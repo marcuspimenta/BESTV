@@ -12,13 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.fragments;
 
 import android.os.Bundle;
 import android.support.v17.leanback.app.VideoSupportFragment;
 import android.support.v17.leanback.app.VideoSupportFragmentGlueHost;
 import android.support.v17.leanback.media.MediaPlayerGlue;
 import android.support.v17.leanback.media.PlaybackGlue;
+
+import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.activities.DetailsActivity;
 
 /**
  * Handles video playback with media controls.

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.presenters;
 
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.R;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.

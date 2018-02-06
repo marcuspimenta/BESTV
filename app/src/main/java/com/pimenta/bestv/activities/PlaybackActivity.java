@@ -12,19 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-/*
- * MainActivity class that loads {@link MainFragment}.
+import com.pimenta.bestv.fragments.PlaybackVideoFragment;
+
+/**
+ * Loads {@link PlaybackVideoFragment}.
  */
-public class MainActivity extends Activity {
+public class PlaybackActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new PlaybackVideoFragment())
+                    .commit();
+        }
     }
 }

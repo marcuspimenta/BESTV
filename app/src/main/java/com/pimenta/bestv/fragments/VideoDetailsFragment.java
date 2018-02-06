@@ -12,13 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
@@ -45,6 +44,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.managers.MovieList;
+import com.pimenta.bestv.R;
+import com.pimenta.bestv.activities.DetailsActivity;
+import com.pimenta.bestv.activities.MainActivity;
+import com.pimenta.bestv.activities.PlaybackActivity;
+import com.pimenta.bestv.presenters.CardPresenter;
+import com.pimenta.bestv.presenters.DetailsDescriptionPresenter;
 
 import java.util.Collections;
 import java.util.List;

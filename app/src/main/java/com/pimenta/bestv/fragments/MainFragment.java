@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.fragments;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +49,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.managers.MovieList;
+import com.pimenta.bestv.R;
+import com.pimenta.bestv.activities.BrowseErrorActivity;
+import com.pimenta.bestv.activities.DetailsActivity;
+import com.pimenta.bestv.presenters.CardPresenter;
 
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";

@@ -12,7 +12,9 @@
  * the License.
  */
 
-package com.pimenta.bestv;
+package com.pimenta.bestv.managers;
+
+import com.pimenta.bestv.models.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
