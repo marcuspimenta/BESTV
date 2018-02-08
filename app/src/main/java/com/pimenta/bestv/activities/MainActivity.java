@@ -17,7 +17,7 @@ package com.pimenta.bestv.activities;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.pimenta.bestv.R;
+import com.pimenta.bestv.fragments.MainFragment;
 
 /*
  * MainActivity class that loads {@link MainFragment}.
@@ -27,6 +27,6 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new MainFragment()).commit();
     }
 }

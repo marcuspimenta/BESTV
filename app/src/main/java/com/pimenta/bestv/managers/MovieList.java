@@ -17,9 +17,12 @@ package com.pimenta.bestv.managers;
 import com.pimenta.bestv.models.Movie;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class MovieList {
+
     public static final String MOVIE_CATEGORY[] = {
             "Category Zero",
             "Category One",
@@ -29,18 +32,18 @@ public final class MovieList {
             "Category Five",
     };
 
-    private static List<Movie> list;
+    private static Map<String, List<Movie>> list;
     private static long count = 0;
 
-    public static List<Movie> getList() {
+    public static Map<String, List<Movie>> getList() {
         if (list == null) {
             list = setupMovies();
         }
         return list;
     }
 
-    public static List<Movie> setupMovies() {
-        list = new ArrayList<>();
+    public static Map<String, List<Movie>> setupMovies() {
+        list = new HashMap<>();
         String title[] = {
                 "Zeitgeist 2010_ Year in Review",
                 "Google Demo Slam_ 20ft Search",
@@ -80,10 +83,9 @@ public final class MovieList {
                 "http://commondatastorage.googleapis.com/android-tv/Sample%20videos/April%20Fool's%202013/Introducing%20Google%20Nose/card.jpg"
         };
 
+        List<Movie> movies = new ArrayList<>();
         for (int index = 0; index < title.length; ++index) {
-            list.add(
-                    buildMovieInfo(
-                            "category",
+            movies.add(buildMovieInfo("category",
                             title[index],
                             description,
                             studio[index],
@@ -92,12 +94,14 @@ public final class MovieList {
                             bgImageUrl[index]));
         }
 
+        for (int index = 0; index < MOVIE_CATEGORY.length; ++index) {
+            list.put(MOVIE_CATEGORY[index], movies);
+        }
+
         return list;
     }
 
-    private static Movie buildMovieInfo(String category, String title,
-                                        String description, String studio, String videoUrl, String cardImageUrl,
-                                        String backgroundImageUrl) {
+    private static Movie buildMovieInfo(String category, String title, String description, String studio, String videoUrl, String cardImageUrl, String backgroundImageUrl) {
         Movie movie = new Movie();
         movie.setId(count++);
         movie.setTitle(title);

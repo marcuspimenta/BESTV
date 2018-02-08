@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenters;
+package com.pimenta.bestv.widget;
 
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;

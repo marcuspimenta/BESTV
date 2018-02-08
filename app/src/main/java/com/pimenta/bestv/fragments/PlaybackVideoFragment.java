@@ -21,12 +21,13 @@ import android.support.v17.leanback.media.MediaPlayerGlue;
 import android.support.v17.leanback.media.PlaybackGlue;
 
 import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.activities.DetailsActivity;
+import com.pimenta.bestv.presenters.PlaybackVideoPresenter;
 
 /**
- * Handles video playback with media controls.
+ * Created by marcus on 08-02-2018.
  */
-public class PlaybackVideoFragment extends VideoSupportFragment {
+public class PlaybackVideoFragment extends BaseVideoSupportFragment<PlaybackVideoPresenter> {
+
     private static final String TAG = "PlaybackVideoFragment";
 
     private MediaPlayerGlue mTransportControlGlue;
@@ -35,26 +36,22 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Movie movie = (Movie) getActivity()
-                .getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+        final Movie movie = (Movie) getActivity().getIntent().getSerializableExtra(MovieDetailsFragment.MOVIE);
 
-        VideoSupportFragmentGlueHost glueHost =
-                new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
-
+        VideoSupportFragmentGlueHost glueHost = new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
         mTransportControlGlue = new MediaPlayerGlue(getContext());
         mTransportControlGlue.setMode(MediaPlayerGlue.NO_REPEAT);
         mTransportControlGlue.setHost(glueHost);
         mTransportControlGlue.setTitle(movie.getTitle());
         mTransportControlGlue.setArtist(movie.getDescription());
-        mTransportControlGlue.addPlayerCallback(
-                new PlaybackGlue.PlayerCallback() {
-                    @Override
-                    public void onPreparedStateChanged(PlaybackGlue glue) {
-                        if (glue.isPrepared()) {
-                            glue.play();
-                        }
-                    }
-                });
+        mTransportControlGlue.addPlayerCallback(new PlaybackGlue.PlayerCallback() {
+            @Override
+            public void onPreparedStateChanged(PlaybackGlue glue) {
+                if (glue.isPrepared()) {
+                    glue.play();
+                }
+            }
+        });
         mTransportControlGlue.setVideoUrl(movie.getVideoUrl());
     }
 
@@ -64,5 +61,10 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         if (mTransportControlGlue != null) {
             mTransportControlGlue.pause();
         }
+    }
+
+    @Override
+    protected PlaybackVideoPresenter getController() {
+        return new PlaybackVideoPresenter();
     }
 }

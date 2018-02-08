@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.pimenta.bestv.activities;
+package com.pimenta.bestv.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +23,7 @@ import com.pimenta.bestv.R;
  * This class demonstrates how to extend ErrorFragment
  */
 public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragment {
+
     private static final String TAG = "ErrorFragment";
     private static final boolean TRANSLUCENT = true;
 
@@ -39,11 +40,6 @@ public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragmen
         setDefaultBackground(TRANSLUCENT);
 
         setButtonText(getResources().getString(R.string.dismiss_error));
-        setButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                getFragmentManager().beginTransaction().remove(ErrorFragment.this).commit();
-            }
-        });
+        setButtonClickListener(arg -> getFragmentManager().beginTransaction().remove(ErrorFragment.this).commit());
     }
 }
