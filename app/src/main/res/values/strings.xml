@@ -20,4 +20,7 @@
     <string name="video_error_unknown_error">Failed to load video</string>
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
+
+    <string name="tmdb_api_key">fb5ac484c71e11e6e0fe358946f07b9e</string>
+    <string name="tmdb_language">en-US</string>
 </resources>

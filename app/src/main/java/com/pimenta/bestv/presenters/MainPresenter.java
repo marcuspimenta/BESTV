@@ -9,7 +9,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.connectors.OmdbConnector;
+import com.pimenta.bestv.connectors.TmdbConnector;
+import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     DisplayMetrics mDisplayMetrics;
 
     @Inject
-    OmdbConnector mOmdbConnector;
+    TmdbConnector mTmdbConnector;
 
     public MainPresenter() {
         BesTV.getApplicationComponent().inject(this);
@@ -41,13 +42,13 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
         return mDisplayMetrics;
     }
 
-    public void loadData() {
-        mDisposables.add(Single.create((SingleOnSubscribe<Map<String, List<Movie>>>) e -> e.onSuccess(mOmdbConnector.getTopMovies()))
+    public void loadGenres() {
+        mDisposables.add(Single.create((SingleOnSubscribe<List<Genre>>) e -> e.onSuccess(mTmdbConnector.getGenres()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
+                .subscribe(genres -> {
                     if (mCallback != null) {
-                        mCallback.onDataLoaded(movies);
+                        mCallback.onGenresLoaded(genres);
                     }
                 }));
     }

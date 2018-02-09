@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -29,23 +27,18 @@ import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.activities.MovieDetailsActivity;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.presenters.MainCallback;
 import com.pimenta.bestv.presenters.MainPresenter;
 import com.pimenta.bestv.widget.CardPresenter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -80,7 +73,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProgressBarManager().show();
-        mController.loadData();
+        mController.loadGenres();
     }
 
     @Override
@@ -93,9 +86,9 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     }
 
     @Override
-    public void onDataLoaded(final Map<String, List<Movie>> movies) {
+    public void onGenresLoaded(final List<Genre> genres) {
         getProgressBarManager().hide();
-        loadRows(movies);
+        loadRows(genres);
     }
 
     @Override
@@ -121,26 +114,24 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
-    private void loadRows(Map<String, List<Movie>> movies) {
+    private void loadRows(final List<Genre> genres) {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        for (final Map.Entry<String, List<Movie>> entry : movies.entrySet()) {
+        for (final Genre genre : genres) {
             final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-            for (int i = 0; i < entry.getValue().size(); i++) {
-                listRowAdapter.add(entry.getValue().get(i));
-            }
-            final HeaderItem header = new HeaderItem(entry.getKey());
+            final HeaderItem header = new HeaderItem(genre.getName());
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 
         setAdapter(mRowsAdapter);
     }
 
+
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
+            /*if (item instanceof Movie) {
                 Movie movie = (Movie) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
@@ -150,7 +141,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
                         ((ImageCardView) itemViewHolder.view).getMainImageView(),
                         MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                 getActivity().startActivity(intent, bundle);
-            }
+            }*/
         }
     }
 
@@ -158,7 +149,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
 
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
+            /*if (item instanceof Movie) {
                 final Movie movie = (Movie) item;
                 if (mBackgroundTimer != null) {
                     mBackgroundTimer.cancel();
@@ -173,7 +164,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
                         });
                     }
                 }, BACKGROUND_UPDATE_DELAY);
-            }
+            }*/
         }
     }
 }

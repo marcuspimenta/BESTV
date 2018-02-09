@@ -3,8 +3,10 @@ package com.pimenta.bestv.dagger;
 import android.app.Application;
 import android.util.DisplayMetrics;
 
-import com.pimenta.bestv.connectors.OmdbConnector;
-import com.pimenta.bestv.connectors.OmdbConnectorImpl;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.pimenta.bestv.connectors.TmdbConnector;
+import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 
 import javax.inject.Singleton;
 
@@ -37,12 +39,18 @@ public class ApplicationModule {
         return new DisplayMetrics();
     }
 
+    @Provides
+    @Singleton
+    public Gson provideGson() {
+        return new GsonBuilder().create();
+    }
+
     @Module
     public interface Impls {
 
         @Binds
         @Singleton
-        OmdbConnector provideOmdbConnector(OmdbConnectorImpl connector);
+        TmdbConnector provideTmdbConnector(TmdbConnectorImpl connector);
     }
 
 }
