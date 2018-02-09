@@ -13,10 +13,10 @@ import com.pimenta.bestv.models.Movie;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallback>{
+public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallback> {
 
     public void loadCardImage(Movie movie) {
-        Glide.with(BesTV.get())
+        /*Glide.with(BesTV.get())
                 .load(movie.getCardImageUrl())
                 .centerCrop()
                 .error(R.drawable.default_background)
@@ -28,11 +28,11 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                             mCallback.onCardImageLoaded(resource);
                         }
                     }
-                });
+                });*/
     }
 
     public void loadBackgroundImage(Movie movie) {
-        Glide.with(BesTV.get())
+        /*Glide.with(BesTV.get())
                 .load(movie.getBackgroundImageUrl())
                 .asBitmap()
                 .centerCrop()
@@ -44,7 +44,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                             mCallback.onBackgroundImageLoaded(bitmap);
                         }
                     }
-                });
+                });*/
     }
 
 }

@@ -3,10 +3,12 @@ package com.pimenta.bestv.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by marcus on 08-02-2018.
  */
-public class Genre {
+public class Genre implements Serializable{
 
     @SerializedName("id")
     @Expose

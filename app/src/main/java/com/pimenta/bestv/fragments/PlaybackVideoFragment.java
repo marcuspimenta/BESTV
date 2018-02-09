@@ -15,11 +15,9 @@
 package com.pimenta.bestv.fragments;
 
 import android.os.Bundle;
-import android.support.v17.leanback.app.VideoSupportFragment;
-import android.support.v17.leanback.app.VideoSupportFragmentGlueHost;
 import android.support.v17.leanback.media.MediaPlayerGlue;
-import android.support.v17.leanback.media.PlaybackGlue;
 
+import com.pimenta.bestv.fragments.bases.BaseVideoSupportFragment;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.PlaybackVideoPresenter;
 
@@ -38,7 +36,7 @@ public class PlaybackVideoFragment extends BaseVideoSupportFragment<PlaybackVide
 
         final Movie movie = (Movie) getActivity().getIntent().getSerializableExtra(MovieDetailsFragment.MOVIE);
 
-        VideoSupportFragmentGlueHost glueHost = new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
+        /*VideoSupportFragmentGlueHost glueHost = new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
         mTransportControlGlue = new MediaPlayerGlue(getContext());
         mTransportControlGlue.setMode(MediaPlayerGlue.NO_REPEAT);
         mTransportControlGlue.setHost(glueHost);
@@ -52,19 +50,19 @@ public class PlaybackVideoFragment extends BaseVideoSupportFragment<PlaybackVide
                 }
             }
         });
-        mTransportControlGlue.setVideoUrl(movie.getVideoUrl());
+        mTransportControlGlue.setVideoUrl(movie.getVideoUrl());*/
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mTransportControlGlue != null) {
+        /*if (mTransportControlGlue != null) {
             mTransportControlGlue.pause();
-        }
+        }*/
     }
 
     @Override
-    protected PlaybackVideoPresenter getController() {
+    protected PlaybackVideoPresenter getPresenter() {
         return new PlaybackVideoPresenter();
     }
 }

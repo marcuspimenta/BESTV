@@ -14,102 +14,115 @@
 
 package com.pimenta.bestv.models;
 
-import android.util.Log;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Date;
 
-/*
- * Movie class represents video entity with title, description, image thumbs and video url.
+/**
+ * Created by marcus on 09-02-2018.
  */
 public class Movie implements Serializable {
-    static final long serialVersionUID = 727566175075960653L;
-    private long id;
-    private String title;
-    private String description;
-    private String bgImageUrl;
-    private String cardImageUrl;
-    private String videoUrl;
-    private String studio;
-    private String category;
 
-    public Movie() {
+    /*"adult":false,
+    "genre_ids":[
+    28,
+    9648,
+    878,
+    53
+    ],
+    "popularity":444.4728,
+    "video":false,
+    "vote_average":7.0,
+    "vote_count":6638*/
+
+    @SerializedName("id")
+    @Expose
+    private int mId;
+    @SerializedName("title")
+    @Expose
+    private String mTitle;
+    @SerializedName("original_title")
+    @Expose
+    private String mOriginalTitle;
+    @SerializedName("original_language")
+    @Expose
+    private String mOriginalLanguage;
+    @SerializedName("overview")
+    @Expose
+    private String mOverview;
+    @SerializedName("release_date")
+    @Expose
+    private Date mReleaseDate;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String mBackdropPath;
+    @SerializedName("poster_path")
+    @Expose
+    private String mPosterPath;
+
+    public int getId() {
+        return mId;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setId(final int id) {
+        mId = id;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(final String title) {
+        mTitle = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getOriginalTitle() {
+        return mOriginalTitle;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOriginalTitle(final String originalTitle) {
+        mOriginalTitle = originalTitle;
     }
 
-    public String getStudio() {
-        return studio;
+    public String getOriginalLanguage() {
+        return mOriginalLanguage;
     }
 
-    public void setStudio(String studio) {
-        this.studio = studio;
+    public void setOriginalLanguage(final String originalLanguage) {
+        mOriginalLanguage = originalLanguage;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public String getOverview() {
+        return mOverview;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setOverview(final String overview) {
+        mOverview = overview;
     }
 
-    public String getBackgroundImageUrl() {
-        return bgImageUrl;
+    public Date getReleaseDate() {
+        return mReleaseDate;
     }
 
-    public void setBackgroundImageUrl(String bgImageUrl) {
-        this.bgImageUrl = bgImageUrl;
+    public void setReleaseDate(final Date releaseDate) {
+        mReleaseDate = releaseDate;
     }
 
-    public String getCardImageUrl() {
-        return cardImageUrl;
+    public String getBackdropPath() {
+        return mBackdropPath;
     }
 
-    public void setCardImageUrl(String cardImageUrl) {
-        this.cardImageUrl = cardImageUrl;
+    public void setBackdropPath(final String backdropPath) {
+        mBackdropPath = backdropPath;
     }
 
-    public String getCategory() {
-        return category;
+    public String getPosterPath() {
+        return mPosterPath;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", videoUrl='" + videoUrl + '\'' +
-                ", backgroundImageUrl='" + bgImageUrl + '\'' +
-                ", cardImageUrl='" + cardImageUrl + '\'' +
-                '}';
+    public void setPosterPath(final String posterPath) {
+        mPosterPath = posterPath;
     }
 }

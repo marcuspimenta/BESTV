@@ -14,31 +14,27 @@
 
 package com.pimenta.bestv.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
+import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
-import android.support.v17.leanback.widget.Presenter;
+import android.support.v17.leanback.widget.PageRow;
 import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowPresenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.fragments.bases.BaseBrowseFragment;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.presenters.MainCallback;
 import com.pimenta.bestv.presenters.MainPresenter;
-import com.pimenta.bestv.widget.CardPresenter;
+import com.pimenta.bestv.widget.GenreHeaderItem;
 
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -46,17 +42,12 @@ import java.util.Timer;
 public class MainFragment extends BaseBrowseFragment<MainPresenter> implements MainCallback {
 
     private static final String TAG = "MainFragment";
-    private static final int BACKGROUND_UPDATE_DELAY = 300;
 
-    private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
-    private Timer mBackgroundTimer;
-    private BackgroundManager mBackgroundManager;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prepareBackgroundManager();
         setupUIElements();
     }
 
@@ -73,15 +64,12 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProgressBarManager().show();
-        mController.loadGenres();
+        mPresenter.loadGenres();
     }
 
     @Override
     public void onDestroy() {
         getProgressBarManager().hide();
-        if (mBackgroundTimer != null) {
-            mBackgroundTimer.cancel();
-        }
         super.onDestroy();
     }
 
@@ -89,17 +77,13 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     public void onGenresLoaded(final List<Genre> genres) {
         getProgressBarManager().hide();
         loadRows(genres);
+
+        startEntranceTransition();
     }
 
     @Override
-    public MainPresenter getController() {
+    public MainPresenter getPresenter() {
         return new MainPresenter();
-    }
-
-    private void prepareBackgroundManager() {
-        mBackgroundManager = BackgroundManager.getInstance(getActivity());
-        mBackgroundManager.attach(getActivity().getWindow());
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(mController.getDisplayMetrics());
     }
 
     private void setupUIElements() {
@@ -109,62 +93,31 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
 
         setBrandColor(getResources().getColor(R.color.fastlane_background, getActivity().getTheme()));
         setSearchAffordanceColor(getResources().getColor(R.color.search_opaque, getActivity().getTheme()));
+        getMainFragmentRegistry().registerFragment(PageRow.class, new PageRowFragmentFactory());
 
-        setOnItemViewClickedListener(new ItemViewClickedListener());
-        setOnItemViewSelectedListener(new ItemViewSelectedListener());
+        BackgroundManager.getInstance(getActivity()).attach(getActivity().getWindow());
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(mPresenter.getDisplayMetrics());
+
+        prepareEntranceTransition();
     }
 
     private void loadRows(final List<Genre> genres) {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        setAdapter(mRowsAdapter);
 
         for (final Genre genre : genres) {
-            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-            final HeaderItem header = new HeaderItem(genre.getName());
-            mRowsAdapter.add(new ListRow(header, listRowAdapter));
-        }
-
-        setAdapter(mRowsAdapter);
-    }
-
-
-    private final class ItemViewClickedListener implements OnItemViewClickedListener {
-
-        @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            /*if (item instanceof Movie) {
-                Movie movie = (Movie) item;
-                Log.d(TAG, "Item: " + item.toString());
-                Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                intent.putExtra(MovieDetailsFragment.MOVIE, movie);
-
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
-            }*/
+            mRowsAdapter.add(new PageRow(new GenreHeaderItem(genre)));
         }
     }
 
-    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+    private static class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
 
         @Override
-        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            /*if (item instanceof Movie) {
-                final Movie movie = (Movie) item;
-                if (mBackgroundTimer != null) {
-                    mBackgroundTimer.cancel();
-                }
-                mBackgroundTimer = new Timer();
-                mBackgroundTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        mHandler.post(() -> {
-                            mController.loadImage(mBackgroundManager, movie.getBackgroundImageUrl());
-                            mBackgroundTimer.cancel();
-                        });
-                    }
-                }, BACKGROUND_UPDATE_DELAY);
-            }*/
+        public Fragment createFragment(Object rowObj) {
+            final Row row = (Row) rowObj;
+            final GenreHeaderItem headerItem = (GenreHeaderItem) row.getHeaderItem();
+
+            return MovieGridFragment.newInstance(headerItem.getGenre());
         }
     }
 }

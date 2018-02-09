@@ -29,6 +29,7 @@ import android.support.v4.content.ContextCompat;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activities.PlaybackActivity;
+import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieDetailsCallback;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
@@ -77,7 +78,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     }
 
     @Override
-    public MovieDetailsPresenter getController() {
+    public MovieDetailsPresenter getPresenter() {
         return new MovieDetailsPresenter();
     }
 
@@ -87,7 +88,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         mDetailsOverviewRow = new DetailsOverviewRow(mMovie);
         mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_background));
-        mController.loadCardImage(mMovie);
+        mPresenter.loadCardImage(mMovie);
 
         ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
         actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer_1), getResources().getString(R.string.watch_trailer_2)));
@@ -120,6 +121,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private void setupBackgroundImage() {
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
         mDetailsBackground.enableParallax();
-        mController.loadBackgroundImage(mMovie);
+        mPresenter.loadBackgroundImage(mMovie);
     }
 }

@@ -21,14 +21,15 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.models.Movie;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.
  * It contains an Image CardView
  */
 public class CardPresenter extends Presenter {
+
     private static final String TAG = "CardPresenter";
 
     private static final int CARD_WIDTH = 313;
@@ -74,20 +75,17 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+        Log.d(TAG, "onBindViewHolder");
         Movie movie = (Movie) item;
         ImageCardView cardView = (ImageCardView) viewHolder.view;
-
-        Log.d(TAG, "onBindViewHolder");
-        if (movie.getCardImageUrl() != null) {
-            cardView.setTitleText(movie.getTitle());
-            cardView.setContentText(movie.getStudio());
-            cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
-            Glide.with(viewHolder.view.getContext())
-                    .load(movie.getCardImageUrl())
-                    .centerCrop()
-                    .error(mDefaultCardImage)
-                    .into(cardView.getMainImageView());
-        }
+        cardView.setTitleText(movie.getTitle());
+        //cardView.setContentText(movie.getStudio());
+        cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+        /*Glide.with(viewHolder.view.getContext())
+                .load(movie.getCardImageUrl())
+                .centerCrop()
+                .error(mDefaultCardImage)
+                .into(cardView.getMainImageView());*/
     }
 
     @Override

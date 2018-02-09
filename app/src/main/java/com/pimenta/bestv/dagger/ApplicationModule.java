@@ -5,12 +5,9 @@ import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pimenta.bestv.connectors.TmdbConnector;
-import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 
 import javax.inject.Singleton;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -18,7 +15,7 @@ import dagger.Provides;
  * Created by marcus on 07-02-2018.
  */
 @Singleton
-@Module(includes = {ApplicationModule.Impls.class})
+@Module(includes = {ImplModule.class})
 public class ApplicationModule {
 
     private Application mApplication;
@@ -43,14 +40,6 @@ public class ApplicationModule {
     @Singleton
     public Gson provideGson() {
         return new GsonBuilder().create();
-    }
-
-    @Module
-    public interface Impls {
-
-        @Binds
-        @Singleton
-        TmdbConnector provideTmdbConnector(TmdbConnectorImpl connector);
     }
 
 }
