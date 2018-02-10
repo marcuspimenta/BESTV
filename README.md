@@ -5,11 +5,10 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 # Implementations
 <ul>
 <li>The Movie Database (TMDb)</li>
-<li>Dagger 2 - for injecting the services</li>
-<li>Retrofit - for networking</li>
-<li>Glide - for images</li>
+<li>Dagger 2
+<li>Retrofit
+<li>Glide
 </ul>
-
 
 # Licence
 ```
@@ -26,3 +25,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
