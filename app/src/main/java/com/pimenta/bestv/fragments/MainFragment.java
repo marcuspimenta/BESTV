@@ -110,13 +110,13 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         }
     }
 
-    private static class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
+    private class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
 
         @Override
         public Fragment createFragment(Object rowObj) {
             final Row row = (Row) rowObj;
             final GenreHeaderItem headerItem = (GenreHeaderItem) row.getHeaderItem();
-
+            MainFragment.this.setTitle(headerItem.getGenre().getName());
             return MovieGridFragment.newInstance(headerItem.getGenre());
         }
     }

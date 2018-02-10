@@ -23,7 +23,7 @@ import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieGridCallback;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
-import com.pimenta.bestv.widget.CardPresenter;
+import com.pimenta.bestv.widget.MovieCardPresenter;
 
 import java.util.List;
 import java.util.Timer;
@@ -38,7 +38,7 @@ public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresent
     private static final String GENRE = "GENRE";
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
-    private static final int NUMBER_COLUMNS = 3;
+    private static final int NUMBER_COLUMNS = 4;
 
     private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
@@ -128,7 +128,7 @@ public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresent
         mVerticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
         setGridPresenter(mVerticalGridPresenter);
 
-        mRowsAdapter = new ArrayObjectAdapter(new CardPresenter());
+        mRowsAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
         setAdapter(mRowsAdapter);
 
         setOnItemViewSelectedListener(new ItemViewSelectedListener());

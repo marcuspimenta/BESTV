@@ -29,7 +29,7 @@ public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragmen
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "register");
         super.onCreate(savedInstanceState);
         setTitle(getResources().getString(R.string.app_name));
     }

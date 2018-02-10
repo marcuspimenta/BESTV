@@ -21,6 +21,12 @@
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
 
+    <!-- TMDb sources -->
     <string name="tmdb_api_key">fb5ac484c71e11e6e0fe358946f07b9e</string>
-    <string name="tmdb_language">en-US</string>
+    <string name="tmdb_filter_language">en-US</string>
+    <string name="tmdb_filer_sort_by_desc">created_at.desc</string>
+    <string name="tmdb_filer_sort_by_asc">created_at.desc</string>
+    <string name="tmdb_base_url_api">https://api.themoviedb.org/3/</string>
+    <string name="tmdb_load_image_url_api_w780">https://image.tmdb.org/t/p/w780%s</string>
+    <string name="tmdb_load_image_url_api_w1280">https://image.tmdb.org/t/p/w1280%s</string>
 </resources>

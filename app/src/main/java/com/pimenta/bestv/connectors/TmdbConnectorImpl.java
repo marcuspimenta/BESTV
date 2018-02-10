@@ -1,10 +1,24 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.pimenta.bestv.connectors;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.api.Tmdb;
+import com.pimenta.bestv.tmdb.Tmdb;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 
@@ -22,14 +36,16 @@ public class TmdbConnectorImpl extends BasePreferences implements TmdbConnector 
 
     private String mApiKey;
     private String mLanguage;
+    private String mSortBy;
 
     private Tmdb mTmdb;
 
     @Inject
     public TmdbConnectorImpl(Gson gson) {
         mApiKey = getString(R.string.tmdb_api_key);
-        mLanguage = getString(R.string.tmdb_language);
-        mTmdb = new Tmdb(gson, getThreadPool());
+        mLanguage = getString(R.string.tmdb_filter_language);
+        mSortBy = getString(R.string.tmdb_filer_sort_by_desc);
+        mTmdb = new Tmdb(getString(R.string.tmdb_base_url_api), gson, getThreadPool());
     }
 
     @Override
@@ -45,7 +61,7 @@ public class TmdbConnectorImpl extends BasePreferences implements TmdbConnector 
     @Override
     public List<Movie> getMoviesByGenre(final Genre genre) {
         try {
-            return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, "created_at.desc").execute().body().getMovies();
+            return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, mSortBy).execute().body().getMovies();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
             return null;

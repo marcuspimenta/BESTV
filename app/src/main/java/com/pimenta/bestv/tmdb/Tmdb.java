@@ -12,30 +12,34 @@
  * the License.
  */
 
-package com.pimenta.bestv.connectors;
+package com.pimenta.bestv.tmdb;
 
-import android.support.annotation.StringRes;
-
-import com.pimenta.bestv.BesTV;
+import com.google.gson.Gson;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+
+import io.reactivex.annotations.NonNull;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by marcus on 08-02-2018.
  */
-public abstract class BasePreferences {
+public class Tmdb {
 
-    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
-    private static final Executor THREAD_POOL_EXECUTOR = Executors.newFixedThreadPool(CORE_POOL_SIZE);
+    private GenreApi mGenreApi;
 
-    protected Executor getThreadPool() {
-        return THREAD_POOL_EXECUTOR;
+    public Tmdb(String baseUrl, Gson gson, @NonNull Executor executor) {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .callbackExecutor(executor)
+                .build();
+
+        mGenreApi = retrofit.create(GenreApi.class);
     }
 
-    protected String getString(@StringRes int id) {
-        return BesTV.get().getString(id);
+    public GenreApi getGenreApi() {
+        return mGenreApi;
     }
-
 }
