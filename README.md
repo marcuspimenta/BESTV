@@ -12,7 +12,7 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 
 # Licence
 ```
-Copyright (c) 2017 Hitanshu Dhawan
+Copyright (c) 2018 Marcus Pimenta
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
