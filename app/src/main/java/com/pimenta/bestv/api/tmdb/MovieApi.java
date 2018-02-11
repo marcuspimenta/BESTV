@@ -14,24 +14,27 @@
 
 package com.pimenta.bestv.api.tmdb;
 
-import com.pimenta.bestv.models.GenreList;
 import com.pimenta.bestv.models.MovieList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-public interface GenreApi {
+public interface MovieApi {
 
-    @GET("genre/movie/list")
-    Call<GenreList> getGenres(@Query("api_key") String apiKey, @Query("language") String language);
+    @GET("movie/now_playing")
+    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region);
 
-    @GET("genre/{genre_id}/movies")
-    Call<MovieList> getMovies(@Path("genre_id") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
-            @Query("include_adult") boolean includeAdult, @Query("sort_by") String sortBy);
-    
+    @GET("movie/popular")
+    Call<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("movie/top_rated")
+    Call<MovieList> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("movie/upcoming")
+    Call<MovieList> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language);
+
 }

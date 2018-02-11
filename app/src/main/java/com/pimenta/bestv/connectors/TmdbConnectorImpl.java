@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.connectors;
 
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -79,10 +80,57 @@ public class TmdbConnectorImpl implements TmdbConnector {
     public List<Movie> getNowPlayingMovies() {
         try {
             final String region = mDeviceManager.getCountryCode();
-            return mTmdb.getGenreApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "").execute().body().getMovies();
+            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "").execute().body().getMovies();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
             return null;
+        }
+    }
+
+    @Override
+    public List<Movie> getPopularMovies() {
+        try {
+            return mTmdb.getMovieApi().getPopularMovies(mApiKey, mLanguage).execute().body().getMovies();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the movies by genre", e);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Movie> getTopRatedMovies() {
+        try {
+            return mTmdb.getMovieApi().getTopRatedMovies(mApiKey, mLanguage).execute().body().getMovies();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the movies by genre", e);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Movie> getUpComingMovies() {
+        try {
+            return mTmdb.getMovieApi().getUpComingMovies(mApiKey, mLanguage).execute().body().getMovies();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the movies by genre", e);
+            return null;
+        }
+    }
+
+    public enum MovieListType {
+        NOW_PLAYING(R.string.now_playing),
+        POPULAR(R.string.popular),
+        TOP_RATED(R.string.top_rated),
+        UP_COMING(R.string.up_coming);
+
+        private String mName;
+
+        MovieListType(@StringRes int nameResource) {
+            mName = BesTV.get().getString(nameResource);
+        }
+
+        public String getName() {
+            return mName;
         }
     }
 

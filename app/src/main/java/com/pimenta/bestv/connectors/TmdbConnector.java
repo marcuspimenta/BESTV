@@ -40,10 +40,31 @@ public interface TmdbConnector {
     List<Movie> getMoviesByGenre(Genre genre);
 
     /**
-     * Gets the {@link List<Movie>} that are been played in theatres
+     * Gets the now playing {@link List<Movie>}
      *
      * @return {@link List<Movie>}
      */
     List<Movie> getNowPlayingMovies();
+
+    /**
+     * Gets the popular {@link List<Movie>}
+     *
+     * @return {@link List<Movie>}
+     */
+    List<Movie> getPopularMovies();
+
+    /**
+     * Gets the top rated {@link List<Movie>}
+     *
+     * @return {@link List<Movie>}
+     */
+    List<Movie> getTopRatedMovies();
+
+    /**
+     * Gets the up coming {@link List<Movie>}
+     *
+     * @return {@link List<Movie>}
+     */
+    List<Movie> getUpComingMovies();
 
 }

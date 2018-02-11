@@ -20,19 +20,23 @@ import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.DividerRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.PageRow;
 import android.support.v17.leanback.widget.Row;
+import android.support.v17.leanback.widget.SectionRow;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 import com.pimenta.bestv.fragments.bases.BaseBrowseFragment;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.presenters.MainCallback;
 import com.pimenta.bestv.presenters.MainPresenter;
 import com.pimenta.bestv.widget.GenreHeaderItem;
+import com.pimenta.bestv.widget.MovieListTypeHeaderItem;
 
 import java.util.List;
 
@@ -42,6 +46,10 @@ import java.util.List;
 public class MainFragment extends BaseBrowseFragment<MainPresenter> implements MainCallback {
 
     private static final String TAG = "MainFragment";
+    private static final int NOW_PLAYING_ID = 1;
+    private static final int POPULAR_ID = 2;
+    private static final int TOP_RATED_ID = 3;
+    private static final int UP_COMING_ID = 4;
 
     private ArrayObjectAdapter mRowsAdapter;
 
@@ -91,8 +99,8 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 
-        setBrandColor(getResources().getColor(R.color.fastlane_background, getActivity().getTheme()));
-        setSearchAffordanceColor(getResources().getColor(R.color.search_opaque, getActivity().getTheme()));
+        //setBrandColor(getResources().getColor(R.color.fastlane_background, getActivity().getTheme()));
+        //setSearchAffordanceColor(getResources().getColor(R.color.search_opaque, getActivity().getTheme()));
         getMainFragmentRegistry().registerFragment(PageRow.class, new PageRowFragmentFactory());
 
         BackgroundManager.getInstance(getActivity()).attach(getActivity().getWindow());
@@ -105,8 +113,18 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
 
-        for (final Genre genre : genres) {
-            mRowsAdapter.add(new PageRow(new GenreHeaderItem(genre)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(NOW_PLAYING_ID, TmdbConnectorImpl.MovieListType.NOW_PLAYING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(POPULAR_ID, TmdbConnectorImpl.MovieListType.POPULAR)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_RATED_ID, TmdbConnectorImpl.MovieListType.TOP_RATED)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(UP_COMING_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
+
+        if (genres != null && genres.size() > 0) {
+            mRowsAdapter.add(new DividerRow());
+            mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
+
+            for (final Genre genre : genres) {
+                mRowsAdapter.add(new PageRow(new GenreHeaderItem(genre)));
+            }
         }
     }
 
@@ -115,9 +133,20 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         @Override
         public Fragment createFragment(Object rowObj) {
             final Row row = (Row) rowObj;
-            final GenreHeaderItem headerItem = (GenreHeaderItem) row.getHeaderItem();
-            MainFragment.this.setTitle(headerItem.getGenre().getName());
-            return MovieGridFragment.newInstance(headerItem.getGenre());
+
+            switch ((int) row.getHeaderItem().getId()) {
+                case NOW_PLAYING_ID:
+                case POPULAR_ID:
+                case TOP_RATED_ID:
+                case UP_COMING_ID:
+                    final MovieListTypeHeaderItem movieListTypeHeaderItem = (MovieListTypeHeaderItem) row.getHeaderItem();
+                    MainFragment.this.setTitle(row.getHeaderItem().getName());
+                    return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType());
+                default:
+                    final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
+                    MainFragment.this.setTitle(genreHeaderItem.getGenre().getName());
+                    return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre());
+            }
         }
     }
 }

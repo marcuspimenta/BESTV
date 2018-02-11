@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.presenters;
 
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connectors.TmdbConnector;
+import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 
@@ -52,6 +54,41 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     }
 
     /**
+     * Loads the now playing {@link List<Movie>}
+     */
+    public void loadToMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+                List<Movie> movies = null;
+                switch (movieListType) {
+                    case NOW_PLAYING:
+                        movies = mTmdbConnector.getNowPlayingMovies();
+                        break;
+                    case POPULAR:
+                        movies = mTmdbConnector.getPopularMovies();
+                        break;
+                    case TOP_RATED:
+                        movies = mTmdbConnector.getTopRatedMovies();
+                        break;
+                    case UP_COMING:
+                        movies = mTmdbConnector.getUpComingMovies();
+                        break;
+                }
+
+                if (movies != null) {
+                    Collections.sort(movies, (a, b) -> a.getReleaseDate().getTime() > b.getReleaseDate().getTime() ? -1 : 1);
+                }
+                e.onSuccess(movies);
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(movies -> {
+                if (mCallback != null) {
+                    mCallback.onMoviesLoaded(movies);
+                }
+            }));
+    }
+
+    /**
      * Loads the {@link List<Movie>} by the {@link Genre}
      *
      * @param genre {@link Genre}
@@ -78,7 +115,7 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      *
      * @param movie {@link Movie}
      */
-    public void loadPosterImage(Movie movie) {
+    public void loadPosterImage(@NonNull Movie movie) {
         Glide.with(BesTV.get())
             .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .centerCrop()

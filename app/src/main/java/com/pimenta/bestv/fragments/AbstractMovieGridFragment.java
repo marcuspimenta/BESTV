@@ -1,3 +1,17 @@
+/*
+ * Copyright (C) 2018 Marcus Pimenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.pimenta.bestv.fragments;
 
 import android.graphics.drawable.Drawable;
@@ -32,10 +46,9 @@ import java.util.TimerTask;
 /**
  * Created by marcus on 09-02-2018.
  */
-public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback, BrowseFragment.MainFragmentAdapterProvider {
+public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback, BrowseFragment.MainFragmentAdapterProvider {
 
-    private static final String TAG = "MovieGridFragment";
-    private static final String GENRE = "GENRE";
+    private static final String TAG = "AbstractMovieGridFragment";
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int NUMBER_COLUMNS = 4;
@@ -43,30 +56,14 @@ public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresent
     private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
     private final VerticalGridPresenter mVerticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
-    private final BrowseFragment.MainFragmentAdapter<MovieGridFragment> mMainFragmentAdapter = new BrowseFragment.MainFragmentAdapter<>(this);
+    private final BrowseFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseFragment.MainFragmentAdapter<>(this);
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
 
-    private Genre mGenre;
-
-    public static MovieGridFragment newInstance(Genre genre) {
-        Bundle args = new Bundle();
-        args.putSerializable(GENRE, genre);
-
-        MovieGridFragment movieGridFragment = new MovieGridFragment();
-        movieGridFragment.setArguments(args);
-        movieGridFragment.mGenre = genre;
-        return movieGridFragment;
-    }
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (mGenre == null) {
-            mGenre = (Genre) getArguments().getSerializable(GENRE);
-        }
 
         setupUI();
     }
@@ -85,7 +82,7 @@ public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresent
         getMainFragmentAdapter().getFragmentHost().notifyViewCreated(getMainFragmentAdapter());
 
         getProgressBarManager().show();
-        mPresenter.loadMoviesByGenre(mGenre);
+        loadData();
     }
 
     @Override
@@ -134,6 +131,8 @@ public class MovieGridFragment extends BaseVerticalGridFragment<MovieGridPresent
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
         setOnItemViewClickedListener(new ItemViewClickedListener());
     }
+
+    abstract void loadData();
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
 

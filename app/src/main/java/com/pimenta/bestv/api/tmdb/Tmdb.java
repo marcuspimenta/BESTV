@@ -28,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Tmdb {
 
     private GenreApi mGenreApi;
+    private MovieApi mMovieApi;
 
     public Tmdb(String baseUrl, Gson gson, @NonNull Executor executor) {
         final Retrofit retrofit = new Retrofit.Builder()
@@ -36,7 +37,12 @@ public class Tmdb {
                 .callbackExecutor(executor)
                 .build();
 
+        mMovieApi = retrofit.create(MovieApi.class);
         mGenreApi = retrofit.create(GenreApi.class);
+    }
+
+    public MovieApi getMovieApi() {
+        return mMovieApi;
     }
 
     public GenreApi getGenreApi() {

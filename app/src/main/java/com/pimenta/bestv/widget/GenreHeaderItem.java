@@ -26,7 +26,7 @@ public class GenreHeaderItem extends HeaderItem {
     private Genre mGenre;
 
     public GenreHeaderItem(Genre genre) {
-        super(genre.getId(), genre.getName());
+        super(genre.getName());
         mGenre = genre;
     }
 
@@ -34,7 +34,4 @@ public class GenreHeaderItem extends HeaderItem {
         return mGenre;
     }
 
-    public void setGenre(final Genre genre) {
-        mGenre = genre;
-    }
 }
