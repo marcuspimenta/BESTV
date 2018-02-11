@@ -14,28 +14,29 @@
 
 package com.pimenta.bestv.dagger;
 
-import com.pimenta.bestv.connectors.TmdbConnector;
-import com.pimenta.bestv.connectors.TmdbConnectorImpl;
-import com.pimenta.bestv.managers.DeviceManager;
-import com.pimenta.bestv.managers.DeviceManagerImpl;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
 
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 11-02-2018.
  */
 @Module
-public interface ImplModule {
+@Singleton
+public class PreferenceModule {
 
-    @Binds
-    @Singleton
-    TmdbConnector provideTmdbConnector(TmdbConnectorImpl connector);
+    @Provides
+    int provideCorePoolSize() {
+        return Runtime.getRuntime().availableProcessors() + 1;
+    }
 
-    @Binds
-    @Singleton
-    DeviceManager provideDeviceManager(DeviceManagerImpl manager);
+    @Provides
+    Executor provideThreadPoolExecutor(int corePoolSize) {
+        return Executors.newFixedThreadPool(corePoolSize);
+    }
 
 }

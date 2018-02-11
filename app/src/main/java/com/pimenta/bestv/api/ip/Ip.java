@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.tmdb;
+package com.pimenta.bestv.api.ip;
 
 import com.google.gson.Gson;
 
@@ -23,23 +23,23 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-public class Tmdb {
+public class Ip {
 
-    private GenreApi mGenreApi;
+    private InfoApi mInfoApi;
 
-    public Tmdb(String baseUrl, Gson gson, @NonNull Executor executor) {
+    public Ip(String baseUrl, Gson gson, @NonNull Executor executor) {
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .callbackExecutor(executor)
                 .build();
 
-        mGenreApi = retrofit.create(GenreApi.class);
+        mInfoApi = retrofit.create(InfoApi.class);
     }
 
-    public GenreApi getGenreApi() {
-        return mGenreApi;
+    public InfoApi getInfoApi() {
+        return mInfoApi;
     }
 }

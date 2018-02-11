@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.tmdb;
+package com.pimenta.bestv.api.tmdb;
 
 import com.pimenta.bestv.models.GenreList;
 import com.pimenta.bestv.models.MovieList;
@@ -33,5 +33,8 @@ public interface GenreApi {
     @GET("genre/{genre_id}/movies")
     Call<MovieList> getMovies(@Path("genre_id") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("include_adult") boolean includeAdult, @Query("sort_by") String sortBy);
+
+    @GET("movie/now_playing")
+    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region);
 
 }

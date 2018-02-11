@@ -12,30 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.dagger;
+package com.pimenta.bestv.api.ip;
 
-import com.pimenta.bestv.connectors.TmdbConnector;
-import com.pimenta.bestv.connectors.TmdbConnectorImpl;
-import com.pimenta.bestv.managers.DeviceManager;
-import com.pimenta.bestv.managers.DeviceManagerImpl;
+import com.pimenta.bestv.models.IpInfo;
 
-import javax.inject.Singleton;
-
-import dagger.Binds;
-import dagger.Module;
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-@Module
-public interface ImplModule {
+public interface InfoApi {
 
-    @Binds
-    @Singleton
-    TmdbConnector provideTmdbConnector(TmdbConnectorImpl connector);
-
-    @Binds
-    @Singleton
-    DeviceManager provideDeviceManager(DeviceManagerImpl manager);
+    @GET("json")
+    Call<IpInfo> getIpInfo();
 
 }

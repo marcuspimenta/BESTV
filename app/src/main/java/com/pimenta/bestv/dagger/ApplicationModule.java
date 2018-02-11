@@ -29,7 +29,7 @@ import dagger.Provides;
  * Created by marcus on 07-02-2018.
  */
 @Singleton
-@Module(includes = {ImplModule.class})
+@Module(includes = {PreferenceModule.class, ImplModule.class})
 public class ApplicationModule {
 
     private Application mApplication;

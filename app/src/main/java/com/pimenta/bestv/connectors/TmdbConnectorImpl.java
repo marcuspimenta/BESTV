@@ -14,25 +14,32 @@
 
 package com.pimenta.bestv.connectors;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.tmdb.Tmdb;
+import com.pimenta.bestv.api.tmdb.Tmdb;
+import com.pimenta.bestv.managers.DeviceManager;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
 /**
  * Created by marcus on 08-02-2018.
  */
-public class TmdbConnectorImpl extends BasePreferences implements TmdbConnector {
+public class TmdbConnectorImpl implements TmdbConnector {
 
     private static final String TAG = "TmdbConnectorImpl";
+
+    @Inject
+    DeviceManager mDeviceManager;
 
     private String mApiKey;
     private String mLanguage;
@@ -41,11 +48,11 @@ public class TmdbConnectorImpl extends BasePreferences implements TmdbConnector 
     private Tmdb mTmdb;
 
     @Inject
-    public TmdbConnectorImpl(Gson gson) {
-        mApiKey = getString(R.string.tmdb_api_key);
-        mLanguage = getString(R.string.tmdb_filter_language);
-        mSortBy = getString(R.string.tmdb_filer_sort_by_desc);
-        mTmdb = new Tmdb(getString(R.string.tmdb_base_url_api), gson, getThreadPool());
+    public TmdbConnectorImpl(Gson gson, Executor threadPool) {
+        mApiKey = BesTV.get().getString(R.string.tmdb_api_key);
+        mLanguage = BesTV.get().getString(R.string.tmdb_filter_language);
+        mSortBy = BesTV.get().getString(R.string.tmdb_filer_sort_by_desc);
+        mTmdb = new Tmdb(BesTV.get().getString(R.string.tmdb_base_url_api), gson, threadPool);
     }
 
     @Override
@@ -62,6 +69,17 @@ public class TmdbConnectorImpl extends BasePreferences implements TmdbConnector 
     public List<Movie> getMoviesByGenre(final Genre genre) {
         try {
             return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, mSortBy).execute().body().getMovies();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the movies by genre", e);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Movie> getNowPlayingMovies() {
+        try {
+            final String region = mDeviceManager.getCountryCode();
+            return mTmdb.getGenreApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "").execute().body().getMovies();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
             return null;

@@ -39,4 +39,11 @@ public interface TmdbConnector {
      */
     List<Movie> getMoviesByGenre(Genre genre);
 
+    /**
+     * Gets the {@link List<Movie>} that are been played in theatres
+     *
+     * @return {@link List<Movie>}
+     */
+    List<Movie> getNowPlayingMovies();
+
 }

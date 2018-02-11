@@ -12,30 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.dagger;
-
-import com.pimenta.bestv.connectors.TmdbConnector;
-import com.pimenta.bestv.connectors.TmdbConnectorImpl;
-import com.pimenta.bestv.managers.DeviceManager;
-import com.pimenta.bestv.managers.DeviceManagerImpl;
-
-import javax.inject.Singleton;
-
-import dagger.Binds;
-import dagger.Module;
+package com.pimenta.bestv.managers;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-@Module
-public interface ImplModule {
+public interface DeviceManager {
 
-    @Binds
-    @Singleton
-    TmdbConnector provideTmdbConnector(TmdbConnectorImpl connector);
-
-    @Binds
-    @Singleton
-    DeviceManager provideDeviceManager(DeviceManagerImpl manager);
+    /**
+     * Gets the {@link String} country ISO 3166-1 code
+     *
+     * @return {@link String}
+     */
+    String getCountryCode();
 
 }
