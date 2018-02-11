@@ -14,6 +14,11 @@
 
 package com.pimenta.bestv.fragments;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,18 +27,20 @@ import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.FocusHighlight;
+import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pimenta.bestv.activities.MovieDetailsActivity;
 import com.pimenta.bestv.fragments.bases.BaseVerticalGridFragment;
-import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieGridCallback;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
@@ -49,6 +56,7 @@ import java.util.TimerTask;
 public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback, BrowseFragment.MainFragmentAdapterProvider {
 
     private static final String TAG = "AbstractMovieGridFragment";
+    private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int NUMBER_COLUMNS = 4;
@@ -106,8 +114,18 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
     @Override
     public void onMoviesLoaded(final List<Movie> movies) {
-        for (final Movie movie : movies) {
-            mRowsAdapter.add(movie);
+        if (movies != null) {
+            for (final Movie movie : movies) {
+                mRowsAdapter.add(movie);
+            }
+        } else {
+            final Fragment fragment = ErrorFragment.newInstance();
+            fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE);
+
+            getActivity().getFragmentManager().beginTransaction()
+                    .add(android.R.id.content, fragment)
+                    .addToBackStack(ErrorFragment.TAG)
+                    .commit();
         }
 
         getProgressBarManager().hide();
@@ -115,8 +133,21 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     }
 
     @Override
-    public void onPosterImageLoaded(final Drawable drawable) {
+    public void onBackdropImageLoaded(final Drawable drawable) {
         mBackgroundManager.setDrawable(drawable);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case ERROR_FRAGMENT_REQUEST_CODE:
+                getActivity().getFragmentManager().popBackStackImmediate(ErrorFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                if (resultCode == Activity.RESULT_OK) {
+                    getProgressBarManager().show();
+                    loadData();
+                }
+                break;
+        }
     }
 
     private void setupUI() {
@@ -147,7 +178,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
                 @Override
                 public void run() {
                     mHandler.post(() -> {
-                        mPresenter.loadPosterImage(movie);
+                        mPresenter.loadBackdropImage(movie);
                         mBackgroundTimer.cancel();
                     });
                 }
@@ -159,17 +190,13 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            /*if (item instanceof Movie) {
-                Movie movie = (Movie) item;
-                Log.d(TAG, "Item: " + item.toString());
-                Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                intent.putExtra(MovieDetailsFragment.MOVIE, movie);
+            Movie movie = (Movie) item;
+            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+            intent.putExtra(MovieDetailsFragment.MOVIE, movie);
 
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
-            }*/
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                    ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+            getActivity().startActivity(intent, bundle);
         }
     }
 }

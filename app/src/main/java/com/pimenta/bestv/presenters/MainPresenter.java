@@ -41,6 +41,7 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     TmdbConnector mTmdbConnector;
 
     public MainPresenter() {
+        super();
         BesTV.getApplicationComponent().inject(this);
     }
 

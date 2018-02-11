@@ -17,6 +17,7 @@ package com.pimenta.bestv.dagger;
 import android.app.Application;
 
 import com.pimenta.bestv.presenters.MainPresenter;
+import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
 
 import javax.inject.Singleton;
@@ -35,5 +36,7 @@ public interface ApplicationComponent {
     void inject(MainPresenter presenter);
 
     void inject(MovieGridPresenter presenter);
+
+    void inject(MovieDetailsPresenter presenter);
 
 }

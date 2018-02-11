@@ -15,8 +15,8 @@
 package com.pimenta.bestv.presenters;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-public class PlaybackVideoPresenter extends AbstractPresenter<BasePresenter.Callback>{
+public class ErrorPresenter extends AbstractPresenter<BasePresenter.Callback> {
 
 }

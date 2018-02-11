@@ -19,8 +19,8 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.R;
 
-/*
- * Details activity class that loads LeanbackDetailsFragment class
+/**
+ * Created by marcus on 11-02-2018.
  */
 public class MovieDetailsActivity extends Activity {
 

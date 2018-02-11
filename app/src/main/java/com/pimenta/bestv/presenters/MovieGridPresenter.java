@@ -50,6 +50,7 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     TmdbConnector mTmdbConnector;
 
     public MovieGridPresenter() {
+        super();
         BesTV.getApplicationComponent().inject(this);
     }
 
@@ -115,16 +116,16 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      *
      * @param movie {@link Movie}
      */
-    public void loadPosterImage(@NonNull Movie movie) {
+    public void loadBackdropImage(@NonNull Movie movie) {
         Glide.with(BesTV.get())
             .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .centerCrop()
-            .error(R.drawable.default_background)
+            .error(R.drawable.lb_ic_sad_cloud)
             .into(new SimpleTarget<GlideDrawable>(mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels) {
                 @Override
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                     if (mCallback != null) {
-                        mCallback.onPosterImageLoaded(resource);
+                        mCallback.onBackdropImageLoaded(resource);
                     }
                 }
             });

@@ -19,8 +19,8 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.fragments.MainFragment;
 
-/*
- * MainActivity class that loads {@link MainFragment}.
+/**
+ * Created by marcus on 11-02-2018.
  */
 public class MainActivity extends Activity {
 

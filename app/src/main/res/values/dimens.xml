@@ -3,8 +3,4 @@
     <!-- MovieCardPresenter -->
     <dimen name="movie_card_width">180dp</dimen>
     <dimen name="movie_card_height">255dp</dimen>
-
-    <!-- MovieDetailsFragment -->
-    <dimen name="movie_details_fragment_thumbnail_width">274dp</dimen>
-    <dimen name="movie_details_fragment_thumbnail_height">274dp</dimen>
 </resources>

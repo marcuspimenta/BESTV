@@ -21,7 +21,7 @@ import com.pimenta.bestv.models.Genre;
 /**
  * Created by marcus on 11-02-2018.
  */
-public class GenreMovieGridFragment extends AbstractMovieGridFragment{
+public class GenreMovieGridFragment extends AbstractMovieGridFragment {
 
     private static final String GENRE = "GENRE";
 

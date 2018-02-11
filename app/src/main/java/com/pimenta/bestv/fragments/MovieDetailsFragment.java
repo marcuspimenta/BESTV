@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.fragments;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
@@ -28,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.activities.PlaybackActivity;
 import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieDetailsCallback;
@@ -72,7 +70,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     }
 
     @Override
-    public void onBackgroundImageLoaded(final Bitmap bitmap) {
+    public void onBackdropImageLoaded(final Bitmap bitmap) {
         mDetailsBackground.setCoverBitmap(bitmap);
         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
     }
@@ -91,7 +89,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mPresenter.loadCardImage(mMovie);
 
         ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
-        actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer_1), getResources().getString(R.string.watch_trailer_2)));
+        actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer_1),
+                getResources().getString(R.string.watch_trailer_2)));
         mDetailsOverviewRow.setActionsAdapter(actionAdapter);
         mAdapter.add(mDetailsOverviewRow);
     }
@@ -99,7 +98,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
         final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
-        detailsPresenter.setBackgroundColor(getResources().getColor(R.color.selected_background, getActivity().getTheme()));
+        //detailsPresenter.setBackgroundColor(getResources().getColor(R.color.selected_background, getActivity().getTheme()));
 
         // Hook up transition element.
         final FullWidthDetailsOverviewSharedElementHelper sharedElementHelper = new FullWidthDetailsOverviewSharedElementHelper();
@@ -109,9 +108,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         detailsPresenter.setOnActionClickedListener(action -> {
             switch ((int) action.getId()) {
                 case ACTION_WATCH_TRAILER:
-                    Intent intent = new Intent(getActivity(), PlaybackActivity.class);
+                    /*Intent intent = new Intent(getActivity(), PlaybackActivity.class);
                     intent.putExtra(MOVIE, mMovie);
-                    startActivity(intent);
+                    startActivity(intent);*/
                     break;
             }
         });
@@ -121,6 +120,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private void setupBackgroundImage() {
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
         mDetailsBackground.enableParallax();
-        mPresenter.loadBackgroundImage(mMovie);
+        mPresenter.loadBackdropImage(mMovie);
     }
 }

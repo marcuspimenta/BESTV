@@ -25,6 +25,6 @@ public interface MovieDetailsCallback extends BasePresenter.Callback {
 
     void onCardImageLoaded(GlideDrawable resource);
 
-    void onBackgroundImageLoaded(Bitmap bitmap);
+    void onBackdropImageLoaded(Bitmap bitmap);
 
 }

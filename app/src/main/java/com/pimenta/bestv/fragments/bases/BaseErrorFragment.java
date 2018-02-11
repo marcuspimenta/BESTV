@@ -16,27 +16,27 @@ package com.pimenta.bestv.fragments.bases;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v17.leanback.app.VideoSupportFragment;
+import android.support.v17.leanback.app.ErrorFragment;
 import android.view.View;
 
 import com.pimenta.bestv.presenters.BasePresenter;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-public abstract class BaseVideoSupportFragment<T extends BasePresenter> extends VideoSupportFragment implements BasePresenter.Callback {
+public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorFragment implements BasePresenter.Callback {
 
-    protected final T mBasePresenter = getPresenter();
+    protected final T mPresenter = getPresenter();
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBasePresenter.register(this);
+        mPresenter.register(this);
     }
 
     @Override
     public void onDestroyView() {
-        mBasePresenter.unRegister();
+        mPresenter.unRegister();
         super.onDestroyView();
     }
 

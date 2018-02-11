@@ -19,15 +19,18 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Created by marcus on 06-02-2018.
  */
-public class AbstractPresenter<T extends BasePresenter.Callback> implements BasePresenter<T> {
+public abstract class AbstractPresenter<T extends BasePresenter.Callback> implements BasePresenter<T> {
 
     protected T mCallback;
     protected CompositeDisposable mCompositeDisposable;
 
+    public AbstractPresenter() {
+        mCompositeDisposable = new CompositeDisposable();
+    }
+
     @Override
     public void register(T callback) {
         mCallback = callback;
-        mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override

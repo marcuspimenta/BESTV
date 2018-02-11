@@ -27,6 +27,6 @@ public interface MovieGridCallback extends BasePresenter.Callback {
 
     void onMoviesLoaded(List<Movie> movies);
 
-    void onPosterImageLoaded(Drawable drawable);
+    void onBackdropImageLoaded(Drawable drawable);
 
 }

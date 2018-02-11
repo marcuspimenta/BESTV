@@ -13,33 +13,43 @@
  */
 package com.pimenta.bestv.fragments;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.fragments.bases.BaseErrorFragment;
+import com.pimenta.bestv.presenters.ErrorPresenter;
 
-/*
- * This class demonstrates how to extend ErrorFragment
+/**
+ * Created by marcus on 11-02-2018.
  */
-public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragment {
+public class ErrorFragment extends BaseErrorFragment<ErrorPresenter> {
 
-    private static final String TAG = "ErrorFragment";
-    private static final boolean TRANSLUCENT = true;
+    public static final String TAG = "ErrorFragment";
+
+    public static ErrorFragment newInstance() {
+        return new ErrorFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "register");
         super.onCreate(savedInstanceState);
-        setTitle(getResources().getString(R.string.app_name));
+        setImageDrawable(getResources().getDrawable(R.drawable.lb_ic_sad_cloud, getActivity().getTheme()));
+        setMessage(getResources().getString(R.string.error_fragment_message));
+        setDefaultBackground(true);
+
+        setButtonText(getResources().getString(R.string.error_fragment_button));
+        setButtonClickListener(arg -> {
+            final Fragment fragment = getTargetFragment();
+            if (fragment != null) {
+                fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+            }
+        });
     }
 
-    void setErrorContent() {
-        setImageDrawable(getResources().getDrawable(R.drawable.lb_ic_sad_cloud));
-        setMessage(getResources().getString(R.string.error_fragment_message));
-        setDefaultBackground(TRANSLUCENT);
-
-        setButtonText(getResources().getString(R.string.dismiss_error));
-        setButtonClickListener(arg -> getFragmentManager().beginTransaction().remove(ErrorFragment.this).commit());
+    @Override
+    protected ErrorPresenter getPresenter() {
+        return new ErrorPresenter();
     }
 }
