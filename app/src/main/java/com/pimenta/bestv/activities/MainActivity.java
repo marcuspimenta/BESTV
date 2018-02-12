@@ -27,6 +27,6 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new MainFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, MainFragment.newInstance()).commit();
     }
 }

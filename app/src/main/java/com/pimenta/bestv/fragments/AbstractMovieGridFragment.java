@@ -17,7 +17,6 @@ package com.pimenta.bestv.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -53,7 +52,8 @@ import java.util.TimerTask;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback, BrowseFragment.MainFragmentAdapterProvider {
+public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback,
+        BrowseFragment.MainFragmentAdapterProvider {
 
     private static final String TAG = "AbstractMovieGridFragment";
     private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
@@ -62,12 +62,11 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private static final int NUMBER_COLUMNS = 4;
 
     private final Handler mHandler = new Handler();
-    private ArrayObjectAdapter mRowsAdapter;
-    private final VerticalGridPresenter mVerticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
     private final BrowseFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseFragment.MainFragmentAdapter<>(this);
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
+    private ArrayObjectAdapter mRowsAdapter;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -153,8 +152,9 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private void setupUI() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
 
-        mVerticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
-        setGridPresenter(mVerticalGridPresenter);
+        VerticalGridPresenter verticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
+        verticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
+        setGridPresenter(verticalGridPresenter);
 
         mRowsAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
         setAdapter(mRowsAdapter);

@@ -130,5 +130,4 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 }
             });
     }
-
 }

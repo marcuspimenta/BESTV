@@ -46,12 +46,14 @@ import java.util.List;
 public class MainFragment extends BaseBrowseFragment<MainPresenter> implements MainCallback {
 
     private static final String TAG = "MainFragment";
-    private static final int NOW_PLAYING_ID = 1;
-    private static final int POPULAR_ID = 2;
-    private static final int TOP_RATED_ID = 3;
-    private static final int UP_COMING_ID = 4;
+    private static final int TOP_MOVIES_LIST_ID = 1;
+    private static final int GENRE_ID = 2;
 
     private ArrayObjectAdapter mRowsAdapter;
+
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -113,17 +115,17 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
 
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(NOW_PLAYING_ID, TmdbConnectorImpl.MovieListType.NOW_PLAYING)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(POPULAR_ID, TmdbConnectorImpl.MovieListType.POPULAR)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_RATED_ID, TmdbConnectorImpl.MovieListType.TOP_RATED)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(UP_COMING_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.NOW_PLAYING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.POPULAR)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.TOP_RATED)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
 
         if (genres != null && genres.size() > 0) {
             mRowsAdapter.add(new DividerRow());
             mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
 
             for (final Genre genre : genres) {
-                mRowsAdapter.add(new PageRow(new GenreHeaderItem(genre)));
+                mRowsAdapter.add(new PageRow(new GenreHeaderItem(GENRE_ID, genre)));
             }
         }
     }
@@ -135,18 +137,17 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
             final Row row = (Row) rowObj;
 
             switch ((int) row.getHeaderItem().getId()) {
-                case NOW_PLAYING_ID:
-                case POPULAR_ID:
-                case TOP_RATED_ID:
-                case UP_COMING_ID:
+                case TOP_MOVIES_LIST_ID:
                     final MovieListTypeHeaderItem movieListTypeHeaderItem = (MovieListTypeHeaderItem) row.getHeaderItem();
                     MainFragment.this.setTitle(row.getHeaderItem().getName());
                     return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType());
-                default:
+                case GENRE_ID:
                     final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
                     MainFragment.this.setTitle(genreHeaderItem.getGenre().getName());
                     return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre());
             }
+
+            throw new IllegalArgumentException(String.format("Invalid row %s", rowObj));
         }
     }
 }
