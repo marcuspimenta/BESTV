@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.presenters;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
@@ -79,7 +80,7 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                         break;
                 }
 
-                if (movieList.getPage() <= movieList.getTotalPages()) {
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                     mCurrentPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
                 } else {
@@ -109,7 +110,7 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 int pageSearch = mCurrentPage + 1;
                 final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
 
-                if (movieList.getPage() <= movieList.getTotalPages()) {
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                     mCurrentPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
                 } else {
@@ -144,6 +145,13 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                     if (mCallback != null) {
                         mCallback.onBackdropImageLoaded(resource);
+                    }
+                }
+
+                @Override
+                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                    if (mCallback != null) {
+                        mCallback.onBackdropImageLoaded(null);
                     }
                 }
             });

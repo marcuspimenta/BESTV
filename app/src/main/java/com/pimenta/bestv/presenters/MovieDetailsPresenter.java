@@ -15,6 +15,7 @@
 package com.pimenta.bestv.presenters;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -46,6 +47,13 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                         mCallback.onCardImageLoaded(resource);
                     }
                 }
+
+                @Override
+                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                    if (mCallback != null) {
+                        mCallback.onCardImageLoaded(null);
+                    }
+                }
             });
     }
 
@@ -60,6 +68,13 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                     if (mCallback != null) {
                         mCallback.onBackdropImageLoaded(bitmap);
+                    }
+                }
+
+                @Override
+                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                    if (mCallback != null) {
+                        mCallback.onBackdropImageLoaded(null);
                     }
                 }
             });

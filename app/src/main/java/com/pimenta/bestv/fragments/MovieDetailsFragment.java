@@ -15,6 +15,7 @@
 package com.pimenta.bestv.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
@@ -25,7 +26,6 @@ import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v4.content.ContextCompat;
 
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
 import com.pimenta.bestv.models.Movie;
@@ -63,14 +63,14 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         setupDetailsOverviewRow();
         setupDetailsOverviewRowPresenter();
-        setupBackgroundImage();
         setAdapter(mAdapter);
     }
 
     @Override
-    public void onCardImageLoaded(final GlideDrawable resource) {
+    public void onCardImageLoaded(final Drawable resource) {
         mDetailsOverviewRow.setImageDrawable(resource);
         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
+        setupBackgroundImage();
     }
 
     @Override

@@ -15,15 +15,14 @@
 package com.pimenta.bestv.presenters;
 
 import android.graphics.Bitmap;
-
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by marcus on 07-02-2018.
  */
 public interface MovieDetailsCallback extends BasePresenter.Callback {
 
-    void onCardImageLoaded(GlideDrawable resource);
+    void onCardImageLoaded(Drawable resource);
 
     void onBackdropImageLoaded(Bitmap bitmap);
 

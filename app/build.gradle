@@ -30,11 +30,11 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.8.0'
 
     // RxJava 2
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger-android:2.13'
+    implementation 'com.google.dagger:dagger-android:2.14.1'
     annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 
     // Retrofit
