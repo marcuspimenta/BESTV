@@ -82,7 +82,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
             final String region = mDeviceManager.getCountryCode();
             return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "").execute().body().getMovies();
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movies by genre", e);
+            Log.e(TAG, "Failed to get the now playing movies", e);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
         try {
             return mTmdb.getMovieApi().getPopularMovies(mApiKey, mLanguage).execute().body().getMovies();
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movies by genre", e);
+            Log.e(TAG, "Failed to get the popular movies", e);
             return null;
         }
     }
@@ -102,7 +102,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
         try {
             return mTmdb.getMovieApi().getTopRatedMovies(mApiKey, mLanguage).execute().body().getMovies();
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movies by genre", e);
+            Log.e(TAG, "Failed to get the rated movies", e);
             return null;
         }
     }
@@ -112,7 +112,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
         try {
             return mTmdb.getMovieApi().getUpComingMovies(mApiKey, mLanguage).execute().body().getMovies();
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movies by genre", e);
+            Log.e(TAG, "Failed to get the up coming movies", e);
             return null;
         }
     }
