@@ -16,6 +16,7 @@ package com.pimenta.bestv.connectors;
 
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.MovieList;
 
 import java.util.List;
 
@@ -35,36 +36,46 @@ public interface TmdbConnector {
      * Gets the {@link List<Movie>} by the {@link Genre}
      *
      * @param genre {@link Genre} to search the {@link List<Movie>}
-     * @return {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     * @return      {@link MovieList}
      */
-    List<Movie> getMoviesByGenre(Genre genre);
+    MovieList getMoviesByGenre(Genre genre, int page);
 
     /**
-     * Gets the now playing {@link List<Movie>}
+     * Gets the now playing {@link MovieList}
      *
-     * @return {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     * @return      {@link MovieList}
      */
-    List<Movie> getNowPlayingMovies();
+    MovieList getNowPlayingMovies(int page);
 
     /**
-     * Gets the popular {@link List<Movie>}
+     * Gets the popular {@link MovieList}
      *
-     * @return {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     * @return      {@link MovieList}
      */
-    List<Movie> getPopularMovies();
+    MovieList getPopularMovies(int page);
 
     /**
-     * Gets the top rated {@link List<Movie>}
+     * Gets the top rated {@link MovieList}
      *
-     * @return {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     * @return      {@link MovieList}
      */
-    List<Movie> getTopRatedMovies();
+    MovieList getTopRatedMovies(int page);
 
     /**
-     * Gets the up coming {@link List<Movie>}
+     * Gets the up coming {@link MovieList}
      *
-     * @return {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     * @return      {@link MovieList}
      */
-    List<Movie> getUpComingMovies();
+    MovieList getUpComingMovies(int page);
 
 }

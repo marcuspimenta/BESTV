@@ -27,6 +27,7 @@ import com.pimenta.bestv.connectors.TmdbConnector;
 import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.MovieList;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +50,8 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     @Inject
     TmdbConnector mTmdbConnector;
 
+    private int mCurrentPage = 0;
+
     public MovieGridPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
@@ -59,32 +62,39 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      */
     public void loadToMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                List<Movie> movies = null;
+                int pageSearch = mCurrentPage + 1;
+                MovieList movieList = null;
                 switch (movieListType) {
                     case NOW_PLAYING:
-                        movies = mTmdbConnector.getNowPlayingMovies();
+                        movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
                         break;
                     case POPULAR:
-                        movies = mTmdbConnector.getPopularMovies();
+                        movieList = mTmdbConnector.getPopularMovies(pageSearch);
                         break;
                     case TOP_RATED:
-                        movies = mTmdbConnector.getTopRatedMovies();
+                        movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
                         break;
                     case UP_COMING:
-                        movies = mTmdbConnector.getUpComingMovies();
+                        movieList = mTmdbConnector.getUpComingMovies(pageSearch);
                         break;
                 }
 
-                if (movies != null) {
-                    Collections.sort(movies, (a, b) -> a.getReleaseDate().getTime() > b.getReleaseDate().getTime() ? -1 : 1);
+                if (movieList.getPage() <= movieList.getTotalPages()) {
+                    mCurrentPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
                 }
-                e.onSuccess(movies);
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(movies -> {
                 if (mCallback != null) {
                     mCallback.onMoviesLoaded(movies);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onMoviesLoaded(null);
                 }
             }));
     }
@@ -96,17 +106,25 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      */
     public void loadMoviesByGenre(Genre genre) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                final List<Movie> movies = mTmdbConnector.getMoviesByGenre(genre);
-                if (movies != null) {
-                    Collections.sort(movies, (a, b) -> a.getReleaseDate().getTime() > b.getReleaseDate().getTime() ? -1 : 1);
+                int pageSearch = mCurrentPage + 1;
+                final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
+
+                if (movieList.getPage() <= movieList.getTotalPages()) {
+                    mCurrentPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
                 }
-                e.onSuccess(movies);
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(movies -> {
                 if (mCallback != null) {
                     mCallback.onMoviesLoaded(movies);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onMoviesLoaded(null);
                 }
             }));
     }

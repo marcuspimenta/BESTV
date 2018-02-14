@@ -32,6 +32,6 @@ public interface GenreApi {
 
     @GET("genre/{genre_id}/movies")
     Call<MovieList> getMovies(@Path("genre_id") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
-            @Query("include_adult") boolean includeAdult, @Query("sort_by") String sortBy);
+            @Query("include_adult") boolean includeAdult, @Query("page") int page);
     
 }

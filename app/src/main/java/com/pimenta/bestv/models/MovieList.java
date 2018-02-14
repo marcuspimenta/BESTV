@@ -23,8 +23,48 @@ import java.util.List;
  */
 public class MovieList {
 
+    @SerializedName("id")
+    private int mId;
+    @SerializedName("page")
+    private int mPage;
+    @SerializedName("total_pages")
+    private int mTotalPages;
+    @SerializedName("total_results")
+    private int mTotalResults;
     @SerializedName("results")
     private List<Movie> mMovies;
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(final int id) {
+        mId = id;
+    }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public void setPage(final int page) {
+        mPage = page;
+    }
+
+    public int getTotalPages() {
+        return mTotalPages;
+    }
+
+    public void setTotalPages(final int totalPages) {
+        mTotalPages = totalPages;
+    }
+
+    public int getTotalResults() {
+        return mTotalResults;
+    }
+
+    public void setTotalResults(final int totalResults) {
+        mTotalResults = totalResults;
+    }
 
     public List<Movie> getMovies() {
         return mMovies;

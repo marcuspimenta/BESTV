@@ -24,7 +24,7 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.tmdb.Tmdb;
 import com.pimenta.bestv.managers.DeviceManager;
 import com.pimenta.bestv.models.Genre;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.MovieList;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +44,6 @@ public class TmdbConnectorImpl implements TmdbConnector {
 
     private String mApiKey;
     private String mLanguage;
-    private String mSortBy;
 
     private Tmdb mTmdb;
 
@@ -52,7 +51,6 @@ public class TmdbConnectorImpl implements TmdbConnector {
     public TmdbConnectorImpl(Gson gson, Executor threadPool) {
         mApiKey = BesTV.get().getString(R.string.tmdb_api_key);
         mLanguage = BesTV.get().getString(R.string.tmdb_filter_language);
-        mSortBy = BesTV.get().getString(R.string.tmdb_filer_sort_by_desc);
         mTmdb = new Tmdb(BesTV.get().getString(R.string.tmdb_base_url_api), gson, threadPool);
     }
 
@@ -67,9 +65,9 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
-    public List<Movie> getMoviesByGenre(final Genre genre) {
+    public MovieList getMoviesByGenre(final Genre genre, int page) {
         try {
-            return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, mSortBy).execute().body().getMovies();
+            return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
             return null;
@@ -77,10 +75,10 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
-    public List<Movie> getNowPlayingMovies() {
+    public MovieList getNowPlayingMovies(int page) {
         try {
             final String region = mDeviceManager.getCountryCode();
-            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "").execute().body().getMovies();
+            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "", page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the now playing movies", e);
             return null;
@@ -88,9 +86,9 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
-    public List<Movie> getPopularMovies() {
+    public MovieList getPopularMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getPopularMovies(mApiKey, mLanguage).execute().body().getMovies();
+            return mTmdb.getMovieApi().getPopularMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the popular movies", e);
             return null;
@@ -98,9 +96,9 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
-    public List<Movie> getTopRatedMovies() {
+    public MovieList getTopRatedMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getTopRatedMovies(mApiKey, mLanguage).execute().body().getMovies();
+            return mTmdb.getMovieApi().getTopRatedMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the rated movies", e);
             return null;
@@ -108,15 +106,18 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
-    public List<Movie> getUpComingMovies() {
+    public MovieList getUpComingMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getUpComingMovies(mApiKey, mLanguage).execute().body().getMovies();
+            return mTmdb.getMovieApi().getUpComingMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the up coming movies", e);
             return null;
         }
     }
 
+    /**
+     * Represents the movie list type
+     */
     public enum MovieListType {
         NOW_PLAYING(R.string.now_playing),
         POPULAR(R.string.popular),

@@ -45,6 +45,7 @@ import com.pimenta.bestv.presenters.MovieGridCallback;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,11 +118,11 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
             for (final Movie movie : movies) {
                 mRowsAdapter.add(movie);
             }
-        } else {
+        } /*else {
             final Fragment fragment = ErrorFragment.newInstance();
             fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE);
             addFragment(fragment, ErrorFragment.TAG);
-        }
+        }*/
 
         getProgressBarManager().hide();
         getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
@@ -179,6 +180,11 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
                     });
                 }
             }, BACKGROUND_UPDATE_DELAY);
+
+            if (mRowsAdapter.indexOf(movie) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
+                getProgressBarManager().show();
+                loadData();
+            }
         }
     }
 
@@ -186,9 +192,9 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            Movie movie = (Movie) item;
+            final Movie movie = (Movie) item;
 
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
             startActivity(MovieDetailsActivity.newInstance(movie), bundle);
         }
