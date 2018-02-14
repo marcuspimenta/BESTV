@@ -69,6 +69,8 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private BackgroundManager mBackgroundManager;
     private ArrayObjectAdapter mRowsAdapter;
 
+    private Movie mMovieSelected;
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +93,14 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
         getProgressBarManager().show();
         loadData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMovieSelected != null) {
+            loadBackdropImage(false);
+        }
     }
 
     @Override
@@ -160,28 +170,32 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         setOnItemViewClickedListener(new ItemViewClickedListener());
     }
 
+    private void loadBackdropImage(boolean delay) {
+        if (mBackgroundTimer != null) {
+            mBackgroundTimer.cancel();
+        }
+        mBackgroundTimer = new Timer();
+        mBackgroundTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.post(() -> {
+                    mPresenter.loadBackdropImage(mMovieSelected);
+                    mBackgroundTimer.cancel();
+                });
+            }
+        }, delay ? BACKGROUND_UPDATE_DELAY : 0);
+    }
+
     abstract void loadData();
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
 
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            final Movie movie = (Movie) item;
-            if (mBackgroundTimer != null) {
-                mBackgroundTimer.cancel();
-            }
-            mBackgroundTimer = new Timer();
-            mBackgroundTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    mHandler.post(() -> {
-                        mPresenter.loadBackdropImage(movie);
-                        mBackgroundTimer.cancel();
-                    });
-                }
-            }, BACKGROUND_UPDATE_DELAY);
+            mMovieSelected = (Movie) item;
+            loadBackdropImage(true);
 
-            if (mRowsAdapter.indexOf(movie) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
+            if (mRowsAdapter.indexOf(mMovieSelected) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
                 getProgressBarManager().show();
                 loadData();
             }
