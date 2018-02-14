@@ -120,11 +120,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         } else {
             final Fragment fragment = ErrorFragment.newInstance();
             fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE);
-
-            getActivity().getFragmentManager().beginTransaction()
-                    .add(android.R.id.content, fragment)
-                    .addToBackStack(ErrorFragment.TAG)
-                    .commit();
+            addFragment(fragment, ErrorFragment.TAG);
         }
 
         getProgressBarManager().hide();
@@ -140,7 +136,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case ERROR_FRAGMENT_REQUEST_CODE:
-                getActivity().getFragmentManager().popBackStackImmediate(ErrorFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                popBackStack(ErrorFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 if (resultCode == Activity.RESULT_OK) {
                     getProgressBarManager().show();
                     loadData();
@@ -191,12 +187,10 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             Movie movie = (Movie) item;
-            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-            intent.putExtra(MovieDetailsFragment.MOVIE, movie);
 
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-            getActivity().startActivity(intent, bundle);
+            startActivity(MovieDetailsActivity.newInstance(movie), bundle);
         }
     }
 }

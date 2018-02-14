@@ -38,7 +38,7 @@ import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
  */
 public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsCallback {
 
-    private static final String TAG = "MovieDetailsFragment";
+    public static final String TAG = "MovieDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String MOVIE = "Movie";
 
@@ -50,6 +50,10 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private DetailsFragmentBackgroundController mDetailsBackground;
 
     private Movie mMovie;
+
+    public static MovieDetailsFragment newInstance() {
+        return new MovieDetailsFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

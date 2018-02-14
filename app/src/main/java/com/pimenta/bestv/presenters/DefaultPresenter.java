@@ -12,26 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.activities;
-
-import android.os.Bundle;
-
-import com.pimenta.bestv.fragments.MainFragment;
-import com.pimenta.bestv.presenters.DefaultPresenter;
+package com.pimenta.bestv.presenters;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 14-02-2018.
  */
-public class MainActivity extends BaseActivity<DefaultPresenter> {
+public class DefaultPresenter extends AbstractPresenter<BasePresenter.Callback> {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        replaceFragment(MainFragment.newInstance());
+    public DefaultPresenter() {
+        super();
     }
 
-    @Override
-    protected DefaultPresenter getPresenter() {
-        return new DefaultPresenter();
-    }
 }

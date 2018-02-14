@@ -4,7 +4,7 @@
     <string name="watch_trailer_2">FREE</string>
 
     <!-- Error messages -->
-    <string name="error_fragment_message">Failed to load the movies. Please if the internet connection is working right.</string>
+    <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>
     <string name="error_fragment_button">Try again</string>
 
     <!-- TMDb API sources -->

@@ -12,34 +12,34 @@
  * the License.
  */
 
-package com.pimenta.bestv.fragments.bases;
+package com.pimenta.bestv.activities;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.v17.leanback.app.DetailsFragment;
-import android.view.View;
 
 import com.pimenta.bestv.presenters.BasePresenter;
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 14-02-2018.
  */
-public abstract class BaseDetailsFragment<T extends BasePresenter> extends DetailsFragment implements BasePresenter.Callback {
+public abstract class BaseActivity<T extends BasePresenter> extends Activity implements BasePresenter.Callback {
 
     protected final T mPresenter = getPresenter();
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(@Nullable final Bundle savedInstanceState, @Nullable final PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
         mPresenter.register(this);
     }
 
     @Override
-    public void onDestroyView() {
+    protected void onDestroy() {
         mPresenter.unRegister();
-        super.onDestroyView();
+        super.onDestroy();
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class BaseDetailsFragment<T extends BasePresenter> extends Detai
      * @param fragment The new fragment to place in the container.
      */
     protected void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment)
@@ -63,7 +63,7 @@ public abstract class BaseDetailsFragment<T extends BasePresenter> extends Detai
      * @param tag      Optional tag name for the fragment.
      */
     protected void addFragment(Fragment fragment, String tag) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .add(android.R.id.content, fragment)
@@ -81,7 +81,7 @@ public abstract class BaseDetailsFragment<T extends BasePresenter> extends Detai
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected void popBackStack(String name, int flags) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.popBackStackImmediate(name, flags);
         }
