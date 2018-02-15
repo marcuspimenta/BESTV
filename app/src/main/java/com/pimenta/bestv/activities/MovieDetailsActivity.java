@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragments.MovieDetailsFragment;
 import com.pimenta.bestv.models.Movie;
@@ -28,8 +28,8 @@ import com.pimenta.bestv.presenters.DefaultPresenter;
  */
 public class MovieDetailsActivity extends BaseActivity<DefaultPresenter> {
 
-    public static Intent newInstance(Movie movie) {
-        Intent intent = new Intent(BesTV.get(), MovieDetailsActivity.class);
+    public static Intent newInstance(Context context, Movie movie) {
+        Intent intent = new Intent(context, MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsFragment.MOVIE, movie);
         return intent;
     }

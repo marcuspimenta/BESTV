@@ -14,10 +14,12 @@
 
 package com.pimenta.bestv.api.tmdb;
 
+import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.MovieList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -25,8 +27,12 @@ import retrofit2.http.Query;
  */
 public interface MovieApi {
 
+    @GET("movie/{movie_id}/credits")
+    Call<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
+
     @GET("movie/now_playing")
-    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region, @Query("page") int page);
+    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region,
+            @Query("page") int page);
 
     @GET("movie/popular")
     Call<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);

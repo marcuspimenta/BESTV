@@ -97,7 +97,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     }
 
     private void setupUIElements() {
-        setTitle(getString(R.string.app_name));
+        //setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 

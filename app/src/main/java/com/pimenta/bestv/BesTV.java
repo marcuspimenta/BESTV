@@ -40,7 +40,7 @@ public class BesTV extends Application {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "[register]");
+        Log.d(TAG, "[onCreate]");
         super.onCreate();
 
         sApplicationComponent = DaggerApplicationComponent

@@ -17,6 +17,7 @@ package com.pimenta.bestv.fragments;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -25,13 +26,17 @@ import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
+import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieDetailsCallback;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
+
+import java.util.List;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -59,11 +64,24 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mMovie = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
+        if (mMovie == null) {
+            mMovie = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
+        }
 
         setupDetailsOverviewRow();
         setupDetailsOverviewRowPresenter();
         setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPresenter.loadCastByMovie(mMovie);
+    }
+
+    @Override
+    public void onCastLoaded(final List<Cast> casts) {
+
     }
 
     @Override
@@ -93,8 +111,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mPresenter.loadCardImage(mMovie);
 
         ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
-        actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer_1),
-                getResources().getString(R.string.watch_trailer_2)));
+        actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer)));
         mDetailsOverviewRow.setActionsAdapter(actionAdapter);
         mAdapter.add(mDetailsOverviewRow);
     }

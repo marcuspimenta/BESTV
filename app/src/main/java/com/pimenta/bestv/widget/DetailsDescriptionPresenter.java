@@ -18,15 +18,20 @@ import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
 import com.pimenta.bestv.models.Movie;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        final Movie movie = (Movie) item;
 
         if (movie != null) {
+            final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
             viewHolder.getTitle().setText(movie.getTitle());
-            //viewHolder.getSubtitle().setText(movie.getStudio());
+            viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
             viewHolder.getBody().setText(movie.getOverview());
         }
     }

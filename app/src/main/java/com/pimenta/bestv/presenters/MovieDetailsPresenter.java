@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.presenters;
 
+import android.app.Application;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
@@ -23,24 +25,78 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.connectors.TmdbConnector;
+import com.pimenta.bestv.models.Cast;
+import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Movie;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by marcus on 07-02-2018.
  */
 public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallback> {
 
+    @Inject
+    Application mApplication;
+
+    @Inject
+    Resources mResources;
+
+    @Inject
+    TmdbConnector mTmdbConnector;
+
     public MovieDetailsPresenter() {
         super();
+        BesTV.getApplicationComponent().inject(this);
     }
 
+    /**
+     * Loads the {@link List<Cast>} by the {@link Movie}
+     *
+     * @param movie {@link Movie}
+     */
+    public void loadCastByMovie(Movie movie) {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Cast>>) e -> {
+                final CastList castList = mTmdbConnector.getCastByMovie(movie);
+                if (castList != null) {
+                    e.onSuccess(castList.getCasts());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(casts -> {
+                if (mCallback != null) {
+                    mCallback.onCastLoaded(casts);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onCastLoaded(null);
+                }
+            }));
+    }
+
+    /**
+     * Loads the {@link Movie} card image using Glide tool
+     *
+     * @param movie {@link Movie}
+     */
     public void loadCardImage(Movie movie) {
-        Glide.with(BesTV.get())
-            .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+        Glide.with(mApplication)
+            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
-            .into(new SimpleTarget<GlideDrawable>(convertDpToPixel(BesTV.get().getResources().getDimension(R.dimen.movie_card_width)),
-                    convertDpToPixel(BesTV.get().getResources().getDimension(R.dimen.movie_card_height))) {
+            .into(new SimpleTarget<GlideDrawable>(convertDpToPixel(mResources.getDimension(R.dimen.movie_card_width)),
+                    convertDpToPixel(mResources.getDimension(R.dimen.movie_card_height))) {
                 @Override
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                     if (mCallback != null) {
@@ -57,9 +113,14 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             });
     }
 
+    /**
+     * Loads the {@link Movie} backdrop image using Glide tool
+     *
+     * @param movie {@link Movie}
+     */
     public void loadBackdropImage(Movie movie) {
-        Glide.with(BesTV.get())
-            .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+        Glide.with(mApplication)
+            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .asBitmap()
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
@@ -81,7 +142,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     }
 
     private int convertDpToPixel(float dp) {
-        float density = BesTV.get().getResources().getDisplayMetrics().density;
+        float density = mResources.getDisplayMetrics().density;
         return Math.round(dp * density);
     }
 

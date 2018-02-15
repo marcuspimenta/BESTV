@@ -15,6 +15,7 @@
 package com.pimenta.bestv.dagger;
 
 import android.app.Application;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
@@ -42,6 +43,12 @@ public class ApplicationModule {
     @Singleton
     public Application provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    public Resources provideResources() {
+        return mApplication.getResources();
     }
 
     @Provides

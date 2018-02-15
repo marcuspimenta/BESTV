@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.widget;
 
+import android.content.res.Resources;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
@@ -26,13 +27,20 @@ import com.pimenta.bestv.models.Movie;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 10-02-2018.
  */
 public class MovieCardPresenter extends Presenter {
 
+    @Inject
+    Resources mResources;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        BesTV.getApplicationComponent().inject(this);
+
         ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -47,10 +55,10 @@ public class MovieCardPresenter extends Presenter {
         ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(movie.getTitle());
         cardView.setContentText(dateFormat.format(movie.getReleaseDate()));
-        cardView.setMainImageDimensions(BesTV.get().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
-                BesTV.get().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
+        cardView.setMainImageDimensions(mResources.getDimensionPixelSize(R.dimen.movie_card_width),
+                mResources.getDimensionPixelSize(R.dimen.movie_card_height));
         Glide.with(viewHolder.view.getContext())
-                .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+                .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
                 .centerCrop()
                 .into(cardView.getMainImageView());
     }

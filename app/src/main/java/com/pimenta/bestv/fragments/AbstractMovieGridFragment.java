@@ -210,7 +210,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
             final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-            startActivity(MovieDetailsActivity.newInstance(movie), bundle);
+            startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
         }
     }
 }

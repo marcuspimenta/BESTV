@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.connectors;
 
+import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
@@ -38,43 +39,57 @@ public interface TmdbConnector {
      * @param genre {@link Genre} to search the {@link List<Movie>}
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
-     * @return      {@link MovieList}
+     *
+     * @return {@link MovieList}
      */
     MovieList getMoviesByGenre(Genre genre, int page);
 
     /**
+     * Gets the {@link CastList} by the {@link Movie}
+     *
+     * @param movie {@link Movie} to search the {@link List<CastList>}
+     *
+     * @return {@link CastList}
+     */
+    CastList getCastByMovie(Movie movie);
+
+    /**
      * Gets the now playing {@link MovieList}
      *
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
-     * @return      {@link MovieList}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link MovieList}
      */
     MovieList getNowPlayingMovies(int page);
 
     /**
      * Gets the popular {@link MovieList}
      *
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
-     * @return      {@link MovieList}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link MovieList}
      */
     MovieList getPopularMovies(int page);
 
     /**
      * Gets the top rated {@link MovieList}
      *
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
-     * @return      {@link MovieList}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link MovieList}
      */
     MovieList getTopRatedMovies(int page);
 
     /**
      * Gets the up coming {@link MovieList}
      *
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
-     * @return      {@link MovieList}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link MovieList}
      */
     MovieList getUpComingMovies(int page);
 

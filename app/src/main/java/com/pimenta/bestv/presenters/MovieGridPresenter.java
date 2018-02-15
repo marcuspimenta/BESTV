@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.presenters;
 
+import android.app.Application;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -30,7 +32,6 @@ import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,6 +45,12 @@ import io.reactivex.schedulers.Schedulers;
  * Created by marcus on 09-02-2018.
  */
 public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
+
+    @Inject
+    Application mApplication;
+
+    @Inject
+    Resources mResources;
 
     @Inject
     DisplayMetrics mDisplayMetrics;
@@ -136,8 +143,8 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(@NonNull Movie movie) {
-        Glide.with(BesTV.get())
-            .load(String.format(BesTV.get().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+        Glide.with(mApplication)
+            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
             .into(new SimpleTarget<GlideDrawable>(mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels) {

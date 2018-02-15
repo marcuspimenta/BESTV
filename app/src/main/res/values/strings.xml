@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">BesTV</string>
-    <string name="watch_trailer_1">Watch trailer</string>
-    <string name="watch_trailer_2">FREE</string>
+    <string name="watch_trailer">Watch trailer</string>
+    <string name="genres">GENRES</string>
+    <string name="now_playing">Now playing</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top rated</string>
+    <string name="up_coming">Up coming</string>
 
     <!-- Error messages -->
     <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>
@@ -18,10 +22,4 @@
 
     <!-- IP API sources -->
     <string name="ip_base_url_api">http://ip-api.com/</string>
-
-    <string name="genres">GENRES</string>
-    <string name="now_playing">Now playing</string>
-    <string name="popular">Popular</string>
-    <string name="top_rated">Top rated</string>
-    <string name="up_coming">Up coming</string>
 </resources>

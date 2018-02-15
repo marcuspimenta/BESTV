@@ -12,24 +12,35 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenters;
+package com.pimenta.bestv.models;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
-import com.pimenta.bestv.models.Cast;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 15-02-2018.
  */
-public interface MovieDetailsCallback extends BasePresenter.Callback {
+public class CastList {
 
-    void onCastLoaded(List<Cast> casts);
+    @SerializedName("id")
+    private int mId;
+    @SerializedName("cast")
+    private List<Cast> mCasts;
 
-    void onCardImageLoaded(Drawable resource);
+    public int getId() {
+        return mId;
+    }
 
-    void onBackdropImageLoaded(Bitmap bitmap);
+    public void setId(final int id) {
+        mId = id;
+    }
 
+    public List<Cast> getCasts() {
+        return mCasts;
+    }
+
+    public void setCasts(final List<Cast> casts) {
+        mCasts = casts;
+    }
 }

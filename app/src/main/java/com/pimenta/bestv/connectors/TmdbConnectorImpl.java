@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.connectors;
 
+import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,7 +24,9 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.tmdb.Tmdb;
 import com.pimenta.bestv.managers.DeviceManager;
+import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Genre;
+import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
 
 import java.io.IOException;
@@ -48,10 +51,10 @@ public class TmdbConnectorImpl implements TmdbConnector {
     private Tmdb mTmdb;
 
     @Inject
-    public TmdbConnectorImpl(Gson gson, Executor threadPool) {
-        mApiKey = BesTV.get().getString(R.string.tmdb_api_key);
-        mLanguage = BesTV.get().getString(R.string.tmdb_filter_language);
-        mTmdb = new Tmdb(BesTV.get().getString(R.string.tmdb_base_url_api), gson, threadPool);
+    public TmdbConnectorImpl(Resources resources, Gson gson, Executor threadPool) {
+        mApiKey = resources.getString(R.string.tmdb_api_key);
+        mLanguage = resources.getString(R.string.tmdb_filter_language);
+        mTmdb = new Tmdb(resources.getString(R.string.tmdb_base_url_api), gson, threadPool);
     }
 
     @Override
@@ -70,6 +73,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
             return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
+            return null;
+        }
+    }
+
+    @Override
+    public CastList getCastByMovie(final Movie movie) {
+        try {
+            return mTmdb.getMovieApi().getCastByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the cast by movie", e);
             return null;
         }
     }
