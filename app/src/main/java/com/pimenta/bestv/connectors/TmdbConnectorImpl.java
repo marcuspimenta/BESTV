@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.connectors;
 
+import android.app.Application;
 import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -51,10 +52,10 @@ public class TmdbConnectorImpl implements TmdbConnector {
     private Tmdb mTmdb;
 
     @Inject
-    public TmdbConnectorImpl(Resources resources, Gson gson, Executor threadPool) {
-        mApiKey = resources.getString(R.string.tmdb_api_key);
-        mLanguage = resources.getString(R.string.tmdb_filter_language);
-        mTmdb = new Tmdb(resources.getString(R.string.tmdb_base_url_api), gson, threadPool);
+    public TmdbConnectorImpl(Application application, Gson gson, Executor threadPool) {
+        mApiKey = application.getString(R.string.tmdb_api_key);
+        mLanguage = application.getString(R.string.tmdb_filter_language);
+        mTmdb = new Tmdb(application.getString(R.string.tmdb_base_url_api), gson, threadPool);
     }
 
     @Override

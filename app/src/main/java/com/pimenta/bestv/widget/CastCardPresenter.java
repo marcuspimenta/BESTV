@@ -20,18 +20,15 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.models.Movie;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.pimenta.bestv.models.Cast;
 
 /**
- * Created by marcus on 10-02-2018.
+ * Created by marcus on 16-02-2018.
  */
-public class MovieCardPresenter extends Presenter {
+public class CastCardPresenter extends Presenter {
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent) {
         ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -39,23 +36,21 @@ public class MovieCardPresenter extends Presenter {
     }
 
     @Override
-    public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        final Movie movie = (Movie) item;
-        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
+    public void onBindViewHolder(final ViewHolder viewHolder, final Object item) {
+        final Cast cast = (Cast) item;
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
-        cardView.setTitleText(movie.getTitle());
-        cardView.setContentText(dateFormat.format(movie.getReleaseDate()));
-        cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
-                viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
+
+        cardView.setTitleText(cast.getName());
+        cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_width),
+                viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
         Glide.with(viewHolder.view.getContext())
-                .load(String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+                .load(String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()))
                 .centerCrop()
                 .into(cardView.getMainImageView());
     }
 
     @Override
-    public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
+    public void onUnbindViewHolder(final ViewHolder viewHolder) {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);

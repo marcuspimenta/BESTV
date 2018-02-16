@@ -14,11 +14,10 @@
 
 package com.pimenta.bestv.managers;
 
-import android.content.res.Resources;
+import android.app.Application;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.ip.Ip;
 import com.pimenta.bestv.models.IpInfo;
@@ -39,8 +38,8 @@ public class DeviceManagerImpl implements DeviceManager {
     private IpInfo mIpInfo;
 
     @Inject
-    public DeviceManagerImpl(Resources resources, Gson gson, Executor threadPool) {
-        mIp = new Ip(resources.getString(R.string.ip_base_url_api), gson, threadPool);
+    public DeviceManagerImpl(Application application, Gson gson, Executor threadPool) {
+        mIp = new Ip(application.getString(R.string.ip_base_url_api), gson, threadPool);
     }
 
     @Override

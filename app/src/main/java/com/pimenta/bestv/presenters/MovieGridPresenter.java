@@ -15,7 +15,6 @@
 package com.pimenta.bestv.presenters;
 
 import android.app.Application;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -48,9 +47,6 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
 
     @Inject
     Application mApplication;
-
-    @Inject
-    Resources mResources;
 
     @Inject
     DisplayMetrics mDisplayMetrics;
@@ -144,7 +140,7 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      */
     public void loadBackdropImage(@NonNull Movie movie) {
         Glide.with(mApplication)
-            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+            .load(String.format(mApplication.getResources().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
             .into(new SimpleTarget<GlideDrawable>(mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels) {

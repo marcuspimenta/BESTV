@@ -19,6 +19,7 @@
     <string name="tmdb_base_url_api">https://api.themoviedb.org/3/</string>
     <string name="tmdb_load_image_url_api_w780">https://image.tmdb.org/t/p/w780%s</string>
     <string name="tmdb_load_image_url_api_w1280">https://image.tmdb.org/t/p/w1280%s</string>
+    <string name="tmdb_load_image_url_api_h632">https://image.tmdb.org/t/p/h632%s</string>
 
     <!-- IP API sources -->
     <string name="ip_base_url_api">http://ip-api.com/</string>

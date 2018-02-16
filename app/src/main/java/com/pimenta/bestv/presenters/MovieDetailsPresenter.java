@@ -48,9 +48,6 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     Application mApplication;
 
     @Inject
-    Resources mResources;
-
-    @Inject
     TmdbConnector mTmdbConnector;
 
     public MovieDetailsPresenter() {
@@ -92,11 +89,11 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadCardImage(Movie movie) {
         Glide.with(mApplication)
-            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
-            .into(new SimpleTarget<GlideDrawable>(convertDpToPixel(mResources.getDimension(R.dimen.movie_card_width)),
-                    convertDpToPixel(mResources.getDimension(R.dimen.movie_card_height))) {
+            .into(new SimpleTarget<GlideDrawable>(convertDpToPixel(mApplication.getResources().getDimension(R.dimen.movie_card_width)),
+                    convertDpToPixel(mApplication.getResources().getDimension(R.dimen.movie_card_height))) {
                 @Override
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                     if (mCallback != null) {
@@ -120,7 +117,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadBackdropImage(Movie movie) {
         Glide.with(mApplication)
-            .load(String.format(mResources.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .asBitmap()
             .centerCrop()
             .error(R.drawable.lb_ic_sad_cloud)
@@ -142,7 +139,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     }
 
     private int convertDpToPixel(float dp) {
-        float density = mResources.getDisplayMetrics().density;
+        float density = mApplication.getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
 

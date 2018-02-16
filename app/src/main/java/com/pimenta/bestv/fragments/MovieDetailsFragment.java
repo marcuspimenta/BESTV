@@ -25,6 +25,9 @@ import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
+import android.support.v17.leanback.widget.HeaderItem;
+import android.support.v17.leanback.widget.ListRow;
+import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
@@ -34,6 +37,7 @@ import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MovieDetailsCallback;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
+import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
 
 import java.util.List;
@@ -81,7 +85,10 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     @Override
     public void onCastLoaded(final List<Cast> casts) {
-
+        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
+        listRowAdapter.addAll(0, casts);
+        final HeaderItem header = new HeaderItem(0, "Casts");
+        mAdapter.add(new ListRow(header, listRowAdapter));
     }
 
     @Override
@@ -104,6 +111,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     private void setupDetailsOverviewRow() {
         mPresenterSelector = new ClassPresenterSelector();
+        mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
         mAdapter = new ArrayObjectAdapter(mPresenterSelector);
 
         mDetailsOverviewRow = new DetailsOverviewRow(mMovie);

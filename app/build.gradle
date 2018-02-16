@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android:2.14.1'
     annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 
-    // Retrofit
+    // Retrofit 2
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 

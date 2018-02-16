@@ -47,12 +47,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public Resources provideResources() {
-        return mApplication.getResources();
-    }
-
-    @Provides
-    @Singleton
     public DisplayMetrics provideDisplayMetrics() {
         return new DisplayMetrics();
     }
