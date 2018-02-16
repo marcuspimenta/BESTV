@@ -6,7 +6,8 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 <ul>
 <li>The Movie Database (TMDb)</li>
 <li>Dagger 2
-<li>Retrofit
+<li>Retrofit 2
+<li>RxJava 2  
 <li>Glide
 </ul>
 
