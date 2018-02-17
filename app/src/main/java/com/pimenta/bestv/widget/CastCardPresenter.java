@@ -45,6 +45,7 @@ public class CastCardPresenter extends Presenter {
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
         Glide.with(viewHolder.view.getContext())
                 .load(String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()))
+                .error(R.drawable.lb_ic_sad_cloud)
                 .centerCrop()
                 .into(cardView.getMainImageView());
     }

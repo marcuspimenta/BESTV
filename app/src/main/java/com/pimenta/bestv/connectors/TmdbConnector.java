@@ -54,6 +54,17 @@ public interface TmdbConnector {
     CastList getCastByMovie(Movie movie);
 
     /**
+     * Gets the {@link MovieList} recommended by {@link Movie}
+     *
+     * @param movie {@link Movie} to search the {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link MovieList}
+     */
+    MovieList getRecommendationByMovie(Movie movie, int page);
+
+    /**
      * Gets the now playing {@link MovieList}
      *
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,

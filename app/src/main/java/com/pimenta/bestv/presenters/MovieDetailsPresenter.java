@@ -29,6 +29,7 @@ import com.pimenta.bestv.connectors.TmdbConnector;
 import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.MovieList;
 
 import java.util.List;
 
@@ -49,6 +50,8 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
 
     @Inject
     TmdbConnector mTmdbConnector;
+
+    private int mCurrentPage = 0;
 
     public MovieDetailsPresenter() {
         super();
@@ -78,6 +81,36 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             }, throwable -> {
                 if (mCallback != null) {
                     mCallback.onCastLoaded(null);
+                }
+            }));
+    }
+
+    /**
+     * Loads the {@link List<Cast>} by the {@link Movie}
+     *
+     * @param movie {@link Movie}
+     */
+    public void loadRecommendationByMovie(Movie movie) {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+                int pageSearch = mCurrentPage + 1;
+                MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
+
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                    mCurrentPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(movies -> {
+                if (mCallback != null) {
+                    mCallback.onRecommendationLoaded(movies);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onRecommendationLoaded(null);
                 }
             }));
     }

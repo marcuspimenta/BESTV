@@ -39,6 +39,7 @@ import com.pimenta.bestv.presenters.MovieDetailsCallback;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
+import com.pimenta.bestv.widget.MovieCardPresenter;
 
 import java.util.List;
 
@@ -88,6 +89,16 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
         listRowAdapter.addAll(0, casts);
         final HeaderItem header = new HeaderItem(0, "Casts");
+        mAdapter.add(new ListRow(header, listRowAdapter));
+
+        mPresenter.loadRecommendationByMovie(mMovie);
+    }
+
+    @Override
+    public void onRecommendationLoaded(final List<Movie> movies) {
+        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+        listRowAdapter.addAll(0, movies);
+        final HeaderItem header = new HeaderItem(0, "Recommendations");
         mAdapter.add(new ListRow(header, listRowAdapter));
     }
 

@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.pimenta.bestv.models.Cast;
+import com.pimenta.bestv.models.Movie;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ import java.util.List;
 public interface MovieDetailsCallback extends BasePresenter.Callback {
 
     void onCastLoaded(List<Cast> casts);
+
+    void onRecommendationLoaded(List<Movie> movies);
 
     void onCardImageLoaded(Drawable resource);
 

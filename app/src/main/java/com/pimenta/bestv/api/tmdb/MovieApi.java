@@ -30,6 +30,10 @@ public interface MovieApi {
     @GET("movie/{movie_id}/credits")
     Call<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
+    @GET("movie/{movie_id}/recommendations")
+    Call<MovieList> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("page") int page);
+
     @GET("movie/now_playing")
     Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region,
             @Query("page") int page);
