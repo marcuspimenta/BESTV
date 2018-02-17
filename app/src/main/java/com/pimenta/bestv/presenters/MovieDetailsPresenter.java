@@ -52,7 +52,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     @Inject
     TmdbConnector mTmdbConnector;
 
-    private int mCurrentPage = 0;
+    private int mRecommendedPage = 0;
     private int mSimilarPage = 0;
 
     public MovieDetailsPresenter() {
@@ -76,11 +76,11 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 }
             }),
             Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mCurrentPage + 1;
+                int pageSearch = mRecommendedPage + 1;
                 final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
 
                 if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mCurrentPage = movieList.getPage();
+                    mRecommendedPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
                 } else {
                     e.onError(new AssertionError());
@@ -118,11 +118,11 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadRecommendationByMovie(Movie movie) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mCurrentPage + 1;
+                int pageSearch = mRecommendedPage + 1;
                 final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
 
                 if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mCurrentPage = movieList.getPage();
+                    mRecommendedPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
                 } else {
                     e.onError(new AssertionError());

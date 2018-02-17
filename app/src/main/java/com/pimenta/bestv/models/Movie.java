@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.models;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -124,5 +126,19 @@ public class Movie implements Serializable {
 
     public void setPosterPath(final String posterPath) {
         mPosterPath = posterPath;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Movie that = (Movie) obj;
+
+        return mId == that.getId();
     }
 }

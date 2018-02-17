@@ -28,6 +28,10 @@ import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElement
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.OnItemViewSelectedListener;
+import android.support.v17.leanback.widget.Presenter;
+import android.support.v17.leanback.widget.Row;
+import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
@@ -53,6 +57,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     public static final String MOVIE = "Movie";
 
     private static final int ACTION_WATCH_TRAILER = 1;
+    private static final int RECOMMENDED_HEADER_ID = 1;
+    private static final int SIMILAR_HEADER_ID = 2;
 
     private ArrayObjectAdapter mAdapter;
     private ArrayObjectAdapter mRecommendedRowAdapter;
@@ -88,30 +94,44 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     @Override
     public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
-        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
-        listRowAdapter.addAll(0, casts);
-        final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
-        mAdapter.add(new ListRow(header, listRowAdapter));
+        if (casts != null) {
+            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
+            listRowAdapter.addAll(0, casts);
+            final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
+            mAdapter.add(new ListRow(header, listRowAdapter));
+        }
 
-        mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
-        mRecommendedRowAdapter.addAll(0, recommendedMovies);
-        final HeaderItem recommendedHeader = new HeaderItem(0, getString(R.string.recommended_movies));
-        mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
+        if (recommendedMovies != null) {
+            mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+            mRecommendedRowAdapter.addAll(0, recommendedMovies);
+            final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
+            mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
+        }
 
-        mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
-        mSimilarRowAdapter.addAll(0, similarMovies);
-        final HeaderItem similarHeader = new HeaderItem(0, getString(R.string.similar_movies));
-        mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
+        if (similarMovies != null) {
+            mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+            mSimilarRowAdapter.addAll(0, similarMovies);
+            final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
+            mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
+        }
     }
 
     @Override
     public void onRecommendationLoaded(final List<Movie> movies) {
-        mRecommendedRowAdapter.addAll(mRecommendedRowAdapter.size() - 1, movies);
+        for (final Movie movie : movies) {
+            if (mRecommendedRowAdapter.indexOf(movie) == -1) {
+                mRecommendedRowAdapter.add(movie);
+            }
+        }
     }
 
     @Override
     public void onSimilarLoaded(final List<Movie> movies) {
-        mSimilarRowAdapter.addAll(mSimilarRowAdapter.size() - 1, movies);
+        for (final Movie movie : movies) {
+            if (mSimilarRowAdapter.indexOf(movie) == -1) {
+                mSimilarRowAdapter.add(movie);
+            }
+        }
     }
 
     @Override
@@ -145,6 +165,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer)));
         mDetailsOverviewRow.setActionsAdapter(actionAdapter);
         mAdapter.add(mDetailsOverviewRow);
+
+        setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
     private void setupDetailsOverviewRowPresenter() {
@@ -173,5 +195,27 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
         mDetailsBackground.enableParallax();
         mPresenter.loadBackdropImage(mMovie);
+    }
+
+    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+
+        @Override
+        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+            if (item instanceof Movie && row != null) {
+                final Movie movie = (Movie) item;
+                switch ((int)row.getHeaderItem().getId()) {
+                    case RECOMMENDED_HEADER_ID:
+                        if (mRecommendedRowAdapter.indexOf(movie) >= mRecommendedRowAdapter.size() - 1) {
+                            mPresenter.loadRecommendationByMovie(mMovie);
+                        }
+                        break;
+                    case SIMILAR_HEADER_ID:
+                        if (mSimilarRowAdapter.indexOf(movie) >= mSimilarRowAdapter.size() - 1) {
+                            mPresenter.loadSimilarByMovie(mMovie);
+                        }
+                        break;
+                }
+            }
+        }
     }
 }

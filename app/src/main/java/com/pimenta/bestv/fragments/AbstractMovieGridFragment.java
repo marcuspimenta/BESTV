@@ -126,7 +126,9 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     public void onMoviesLoaded(final List<Movie> movies) {
         if (movies != null) {
             for (final Movie movie : movies) {
-                mRowsAdapter.add(movie);
+                if (mRowsAdapter.indexOf(movie) == -1) {
+                    mRowsAdapter.add(movie);
+                }
             }
         } /*else {
             final Fragment fragment = ErrorFragment.newInstance();
