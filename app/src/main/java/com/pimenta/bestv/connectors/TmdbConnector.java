@@ -54,7 +54,7 @@ public interface TmdbConnector {
     CastList getCastByMovie(Movie movie);
 
     /**
-     * Gets the {@link MovieList} recommended by {@link Movie}
+     * Get a list of recommended movies for a movie.
      *
      * @param movie {@link Movie} to search the {@link List<Movie>}
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
@@ -63,6 +63,19 @@ public interface TmdbConnector {
      * @return {@link MovieList}
      */
     MovieList getRecommendationByMovie(Movie movie, int page);
+
+    /**
+     * Get a list of similar movies. This is not the same as the
+     * "Recommendation" system you see on the website. These items
+     * are assembled by looking at keywords and genres.
+     *
+     * @param movie {@link Movie} to search the {@link List<Movie>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link MovieList}
+     */
+    MovieList getSimilarByMovie(Movie movie, int page);
 
     /**
      * Gets the now playing {@link MovieList}

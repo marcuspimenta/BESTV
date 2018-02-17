@@ -18,6 +18,7 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.util.Pair;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -52,6 +53,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     TmdbConnector mTmdbConnector;
 
     private int mCurrentPage = 0;
+    private int mSimilarPage = 0;
 
     public MovieDetailsPresenter() {
         super();
@@ -63,37 +65,61 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      *
      * @param movie {@link Movie}
      */
-    public void loadCastByMovie(Movie movie) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Cast>>) e -> {
+    public void loadDataByMovie(Movie movie) {
+        mCompositeDisposable.add(Single.zip(
+            Single.create((SingleOnSubscribe<List<Cast>>) e -> {
                 final CastList castList = mTmdbConnector.getCastByMovie(movie);
                 if (castList != null) {
                     e.onSuccess(castList.getCasts());
                 } else {
                     e.onError(new AssertionError());
                 }
-            })
+            }),
+            Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+                int pageSearch = mCurrentPage + 1;
+                final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
+
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                    mCurrentPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            }),
+            Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+                int pageSearch = mSimilarPage + 1;
+                final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
+
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                    mSimilarPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            }),
+            (casts, recommendations, similar) -> new MovieInfo(casts, recommendations, similar))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(casts -> {
+            .subscribe(movieInfo -> {
                 if (mCallback != null) {
-                    mCallback.onCastLoaded(casts);
+                    mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies());
                 }
             }, throwable -> {
                 if (mCallback != null) {
-                    mCallback.onCastLoaded(null);
+                    mCallback.onDataLoaded(null, null, null);
                 }
             }));
     }
 
     /**
-     * Loads the {@link List<Cast>} by the {@link Movie}
+     * Loads the {@link List<Movie>} recommended by the {@link Movie}
      *
      * @param movie {@link Movie}
      */
     public void loadRecommendationByMovie(Movie movie) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
                 int pageSearch = mCurrentPage + 1;
-                MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
+                final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
 
                 if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                     mCurrentPage = movieList.getPage();
@@ -111,6 +137,36 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             }, throwable -> {
                 if (mCallback != null) {
                     mCallback.onRecommendationLoaded(null);
+                }
+            }));
+    }
+
+    /**
+     * Loads the {@link List<Movie>} similar by the {@link Movie}
+     *
+     * @param movie {@link Movie}
+     */
+    public void loadSimilarByMovie(Movie movie) {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+                int pageSearch = mSimilarPage + 1;
+                final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
+
+                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                    mSimilarPage = movieList.getPage();
+                    e.onSuccess(movieList.getMovies());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(movies -> {
+                if (mCallback != null) {
+                    mCallback.onSimilarLoaded(movies);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onSimilarLoaded(null);
                 }
             }));
     }
@@ -174,6 +230,31 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     private int convertDpToPixel(float dp) {
         float density = mApplication.getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    private class MovieInfo {
+
+        private List<Cast> mCasts;
+        private List<Movie> mRecommendedMovies;
+        private List<Movie> mSimilarMovies;
+
+        public MovieInfo(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
+            mCasts = casts;
+            mRecommendedMovies = recommendedMovies;
+            mSimilarMovies = similarMovies;
+        }
+
+        public List<Cast> getCasts() {
+            return mCasts;
+        }
+
+        public List<Movie> getRecommendedMovies() {
+            return mRecommendedMovies;
+        }
+
+        public List<Movie> getSimilarMovies() {
+            return mSimilarMovies;
+        }
     }
 
 }

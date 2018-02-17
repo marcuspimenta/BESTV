@@ -27,9 +27,11 @@ import java.util.List;
  */
 public interface MovieDetailsCallback extends BasePresenter.Callback {
 
-    void onCastLoaded(List<Cast> casts);
+    void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies);
 
     void onRecommendationLoaded(List<Movie> movies);
+
+    void onSimilarLoaded(List<Movie> movies);
 
     void onCardImageLoaded(Drawable resource);
 

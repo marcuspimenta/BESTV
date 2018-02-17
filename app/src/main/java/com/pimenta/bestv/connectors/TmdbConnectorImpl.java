@@ -99,6 +99,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
+    public MovieList getSimilarByMovie(final Movie movie, final int page) {
+        try {
+            return mTmdb.getMovieApi().getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the similar", e);
+            return null;
+        }
+    }
+
+    @Override
     public MovieList getNowPlayingMovies(int page) {
         try {
             final String region = mDeviceManager.getCountryCode();

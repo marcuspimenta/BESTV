@@ -55,6 +55,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private static final int ACTION_WATCH_TRAILER = 1;
 
     private ArrayObjectAdapter mAdapter;
+    private ArrayObjectAdapter mRecommendedRowAdapter;
+    private ArrayObjectAdapter mSimilarRowAdapter;
     private ClassPresenterSelector mPresenterSelector;
     private DetailsOverviewRow mDetailsOverviewRow;
     private DetailsFragmentBackgroundController mDetailsBackground;
@@ -81,25 +83,35 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.loadCastByMovie(mMovie);
+        mPresenter.loadDataByMovie(mMovie);
     }
 
     @Override
-    public void onCastLoaded(final List<Cast> casts) {
+    public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
         final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
         listRowAdapter.addAll(0, casts);
-        final HeaderItem header = new HeaderItem(0, "Casts");
+        final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
         mAdapter.add(new ListRow(header, listRowAdapter));
 
-        mPresenter.loadRecommendationByMovie(mMovie);
+        mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+        mRecommendedRowAdapter.addAll(0, recommendedMovies);
+        final HeaderItem recommendedHeader = new HeaderItem(0, getString(R.string.recommended_movies));
+        mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
+
+        mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+        mSimilarRowAdapter.addAll(0, similarMovies);
+        final HeaderItem similarHeader = new HeaderItem(0, getString(R.string.similar_movies));
+        mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
     }
 
     @Override
     public void onRecommendationLoaded(final List<Movie> movies) {
-        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
-        listRowAdapter.addAll(0, movies);
-        final HeaderItem header = new HeaderItem(0, "Recommendations");
-        mAdapter.add(new ListRow(header, listRowAdapter));
+        mRecommendedRowAdapter.addAll(mRecommendedRowAdapter.size() - 1, movies);
+    }
+
+    @Override
+    public void onSimilarLoaded(final List<Movie> movies) {
+        mSimilarRowAdapter.addAll(mSimilarRowAdapter.size() - 1, movies);
     }
 
     @Override

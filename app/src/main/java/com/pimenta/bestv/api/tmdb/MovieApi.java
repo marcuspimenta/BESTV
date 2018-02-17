@@ -34,6 +34,10 @@ public interface MovieApi {
     Call<MovieList> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
+    @GET("movie/{movie_id}/similar")
+    Call<MovieList> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("page") int page);
+
     @GET("movie/now_playing")
     Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region,
             @Query("page") int page);
