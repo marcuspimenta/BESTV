@@ -45,7 +45,6 @@ import com.pimenta.bestv.presenters.MovieGridCallback;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -130,11 +129,11 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
                     mRowsAdapter.add(movie);
                 }
             }
-        } /*else {
+        } else if (mRowsAdapter.size() == 0) {
             final Fragment fragment = ErrorFragment.newInstance();
             fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE);
             addFragment(fragment, ErrorFragment.TAG);
-        }*/
+        }
 
         getProgressBarManager().hide();
         getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());

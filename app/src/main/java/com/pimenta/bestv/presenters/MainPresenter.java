@@ -58,12 +58,23 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
      * Loads the {@link List<Genre>} available at TMDb
      */
     public void loadGenres() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Genre>>) e -> e.onSuccess(mTmdbConnector.getGenres()))
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Genre>>) e -> {
+                final List<Genre> genres = mTmdbConnector.getGenres();
+                if (genres != null) {
+                    e.onSuccess(genres);
+                } else {
+                    e.onError(new AssertionError());
+                }
+            })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(genres -> {
                 if (mCallback != null) {
                     mCallback.onGenresLoaded(genres);
+                }
+            }, throwable -> {
+                if (mCallback != null) {
+                    mCallback.onGenresLoaded(null);
                 }
             }));
     }
