@@ -111,8 +111,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getNowPlayingMovies(int page) {
         try {
-            final String region = mDeviceManager.getCountryCode();
-            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, !TextUtils.isEmpty(region) ? region : "", page).execute().body();
+            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the now playing movies", e);
             return null;

@@ -41,7 +41,7 @@ public class MovieCardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         final Movie movie = (Movie) item;
-        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(movie.getTitle());

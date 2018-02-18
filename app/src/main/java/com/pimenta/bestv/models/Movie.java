@@ -36,7 +36,6 @@ public class Movie implements Serializable {
     ],
     "popularity":444.4728,
     "video":false,
-    "vote_average":7.0,
     "vote_count":6638*/
 
     @SerializedName("id")
@@ -63,6 +62,9 @@ public class Movie implements Serializable {
     @SerializedName("poster_path")
     @Expose
     private String mPosterPath;
+    @SerializedName("vote_average")
+    @Expose
+    private float mVoteAverage;
 
     public int getId() {
         return mId;
@@ -126,6 +128,14 @@ public class Movie implements Serializable {
 
     public void setPosterPath(final String posterPath) {
         mPosterPath = posterPath;
+    }
+
+    public float getVoteAverage() {
+        return mVoteAverage;
+    }
+
+    public void setVoteAverage(final float voteAverage) {
+        mVoteAverage = voteAverage;
     }
 
     @Override

@@ -26,16 +26,20 @@ import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
+import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.activities.MovieDetailsActivity;
 import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
 import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.Movie;
@@ -94,21 +98,21 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     @Override
     public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
-        if (casts != null) {
+        if (casts != null && casts.size() > 0) {
             final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
             listRowAdapter.addAll(0, casts);
             final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
             mAdapter.add(new ListRow(header, listRowAdapter));
         }
 
-        if (recommendedMovies != null) {
+        if (recommendedMovies != null && recommendedMovies.size() > 0) {
             mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
             mRecommendedRowAdapter.addAll(0, recommendedMovies);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
         }
 
-        if (similarMovies != null) {
+        if (similarMovies != null && similarMovies.size() > 0) {
             mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
             mSimilarRowAdapter.addAll(0, similarMovies);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
@@ -167,6 +171,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mAdapter.add(mDetailsOverviewRow);
 
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
+        setOnItemViewClickedListener(new ItemViewClickedListener());
     }
 
     private void setupDetailsOverviewRowPresenter() {
@@ -215,6 +220,20 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                         }
                         break;
                 }
+            }
+        }
+    }
+
+    private final class ItemViewClickedListener implements OnItemViewClickedListener {
+
+        @Override
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+            if (item instanceof Movie) {
+                final Movie movie = (Movie) item;
+
+                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
             }
         }
     }

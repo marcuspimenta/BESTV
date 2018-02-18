@@ -28,7 +28,7 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
         final Movie movie = (Movie) item;
 
         if (movie != null) {
-            final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
             viewHolder.getTitle().setText(movie.getTitle());
             viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));

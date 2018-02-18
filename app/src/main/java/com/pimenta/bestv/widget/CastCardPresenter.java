@@ -41,6 +41,7 @@ public class CastCardPresenter extends Presenter {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
 
         cardView.setTitleText(cast.getName());
+        cardView.setContentText(cast.getCharacter());
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
         Glide.with(viewHolder.view.getContext())

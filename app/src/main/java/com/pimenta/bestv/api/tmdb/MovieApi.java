@@ -39,8 +39,7 @@ public interface MovieApi {
             @Query("page") int page);
 
     @GET("movie/now_playing")
-    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("region") String region,
-            @Query("page") int page);
+    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/popular")
     Call<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
