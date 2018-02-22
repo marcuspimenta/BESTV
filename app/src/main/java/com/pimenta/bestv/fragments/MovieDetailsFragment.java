@@ -14,8 +14,10 @@
 
 package com.pimenta.bestv.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
@@ -43,6 +45,7 @@ import com.pimenta.bestv.activities.MovieDetailsActivity;
 import com.pimenta.bestv.fragments.bases.BaseDetailsFragment;
 import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.Video;
 import com.pimenta.bestv.presenters.MovieDetailsCallback;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
@@ -72,6 +75,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private DetailsFragmentBackgroundController mDetailsBackground;
 
     private Movie mMovie;
+    private List<Video> mVideos;
 
     public static MovieDetailsFragment newInstance() {
         return new MovieDetailsFragment();
@@ -97,7 +101,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     }
 
     @Override
-    public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
+    public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
         if (casts != null && casts.size() > 0) {
             final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
             listRowAdapter.addAll(0, casts);
@@ -118,6 +122,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
         }
+
+        mVideos = videos;
     }
 
     @Override
@@ -187,9 +193,11 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         detailsPresenter.setOnActionClickedListener(action -> {
             switch ((int) action.getId()) {
                 case ACTION_WATCH_TRAILER:
-                    /*Intent intent = new Intent(getActivity(), PlaybackActivity.class);
-                    intent.putExtra(MOVIE, mMovie);
-                    startActivity(intent);*/
+                    if (mVideos != null && mVideos.size() > 0) {
+                        final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(String.format(getString(R.string.youtube_base_url), mVideos.get(0).getKey())));
+                        startActivity(intent);
+                    }
                     break;
             }
         });
@@ -208,7 +216,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Movie && row != null) {
                 final Movie movie = (Movie) item;
-                switch ((int)row.getHeaderItem().getId()) {
+                switch ((int) row.getHeaderItem().getId()) {
                     case RECOMMENDED_HEADER_ID:
                         if (mRecommendedRowAdapter.indexOf(movie) >= mRecommendedRowAdapter.size() - 1) {
                             mPresenter.loadRecommendationByMovie(mMovie);

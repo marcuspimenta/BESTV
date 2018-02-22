@@ -29,6 +29,7 @@ import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
+import com.pimenta.bestv.models.VideoList;
 
 import java.io.IOException;
 import java.util.List;
@@ -104,6 +105,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
             return mTmdb.getMovieApi().getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the similar", e);
+            return null;
+        }
+    }
+
+    @Override
+    public VideoList getVideosByMovie(final Movie movie) {
+        try {
+            return mTmdb.getMovieApi().getVideosByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the videos", e);
             return null;
         }
     }

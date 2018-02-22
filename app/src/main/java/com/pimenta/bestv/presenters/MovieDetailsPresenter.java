@@ -32,6 +32,8 @@ import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
+import com.pimenta.bestv.models.Video;
+import com.pimenta.bestv.models.VideoList;
 
 import java.util.List;
 
@@ -79,7 +81,6 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             Single.create((SingleOnSubscribe<List<Movie>>) e -> {
                 int pageSearch = mRecommendedPage + 1;
                 final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
-
                 if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                     mRecommendedPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
@@ -90,7 +91,6 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             Single.create((SingleOnSubscribe<List<Movie>>) e -> {
                 int pageSearch = mSimilarPage + 1;
                 final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
-
                 if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                     mSimilarPage = movieList.getPage();
                     e.onSuccess(movieList.getMovies());
@@ -98,16 +98,25 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                     e.onError(new AssertionError());
                 }
             }),
-            (casts, recommendations, similar) -> new MovieInfo(casts, recommendations, similar))
+            Single.create((SingleOnSubscribe<List<Video>>) e -> {
+                final VideoList videoList = mTmdbConnector.getVideosByMovie(movie);
+                if (videoList != null) {
+                    e.onSuccess(videoList.getVideos());
+                } else {
+                    e.onError(new AssertionError());
+                }
+            }),
+            (casts, recommendations, similar, videos) -> new MovieInfo(casts, recommendations, similar, videos))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(movieInfo -> {
                 if (mCallback != null) {
-                    mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies());
+                    mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
+                            movieInfo.getVideos());
                 }
             }, throwable -> {
                 if (mCallback != null) {
-                    mCallback.onDataLoaded(null, null, null);
+                    mCallback.onDataLoaded(null, null, null, null);
                 }
             }));
     }
@@ -230,11 +239,13 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
         private List<Cast> mCasts;
         private List<Movie> mRecommendedMovies;
         private List<Movie> mSimilarMovies;
+        private List<Video> mVideos;
 
-        public MovieInfo(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies) {
+        public MovieInfo(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
             mCasts = casts;
             mRecommendedMovies = recommendedMovies;
             mSimilarMovies = similarMovies;
+            mVideos = videos;
         }
 
         public List<Cast> getCasts() {
@@ -247,6 +258,10 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
 
         public List<Movie> getSimilarMovies() {
             return mSimilarMovies;
+        }
+
+        public List<Video> getVideos() {
+            return mVideos;
         }
     }
 

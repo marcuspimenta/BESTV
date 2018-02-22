@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 
 import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.models.Video;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public interface MovieDetailsCallback extends BasePresenter.Callback {
 
-    void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies);
+    void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies, List<Video> videos);
 
     void onRecommendationLoaded(List<Movie> movies);
 

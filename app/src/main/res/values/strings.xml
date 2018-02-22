@@ -26,4 +26,7 @@
 
     <!-- IP API sources -->
     <string name="ip_base_url_api">http://ip-api.com/</string>
+
+    <!-- YouTube -->
+    <string name="youtube_base_url">https://www.youtube.com/watch?v=%s</string>
 </resources>

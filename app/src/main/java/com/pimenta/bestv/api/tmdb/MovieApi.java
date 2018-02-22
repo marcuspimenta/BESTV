@@ -16,6 +16,7 @@ package com.pimenta.bestv.api.tmdb;
 
 import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.MovieList;
+import com.pimenta.bestv.models.VideoList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -37,6 +38,9 @@ public interface MovieApi {
     @GET("movie/{movie_id}/similar")
     Call<MovieList> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
+
+    @GET("movie/{movie_id}/videos")
+    Call<VideoList> getVideosByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/now_playing")
     Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
