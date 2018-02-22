@@ -19,6 +19,8 @@ import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.models.Cast;
 
@@ -46,8 +48,7 @@ public class CastCardPresenter extends Presenter {
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
         Glide.with(viewHolder.view.getContext())
                 .load(String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()))
-                .error(R.drawable.lb_ic_sad_cloud)
-                .centerCrop()
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(cardView.getMainImageView());
     }
 

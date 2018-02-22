@@ -19,6 +19,8 @@ import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.models.Movie;
 
@@ -50,7 +52,7 @@ public class MovieCardPresenter extends Presenter {
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
         Glide.with(viewHolder.view.getContext())
                 .load(String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
-                .centerCrop()
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(cardView.getMainImageView());
     }
 

@@ -17,12 +17,14 @@ package com.pimenta.bestv.presenters;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connectors.TmdbConnector;
@@ -141,18 +143,17 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     public void loadBackdropImage(@NonNull Movie movie) {
         Glide.with(mApplication)
             .load(String.format(mApplication.getResources().getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
-            .centerCrop()
-            .error(R.drawable.lb_ic_sad_cloud)
-            .into(new SimpleTarget<GlideDrawable>(mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels) {
+            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+            .into(new SimpleTarget<Drawable>() {
                 @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
                     if (mCallback != null) {
                         mCallback.onBackdropImageLoaded(resource);
                     }
                 }
 
                 @Override
-                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                     if (mCallback != null) {
                         mCallback.onBackdropImageLoaded(null);
                     }

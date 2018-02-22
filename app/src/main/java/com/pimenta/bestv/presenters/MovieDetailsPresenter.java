@@ -15,15 +15,16 @@
 package com.pimenta.bestv.presenters;
 
 import android.app.Application;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Pair;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connectors.TmdbConnector;
@@ -179,19 +180,17 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     public void loadCardImage(Movie movie) {
         Glide.with(mApplication)
             .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
-            .centerCrop()
-            .error(R.drawable.lb_ic_sad_cloud)
-            .into(new SimpleTarget<GlideDrawable>(convertDpToPixel(mApplication.getResources().getDimension(R.dimen.movie_card_width)),
-                    convertDpToPixel(mApplication.getResources().getDimension(R.dimen.movie_card_height))) {
+            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+            .into(new SimpleTarget<Drawable>() {
                 @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
                     if (mCallback != null) {
                         mCallback.onCardImageLoaded(resource);
                     }
                 }
 
                 @Override
-                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                     if (mCallback != null) {
                         mCallback.onCardImageLoaded(null);
                     }
@@ -206,30 +205,24 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadBackdropImage(Movie movie) {
         Glide.with(mApplication)
-            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
             .asBitmap()
-            .centerCrop()
-            .error(R.drawable.lb_ic_sad_cloud)
+            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
             .into(new SimpleTarget<Bitmap>() {
                 @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
                     if (mCallback != null) {
-                        mCallback.onBackdropImageLoaded(bitmap);
+                        mCallback.onBackdropImageLoaded(resource);
                     }
                 }
 
                 @Override
-                public void onLoadFailed(final Exception e, final Drawable errorDrawable) {
+                public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                     if (mCallback != null) {
                         mCallback.onBackdropImageLoaded(null);
                     }
                 }
             });
-    }
-
-    private int convertDpToPixel(float dp) {
-        float density = mApplication.getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
     }
 
     private class MovieInfo {
