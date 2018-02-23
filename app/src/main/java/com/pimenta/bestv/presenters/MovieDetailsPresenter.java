@@ -69,44 +69,36 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      * @param movie {@link Movie}
      */
     public void loadDataByMovie(Movie movie) {
-        mCompositeDisposable.add(Single.zip(
-            Single.create((SingleOnSubscribe<List<Cast>>) e -> {
+        mCompositeDisposable.add(
+            Single.create((SingleOnSubscribe<MovieInfo>) e -> {
+                final MovieInfo movieInfo = new MovieInfo();
+
                 final CastList castList = mTmdbConnector.getCastByMovie(movie);
                 if (castList != null) {
-                    e.onSuccess(castList.getCasts());
-                } else {
-                    e.onError(new AssertionError());
+                    movieInfo.setCasts(castList.getCasts());
                 }
-            }),
-            Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mRecommendedPage + 1;
-                final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mRecommendedPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
-                } else {
-                    e.onError(new AssertionError());
+
+                int recommendedPageSearch = mRecommendedPage + 1;
+                final MovieList recommendedMovieList = mTmdbConnector.getRecommendationByMovie(movie, recommendedPageSearch);
+                if (recommendedMovieList != null && recommendedMovieList.getPage() <= recommendedMovieList.getTotalPages()) {
+                    mRecommendedPage = recommendedMovieList.getPage();
+                    movieInfo.setRecommendedMovies(recommendedMovieList.getMovies());
                 }
-            }),
-            Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mSimilarPage + 1;
-                final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mSimilarPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
-                } else {
-                    e.onError(new AssertionError());
+
+                int similarPageSearch = mSimilarPage + 1;
+                final MovieList similarMovieList = mTmdbConnector.getSimilarByMovie(movie, similarPageSearch);
+                if (similarMovieList != null && similarMovieList.getPage() <= similarMovieList.getTotalPages()) {
+                    mSimilarPage = similarMovieList.getPage();
+                    movieInfo.setSimilarMovies(similarMovieList.getMovies());
                 }
-            }),
-            Single.create((SingleOnSubscribe<List<Video>>) e -> {
+
                 final VideoList videoList = mTmdbConnector.getVideosByMovie(movie);
                 if (videoList != null) {
-                    e.onSuccess(videoList.getVideos());
-                } else {
-                    e.onError(new AssertionError());
+                    movieInfo.setVideos(videoList.getVideos());
                 }
-            }),
-            (casts, recommendations, similar, videos) -> new MovieInfo(casts, recommendations, similar, videos))
+
+                e.onSuccess(movieInfo);
+            })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(movieInfo -> {
@@ -234,6 +226,9 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
             });
     }
 
+    /**
+     * Wrapper class to keep the movie info
+     */
     private class MovieInfo {
 
         private List<Cast> mCasts;
@@ -241,27 +236,36 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
         private List<Movie> mSimilarMovies;
         private List<Video> mVideos;
 
-        public MovieInfo(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
-            mCasts = casts;
-            mRecommendedMovies = recommendedMovies;
-            mSimilarMovies = similarMovies;
-            mVideos = videos;
-        }
-
         public List<Cast> getCasts() {
             return mCasts;
+        }
+
+        public void setCasts(final List<Cast> casts) {
+            mCasts = casts;
         }
 
         public List<Movie> getRecommendedMovies() {
             return mRecommendedMovies;
         }
 
+        public void setRecommendedMovies(final List<Movie> recommendedMovies) {
+            mRecommendedMovies = recommendedMovies;
+        }
+
         public List<Movie> getSimilarMovies() {
             return mSimilarMovies;
         }
 
+        public void setSimilarMovies(final List<Movie> similarMovies) {
+            mSimilarMovies = similarMovies;
+        }
+
         public List<Video> getVideos() {
             return mVideos;
+        }
+
+        public void setVideos(final List<Video> videos) {
+            mVideos = videos;
         }
     }
 
