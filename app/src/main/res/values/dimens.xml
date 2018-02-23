@@ -10,5 +10,8 @@
 
     <!-- VideoCardPresenter -->
     <dimen name="video_card_width">260dp</dimen>
-    <dimen name="video_card_height">135dp</dimen>
+    <dimen name="video_card_height">140dp</dimen>
+
+    <dimen name="lb_details_v2_logo_max_width">@dimen/movie_card_width</dimen>
+    <dimen name="lb_details_v2_logo_max_height">@dimen/movie_card_height</dimen>
 </resources>

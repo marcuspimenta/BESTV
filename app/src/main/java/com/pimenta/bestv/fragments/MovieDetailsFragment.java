@@ -40,6 +40,8 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activities.MovieDetailsActivity;
@@ -188,7 +190,21 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
+        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter()) {
+
+            private ImageView mDetailsImageView;
+
+            @Override
+            protected RowPresenter.ViewHolder createRowViewHolder(final ViewGroup parent) {
+                RowPresenter.ViewHolder viewHolder = super.createRowViewHolder(parent);
+                mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image);
+                ViewGroup.LayoutParams lp = mDetailsImageView.getLayoutParams();
+                lp.width = getResources().getDimensionPixelSize(R.dimen.movie_card_width);
+                lp.height =getResources().getDimensionPixelSize(R.dimen.movie_card_height);
+                mDetailsImageView.setLayoutParams(lp);
+                return viewHolder;
+            }
+        };
         //detailsPresenter.setBackgroundColor(getResources().getColor(R.color.selected_background, getActivity().getTheme()));
 
         // Hook up transition element.
