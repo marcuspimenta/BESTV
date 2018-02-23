@@ -73,19 +73,20 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getProgressBarManager().show();
+        //getProgressBarManager().show();
+        setupMainList();
         mPresenter.loadGenres();
     }
 
     @Override
     public void onDestroy() {
-        getProgressBarManager().hide();
+        //getProgressBarManager().hide();
         super.onDestroy();
     }
 
     @Override
     public void onGenresLoaded(final List<Genre> genres) {
-        getProgressBarManager().hide();
+        //getProgressBarManager().hide();
         loadRows(genres);
 
         startEntranceTransition();
@@ -111,15 +112,16 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         prepareEntranceTransition();
     }
 
-    private void loadRows(final List<Genre> genres) {
+    private void setupMainList() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
-
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.NOW_PLAYING)));
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.POPULAR)));
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.TOP_RATED)));
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
+    }
 
+    private void loadRows(final List<Genre> genres) {
         if (genres != null && genres.size() > 0) {
             mRowsAdapter.add(new DividerRow());
             mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
