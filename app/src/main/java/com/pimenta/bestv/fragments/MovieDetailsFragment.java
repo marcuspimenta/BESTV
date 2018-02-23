@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.fragments;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -21,7 +22,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
-import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
@@ -38,6 +38,7 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 
 import com.pimenta.bestv.R;
@@ -51,6 +52,7 @@ import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
+import com.pimenta.bestv.widget.VideoCardPresenter;
 
 import java.util.List;
 
@@ -75,7 +77,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private DetailsFragmentBackgroundController mDetailsBackground;
 
     private Movie mMovie;
-    private List<Video> mVideos;
 
     public static MovieDetailsFragment newInstance() {
         return new MovieDetailsFragment();
@@ -102,6 +103,13 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     @Override
     public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
+        if (videos != null && videos.size() > 0) {
+            final ArrayObjectAdapter listRowAdapte = new ArrayObjectAdapter(new VideoCardPresenter());
+            listRowAdapte.addAll(0, videos);
+            final HeaderItem recommendedHeader = new HeaderItem(0, getString(R.string.videos));
+            mAdapter.add(new ListRow(recommendedHeader, listRowAdapte));
+        }
+
         if (casts != null && casts.size() > 0) {
             final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
             listRowAdapter.addAll(0, casts);
@@ -122,8 +130,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
         }
-
-        mVideos = videos;
     }
 
     @Override
@@ -172,7 +178,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mPresenter.loadCardImage(mMovie);
 
         ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
-        actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer)));
+        //actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer)));
         mDetailsOverviewRow.setActionsAdapter(actionAdapter);
         mAdapter.add(mDetailsOverviewRow);
 
@@ -190,17 +196,12 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         sharedElementHelper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME);
         detailsPresenter.setListener(sharedElementHelper);
         detailsPresenter.setParticipatingEntranceTransition(true);
-        detailsPresenter.setOnActionClickedListener(action -> {
+        /*detailsPresenter.setOnActionClickedListener(action -> {
             switch ((int) action.getId()) {
                 case ACTION_WATCH_TRAILER:
-                    if (mVideos != null && mVideos.size() > 0) {
-                        final Intent intent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(String.format(getString(R.string.youtube_base_url), mVideos.get(0).getKey())));
-                        startActivity(intent);
-                    }
                     break;
             }
-        });
+        });*/
         mPresenterSelector.addClassPresenter(DetailsOverviewRow.class, detailsPresenter);
     }
 
@@ -238,10 +239,19 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Movie) {
                 final Movie movie = (Movie) item;
-
                 final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                 startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+
+            } else if (item instanceof Video) {
+                final Video video = (Video) item;
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(String.format(getString(R.string.youtube_video_base_url), video.getKey())));
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, "Failed to play a video", e);
+                }
             }
         }
     }

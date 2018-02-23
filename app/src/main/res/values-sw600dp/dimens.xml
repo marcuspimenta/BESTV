@@ -3,4 +3,12 @@
     <!-- MovieCardPresenter -->
     <dimen name="movie_card_width">240dp</dimen>
     <dimen name="movie_card_height">340dp</dimen>
+
+    <!-- CastCardPresenter -->
+    <dimen name="character_image_card_width">174dp</dimen>
+    <dimen name="character_image_card_height">267dp</dimen>
+
+    <!-- VideoCardPresenter -->
+    <dimen name="video_card_width">345dp</dimen>
+    <dimen name="video_card_height">180dp</dimen>
 </resources>

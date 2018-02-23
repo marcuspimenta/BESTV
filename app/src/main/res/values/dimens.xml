@@ -7,4 +7,8 @@
     <!-- CastCardPresenter -->
     <dimen name="character_image_card_width">130dp</dimen>
     <dimen name="character_image_card_height">200dp</dimen>
+
+    <!-- VideoCardPresenter -->
+    <dimen name="video_card_width">260dp</dimen>
+    <dimen name="video_card_height">135dp</dimen>
 </resources>
