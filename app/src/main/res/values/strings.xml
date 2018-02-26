@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BesTV</string>
-    <string name="watch_trailer">Watch trailer</string>
     <string name="genres">GENRES</string>
     <string name="now_playing">Now playing</string>
     <string name="popular">Popular</string>
@@ -8,7 +7,9 @@
     <string name="up_coming">Up coming</string>
     <string name="cast">Cast</string>
     <string name="videos">Videos</string>
+    <string name="recommended">Recommended</string>
     <string name="recommended_movies">Recommended movies</string>
+    <string name="similar">Similar</string>
     <string name="similar_movies">Similar movies</string>
 
     <!-- Error messages -->

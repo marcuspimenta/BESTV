@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
+import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
@@ -67,11 +68,18 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String MOVIE = "Movie";
 
-    private static final int ACTION_WATCH_TRAILER = 1;
-    private static final int RECOMMENDED_HEADER_ID = 1;
-    private static final int SIMILAR_HEADER_ID = 2;
+    private static final int ACTION_VIDEOS = 1;
+    private static final int ACTION_CAST = 2;
+    private static final int ACTION_RECOMMENDED = 3;
+    private static final int ACTION_SIMILAR = 4;
+    private static final int VIDEO_HEADER_ID = 1;
+    private static final int RECOMMENDED_HEADER_ID = 2;
+    private static final int SIMILAR_HEADER_ID = 3;
 
     private ArrayObjectAdapter mAdapter;
+    private ArrayObjectAdapter mActionAdapter;
+    private ArrayObjectAdapter mVideoRowAdapter;
+    private ArrayObjectAdapter mCastRowAdapter;
     private ArrayObjectAdapter mRecommendedRowAdapter;
     private ArrayObjectAdapter mSimilarRowAdapter;
     private ClassPresenterSelector mPresenterSelector;
@@ -106,20 +114,23 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
         if (videos != null && videos.size() > 0) {
-            final ArrayObjectAdapter listRowAdapte = new ArrayObjectAdapter(new VideoCardPresenter());
-            listRowAdapte.addAll(0, videos);
-            final HeaderItem recommendedHeader = new HeaderItem(0, getString(R.string.videos));
-            mAdapter.add(new ListRow(recommendedHeader, listRowAdapte));
+            mActionAdapter.add(new Action(ACTION_VIDEOS, getResources().getString(R.string.videos)));
+            mVideoRowAdapter = new ArrayObjectAdapter(new VideoCardPresenter());
+            mVideoRowAdapter.addAll(0, videos);
+            final HeaderItem recommendedHeader = new HeaderItem(VIDEO_HEADER_ID, getString(R.string.videos));
+            mAdapter.add(new ListRow(recommendedHeader, mVideoRowAdapter));
         }
 
         if (casts != null && casts.size() > 0) {
-            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
-            listRowAdapter.addAll(0, casts);
+            mActionAdapter.add(new Action(ACTION_CAST, getResources().getString(R.string.cast)));
+            mCastRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
+            mCastRowAdapter.addAll(0, casts);
             final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
-            mAdapter.add(new ListRow(header, listRowAdapter));
+            mAdapter.add(new ListRow(header, mCastRowAdapter));
         }
 
         if (recommendedMovies != null && recommendedMovies.size() > 0) {
+            mActionAdapter.add(new Action(ACTION_RECOMMENDED, getResources().getString(R.string.recommended)));
             mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
             mRecommendedRowAdapter.addAll(0, recommendedMovies);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
@@ -127,6 +138,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         }
 
         if (similarMovies != null && similarMovies.size() > 0) {
+            mActionAdapter.add(new Action(ACTION_SIMILAR, getResources().getString(R.string.similar)));
             mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
             mSimilarRowAdapter.addAll(0, similarMovies);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
@@ -179,9 +191,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_background));
         mPresenter.loadCardImage(mMovie);
 
-        ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
-        //actionAdapter.add(new Action(ACTION_WATCH_TRAILER, getResources().getString(R.string.watch_trailer)));
-        mDetailsOverviewRow.setActionsAdapter(actionAdapter);
+        mActionAdapter = new ArrayObjectAdapter();
+        mDetailsOverviewRow.setActionsAdapter(mActionAdapter);
         mAdapter.add(mDetailsOverviewRow);
 
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
@@ -212,12 +223,28 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         sharedElementHelper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME);
         detailsPresenter.setListener(sharedElementHelper);
         detailsPresenter.setParticipatingEntranceTransition(true);
-        /*detailsPresenter.setOnActionClickedListener(action -> {
+        detailsPresenter.setOnActionClickedListener(action -> {
+            int position = 0;
             switch ((int) action.getId()) {
-                case ACTION_WATCH_TRAILER:
-                    break;
+                case ACTION_SIMILAR:
+                    if (mSimilarRowAdapter.size() > 0) {
+                        position++;
+                    }
+                case ACTION_RECOMMENDED:
+                    if (mRecommendedRowAdapter.size() > 0) {
+                        position++;
+                    }
+                case ACTION_CAST:
+                    if (mCastRowAdapter.size() > 0) {
+                        position++;
+                    }
+                case ACTION_VIDEOS:
+                    if (mVideoRowAdapter.size() > 0) {
+                        position++;
+                    }
             }
-        });*/
+            setSelectedPosition(position);
+        });
         mPresenterSelector.addClassPresenter(DetailsOverviewRow.class, detailsPresenter);
     }
 
@@ -231,16 +258,17 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie && row != null) {
-                final Movie movie = (Movie) item;
+            if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
                     case RECOMMENDED_HEADER_ID:
-                        if (mRecommendedRowAdapter.indexOf(movie) >= mRecommendedRowAdapter.size() - 1) {
+                        final Movie recommendedMovie = (Movie) item;
+                        if (mRecommendedRowAdapter.indexOf(recommendedMovie) >= mRecommendedRowAdapter.size() - 1) {
                             mPresenter.loadRecommendationByMovie(mMovie);
                         }
                         break;
                     case SIMILAR_HEADER_ID:
-                        if (mSimilarRowAdapter.indexOf(movie) >= mSimilarRowAdapter.size() - 1) {
+                        final Movie similarMovie = (Movie) item;
+                        if (mSimilarRowAdapter.indexOf(similarMovie) >= mSimilarRowAdapter.size() - 1) {
                             mPresenter.loadSimilarByMovie(mMovie);
                         }
                         break;
@@ -253,20 +281,25 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                final Movie movie = (Movie) item;
-                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
-
-            } else if (item instanceof Video) {
-                final Video video = (Video) item;
-                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(String.format(getString(R.string.youtube_video_base_url), video.getKey())));
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Log.e(TAG, "Failed to play a video", e);
+            if (row != null && row.getHeaderItem() != null) {
+                switch ((int) row.getHeaderItem().getId()) {
+                    case VIDEO_HEADER_ID:
+                        final Video video = (Video) item;
+                        final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(String.format(getString(R.string.youtube_video_base_url), video.getKey())));
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e(TAG, "Failed to play a video", e);
+                        }
+                        break;
+                    case RECOMMENDED_HEADER_ID:
+                    case SIMILAR_HEADER_ID:
+                        final Movie movie = (Movie) item;
+                        final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                                ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+                        break;
                 }
             }
         }
