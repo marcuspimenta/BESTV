@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="@style/Theme.Leanback"></style>
+    <style name="AppTheme" parent="@style/Theme.Leanback">
+        <item name="defaultSectionHeaderColor">@android:color/white</item>
+    </style>
 </resources>

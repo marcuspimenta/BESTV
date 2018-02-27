@@ -148,18 +148,22 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     @Override
     public void onRecommendationLoaded(final List<Movie> movies) {
-        for (final Movie movie : movies) {
-            if (mRecommendedRowAdapter.indexOf(movie) == -1) {
-                mRecommendedRowAdapter.add(movie);
+        if (movies != null) {
+            for (final Movie movie : movies) {
+                if (mRecommendedRowAdapter.indexOf(movie) == -1) {
+                    mRecommendedRowAdapter.add(movie);
+                }
             }
         }
     }
 
     @Override
     public void onSimilarLoaded(final List<Movie> movies) {
-        for (final Movie movie : movies) {
-            if (mSimilarRowAdapter.indexOf(movie) == -1) {
-                mSimilarRowAdapter.add(movie);
+        if (movies != null) {
+            for (final Movie movie : movies) {
+                if (mSimilarRowAdapter.indexOf(movie) == -1) {
+                    mSimilarRowAdapter.add(movie);
+                }
             }
         }
     }
@@ -188,7 +192,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mAdapter = new ArrayObjectAdapter(mPresenterSelector);
 
         mDetailsOverviewRow = new DetailsOverviewRow(mMovie);
-        mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_background));
         mPresenter.loadCardImage(mMovie);
 
         mActionAdapter = new ArrayObjectAdapter();
@@ -216,7 +219,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                 return viewHolder;
             }
         };
-        //detailsPresenter.setBackgroundColor(getResources().getColor(R.color.selected_background, getActivity().getTheme()));
+        detailsPresenter.setActionsBackgroundColor(getResources().getColor(R.color.detail_view_actionbar_background, getActivity().getTheme()));
+        detailsPresenter.setBackgroundColor(getResources().getColor(R.color.detail_view_background, getActivity().getTheme()));
 
         // Hook up transition element.
         final FullWidthDetailsOverviewSharedElementHelper sharedElementHelper = new FullWidthDetailsOverviewSharedElementHelper();
