@@ -14,17 +14,17 @@
 
 package com.pimenta.bestv.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.DividerRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.PageRow;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.SectionRow;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,10 +132,10 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         }
     }
 
-    private class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
+    private class PageRowFragmentFactory extends BrowseSupportFragment.FragmentFactory {
 
         @Override
-        public Fragment createFragment(Object rowObj) {
+        public Fragment createFragment(final Object rowObj) {
             final Row row = (Row) rowObj;
 
             switch ((int) row.getHeaderItem().getId()) {

@@ -14,11 +14,12 @@
 
 package com.pimenta.bestv.fragments.bases;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v17.leanback.app.VerticalGridFragment;
+import android.support.v17.leanback.app.VerticalGridSupportFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.pimenta.bestv.presenters.BasePresenter;
@@ -26,8 +27,10 @@ import com.pimenta.bestv.presenters.BasePresenter;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends VerticalGridFragment implements BasePresenter.Callback {
+public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends VerticalGridSupportFragment implements BasePresenter.Callback {
 
+    protected Fragment mTargetFragment;
+    protected int mTargetRequestCode;
     protected final T mPresenter = getPresenter();
 
     @Override
@@ -43,12 +46,28 @@ public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends 
     }
 
     /**
+     * Optional target for this fragment.  This may be used, for example,
+     * if this fragment is being started by another, and when done wants to
+     * give a result back to the first.  The target set here is retained
+     * across instances via {@link FragmentManager#putFragment
+     * FragmentManager.putFragment()}.
+     *
+     * @param fragment    The fragment that is the target of this one.
+     * @param requestCode Optional request code, for convenience if you
+     *                    are going to call back with {@link #onActivityResult(int, int, Intent)}.
+     */
+    public void setTarget(final Fragment fragment, final int requestCode) {
+        mTargetFragment = fragment;
+        mTargetRequestCode = requestCode;
+    }
+
+    /**
      * Replace an existing fragment that was added to a container.
      *
      * @param fragment The new fragment to place in the container.
      */
     protected void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment)
@@ -63,7 +82,7 @@ public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends 
      * @param tag      Optional tag name for the fragment.
      */
     protected void addFragment(Fragment fragment, String tag) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .add(android.R.id.content, fragment)
@@ -81,7 +100,7 @@ public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends 
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected void popBackStack(String name, int flags) {
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.popBackStackImmediate(name, flags);
         }

@@ -21,7 +21,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
+import android.support.v17.leanback.app.DetailsSupportFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
@@ -38,7 +38,6 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private ArrayObjectAdapter mSimilarRowAdapter;
     private ClassPresenterSelector mPresenterSelector;
     private DetailsOverviewRow mDetailsOverviewRow;
-    private DetailsFragmentBackgroundController mDetailsBackground;
+    private DetailsSupportFragmentBackgroundController mDetailsBackground;
 
     private Movie mMovie;
 
@@ -214,7 +213,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                 mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image);
                 ViewGroup.LayoutParams lp = mDetailsImageView.getLayoutParams();
                 lp.width = getResources().getDimensionPixelSize(R.dimen.movie_card_width);
-                lp.height =getResources().getDimensionPixelSize(R.dimen.movie_card_height);
+                lp.height = getResources().getDimensionPixelSize(R.dimen.movie_card_height);
                 mDetailsImageView.setLayoutParams(lp);
                 return viewHolder;
             }
@@ -253,7 +252,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     }
 
     private void setupBackgroundImage() {
-        mDetailsBackground = new DetailsFragmentBackgroundController(this);
+        mDetailsBackground = new DetailsSupportFragmentBackgroundController(this);
         mDetailsBackground.enableParallax();
         mPresenter.loadBackdropImage(mMovie);
     }

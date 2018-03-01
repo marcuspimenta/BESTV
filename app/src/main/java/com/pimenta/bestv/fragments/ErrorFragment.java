@@ -14,7 +14,6 @@
 package com.pimenta.bestv.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 
 import com.pimenta.bestv.R;
@@ -41,9 +40,8 @@ public class ErrorFragment extends BaseErrorFragment<ErrorPresenter> {
 
         setButtonText(getResources().getString(R.string.error_fragment_button));
         setButtonClickListener(arg -> {
-            final Fragment fragment = getTargetFragment();
-            if (fragment != null) {
-                fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+            if (mTargetFragment != null) {
+                mTargetFragment.onActivityResult(mTargetRequestCode, Activity.RESULT_OK, null);
             }
         });
     }

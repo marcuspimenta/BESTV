@@ -15,8 +15,6 @@
 package com.pimenta.bestv.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,6 +22,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.FocusHighlight;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -34,6 +33,8 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ import java.util.TimerTask;
  * Created by marcus on 09-02-2018.
  */
 public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback,
-        BrowseFragment.MainFragmentAdapterProvider {
+        BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private static final String TAG = "AbstractMovieGridFragment";
     private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
@@ -62,7 +63,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private static final int NUMBER_COLUMNS = 4;
 
     private final Handler mHandler = new Handler();
-    private final BrowseFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseFragment.MainFragmentAdapter<>(this);
+    private final BrowseSupportFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseSupportFragment.MainFragmentAdapter<>(this);
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
@@ -117,7 +118,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     }
 
     @Override
-    public BrowseFragment.MainFragmentAdapter getMainFragmentAdapter() {
+    public BrowseSupportFragment.MainFragmentAdapter getMainFragmentAdapter() {
         return mMainFragmentAdapter;
     }
 
@@ -130,8 +131,8 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
                 }
             }
         } else if (mRowsAdapter.size() == 0) {
-            final Fragment fragment = ErrorFragment.newInstance();
-            fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE);
+            final ErrorFragment fragment = ErrorFragment.newInstance();
+            fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE);
             addFragment(fragment, ErrorFragment.TAG);
         }
 

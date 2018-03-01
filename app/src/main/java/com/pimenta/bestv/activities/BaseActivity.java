@@ -14,19 +14,19 @@
 
 package com.pimenta.bestv.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import com.pimenta.bestv.presenters.BasePresenter;
 
 /**
  * Created by marcus on 14-02-2018.
  */
-public abstract class BaseActivity<T extends BasePresenter> extends Activity implements BasePresenter.Callback {
+public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements BasePresenter.Callback {
 
     protected final T mPresenter = getPresenter();
 
@@ -48,7 +48,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends Activity imp
      * @param fragment The new fragment to place in the container.
      */
     protected void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment)
@@ -63,7 +63,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends Activity imp
      * @param tag      Optional tag name for the fragment.
      */
     protected void addFragment(Fragment fragment, String tag) {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .add(android.R.id.content, fragment)
@@ -81,7 +81,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends Activity imp
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected void popBackStack(String name, int flags) {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null) {
             fragmentManager.popBackStackImmediate(name, flags);
         }
