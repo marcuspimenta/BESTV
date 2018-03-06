@@ -15,6 +15,8 @@
 package com.pimenta.bestv.dagger;
 
 import android.app.Application;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
@@ -55,6 +57,12 @@ public class ApplicationModule {
     @Singleton
     public Gson provideGson() {
         return new GsonBuilder().create();
+    }
+
+    @Provides
+    @Singleton
+    public NotificationManager provideNotificationManager(Application application) {
+        return (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Provides

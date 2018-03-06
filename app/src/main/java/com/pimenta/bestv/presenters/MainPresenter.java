@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.connectors.TmdbConnector;
+import com.pimenta.bestv.managers.RecommendationManager;
 import com.pimenta.bestv.models.Genre;
 
 import java.util.List;
@@ -38,11 +39,24 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     DisplayMetrics mDisplayMetrics;
 
     @Inject
+    RecommendationManager mRecommendationManager;
+
+    @Inject
     TmdbConnector mTmdbConnector;
 
     public MainPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
+    }
+
+    /**
+     * Loads the recommendations
+     */
+    public void loadRecommendations() {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Void>) e -> mRecommendationManager.loadRecommendations())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 
     /**

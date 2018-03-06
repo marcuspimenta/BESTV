@@ -177,7 +177,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onBackdropImageLoaded(final Bitmap bitmap) {
         mDetailsBackground.setCoverBitmap(bitmap);
-        mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
     }
 
     @Override

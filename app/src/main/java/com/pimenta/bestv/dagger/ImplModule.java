@@ -20,6 +20,8 @@ import com.pimenta.bestv.managers.DeviceManager;
 import com.pimenta.bestv.managers.DeviceManagerImpl;
 import com.pimenta.bestv.managers.MovieManager;
 import com.pimenta.bestv.managers.MovieManagerImpl;
+import com.pimenta.bestv.managers.RecommendationManager;
+import com.pimenta.bestv.managers.RecommendationManagerImpl;
 
 import javax.inject.Singleton;
 
@@ -43,5 +45,9 @@ public interface ImplModule {
     @Binds
     @Singleton
     MovieManager provideMovieManager(MovieManagerImpl manager);
+
+    @Binds
+    @Singleton
+    RecommendationManager provideRecommendationManager(RecommendationManagerImpl manager);
 
 }

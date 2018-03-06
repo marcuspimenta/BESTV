@@ -12,28 +12,26 @@
  * the License.
  */
 
-package com.pimenta.bestv.activities;
+package com.pimenta.bestv.broadcasts;
 
-import android.os.Bundle;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-import com.pimenta.bestv.fragments.MainFragment;
-import com.pimenta.bestv.presenters.DefaultPresenter;
-import com.pimenta.bestv.presenters.MainPresenter;
+import com.pimenta.bestv.presenters.BasePresenter;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-public class MainActivity extends BaseActivity<MainPresenter> {
+public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Callback {
+
+    protected final T mPresenter = getPresenter();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter.loadRecommendations();
-        replaceFragment(MainFragment.newInstance());
+    public void onReceive(final Context context, final Intent intent) {
+        mPresenter.register(this);
     }
 
-    @Override
-    protected MainPresenter getPresenter() {
-        return new MainPresenter();
-    }
+    protected abstract T getPresenter();
+
 }

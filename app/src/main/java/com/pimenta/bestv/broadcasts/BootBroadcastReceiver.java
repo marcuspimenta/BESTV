@@ -12,28 +12,30 @@
  * the License.
  */
 
-package com.pimenta.bestv.activities;
+package com.pimenta.bestv.broadcasts;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
-import com.pimenta.bestv.fragments.MainFragment;
-import com.pimenta.bestv.presenters.DefaultPresenter;
-import com.pimenta.bestv.presenters.MainPresenter;
+import com.pimenta.bestv.presenters.BootPresenter;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-public class MainActivity extends BaseActivity<MainPresenter> {
+public class BootBroadcastReceiver extends BaseBroadcastReceiver<BootPresenter> {
+
+    private static final String TAG = "BootBroadcastReceiver";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onReceive(final Context context, final Intent intent) {
+        super.onReceive(context, intent);
+        Log.d(TAG, "Boot initiated");
         mPresenter.loadRecommendations();
-        replaceFragment(MainFragment.newInstance());
     }
 
     @Override
-    protected MainPresenter getPresenter() {
-        return new MainPresenter();
+    protected BootPresenter getPresenter() {
+        return new BootPresenter();
     }
 }

@@ -12,20 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.database;
-
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.pimenta.bestv.BesTV;
-
-import java.io.Serializable;
+package com.pimenta.bestv.managers;
 
 /**
- * Created by marcus on 05-03-2018.
+ * Created by marcus on 06-03-2018.
  */
-public abstract class AbstractDatabaseModel implements Serializable {
+public interface RecommendationManager {
 
-    protected static <T extends AbstractDatabaseModel, E> RuntimeExceptionDao<T, E> getDao(Class<T> c) {
-        return BesTV.getApplicationComponent().getDatabaseHelper().getRuntimeExceptionDao(c);
-    }
+    void loadRecommendations();
 
 }

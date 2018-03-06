@@ -34,11 +34,6 @@ public abstract class BaseBrowseFragment<T extends BasePresenter> extends Browse
     protected final T mPresenter = getPresenter();
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.register(this);
