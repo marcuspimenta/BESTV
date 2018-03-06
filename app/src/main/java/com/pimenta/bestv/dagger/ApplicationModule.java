@@ -15,11 +15,11 @@
 package com.pimenta.bestv.dagger;
 
 import android.app.Application;
-import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pimenta.bestv.database.DatabaseHelper;
 
 import javax.inject.Singleton;
 
@@ -55,6 +55,12 @@ public class ApplicationModule {
     @Singleton
     public Gson provideGson() {
         return new GsonBuilder().create();
+    }
+
+    @Provides
+    @Singleton
+    public DatabaseHelper provideDatabaseHelper(Application application) {
+        return new DatabaseHelper(application);
     }
 
 }

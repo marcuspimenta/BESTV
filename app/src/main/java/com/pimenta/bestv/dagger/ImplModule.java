@@ -18,6 +18,8 @@ import com.pimenta.bestv.connectors.TmdbConnector;
 import com.pimenta.bestv.connectors.TmdbConnectorImpl;
 import com.pimenta.bestv.managers.DeviceManager;
 import com.pimenta.bestv.managers.DeviceManagerImpl;
+import com.pimenta.bestv.managers.MovieManager;
+import com.pimenta.bestv.managers.MovieManagerImpl;
 
 import javax.inject.Singleton;
 
@@ -37,5 +39,9 @@ public interface ImplModule {
     @Binds
     @Singleton
     DeviceManager provideDeviceManager(DeviceManagerImpl manager);
+
+    @Binds
+    @Singleton
+    MovieManager provideMovieManager(MovieManagerImpl manager);
 
 }

@@ -47,4 +47,7 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.2'
 
+    // OrmLite
+    implementation 'com.j256.ormlite:ormlite-core:5.1'
+    implementation 'com.j256.ormlite:ormlite-android:5.1'
 }

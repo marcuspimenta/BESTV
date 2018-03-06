@@ -14,28 +14,28 @@
 
 package com.pimenta.bestv.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.pimenta.bestv.database.AbstractDatabaseModel;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by marcus on 09-02-2018.
  */
-public class Movie implements Serializable {
+@DatabaseTable(tableName = Movie.TABLE)
+public class Movie extends AbstractDatabaseModel {
 
-    /*"adult":false,
-    "genre_ids":[
-    28,
-    9648,
-    878,
-    53
-    ],
-    "popularity":444.4728,
-    "video":false,
-    "vote_count":6638*/
+    private static final String TAG = "Movie";
+    public static final String TABLE = "movie";
+    public static final String FIELD_ID = "id";
 
+    @DatabaseField(columnName = FIELD_ID, generatedId = true)
     @SerializedName("id")
     @Expose
     private int mId;
@@ -60,9 +60,52 @@ public class Movie implements Serializable {
     @SerializedName("poster_path")
     @Expose
     private String mPosterPath;
+    @SerializedName("popularity")
+    @Expose
+    private float mPopularity;
     @SerializedName("vote_average")
     @Expose
     private float mVoteAverage;
+    @SerializedName("vote_count")
+    @Expose
+    private float mVoteCount;
+    @SerializedName("adult")
+    @Expose
+    private boolean mIsAdult;
+
+    public static List<Movie> getAll() {
+        return getDao(Movie.class).queryForAll();
+    }
+
+    public int create() {
+        int res = 0;
+        try {
+            res = getDao(Movie.class).create(this);
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Failed to create a movie.", e);
+        }
+        return res;
+    }
+
+    public int delete() {
+        int res = 0;
+        try {
+            res = getDao(Movie.class).delete(this);
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Failed to delete a movie.", e);
+        }
+        return res;
+    }
+
+    public int update() {
+        int res = 0;
+        try {
+            res = getDao(Movie.class).update(this);
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Failed to update a movie.", e);
+        }
+        return res;
+    }
 
     public int getId() {
         return mId;
@@ -128,12 +171,36 @@ public class Movie implements Serializable {
         mPosterPath = posterPath;
     }
 
+    public float getPopularity() {
+        return mPopularity;
+    }
+
+    public void setPopularity(final float popularity) {
+        mPopularity = popularity;
+    }
+
     public float getVoteAverage() {
         return mVoteAverage;
     }
 
     public void setVoteAverage(final float voteAverage) {
         mVoteAverage = voteAverage;
+    }
+
+    public float getVoteCount() {
+        return mVoteCount;
+    }
+
+    public void setVoteCount(final float voteCount) {
+        mVoteCount = voteCount;
+    }
+
+    public boolean isAdult() {
+        return mIsAdult;
+    }
+
+    public void setAdult(final boolean adult) {
+        mIsAdult = adult;
     }
 
     @Override

@@ -16,6 +16,8 @@ package com.pimenta.bestv.dagger;
 
 import android.app.Application;
 
+import com.pimenta.bestv.database.DatabaseHelper;
+import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.presenters.MainPresenter;
 import com.pimenta.bestv.presenters.MovieDetailsPresenter;
 import com.pimenta.bestv.presenters.MovieGridPresenter;
@@ -33,6 +35,10 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     Application getApplication();
+
+    DatabaseHelper getDatabaseHelper();
+
+    void inject(Movie movie);
 
     void inject(MainPresenter presenter);
 
