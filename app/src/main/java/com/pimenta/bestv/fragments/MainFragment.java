@@ -49,6 +49,8 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     private static final int TOP_MOVIES_LIST_ID = 1;
     private static final int GENRE_ID = 2;
 
+    private int mCountFragment = 0;
+    private boolean mShowProgress = false;
     private ArrayObjectAdapter mRowsAdapter;
 
     public static MainFragment newInstance() {
@@ -59,6 +61,11 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUIElements();
+    }
+
+    @Override
+    public boolean isShowingHeaders() {
+        return super.isShowingHeaders();
     }
 
     @Override
@@ -73,20 +80,20 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //getProgressBarManager().show();
+        getProgressBarManager().show();
         setupMainList();
         mPresenter.loadGenres();
     }
 
     @Override
     public void onDestroy() {
-        //getProgressBarManager().hide();
+        getProgressBarManager().hide();
         super.onDestroy();
     }
 
     @Override
     public void onGenresLoaded(final List<Genre> genres) {
-        //getProgressBarManager().hide();
+        getProgressBarManager().hide();
         loadRows(genres);
 
         startEntranceTransition();
@@ -136,17 +143,20 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
 
         @Override
         public Fragment createFragment(final Object rowObj) {
-            final Row row = (Row) rowObj;
+            if (mCountFragment++ >= 1) {
+                mShowProgress = true;
+            }
 
+            final Row row = (Row) rowObj;
             switch ((int) row.getHeaderItem().getId()) {
                 case TOP_MOVIES_LIST_ID:
                     final MovieListTypeHeaderItem movieListTypeHeaderItem = (MovieListTypeHeaderItem) row.getHeaderItem();
                     MainFragment.this.setTitle(row.getHeaderItem().getName());
-                    return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType());
+                    return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType(), mShowProgress);
                 case GENRE_ID:
                     final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
                     MainFragment.this.setTitle(genreHeaderItem.getGenre().getName());
-                    return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre());
+                    return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre(), mShowProgress);
             }
 
             throw new IllegalArgumentException(String.format("Invalid row %s", rowObj));

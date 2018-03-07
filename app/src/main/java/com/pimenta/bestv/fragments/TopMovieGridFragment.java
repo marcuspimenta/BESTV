@@ -27,13 +27,15 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     private TmdbConnectorImpl.MovieListType mMovieListType;
 
-    public static TopMovieGridFragment newInstance(TmdbConnectorImpl.MovieListType movieListType) {
+    public static TopMovieGridFragment newInstance(TmdbConnectorImpl.MovieListType movieListType, boolean showProgress) {
         Bundle args = new Bundle();
         args.putSerializable(TYPE, movieListType);
+        args.putBoolean(SHOW_PROGRESS, showProgress);
 
         TopMovieGridFragment topMovieGridFragment = new TopMovieGridFragment();
         topMovieGridFragment.setArguments(args);
         topMovieGridFragment.mMovieListType = movieListType;
+        topMovieGridFragment.mShowProgress = showProgress;
         return topMovieGridFragment;
     }
 
@@ -43,6 +45,7 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
         if (mMovieListType == null) {
             mMovieListType = (TmdbConnectorImpl.MovieListType) getArguments().getSerializable(TYPE);
+            mShowProgress = getArguments().getBoolean(SHOW_PROGRESS);
         }
     }
 

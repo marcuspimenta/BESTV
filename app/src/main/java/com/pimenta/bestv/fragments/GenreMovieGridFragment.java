@@ -27,13 +27,15 @@ public class GenreMovieGridFragment extends AbstractMovieGridFragment {
 
     private Genre mGenre;
 
-    public static GenreMovieGridFragment newInstance(Genre genre) {
+    public static GenreMovieGridFragment newInstance(Genre genre, boolean showProgress) {
         Bundle args = new Bundle();
         args.putSerializable(GENRE, genre);
+        args.putBoolean(SHOW_PROGRESS, showProgress);
 
         GenreMovieGridFragment genreMovieGridFragment = new GenreMovieGridFragment();
         genreMovieGridFragment.setArguments(args);
         genreMovieGridFragment.mGenre = genre;
+        genreMovieGridFragment.mShowProgress = showProgress;
         return genreMovieGridFragment;
     }
 
@@ -43,6 +45,7 @@ public class GenreMovieGridFragment extends AbstractMovieGridFragment {
 
         if (mGenre == null) {
             mGenre = (Genre) getArguments().getSerializable(GENRE);
+            mShowProgress = getArguments().getBoolean(SHOW_PROGRESS);
         }
     }
 

@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.FocusHighlight;
@@ -33,7 +32,6 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,8 +55,9 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private static final String TAG = "AbstractMovieGridFragment";
-    private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
+    protected static final String SHOW_PROGRESS = "SHOW_PROGRESS";
 
+    private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int NUMBER_COLUMNS = 4;
 
@@ -70,6 +69,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private ArrayObjectAdapter mRowsAdapter;
 
     private Movie mMovieSelected;
+    protected boolean mShowProgress;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -91,7 +91,9 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         super.onViewCreated(view, savedInstanceState);
         getMainFragmentAdapter().getFragmentHost().notifyViewCreated(getMainFragmentAdapter());
 
-        getProgressBarManager().show();
+        if (mShowProgress) {
+            getProgressBarManager().show();
+        }
         loadData();
     }
 
@@ -215,4 +217,5 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
             startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
         }
     }
+
 }
