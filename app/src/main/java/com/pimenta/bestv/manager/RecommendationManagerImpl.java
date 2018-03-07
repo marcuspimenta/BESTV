@@ -77,7 +77,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .setBadgeIcon(R.drawable.movie)
                             .setTitle(movie.getTitle())
                             .setContentImage(cardBitmap)
-                            .setBackgroundImageUri(movie.getBackdropPath())
+                            .setBackgroundImageUri(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
                             .setText(mApplication.getString(R.string.popular))
                             .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),
                                     0, null)

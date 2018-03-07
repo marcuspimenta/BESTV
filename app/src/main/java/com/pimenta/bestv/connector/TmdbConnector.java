@@ -46,6 +46,14 @@ public interface TmdbConnector {
     MovieList getMoviesByGenre(Genre genre, int page);
 
     /**
+     * Gets the {@link Movie} by the ID
+     *
+     * @param movieId   Movie ID
+     * @return          {@link Movie}
+     */
+    Movie getMovie(int movieId);
+
+    /**
      * Gets the {@link CastList} by the {@link Movie}
      *
      * @param movie {@link Movie} to search the {@link List<CastList>}

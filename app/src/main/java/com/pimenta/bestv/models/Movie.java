@@ -72,6 +72,9 @@ public class Movie extends AbstractDatabaseModel {
     @SerializedName("adult")
     @Expose
     private boolean mIsAdult;
+    @SerializedName("genres")
+    @Expose
+    private List<Genre> mGenres;
 
     public static List<Movie> getAll() {
         return getDao(Movie.class).queryForAll();
@@ -201,6 +204,14 @@ public class Movie extends AbstractDatabaseModel {
 
     public void setAdult(final boolean adult) {
         mIsAdult = adult;
+    }
+
+    public List<Genre> getGenres() {
+        return mGenres;
+    }
+
+    public void setGenres(final List<Genre> genres) {
+        mGenres = genres;
     }
 
     @Override

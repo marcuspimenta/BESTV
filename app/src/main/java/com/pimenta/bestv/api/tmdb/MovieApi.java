@@ -15,6 +15,7 @@
 package com.pimenta.bestv.api.tmdb;
 
 import com.pimenta.bestv.models.CastList;
+import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
 import com.pimenta.bestv.models.VideoList;
 
@@ -27,6 +28,9 @@ import retrofit2.http.Query;
  * Created by marcus on 11-02-2018.
  */
 public interface MovieApi {
+
+    @GET("movie/{movie_id}")
+    Call<Movie> getMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/{movie_id}/credits")
     Call<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);

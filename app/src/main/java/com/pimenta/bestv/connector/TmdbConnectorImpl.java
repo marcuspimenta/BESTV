@@ -78,6 +78,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
     }
 
     @Override
+    public Movie getMovie(final int movieId) {
+        try {
+            return mTmdb.getMovieApi().getMovie(movieId, mApiKey, mLanguage).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get the movie", e);
+            return null;
+        }
+    }
+
+    @Override
     public CastList getCastByMovie(final Movie movie) {
         try {
             return mTmdb.getMovieApi().getCastByMovie(movie.getId(), mApiKey, mLanguage).execute().body();

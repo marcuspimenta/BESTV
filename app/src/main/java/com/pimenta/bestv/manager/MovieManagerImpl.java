@@ -16,6 +16,7 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
+import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.models.Movie;
 
 import java.util.List;
@@ -26,6 +27,9 @@ import javax.inject.Inject;
  * Created by marcus on 05-03-2018.
  */
 public class MovieManagerImpl implements MovieManager {
+
+    @Inject
+    TmdbConnector mTmdbConnector;
 
     @Inject
     public MovieManagerImpl() {
