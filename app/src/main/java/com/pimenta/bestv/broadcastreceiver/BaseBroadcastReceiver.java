@@ -12,25 +12,26 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget;
+package com.pimenta.bestv.broadcastreceiver;
 
-import android.support.v17.leanback.widget.HeaderItem;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.presenter.BasePresenter;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-public class MovieListTypeHeaderItem extends HeaderItem {
+public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Callback {
 
-    private TmdbConnectorImpl.MovieListType mMovieListType;
+    protected final T mPresenter = getPresenter();
 
-    public MovieListTypeHeaderItem(int id, TmdbConnectorImpl.MovieListType movieListType) {
-        super(id, movieListType.getName());
-        mMovieListType = movieListType;
+    @Override
+    public void onReceive(final Context context, final Intent intent) {
+        mPresenter.register(this);
     }
 
-    public TmdbConnectorImpl.MovieListType getMovieListType() {
-        return mMovieListType;
-    }
+    protected abstract T getPresenter();
+
 }

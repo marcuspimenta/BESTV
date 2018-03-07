@@ -18,10 +18,10 @@ import android.app.Application;
 
 import com.pimenta.bestv.database.DatabaseHelper;
 import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.presenters.BootPresenter;
-import com.pimenta.bestv.presenters.MainPresenter;
-import com.pimenta.bestv.presenters.MovieDetailsPresenter;
-import com.pimenta.bestv.presenters.MovieGridPresenter;
+import com.pimenta.bestv.presenter.BootPresenter;
+import com.pimenta.bestv.presenter.MainPresenter;
+import com.pimenta.bestv.presenter.MovieDetailsPresenter;
+import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
 import javax.inject.Singleton;

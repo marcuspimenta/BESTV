@@ -12,25 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget;
+package com.pimenta.bestv.activity;
 
-import android.support.v17.leanback.widget.HeaderItem;
+import android.os.Bundle;
 
-import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.fragment.MainFragment;
+import com.pimenta.bestv.presenter.MainPresenter;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class MovieListTypeHeaderItem extends HeaderItem {
+public class MainActivity extends BaseActivity<MainPresenter> {
 
-    private TmdbConnectorImpl.MovieListType mMovieListType;
-
-    public MovieListTypeHeaderItem(int id, TmdbConnectorImpl.MovieListType movieListType) {
-        super(id, movieListType.getName());
-        mMovieListType = movieListType;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter.loadRecommendations();
+        replaceFragment(MainFragment.newInstance());
     }
 
-    public TmdbConnectorImpl.MovieListType getMovieListType() {
-        return mMovieListType;
+    @Override
+    protected MainPresenter getPresenter() {
+        return new MainPresenter();
     }
 }

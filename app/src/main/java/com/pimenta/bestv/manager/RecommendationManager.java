@@ -12,25 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget;
-
-import android.support.v17.leanback.widget.HeaderItem;
-
-import com.pimenta.bestv.connector.TmdbConnectorImpl;
+package com.pimenta.bestv.manager;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-public class MovieListTypeHeaderItem extends HeaderItem {
+public interface RecommendationManager {
 
-    private TmdbConnectorImpl.MovieListType mMovieListType;
+    void loadRecommendations();
 
-    public MovieListTypeHeaderItem(int id, TmdbConnectorImpl.MovieListType movieListType) {
-        super(id, movieListType.getName());
-        mMovieListType = movieListType;
-    }
-
-    public TmdbConnectorImpl.MovieListType getMovieListType() {
-        return mMovieListType;
-    }
 }

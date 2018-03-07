@@ -12,25 +12,31 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget;
+package com.pimenta.bestv.manager;
 
-import android.support.v17.leanback.widget.HeaderItem;
+import android.support.annotation.NonNull;
 
-import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.models.Movie;
+
+import java.util.List;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 05-03-2018.
  */
-public class MovieListTypeHeaderItem extends HeaderItem {
+public class MovieManagerImpl implements MovieManager {
 
-    private TmdbConnectorImpl.MovieListType mMovieListType;
-
-    public MovieListTypeHeaderItem(int id, TmdbConnectorImpl.MovieListType movieListType) {
-        super(id, movieListType.getName());
-        mMovieListType = movieListType;
+    @Override
+    public boolean saveFavoriteMovie(@NonNull final Movie movie) {
+        return movie.create() > 0;
     }
 
-    public TmdbConnectorImpl.MovieListType getMovieListType() {
-        return mMovieListType;
+    @Override
+    public boolean deleteFavoriteMovie(@NonNull final Movie movie) {
+        return movie.delete() > 0;
+    }
+
+    @Override
+    public List<Movie> getFavoriteMovies() {
+        return Movie.getAll();
     }
 }

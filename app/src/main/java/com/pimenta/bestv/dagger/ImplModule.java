@@ -14,14 +14,14 @@
 
 package com.pimenta.bestv.dagger;
 
-import com.pimenta.bestv.connectors.TmdbConnector;
-import com.pimenta.bestv.connectors.TmdbConnectorImpl;
-import com.pimenta.bestv.managers.DeviceManager;
-import com.pimenta.bestv.managers.DeviceManagerImpl;
-import com.pimenta.bestv.managers.MovieManager;
-import com.pimenta.bestv.managers.MovieManagerImpl;
-import com.pimenta.bestv.managers.RecommendationManager;
-import com.pimenta.bestv.managers.RecommendationManagerImpl;
+import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.manager.DeviceManager;
+import com.pimenta.bestv.manager.DeviceManagerImpl;
+import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.manager.MovieManagerImpl;
+import com.pimenta.bestv.manager.RecommendationManager;
+import com.pimenta.bestv.manager.RecommendationManagerImpl;
 
 import javax.inject.Singleton;
 
