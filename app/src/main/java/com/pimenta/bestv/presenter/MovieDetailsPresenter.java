@@ -15,6 +15,7 @@
 package com.pimenta.bestv.presenter;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -53,6 +54,9 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     Application mApplication;
 
     @Inject
+    NotificationManager mNotificationManager;
+
+    @Inject
     TmdbConnector mTmdbConnector;
 
     private int mRecommendedPage = 0;
@@ -61,6 +65,19 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     public MovieDetailsPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
+    }
+
+    /**
+     * Cancel a previously shown notification.  If it's transient, the view
+     * will be hidden.  If it's persistent, it will be removed from the status
+     * bar.
+     *
+     * @param notificationId    Notification ID
+     */
+    public void removeNotification(int notificationId) {
+        if (notificationId != -1) {
+            mNotificationManager.cancel(notificationId);
+        }
     }
 
     /**

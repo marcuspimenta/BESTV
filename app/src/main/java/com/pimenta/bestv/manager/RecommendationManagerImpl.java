@@ -16,6 +16,7 @@ package com.pimenta.bestv.manager;
 
 import android.app.Application;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.app.recommendation.ContentRecommendation;
 import android.util.Log;
@@ -55,11 +56,13 @@ public class RecommendationManagerImpl implements RecommendationManager {
 
     @Override
     public void loadRecommendations() {
-        final MovieList movieList = mTmdbConnector.getTopRatedMovies(1);
+        final MovieList movieList = mTmdbConnector.getPopularMovies(1);
         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
             int count = 0;
             for (final Movie movie : movieList.getMovies()) {
                 try {
+                    int id = Long.valueOf(movie.getId()).hashCode();
+
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()
                             .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
@@ -68,18 +71,18 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .get();
 
                     final ContentRecommendation contentRecommendation = new ContentRecommendation.Builder()
-                            .setIdTag(Integer.toString(movie.getId()))
+                            .setIdTag(Integer.toString(id))
                             .setGroup(mApplication.getString(R.string.app_name))
                             .setBadgeIcon(R.drawable.movie)
                             .setTitle(movie.getTitle())
                             .setContentImage(cardBitmap)
                             .setBackgroundImageUri(movie.getBackdropPath())
-                            .setText(mApplication.getString(R.string.top_rated))
-                            .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, MovieDetailsActivity.newInstance(mApplication, movie),
+                            .setText(mApplication.getString(R.string.popular))
+                            .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),
                                     0, null)
                             .build();
 
-                    mNotificationManager.notify(movie.getId(), contentRecommendation.getNotificationObject(mApplication));
+                    mNotificationManager.notify(id, contentRecommendation.getNotificationObject(mApplication));
                     count++;
                     if (count == RECOMMENDATION_NUMBER) {
                         return;
@@ -89,5 +92,18 @@ public class RecommendationManagerImpl implements RecommendationManager {
                 }
             }
         }
+    }
+
+    /**
+     * Builds a {@link Intent} to open the movie details when click in a notification
+     *
+     * @param movie                 {@link Movie}
+     * @param notificationId        Notification ID
+     * @return                      {@link Intent}
+     */
+    private Intent buildIntent(Movie movie, int notificationId) {
+        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, movie, notificationId);
+        detailsIntent.setAction(Integer.toString(notificationId));
+        return detailsIntent;
     }
 }

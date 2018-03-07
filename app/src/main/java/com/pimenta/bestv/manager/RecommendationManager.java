@@ -19,6 +19,9 @@ package com.pimenta.bestv.manager;
  */
 public interface RecommendationManager {
 
+    /**
+     * Loads the recommendations
+     */
     void loadRecommendations();
 
 }

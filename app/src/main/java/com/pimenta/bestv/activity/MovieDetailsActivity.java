@@ -29,8 +29,13 @@ import com.pimenta.bestv.presenter.DefaultPresenter;
 public class MovieDetailsActivity extends BaseActivity<DefaultPresenter> {
 
     public static Intent newInstance(Context context, Movie movie) {
-        Intent intent = new Intent(context, MovieDetailsActivity.class);
+        return newInstance(context, movie, -1);
+    }
+
+    public static Intent newInstance(Context context, Movie movie, int notificationId) {
+        final Intent intent = new Intent(context, MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsFragment.MOVIE, movie);
+        intent.putExtra(MovieDetailsFragment.NOTIFICATION_ID, notificationId);
         return intent;
     }
 

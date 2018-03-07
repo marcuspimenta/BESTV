@@ -64,8 +64,9 @@ import java.util.List;
 public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsCallback {
 
     public static final String TAG = "MovieDetailsFragment";
-    public static final String SHARED_ELEMENT_NAME = "hero";
-    public static final String MOVIE = "Movie";
+    public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";
+    public static final String MOVIE = "MOVIE";
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 
     private static final int ACTION_VIDEOS = 1;
     private static final int ACTION_CAST = 2;
@@ -85,6 +86,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private DetailsOverviewRow mDetailsOverviewRow;
     private DetailsSupportFragmentBackgroundController mDetailsBackground;
 
+    private int mNotificationId;
     private Movie mMovie;
 
     public static MovieDetailsFragment newInstance() {
@@ -96,9 +98,11 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         super.onCreate(savedInstanceState);
 
         if (mMovie == null) {
+            mNotificationId = getActivity().getIntent().getIntExtra(NOTIFICATION_ID, -1);
             mMovie = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
         }
 
+        mPresenter.removeNotification(mNotificationId);
         setupDetailsOverviewRow();
         setupDetailsOverviewRowPresenter();
         setAdapter(mAdapter);
