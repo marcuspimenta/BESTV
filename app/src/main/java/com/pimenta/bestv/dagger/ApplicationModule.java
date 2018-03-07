@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.dagger;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -63,6 +64,12 @@ public class ApplicationModule {
     @Singleton
     public NotificationManager provideNotificationManager(Application application) {
         return (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    public AlarmManager provideAlarmManager(Application application) {
+        return (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
     }
 
     @Provides

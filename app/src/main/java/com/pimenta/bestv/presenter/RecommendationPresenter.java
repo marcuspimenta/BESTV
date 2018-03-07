@@ -14,15 +14,8 @@
 
 package com.pimenta.bestv.presenter;
 
-import android.app.AlarmManager;
-import android.app.Application;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.manager.RecommendationManager;
-import com.pimenta.bestv.service.RecommendationService;
 
 import javax.inject.Inject;
 
@@ -32,28 +25,30 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 07-03-2018.
  */
-public class BootPresenter extends AbstractPresenter<BasePresenter.Callback> {
-
-    private static final long INITIAL_DELAY = 5000;
+public class RecommendationPresenter extends AbstractPresenter<RecommendationCallbak> {
 
     @Inject
-    Application mApplication;
+    RecommendationManager mRecommendationManager;
 
-    @Inject
-    AlarmManager mAlarmManager;
-
-    public BootPresenter() {
+    public RecommendationPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
     }
 
     /**
-     * Schedules the recommendation update
+     * Loads the recommendations
      */
-    public void scheduleRecommendationUpdate() {
-        final PendingIntent alarmIntent = PendingIntent.getService(mApplication, 0, RecommendationService.newInstance(mApplication), 0);
-        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, INITIAL_DELAY, AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
+    public void loadRecommendations() {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Void>) e -> mRecommendationManager.loadRecommendations())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aVoid -> {
+                    if (mCallback != null) {
+                        mCallback.onLoadRecommendationFinished();
+                    }
+                }));
     }
+
 }

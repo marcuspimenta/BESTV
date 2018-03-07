@@ -20,10 +20,16 @@ import com.pimenta.bestv.models.Movie;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 05-03-2018.
  */
 public class MovieManagerImpl implements MovieManager {
+
+    @Inject
+    public MovieManagerImpl() {
+    }
 
     @Override
     public boolean saveFavoriteMovie(@NonNull final Movie movie) {

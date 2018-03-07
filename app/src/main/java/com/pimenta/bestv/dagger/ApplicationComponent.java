@@ -22,6 +22,7 @@ import com.pimenta.bestv.presenter.BootPresenter;
 import com.pimenta.bestv.presenter.MainPresenter;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
+import com.pimenta.bestv.presenter.RecommendationPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
 import javax.inject.Singleton;
@@ -50,5 +51,7 @@ public interface ApplicationComponent {
     void inject(MovieCardPresenter presenter);
 
     void inject(BootPresenter presenter);
+
+    void inject(RecommendationPresenter presenter);
 
 }

@@ -56,6 +56,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
 
     @Override
     public void loadRecommendations() {
+        mNotificationManager.cancelAll();
         final MovieList movieList = mTmdbConnector.getPopularMovies(1);
         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
             int count = 0;

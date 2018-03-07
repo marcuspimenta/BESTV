@@ -12,30 +12,30 @@
  * the License.
  */
 
-package com.pimenta.bestv.broadcastreceiver;
+package com.pimenta.bestv.service;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+import android.app.Service;
 
-import com.pimenta.bestv.presenter.BootPresenter;
+import com.pimenta.bestv.presenter.BasePresenter;
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 07-03-2018.
  */
-public class BootBroadcastReceiver extends BaseBroadcastReceiver<BootPresenter> {
+public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.Callback {
 
-    private static final String TAG = "BootBroadcastReceiver";
+    protected final T mPresenter = getPresenter();
 
     @Override
-    public void onReceive(final Context context, final Intent intent) {
-        super.onReceive(context, intent);
-        Log.d(TAG, "Boot initiated");
-        mPresenter.scheduleRecommendationUpdate();
+    public void onCreate() {
+        super.onCreate();
+        mPresenter.register(this);
     }
 
     @Override
-    protected BootPresenter getPresenter() {
-        return new BootPresenter();
+    public void onDestroy() {
+        mPresenter.unRegister();
+        super.onDestroy();
     }
+
+    protected abstract T getPresenter();
 }
