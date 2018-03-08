@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BesTV</string>
     <string name="genres">GENRES</string>
+    <string name="favorite">Favorite</string>
     <string name="now_playing">Now playing</string>
     <string name="popular">Popular</string>
     <string name="top_rated">Top rated</string>
@@ -11,6 +12,8 @@
     <string name="recommended_movies">Recommended movies</string>
     <string name="similar">Similar</string>
     <string name="similar_movies">Similar movies</string>
+    <string name="save_favorite">Save move</string>
+    <string name="remove_favorite">Remove from favorite</string>
 
     <!-- Error messages -->
     <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>

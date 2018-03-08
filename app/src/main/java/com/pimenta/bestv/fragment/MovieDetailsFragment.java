@@ -68,14 +68,16 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     public static final String MOVIE = "MOVIE";
     public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 
-    private static final int ACTION_VIDEOS = 1;
-    private static final int ACTION_CAST = 2;
-    private static final int ACTION_RECOMMENDED = 3;
-    private static final int ACTION_SIMILAR = 4;
+    private static final int ACTION_FAVORITE = 1;
+    private static final int ACTION_VIDEOS = 2;
+    private static final int ACTION_CAST = 3;
+    private static final int ACTION_RECOMMENDED = 4;
+    private static final int ACTION_SIMILAR = 5;
     private static final int VIDEO_HEADER_ID = 1;
     private static final int RECOMMENDED_HEADER_ID = 2;
     private static final int SIMILAR_HEADER_ID = 3;
 
+    private Action mFavoriteAction;
     private ArrayObjectAdapter mAdapter;
     private ArrayObjectAdapter mActionAdapter;
     private ArrayObjectAdapter mVideoRowAdapter;
@@ -96,7 +98,6 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (mMovie == null) {
             mNotificationId = getActivity().getIntent().getIntExtra(NOTIFICATION_ID, -1);
             mMovie = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
@@ -111,7 +112,19 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mFavoriteAction = new Action(ACTION_FAVORITE, mMovie.isFavorite() ? getResources().getString(R.string.remove_favorite) :
+                getResources().getString(R.string.save_favorite));
+        mActionAdapter.add(mFavoriteAction);
         mPresenter.loadDataByMovie(mMovie);
+    }
+
+    @Override
+    public void onResultSetFavoriteMovie(final boolean success) {
+        if (success) {
+            mFavoriteAction.setLabel1(mMovie.isFavorite() ? getResources().getString(R.string.remove_favorite) :
+                    getResources().getString(R.string.save_favorite));
+            mActionAdapter.notifyItemRangeChanged(mActionAdapter.indexOf(mFavoriteAction), 1);
+        }
     }
 
     @Override
@@ -232,24 +245,27 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         detailsPresenter.setOnActionClickedListener(action -> {
             int position = 0;
             switch ((int) action.getId()) {
+                case ACTION_FAVORITE:
+                    mPresenter.setFavoriteMovie(mMovie);
+                    break;
                 case ACTION_SIMILAR:
-                    if (mSimilarRowAdapter.size() > 0) {
+                    if (mSimilarRowAdapter != null && mSimilarRowAdapter.size() > 0) {
                         position++;
                     }
                 case ACTION_RECOMMENDED:
-                    if (mRecommendedRowAdapter.size() > 0) {
+                    if (mRecommendedRowAdapter != null && mRecommendedRowAdapter.size() > 0) {
                         position++;
                     }
                 case ACTION_CAST:
-                    if (mCastRowAdapter.size() > 0) {
+                    if (mCastRowAdapter != null && mCastRowAdapter.size() > 0) {
                         position++;
                     }
                 case ACTION_VIDEOS:
-                    if (mVideoRowAdapter.size() > 0) {
+                    if (mVideoRowAdapter != null && mVideoRowAdapter.size() > 0) {
                         position++;
                     }
+                    setSelectedPosition(position);
             }
-            setSelectedPosition(position);
         });
         mPresenterSelector.addClassPresenter(DetailsOverviewRow.class, detailsPresenter);
     }

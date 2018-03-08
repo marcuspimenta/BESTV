@@ -49,6 +49,8 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     private static final int TOP_MOVIES_LIST_ID = 1;
     private static final int GENRE_ID = 2;
 
+    private static final PageRow sFavoritePageRow = new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITE));
+
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
     private ArrayObjectAdapter mRowsAdapter;
@@ -82,7 +84,15 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         super.onViewCreated(view, savedInstanceState);
         getProgressBarManager().show();
         setupMainList();
-        mPresenter.loadGenres();
+        mPresenter.loadData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPresenter.hasFavoriteMovies() && mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
+            mRowsAdapter.add(4, sFavoritePageRow);
+        }
     }
 
     @Override
@@ -92,10 +102,21 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     }
 
     @Override
-    public void onGenresLoaded(final List<Genre> genres) {
-        getProgressBarManager().hide();
-        loadRows(genres);
+    public void onDataLoaded(final boolean hasFavoriteMovie, final List<Genre> genres) {
+        if (hasFavoriteMovie) {
+            mRowsAdapter.add(4, sFavoritePageRow);
+        }
 
+        if (genres != null && genres.size() > 0) {
+            mRowsAdapter.add(new DividerRow());
+            mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
+
+            for (final Genre genre : genres) {
+                mRowsAdapter.add(new PageRow(new GenreHeaderItem(GENRE_ID, genre)));
+            }
+        }
+
+        getProgressBarManager().hide();
         startEntranceTransition();
     }
 
@@ -126,17 +147,6 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.POPULAR)));
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.TOP_RATED)));
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
-    }
-
-    private void loadRows(final List<Genre> genres) {
-        if (genres != null && genres.size() > 0) {
-            mRowsAdapter.add(new DividerRow());
-            mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
-
-            for (final Genre genre : genres) {
-                mRowsAdapter.add(new PageRow(new GenreHeaderItem(GENRE_ID, genre)));
-            }
-        }
     }
 
     private class PageRowFragmentFactory extends BrowseSupportFragment.FragmentFactory {

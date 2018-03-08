@@ -24,6 +24,14 @@ import java.util.List;
 public interface MovieManager {
 
     /**
+     * Checks if there is any {@link Movie} saved as favorite
+     *
+     * @return          {@code true} if there any {@link Movie} saved as favorite,
+     *                  {@code false} otherwise
+     */
+    boolean hasFavoriteMovie();
+
+    /**
      * Saves a {@link Movie} as favorites
      *
      * @param movie     {@link Movie} to be saved as favorite

@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.models.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,6 +37,12 @@ public class MovieManagerImpl implements MovieManager {
     }
 
     @Override
+    public boolean hasFavoriteMovie() {
+        final List<Movie> favoriteMovies = Movie.getAll();
+        return favoriteMovies != null ? favoriteMovies.size() > 0 : false;
+    }
+
+    @Override
     public boolean saveFavoriteMovie(@NonNull final Movie movie) {
         return movie.create() > 0;
     }
@@ -47,6 +54,15 @@ public class MovieManagerImpl implements MovieManager {
 
     @Override
     public List<Movie> getFavoriteMovies() {
-        return Movie.getAll();
+        final List<Movie> favoriteMovies = Movie.getAll();
+        final List<Movie> movies = new ArrayList<>();
+        for (final Movie movie : favoriteMovies) {
+            final Movie detailMovie = mTmdbConnector.getMovie(movie.getTmdbId());
+            if (detailMovie != null) {
+                detailMovie.setFavorite(true);
+                movies.add(detailMovie);
+            }
+        }
+        return movies;
     }
 }

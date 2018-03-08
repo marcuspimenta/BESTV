@@ -23,6 +23,6 @@ import java.util.List;
  */
 public interface MainCallback extends BasePresenter.Callback {
 
-    void onGenresLoaded(List<Genre> genres);
+    void onDataLoaded(boolean hasFavoriteMovie, List<Genre> genres);
 
 }

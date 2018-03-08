@@ -90,7 +90,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public CastList getCastByMovie(final Movie movie) {
         try {
-            return mTmdb.getMovieApi().getCastByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
+            return mTmdb.getMovieApi().getCastByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the cast by movie", e);
             return null;
@@ -100,7 +100,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getRecommendationByMovie(final Movie movie, final int page) {
         try {
-            return mTmdb.getMovieApi().getRecommendationByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
+            return mTmdb.getMovieApi().getRecommendationByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the recommendations", e);
             return null;
@@ -110,7 +110,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getSimilarByMovie(final Movie movie, final int page) {
         try {
-            return mTmdb.getMovieApi().getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
+            return mTmdb.getMovieApi().getSimilarByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the similar", e);
             return null;
@@ -120,7 +120,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public VideoList getVideosByMovie(final Movie movie) {
         try {
-            return mTmdb.getMovieApi().getVideosByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
+            return mTmdb.getMovieApi().getVideosByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the videos", e);
             return null;
@@ -171,6 +171,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
      * Represents the movie list type
      */
     public enum MovieListType {
+        FAVORITE(R.string.favorite),
         NOW_PLAYING(R.string.now_playing),
         POPULAR(R.string.popular),
         TOP_RATED(R.string.top_rated),

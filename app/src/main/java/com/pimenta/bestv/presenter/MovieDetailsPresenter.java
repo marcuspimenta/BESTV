@@ -29,6 +29,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.models.Cast;
 import com.pimenta.bestv.models.CastList;
 import com.pimenta.bestv.models.Movie;
@@ -57,6 +58,9 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     NotificationManager mNotificationManager;
 
     @Inject
+    MovieManager mMovieManager;
+
+    @Inject
     TmdbConnector mTmdbConnector;
 
     private int mRecommendedPage = 0;
@@ -81,13 +85,45 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     }
 
     /**
+     * Sets if a {@link Movie} is or not is favorite
+     *
+     * @param movie {@link Movie}
+     */
+    public void setFavoriteMovie(Movie movie) {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Boolean>) e -> {
+                    boolean result;
+                    if (movie.isFavorite()) {
+                        result = mMovieManager.deleteFavoriteMovie(movie);
+                    } else {
+                        result = mMovieManager.saveFavoriteMovie(movie);
+                    }
+                    if (result) {
+                        e.onSuccess(true);
+                    } else {
+                        e.onError(new AssertionError());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    movie.setFavorite(!movie.isFavorite());
+                    if (mCallback != null) {
+                        mCallback.onResultSetFavoriteMovie(true);
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onResultSetFavoriteMovie(false);
+                    }
+                }));
+    }
+
+    /**
      * Loads the {@link List<Cast>} by the {@link Movie}
      *
      * @param movie {@link Movie}
      */
     public void loadDataByMovie(Movie movie) {
-        mCompositeDisposable.add(
-            Single.create((SingleOnSubscribe<MovieInfo>) e -> {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<MovieInfo>) e -> {
                 final MovieInfo movieInfo = new MovieInfo();
 
                 final CastList castList = mTmdbConnector.getCastByMovie(movie);

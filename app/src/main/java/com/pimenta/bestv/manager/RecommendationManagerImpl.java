@@ -58,11 +58,11 @@ public class RecommendationManagerImpl implements RecommendationManager {
     public void loadRecommendations() {
         mNotificationManager.cancelAll();
         final MovieList movieList = mTmdbConnector.getPopularMovies(1);
-        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+        if (movieList != null && movieList.getPage() <= movieList.getTotalPages() && movieList.getMovies() != null) {
             int count = 0;
             for (final Movie movie : movieList.getMovies()) {
                 try {
-                    int id = Long.valueOf(movie.getId()).hashCode();
+                    int id = Long.valueOf(movie.getTmdbId()).hashCode();
 
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()
@@ -77,6 +77,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .setBadgeIcon(R.drawable.movie)
                             .setTitle(movie.getTitle())
                             .setContentImage(cardBitmap)
+                            .setContentTypes(new String[]{ContentRecommendation.CONTENT_TYPE_MOVIE})
                             .setBackgroundImageUri(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
                             .setText(mApplication.getString(R.string.popular))
                             .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),

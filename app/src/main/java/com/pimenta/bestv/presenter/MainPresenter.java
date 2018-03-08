@@ -18,8 +18,10 @@ import android.util.DisplayMetrics;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.models.Genre;
+import com.pimenta.bestv.models.Movie;
 
 import java.util.List;
 
@@ -42,11 +44,33 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     RecommendationManager mRecommendationManager;
 
     @Inject
+    MovieManager mMovieManager;
+
+    @Inject
     TmdbConnector mTmdbConnector;
 
     public MainPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
+    }
+
+    /**
+     * Gets the {@link DisplayMetrics} instance
+     *
+     * @return {@link DisplayMetrics}
+     */
+    public DisplayMetrics getDisplayMetrics() {
+        return mDisplayMetrics;
+    }
+
+    /**
+     * Checks if there is any {@link Movie} saved as favorite
+     *
+     * @return          {@code true} if there any {@link Movie} saved as favorite,
+     *                  {@code false} otherwise
+     */
+    public boolean hasFavoriteMovies() {
+        return mMovieManager.hasFavoriteMovie();
     }
 
     /**
@@ -60,37 +84,51 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     }
 
     /**
-     * Gets the {@link DisplayMetrics} instance
-     *
-     * @return {@link DisplayMetrics}
+     * Loads the {@link List<Genre>} available at TMDb
      */
-    public DisplayMetrics getDisplayMetrics() {
-        return mDisplayMetrics;
+    public void loadData() {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Data>) e -> {
+                    final boolean hasFavoriteMovie = mMovieManager.hasFavoriteMovie();
+                    final List<Genre> genres = mTmdbConnector.getGenres();
+                    final Data data = new Data(hasFavoriteMovie, genres);
+                    if (genres != null) {
+                        e.onSuccess(data);
+                    } else {
+                        e.onError(new AssertionError());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                    if (mCallback != null) {
+                        mCallback.onDataLoaded(data.hasFavoriteMovie(), data.getGenres());
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onDataLoaded(false, null);
+                    }
+                }));
     }
 
     /**
-     * Loads the {@link List<Genre>} available at TMDb
+     * Wrapper to keep the data to be handle by callback
      */
-    public void loadGenres() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Genre>>) e -> {
-                final List<Genre> genres = mTmdbConnector.getGenres();
-                if (genres != null) {
-                    e.onSuccess(genres);
-                } else {
-                    e.onError(new AssertionError());
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(genres -> {
-                if (mCallback != null) {
-                    mCallback.onGenresLoaded(genres);
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onGenresLoaded(null);
-                }
-            }));
-    }
+    private class Data {
 
+        private boolean mHasFavoriteMovie;
+        private List<Genre> mGenres;
+
+        public Data(final boolean hasFavoriteMovie, final List<Genre> genres) {
+            mHasFavoriteMovie = hasFavoriteMovie;
+            mGenres = genres;
+        }
+
+        public boolean hasFavoriteMovie() {
+            return mHasFavoriteMovie;
+        }
+
+        public List<Genre> getGenres() {
+            return mGenres;
+        }
+    }
 }

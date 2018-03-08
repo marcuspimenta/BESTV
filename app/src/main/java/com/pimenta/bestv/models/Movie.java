@@ -22,6 +22,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.pimenta.bestv.database.AbstractDatabaseModel;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -34,11 +37,14 @@ public class Movie extends AbstractDatabaseModel {
     private static final String TAG = "Movie";
     public static final String TABLE = "movie";
     public static final String FIELD_ID = "id";
+    public static final String FIELD_TMDB_ID = "tmdb_id";
 
     @DatabaseField(columnName = FIELD_ID, generatedId = true)
+    private int mId;
+    @DatabaseField(columnName = FIELD_TMDB_ID)
     @SerializedName("id")
     @Expose
-    private int mId;
+    private int mTmdbId;
     @SerializedName("title")
     @Expose
     private String mTitle;
@@ -53,7 +59,7 @@ public class Movie extends AbstractDatabaseModel {
     private String mOverview;
     @SerializedName("release_date")
     @Expose
-    private Date mReleaseDate;
+    private String mReleaseDate;
     @SerializedName("backdrop_path")
     @Expose
     private String mBackdropPath;
@@ -72,9 +78,7 @@ public class Movie extends AbstractDatabaseModel {
     @SerializedName("adult")
     @Expose
     private boolean mIsAdult;
-    @SerializedName("genres")
-    @Expose
-    private List<Genre> mGenres;
+    private boolean mIsFavorite;
 
     public static List<Movie> getAll() {
         return getDao(Movie.class).queryForAll();
@@ -118,6 +122,14 @@ public class Movie extends AbstractDatabaseModel {
         mId = id;
     }
 
+    public int getTmdbId() {
+        return mTmdbId;
+    }
+
+    public void setTmdbId(final int tmdbId) {
+        mTmdbId = tmdbId;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -151,11 +163,17 @@ public class Movie extends AbstractDatabaseModel {
     }
 
     public Date getReleaseDate() {
-        return mReleaseDate;
+        try {
+            final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return dateFormat.parse(mReleaseDate);
+        } catch (ParseException e) {
+            Log.e(TAG, "Error to get the release data", e);
+        }
+        return null;
     }
 
     public void setReleaseDate(final Date releaseDate) {
-        mReleaseDate = releaseDate;
+        mReleaseDate = releaseDate.toString();
     }
 
     public String getBackdropPath() {
@@ -206,12 +224,12 @@ public class Movie extends AbstractDatabaseModel {
         mIsAdult = adult;
     }
 
-    public List<Genre> getGenres() {
-        return mGenres;
+    public boolean isFavorite() {
+        return mIsFavorite;
     }
 
-    public void setGenres(final List<Genre> genres) {
-        mGenres = genres;
+    public void setFavorite(final boolean favorite) {
+        mIsFavorite = favorite;
     }
 
     @Override
@@ -225,6 +243,6 @@ public class Movie extends AbstractDatabaseModel {
 
         Movie that = (Movie) obj;
 
-        return mId == that.getId();
+        return mId == that.getTmdbId();
     }
 }

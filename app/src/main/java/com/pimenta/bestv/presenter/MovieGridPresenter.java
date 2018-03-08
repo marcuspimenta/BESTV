@@ -29,6 +29,7 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.models.Genre;
 import com.pimenta.bestv.models.Movie;
 import com.pimenta.bestv.models.MovieList;
@@ -54,6 +55,9 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     DisplayMetrics mDisplayMetrics;
 
     @Inject
+    MovieManager mMovieManager;
+
+    @Inject
     TmdbConnector mTmdbConnector;
 
     private int mCurrentPage = 0;
@@ -66,30 +70,39 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
     /**
      * Loads the now playing {@link List<Movie>}
      */
-    public void loadToMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
+    public void loadMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mCurrentPage + 1;
-                MovieList movieList = null;
-                switch (movieListType) {
-                    case NOW_PLAYING:
-                        movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
-                        break;
-                    case POPULAR:
-                        movieList = mTmdbConnector.getPopularMovies(pageSearch);
-                        break;
-                    case TOP_RATED:
-                        movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
-                        break;
-                    case UP_COMING:
-                        movieList = mTmdbConnector.getUpComingMovies(pageSearch);
-                        break;
-                }
-
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mCurrentPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
+                if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+                    final List<Movie> movies = mMovieManager.getFavoriteMovies();
+                    if (movies != null) {
+                        e.onSuccess(movies);
+                    } else {
+                        e.onError(new AssertionError());
+                    }
                 } else {
-                    e.onError(new AssertionError());
+                    int pageSearch = mCurrentPage + 1;
+                    MovieList movieList = null;
+                    switch (movieListType) {
+                        case NOW_PLAYING:
+                            movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
+                            break;
+                        case POPULAR:
+                            movieList = mTmdbConnector.getPopularMovies(pageSearch);
+                            break;
+                        case TOP_RATED:
+                            movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
+                            break;
+                        case UP_COMING:
+                            movieList = mTmdbConnector.getUpComingMovies(pageSearch);
+                            break;
+                    }
+
+                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                        mCurrentPage = movieList.getPage();
+                        e.onSuccess(movieList.getMovies());
+                    } else {
+                        e.onError(new AssertionError());
+                    }
                 }
             })
             .subscribeOn(Schedulers.io())

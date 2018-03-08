@@ -51,6 +51,6 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     @Override
     void loadData() {
-        mPresenter.loadToMoviesByType(mMovieListType);
+        mPresenter.loadMoviesByType(mMovieListType);
     }
 }

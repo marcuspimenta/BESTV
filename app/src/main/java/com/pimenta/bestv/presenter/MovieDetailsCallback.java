@@ -28,6 +28,8 @@ import java.util.List;
  */
 public interface MovieDetailsCallback extends BasePresenter.Callback {
 
+    void onResultSetFavoriteMovie(boolean success);
+
     void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies, List<Video> videos);
 
     void onRecommendationLoaded(List<Movie> movies);

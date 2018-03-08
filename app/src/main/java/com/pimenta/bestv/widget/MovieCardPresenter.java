@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
  */
 public class MovieCardPresenter extends Presenter {
 
+    private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         ImageCardView cardView = new ImageCardView(parent.getContext());
@@ -43,11 +45,12 @@ public class MovieCardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         final Movie movie = (Movie) item;
-        final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(movie.getTitle());
-        cardView.setContentText(dateFormat.format(movie.getReleaseDate()));
+        if (movie.getReleaseDate() != null) {
+            cardView.setContentText(sDateFormat.format(movie.getReleaseDate()));
+        }
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
         Glide.with(viewHolder.view.getContext())
