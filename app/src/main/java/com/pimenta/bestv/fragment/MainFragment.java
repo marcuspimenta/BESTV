@@ -48,6 +48,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     private static final String TAG = "MainFragment";
     private static final int TOP_MOVIES_LIST_ID = 1;
     private static final int GENRE_ID = 2;
+    private static final int FAVORITE_INDEX = 4;
 
     private static final PageRow sFavoritePageRow = new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITE));
 
@@ -90,8 +91,17 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     @Override
     public void onResume() {
         super.onResume();
-        if (mPresenter.hasFavoriteMovies() && mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
-            mRowsAdapter.add(4, sFavoritePageRow);
+        if (mPresenter.hasFavoriteMovies()) {
+            if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
+                mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
+            }
+        } else {
+            if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
+                if (getSelectedPosition() == FAVORITE_INDEX) {
+                    setSelectedPosition(3);
+                }
+                mRowsAdapter.remove(sFavoritePageRow);
+            }
         }
     }
 
@@ -103,8 +113,8 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
 
     @Override
     public void onDataLoaded(final boolean hasFavoriteMovie, final List<Genre> genres) {
-        if (hasFavoriteMovie) {
-            mRowsAdapter.add(4, sFavoritePageRow);
+        if (hasFavoriteMovie && mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
+            mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
         }
 
         if (genres != null && genres.size() > 0) {

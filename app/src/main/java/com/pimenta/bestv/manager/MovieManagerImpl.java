@@ -37,6 +37,16 @@ public class MovieManagerImpl implements MovieManager {
     }
 
     @Override
+    public boolean isFavorite(final Movie movie) {
+        final Movie movieFind = Movie.getByTmdbId(movie.getTmdbId());
+        if (movieFind != null) {
+            movie.setId(movieFind.getId());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean hasFavoriteMovie() {
         final List<Movie> favoriteMovies = Movie.getAll();
         return favoriteMovies != null ? favoriteMovies.size() > 0 : false;

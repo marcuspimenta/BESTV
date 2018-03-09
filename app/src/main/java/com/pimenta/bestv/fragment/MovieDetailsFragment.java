@@ -112,7 +112,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFavoriteAction = new Action(ACTION_FAVORITE, mMovie.isFavorite() ? getResources().getString(R.string.remove_favorite) :
+        mFavoriteAction = new Action(ACTION_FAVORITE, mPresenter.isMovieFavorite(mMovie) ? getResources().getString(R.string.remove_favorite) :
                 getResources().getString(R.string.save_favorite));
         mActionAdapter.add(mFavoriteAction);
         mPresenter.loadDataByMovie(mMovie);
@@ -121,8 +121,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onResultSetFavoriteMovie(final boolean success) {
         if (success) {
-            mFavoriteAction.setLabel1(mMovie.isFavorite() ? getResources().getString(R.string.remove_favorite) :
-                    getResources().getString(R.string.save_favorite));
+            mFavoriteAction.setLabel1(mMovie.isFavorite() ? getResources().getString(R.string.remove_favorite) : getResources().getString(R.string.save_favorite));
             mActionAdapter.notifyItemRangeChanged(mActionAdapter.indexOf(mFavoriteAction), 1);
         }
     }

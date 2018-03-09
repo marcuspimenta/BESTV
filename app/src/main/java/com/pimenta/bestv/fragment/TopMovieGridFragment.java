@@ -15,8 +15,13 @@
 package com.pimenta.bestv.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v17.leanback.widget.DiffCallback;
 
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.models.Movie;
+
+import java.util.List;
 
 /**
  * Created by marcus on 11-02-2018.
@@ -52,5 +57,40 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
     @Override
     void loadData() {
         mPresenter.loadMoviesByType(mMovieListType);
+    }
+
+    @Override
+    public void loadMorePages() {
+        if (!mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+            super.loadMorePages();
+        }
+    }
+
+    @Override
+    public void refreshDada() {
+        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+            super.loadMorePages();
+        }
+    }
+
+    @Override
+    public void onMoviesLoaded(final List<Movie> movies) {
+        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+            mRowsAdapter.setItems(movies, new DiffCallback<Movie>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
+                    return oldItem.equals(newItem);
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
+                    return oldItem.equals(newItem);
+                }
+            });
+            getProgressBarManager().hide();
+            getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
+            return;
+        }
+        super.onMoviesLoaded(movies);
     }
 }

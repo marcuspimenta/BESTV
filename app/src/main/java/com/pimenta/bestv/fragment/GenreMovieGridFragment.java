@@ -54,4 +54,8 @@ public class GenreMovieGridFragment extends AbstractMovieGridFragment {
         mPresenter.loadMoviesByGenre(mGenre);
     }
 
+    @Override
+    public void refreshDada() {
+        // DO ANYTHING
+    }
 }

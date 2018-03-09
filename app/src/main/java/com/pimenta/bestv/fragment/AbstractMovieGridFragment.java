@@ -66,7 +66,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
-    private ArrayObjectAdapter mRowsAdapter;
+    protected ArrayObjectAdapter mRowsAdapter;
 
     private Movie mMovieSelected;
     protected boolean mShowProgress;
@@ -102,6 +102,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         super.onResume();
         if (mMovieSelected != null) {
             loadBackdropImage(false);
+            refreshDada();
         }
     }
 
@@ -160,6 +161,16 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         }
     }
 
+    public void loadMorePages() {
+        getProgressBarManager().show();
+        loadData();
+    }
+
+    public void refreshDada() {
+        getProgressBarManager().show();
+        loadData();
+    }
+
     private void setupUI() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
 
@@ -200,8 +211,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
             loadBackdropImage(true);
 
             if (mRowsAdapter.indexOf(mMovieSelected) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
-                getProgressBarManager().show();
-                loadData();
+                loadMorePages();
             }
         }
     }

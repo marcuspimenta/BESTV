@@ -84,6 +84,14 @@ public class Movie extends AbstractDatabaseModel {
         return getDao(Movie.class).queryForAll();
     }
 
+    public static Movie getByTmdbId(int tmdbId) {
+        final List<Movie> movies = getDao(Movie.class).queryForEq(FIELD_TMDB_ID, tmdbId);
+        if (movies != null && movies.size() > 0) {
+            return movies.get(0);
+        }
+        return null;
+    }
+
     public int create() {
         int res = 0;
         try {

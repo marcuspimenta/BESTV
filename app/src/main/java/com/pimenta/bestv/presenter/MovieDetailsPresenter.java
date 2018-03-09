@@ -66,9 +66,21 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     private int mRecommendedPage = 0;
     private int mSimilarPage = 0;
 
+
     public MovieDetailsPresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
+    }
+
+    /**
+     * Checks if the {@link Movie} is favorite
+     *
+     * @param movie     {@link Movie}
+     * @return          {@code true} if yes, {@code false} otherwise
+     */
+    public boolean isMovieFavorite(Movie movie) {
+        movie.setFavorite(mMovieManager.isFavorite(movie));
+        return movie.isFavorite();
     }
 
     /**
