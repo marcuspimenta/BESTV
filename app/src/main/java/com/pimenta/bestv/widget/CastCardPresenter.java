@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.models.Cast;
+import com.pimenta.bestv.model.Cast;
 
 /**
  * Created by marcus on 16-02-2018.

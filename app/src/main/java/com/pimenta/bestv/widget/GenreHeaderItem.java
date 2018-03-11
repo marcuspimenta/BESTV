@@ -16,7 +16,7 @@ package com.pimenta.bestv.widget;
 
 import android.support.v17.leanback.widget.HeaderItem;
 
-import com.pimenta.bestv.models.Genre;
+import com.pimenta.bestv.model.Genre;
 
 /**
  * Created by marcus on 09-02-2018.

@@ -30,9 +30,9 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.models.Genre;
-import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.models.MovieList;
+import com.pimenta.bestv.model.Genre;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.MovieList;
 
 import java.util.List;
 

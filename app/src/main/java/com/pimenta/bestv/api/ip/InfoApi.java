@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.api.ip;
 
-import com.pimenta.bestv.models.IpInfo;
+import com.pimenta.bestv.model.IpInfo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -12,38 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.models;
+package com.pimenta.bestv.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-public class Genre implements Serializable{
+public class GenreList {
 
-    @SerializedName("id")
-    @Expose
-    private int mId;
-    @SerializedName("name")
-    @Expose
-    private String mName;
+    @SerializedName("genres")
+    private List<Genre> mGenres;
 
-    public int getId() {
-        return mId;
+    public List<Genre> getGenres() {
+        return mGenres;
     }
 
-    public void setId(final int id) {
-        mId = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(final String name) {
-        mName = name;
+    public void setGenres(final List<Genre> genres) {
+        mGenres = genres;
     }
 }

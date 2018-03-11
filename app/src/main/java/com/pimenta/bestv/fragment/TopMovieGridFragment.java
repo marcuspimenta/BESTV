@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v17.leanback.widget.DiffCallback;
 
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 
 import java.util.List;
 

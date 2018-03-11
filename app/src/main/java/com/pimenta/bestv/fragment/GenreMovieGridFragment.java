@@ -16,7 +16,7 @@ package com.pimenta.bestv.fragment;
 
 import android.os.Bundle;
 
-import com.pimenta.bestv.models.Genre;
+import com.pimenta.bestv.model.Genre;
 
 /**
  * Created by marcus on 11-02-2018.

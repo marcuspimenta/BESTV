@@ -20,7 +20,7 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragment.MovieDetailsFragment;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**

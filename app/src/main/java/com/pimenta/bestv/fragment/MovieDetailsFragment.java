@@ -46,9 +46,9 @@ import android.widget.ImageView;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseDetailsFragment;
-import com.pimenta.bestv.models.Cast;
-import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.models.Video;
+import com.pimenta.bestv.model.Cast;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.Video;
 import com.pimenta.bestv.presenter.MovieDetailsCallback;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
@@ -193,6 +193,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onBackdropImageLoaded(final Bitmap bitmap) {
         mDetailsBackground.setCoverBitmap(bitmap);
+        mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
     }
 
     @Override

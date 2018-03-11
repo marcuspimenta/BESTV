@@ -39,7 +39,7 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseVerticalGridFragment;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.presenter.MovieGridCallback;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;

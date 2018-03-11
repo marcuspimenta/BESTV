@@ -14,11 +14,11 @@
 
 package com.pimenta.bestv.connector;
 
-import com.pimenta.bestv.models.CastList;
-import com.pimenta.bestv.models.Genre;
-import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.models.MovieList;
-import com.pimenta.bestv.models.VideoList;
+import com.pimenta.bestv.model.CastList;
+import com.pimenta.bestv.model.Genre;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.MovieList;
+import com.pimenta.bestv.model.VideoList;
 
 import java.util.List;
 

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.models;
+package com.pimenta.bestv.model;
 
 import android.util.Log;
 

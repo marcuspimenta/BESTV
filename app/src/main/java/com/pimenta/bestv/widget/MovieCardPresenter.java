@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

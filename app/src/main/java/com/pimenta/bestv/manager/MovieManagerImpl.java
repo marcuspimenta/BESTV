@@ -17,7 +17,7 @@ package com.pimenta.bestv.manager;
 import android.support.annotation.NonNull;
 
 import com.pimenta.bestv.connector.TmdbConnector;
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -30,12 +30,12 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.models.Cast;
-import com.pimenta.bestv.models.CastList;
-import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.models.MovieList;
-import com.pimenta.bestv.models.Video;
-import com.pimenta.bestv.models.VideoList;
+import com.pimenta.bestv.model.Cast;
+import com.pimenta.bestv.model.CastList;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.MovieList;
+import com.pimenta.bestv.model.Video;
+import com.pimenta.bestv.model.VideoList;
 
 import java.util.List;
 

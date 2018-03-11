@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.fragment.bases.BaseBrowseFragment;
-import com.pimenta.bestv.models.Genre;
+import com.pimenta.bestv.model.Genre;
 import com.pimenta.bestv.presenter.MainCallback;
 import com.pimenta.bestv.presenter.MainPresenter;
 import com.pimenta.bestv.widget.GenreHeaderItem;
@@ -98,7 +98,7 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         } else {
             if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
                 if (getSelectedPosition() == FAVORITE_INDEX) {
-                    setSelectedPosition(3);
+                    setSelectedPosition(FAVORITE_INDEX - 1);
                 }
                 mRowsAdapter.remove(sFavoritePageRow);
             }

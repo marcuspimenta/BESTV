@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.manager;
 
-import com.pimenta.bestv.models.Movie;
+import com.pimenta.bestv.model.Movie;
 
 import java.util.List;
 

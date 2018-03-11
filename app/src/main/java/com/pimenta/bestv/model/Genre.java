@@ -12,21 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.models;
+package com.pimenta.bestv.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * Created by marcus on 22-02-2018.
+ * Created by marcus on 08-02-2018.
  */
-public class VideoList {
+public class Genre implements Serializable{
 
     @SerializedName("id")
+    @Expose
     private int mId;
-    @SerializedName("results")
-    private List<Video> mVideos;
+    @SerializedName("name")
+    @Expose
+    private String mName;
 
     public int getId() {
         return mId;
@@ -36,11 +39,11 @@ public class VideoList {
         mId = id;
     }
 
-    public List<Video> getVideos() {
-        return mVideos;
+    public String getName() {
+        return mName;
     }
 
-    public void setVideos(final List<Video> videos) {
-        mVideos = videos;
+    public void setName(final String name) {
+        mName = name;
     }
 }

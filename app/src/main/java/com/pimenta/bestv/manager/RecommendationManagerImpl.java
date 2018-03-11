@@ -25,8 +25,8 @@ import com.bumptech.glide.Glide;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.connector.TmdbConnector;
-import com.pimenta.bestv.models.Movie;
-import com.pimenta.bestv.models.MovieList;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.MovieList;
 
 import java.util.concurrent.ExecutionException;
 
