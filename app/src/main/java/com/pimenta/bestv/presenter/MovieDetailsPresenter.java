@@ -84,19 +84,6 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     }
 
     /**
-     * Cancel a previously shown notification.  If it's transient, the view
-     * will be hidden.  If it's persistent, it will be removed from the status
-     * bar.
-     *
-     * @param notificationId    Notification ID
-     */
-    public void removeNotification(int notificationId) {
-        if (notificationId != -1) {
-            mNotificationManager.cancel(notificationId);
-        }
-    }
-
-    /**
      * Sets if a {@link Movie} is or not is favorite
      *
      * @param movie {@link Movie}

@@ -72,6 +72,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .get();
 
                     final ContentRecommendation contentRecommendation = new ContentRecommendation.Builder()
+                            .setAutoDismiss(true)
                             .setIdTag(Integer.toString(id))
                             .setGroup(mApplication.getString(R.string.app_name))
                             .setBadgeIcon(R.drawable.movie)
@@ -104,7 +105,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
      * @return                      {@link Intent}
      */
     private Intent buildIntent(Movie movie, int notificationId) {
-        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, movie, notificationId);
+        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, movie);
         detailsIntent.setAction(Integer.toString(notificationId));
         return detailsIntent;
     }
