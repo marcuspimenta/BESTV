@@ -33,8 +33,8 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.fragment.bases.BaseBrowseFragment;
 import com.pimenta.bestv.model.Genre;
-import com.pimenta.bestv.presenter.MainCallback;
-import com.pimenta.bestv.presenter.MainPresenter;
+import com.pimenta.bestv.presenter.MovieBrowseCallback;
+import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 import com.pimenta.bestv.widget.GenreHeaderItem;
 import com.pimenta.bestv.widget.MovieListTypeHeaderItem;
 
@@ -43,9 +43,9 @@ import java.util.List;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MainFragment extends BaseBrowseFragment<MainPresenter> implements MainCallback {
+public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter> implements MovieBrowseCallback {
 
-    private static final String TAG = "MainFragment";
+    public static final String TAG = "MovieBrowseFragment";
     private static final int TOP_MOVIES_LIST_ID = 1;
     private static final int GENRE_ID = 2;
     private static final int FAVORITE_INDEX = 4;
@@ -56,8 +56,8 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     private boolean mShowProgress = false;
     private ArrayObjectAdapter mRowsAdapter;
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static MovieBrowseFragment newInstance() {
+        return new MovieBrowseFragment();
     }
 
     @Override
@@ -131,17 +131,16 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
     }
 
     @Override
-    public MainPresenter getPresenter() {
-        return new MainPresenter();
+    public MovieBrowsePresenter getPresenter() {
+        return new MovieBrowsePresenter();
     }
 
     private void setupUIElements() {
-        //setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
+        setOnSearchClickedListener(new SearchClickListener());
 
-        //setBrandColor(getResources().getColor(R.color.fastlane_background, getActivity().getTheme()));
-        //setSearchAffordanceColor(getResources().getColor(R.color.search_opaque, getActivity().getTheme()));
+        setSearchAffordanceColor(getResources().getColor(R.color.background_color, getActivity().getTheme()));
         getMainFragmentRegistry().registerFragment(PageRow.class, new PageRowFragmentFactory());
 
         BackgroundManager.getInstance(getActivity()).attach(getActivity().getWindow());
@@ -159,6 +158,14 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
         mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.UP_COMING)));
     }
 
+    private class SearchClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(final View v) {
+
+        }
+    }
+
     private class PageRowFragmentFactory extends BrowseSupportFragment.FragmentFactory {
 
         @Override
@@ -171,11 +178,11 @@ public class MainFragment extends BaseBrowseFragment<MainPresenter> implements M
             switch ((int) row.getHeaderItem().getId()) {
                 case TOP_MOVIES_LIST_ID:
                     final MovieListTypeHeaderItem movieListTypeHeaderItem = (MovieListTypeHeaderItem) row.getHeaderItem();
-                    MainFragment.this.setTitle(row.getHeaderItem().getName());
+                    MovieBrowseFragment.this.setTitle(row.getHeaderItem().getName());
                     return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType(), mShowProgress);
                 case GENRE_ID:
                     final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
-                    MainFragment.this.setTitle(genreHeaderItem.getGenre().getName());
+                    MovieBrowseFragment.this.setTitle(genreHeaderItem.getGenre().getName());
                     return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre(), mShowProgress);
             }
 

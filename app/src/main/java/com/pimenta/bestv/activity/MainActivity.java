@@ -16,23 +16,23 @@ package com.pimenta.bestv.activity;
 
 import android.os.Bundle;
 
-import com.pimenta.bestv.fragment.MainFragment;
-import com.pimenta.bestv.presenter.MainPresenter;
+import com.pimenta.bestv.fragment.MovieBrowseFragment;
+import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class MainActivity extends BaseActivity<MainPresenter> {
+public class MainActivity extends BaseActivity<MovieBrowsePresenter> {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter.loadRecommendations();
-        replaceFragment(MainFragment.newInstance());
+        replaceFragment(MovieBrowseFragment.newInstance());
     }
 
     @Override
-    protected MainPresenter getPresenter() {
-        return new MainPresenter();
+    protected MovieBrowsePresenter getPresenter() {
+        return new MovieBrowsePresenter();
     }
 }

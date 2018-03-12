@@ -12,17 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenter;
+package com.pimenta.bestv.fragment;
 
-import com.pimenta.bestv.model.Genre;
-
-import java.util.List;
+import com.pimenta.bestv.fragment.bases.BaseSearchFragment;
+import com.pimenta.bestv.presenter.SearchPresenter;
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 12-03-2018.
  */
-public interface MainCallback extends BasePresenter.Callback {
+public class SearchFragment extends BaseSearchFragment<SearchPresenter> {
 
-    void onDataLoaded(boolean hasFavoriteMovie, List<Genre> genres);
+    public static final String TAG = "SearchFragment";
 
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
+    }
+
+    @Override
+    protected SearchPresenter getPresenter() {
+        return new SearchPresenter();
+    }
 }

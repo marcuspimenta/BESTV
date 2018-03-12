@@ -19,7 +19,7 @@ import android.app.Application;
 import com.pimenta.bestv.database.DatabaseHelper;
 import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.presenter.BootPresenter;
-import com.pimenta.bestv.presenter.MainPresenter;
+import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
@@ -42,7 +42,7 @@ public interface ApplicationComponent {
 
     void inject(Movie movie);
 
-    void inject(MainPresenter presenter);
+    void inject(MovieBrowsePresenter presenter);
 
     void inject(MovieGridPresenter presenter);
 

@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 06-02-2018.
  */
-public class MainPresenter extends AbstractPresenter<MainCallback> {
+public class MovieBrowsePresenter extends AbstractPresenter<MovieBrowseCallback> {
 
     @Inject
     DisplayMetrics mDisplayMetrics;
@@ -49,7 +49,7 @@ public class MainPresenter extends AbstractPresenter<MainCallback> {
     @Inject
     TmdbConnector mTmdbConnector;
 
-    public MainPresenter() {
+    public MovieBrowsePresenter() {
         super();
         BesTV.getApplicationComponent().inject(this);
     }
