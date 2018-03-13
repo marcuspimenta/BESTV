@@ -29,6 +29,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.CastList;
@@ -59,6 +60,9 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
 
     @Inject
     MovieManager mMovieManager;
+
+    @Inject
+    ImageManager mImageManager;
 
     @Inject
     TmdbConnector mTmdbConnector;
@@ -257,11 +261,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(Movie movie) {
-        Glide.with(mApplication)
-            .asBitmap()
-            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
-            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(new SimpleTarget<Bitmap>() {
+        mImageManager.loadBackdropImage(movie, new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
                     if (mCallback != null) {

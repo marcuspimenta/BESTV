@@ -12,22 +12,21 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenter;
+package com.pimenta.bestv.manager;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
+import com.bumptech.glide.request.target.Target;
 import com.pimenta.bestv.model.Movie;
 
-import java.util.List;
-
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 13-03-2018.
  */
-public interface MovieGridCallback extends BasePresenter.Callback {
+public interface ImageManager {
 
-    void onMoviesLoaded(List<Movie> movies);
-
-    void onBackdropImageLoaded(Bitmap bitmap);
+    /**
+     * Loads the {@link Movie} backdrop image using Glide tool
+     *
+     * @param movie {@link Movie}
+     */
+    void loadBackdropImage(Movie movie, Target target);
 
 }

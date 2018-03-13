@@ -16,6 +16,7 @@ package com.pimenta.bestv.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -144,8 +145,8 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     }
 
     @Override
-    public void onBackdropImageLoaded(final Drawable drawable) {
-        mBackgroundManager.setDrawable(drawable);
+    public void onBackdropImageLoaded(final Bitmap bitmap) {
+        mBackgroundManager.setBitmap(bitmap);
     }
 
     @Override
