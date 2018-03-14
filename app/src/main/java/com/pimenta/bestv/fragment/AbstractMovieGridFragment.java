@@ -222,7 +222,6 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             final Movie movie = (Movie) item;
-
             final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
             startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);

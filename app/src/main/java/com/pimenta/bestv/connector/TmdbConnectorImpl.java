@@ -30,6 +30,7 @@ import com.pimenta.bestv.model.MovieList;
 import com.pimenta.bestv.model.VideoList;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -172,7 +173,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList searchMoviesByQuery(final String query, final int page) {
         try {
-            return mTmdb.getMovieApi().searchMoviesByQuery(mApiKey, query, mLanguage, page).execute().body();
+            return mTmdb.getMovieApi().searchMoviesByQuery(mApiKey, URLEncoder.encode(query, "UTF-8"), mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to search the movies by query", e);
             return null;

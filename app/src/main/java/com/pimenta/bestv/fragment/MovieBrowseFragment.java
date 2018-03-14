@@ -50,7 +50,8 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private static final int GENRE_ID = 2;
     private static final int FAVORITE_INDEX = 4;
 
-    private static final PageRow sFavoritePageRow = new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITE));
+    private static final PageRow sFavoritePageRow = new PageRow(
+            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITE));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
@@ -61,14 +62,20 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     }
 
     @Override
+    public boolean isShowingHeaders() {
+        return super.isShowingHeaders();
+    }
+
+    @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUIElements();
     }
 
     @Override
-    public boolean isShowingHeaders() {
-        return super.isShowingHeaders();
+    public void onDestroy() {
+        getProgressBarManager().hide();
+        super.onDestroy();
     }
 
     @Override
@@ -89,6 +96,11 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     }
 
     @Override
+    public MovieBrowsePresenter getPresenter() {
+        return new MovieBrowsePresenter();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mPresenter.hasFavoriteMovies()) {
@@ -103,12 +115,6 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
                 mRowsAdapter.remove(sFavoritePageRow);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        getProgressBarManager().hide();
-        super.onDestroy();
     }
 
     @Override
@@ -128,11 +134,6 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
 
         getProgressBarManager().hide();
         startEntranceTransition();
-    }
-
-    @Override
-    public MovieBrowsePresenter getPresenter() {
-        return new MovieBrowsePresenter();
     }
 
     private void setupUIElements() {

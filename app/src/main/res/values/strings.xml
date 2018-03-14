@@ -14,6 +14,8 @@
     <string name="similar_movies">Similar movies</string>
     <string name="save_favorite">Save move</string>
     <string name="remove_favorite">Remove from favorite</string>
+    <string name="results">Results</string>
+    <string name="no_results">No results</string>
 
     <!-- Error messages -->
     <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>
