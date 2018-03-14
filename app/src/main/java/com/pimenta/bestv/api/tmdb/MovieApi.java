@@ -58,4 +58,8 @@ public interface MovieApi {
     @GET("movie/upcoming")
     Call<MovieList> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
+    @GET("search/movie")
+    Call<MovieList> searchMoviesByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
+            @Query("page") int page);
+
 }

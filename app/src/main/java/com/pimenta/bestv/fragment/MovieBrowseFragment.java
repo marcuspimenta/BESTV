@@ -162,7 +162,7 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
 
         @Override
         public void onClick(final View v) {
-
+            addFragment(SearchFragment.newInstance(), SearchFragment.TAG);
         }
     }
 

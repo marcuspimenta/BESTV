@@ -135,4 +135,15 @@ public interface TmdbConnector {
      */
     MovieList getUpComingMovies(int page);
 
+
+    /**
+     * Searches the movies by a query
+     *
+     * @param query     Query to search the movies
+     * @param page      Specify which page to query. Minimum: 1, maximum: 1000,
+     *                  default: 1
+     *
+     * @return          {@link MovieList}
+     */
+    MovieList searchMoviesByQuery(String query, int page);
 }

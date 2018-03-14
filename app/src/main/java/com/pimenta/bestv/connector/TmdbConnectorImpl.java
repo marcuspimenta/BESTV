@@ -169,6 +169,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
         }
     }
 
+    @Override
+    public MovieList searchMoviesByQuery(final String query, final int page) {
+        try {
+            return mTmdb.getMovieApi().searchMoviesByQuery(mApiKey, query, mLanguage, page).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to search the movies by query", e);
+            return null;
+        }
+    }
+
     /**
      * Represents the movie list type
      */

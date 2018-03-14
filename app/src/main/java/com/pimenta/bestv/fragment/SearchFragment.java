@@ -15,12 +15,16 @@
 package com.pimenta.bestv.fragment;
 
 import com.pimenta.bestv.fragment.bases.BaseSearchFragment;
+import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.presenter.SearchCallback;
 import com.pimenta.bestv.presenter.SearchPresenter;
+
+import java.util.List;
 
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchFragment extends BaseSearchFragment<SearchPresenter> {
+public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchCallback {
 
     public static final String TAG = "SearchFragment";
 
@@ -31,5 +35,10 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> {
     @Override
     protected SearchPresenter getPresenter() {
         return new SearchPresenter();
+    }
+
+    @Override
+    public void onResultLoaded(final List<Movie> movies) {
+
     }
 }
