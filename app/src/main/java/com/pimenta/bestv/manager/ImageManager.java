@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.manager;
 
-import com.bumptech.glide.request.target.Target;
 import com.pimenta.bestv.model.Movie;
 
 /**
@@ -23,10 +22,19 @@ import com.pimenta.bestv.model.Movie;
 public interface ImageManager {
 
     /**
-     * Loads the {@link Movie} backdrop image using Glide tool
+     * Loads the {@link Movie} backdrop image.
      *
-     * @param movie {@link Movie}
+     * @param movie    {@link Movie}
+     * @param callback {@link Callback}
      */
-    void loadBackdropImage(Movie movie, Target target);
+    void loadBackdropImage(Movie movie, Callback callback);
+
+    interface Callback<T> {
+
+        void onSuccess(T resource);
+
+        void onError();
+
+    }
 
 }

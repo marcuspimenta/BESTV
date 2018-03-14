@@ -35,6 +35,8 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import okhttp3.OkHttpClient;
+
 /**
  * Created by marcus on 08-02-2018.
  */
@@ -51,10 +53,10 @@ public class TmdbConnectorImpl implements TmdbConnector {
     private Tmdb mTmdb;
 
     @Inject
-    public TmdbConnectorImpl(Application application, Gson gson, Executor threadPool) {
+    public TmdbConnectorImpl(Application application, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
         mApiKey = application.getString(R.string.tmdb_api_key);
         mLanguage = application.getString(R.string.tmdb_filter_language);
-        mTmdb = new Tmdb(application.getString(R.string.tmdb_base_url_api), gson, threadPool);
+        mTmdb = new Tmdb(application.getString(R.string.tmdb_base_url_api), okHttpClient, gson, threadPool);
     }
 
     @Override

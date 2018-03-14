@@ -79,8 +79,9 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     /**
      * Checks if the {@link Movie} is favorite
      *
-     * @param movie     {@link Movie}
-     * @return          {@code true} if yes, {@code false} otherwise
+     * @param movie {@link Movie}
+     *
+     * @return {@code true} if yes, {@code false} otherwise
      */
     public boolean isMovieFavorite(Movie movie) {
         movie.setFavorite(mMovieManager.isFavorite(movie));
@@ -127,46 +128,46 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadDataByMovie(Movie movie) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<MovieInfo>) e -> {
-                final MovieInfo movieInfo = new MovieInfo();
+                    final MovieInfo movieInfo = new MovieInfo();
 
-                final CastList castList = mTmdbConnector.getCastByMovie(movie);
-                if (castList != null) {
-                    movieInfo.setCasts(castList.getCasts());
-                }
+                    final CastList castList = mTmdbConnector.getCastByMovie(movie);
+                    if (castList != null) {
+                        movieInfo.setCasts(castList.getCasts());
+                    }
 
-                int recommendedPageSearch = mRecommendedPage + 1;
-                final MovieList recommendedMovieList = mTmdbConnector.getRecommendationByMovie(movie, recommendedPageSearch);
-                if (recommendedMovieList != null && recommendedMovieList.getPage() <= recommendedMovieList.getTotalPages()) {
-                    mRecommendedPage = recommendedMovieList.getPage();
-                    movieInfo.setRecommendedMovies(recommendedMovieList.getMovies());
-                }
+                    int recommendedPageSearch = mRecommendedPage + 1;
+                    final MovieList recommendedMovieList = mTmdbConnector.getRecommendationByMovie(movie, recommendedPageSearch);
+                    if (recommendedMovieList != null && recommendedMovieList.getPage() <= recommendedMovieList.getTotalPages()) {
+                        mRecommendedPage = recommendedMovieList.getPage();
+                        movieInfo.setRecommendedMovies(recommendedMovieList.getMovies());
+                    }
 
-                int similarPageSearch = mSimilarPage + 1;
-                final MovieList similarMovieList = mTmdbConnector.getSimilarByMovie(movie, similarPageSearch);
-                if (similarMovieList != null && similarMovieList.getPage() <= similarMovieList.getTotalPages()) {
-                    mSimilarPage = similarMovieList.getPage();
-                    movieInfo.setSimilarMovies(similarMovieList.getMovies());
-                }
+                    int similarPageSearch = mSimilarPage + 1;
+                    final MovieList similarMovieList = mTmdbConnector.getSimilarByMovie(movie, similarPageSearch);
+                    if (similarMovieList != null && similarMovieList.getPage() <= similarMovieList.getTotalPages()) {
+                        mSimilarPage = similarMovieList.getPage();
+                        movieInfo.setSimilarMovies(similarMovieList.getMovies());
+                    }
 
-                final VideoList videoList = mTmdbConnector.getVideosByMovie(movie);
-                if (videoList != null) {
-                    movieInfo.setVideos(videoList.getVideos());
-                }
+                    final VideoList videoList = mTmdbConnector.getVideosByMovie(movie);
+                    if (videoList != null) {
+                        movieInfo.setVideos(videoList.getVideos());
+                    }
 
-                e.onSuccess(movieInfo);
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(movieInfo -> {
-                if (mCallback != null) {
-                    mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
-                            movieInfo.getVideos());
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onDataLoaded(null, null, null, null);
-                }
-            }));
+                    e.onSuccess(movieInfo);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movieInfo -> {
+                    if (mCallback != null) {
+                        mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
+                                movieInfo.getVideos());
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onDataLoaded(null, null, null, null);
+                    }
+                }));
     }
 
     /**
@@ -176,27 +177,27 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadRecommendationByMovie(Movie movie) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mRecommendedPage + 1;
-                final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
+                    int pageSearch = mRecommendedPage + 1;
+                    final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
 
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mRecommendedPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
-                } else {
-                    e.onError(new AssertionError());
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(movies -> {
-                if (mCallback != null) {
-                    mCallback.onRecommendationLoaded(movies);
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onRecommendationLoaded(null);
-                }
-            }));
+                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                        mRecommendedPage = movieList.getPage();
+                        e.onSuccess(movieList.getMovies());
+                    } else {
+                        e.onError(new AssertionError());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movies -> {
+                    if (mCallback != null) {
+                        mCallback.onRecommendationLoaded(movies);
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onRecommendationLoaded(null);
+                    }
+                }));
     }
 
     /**
@@ -206,27 +207,27 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadSimilarByMovie(Movie movie) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mSimilarPage + 1;
-                final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
+                    int pageSearch = mSimilarPage + 1;
+                    final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
 
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mSimilarPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
-                } else {
-                    e.onError(new AssertionError());
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(movies -> {
-                if (mCallback != null) {
-                    mCallback.onSimilarLoaded(movies);
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onSimilarLoaded(null);
-                }
-            }));
+                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                        mSimilarPage = movieList.getPage();
+                        e.onSuccess(movieList.getMovies());
+                    } else {
+                        e.onError(new AssertionError());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movies -> {
+                    if (mCallback != null) {
+                        mCallback.onSimilarLoaded(movies);
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onSimilarLoaded(null);
+                    }
+                }));
     }
 
     /**
@@ -236,23 +237,23 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadCardImage(Movie movie) {
         Glide.with(mApplication)
-            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
-            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(new SimpleTarget<Drawable>() {
-                @Override
-                public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
-                    if (mCallback != null) {
-                        mCallback.onCardImageLoaded(resource);
+                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
+                        if (mCallback != null) {
+                            mCallback.onCardImageLoaded(resource);
+                        }
                     }
-                }
 
-                @Override
-                public void onLoadFailed(@Nullable final Drawable errorDrawable) {
-                    if (mCallback != null) {
-                        mCallback.onCardImageLoaded(null);
+                    @Override
+                    public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+                        if (mCallback != null) {
+                            mCallback.onCardImageLoaded(null);
+                        }
                     }
-                }
-            });
+                });
     }
 
     /**
@@ -261,21 +262,21 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(Movie movie) {
-        mImageManager.loadBackdropImage(movie, new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                    if (mCallback != null) {
-                        mCallback.onBackdropImageLoaded(resource);
-                    }
+        mImageManager.loadBackdropImage(movie, new ImageManager.Callback<Bitmap>() {
+            @Override
+            public void onSuccess(final Bitmap resource) {
+                if (mCallback != null) {
+                    mCallback.onBackdropImageLoaded(resource);
                 }
+            }
 
-                @Override
-                public void onLoadFailed(@Nullable final Drawable errorDrawable) {
-                    if (mCallback != null) {
-                        mCallback.onBackdropImageLoaded(null);
-                    }
+            @Override
+            public void onError() {
+                if (mCallback != null) {
+                    mCallback.onBackdropImageLoaded(null);
                 }
-            });
+            }
+        });
     }
 
     /**

@@ -159,16 +159,16 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(@NonNull Movie movie) {
-        mImageManager.loadBackdropImage(movie, new SimpleTarget<Bitmap>() {
+        mImageManager.loadBackdropImage(movie, new ImageManager.Callback<Bitmap>() {
             @Override
-            public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
+            public void onSuccess(final Bitmap resource) {
                 if (mCallback != null) {
                     mCallback.onBackdropImageLoaded(resource);
                 }
             }
 
             @Override
-            public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+            public void onError() {
                 if (mCallback != null) {
                     mCallback.onBackdropImageLoaded(null);
                 }

@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.util.concurrent.Executor;
 
 import io.reactivex.annotations.NonNull;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -30,9 +31,10 @@ public class Tmdb {
     private GenreApi mGenreApi;
     private MovieApi mMovieApi;
 
-    public Tmdb(String baseUrl, Gson gson, @NonNull Executor executor) {
+    public Tmdb(String baseUrl, OkHttpClient okHttpClient, Gson gson, Executor executor) {
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .callbackExecutor(executor)
                 .build();

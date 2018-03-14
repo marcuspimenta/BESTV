@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -52,6 +53,12 @@ public class ApplicationModule {
     @Singleton
     public DisplayMetrics provideDisplayMetrics() {
         return new DisplayMetrics();
+    }
+
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient();
     }
 
     @Provides

@@ -27,6 +27,8 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import okhttp3.OkHttpClient;
+
 /**
  * Created by marcus on 11-02-2018.
  */
@@ -38,8 +40,8 @@ public class DeviceManagerImpl implements DeviceManager {
     private IpInfo mIpInfo;
 
     @Inject
-    public DeviceManagerImpl(Application application, Gson gson, Executor threadPool) {
-        mIp = new Ip(application.getString(R.string.ip_base_url_api), gson, threadPool);
+    public DeviceManagerImpl(Application application, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
+        mIp = new Ip(application.getString(R.string.ip_base_url_api), okHttpClient, gson, threadPool);
     }
 
     @Override
