@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.ProgressBarManager;
@@ -50,7 +51,8 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         SearchSupportFragment.SearchResultProvider {
 
     public static final String TAG = "SearchFragment";
-    public static final String MOVIE = "MOVIE";
+    private static final int SEARCH_FRAGMENT_REQUEST_CODE = 1;
+
     private final ProgressBarManager mProgressBarManager = new ProgressBarManager();
     private ArrayObjectAdapter mRowsAdapter;
 
@@ -127,6 +129,15 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         return true;
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case SEARCH_FRAGMENT_REQUEST_CODE:
+                getView().requestFocus();
+                break;
+        }
+    }
+
     private void searchQuery(String query) {
         mRowsAdapter.clear();
         mProgressBarManager.show();
@@ -148,7 +159,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
                 final Movie movie = (Movie) item;
                 final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+                startActivityForResult(MovieDetailsActivity.newInstance(getContext(), movie), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
             }
         }
     }
