@@ -18,20 +18,26 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.model.Cast;
+
+import javax.inject.Inject;
 
 /**
  * Created by marcus on 16-02-2018.
  */
 public class CastCardPresenter extends Presenter {
 
+    @Inject
+    ImageManager mImageManager;
+
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent) {
-        ImageCardView cardView = new ImageCardView(parent.getContext());
+        BesTV.getApplicationComponent().inject(this);
+
+        final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
@@ -41,15 +47,13 @@ public class CastCardPresenter extends Presenter {
     public void onBindViewHolder(final ViewHolder viewHolder, final Object item) {
         final Cast cast = (Cast) item;
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
-
         cardView.setTitleText(cast.getName());
         cardView.setContentText(cast.getCharacter());
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
-        Glide.with(viewHolder.view.getContext())
-                .load(String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(cardView.getMainImageView());
+
+        mImageManager.loadImageInto(cardView.getMainImageView(),
+                String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()));
     }
 
     @Override

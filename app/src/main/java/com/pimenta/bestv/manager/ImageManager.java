@@ -14,12 +14,22 @@
 
 package com.pimenta.bestv.manager;
 
+import android.widget.ImageView;
+
 import com.pimenta.bestv.model.Movie;
 
 /**
  * Created by marcus on 13-03-2018.
  */
 public interface ImageManager {
+
+    /**
+     * Loads an image URL in {@link ImageView}.
+     *
+     * @param imageView {@link ImageView}
+     * @param imageUrl  Image URL to be loaded
+     */
+    void loadImageInto(ImageView imageView, String imageUrl);
 
     /**
      * Loads the {@link Movie} backdrop image.

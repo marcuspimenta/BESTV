@@ -24,7 +24,9 @@ import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
 import com.pimenta.bestv.presenter.SearchPresenter;
+import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
+import com.pimenta.bestv.widget.VideoCardPresenter;
 
 import javax.inject.Singleton;
 
@@ -41,15 +43,17 @@ public interface ApplicationComponent {
 
     DatabaseHelper getDatabaseHelper();
 
-    void inject(Movie movie);
+    void inject(CastCardPresenter presenter);
+
+    void inject(MovieCardPresenter presenter);
+
+    void inject(VideoCardPresenter presenter);
 
     void inject(MovieBrowsePresenter presenter);
 
     void inject(MovieGridPresenter presenter);
 
     void inject(MovieDetailsPresenter presenter);
-
-    void inject(MovieCardPresenter presenter);
 
     void inject(BootPresenter presenter);
 

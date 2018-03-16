@@ -21,17 +21,26 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.model.Video;
+
+import javax.inject.Inject;
 
 /**
  * Created by marcus on 23-02-2018.
  */
 public class VideoCardPresenter extends Presenter {
 
+    @Inject
+    ImageManager mImageManager;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        ImageCardView cardView = new ImageCardView(parent.getContext());
+        BesTV.getApplicationComponent().inject(this);
+
+        final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
@@ -40,16 +49,14 @@ public class VideoCardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         final Video video = (Video) item;
-
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(video.getName());
         cardView.setContentText(video.getType());
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.video_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.video_card_height));
-        Glide.with(viewHolder.view.getContext())
-                .load(String.format(viewHolder.view.getContext().getResources().getString(R.string.youtube_thumbnail_base_url), video.getKey()))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(cardView.getMainImageView());
+
+        mImageManager.loadImageInto(cardView.getMainImageView(),
+                String.format(viewHolder.view.getContext().getResources().getString(R.string.youtube_thumbnail_base_url), video.getKey()));
     }
 
     @Override

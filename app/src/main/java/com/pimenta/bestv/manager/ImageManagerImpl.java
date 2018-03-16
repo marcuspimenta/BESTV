@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,6 +42,14 @@ public class ImageManagerImpl implements ImageManager {
 
     @Inject
     public ImageManagerImpl() {
+    }
+
+    @Override
+    public void loadImageInto(final ImageView imageView, final String imageUrl) {
+        Glide.with(mApplication)
+                .load(imageUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(imageView);
     }
 
     @Override

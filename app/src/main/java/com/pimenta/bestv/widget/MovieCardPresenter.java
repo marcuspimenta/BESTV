@@ -21,11 +21,15 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.model.Movie;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javax.inject.Inject;
 
 /**
  * Created by marcus on 10-02-2018.
@@ -34,9 +38,14 @@ public class MovieCardPresenter extends Presenter {
 
     private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
+    @Inject
+    ImageManager mImageManager;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        ImageCardView cardView = new ImageCardView(parent.getContext());
+        BesTV.getApplicationComponent().inject(this);
+
+        final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
@@ -45,7 +54,6 @@ public class MovieCardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         final Movie movie = (Movie) item;
-
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(movie.getTitle());
         if (movie.getReleaseDate() != null) {
@@ -53,10 +61,9 @@ public class MovieCardPresenter extends Presenter {
         }
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
-        Glide.with(viewHolder.view.getContext())
-                .load(String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(cardView.getMainImageView());
+
+        mImageManager.loadImageInto(cardView.getMainImageView(),
+                String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()));
     }
 
     @Override
