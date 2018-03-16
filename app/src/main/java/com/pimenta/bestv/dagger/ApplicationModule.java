@@ -33,7 +33,6 @@ import okhttp3.OkHttpClient;
 /**
  * Created by marcus on 07-02-2018.
  */
-@Singleton
 @Module(includes = {PreferenceModule.class, ImplModule.class})
 public class ApplicationModule {
 

@@ -26,15 +26,16 @@ import dagger.Provides;
  * Created by marcus on 11-02-2018.
  */
 @Module
-@Singleton
 public class PreferenceModule {
 
     @Provides
+    @Singleton
     int provideCorePoolSize() {
         return Runtime.getRuntime().availableProcessors() + 1;
     }
 
     @Provides
+    @Singleton
     Executor provideThreadPoolExecutor(int corePoolSize) {
         return Executors.newFixedThreadPool(corePoolSize);
     }
