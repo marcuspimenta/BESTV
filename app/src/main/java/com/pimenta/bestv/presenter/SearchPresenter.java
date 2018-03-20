@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.model.MovieList;
@@ -33,14 +32,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SearchPresenter extends AbstractPresenter<SearchCallback> {
 
-    @Inject
-    TmdbConnector mTmdbConnector;
-
     private int mResultPage = 0;
 
-    public SearchPresenter() {
+    private TmdbConnector mTmdbConnector;
+
+    @Inject
+    public SearchPresenter(TmdbConnector tmdbConnector) {
         super();
-        BesTV.getApplicationComponent().inject(this);
+        mTmdbConnector = tmdbConnector;
     }
 
     /**

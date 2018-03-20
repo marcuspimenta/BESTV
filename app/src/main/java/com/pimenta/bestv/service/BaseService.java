@@ -18,16 +18,20 @@ import android.app.Service;
 
 import com.pimenta.bestv.presenter.BasePresenter;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 07-03-2018.
  */
 public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.Callback {
 
-    protected final T mPresenter = getPresenter();
+    @Inject
+    protected T mPresenter;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        injectPresenter();
         mPresenter.register(this);
     }
 
@@ -37,5 +41,5 @@ public abstract class BaseService<T extends BasePresenter> extends Service imple
         super.onDestroy();
     }
 
-    protected abstract T getPresenter();
+    protected abstract void injectPresenter();
 }

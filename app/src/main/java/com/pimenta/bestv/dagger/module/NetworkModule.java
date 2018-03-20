@@ -12,32 +12,33 @@
  * the License.
  */
 
-package com.pimenta.bestv.dagger;
+package com.pimenta.bestv.dagger.module;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 20-03-2018.
  */
 @Module
-public class PreferenceModule {
+public class NetworkModule {
 
     @Provides
     @Singleton
-    int provideCorePoolSize() {
-        return Runtime.getRuntime().availableProcessors() + 1;
+    public OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient();
     }
 
     @Provides
     @Singleton
-    Executor provideThreadPoolExecutor(int corePoolSize) {
-        return Executors.newFixedThreadPool(corePoolSize);
+    public Gson provideGson() {
+        return new GsonBuilder().create();
     }
 
 }

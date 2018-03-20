@@ -21,18 +21,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import com.pimenta.bestv.fragment.MovieBrowseFragment;
 import com.pimenta.bestv.presenter.BasePresenter;
+
+import javax.inject.Inject;
 
 /**
  * Created by marcus on 14-02-2018.
  */
 public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements BasePresenter.Callback {
 
-    protected final T mPresenter = getPresenter();
+    @Inject
+    protected T mPresenter;
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState, @Nullable final PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        injectPresenter();
         mPresenter.register(this);
     }
 
@@ -87,6 +92,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends FragmentActi
         }
     }
 
-    protected abstract T getPresenter();
+    protected abstract void injectPresenter();
 
 }

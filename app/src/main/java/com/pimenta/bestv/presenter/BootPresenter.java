@@ -17,19 +17,10 @@ package com.pimenta.bestv.presenter;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 
-import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.service.RecommendationService;
 
 import javax.inject.Inject;
-
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by marcus on 06-03-2018.
@@ -38,15 +29,14 @@ public class BootPresenter extends AbstractPresenter<BasePresenter.Callback> {
 
     private static final long INITIAL_DELAY = 5000;
 
-    @Inject
-    Application mApplication;
+    private Application mApplication;
+    private AlarmManager mAlarmManager;
 
     @Inject
-    AlarmManager mAlarmManager;
-
-    public BootPresenter() {
+    public BootPresenter(Application application, AlarmManager alarmManager) {
         super();
-        BesTV.getApplicationComponent().inject(this);
+        mApplication = application;
+        mAlarmManager = alarmManager;
     }
 
     /**

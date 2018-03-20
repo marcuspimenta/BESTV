@@ -38,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseVerticalGridFragment;
 import com.pimenta.bestv.model.Movie;
@@ -114,11 +115,6 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
             mBackgroundTimer.cancel();
         }
         super.onDestroy();
-    }
-
-    @Override
-    protected MovieGridPresenter getPresenter() {
-        return new MovieGridPresenter();
     }
 
     @Override

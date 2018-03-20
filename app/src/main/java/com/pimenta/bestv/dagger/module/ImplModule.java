@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.dagger;
+package com.pimenta.bestv.dagger.module;
 
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;

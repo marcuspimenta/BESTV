@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v17.leanback.widget.DiffCallback;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.model.Movie;
 
@@ -92,5 +93,10 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
             return;
         }
         super.onMoviesLoaded(movies);
+    }
+
+    @Override
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

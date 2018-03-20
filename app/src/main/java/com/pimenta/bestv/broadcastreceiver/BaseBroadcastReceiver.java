@@ -20,18 +20,22 @@ import android.content.Intent;
 
 import com.pimenta.bestv.presenter.BasePresenter;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 06-03-2018.
  */
 public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Callback {
 
-    protected final T mPresenter = getPresenter();
+    @Inject
+    protected T mPresenter;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        injectPresenter();
         mPresenter.register(this);
     }
 
-    protected abstract T getPresenter();
+    protected abstract void injectPresenter();
 
 }

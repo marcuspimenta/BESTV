@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragment.MovieDetailsFragment;
 import com.pimenta.bestv.model.Movie;
@@ -41,7 +42,7 @@ public class MovieDetailsActivity extends BaseActivity<DefaultPresenter> {
     }
 
     @Override
-    protected DefaultPresenter getPresenter() {
-        return new DefaultPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

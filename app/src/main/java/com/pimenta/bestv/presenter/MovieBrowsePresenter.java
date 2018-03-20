@@ -37,21 +37,19 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MovieBrowsePresenter extends AbstractPresenter<MovieBrowseCallback> {
 
-    @Inject
-    DisplayMetrics mDisplayMetrics;
+    private DisplayMetrics mDisplayMetrics;
+    private RecommendationManager mRecommendationManager;
+    private MovieManager mMovieManager;
+    private TmdbConnector mTmdbConnector;
 
     @Inject
-    RecommendationManager mRecommendationManager;
-
-    @Inject
-    MovieManager mMovieManager;
-
-    @Inject
-    TmdbConnector mTmdbConnector;
-
-    public MovieBrowsePresenter() {
+    public MovieBrowsePresenter(DisplayMetrics displayMetrics, RecommendationManager recommendationManager, MovieManager movieManager,
+            TmdbConnector tmdbConnector) {
         super();
-        BesTV.getApplicationComponent().inject(this);
+        mDisplayMetrics = displayMetrics;
+        mRecommendationManager = recommendationManager;
+        mMovieManager = movieManager;
+        mTmdbConnector = tmdbConnector;
     }
 
     /**

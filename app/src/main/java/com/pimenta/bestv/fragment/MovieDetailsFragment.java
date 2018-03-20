@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseDetailsFragment;
@@ -193,8 +194,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     }
 
     @Override
-    public MovieDetailsPresenter getPresenter() {
-        return new MovieDetailsPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 
     private void setupDetailsOverviewRow() {

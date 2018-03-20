@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.presenter.RecommendationCallbak;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
 
@@ -49,7 +50,7 @@ public class RecommendationService extends BaseService<RecommendationPresenter> 
     }
 
     @Override
-    protected RecommendationPresenter getPresenter() {
-        return new RecommendationPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

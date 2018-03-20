@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.presenter.BootPresenter;
 
 /**
@@ -35,7 +36,8 @@ public class BootBroadcastReceiver extends BaseBroadcastReceiver<BootPresenter> 
     }
 
     @Override
-    protected BootPresenter getPresenter() {
-        return new BootPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
+
 }

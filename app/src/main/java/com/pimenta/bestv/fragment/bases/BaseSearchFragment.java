@@ -14,15 +14,15 @@
 
 package com.pimenta.bestv.fragment.bases;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.SearchSupportFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 
 import com.pimenta.bestv.presenter.BasePresenter;
+
+import javax.inject.Inject;
 
 /**
  * Created by marcus on 12-03-2018.
@@ -31,18 +31,21 @@ public abstract class BaseSearchFragment<T extends BasePresenter> extends Search
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;
-    protected final T mPresenter = getPresenter();
+
+    @Inject
+    protected T mPresenter;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        injectPresenter();
         mPresenter.register(this);
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDetach() {
         mPresenter.unRegister();
-        super.onDestroyView();
+        super.onDetach();
     }
 
     /**
@@ -106,6 +109,6 @@ public abstract class BaseSearchFragment<T extends BasePresenter> extends Search
         }
     }
 
-    protected abstract T getPresenter();
+    protected abstract void injectPresenter();
 
 }

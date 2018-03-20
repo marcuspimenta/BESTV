@@ -16,14 +16,18 @@ package com.pimenta.bestv.dagger;
 
 import android.app.Application;
 
+import com.pimenta.bestv.activity.MainActivity;
+import com.pimenta.bestv.activity.MovieDetailsActivity;
+import com.pimenta.bestv.broadcastreceiver.BootBroadcastReceiver;
+import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.database.DatabaseHelper;
-import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.presenter.BootPresenter;
-import com.pimenta.bestv.presenter.MovieBrowsePresenter;
-import com.pimenta.bestv.presenter.MovieDetailsPresenter;
-import com.pimenta.bestv.presenter.MovieGridPresenter;
-import com.pimenta.bestv.presenter.RecommendationPresenter;
-import com.pimenta.bestv.presenter.SearchPresenter;
+import com.pimenta.bestv.fragment.ErrorFragment;
+import com.pimenta.bestv.fragment.GenreMovieGridFragment;
+import com.pimenta.bestv.fragment.MovieBrowseFragment;
+import com.pimenta.bestv.fragment.MovieDetailsFragment;
+import com.pimenta.bestv.fragment.SearchFragment;
+import com.pimenta.bestv.fragment.TopMovieGridFragment;
+import com.pimenta.bestv.service.RecommendationService;
 import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 import com.pimenta.bestv.widget.VideoCardPresenter;
@@ -36,29 +40,39 @@ import dagger.Component;
  * Created by marcus on 07-02-2018.
  */
 @Singleton
-@Component(modules = {ApplicationModule.class})
+@Component(modules = {
+        ApplicationModule.class
+})
 public interface ApplicationComponent {
 
     Application getApplication();
 
     DatabaseHelper getDatabaseHelper();
 
+    void inject(BootBroadcastReceiver receiver);
+
+    void inject(RecommendationService service);
+
+    void inject(MainActivity activity);
+
+    void inject(MovieDetailsActivity activity);
+
+    void inject(MovieBrowseFragment fragment);
+
+    void inject(GenreMovieGridFragment fragment);
+
+    void inject(TopMovieGridFragment fragment);
+
+    void inject(SearchFragment fragment);
+
+    void inject(MovieDetailsFragment fragment);
+
+    void inject(ErrorFragment fragment);
+
     void inject(CastCardPresenter presenter);
 
     void inject(MovieCardPresenter presenter);
 
     void inject(VideoCardPresenter presenter);
-
-    void inject(MovieBrowsePresenter presenter);
-
-    void inject(MovieGridPresenter presenter);
-
-    void inject(MovieDetailsPresenter presenter);
-
-    void inject(BootPresenter presenter);
-
-    void inject(RecommendationPresenter presenter);
-
-    void inject(SearchPresenter presenter);
 
 }

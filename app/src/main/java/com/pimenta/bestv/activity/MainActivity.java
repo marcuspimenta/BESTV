@@ -16,6 +16,7 @@ package com.pimenta.bestv.activity;
 
 import android.os.Bundle;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.fragment.MovieBrowseFragment;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 
@@ -32,7 +33,7 @@ public class MainActivity extends BaseActivity<MovieBrowsePresenter> {
     }
 
     @Override
-    protected MovieBrowsePresenter getPresenter() {
-        return new MovieBrowsePresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

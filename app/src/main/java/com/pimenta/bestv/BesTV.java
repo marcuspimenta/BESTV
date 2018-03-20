@@ -18,7 +18,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.pimenta.bestv.dagger.ApplicationComponent;
-import com.pimenta.bestv.dagger.ApplicationModule;
+import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.dagger.DaggerApplicationComponent;
 
 /**

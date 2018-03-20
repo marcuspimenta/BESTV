@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseSearchFragment;
@@ -94,8 +95,8 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    protected SearchPresenter getPresenter() {
-        return new SearchPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 
     @Override

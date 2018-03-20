@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.manager.RecommendationManager;
 
 import javax.inject.Inject;
@@ -29,12 +28,12 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class RecommendationPresenter extends AbstractPresenter<RecommendationCallbak> {
 
-    @Inject
-    RecommendationManager mRecommendationManager;
+    private RecommendationManager mRecommendationManager;
 
-    public RecommendationPresenter() {
+    @Inject
+    public RecommendationPresenter(RecommendationManager recommendationManager) {
         super();
-        BesTV.getApplicationComponent().inject(this);
+        mRecommendationManager = recommendationManager;
     }
 
     /**

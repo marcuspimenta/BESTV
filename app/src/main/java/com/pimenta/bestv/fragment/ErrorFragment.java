@@ -16,14 +16,15 @@ package com.pimenta.bestv.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragment.bases.BaseErrorFragment;
-import com.pimenta.bestv.presenter.ErrorPresenter;
+import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class ErrorFragment extends BaseErrorFragment<ErrorPresenter> {
+public class ErrorFragment extends BaseErrorFragment<DefaultPresenter> {
 
     public static final String TAG = "ErrorFragment";
 
@@ -47,7 +48,7 @@ public class ErrorFragment extends BaseErrorFragment<ErrorPresenter> {
     }
 
     @Override
-    protected ErrorPresenter getPresenter() {
-        return new ErrorPresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

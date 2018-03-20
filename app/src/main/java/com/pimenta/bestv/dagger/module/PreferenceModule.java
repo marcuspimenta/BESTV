@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.dagger;
+package com.pimenta.bestv.dagger.module;
 
 import android.app.AlarmManager;
 import android.app.Application;
@@ -20,50 +20,36 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.pimenta.bestv.database.DatabaseHelper;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.OkHttpClient;
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-@Module(includes = {PreferenceModule.class, ImplModule.class})
-public class ApplicationModule {
+@Module
+public class PreferenceModule {
 
-    private Application mApplication;
-
-    public ApplicationModule(Application application) {
-        this.mApplication = application;
+    @Provides
+    @Singleton
+    int provideCorePoolSize() {
+        return Runtime.getRuntime().availableProcessors() + 1;
     }
 
     @Provides
     @Singleton
-    public Application provideApplication() {
-        return mApplication;
+    Executor provideThreadPoolExecutor(int corePoolSize) {
+        return Executors.newFixedThreadPool(corePoolSize);
     }
 
     @Provides
     @Singleton
     public DisplayMetrics provideDisplayMetrics() {
         return new DisplayMetrics();
-    }
-
-    @Provides
-    @Singleton
-    public OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient();
-    }
-
-    @Provides
-    @Singleton
-    public Gson provideGson() {
-        return new GsonBuilder().create();
     }
 
     @Provides
@@ -76,12 +62,6 @@ public class ApplicationModule {
     @Singleton
     public AlarmManager provideAlarmManager(Application application) {
         return (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
-    }
-
-    @Provides
-    @Singleton
-    public DatabaseHelper provideDatabaseHelper(Application application) {
-        return new DatabaseHelper(application);
     }
 
 }

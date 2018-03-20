@@ -16,6 +16,7 @@ package com.pimenta.bestv.fragment;
 
 import android.os.Bundle;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.model.Genre;
 
 /**
@@ -57,5 +58,10 @@ public class GenreMovieGridFragment extends AbstractMovieGridFragment {
     @Override
     public void refreshDada() {
         // DO ANYTHING
+    }
+
+    @Override
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 }

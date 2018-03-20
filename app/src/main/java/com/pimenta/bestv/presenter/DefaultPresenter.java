@@ -14,11 +14,14 @@
 
 package com.pimenta.bestv.presenter;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 14-02-2018.
  */
 public class DefaultPresenter extends AbstractPresenter<BasePresenter.Callback> {
 
+    @Inject
     public DefaultPresenter() {
         super();
     }

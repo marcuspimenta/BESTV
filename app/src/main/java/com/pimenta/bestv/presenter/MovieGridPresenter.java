@@ -14,20 +14,9 @@
 
 package com.pimenta.bestv.presenter;
 
-import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.manager.ImageManager;
@@ -50,26 +39,18 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
 
-    @Inject
-    Application mApplication;
-
-    @Inject
-    DisplayMetrics mDisplayMetrics;
-
-    @Inject
-    MovieManager mMovieManager;
-
-    @Inject
-    ImageManager mImageManager;
-
-    @Inject
-    TmdbConnector mTmdbConnector;
-
     private int mCurrentPage = 0;
 
-    public MovieGridPresenter() {
+    private MovieManager mMovieManager;
+    private ImageManager mImageManager;
+    private TmdbConnector mTmdbConnector;
+
+    @Inject
+    public MovieGridPresenter(MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
         super();
-        BesTV.getApplicationComponent().inject(this);
+        mMovieManager = movieManager;
+        mImageManager = imageManager;
+        mTmdbConnector = tmdbConnector;
     }
 
     /**
@@ -77,50 +58,50 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      */
     public void loadMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
-                    final List<Movie> movies = mMovieManager.getFavoriteMovies();
-                    if (movies != null) {
-                        e.onSuccess(movies);
+                    if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+                        final List<Movie> movies = mMovieManager.getFavoriteMovies();
+                        if (movies != null) {
+                            e.onSuccess(movies);
+                        } else {
+                            e.onError(new AssertionError());
+                        }
                     } else {
-                        e.onError(new AssertionError());
-                    }
-                } else {
-                    int pageSearch = mCurrentPage + 1;
-                    MovieList movieList = null;
-                    switch (movieListType) {
-                        case NOW_PLAYING:
-                            movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
-                            break;
-                        case POPULAR:
-                            movieList = mTmdbConnector.getPopularMovies(pageSearch);
-                            break;
-                        case TOP_RATED:
-                            movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
-                            break;
-                        case UP_COMING:
-                            movieList = mTmdbConnector.getUpComingMovies(pageSearch);
-                            break;
-                    }
+                        int pageSearch = mCurrentPage + 1;
+                        MovieList movieList = null;
+                        switch (movieListType) {
+                            case NOW_PLAYING:
+                                movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
+                                break;
+                            case POPULAR:
+                                movieList = mTmdbConnector.getPopularMovies(pageSearch);
+                                break;
+                            case TOP_RATED:
+                                movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
+                                break;
+                            case UP_COMING:
+                                movieList = mTmdbConnector.getUpComingMovies(pageSearch);
+                                break;
+                        }
 
-                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                        mCurrentPage = movieList.getPage();
-                        e.onSuccess(movieList.getMovies());
-                    } else {
-                        e.onError(new AssertionError());
+                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                            mCurrentPage = movieList.getPage();
+                            e.onSuccess(movieList.getMovies());
+                        } else {
+                            e.onError(new AssertionError());
+                        }
                     }
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(movies -> {
-                if (mCallback != null) {
-                    mCallback.onMoviesLoaded(movies);
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onMoviesLoaded(null);
-                }
-            }));
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movies -> {
+                    if (mCallback != null) {
+                        mCallback.onMoviesLoaded(movies);
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onMoviesLoaded(null);
+                    }
+                }));
     }
 
     /**
@@ -130,27 +111,27 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      */
     public void loadMoviesByGenre(Genre genre) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                int pageSearch = mCurrentPage + 1;
-                final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
+                    int pageSearch = mCurrentPage + 1;
+                    final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
 
-                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                    mCurrentPage = movieList.getPage();
-                    e.onSuccess(movieList.getMovies());
-                } else {
-                    e.onError(new AssertionError());
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(movies -> {
-                if (mCallback != null) {
-                    mCallback.onMoviesLoaded(movies);
-                }
-            }, throwable -> {
-                if (mCallback != null) {
-                    mCallback.onMoviesLoaded(null);
-                }
-            }));
+                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                        mCurrentPage = movieList.getPage();
+                        e.onSuccess(movieList.getMovies());
+                    } else {
+                        e.onError(new AssertionError());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movies -> {
+                    if (mCallback != null) {
+                        mCallback.onMoviesLoaded(movies);
+                    }
+                }, throwable -> {
+                    if (mCallback != null) {
+                        mCallback.onMoviesLoaded(null);
+                    }
+                }));
     }
 
     /**

@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.fragment.bases.BaseBrowseFragment;
@@ -96,8 +97,8 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     }
 
     @Override
-    public MovieBrowsePresenter getPresenter() {
-        return new MovieBrowsePresenter();
+    protected void injectPresenter() {
+        BesTV.getApplicationComponent().inject(this);
     }
 
     @Override
