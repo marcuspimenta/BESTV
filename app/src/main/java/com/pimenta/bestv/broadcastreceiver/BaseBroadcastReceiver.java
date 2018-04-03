@@ -36,6 +36,9 @@ public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends Bro
         mPresenter.register(this);
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

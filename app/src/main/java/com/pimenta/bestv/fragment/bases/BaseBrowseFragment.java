@@ -109,6 +109,9 @@ public abstract class BaseBrowseFragment<T extends BasePresenter> extends Browse
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

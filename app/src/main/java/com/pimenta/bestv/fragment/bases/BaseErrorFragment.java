@@ -109,6 +109,9 @@ public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorSu
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

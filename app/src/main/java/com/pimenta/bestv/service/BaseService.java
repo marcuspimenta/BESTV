@@ -41,5 +41,8 @@ public abstract class BaseService<T extends BasePresenter> extends Service imple
         super.onDestroy();
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 }

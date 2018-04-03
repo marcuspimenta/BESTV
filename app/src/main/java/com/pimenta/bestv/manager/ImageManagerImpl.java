@@ -56,7 +56,7 @@ public class ImageManagerImpl implements ImageManager {
     public void loadBackdropImage(final Movie movie, final Callback callback) {
         Glide.with(mApplication)
                 .asBitmap()
-                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()))
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(new SimpleTarget<Bitmap>() {
                     @Override

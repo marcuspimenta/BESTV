@@ -230,7 +230,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      */
     public void loadCardImage(Movie movie) {
         Glide.with(mApplication)
-                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()))
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(new SimpleTarget<Drawable>() {
                     @Override

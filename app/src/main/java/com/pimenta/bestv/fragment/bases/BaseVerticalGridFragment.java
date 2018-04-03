@@ -109,6 +109,9 @@ public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends 
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

@@ -109,6 +109,9 @@ public abstract class BaseSearchFragment<T extends BasePresenter> extends Search
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

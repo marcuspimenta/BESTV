@@ -109,6 +109,9 @@ public abstract class BaseDetailsFragment<T extends BasePresenter> extends Detai
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

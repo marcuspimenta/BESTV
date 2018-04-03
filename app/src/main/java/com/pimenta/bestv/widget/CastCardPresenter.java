@@ -53,7 +53,7 @@ public class CastCardPresenter extends Presenter {
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
 
         mImageManager.loadImageInto(cardView.getMainImageView(),
-                String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api_h632), cast.getProfilePath()));
+                String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api), cast.getProfilePath()));
     }
 
     @Override

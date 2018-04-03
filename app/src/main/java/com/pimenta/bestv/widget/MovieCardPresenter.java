@@ -63,7 +63,7 @@ public class MovieCardPresenter extends Presenter {
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
 
         mImageManager.loadImageInto(cardView.getMainImageView(),
-                String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()));
+                String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()));
     }
 
     @Override

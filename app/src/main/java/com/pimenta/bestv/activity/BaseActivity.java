@@ -92,6 +92,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends FragmentActi
         }
     }
 
+    /**
+     * Injects the {@link BasePresenter}
+     */
     protected abstract void injectPresenter();
 
 }

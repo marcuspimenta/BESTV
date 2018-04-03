@@ -66,7 +66,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
 
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()
-                            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w780), movie.getPosterPath()))
+                            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()))
                             .submit(mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                                     mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_height))
                             .get();
@@ -79,7 +79,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .setTitle(movie.getTitle())
                             .setContentImage(cardBitmap)
                             .setContentTypes(new String[]{ContentRecommendation.CONTENT_TYPE_MOVIE})
-                            .setBackgroundImageUri(String.format(mApplication.getString(R.string.tmdb_load_image_url_api_w1280), movie.getBackdropPath()))
+                            .setBackgroundImageUri(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()))
                             .setText(mApplication.getString(R.string.popular))
                             .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),
                                     0, null)
