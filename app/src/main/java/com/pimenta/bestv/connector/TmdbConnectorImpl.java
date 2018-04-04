@@ -23,6 +23,7 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.tmdb.Tmdb;
 import com.pimenta.bestv.manager.DeviceManager;
+import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.CastList;
 import com.pimenta.bestv.model.Genre;
 import com.pimenta.bestv.model.Movie;
@@ -174,6 +175,16 @@ public class TmdbConnectorImpl implements TmdbConnector {
     public MovieList searchMoviesByQuery(final String query, final int page) {
         try {
             return mTmdb.getMovieApi().searchMoviesByQuery(mApiKey, URLEncoder.encode(query, "UTF-8"), mLanguage, page).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to search the movies by query", e);
+            return null;
+        }
+    }
+
+    @Override
+    public Cast getCastDetails(final Cast cast) {
+        try {
+            return mTmdb.getPersonApi().getCastDetails(cast.getId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to search the movies by query", e);
             return null;

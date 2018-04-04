@@ -30,6 +30,7 @@ public class Tmdb {
 
     private GenreApi mGenreApi;
     private MovieApi mMovieApi;
+    private PersonApi mPersonApi;
 
     public Tmdb(String baseUrl, OkHttpClient okHttpClient, Gson gson, Executor executor) {
         final Retrofit retrofit = new Retrofit.Builder()
@@ -41,6 +42,7 @@ public class Tmdb {
 
         mMovieApi = retrofit.create(MovieApi.class);
         mGenreApi = retrofit.create(GenreApi.class);
+        mPersonApi = retrofit.create(PersonApi.class);
     }
 
     public MovieApi getMovieApi() {
@@ -49,5 +51,9 @@ public class Tmdb {
 
     public GenreApi getGenreApi() {
         return mGenreApi;
+    }
+
+    public PersonApi getPersonApi() {
+        return mPersonApi;
     }
 }

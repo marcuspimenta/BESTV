@@ -37,6 +37,16 @@ public class Cast {
     private String mCharacter;
     @SerializedName("profile_path")
     private String mProfilePath;
+    @SerializedName("birthday")
+    private String mBirthday;
+    @SerializedName("deathday")
+    private String mDeathDay;
+    @SerializedName("biography")
+    private String mBiography;
+    @SerializedName("popularity")
+    private Double mPopularity;
+    @SerializedName("place_of_birth")
+    private String mPlaceOfBirth;
 
     public int getCastId() {
         return mCastId;
@@ -100,5 +110,45 @@ public class Cast {
 
     public void setProfilePath(final String profilePath) {
         mProfilePath = profilePath;
+    }
+
+    public String getBirthday() {
+        return mBirthday;
+    }
+
+    public void setBirthday(final String birthday) {
+        mBirthday = birthday;
+    }
+
+    public String getDeathDay() {
+        return mDeathDay;
+    }
+
+    public void setDeathDay(final String deathDay) {
+        mDeathDay = deathDay;
+    }
+
+    public String getBiography() {
+        return mBiography;
+    }
+
+    public void setBiography(final String biography) {
+        mBiography = biography;
+    }
+
+    public Double getPopularity() {
+        return mPopularity;
+    }
+
+    public void setPopularity(final Double popularity) {
+        mPopularity = popularity;
+    }
+
+    public String getPlaceOfBirth() {
+        return mPlaceOfBirth;
+    }
+
+    public void setPlaceOfBirth(final String placeOfBirth) {
+        mPlaceOfBirth = placeOfBirth;
     }
 }

@@ -12,35 +12,21 @@
  * the License.
  */
 
-package com.pimenta.bestv.model;
+package com.pimenta.bestv.api.tmdb;
 
-import com.google.gson.annotations.SerializedName;
+import com.pimenta.bestv.model.Cast;
 
-import java.io.Serializable;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 04-04-2018.
  */
-public class Genre implements Serializable {
+public interface PersonApi {
 
-    @SerializedName("id")
-    private int mId;
-    @SerializedName("name")
-    private String mName;
+    @GET("person/{person_id}")
+    Call<Cast> getCastDetails(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
 
-    public int getId() {
-        return mId;
-    }
-
-    public void setId(final int id) {
-        mId = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(final String name) {
-        mName = name;
-    }
 }

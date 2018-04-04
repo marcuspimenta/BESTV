@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.connector;
 
+import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.CastList;
 import com.pimenta.bestv.model.Genre;
 import com.pimenta.bestv.model.Movie;
@@ -146,4 +147,13 @@ public interface TmdbConnector {
      * @return          {@link MovieList}
      */
     MovieList searchMoviesByQuery(String query, int page);
+
+    /**
+     * Gets the {@link Cast} details by the {@link Cast}
+     *
+     * @param cast {@link Cast} to search
+     *
+     * @return {@link Cast}
+     */
+    Cast getCastDetails(Cast cast);
 }
