@@ -16,11 +16,13 @@ package com.pimenta.bestv.dagger;
 
 import android.app.Application;
 
+import com.pimenta.bestv.activity.CastDetailsActivity;
 import com.pimenta.bestv.activity.MainActivity;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.broadcastreceiver.BootBroadcastReceiver;
 import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.database.DatabaseHelper;
+import com.pimenta.bestv.fragment.CastDetailsFragment;
 import com.pimenta.bestv.fragment.ErrorFragment;
 import com.pimenta.bestv.fragment.GenreMovieGridFragment;
 import com.pimenta.bestv.fragment.MovieBrowseFragment;
@@ -57,6 +59,8 @@ public interface ApplicationComponent {
 
     void inject(MovieDetailsActivity activity);
 
+    void inject(CastDetailsActivity activity);
+
     void inject(MovieBrowseFragment fragment);
 
     void inject(GenreMovieGridFragment fragment);
@@ -66,6 +70,8 @@ public interface ApplicationComponent {
     void inject(SearchFragment fragment);
 
     void inject(MovieDetailsFragment fragment);
+
+    void inject(CastDetailsFragment fragment);
 
     void inject(ErrorFragment fragment);
 

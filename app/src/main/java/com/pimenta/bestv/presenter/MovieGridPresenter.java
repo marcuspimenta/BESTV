@@ -14,9 +14,15 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.app.Application;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.manager.ImageManager;
@@ -41,13 +47,15 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
 
     private int mCurrentPage = 0;
 
+    private Application mApplication;
     private MovieManager mMovieManager;
     private ImageManager mImageManager;
     private TmdbConnector mTmdbConnector;
 
     @Inject
-    public MovieGridPresenter(MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
+    public MovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
         super();
+        mApplication = application;
         mMovieManager = movieManager;
         mImageManager = imageManager;
         mTmdbConnector = tmdbConnector;
@@ -140,20 +148,22 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(@NonNull Movie movie) {
-        mImageManager.loadBackdropImage(movie, new ImageManager.Callback<Bitmap>() {
-            @Override
-            public void onSuccess(final Bitmap resource) {
-                if (mCallback != null) {
-                    mCallback.onBackdropImageLoaded(resource);
-                }
-            }
+        mImageManager.loadBitmapImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()),
+                new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
+                        if (mCallback != null) {
+                            mCallback.onBackdropImageLoaded(resource);
+                        }
+                    }
 
-            @Override
-            public void onError() {
-                if (mCallback != null) {
-                    mCallback.onBackdropImageLoaded(null);
-                }
-            }
-        });
+                    @Override
+                    public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        if (mCallback != null) {
+                            mCallback.onBackdropImageLoaded(null);
+                        }
+                    }
+                });
     }
 }

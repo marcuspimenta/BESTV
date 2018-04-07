@@ -16,23 +16,21 @@ package com.pimenta.bestv.widget;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.Cast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+/**
+ * Created by marcus on 07-04-2018.
+ */
+public class CastDetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        final Movie movie = (Movie) item;
+        final Cast cast = (Cast) item;
 
-        if (movie != null) {
-            final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-
-            viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-            viewHolder.getBody().setText(movie.getOverview());
+        if (cast != null) {
+            viewHolder.getTitle().setText(cast.getName());
+            //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
+            viewHolder.getBody().setText(cast.getBiography());
         }
     }
 }

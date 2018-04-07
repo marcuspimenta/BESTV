@@ -16,6 +16,7 @@ package com.pimenta.bestv.dagger.module;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.media.Image;
 import android.util.DisplayMetrics;
 
 import com.pimenta.bestv.connector.TmdbConnector;
@@ -23,6 +24,7 @@ import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.presenter.BootPresenter;
+import com.pimenta.bestv.presenter.CastDetailsPresenter;
 import com.pimenta.bestv.presenter.DefaultPresenter;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
@@ -56,14 +58,19 @@ public class PresenterModule {
     }
 
     @Provides
-    MovieGridPresenter provideMovieGridPresenter(MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
-        return new MovieGridPresenter(movieManager, imageManager, tmdbConnector);
+    MovieGridPresenter provideMovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
+        return new MovieGridPresenter(application, movieManager, imageManager, tmdbConnector);
     }
 
     @Provides
     MovieDetailsPresenter provideMovieDetailsPresenter(Application application, MovieManager movieManager, ImageManager imageManager,
             TmdbConnector tmdbConnector) {
         return new MovieDetailsPresenter(application, movieManager, imageManager, tmdbConnector);
+    }
+
+    @Provides
+    CastDetailsPresenter provideCastDetailsPresenter(Application application, TmdbConnector tmdbConnector, ImageManager imageManager) {
+        return new CastDetailsPresenter(application, tmdbConnector, imageManager);
     }
 
     @Provides

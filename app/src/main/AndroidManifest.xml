@@ -34,6 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MovieDetailsActivity"/>
+        <activity android:name=".activity.CastDetailsActivity"/>
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"

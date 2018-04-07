@@ -15,20 +15,12 @@
 package com.pimenta.bestv.manager;
 
 import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
-import com.pimenta.bestv.R;
-import com.pimenta.bestv.model.Movie;
 
 import javax.inject.Inject;
 
@@ -53,25 +45,19 @@ public class ImageManagerImpl implements ImageManager {
     }
 
     @Override
-    public void loadBackdropImage(final Movie movie, final Callback callback) {
+    public void loadImage(final String imageUrl, final SimpleTarget target) {
+        Glide.with(mApplication)
+                .load(imageUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(target);
+    }
+
+    @Override
+    public void loadBitmapImage(final String imageUrl, final SimpleTarget target) {
         Glide.with(mApplication)
                 .asBitmap()
-                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()))
+                .load(imageUrl)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (callback != null) {
-                            callback.onSuccess(resource);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadFailed(@Nullable final Drawable errorDrawable) {
-                        if (callback != null) {
-                            callback.onError();
-                        }
-                    }
-                });
+                .into(target);
     }
 }

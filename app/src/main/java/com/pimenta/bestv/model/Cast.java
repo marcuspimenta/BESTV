@@ -16,10 +16,12 @@ package com.pimenta.bestv.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by marcus on 15-02-2018.
  */
-public class Cast {
+public class Cast implements Serializable {
 
     @SerializedName("cast_id")
     private int mCastId;

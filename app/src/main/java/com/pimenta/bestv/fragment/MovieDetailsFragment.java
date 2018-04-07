@@ -45,6 +45,7 @@ import android.widget.ImageView;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.activity.CastDetailsActivity;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.bases.BaseDetailsFragment;
 import com.pimenta.bestv.model.Cast;
@@ -53,7 +54,7 @@ import com.pimenta.bestv.model.Video;
 import com.pimenta.bestv.presenter.MovieDetailsCallback;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
-import com.pimenta.bestv.widget.DetailsDescriptionPresenter;
+import com.pimenta.bestv.widget.MovieDetailsDescriptionPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 import com.pimenta.bestv.widget.VideoCardPresenter;
 
@@ -76,6 +77,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private static final int VIDEO_HEADER_ID = 1;
     private static final int RECOMMENDED_HEADER_ID = 2;
     private static final int SIMILAR_HEADER_ID = 3;
+    private static final int CAST_HEAD_ID = 4;
 
     private Action mFavoriteAction;
     private ArrayObjectAdapter mAdapter;
@@ -137,7 +139,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             mActionAdapter.add(new Action(ACTION_CAST, getResources().getString(R.string.cast)));
             mCastRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
             mCastRowAdapter.addAll(0, casts);
-            final HeaderItem header = new HeaderItem(0, getString(R.string.cast));
+            final HeaderItem header = new HeaderItem(CAST_HEAD_ID, getString(R.string.cast));
             mAdapter.add(new ListRow(header, mCastRowAdapter));
         }
 
@@ -216,7 +218,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter()) {
+        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new MovieDetailsDescriptionPresenter()) {
 
             private ImageView mDetailsImageView;
 
@@ -302,6 +304,12 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
+                    case CAST_HEAD_ID:
+                        final Cast cast = (Cast) item;
+                        final Bundle castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                                ((ImageCardView) itemViewHolder.view).getMainImageView(), CastDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        startActivity(CastDetailsActivity.newInstance(getContext(), cast), castBundle);
+                        break;
                     case VIDEO_HEADER_ID:
                         final Video video = (Video) item;
                         final Intent intent = new Intent(Intent.ACTION_VIEW,

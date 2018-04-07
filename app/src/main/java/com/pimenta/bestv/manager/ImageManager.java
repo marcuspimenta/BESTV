@@ -16,7 +16,7 @@ package com.pimenta.bestv.manager;
 
 import android.widget.ImageView;
 
-import com.pimenta.bestv.model.Movie;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 /**
  * Created by marcus on 13-03-2018.
@@ -32,19 +32,19 @@ public interface ImageManager {
     void loadImageInto(ImageView imageView, String imageUrl);
 
     /**
-     * Loads the {@link Movie} backdrop image.
+     * Loads an image URL.
      *
-     * @param movie    {@link Movie}
-     * @param callback {@link Callback}
+     * @param imageUrl Image URL to be loaded
+     * @param target   {@link SimpleTarget}
      */
-    void loadBackdropImage(Movie movie, Callback callback);
+    void loadImage(String imageUrl, SimpleTarget target);
 
-    interface Callback<T> {
-
-        void onSuccess(T resource);
-
-        void onError();
-
-    }
+    /**
+     * Loads an bitmap image URL.
+     *
+     * @param imageUrl Image URL to be loaded
+     * @param target   {@link SimpleTarget}
+     */
+    void loadBitmapImage(String imageUrl, SimpleTarget target);
 
 }

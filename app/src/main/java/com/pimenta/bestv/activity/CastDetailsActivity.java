@@ -20,25 +20,25 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.fragment.MovieDetailsFragment;
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.fragment.CastDetailsFragment;
+import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 04-04-2018.
  */
-public class MovieDetailsActivity extends BaseActivity<DefaultPresenter> {
+public class CastDetailsActivity extends BaseActivity<DefaultPresenter> {
 
-    public static Intent newInstance(Context context, Movie movie) {
-        final Intent intent = new Intent(context, MovieDetailsActivity.class);
-        intent.putExtra(MovieDetailsFragment.MOVIE, movie);
+    public static Intent newInstance(Context context, Cast cast) {
+        final Intent intent = new Intent(context, CastDetailsActivity.class);
+        intent.putExtra(CastDetailsFragment.CAST, cast);
         return intent;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_details);
+        setContentView(R.layout.activity_cast_details);
     }
 
     @Override

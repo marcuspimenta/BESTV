@@ -15,18 +15,13 @@
 package com.pimenta.bestv.presenter;
 
 import android.app.Application;
-import android.app.NotificationManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.manager.ImageManager;
@@ -64,7 +59,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     public MovieDetailsPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
         super();
         mApplication = application;
-        mMovieManager= movieManager;
+        mMovieManager = movieManager;
         mImageManager = imageManager;
         mTmdbConnector = tmdbConnector;
     }
@@ -224,15 +219,13 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
     }
 
     /**
-     * Loads the {@link Movie} card image using Glide tool
+     * Loads the {@link Movie} poster
      *
      * @param movie {@link Movie}
      */
     public void loadCardImage(Movie movie) {
-        Glide.with(mApplication)
-                .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(new SimpleTarget<Drawable>() {
+        mImageManager.loadImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()),
+                new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
                         if (mCallback != null) {
@@ -242,6 +235,7 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
                         if (mCallback != null) {
                             mCallback.onCardImageLoaded(null);
                         }
@@ -255,21 +249,23 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(Movie movie) {
-        mImageManager.loadBackdropImage(movie, new ImageManager.Callback<Bitmap>() {
-            @Override
-            public void onSuccess(final Bitmap resource) {
-                if (mCallback != null) {
-                    mCallback.onBackdropImageLoaded(resource);
-                }
-            }
+        mImageManager.loadBitmapImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()),
+                new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
+                        if (mCallback != null) {
+                            mCallback.onBackdropImageLoaded(resource);
+                        }
+                    }
 
-            @Override
-            public void onError() {
-                if (mCallback != null) {
-                    mCallback.onBackdropImageLoaded(null);
-                }
-            }
-        });
+                    @Override
+                    public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        if (mCallback != null) {
+                            mCallback.onBackdropImageLoaded(null);
+                        }
+                    }
+                });
     }
 
     /**
