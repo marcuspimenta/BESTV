@@ -23,10 +23,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:leanback-v17:27.1.0'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:recommendation:27.1.0'
+    implementation 'com.android.support:leanback-v17:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:recommendation:27.1.1'
 
     // Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
