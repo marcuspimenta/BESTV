@@ -47,7 +47,7 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.CastDetailsActivity;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
-import com.pimenta.bestv.fragment.bases.BaseDetailsFragment;
+import com.pimenta.bestv.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.model.Video;

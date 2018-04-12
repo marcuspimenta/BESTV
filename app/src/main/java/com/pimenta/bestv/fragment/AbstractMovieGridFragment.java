@@ -17,7 +17,6 @@ package com.pimenta.bestv.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -38,9 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
-import com.pimenta.bestv.fragment.bases.BaseVerticalGridFragment;
+import com.pimenta.bestv.fragment.base.BaseVerticalGridFragment;
 import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.presenter.MovieGridCallback;
 import com.pimenta.bestv.presenter.MovieGridPresenter;

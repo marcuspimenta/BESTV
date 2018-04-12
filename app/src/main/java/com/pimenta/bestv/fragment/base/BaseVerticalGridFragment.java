@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.fragment.bases;
+package com.pimenta.bestv.fragment.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v17.leanback.app.ErrorSupportFragment;
+import android.support.v17.leanback.app.VerticalGridSupportFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -25,9 +25,9 @@ import com.pimenta.bestv.presenter.BasePresenter;
 import javax.inject.Inject;
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorSupportFragment implements BasePresenter.Callback {
+public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends VerticalGridSupportFragment implements BasePresenter.Callback {
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;

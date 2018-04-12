@@ -18,7 +18,7 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.fragment.bases.BaseErrorFragment;
+import com.pimenta.bestv.fragment.base.BaseErrorFragment;
 import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**

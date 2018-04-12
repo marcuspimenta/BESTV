@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.fragment.bases;
+package com.pimenta.bestv.fragment.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v17.leanback.app.BrowseSupportFragment;
+import android.support.v17.leanback.app.SearchSupportFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -25,9 +25,9 @@ import com.pimenta.bestv.presenter.BasePresenter;
 import javax.inject.Inject;
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 12-03-2018.
  */
-public abstract class BaseBrowseFragment<T extends BasePresenter> extends BrowseSupportFragment implements BasePresenter.Callback {
+public abstract class BaseSearchFragment<T extends BasePresenter> extends SearchSupportFragment implements BasePresenter.Callback {
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;

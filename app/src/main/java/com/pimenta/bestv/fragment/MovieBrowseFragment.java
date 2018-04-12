@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
-import com.pimenta.bestv.fragment.bases.BaseBrowseFragment;
+import com.pimenta.bestv.fragment.base.BaseBrowseFragment;
 import com.pimenta.bestv.model.Genre;
 import com.pimenta.bestv.presenter.MovieBrowseCallback;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
