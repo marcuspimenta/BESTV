@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.Executor;
 
-import io.reactivex.annotations.NonNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

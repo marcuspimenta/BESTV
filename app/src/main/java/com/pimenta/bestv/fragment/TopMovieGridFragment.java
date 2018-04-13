@@ -62,21 +62,21 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     @Override
     public void loadMorePages() {
-        if (!mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+        if (!mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void refreshDada() {
-        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void onMoviesLoaded(final List<Movie> movies) {
-        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+        if (mMovieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
             mRowsAdapter.setItems(movies, new DiffCallback<Movie>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {

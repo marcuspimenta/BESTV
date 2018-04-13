@@ -66,7 +66,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      */
     public void loadMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
-                    if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITE)) {
+                    if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
                         final List<Movie> movies = mMovieManager.getFavoriteMovies();
                         if (movies != null) {
                             e.onSuccess(movies);

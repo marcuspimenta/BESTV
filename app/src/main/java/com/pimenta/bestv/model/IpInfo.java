@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -23,46 +22,32 @@ import com.google.gson.annotations.SerializedName;
 public class IpInfo {
 
     @SerializedName("as")
-    @Expose
     private String mAs;
     @SerializedName("city")
-    @Expose
     private String mCity;
     @SerializedName("country")
-    @Expose
     private String mCountry;
     @SerializedName("countryCode")
-    @Expose
     private String mCountryCode;
     @SerializedName("isp")
-    @Expose
     private String mIsp;
     @SerializedName("lat")
-    @Expose
     private float mLat;
     @SerializedName("lon")
-    @Expose
     private float mLon;
     @SerializedName("org")
-    @Expose
     private String mOrg;
     @SerializedName("query")
-    @Expose
     private String mQuery;
     @SerializedName("region")
-    @Expose
     private String mRegion;
     @SerializedName("regionName")
-    @Expose
     private String mRegionName;
     @SerializedName("status")
-    @Expose
     private String mStatus;
     @SerializedName("timezone")
-    @Expose
     private String mTimeZone;
     @SerializedName("zip")
-    @Expose
     private String mZip;
 
     public String getAs() {

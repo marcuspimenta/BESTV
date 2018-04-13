@@ -46,19 +46,18 @@ public class TmdbConnectorImpl implements TmdbConnector {
 
     private static final String TAG = "TmdbConnectorImpl";
 
-    @Inject
-    DeviceManager mDeviceManager;
-
     private String mApiKey;
     private String mLanguage;
 
     private Tmdb mTmdb;
+    private DeviceManager mDeviceManager;
 
     @Inject
-    public TmdbConnectorImpl(Application application, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
+    public TmdbConnectorImpl(Application application, DeviceManager deviceManager, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
         mApiKey = application.getString(R.string.tmdb_api_key);
         mLanguage = application.getString(R.string.tmdb_filter_language);
         mTmdb = new Tmdb(application.getString(R.string.tmdb_base_url_api), okHttpClient, gson, threadPool);
+        mDeviceManager = deviceManager;
     }
 
     @Override
@@ -195,7 +194,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
      * Represents the movie list type
      */
     public enum MovieListType {
-        FAVORITE(R.string.favorite),
+        FAVORITES(R.string.favorites),
         NOW_PLAYING(R.string.now_playing),
         POPULAR(R.string.popular),
         TOP_RATED(R.string.top_rated),

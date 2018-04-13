@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -25,19 +24,14 @@ import java.io.Serializable;
 public class Video implements Serializable {
 
     @SerializedName("id")
-    @Expose
     private String mId;
     @SerializedName("key")
-    @Expose
     private String mKey;
     @SerializedName("name")
-    @Expose
     private String mName;
     @SerializedName("site")
-    @Expose
     private String mSite;
     @SerializedName("type")
-    @Expose
     private String mType;
 
     public String getId() {

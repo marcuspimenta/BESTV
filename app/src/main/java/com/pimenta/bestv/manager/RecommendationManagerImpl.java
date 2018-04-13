@@ -38,20 +38,17 @@ import javax.inject.Inject;
 public class RecommendationManagerImpl implements RecommendationManager {
 
     private static final String TAG = "RecommendationManager";
-
     private static final int RECOMMENDATION_NUMBER = 5;
 
-    @Inject
-    Application mApplication;
+    private Application mApplication;
+    private NotificationManager mNotificationManager;
+    private TmdbConnector mTmdbConnector;
 
     @Inject
-    NotificationManager mNotificationManager;
-
-    @Inject
-    TmdbConnector mTmdbConnector;
-
-    @Inject
-    public RecommendationManagerImpl() {
+    public RecommendationManagerImpl(Application application, NotificationManager notificationManager, TmdbConnector tmdbConnector) {
+        mApplication = application;
+        mNotificationManager = notificationManager;
+        mTmdbConnector = tmdbConnector;
     }
 
     @Override

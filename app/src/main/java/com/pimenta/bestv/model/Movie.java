@@ -16,7 +16,6 @@ package com.pimenta.bestv.model;
 
 import android.util.Log;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -43,40 +42,28 @@ public class Movie extends AbstractDatabaseModel {
     private int mId;
     @DatabaseField(columnName = FIELD_TMDB_ID)
     @SerializedName("id")
-    @Expose
     private int mTmdbId;
     @SerializedName("title")
-    @Expose
     private String mTitle;
     @SerializedName("original_title")
-    @Expose
     private String mOriginalTitle;
     @SerializedName("original_language")
-    @Expose
     private String mOriginalLanguage;
     @SerializedName("overview")
-    @Expose
     private String mOverview;
     @SerializedName("release_date")
-    @Expose
     private String mReleaseDate;
     @SerializedName("backdrop_path")
-    @Expose
     private String mBackdropPath;
     @SerializedName("poster_path")
-    @Expose
     private String mPosterPath;
     @SerializedName("popularity")
-    @Expose
     private float mPopularity;
     @SerializedName("vote_average")
-    @Expose
     private float mVoteAverage;
     @SerializedName("vote_count")
-    @Expose
     private float mVoteCount;
     @SerializedName("adult")
-    @Expose
     private boolean mIsAdult;
     private boolean mIsFavorite;
 

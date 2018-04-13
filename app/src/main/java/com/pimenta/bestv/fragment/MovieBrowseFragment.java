@@ -52,7 +52,7 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private static final int FAVORITE_INDEX = 4;
 
     private static final PageRow sFavoritePageRow = new PageRow(
-            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITE));
+            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbConnectorImpl.MovieListType.FAVORITES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;

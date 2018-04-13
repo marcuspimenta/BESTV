@@ -29,11 +29,11 @@ import javax.inject.Inject;
  */
 public class ImageManagerImpl implements ImageManager {
 
-    @Inject
-    Application mApplication;
+    private Application mApplication;
 
     @Inject
-    public ImageManagerImpl() {
+    public ImageManagerImpl(Application application) {
+        mApplication = application;
     }
 
     @Override

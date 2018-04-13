@@ -29,11 +29,11 @@ import javax.inject.Inject;
  */
 public class MovieManagerImpl implements MovieManager {
 
-    @Inject
-    TmdbConnector mTmdbConnector;
+    private TmdbConnector mTmdbConnector;
 
     @Inject
-    public MovieManagerImpl() {
+    public MovieManagerImpl(TmdbConnector tmdbConnector) {
+        mTmdbConnector = tmdbConnector;
     }
 
     @Override
