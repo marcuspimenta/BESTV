@@ -19,24 +19,23 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.pimenta.bestv.database.AbstractDatabaseModel;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by marcus on 09-02-2018.
  */
 @DatabaseTable(tableName = Movie.TABLE)
-public class Movie extends AbstractDatabaseModel {
+public class Movie implements Serializable {
 
-    private static final String TAG = "Movie";
     public static final String TABLE = "movie";
     public static final String FIELD_ID = "id";
     public static final String FIELD_TMDB_ID = "tmdb_id";
+    private static final String TAG = "Movie";
 
     @DatabaseField(columnName = FIELD_ID, generatedId = true)
     private int mId;
@@ -66,48 +65,6 @@ public class Movie extends AbstractDatabaseModel {
     @SerializedName("adult")
     private boolean mIsAdult;
     private boolean mIsFavorite;
-
-    public static List<Movie> getAll() {
-        return getDao(Movie.class).queryForAll();
-    }
-
-    public static Movie getByTmdbId(int tmdbId) {
-        final List<Movie> movies = getDao(Movie.class).queryForEq(FIELD_TMDB_ID, tmdbId);
-        if (movies != null && movies.size() > 0) {
-            return movies.get(0);
-        }
-        return null;
-    }
-
-    public int create() {
-        int res = 0;
-        try {
-            res = getDao(Movie.class).create(this);
-        } catch (RuntimeException e) {
-            Log.w(TAG, "Failed to create a movie.", e);
-        }
-        return res;
-    }
-
-    public int delete() {
-        int res = 0;
-        try {
-            res = getDao(Movie.class).delete(this);
-        } catch (RuntimeException e) {
-            Log.w(TAG, "Failed to delete a movie.", e);
-        }
-        return res;
-    }
-
-    public int update() {
-        int res = 0;
-        try {
-            res = getDao(Movie.class).update(this);
-        } catch (RuntimeException e) {
-            Log.w(TAG, "Failed to update a movie.", e);
-        }
-        return res;
-    }
 
     public int getId() {
         return mId;

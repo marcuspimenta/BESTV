@@ -16,7 +16,9 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.database.DatabaseHelper;
 import com.pimenta.bestv.model.Movie;
 
 import java.util.ArrayList;
@@ -29,16 +31,21 @@ import javax.inject.Inject;
  */
 public class MovieManagerImpl implements MovieManager {
 
+    private DatabaseHelper mDatabaseHelper;
     private TmdbConnector mTmdbConnector;
+    private RuntimeExceptionDao<Movie, ?> mMovieDao;
 
     @Inject
-    public MovieManagerImpl(TmdbConnector tmdbConnector) {
+    public MovieManagerImpl(DatabaseHelper databaseHelper, TmdbConnector tmdbConnector) {
+        mDatabaseHelper = databaseHelper;
         mTmdbConnector = tmdbConnector;
+        mMovieDao = mDatabaseHelper.getRuntimeExceptionDao(Movie.class);
     }
 
     @Override
     public boolean isFavorite(final Movie movie) {
-        final Movie movieFind = Movie.getByTmdbId(movie.getTmdbId());
+        final List<Movie> movies = mMovieDao.queryForEq(Movie.FIELD_TMDB_ID, movie.getTmdbId());
+        final Movie movieFind = movies != null && movies.size() > 0 ? movies.get(0) : null;
         if (movieFind != null) {
             movie.setId(movieFind.getId());
             return true;
@@ -48,23 +55,23 @@ public class MovieManagerImpl implements MovieManager {
 
     @Override
     public boolean hasFavoriteMovie() {
-        final List<Movie> favoriteMovies = Movie.getAll();
+        final List<Movie> favoriteMovies = mMovieDao.queryForAll();
         return favoriteMovies != null ? favoriteMovies.size() > 0 : false;
     }
 
     @Override
     public boolean saveFavoriteMovie(@NonNull final Movie movie) {
-        return movie.create() > 0;
+        return mMovieDao.create(movie) > 0;
     }
 
     @Override
     public boolean deleteFavoriteMovie(@NonNull final Movie movie) {
-        return movie.delete() > 0;
+        return mMovieDao.delete(movie) > 0;
     }
 
     @Override
     public List<Movie> getFavoriteMovies() {
-        final List<Movie> favoriteMovies = Movie.getAll();
+        final List<Movie> favoriteMovies = mMovieDao.queryForAll();
         final List<Movie> movies = new ArrayList<>();
         for (final Movie movie : favoriteMovies) {
             final Movie detailMovie = mTmdbConnector.getMovie(movie.getTmdbId());
