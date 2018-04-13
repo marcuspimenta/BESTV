@@ -17,16 +17,26 @@ package com.pimenta.bestv.presenter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.Video;
 
 import java.util.List;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 07-02-2018.
  */
-public interface MovieGridCallback extends BasePresenter.Callback {
+public interface MovieDetailsContract extends BasePresenter.Contract {
 
-    void onMoviesLoaded(List<Movie> movies);
+    void onResultSetFavoriteMovie(boolean success);
+
+    void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies, List<Video> videos);
+
+    void onRecommendationLoaded(List<Movie> movies);
+
+    void onSimilarLoaded(List<Movie> movies);
+
+    void onCardImageLoaded(Drawable resource);
 
     void onBackdropImageLoaded(Bitmap bitmap);
 

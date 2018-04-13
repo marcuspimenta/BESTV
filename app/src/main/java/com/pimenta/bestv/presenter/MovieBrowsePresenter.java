@@ -16,7 +16,6 @@ package com.pimenta.bestv.presenter;
 
 import android.util.DisplayMetrics;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.manager.RecommendationManager;
@@ -35,7 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 06-02-2018.
  */
-public class MovieBrowsePresenter extends AbstractPresenter<MovieBrowseCallback> {
+public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
 
     private DisplayMetrics mDisplayMetrics;
     private RecommendationManager mRecommendationManager;
@@ -98,12 +97,12 @@ public class MovieBrowsePresenter extends AbstractPresenter<MovieBrowseCallback>
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
-                    if (mCallback != null) {
-                        mCallback.onDataLoaded(data.hasFavoriteMovie(), data.getGenres());
+                    if (mContract != null) {
+                        mContract.onDataLoaded(data.hasFavoriteMovie(), data.getGenres());
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onDataLoaded(false, null);
+                    if (mContract != null) {
+                        mContract.onDataLoaded(false, null);
                     }
                 }));
     }

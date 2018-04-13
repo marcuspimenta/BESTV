@@ -21,7 +21,7 @@ import com.pimenta.bestv.model.Cast;
 /**
  * Created by marcus on 05-04-2018.
  */
-public interface CastDetailsCallback extends BasePresenter.Callback {
+public interface CastDetailsContract extends BasePresenter.Contract {
 
     void onCastLoaded(Cast cast);
 

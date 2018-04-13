@@ -14,15 +14,15 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.model.Genre;
 
 import java.util.List;
 
 /**
- * Created by marcus on 14-03-2018.
+ * Created by marcus on 06-02-2018.
  */
-public interface SearchCallback extends BasePresenter.Callback {
+public interface MovieBrowseContract extends BasePresenter.Contract {
 
-    void onResultLoaded(List<Movie> movies);
+    void onDataLoaded(boolean hasFavoriteMovie, List<Genre> genres);
 
 }

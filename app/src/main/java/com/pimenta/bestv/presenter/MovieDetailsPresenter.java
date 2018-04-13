@@ -45,7 +45,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallback> {
+public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
 
     private int mRecommendedPage = 0;
     private int mSimilarPage = 0;
@@ -99,12 +99,12 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     movie.setFavorite(!movie.isFavorite());
-                    if (mCallback != null) {
-                        mCallback.onResultSetFavoriteMovie(true);
+                    if (mContract != null) {
+                        mContract.onResultSetFavoriteMovie(true);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onResultSetFavoriteMovie(false);
+                    if (mContract != null) {
+                        mContract.onResultSetFavoriteMovie(false);
                     }
                 }));
     }
@@ -147,13 +147,13 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
-                    if (mCallback != null) {
-                        mCallback.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
+                    if (mContract != null) {
+                        mContract.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
                                 movieInfo.getVideos());
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onDataLoaded(null, null, null, null);
+                    if (mContract != null) {
+                        mContract.onDataLoaded(null, null, null, null);
                     }
                 }));
     }
@@ -178,12 +178,12 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
-                    if (mCallback != null) {
-                        mCallback.onRecommendationLoaded(movies);
+                    if (mContract != null) {
+                        mContract.onRecommendationLoaded(movies);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onRecommendationLoaded(null);
+                    if (mContract != null) {
+                        mContract.onRecommendationLoaded(null);
                     }
                 }));
     }
@@ -208,12 +208,12 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
-                    if (mCallback != null) {
-                        mCallback.onSimilarLoaded(movies);
+                    if (mContract != null) {
+                        mContract.onSimilarLoaded(movies);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onSimilarLoaded(null);
+                    if (mContract != null) {
+                        mContract.onSimilarLoaded(null);
                     }
                 }));
     }
@@ -228,16 +228,16 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
-                        if (mCallback != null) {
-                            mCallback.onCardImageLoaded(resource);
+                        if (mContract != null) {
+                            mContract.onCardImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (mCallback != null) {
-                            mCallback.onCardImageLoaded(null);
+                        if (mContract != null) {
+                            mContract.onCardImageLoaded(null);
                         }
                     }
                 });
@@ -253,16 +253,16 @@ public class MovieDetailsPresenter extends AbstractPresenter<MovieDetailsCallbac
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (mCallback != null) {
-                            mCallback.onBackdropImageLoaded(resource);
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (mCallback != null) {
-                            mCallback.onBackdropImageLoaded(null);
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(null);
                         }
                     }
                 });

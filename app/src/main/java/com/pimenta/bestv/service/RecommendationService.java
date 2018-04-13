@@ -20,13 +20,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.presenter.RecommendationCallbak;
+import com.pimenta.bestv.presenter.RecommendationContract;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
 
 /**
  * Created by marcus on 07-03-2018.
  */
-public class RecommendationService extends BaseService<RecommendationPresenter> implements RecommendationCallbak {
+public class RecommendationService extends BaseService<RecommendationPresenter> implements RecommendationContract {
 
     public static Intent newInstance(Context context) {
         return new Intent(context, RecommendationService.class);

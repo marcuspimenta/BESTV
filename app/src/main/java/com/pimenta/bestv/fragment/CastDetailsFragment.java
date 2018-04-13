@@ -35,14 +35,14 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.model.Cast;
-import com.pimenta.bestv.presenter.CastDetailsCallback;
+import com.pimenta.bestv.presenter.CastDetailsContract;
 import com.pimenta.bestv.presenter.CastDetailsPresenter;
 import com.pimenta.bestv.widget.CastDetailsDescriptionPresenter;
 
 /**
  * Created by marcus on 04-04-2018.
  */
-public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresenter> implements CastDetailsCallback {
+public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresenter> implements CastDetailsContract {
 
     public static final String TAG = "CastDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";

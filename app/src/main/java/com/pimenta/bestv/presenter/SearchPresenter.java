@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchPresenter extends AbstractPresenter<SearchCallback> {
+public class SearchPresenter extends BasePresenter<SearchContract> {
 
     private int mResultPage = 0;
 
@@ -61,12 +61,12 @@ public class SearchPresenter extends AbstractPresenter<SearchCallback> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
-                    if (mCallback != null) {
-                        mCallback.onResultLoaded(movies);
+                    if (mContract != null) {
+                        mContract.onResultLoaded(movies);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onResultLoaded(null);
+                    if (mContract != null) {
+                        mContract.onResultLoaded(null);
                     }
                 }));
     }

@@ -19,7 +19,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 14-02-2018.
  */
-public class DefaultPresenter extends AbstractPresenter<BasePresenter.Callback> {
+public class DefaultPresenter extends BasePresenter<BasePresenter.Contract> {
 
     @Inject
     public DefaultPresenter() {

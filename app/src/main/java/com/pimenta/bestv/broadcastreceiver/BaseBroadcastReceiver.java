@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 06-03-2018.
  */
-public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Callback {
+public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Contract {
 
     @Inject
     protected T mPresenter;

@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 07-03-2018.
  */
-public class RecommendationPresenter extends AbstractPresenter<RecommendationCallbak> {
+public class RecommendationPresenter extends BasePresenter<RecommendationContract> {
 
     private RecommendationManager mRecommendationManager;
 
@@ -44,8 +44,8 @@ public class RecommendationPresenter extends AbstractPresenter<RecommendationCal
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aVoid -> {
-                    if (mCallback != null) {
-                        mCallback.onLoadRecommendationFinished();
+                    if (mContract != null) {
+                        mContract.onLoadRecommendationFinished();
                     }
                 }));
     }

@@ -14,11 +14,15 @@
 
 package com.pimenta.bestv.presenter;
 
-/**
- * Created by marcus on 07-03-2018.
- */
-public interface RecommendationCallbak extends BasePresenter.Callback {
+import com.pimenta.bestv.model.Movie;
 
-    void onLoadRecommendationFinished();
+import java.util.List;
+
+/**
+ * Created by marcus on 14-03-2018.
+ */
+public interface SearchContract extends BasePresenter.Contract {
+
+    void onResultLoaded(List<Movie> movies);
 
 }

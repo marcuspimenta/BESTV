@@ -29,7 +29,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 14-02-2018.
  */
-public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements BasePresenter.Callback {
+public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements BasePresenter.Contract {
 
     @Inject
     protected T mPresenter;

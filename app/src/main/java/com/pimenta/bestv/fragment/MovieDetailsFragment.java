@@ -51,7 +51,7 @@ import com.pimenta.bestv.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.Movie;
 import com.pimenta.bestv.model.Video;
-import com.pimenta.bestv.presenter.MovieDetailsCallback;
+import com.pimenta.bestv.presenter.MovieDetailsContract;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.widget.CastCardPresenter;
 import com.pimenta.bestv.widget.MovieDetailsDescriptionPresenter;
@@ -63,7 +63,7 @@ import java.util.List;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsCallback {
+public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsContract {
 
     public static final String TAG = "MovieDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";

@@ -23,7 +23,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 07-03-2018.
  */
-public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.Callback {
+public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.Contract {
 
     @Inject
     protected T mPresenter;

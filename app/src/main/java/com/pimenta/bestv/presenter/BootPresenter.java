@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 06-03-2018.
  */
-public class BootPresenter extends AbstractPresenter<BasePresenter.Callback> {
+public class BootPresenter extends BasePresenter<BasePresenter.Contract> {
 
     private static final long INITIAL_DELAY = 5000;
 

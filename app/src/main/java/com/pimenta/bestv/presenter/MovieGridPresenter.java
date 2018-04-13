@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 09-02-2018.
  */
-public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
+public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
 
     private int mCurrentPage = 0;
 
@@ -102,12 +102,12 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
-                    if (mCallback != null) {
-                        mCallback.onMoviesLoaded(movies);
+                    if (mContract != null) {
+                        mContract.onMoviesLoaded(movies);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onMoviesLoaded(null);
+                    if (mContract != null) {
+                        mContract.onMoviesLoaded(null);
                     }
                 }));
     }
@@ -132,12 +132,12 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
-                    if (mCallback != null) {
-                        mCallback.onMoviesLoaded(movies);
+                    if (mContract != null) {
+                        mContract.onMoviesLoaded(movies);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onMoviesLoaded(null);
+                    if (mContract != null) {
+                        mContract.onMoviesLoaded(null);
                     }
                 }));
     }
@@ -152,16 +152,16 @@ public class MovieGridPresenter extends AbstractPresenter<MovieGridCallback> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (mCallback != null) {
-                            mCallback.onBackdropImageLoaded(resource);
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (mCallback != null) {
-                            mCallback.onBackdropImageLoaded(null);
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(null);
                         }
                     }
                 });

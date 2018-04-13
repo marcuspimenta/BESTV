@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 11-02-2018.
  */
-public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorSupportFragment implements BasePresenter.Callback {
+public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorSupportFragment implements BasePresenter.Contract {
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;

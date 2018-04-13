@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends VerticalGridSupportFragment implements BasePresenter.Callback {
+public abstract class BaseVerticalGridFragment<T extends BasePresenter> extends VerticalGridSupportFragment implements BasePresenter.Contract {
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;

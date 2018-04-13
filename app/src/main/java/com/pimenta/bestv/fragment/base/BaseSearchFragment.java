@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 12-03-2018.
  */
-public abstract class BaseSearchFragment<T extends BasePresenter> extends SearchSupportFragment implements BasePresenter.Callback {
+public abstract class BaseSearchFragment<T extends BasePresenter> extends SearchSupportFragment implements BasePresenter.Contract {
 
     protected Fragment mTargetFragment;
     protected int mTargetRequestCode;

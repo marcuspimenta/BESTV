@@ -39,7 +39,7 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.presenter.SearchCallback;
+import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
@@ -48,7 +48,7 @@ import java.util.List;
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchCallback,
+public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchContract,
         SearchSupportFragment.SearchResultProvider {
 
     public static final String TAG = "SearchFragment";

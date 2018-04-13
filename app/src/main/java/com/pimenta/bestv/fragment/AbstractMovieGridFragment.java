@@ -40,7 +40,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
 import com.pimenta.bestv.fragment.base.BaseVerticalGridFragment;
 import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.presenter.MovieGridCallback;
+import com.pimenta.bestv.presenter.MovieGridContract;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.widget.MovieCardPresenter;
 
@@ -51,7 +51,7 @@ import java.util.TimerTask;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridCallback,
+public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridContract,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private static final String TAG = "AbstractMovieGridFragment";

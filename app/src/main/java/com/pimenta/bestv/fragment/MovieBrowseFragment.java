@@ -34,7 +34,7 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.connector.TmdbConnectorImpl;
 import com.pimenta.bestv.fragment.base.BaseBrowseFragment;
 import com.pimenta.bestv.model.Genre;
-import com.pimenta.bestv.presenter.MovieBrowseCallback;
+import com.pimenta.bestv.presenter.MovieBrowseContract;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 import com.pimenta.bestv.widget.GenreHeaderItem;
 import com.pimenta.bestv.widget.MovieListTypeHeaderItem;
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter> implements MovieBrowseCallback {
+public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter> implements MovieBrowseContract {
 
     public static final String TAG = "MovieBrowseFragment";
     private static final int TOP_MOVIES_LIST_ID = 1;

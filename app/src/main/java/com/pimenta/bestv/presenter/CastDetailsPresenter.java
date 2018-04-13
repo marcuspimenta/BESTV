@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 05-04-2018.
  */
-public class CastDetailsPresenter extends AbstractPresenter<CastDetailsCallback> {
+public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
 
     private Application mApplication;
     private TmdbConnector mTmdbConnector;
@@ -67,12 +67,12 @@ public class CastDetailsPresenter extends AbstractPresenter<CastDetailsCallback>
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(castResult -> {
-                    if (mCallback != null) {
-                        mCallback.onCastLoaded(castResult);
+                    if (mContract != null) {
+                        mContract.onCastLoaded(castResult);
                     }
                 }, throwable -> {
-                    if (mCallback != null) {
-                        mCallback.onCastLoaded(null);
+                    if (mContract != null) {
+                        mContract.onCastLoaded(null);
                     }
                 }));
     }
@@ -87,16 +87,16 @@ public class CastDetailsPresenter extends AbstractPresenter<CastDetailsCallback>
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
-                        if (mCallback != null) {
-                            mCallback.onCardImageLoaded(resource);
+                        if (mContract != null) {
+                            mContract.onCardImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (mCallback != null) {
-                            mCallback.onCardImageLoaded(null);
+                        if (mContract != null) {
+                            mContract.onCardImageLoaded(null);
                         }
                     }
                 });

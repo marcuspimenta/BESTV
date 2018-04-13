@@ -14,16 +14,32 @@
 
 package com.pimenta.bestv.presenter;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by marcus on 06-02-2018.
  */
-public interface BasePresenter<T extends BasePresenter.Callback> {
+public abstract class BasePresenter<T extends BasePresenter.Contract> {
 
-    void register(T callback);
+    protected T mContract;
+    protected CompositeDisposable mCompositeDisposable;
 
-    void unRegister();
+    public BasePresenter() {
+        mCompositeDisposable = new CompositeDisposable();
+    }
 
-    interface Callback {
+    public void register(T contract) {
+        mContract = contract;
+    }
+
+    public void unRegister() {
+        mCompositeDisposable.dispose();
+        mCompositeDisposable = null;
+        mContract = null;
+    }
+
+    public interface Contract {
 
     }
+
 }
