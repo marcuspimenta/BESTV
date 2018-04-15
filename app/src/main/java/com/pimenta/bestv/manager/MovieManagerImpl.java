@@ -16,9 +16,8 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.pimenta.bestv.connector.TmdbConnector;
-import com.pimenta.bestv.database.DatabaseHelper;
+import com.pimenta.bestv.database.dao.MovieDao;
 import com.pimenta.bestv.model.Movie;
 
 import java.util.ArrayList;
@@ -31,15 +30,13 @@ import javax.inject.Inject;
  */
 public class MovieManagerImpl implements MovieManager {
 
-    private DatabaseHelper mDatabaseHelper;
     private TmdbConnector mTmdbConnector;
-    private RuntimeExceptionDao<Movie, ?> mMovieDao;
+    private MovieDao mMovieDao;
 
     @Inject
-    public MovieManagerImpl(DatabaseHelper databaseHelper, TmdbConnector tmdbConnector) {
-        mDatabaseHelper = databaseHelper;
+    public MovieManagerImpl(TmdbConnector tmdbConnector, MovieDao movieDao) {
         mTmdbConnector = tmdbConnector;
-        mMovieDao = mDatabaseHelper.getRuntimeExceptionDao(Movie.class);
+        mMovieDao = movieDao;
     }
 
     @Override
@@ -61,12 +58,12 @@ public class MovieManagerImpl implements MovieManager {
 
     @Override
     public boolean saveFavoriteMovie(@NonNull final Movie movie) {
-        return mMovieDao.create(movie) > 0;
+        return mMovieDao.create(movie);
     }
 
     @Override
     public boolean deleteFavoriteMovie(@NonNull final Movie movie) {
-        return mMovieDao.delete(movie) > 0;
+        return mMovieDao.delete(movie);
     }
 
     @Override

@@ -14,10 +14,8 @@
 
 package com.pimenta.bestv.dagger.module;
 
-import android.app.Application;
-import android.util.DisplayMetrics;
-
 import com.pimenta.bestv.database.DatabaseHelper;
+import com.pimenta.bestv.database.dao.MovieDao;
 
 import javax.inject.Singleton;
 
@@ -25,33 +23,15 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 15-04-2018.
  */
-@Module(includes = {
-        PreferenceModule.class,
-        ImplModule.class,
-        NetworkModule.class,
-        PresenterModule.class,
-        DaoModule.class
-})
-public class ApplicationModule {
-
-    private Application mApplication;
-
-    public ApplicationModule(Application application) {
-        this.mApplication = application;
-    }
+@Module
+public class DaoModule {
 
     @Provides
     @Singleton
-    public Application provideApplication() {
-        return mApplication;
-    }
-
-    @Provides
-    @Singleton
-    public DatabaseHelper provideDatabaseHelper(Application application) {
-        return new DatabaseHelper(application);
+    MovieDao provideMovieDao(DatabaseHelper databaseHelper) {
+        return new MovieDao(databaseHelper);
     }
 
 }
