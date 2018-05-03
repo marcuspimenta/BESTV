@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MovieCardPresenter -->
-    <dimen name="movie_card_width">240dp</dimen>
-    <dimen name="movie_card_height">340dp</dimen>
+    <dimen name="movie_card_width">173dp</dimen>
+    <dimen name="movie_card_height">245dp</dimen>
+
+    <dimen name="movie_width">240dp</dimen>
+    <dimen name="movie_height">340dp</dimen>
 
     <!-- CastCardPresenter -->
     <dimen name="character_image_card_width">174dp</dimen>

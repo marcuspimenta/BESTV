@@ -59,7 +59,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
     private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
     private static final int BACKGROUND_UPDATE_DELAY = 300;
-    private static final int NUMBER_COLUMNS = 4;
+    private static final int NUMBER_COLUMNS = 6;
 
     private final Handler mHandler = new Handler();
     private final BrowseSupportFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseSupportFragment.MainFragmentAdapter<>(this);

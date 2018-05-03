@@ -227,8 +227,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                 RowPresenter.ViewHolder viewHolder = super.createRowViewHolder(parent);
                 mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image);
                 ViewGroup.LayoutParams lp = mDetailsImageView.getLayoutParams();
-                lp.width = getResources().getDimensionPixelSize(R.dimen.movie_card_width);
-                lp.height = getResources().getDimensionPixelSize(R.dimen.movie_card_height);
+                lp.width = getResources().getDimensionPixelSize(R.dimen.movie_width);
+                lp.height = getResources().getDimensionPixelSize(R.dimen.movie_height);
                 mDetailsImageView.setLayoutParams(lp);
                 return viewHolder;
             }
