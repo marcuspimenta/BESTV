@@ -15,6 +15,7 @@
 package com.pimenta.bestv.presenter;
 
 import android.util.DisplayMetrics;
+import android.util.Pair;
 
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.manager.MovieManager;
@@ -84,48 +85,25 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      * Loads the {@link List<Genre>} available at TMDb
      */
     public void loadData() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Data>) e -> {
+        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Pair<Boolean, List<Genre>>>) e -> {
                     final boolean hasFavoriteMovie = mMovieManager.hasFavoriteMovie();
                     final List<Genre> genres = mTmdbConnector.getGenres();
-                    final Data data = new Data(hasFavoriteMovie, genres);
                     if (genres != null) {
-                        e.onSuccess(data);
+                        e.onSuccess(new Pair<>(hasFavoriteMovie, genres));
                     } else {
                         e.onError(new AssertionError());
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
+                .subscribe(result -> {
                     if (mContract != null) {
-                        mContract.onDataLoaded(data.hasFavoriteMovie(), data.getGenres());
+                        mContract.onDataLoaded(result.first, result.second);
                     }
                 }, throwable -> {
                     if (mContract != null) {
                         mContract.onDataLoaded(false, null);
                     }
                 }));
-    }
-
-    /**
-     * Wrapper to keep the data to be handle by callback
-     */
-    private class Data {
-
-        private boolean mHasFavoriteMovie;
-        private List<Genre> mGenres;
-
-        public Data(final boolean hasFavoriteMovie, final List<Genre> genres) {
-            mHasFavoriteMovie = hasFavoriteMovie;
-            mGenres = genres;
-        }
-
-        public boolean hasFavoriteMovie() {
-            return mHasFavoriteMovie;
-        }
-
-        public List<Genre> getGenres() {
-            return mGenres;
-        }
     }
 }
