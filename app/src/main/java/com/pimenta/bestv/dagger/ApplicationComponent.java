@@ -19,15 +19,16 @@ import android.app.Application;
 import com.pimenta.bestv.activity.CastDetailsActivity;
 import com.pimenta.bestv.activity.MainActivity;
 import com.pimenta.bestv.activity.MovieDetailsActivity;
+import com.pimenta.bestv.activity.SplashActivity;
 import com.pimenta.bestv.broadcastreceiver.BootBroadcastReceiver;
 import com.pimenta.bestv.dagger.module.ApplicationModule;
-import com.pimenta.bestv.database.DatabaseHelper;
 import com.pimenta.bestv.fragment.CastDetailsFragment;
 import com.pimenta.bestv.fragment.ErrorFragment;
 import com.pimenta.bestv.fragment.GenreMovieGridFragment;
 import com.pimenta.bestv.fragment.MovieBrowseFragment;
 import com.pimenta.bestv.fragment.MovieDetailsFragment;
 import com.pimenta.bestv.fragment.SearchFragment;
+import com.pimenta.bestv.fragment.SplashFragment;
 import com.pimenta.bestv.fragment.TopMovieGridFragment;
 import com.pimenta.bestv.service.RecommendationService;
 import com.pimenta.bestv.widget.CastCardPresenter;
@@ -49,17 +50,19 @@ public interface ApplicationComponent {
 
     Application getApplication();
 
-    DatabaseHelper getDatabaseHelper();
-
     void inject(BootBroadcastReceiver receiver);
 
     void inject(RecommendationService service);
+
+    void inject(SplashActivity activity);
 
     void inject(MainActivity activity);
 
     void inject(MovieDetailsActivity activity);
 
     void inject(CastDetailsActivity activity);
+
+    void inject(SplashFragment fragment);
 
     void inject(MovieBrowseFragment fragment);
 

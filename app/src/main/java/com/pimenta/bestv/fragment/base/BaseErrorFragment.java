@@ -49,6 +49,18 @@ public abstract class BaseErrorFragment<T extends BasePresenter> extends ErrorSu
     }
 
     /**
+     * Finishes and sets the result that your activity will return to its
+     * caller.
+     *
+     * @param resultCode The result code to propagate back to the originating
+     *                   activity, often RESULT_CANCELED or RESULT_OK
+     */
+    public void finishActivity(int resultCode) {
+        getActivity().setResult(resultCode);
+        getActivity().finish();
+    }
+
+    /**
      * Optional target for this fragment.  This may be used, for example,
      * if this fragment is being started by another, and when done wants to
      * give a result back to the first.  The target set here is retained

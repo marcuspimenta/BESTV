@@ -38,16 +38,13 @@ import io.reactivex.schedulers.Schedulers;
 public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
 
     private DisplayMetrics mDisplayMetrics;
-    private RecommendationManager mRecommendationManager;
     private MovieManager mMovieManager;
     private TmdbConnector mTmdbConnector;
 
     @Inject
-    public MovieBrowsePresenter(DisplayMetrics displayMetrics, RecommendationManager recommendationManager, MovieManager movieManager,
-            TmdbConnector tmdbConnector) {
+    public MovieBrowsePresenter(DisplayMetrics displayMetrics, MovieManager movieManager, TmdbConnector tmdbConnector) {
         super();
         mDisplayMetrics = displayMetrics;
-        mRecommendationManager = recommendationManager;
         mMovieManager = movieManager;
         mTmdbConnector = tmdbConnector;
     }
@@ -69,16 +66,6 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      */
     public boolean hasFavoriteMovies() {
         return mMovieManager.hasFavoriteMovie();
-    }
-
-    /**
-     * Loads the recommendations
-     */
-    public void loadRecommendations() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Void>) e -> mRecommendationManager.loadRecommendations())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
     }
 
     /**

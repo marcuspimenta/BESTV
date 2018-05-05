@@ -16,7 +16,6 @@ package com.pimenta.bestv.dagger.module;
 
 import android.app.AlarmManager;
 import android.app.Application;
-import android.media.Image;
 import android.util.DisplayMetrics;
 
 import com.pimenta.bestv.connector.TmdbConnector;
@@ -26,11 +25,13 @@ import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.presenter.BootPresenter;
 import com.pimenta.bestv.presenter.CastDetailsPresenter;
 import com.pimenta.bestv.presenter.DefaultPresenter;
+import com.pimenta.bestv.presenter.MainPresenter;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.presenter.MovieGridPresenter;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
 import com.pimenta.bestv.presenter.SearchPresenter;
+import com.pimenta.bestv.presenter.SplashPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -52,13 +53,23 @@ public class PresenterModule {
     }
 
     @Provides
-    MovieBrowsePresenter provideMovieBrowsePresenter(DisplayMetrics displayMetrics, RecommendationManager recommendationManager,
-            MovieManager movieManager, TmdbConnector tmdbConnector) {
-        return new MovieBrowsePresenter(displayMetrics, recommendationManager, movieManager, tmdbConnector);
+    MainPresenter provideMainPresenter(RecommendationManager recommendationManager) {
+        return new MainPresenter(recommendationManager);
     }
 
     @Provides
-    MovieGridPresenter provideMovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
+    SplashPresenter provideSplashPresenter() {
+        return new SplashPresenter();
+    }
+
+    @Provides
+    MovieBrowsePresenter provideMovieBrowsePresenter(DisplayMetrics displayMetrics, MovieManager movieManager, TmdbConnector tmdbConnector) {
+        return new MovieBrowsePresenter(displayMetrics, movieManager, tmdbConnector);
+    }
+
+    @Provides
+    MovieGridPresenter provideMovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager,
+            TmdbConnector tmdbConnector) {
         return new MovieGridPresenter(application, movieManager, imageManager, tmdbConnector);
     }
 

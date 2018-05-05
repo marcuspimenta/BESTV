@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -33,8 +33,15 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MovieDetailsActivity"/>
-        <activity android:name=".activity.CastDetailsActivity"/>
+        <activity
+            android:name=".activity.SplashActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activity.MovieDetailsActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activity.CastDetailsActivity"
+            android:screenOrientation="landscape"/>
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"
@@ -45,7 +52,7 @@
         </receiver>
         <service
             android:name=".service.RecommendationService"
-            android:enabled="true" />
+            android:enabled="true"/>
 
     </application>
 

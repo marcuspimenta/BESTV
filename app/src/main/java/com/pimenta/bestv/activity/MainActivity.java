@@ -14,26 +14,50 @@
 
 package com.pimenta.bestv.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.fragment.MovieBrowseFragment;
-import com.pimenta.bestv.presenter.MovieBrowsePresenter;
+import com.pimenta.bestv.presenter.MainPresenter;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class MainActivity extends BaseActivity<MovieBrowsePresenter> {
+public class MainActivity extends BaseActivity<MainPresenter> {
+
+    private static final int SPLASH_ACTIVITY_REQUEST_CODE = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter.loadRecommendations();
-        replaceFragment(MovieBrowseFragment.newInstance());
+
+        if (savedInstanceState == null) {
+            startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        } else {
+            replaceFragment(MovieBrowseFragment.newInstance());
+        }
     }
 
     @Override
     protected void injectPresenter() {
         BesTV.getApplicationComponent().inject(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SPLASH_ACTIVITY_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    replaceFragment(MovieBrowseFragment.newInstance());
+                } else {
+                    finish();
+                }
+                break;
+        }
     }
 }
