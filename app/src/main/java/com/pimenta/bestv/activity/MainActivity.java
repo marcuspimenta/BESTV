@@ -36,7 +36,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
 
         if (savedInstanceState == null) {
             startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         } else {
             replaceFragment(MovieBrowseFragment.newInstance());
         }

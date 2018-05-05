@@ -2,16 +2,25 @@
 Android TV App powered by TMDb. 
 It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
 
-# Implementations
+## About
+Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseFragment, SearchFragment, DetailsFragment, VerticalFragment are used.
+
+## Implementations
 <ul>
-<li>The Movie Database (TMDb)</li>
+<li>API The Movie Database (TMDb)</li>
 <li>Dagger 2
 <li>Retrofit 2
 <li>RxJava 2  
 <li>Glide
 </ul>
 
-# Licence
+## Screenshots
+<p align="center"> <img src="images/device-2018-05-04-091859.png"/> </p>
+<p align="center"> <img src="images/device-2018-05-04-091948.png"/> </p>
+<p align="center"> <img src="images/device-2018-05-04-092348.png"/> </p>
+<p align="center"> <img src="images/device-2018-05-04-092327.png"/> </p>
+
+## Licence
 ```
 Copyright (c) 2018 Marcus Pimenta
 
