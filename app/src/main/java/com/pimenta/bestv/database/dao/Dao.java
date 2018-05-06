@@ -21,13 +21,28 @@ import java.util.List;
  */
 public interface Dao<T> {
 
+    /**
+     * @see com.j256.ormlite.dao.Dao#queryForAll()
+     */
     List<T> queryForAll();
 
+    /**
+     * @see com.j256.ormlite.dao.Dao#queryForEq(String, Object)
+     */
     List<T> queryForEq(String field, Object value);
 
+    /**
+     * @see com.j256.ormlite.dao.Dao#create(Object)
+     */
     boolean create(T model);
 
+    /**
+     * @see com.j256.ormlite.dao.Dao#update(Object)
+     */
     boolean update(T model);
 
+    /**
+     * @see com.j256.ormlite.dao.Dao#delete(Object)
+     */
     boolean delete(T model);
 }
