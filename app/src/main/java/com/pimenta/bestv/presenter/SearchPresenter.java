@@ -58,7 +58,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {

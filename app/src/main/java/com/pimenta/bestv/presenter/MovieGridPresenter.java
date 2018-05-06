@@ -99,7 +99,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         }
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {
@@ -129,7 +129,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {

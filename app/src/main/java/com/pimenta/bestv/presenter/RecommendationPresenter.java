@@ -41,7 +41,7 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
      */
     public void loadRecommendations() {
         mCompositeDisposable.add(Single.create((SingleOnSubscribe<Void>) e -> mRecommendationManager.loadRecommendations())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aVoid -> {
                     if (mContract != null) {

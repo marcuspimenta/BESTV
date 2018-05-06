@@ -81,7 +81,7 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (mContract != null) {

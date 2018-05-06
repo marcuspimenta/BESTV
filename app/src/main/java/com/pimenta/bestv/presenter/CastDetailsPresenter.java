@@ -64,7 +64,7 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(castResult -> {
                     if (mContract != null) {

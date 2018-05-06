@@ -95,7 +95,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     movie.setFavorite(!movie.isFavorite());
@@ -144,7 +144,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
 
                     e.onSuccess(movieInfo);
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
                     if (mContract != null) {
@@ -175,7 +175,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {
@@ -205,7 +205,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         e.onError(new AssertionError());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {
