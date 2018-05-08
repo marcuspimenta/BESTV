@@ -60,11 +60,11 @@ public class AppGlideModule extends com.bumptech.glide.module.AppGlideModule {
             final TrustManager[] trustAllCerts = new TrustManager[] {
                     new X509TrustManager() {
                         @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                         }
 
                         @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                         }
 
                         @Override
@@ -83,12 +83,7 @@ public class AppGlideModule extends com.bumptech.glide.module.AppGlideModule {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
+            builder.hostnameVerifier((hostname, session) -> true);
 
             OkHttpClient okHttpClient = builder.build();
             return okHttpClient;
