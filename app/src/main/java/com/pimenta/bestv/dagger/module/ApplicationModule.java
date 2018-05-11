@@ -32,7 +32,8 @@ import dagger.Provides;
         ImplModule.class,
         NetworkModule.class,
         PresenterModule.class,
-        DaoModule.class
+        DaoModule.class,
+        TmdbModule.class
 })
 public class ApplicationModule {
 

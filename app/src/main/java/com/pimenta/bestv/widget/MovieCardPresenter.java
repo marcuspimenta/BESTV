@@ -18,9 +18,6 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.manager.ImageManager;

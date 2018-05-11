@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by marcus on 20-03-2018.
@@ -32,7 +33,12 @@ public class NetworkModule {
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        return httpClient.build();
     }
 
     @Provides

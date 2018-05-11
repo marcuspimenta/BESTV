@@ -18,11 +18,11 @@ import android.app.Application;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.api.tmdb.Tmdb;
-import com.pimenta.bestv.manager.DeviceManager;
+import com.pimenta.bestv.api.tmdb.GenreApi;
+import com.pimenta.bestv.api.tmdb.MovieApi;
+import com.pimenta.bestv.api.tmdb.PersonApi;
 import com.pimenta.bestv.model.Cast;
 import com.pimenta.bestv.model.CastList;
 import com.pimenta.bestv.model.Genre;
@@ -33,11 +33,8 @@ import com.pimenta.bestv.model.VideoList;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
-
-import okhttp3.OkHttpClient;
 
 /**
  * Created by marcus on 08-02-2018.
@@ -49,21 +46,23 @@ public class TmdbConnectorImpl implements TmdbConnector {
     private String mApiKey;
     private String mLanguage;
 
-    private Tmdb mTmdb;
-    private DeviceManager mDeviceManager;
+    private GenreApi mGenreApi;
+    private MovieApi mMovieApi;
+    private PersonApi mPersonApi;
 
     @Inject
-    public TmdbConnectorImpl(Application application, DeviceManager deviceManager, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
+    public TmdbConnectorImpl(Application application, GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
         mApiKey = application.getString(R.string.tmdb_api_key);
         mLanguage = application.getString(R.string.tmdb_filter_language);
-        mTmdb = new Tmdb(application.getString(R.string.tmdb_base_url_api), okHttpClient, gson, threadPool);
-        mDeviceManager = deviceManager;
+        mGenreApi = genreApi;
+        mMovieApi = movieApi;
+        mPersonApi = personApi;
     }
 
     @Override
     public List<Genre> getGenres() {
         try {
-            return mTmdb.getGenreApi().getGenres(mApiKey, mLanguage).execute().body().getGenres();
+            return mGenreApi.getGenres(mApiKey, mLanguage).execute().body().getGenres();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the genres", e);
             return null;
@@ -73,7 +72,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getMoviesByGenre(final Genre genre, int page) {
         try {
-            return mTmdb.getGenreApi().getMovies(genre.getId(), mApiKey, mLanguage, false, page).execute().body();
+            return mGenreApi.getMovies(genre.getId(), mApiKey, mLanguage, false, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movies by genre", e);
             return null;
@@ -83,7 +82,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public Movie getMovie(final int movieId) {
         try {
-            return mTmdb.getMovieApi().getMovie(movieId, mApiKey, mLanguage).execute().body();
+            return mMovieApi.getMovie(movieId, mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the movie", e);
             return null;
@@ -93,7 +92,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public CastList getCastByMovie(final Movie movie) {
         try {
-            return mTmdb.getMovieApi().getCastByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
+            return mMovieApi.getCastByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the cast by movie", e);
             return null;
@@ -103,7 +102,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getRecommendationByMovie(final Movie movie, final int page) {
         try {
-            return mTmdb.getMovieApi().getRecommendationByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getRecommendationByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the recommendations", e);
             return null;
@@ -113,7 +112,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getSimilarByMovie(final Movie movie, final int page) {
         try {
-            return mTmdb.getMovieApi().getSimilarByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getSimilarByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the similar", e);
             return null;
@@ -123,7 +122,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public VideoList getVideosByMovie(final Movie movie) {
         try {
-            return mTmdb.getMovieApi().getVideosByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
+            return mMovieApi.getVideosByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the videos", e);
             return null;
@@ -133,7 +132,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getNowPlayingMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getNowPlayingMovies(mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getNowPlayingMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the now playing movies", e);
             return null;
@@ -143,7 +142,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getPopularMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getPopularMovies(mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getPopularMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the popular movies", e);
             return null;
@@ -153,7 +152,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getTopRatedMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getTopRatedMovies(mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getTopRatedMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the rated movies", e);
             return null;
@@ -163,7 +162,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getUpComingMovies(int page) {
         try {
-            return mTmdb.getMovieApi().getUpComingMovies(mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getUpComingMovies(mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the up coming movies", e);
             return null;
@@ -173,7 +172,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList searchMoviesByQuery(final String query, final int page) {
         try {
-            return mTmdb.getMovieApi().searchMoviesByQuery(mApiKey, URLEncoder.encode(query, "UTF-8"), mLanguage, page).execute().body();
+            return mMovieApi.searchMoviesByQuery(mApiKey, URLEncoder.encode(query, "UTF-8"), mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to search the movies by query", e);
             return null;
@@ -183,7 +182,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public Cast getCastDetails(final Cast cast) {
         try {
-            return mTmdb.getPersonApi().getCastDetails(cast.getId(), mApiKey, mLanguage).execute().body();
+            return mPersonApi.getCastDetails(cast.getId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to search the movies by query", e);
             return null;
