@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -35,11 +36,18 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
     private int mResultPage = 0;
 
     private TmdbConnector mTmdbConnector;
+    private Disposable mDisposable;
 
     @Inject
     public SearchPresenter(TmdbConnector tmdbConnector) {
         super();
         mTmdbConnector = tmdbConnector;
+    }
+
+    @Override
+    public void unRegister() {
+        disposeSearchMovie();
+        super.unRegister();
     }
 
     /**
@@ -48,7 +56,8 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      * @param query Query to search the movies
      */
     public void searchMoviesByQuery(String query) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        disposeSearchMovie();
+        mDisposable = Single.create((SingleOnSubscribe<List<Movie>>) e -> {
                     int resultPage = mResultPage + 1;
                     final MovieList movieList = mTmdbConnector.searchMoviesByQuery(query, resultPage);
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
@@ -68,6 +77,16 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     if (mContract != null) {
                         mContract.onResultLoaded(null);
                     }
-                }));
+                });
+    }
+
+    /**
+     * Disposes the search movies.
+     */
+    private void disposeSearchMovie() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+            mDisposable = null;
+        }
     }
 }
