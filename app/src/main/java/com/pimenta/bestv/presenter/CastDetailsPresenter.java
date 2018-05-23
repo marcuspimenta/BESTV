@@ -28,8 +28,8 @@ import com.pimenta.bestv.model.Cast;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -56,15 +56,15 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      * @param cast {@link Cast}
      */
     public void loadCastDetails(Cast cast) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Cast>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Cast>) e -> {
                     final Cast castResult = mTmdbConnector.getCastDetails(cast);
                     if (castResult != null) {
                         e.onSuccess(castResult);
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(castResult -> {
                     if (mContract != null) {

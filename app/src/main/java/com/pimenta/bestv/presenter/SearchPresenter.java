@@ -22,8 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -57,17 +57,17 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      */
     public void searchMoviesByQuery(String query) {
         disposeSearchMovie();
-        mDisposable = Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        mDisposable = Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int resultPage = mResultPage + 1;
                     final MovieList movieList = mTmdbConnector.searchMoviesByQuery(query, resultPage);
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                         mResultPage = movieList.getPage();
                         e.onSuccess(movieList.getMovies());
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {

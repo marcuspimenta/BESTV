@@ -37,8 +37,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -82,7 +82,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void setFavoriteMovie(Movie movie) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Boolean>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
                     boolean result;
                     if (movie.isFavorite()) {
                         result = mMovieManager.deleteFavoriteMovie(movie);
@@ -92,10 +92,10 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                     if (result) {
                         e.onSuccess(true);
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     movie.setFavorite(!movie.isFavorite());
@@ -115,7 +115,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadDataByMovie(Movie movie) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<MovieInfo>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<MovieInfo>) e -> {
                     final MovieInfo movieInfo = new MovieInfo();
 
                     final CastList castList = mTmdbConnector.getCastByMovie(movie);
@@ -144,7 +144,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
 
                     e.onSuccess(movieInfo);
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
                     if (mContract != null) {
@@ -164,7 +164,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadRecommendationByMovie(Movie movie) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mRecommendedPage + 1;
                     final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
 
@@ -172,10 +172,10 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         mRecommendedPage = movieList.getPage();
                         e.onSuccess(movieList.getMovies());
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {
@@ -194,7 +194,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadSimilarByMovie(Movie movie) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mSimilarPage + 1;
                     final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
 
@@ -202,10 +202,10 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         mSimilarPage = movieList.getPage();
                         e.onSuccess(movieList.getMovies());
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {

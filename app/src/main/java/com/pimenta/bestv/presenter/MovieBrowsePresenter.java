@@ -19,7 +19,6 @@ import android.util.Pair;
 
 import com.pimenta.bestv.connector.TmdbConnector;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.model.Genre;
 import com.pimenta.bestv.model.Movie;
 
@@ -27,8 +26,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -72,16 +71,16 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      * Loads the {@link List<Genre>} available at TMDb
      */
     public void loadData() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Pair<Boolean, List<Genre>>>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Pair<Boolean, List<Genre>>>) e -> {
                     final boolean hasFavoriteMovie = mMovieManager.hasFavoriteMovie();
                     final List<Genre> genres = mTmdbConnector.getGenres();
                     if (genres != null) {
                         e.onSuccess(new Pair<>(hasFavoriteMovie, genres));
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (mContract != null) {

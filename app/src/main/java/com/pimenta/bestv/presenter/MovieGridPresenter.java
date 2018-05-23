@@ -35,8 +35,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -65,7 +65,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      * Loads the now playing {@link List<Movie>}
      */
     public void loadMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
                         final List<Movie> movies = mMovieManager.getFavoriteMovies();
                         if (movies != null) {
@@ -95,11 +95,11 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                             mCurrentPage = movieList.getPage();
                             e.onSuccess(movieList.getMovies());
                         } else {
-                            e.onError(new AssertionError());
+                            e.onComplete();
                         }
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {
@@ -118,7 +118,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      * @param genre {@link Genre}
      */
     public void loadMoviesByGenre(Genre genre) {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<List<Movie>>) e -> {
+        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mCurrentPage + 1;
                     final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
 
@@ -126,10 +126,10 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         mCurrentPage = movieList.getPage();
                         e.onSuccess(movieList.getMovies());
                     } else {
-                        e.onError(new AssertionError());
+                        e.onComplete();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movies -> {
                     if (mContract != null) {

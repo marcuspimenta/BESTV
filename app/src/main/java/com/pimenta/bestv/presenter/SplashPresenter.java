@@ -36,7 +36,7 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
 
     public void loadSplash() {
         mCompositeDisposable.add(Observable.interval(SPLASH_TIME_LOAD_SECONDS, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     if (mContract != null) {
