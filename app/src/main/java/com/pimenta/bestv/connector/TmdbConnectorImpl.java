@@ -92,7 +92,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public CastList getCastByMovie(final Movie movie) {
         try {
-            return mMovieApi.getCastByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
+            return mMovieApi.getCastByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the cast by movie", e);
             return null;
@@ -102,7 +102,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getRecommendationByMovie(final Movie movie, final int page) {
         try {
-            return mMovieApi.getRecommendationByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getRecommendationByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the recommendations", e);
             return null;
@@ -112,7 +112,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public MovieList getSimilarByMovie(final Movie movie, final int page) {
         try {
-            return mMovieApi.getSimilarByMovie(movie.getTmdbId(), mApiKey, mLanguage, page).execute().body();
+            return mMovieApi.getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the similar", e);
             return null;
@@ -122,7 +122,7 @@ public class TmdbConnectorImpl implements TmdbConnector {
     @Override
     public VideoList getVideosByMovie(final Movie movie) {
         try {
-            return mMovieApi.getVideosByMovie(movie.getTmdbId(), mApiKey, mLanguage).execute().body();
+            return mMovieApi.getVideosByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the videos", e);
             return null;

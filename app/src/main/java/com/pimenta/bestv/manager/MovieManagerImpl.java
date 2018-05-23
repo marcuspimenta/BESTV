@@ -41,8 +41,7 @@ public class MovieManagerImpl implements MovieManager {
 
     @Override
     public boolean isFavorite(final Movie movie) {
-        final List<Movie> movies = mMovieDao.queryForEq(Movie.FIELD_TMDB_ID, movie.getTmdbId());
-        final Movie movieFind = movies != null && movies.size() > 0 ? movies.get(0) : null;
+        final Movie movieFind = mMovieDao.getMovieById(movie.getId());
         if (movieFind != null) {
             movie.setId(movieFind.getId());
             return true;
@@ -71,7 +70,7 @@ public class MovieManagerImpl implements MovieManager {
         final List<Movie> favoriteMovies = mMovieDao.queryForAll();
         final List<Movie> movies = new ArrayList<>();
         for (final Movie movie : favoriteMovies) {
-            final Movie detailMovie = mTmdbConnector.getMovie(movie.getTmdbId());
+            final Movie detailMovie = mTmdbConnector.getMovie(movie.getId());
             if (detailMovie != null) {
                 detailMovie.setFavorite(true);
                 movies.add(detailMovie);

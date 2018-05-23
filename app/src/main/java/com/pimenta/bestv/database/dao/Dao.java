@@ -27,9 +27,9 @@ public interface Dao<T> {
     List<T> queryForAll();
 
     /**
-     * @see com.j256.ormlite.dao.Dao#queryForEq(String, Object)
+     * @see com.j256.ormlite.dao.Dao#queryForId(Object)
      */
-    List<T> queryForEq(String field, Object value);
+    T getMovieById(int id);
 
     /**
      * @see com.j256.ormlite.dao.Dao#create(Object)

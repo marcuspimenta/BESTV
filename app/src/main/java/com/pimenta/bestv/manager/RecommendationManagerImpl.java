@@ -59,7 +59,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
             int count = 0;
             for (final Movie movie : movieList.getMovies()) {
                 try {
-                    int id = Long.valueOf(movie.getTmdbId()).hashCode();
+                    int id = Long.valueOf(movie.getId()).hashCode();
 
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()

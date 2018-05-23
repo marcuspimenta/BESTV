@@ -27,7 +27,7 @@ import javax.inject.Inject;
  */
 public class MovieDao implements Dao<Movie> {
 
-    private RuntimeExceptionDao<Movie, ?> mMovieDao;
+    private RuntimeExceptionDao<Movie, Integer> mMovieDao;
 
     @Inject
     public MovieDao(DatabaseHelper databaseHelper) {
@@ -40,8 +40,8 @@ public class MovieDao implements Dao<Movie> {
     }
 
     @Override
-    public List<Movie> queryForEq(final String field, final Object value) {
-        return mMovieDao.queryForEq(field, value);
+    public Movie getMovieById(final int id) {
+        return mMovieDao.queryForId(id);
     }
 
     @Override

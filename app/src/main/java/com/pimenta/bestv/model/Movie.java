@@ -33,15 +33,11 @@ import java.util.Date;
 public class Movie implements Serializable {
 
     public static final String TABLE = "movie";
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_TMDB_ID = "tmdb_id";
     private static final String TAG = "Movie";
 
-    @DatabaseField(columnName = FIELD_ID, generatedId = true)
-    private int mId;
-    @DatabaseField(columnName = FIELD_TMDB_ID)
+    @DatabaseField(id = true, columnName = "id")
     @SerializedName("id")
-    private int mTmdbId;
+    private int mId;
     @SerializedName("title")
     private String mTitle;
     @SerializedName("original_title")
@@ -72,14 +68,6 @@ public class Movie implements Serializable {
 
     public void setId(final int id) {
         mId = id;
-    }
-
-    public int getTmdbId() {
-        return mTmdbId;
-    }
-
-    public void setTmdbId(final int tmdbId) {
-        mTmdbId = tmdbId;
     }
 
     public String getTitle() {
@@ -195,6 +183,6 @@ public class Movie implements Serializable {
 
         Movie that = (Movie) obj;
 
-        return mId == that.getTmdbId();
+        return mId == that.getId();
     }
 }
