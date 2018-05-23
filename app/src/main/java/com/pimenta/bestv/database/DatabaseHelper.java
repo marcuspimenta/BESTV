@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.database;
 
-import android.content.Context;
+import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -25,9 +25,13 @@ import com.pimenta.bestv.model.Movie;
 
 import java.sql.SQLException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by marcus on 05-03-2018.
  */
+@Singleton
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TAG = "DatabaseHelper";
@@ -35,8 +39,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
 
-    public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    @Inject
+    public DatabaseHelper(Application application) {
+        super(application, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

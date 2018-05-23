@@ -14,10 +14,11 @@
 
 package com.pimenta.bestv.dagger.module;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.util.DisplayMetrics;
-
-import com.pimenta.bestv.database.DatabaseHelper;
 
 import javax.inject.Singleton;
 
@@ -28,11 +29,7 @@ import dagger.Provides;
  * Created by marcus on 07-02-2018.
  */
 @Module(includes = {
-        PreferenceModule.class,
         ImplModule.class,
-        NetworkModule.class,
-        PresenterModule.class,
-        DaoModule.class,
         TmdbModule.class
 })
 public class ApplicationModule {
@@ -51,8 +48,20 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public DatabaseHelper provideDatabaseHelper(Application application) {
-        return new DatabaseHelper(application);
+    public DisplayMetrics provideDisplayMetrics() {
+        return new DisplayMetrics();
+    }
+
+    @Provides
+    @Singleton
+    public NotificationManager provideNotificationManager(Application application) {
+        return (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    public AlarmManager provideAlarmManager(Application application) {
+        return (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
     }
 
 }

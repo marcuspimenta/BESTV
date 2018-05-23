@@ -16,13 +16,11 @@ package com.pimenta.bestv.dagger.module;
 
 import android.app.Application;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.tmdb.GenreApi;
 import com.pimenta.bestv.api.tmdb.MovieApi;
 import com.pimenta.bestv.api.tmdb.PersonApi;
-
-import java.util.concurrent.Executor;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -30,6 +28,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -41,13 +40,23 @@ public class TmdbModule {
 
     @Provides
     @Singleton
+    public OkHttpClient provideOkHttpClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        return httpClient.build();
+    }
+
+    @Provides
+    @Singleton
     @Named("Tmdb")
-    Retrofit provideRetrofit(Application application, OkHttpClient okHttpClient, Gson gson, Executor executor) {
+    Retrofit provideRetrofit(Application application, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(application.getString(R.string.tmdb_base_url_api))
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .callbackExecutor(executor)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
                 .build();
     }
 
