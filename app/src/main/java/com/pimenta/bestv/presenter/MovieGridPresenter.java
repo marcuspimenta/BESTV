@@ -23,13 +23,13 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.connector.TmdbConnector;
-import com.pimenta.bestv.connector.TmdbConnectorImpl;
+import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.TmdbRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.model.Genre;
-import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.model.MovieList;
+import com.pimenta.bestv.domain.Genre;
+import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.domain.MovieList;
 
 import java.util.List;
 
@@ -50,23 +50,23 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     private Application mApplication;
     private MovieManager mMovieManager;
     private ImageManager mImageManager;
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mMediaRepository;
 
     @Inject
-    public MovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
+    public MovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, MediaRepository mediaRepository) {
         super();
         mApplication = application;
         mMovieManager = movieManager;
         mImageManager = imageManager;
-        mTmdbConnector = tmdbConnector;
+        mMediaRepository = mediaRepository;
     }
 
     /**
      * Loads the now playing {@link List<Movie>}
      */
-    public void loadMoviesByType(TmdbConnectorImpl.MovieListType movieListType) {
+    public void loadMoviesByType(TmdbRepository.MovieListType movieListType) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    if (movieListType.equals(TmdbConnectorImpl.MovieListType.FAVORITES)) {
+                    if (movieListType.equals(TmdbRepository.MovieListType.FAVORITES)) {
                         final List<Movie> movies = mMovieManager.getFavoriteMovies();
                         if (movies != null) {
                             e.onSuccess(movies);
@@ -78,16 +78,16 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         MovieList movieList = null;
                         switch (movieListType) {
                             case NOW_PLAYING:
-                                movieList = mTmdbConnector.getNowPlayingMovies(pageSearch);
+                                movieList = mMediaRepository.getNowPlayingMovies(pageSearch);
                                 break;
                             case POPULAR:
-                                movieList = mTmdbConnector.getPopularMovies(pageSearch);
+                                movieList = mMediaRepository.getPopularMovies(pageSearch);
                                 break;
                             case TOP_RATED:
-                                movieList = mTmdbConnector.getTopRatedMovies(pageSearch);
+                                movieList = mMediaRepository.getTopRatedMovies(pageSearch);
                                 break;
                             case UP_COMING:
-                                movieList = mTmdbConnector.getUpComingMovies(pageSearch);
+                                movieList = mMediaRepository.getUpComingMovies(pageSearch);
                                 break;
                         }
 
@@ -120,7 +120,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     public void loadMoviesByGenre(Genre genre) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mCurrentPage + 1;
-                    final MovieList movieList = mTmdbConnector.getMoviesByGenre(genre, pageSearch);
+                    final MovieList movieList = mMediaRepository.getMoviesByGenre(genre, pageSearch);
 
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                         mCurrentPage = movieList.getPage();

@@ -5,5 +5,5 @@
           android:name="com.pimenta.bestv.fragment.CastDetailsFragment"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          tools:context="com.pimenta.bestv.activity.CastDetailsActivity"
+          tools:context=".view.activity.CastDetailsActivity"
           tools:deviceIds="tv" />

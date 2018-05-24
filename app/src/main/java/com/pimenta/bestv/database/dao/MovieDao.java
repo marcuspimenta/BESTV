@@ -16,16 +16,18 @@ package com.pimenta.bestv.database.dao;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.pimenta.bestv.database.DatabaseHelper;
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.domain.Movie;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by marcus on 15-04-2018.
  */
-public class MovieDao implements Dao<Movie> {
+@Singleton
+public class MovieDao implements BaseDao<Movie> {
 
     private RuntimeExceptionDao<Movie, Integer> mMovieDao;
 

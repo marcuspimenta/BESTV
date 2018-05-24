@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.api.tmdb;
 
-import com.pimenta.bestv.model.Cast;
+import com.pimenta.bestv.domain.Cast;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

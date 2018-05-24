@@ -20,7 +20,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.api.ip.Ip;
-import com.pimenta.bestv.model.IpInfo;
+import com.pimenta.bestv.domain.IpInfo;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;

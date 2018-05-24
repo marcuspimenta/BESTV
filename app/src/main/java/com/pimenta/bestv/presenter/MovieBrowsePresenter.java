@@ -17,10 +17,10 @@ package com.pimenta.bestv.presenter;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 
-import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.model.Genre;
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.domain.Genre;
+import com.pimenta.bestv.domain.Movie;
 
 import java.util.List;
 
@@ -38,14 +38,14 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
 
     private DisplayMetrics mDisplayMetrics;
     private MovieManager mMovieManager;
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mMediaRepository;
 
     @Inject
-    public MovieBrowsePresenter(DisplayMetrics displayMetrics, MovieManager movieManager, TmdbConnector tmdbConnector) {
+    public MovieBrowsePresenter(DisplayMetrics displayMetrics, MovieManager movieManager, MediaRepository mediaRepository) {
         super();
         mDisplayMetrics = displayMetrics;
         mMovieManager = movieManager;
-        mTmdbConnector = tmdbConnector;
+        mMediaRepository = mediaRepository;
     }
 
     /**
@@ -73,7 +73,7 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
     public void loadData() {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Pair<Boolean, List<Genre>>>) e -> {
                     final boolean hasFavoriteMovie = mMovieManager.hasFavoriteMovie();
-                    final List<Genre> genres = mTmdbConnector.getGenres();
+                    final List<Genre> genres = mMediaRepository.getGenres();
                     if (genres != null) {
                         e.onSuccess(new Pair<>(hasFavoriteMovie, genres));
                     } else {

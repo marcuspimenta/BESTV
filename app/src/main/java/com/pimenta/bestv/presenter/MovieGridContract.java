@@ -15,9 +15,8 @@
 package com.pimenta.bestv.presenter;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.domain.Movie;
 
 import java.util.List;
 

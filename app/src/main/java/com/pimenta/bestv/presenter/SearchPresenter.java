@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.connector.TmdbConnector;
-import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.model.MovieList;
+import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.domain.MovieList;
 
 import java.util.List;
 
@@ -35,13 +35,13 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
 
     private int mResultPage = 0;
 
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mMediaRepository;
     private Disposable mDisposable;
 
     @Inject
-    public SearchPresenter(TmdbConnector tmdbConnector) {
+    public SearchPresenter(MediaRepository mediaRepository) {
         super();
-        mTmdbConnector = tmdbConnector;
+        mMediaRepository = mediaRepository;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
         disposeSearchMovie();
         mDisposable = Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int resultPage = mResultPage + 1;
-                    final MovieList movieList = mTmdbConnector.searchMoviesByQuery(query, resultPage);
+                    final MovieList movieList = mMediaRepository.searchMoviesByQuery(query, resultPage);
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                         mResultPage = movieList.getPage();
                         e.onSuccess(movieList.getMovies());

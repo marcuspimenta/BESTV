@@ -16,9 +16,9 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
-import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.database.dao.MovieDao;
-import com.pimenta.bestv.model.Movie;
+import com.pimenta.bestv.domain.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +30,11 @@ import javax.inject.Inject;
  */
 public class MovieManagerImpl implements MovieManager {
 
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mTmdbConnector;
     private MovieDao mMovieDao;
 
     @Inject
-    public MovieManagerImpl(TmdbConnector tmdbConnector, MovieDao movieDao) {
+    public MovieManagerImpl(MediaRepository tmdbConnector, MovieDao movieDao) {
         mTmdbConnector = tmdbConnector;
         mMovieDao = movieDao;
     }

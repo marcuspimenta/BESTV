@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.api.tmdb;
 
-import com.pimenta.bestv.model.GenreList;
-import com.pimenta.bestv.model.MovieList;
+import com.pimenta.bestv.domain.GenreList;
+import com.pimenta.bestv.domain.MovieList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

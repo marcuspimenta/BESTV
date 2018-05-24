@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.api.tmdb;
 
-import com.pimenta.bestv.model.CastList;
-import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.model.MovieList;
-import com.pimenta.bestv.model.VideoList;
+import com.pimenta.bestv.domain.CastList;
+import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.domain.MovieList;
+import com.pimenta.bestv.domain.VideoList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

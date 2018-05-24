@@ -23,15 +23,15 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.model.Cast;
-import com.pimenta.bestv.model.CastList;
-import com.pimenta.bestv.model.Movie;
-import com.pimenta.bestv.model.MovieList;
-import com.pimenta.bestv.model.Video;
-import com.pimenta.bestv.model.VideoList;
+import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.domain.CastList;
+import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.domain.MovieList;
+import com.pimenta.bestv.domain.Video;
+import com.pimenta.bestv.domain.VideoList;
 
 import java.util.List;
 
@@ -53,15 +53,15 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     private Application mApplication;
     private MovieManager mMovieManager;
     private ImageManager mImageManager;
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mMediaRepository;
 
     @Inject
-    public MovieDetailsPresenter(Application application, MovieManager movieManager, ImageManager imageManager, TmdbConnector tmdbConnector) {
+    public MovieDetailsPresenter(Application application, MovieManager movieManager, ImageManager imageManager, MediaRepository mediaRepository) {
         super();
         mApplication = application;
         mMovieManager = movieManager;
         mImageManager = imageManager;
-        mTmdbConnector = tmdbConnector;
+        mMediaRepository = mediaRepository;
     }
 
     /**
@@ -118,26 +118,26 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<MovieInfo>) e -> {
                     final MovieInfo movieInfo = new MovieInfo();
 
-                    final CastList castList = mTmdbConnector.getCastByMovie(movie);
+                    final CastList castList = mMediaRepository.getCastByMovie(movie);
                     if (castList != null) {
                         movieInfo.setCasts(castList.getCasts());
                     }
 
                     int recommendedPageSearch = mRecommendedPage + 1;
-                    final MovieList recommendedMovieList = mTmdbConnector.getRecommendationByMovie(movie, recommendedPageSearch);
+                    final MovieList recommendedMovieList = mMediaRepository.getRecommendationByMovie(movie, recommendedPageSearch);
                     if (recommendedMovieList != null && recommendedMovieList.getPage() <= recommendedMovieList.getTotalPages()) {
                         mRecommendedPage = recommendedMovieList.getPage();
                         movieInfo.setRecommendedMovies(recommendedMovieList.getMovies());
                     }
 
                     int similarPageSearch = mSimilarPage + 1;
-                    final MovieList similarMovieList = mTmdbConnector.getSimilarByMovie(movie, similarPageSearch);
+                    final MovieList similarMovieList = mMediaRepository.getSimilarByMovie(movie, similarPageSearch);
                     if (similarMovieList != null && similarMovieList.getPage() <= similarMovieList.getTotalPages()) {
                         mSimilarPage = similarMovieList.getPage();
                         movieInfo.setSimilarMovies(similarMovieList.getMovies());
                     }
 
-                    final VideoList videoList = mTmdbConnector.getVideosByMovie(movie);
+                    final VideoList videoList = mMediaRepository.getVideosByMovie(movie);
                     if (videoList != null) {
                         movieInfo.setVideos(videoList.getVideos());
                     }
@@ -166,7 +166,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     public void loadRecommendationByMovie(Movie movie) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mRecommendedPage + 1;
-                    final MovieList movieList = mTmdbConnector.getRecommendationByMovie(movie, pageSearch);
+                    final MovieList movieList = mMediaRepository.getRecommendationByMovie(movie, pageSearch);
 
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                         mRecommendedPage = movieList.getPage();
@@ -196,7 +196,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     public void loadSimilarByMovie(Movie movie) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
                     int pageSearch = mSimilarPage + 1;
-                    final MovieList movieList = mTmdbConnector.getSimilarByMovie(movie, pageSearch);
+                    final MovieList movieList = mMediaRepository.getSimilarByMovie(movie, pageSearch);
 
                     if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                         mSimilarPage = movieList.getPage();

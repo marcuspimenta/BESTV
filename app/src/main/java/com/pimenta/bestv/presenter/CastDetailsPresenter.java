@@ -22,9 +22,9 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.connector.TmdbConnector;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.model.Cast;
+import com.pimenta.bestv.domain.Cast;
 
 import javax.inject.Inject;
 
@@ -39,14 +39,14 @@ import io.reactivex.schedulers.Schedulers;
 public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
 
     private Application mApplication;
-    private TmdbConnector mTmdbConnector;
+    private MediaRepository mMediaRepository;
     private ImageManager mImageManager;
 
     @Inject
-    public CastDetailsPresenter(Application application, TmdbConnector tmdbConnector, ImageManager imageManager) {
+    public CastDetailsPresenter(Application application, MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mApplication = application;
-        mTmdbConnector = tmdbConnector;
+        mMediaRepository = mediaRepository;
         mImageManager = imageManager;
     }
 
@@ -57,7 +57,7 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      */
     public void loadCastDetails(Cast cast) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Cast>) e -> {
-                    final Cast castResult = mTmdbConnector.getCastDetails(cast);
+                    final Cast castResult = mMediaRepository.getCastDetails(cast);
                     if (castResult != null) {
                         e.onSuccess(castResult);
                     } else {
@@ -101,5 +101,4 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
                     }
                 });
     }
-
 }
