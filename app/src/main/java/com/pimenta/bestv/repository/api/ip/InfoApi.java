@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.api.ip;
+package com.pimenta.bestv.repository.api.ip;
 
 import com.pimenta.bestv.domain.IpInfo;
 

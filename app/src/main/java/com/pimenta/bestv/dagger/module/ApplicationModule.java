@@ -24,6 +24,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -64,4 +66,14 @@ public class ApplicationModule {
         return (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
     }
 
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        return httpClient.build();
+    }
 }

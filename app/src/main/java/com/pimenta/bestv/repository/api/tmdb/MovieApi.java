@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.api.tmdb;
+package com.pimenta.bestv.repository.api.tmdb;
 
 import com.pimenta.bestv.domain.CastList;
 import com.pimenta.bestv.domain.Movie;

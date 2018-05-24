@@ -12,9 +12,10 @@
  * the License.
  */
 
-package com.pimenta.bestv.api.tmdb;
+package com.pimenta.bestv.repository.api.tmdb;
 
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.domain.GenreList;
+import com.pimenta.bestv.domain.MovieList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -22,11 +23,15 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by marcus on 04-04-2018.
+ * Created by marcus on 08-02-2018.
  */
-public interface PersonApi {
+public interface GenreApi {
 
-    @GET("person/{person_id}")
-    Call<Cast> getCastDetails(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
+    @GET("genre/movie/list")
+    Call<GenreList> getGenres(@Query("api_key") String apiKey, @Query("language") String language);
 
+    @GET("genre/{genre_id}/movies")
+    Call<MovieList> getMovies(@Path("genre_id") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("include_adult") boolean includeAdult, @Query("page") int page);
+    
 }

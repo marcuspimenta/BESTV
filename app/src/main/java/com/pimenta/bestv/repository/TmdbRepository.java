@@ -20,9 +20,9 @@ import android.util.Log;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.api.tmdb.GenreApi;
-import com.pimenta.bestv.api.tmdb.MovieApi;
-import com.pimenta.bestv.api.tmdb.PersonApi;
+import com.pimenta.bestv.repository.api.tmdb.GenreApi;
+import com.pimenta.bestv.repository.api.tmdb.MovieApi;
+import com.pimenta.bestv.repository.api.tmdb.PersonApi;
 import com.pimenta.bestv.domain.Cast;
 import com.pimenta.bestv.domain.CastList;
 import com.pimenta.bestv.domain.Genre;

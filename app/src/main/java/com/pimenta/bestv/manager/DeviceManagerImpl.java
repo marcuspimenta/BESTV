@@ -14,20 +14,14 @@
 
 package com.pimenta.bestv.manager;
 
-import android.app.Application;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.pimenta.bestv.R;
-import com.pimenta.bestv.api.ip.Ip;
+import com.pimenta.bestv.repository.api.ip.InfoApi;
 import com.pimenta.bestv.domain.IpInfo;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
-
-import okhttp3.OkHttpClient;
 
 /**
  * Created by marcus on 11-02-2018.
@@ -36,19 +30,19 @@ public class DeviceManagerImpl implements DeviceManager {
 
     private static final String TAG = "DeviceManagerImpl";
 
-    private Ip mIp;
     private IpInfo mIpInfo;
+    private InfoApi mInfoApi;
 
     @Inject
-    public DeviceManagerImpl(Application application, OkHttpClient okHttpClient, Gson gson, Executor threadPool) {
-        mIp = new Ip(application.getString(R.string.ip_base_url_api), okHttpClient, gson, threadPool);
+    public DeviceManagerImpl(InfoApi infoApi) {
+        mInfoApi = infoApi;
     }
 
     @Override
     public String getCountryCode() {
         try {
-            if (mIpInfo == null) {
-                mIpInfo = mIp.getInfoApi().getIpInfo().execute().body();
+            if (mInfoApi == null) {
+                mIpInfo = mInfoApi.getIpInfo().execute().body();
             }
         } catch (IOException e) {
             Log.e(TAG, "Failed to get the ip info", e);
