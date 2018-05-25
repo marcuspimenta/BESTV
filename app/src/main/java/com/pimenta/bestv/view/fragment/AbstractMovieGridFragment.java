@@ -37,7 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.view.fragment.base.BaseVerticalGridFragment;
 import com.pimenta.bestv.presenter.MovieGridContract;
 import com.pimenta.bestv.presenter.MovieGridPresenter;

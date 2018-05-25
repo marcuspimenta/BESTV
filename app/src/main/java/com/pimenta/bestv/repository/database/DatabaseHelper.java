@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.database;
+package com.pimenta.bestv.repository.database;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,7 +21,7 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.sql.SQLException;
 

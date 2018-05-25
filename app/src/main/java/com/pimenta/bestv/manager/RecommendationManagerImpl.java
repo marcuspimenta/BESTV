@@ -23,10 +23,10 @@ import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
 
 import java.util.concurrent.ExecutionException;
 

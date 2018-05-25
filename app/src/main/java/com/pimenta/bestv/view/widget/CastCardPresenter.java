@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.repository.entity.Cast;
 
 import javax.inject.Inject;
 

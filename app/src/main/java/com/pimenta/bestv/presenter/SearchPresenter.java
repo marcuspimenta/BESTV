@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
+import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
 
 import java.util.List;
 

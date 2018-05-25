@@ -16,7 +16,7 @@ package com.pimenta.bestv.presenter;
 
 import android.graphics.drawable.Drawable;
 
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.repository.entity.Cast;
 
 /**
  * Created by marcus on 05-04-2018.

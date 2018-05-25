@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.domain;
+package com.pimenta.bestv.repository.entity;
 
 import com.google.gson.annotations.SerializedName;
 

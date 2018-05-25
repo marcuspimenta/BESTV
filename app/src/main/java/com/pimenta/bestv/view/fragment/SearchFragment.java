@@ -36,7 +36,7 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;

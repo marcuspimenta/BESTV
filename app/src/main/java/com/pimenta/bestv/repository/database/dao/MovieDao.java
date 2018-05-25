@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.database.dao;
+package com.pimenta.bestv.repository.database.dao;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.pimenta.bestv.database.DatabaseHelper;
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.database.DatabaseHelper;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.util.List;
 

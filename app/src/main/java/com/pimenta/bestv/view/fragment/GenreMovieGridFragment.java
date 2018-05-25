@@ -17,7 +17,7 @@ package com.pimenta.bestv.view.fragment;
 import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.domain.Genre;
+import com.pimenta.bestv.repository.entity.Genre;
 
 /**
  * Created by marcus on 11-02-2018.

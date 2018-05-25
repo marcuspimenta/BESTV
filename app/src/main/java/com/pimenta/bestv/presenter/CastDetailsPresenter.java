@@ -22,9 +22,9 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.repository.entity.Cast;
 
 import javax.inject.Inject;
 

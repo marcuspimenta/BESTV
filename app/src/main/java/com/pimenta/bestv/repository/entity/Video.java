@@ -12,28 +12,42 @@
  * the License.
  */
 
-package com.pimenta.bestv.domain;
+package com.pimenta.bestv.repository.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 22-02-2018.
  */
-public class Genre implements Serializable {
+public class Video implements Serializable {
 
     @SerializedName("id")
-    private int mId;
+    private String mId;
+    @SerializedName("key")
+    private String mKey;
     @SerializedName("name")
     private String mName;
+    @SerializedName("site")
+    private String mSite;
+    @SerializedName("type")
+    private String mType;
 
-    public int getId() {
+    public String getId() {
         return mId;
     }
 
-    public void setId(final int id) {
+    public void setId(final String id) {
         mId = id;
+    }
+
+    public String getKey() {
+        return mKey;
+    }
+
+    public void setKey(final String key) {
+        mKey = key;
     }
 
     public String getName() {
@@ -42,5 +56,21 @@ public class Genre implements Serializable {
 
     public void setName(final String name) {
         mName = name;
+    }
+
+    public String getSite() {
+        return mSite;
+    }
+
+    public void setSite(final String site) {
+        mSite = site;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public void setType(final String type) {
+        mType = type;
     }
 }

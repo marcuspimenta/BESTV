@@ -19,9 +19,9 @@ import android.support.annotation.NonNull;
 import android.support.v17.leanback.widget.DiffCallback;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.repository.TmdbRepository;
-import com.pimenta.bestv.view.fragment.AbstractMovieGridFragment;
+import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.remote.TmdbRepository;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     private static final String TYPE = "TYPE";
 
-    private TmdbRepository.MovieListType mMovieListType;
+    private MovieManager.MovieListType mMovieListType;
 
-    public static TopMovieGridFragment newInstance(TmdbRepository.MovieListType movieListType, boolean showProgress) {
+    public static TopMovieGridFragment newInstance(MovieManager.MovieListType movieListType, boolean showProgress) {
         Bundle args = new Bundle();
         args.putSerializable(TYPE, movieListType);
         args.putBoolean(SHOW_PROGRESS, showProgress);
@@ -51,7 +51,7 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
         super.onCreate(savedInstanceState);
 
         if (mMovieListType == null) {
-            mMovieListType = (TmdbRepository.MovieListType) getArguments().getSerializable(TYPE);
+            mMovieListType = (MovieManager.MovieListType) getArguments().getSerializable(TYPE);
             mShowProgress = getArguments().getBoolean(SHOW_PROGRESS);
         }
     }
@@ -63,21 +63,21 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     @Override
     public void loadMorePages() {
-        if (!mMovieListType.equals(TmdbRepository.MovieListType.FAVORITES)) {
+        if (!mMovieListType.equals(MovieManager.MovieListType.FAVORITES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void refreshDada() {
-        if (mMovieListType.equals(TmdbRepository.MovieListType.FAVORITES)) {
+        if (mMovieListType.equals(MovieManager.MovieListType.FAVORITES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void onMoviesLoaded(final List<Movie> movies) {
-        if (mMovieListType.equals(TmdbRepository.MovieListType.FAVORITES)) {
+        if (mMovieListType.equals(MovieManager.MovieListType.FAVORITES)) {
             mRowsAdapter.setItems(movies, new DiffCallback<Movie>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {

@@ -18,9 +18,9 @@ import android.app.Application;
 
 import com.google.gson.GsonBuilder;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.api.tmdb.GenreApi;
-import com.pimenta.bestv.repository.api.tmdb.MovieApi;
-import com.pimenta.bestv.repository.api.tmdb.PersonApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
 
 import javax.inject.Named;
 import javax.inject.Singleton;

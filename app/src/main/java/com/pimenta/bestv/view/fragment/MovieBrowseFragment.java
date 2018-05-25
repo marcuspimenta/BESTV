@@ -31,10 +31,11 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.domain.Genre;
+import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.presenter.MovieBrowseContract;
 import com.pimenta.bestv.presenter.MovieBrowsePresenter;
-import com.pimenta.bestv.repository.TmdbRepository;
+import com.pimenta.bestv.repository.remote.TmdbRepository;
 import com.pimenta.bestv.view.fragment.base.BaseBrowseFragment;
 import com.pimenta.bestv.view.widget.GenreHeaderItem;
 import com.pimenta.bestv.view.widget.MovieListTypeHeaderItem;
@@ -52,7 +53,7 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private static final int FAVORITE_INDEX = 4;
 
     private static final PageRow sFavoritePageRow = new PageRow(
-            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbRepository.MovieListType.FAVORITES));
+            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MovieManager.MovieListType.FAVORITES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
@@ -154,10 +155,10 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private void setupMainList() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbRepository.MovieListType.NOW_PLAYING)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbRepository.MovieListType.POPULAR)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbRepository.MovieListType.TOP_RATED)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, TmdbRepository.MovieListType.UP_COMING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MovieManager.MovieListType.NOW_PLAYING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MovieManager.MovieListType.POPULAR)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MovieManager.MovieListType.TOP_RATED)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MovieManager.MovieListType.UP_COMING)));
     }
 
     private class SearchClickListener implements View.OnClickListener {

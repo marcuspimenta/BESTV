@@ -23,13 +23,13 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.repository.TmdbRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.remote.TmdbRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.domain.Genre;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
+import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
 
 import java.util.List;
 
@@ -64,9 +64,9 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     /**
      * Loads the now playing {@link List<Movie>}
      */
-    public void loadMoviesByType(TmdbRepository.MovieListType movieListType) {
+    public void loadMoviesByType(MovieManager.MovieListType movieListType) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    if (movieListType.equals(TmdbRepository.MovieListType.FAVORITES)) {
+                    if (movieListType.equals(MovieManager.MovieListType.FAVORITES)) {
                         final List<Movie> movies = mMovieManager.getFavoriteMovies();
                         if (movies != null) {
                             e.onSuccess(movies);

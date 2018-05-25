@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository;
+package com.pimenta.bestv.repository.remote;
 
-import com.pimenta.bestv.domain.Cast;
-import com.pimenta.bestv.domain.CastList;
-import com.pimenta.bestv.domain.Genre;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
-import com.pimenta.bestv.domain.VideoList;
+import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.util.List;
 

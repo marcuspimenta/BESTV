@@ -17,10 +17,10 @@ package com.pimenta.bestv.presenter;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.domain.Genre;
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.util.List;
 

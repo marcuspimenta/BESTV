@@ -33,7 +33,7 @@ import android.widget.ImageView;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.view.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.presenter.CastDetailsContract;
 import com.pimenta.bestv.presenter.CastDetailsPresenter;

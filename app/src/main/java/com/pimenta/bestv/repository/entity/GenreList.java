@@ -12,35 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.domain;
+package com.pimenta.bestv.repository.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * Created by marcus on 15-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-public class CastList {
+public class GenreList {
 
-    @SerializedName("id")
-    private int mId;
-    @SerializedName("cast")
-    private List<Cast> mCasts;
+    @SerializedName("genres")
+    private List<Genre> mGenres;
 
-    public int getId() {
-        return mId;
+    public List<Genre> getGenres() {
+        return mGenres;
     }
 
-    public void setId(final int id) {
-        mId = id;
-    }
-
-    public List<Cast> getCasts() {
-        return mCasts;
-    }
-
-    public void setCasts(final List<Cast> casts) {
-        mCasts = casts;
+    public void setGenres(final List<Genre> genres) {
+        mGenres = genres;
     }
 }

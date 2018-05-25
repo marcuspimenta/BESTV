@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.google.gson.GsonBuilder;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.api.ip.InfoApi;
+import com.pimenta.bestv.repository.remote.api.ip.InfoApi;
 
 import javax.inject.Named;
 import javax.inject.Singleton;

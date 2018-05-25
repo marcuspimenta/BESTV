@@ -12,21 +12,35 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenter;
+package com.pimenta.bestv.repository.entity;
 
-import android.graphics.Bitmap;
-
-import com.pimenta.bestv.repository.entity.Movie;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 22-02-2018.
  */
-public interface MovieGridContract extends BasePresenter.Contract {
+public class VideoList {
 
-    void onMoviesLoaded(List<Movie> movies);
+    @SerializedName("id")
+    private int mId;
+    @SerializedName("results")
+    private List<Video> mVideos;
 
-    void onBackdropImageLoaded(Bitmap bitmap);
+    public int getId() {
+        return mId;
+    }
 
+    public void setId(final int id) {
+        mId = id;
+    }
+
+    public List<Video> getVideos() {
+        return mVideos;
+    }
+
+    public void setVideos(final List<Video> videos) {
+        mVideos = videos;
+    }
 }

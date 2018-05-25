@@ -16,8 +16,8 @@ package com.pimenta.bestv.manager;
 
 import android.util.Log;
 
-import com.pimenta.bestv.repository.api.ip.InfoApi;
-import com.pimenta.bestv.domain.IpInfo;
+import com.pimenta.bestv.repository.remote.api.ip.InfoApi;
+import com.pimenta.bestv.repository.entity.IpInfo;
 
 import java.io.IOException;
 

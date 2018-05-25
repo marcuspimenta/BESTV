@@ -16,9 +16,9 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
-import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.database.dao.MovieDao;
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.database.dao.MovieDao;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

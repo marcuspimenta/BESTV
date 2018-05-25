@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.api.tmdb;
+package com.pimenta.bestv.repository.remote.api.tmdb;
 
-import com.pimenta.bestv.domain.CastList;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
-import com.pimenta.bestv.domain.VideoList;
+import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.VideoList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

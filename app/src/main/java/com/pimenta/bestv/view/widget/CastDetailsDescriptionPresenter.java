@@ -16,7 +16,7 @@ package com.pimenta.bestv.view.widget;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import com.pimenta.bestv.domain.Cast;
+import com.pimenta.bestv.repository.entity.Cast;
 
 /**
  * Created by marcus on 07-04-2018.

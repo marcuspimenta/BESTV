@@ -16,7 +16,7 @@ package com.pimenta.bestv.view.widget;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import com.pimenta.bestv.domain.Movie;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

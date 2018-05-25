@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.database.dao;
+package com.pimenta.bestv.repository.database.dao;
 
 import java.util.List;
 

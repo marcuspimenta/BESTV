@@ -45,9 +45,9 @@ import android.widget.ImageView;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.domain.Cast;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.Video;
+import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.presenter.MovieDetailsContract;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
 import com.pimenta.bestv.view.activity.CastDetailsActivity;

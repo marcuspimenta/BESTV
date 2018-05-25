@@ -23,15 +23,15 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.domain.Cast;
-import com.pimenta.bestv.domain.CastList;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
-import com.pimenta.bestv.domain.Video;
-import com.pimenta.bestv.domain.VideoList;
+import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.Video;
+import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.util.List;
 

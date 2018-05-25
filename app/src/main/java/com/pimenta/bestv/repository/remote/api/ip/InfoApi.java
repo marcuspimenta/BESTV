@@ -12,25 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.domain;
+package com.pimenta.bestv.repository.remote.api.ip;
 
-import com.google.gson.annotations.SerializedName;
+import com.pimenta.bestv.repository.entity.IpInfo;
 
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-public class GenreList {
+public interface InfoApi {
 
-    @SerializedName("genres")
-    private List<Genre> mGenres;
+    @GET("json")
+    Call<IpInfo> getIpInfo();
 
-    public List<Genre> getGenres() {
-        return mGenres;
-    }
-
-    public void setGenres(final List<Genre> genres) {
-        mGenres = genres;
-    }
 }

@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.dagger.module;
 
-import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.repository.TmdbRepository;
+import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.remote.TmdbRepository;
 import com.pimenta.bestv.manager.DeviceManager;
 import com.pimenta.bestv.manager.DeviceManagerImpl;
 import com.pimenta.bestv.manager.ImageManager;

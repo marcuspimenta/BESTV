@@ -14,7 +14,11 @@
 
 package com.pimenta.bestv.manager;
 
-import com.pimenta.bestv.domain.Movie;
+import android.support.annotation.StringRes;
+
+import com.pimenta.bestv.BesTV;
+import com.pimenta.bestv.R;
+import com.pimenta.bestv.repository.entity.Movie;
 
 import java.util.List;
 
@@ -62,5 +66,26 @@ public interface MovieManager {
      * @return          Favorite {@link List<Movie>}
      */
     List<Movie> getFavoriteMovies();
+
+    /**
+     * Represents the movie list type
+     */
+    public enum MovieListType {
+        FAVORITES(R.string.favorites),
+        NOW_PLAYING(R.string.now_playing),
+        POPULAR(R.string.popular),
+        TOP_RATED(R.string.top_rated),
+        UP_COMING(R.string.up_coming);
+
+        private String mName;
+
+        MovieListType(@StringRes int nameResource) {
+            mName = BesTV.get().getString(nameResource);
+        }
+
+        public String getName() {
+            return mName;
+        }
+    }
 
 }

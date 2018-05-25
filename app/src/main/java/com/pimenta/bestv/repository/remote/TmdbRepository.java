@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository;
+package com.pimenta.bestv.repository.remote;
 
 import android.app.Application;
 import android.support.annotation.StringRes;
@@ -20,15 +20,15 @@ import android.util.Log;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.api.tmdb.GenreApi;
-import com.pimenta.bestv.repository.api.tmdb.MovieApi;
-import com.pimenta.bestv.repository.api.tmdb.PersonApi;
-import com.pimenta.bestv.domain.Cast;
-import com.pimenta.bestv.domain.CastList;
-import com.pimenta.bestv.domain.Genre;
-import com.pimenta.bestv.domain.Movie;
-import com.pimenta.bestv.domain.MovieList;
-import com.pimenta.bestv.domain.VideoList;
+import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
+import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -188,26 +188,4 @@ public class TmdbRepository implements MediaRepository {
             return null;
         }
     }
-
-    /**
-     * Represents the movie list type
-     */
-    public enum MovieListType {
-        FAVORITES(R.string.favorites),
-        NOW_PLAYING(R.string.now_playing),
-        POPULAR(R.string.popular),
-        TOP_RATED(R.string.top_rated),
-        UP_COMING(R.string.up_coming);
-
-        private String mName;
-
-        MovieListType(@StringRes int nameResource) {
-            mName = BesTV.get().getString(nameResource);
-        }
-
-        public String getName() {
-            return mName;
-        }
-    }
-
 }

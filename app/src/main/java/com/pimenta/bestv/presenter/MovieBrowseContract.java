@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.domain.Genre;
+import com.pimenta.bestv.repository.entity.Genre;
 
 import java.util.List;
 
