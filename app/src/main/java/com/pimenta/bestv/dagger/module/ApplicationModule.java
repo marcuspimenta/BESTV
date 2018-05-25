@@ -20,6 +20,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -74,6 +76,9 @@ public class ApplicationModule {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(logging);
+        httpClient.readTimeout(30, TimeUnit.SECONDS);
+        httpClient.writeTimeout(30, TimeUnit.SECONDS);
+        httpClient.connectTimeout(30, TimeUnit.SECONDS);
         return httpClient.build();
     }
 }
