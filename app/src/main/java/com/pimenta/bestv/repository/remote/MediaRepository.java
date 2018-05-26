@@ -17,11 +17,14 @@ package com.pimenta.bestv.repository.remote;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
 import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.util.List;
+
+import io.reactivex.Single;
 
 /**
  * Created by marcus on 08-02-2018.
@@ -29,11 +32,11 @@ import java.util.List;
 public interface MediaRepository {
 
     /**
-     * Gets the {@link List<Genre>} available at TMDb
+     * Gets the {@link GenreList} available at TMDb
      *
-     * @return {@link List<Genre>}
+     * @return {@link Single<GenreList>}
      */
-    List<Genre> getGenres();
+    Single<GenreList> getGenres();
 
     /**
      * Gets the {@link List<Movie>} by the {@link Genre}
@@ -42,9 +45,9 @@ public interface MediaRepository {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getMoviesByGenre(Genre genre, int page);
+    Single<MovieList> getMoviesByGenre(Genre genre, int page);
 
     /**
      * Gets the {@link Movie} by the ID
@@ -59,9 +62,9 @@ public interface MediaRepository {
      *
      * @param movie {@link Movie} to search the {@link List<CastList>}
      *
-     * @return {@link CastList}
+     * @return {@link Single<CastList>}
      */
-    CastList getCastByMovie(Movie movie);
+    Single<CastList> getCastByMovie(Movie movie);
 
     /**
      * Gets a list of recommended movies for a movie.
@@ -70,9 +73,9 @@ public interface MediaRepository {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getRecommendationByMovie(Movie movie, int page);
+    Single<MovieList> getRecommendationByMovie(Movie movie, int page);
 
     /**
      * Gets a list of similar movies. This is not the same as the
@@ -83,18 +86,18 @@ public interface MediaRepository {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getSimilarByMovie(Movie movie, int page);
+    Single<MovieList> getSimilarByMovie(Movie movie, int page);
 
     /**
      * Gets the videos from a movie
      *
      * @param movie {@link Movie}
      *
-     * @return      {@link VideoList}
+     * @return      {@link Single<VideoList>}
      */
-    VideoList getVideosByMovie(Movie movie);
+    Single<VideoList> getVideosByMovie(Movie movie);
 
     /**
      * Gets the now playing {@link MovieList}
@@ -102,9 +105,9 @@ public interface MediaRepository {
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getNowPlayingMovies(int page);
+    Single<MovieList> getNowPlayingMovies(int page);
 
     /**
      * Gets the popular {@link MovieList}
@@ -112,9 +115,9 @@ public interface MediaRepository {
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getPopularMovies(int page);
+    Single<MovieList> getPopularMovies(int page);
 
     /**
      * Gets the top rated {@link MovieList}
@@ -122,9 +125,9 @@ public interface MediaRepository {
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getTopRatedMovies(int page);
+    Single<MovieList> getTopRatedMovies(int page);
 
     /**
      * Gets the up coming {@link MovieList}
@@ -132,9 +135,9 @@ public interface MediaRepository {
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link MovieList}
+     * @return {@link Single<MovieList>}
      */
-    MovieList getUpComingMovies(int page);
+    Single<MovieList> getUpComingMovies(int page);
 
 
     /**
@@ -144,16 +147,16 @@ public interface MediaRepository {
      * @param page      Specify which page to query. Minimum: 1, maximum: 1000,
      *                  default: 1
      *
-     * @return          {@link MovieList}
+     * @return          {@link Single<MovieList>}
      */
-    MovieList searchMoviesByQuery(String query, int page);
+    Single<MovieList> searchMoviesByQuery(String query, int page);
 
     /**
      * Gets the {@link Cast} details by the {@link Cast}
      *
      * @param cast {@link Cast} to search
      *
-     * @return {@link Cast}
+     * @return {@link Single<Cast>}
      */
-    Cast getCastDetails(Cast cast);
+    Single<Cast> getCastDetails(Cast cast);
 }

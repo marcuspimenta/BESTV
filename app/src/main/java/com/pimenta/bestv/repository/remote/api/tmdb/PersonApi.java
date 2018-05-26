@@ -16,7 +16,7 @@ package com.pimenta.bestv.repository.remote.api.tmdb;
 
 import com.pimenta.bestv.repository.entity.Cast;
 
-import retrofit2.Call;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -27,6 +27,6 @@ import retrofit2.http.Query;
 public interface PersonApi {
 
     @GET("person/{person_id}")
-    Call<Cast> getCastDetails(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
+    Single<Cast> getCastDetails(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
 
 }

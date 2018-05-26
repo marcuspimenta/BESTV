@@ -20,6 +20,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -34,7 +37,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 @Module(includes = {
         ImplModule.class,
-        TmdbModule.class
+        MediaModule.class
 })
 public class ApplicationModule {
 
@@ -80,5 +83,11 @@ public class ApplicationModule {
         httpClient.writeTimeout(30, TimeUnit.SECONDS);
         httpClient.connectTimeout(30, TimeUnit.SECONDS);
         return httpClient.build();
+    }
+
+    @Provides
+    @Singleton
+    public Gson provideGson() {
+        return new GsonBuilder().create();
     }
 }

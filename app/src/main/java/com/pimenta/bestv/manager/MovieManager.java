@@ -19,8 +19,11 @@ import android.support.annotation.StringRes;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
 
 import java.util.List;
+
+import io.reactivex.Single;
 
 /**
  * Created by marcus on 05-03-2018.
@@ -63,9 +66,18 @@ public interface MovieManager {
     /**
      * Gets the favorites {@link List<Movie>}
      *
-     * @return          Favorite {@link List<Movie>}
+     * @return          Favorite {@link Single<List<Movie>>}
      */
-    List<Movie> getFavoriteMovies();
+    Single<List<Movie>> getFavoriteMovies();
+
+    /**
+     * Loads the {@link MovieList} by {@link MovieManager.MovieListType}
+     *
+     * @param page              Page to be loaded
+     * @param movieListType     {@link MovieManager.MovieListType}
+     * @return                  {@link Single<MovieList>}
+     */
+    Single<MovieList> loadMoviesByType(int page, MovieManager.MovieListType movieListType);
 
     /**
      * Represents the movie list type

@@ -2,7 +2,7 @@ package com.pimenta.bestv.dagger.module;
 
 import android.app.Application;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.remote.api.ip.InfoApi;
 
@@ -24,11 +24,11 @@ public class IpModule {
     @Provides
     @Singleton
     @Named("Ip")
-    Retrofit provideIpRetrofit(Application application, OkHttpClient okHttpClient) {
+    Retrofit provideIpRetrofit(Application application, OkHttpClient okHttpClient, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl(application.getString(R.string.ip_base_url_api))
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 

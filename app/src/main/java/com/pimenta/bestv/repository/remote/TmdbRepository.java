@@ -15,33 +15,32 @@
 package com.pimenta.bestv.repository.remote;
 
 import android.app.Application;
-import android.support.annotation.StringRes;
 import android.util.Log;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
-import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
-import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.Single;
 
 /**
  * Created by marcus on 08-02-2018.
  */
 public class TmdbRepository implements MediaRepository {
 
-    private static final String TAG = "TmdbRepository";
+    private static final String TAG = TmdbRepository.class.getSimpleName();
 
     private String mApiKey;
     private String mLanguage;
@@ -60,23 +59,13 @@ public class TmdbRepository implements MediaRepository {
     }
 
     @Override
-    public List<Genre> getGenres() {
-        try {
-            return mGenreApi.getGenres(mApiKey, mLanguage).execute().body().getGenres();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the genres", e);
-            return null;
-        }
+    public Single<GenreList> getGenres() {
+        return mGenreApi.getGenres(mApiKey, mLanguage);
     }
 
     @Override
-    public MovieList getMoviesByGenre(final Genre genre, int page) {
-        try {
-            return mGenreApi.getMovies(genre.getId(), mApiKey, mLanguage, false, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movies by genre", e);
-            return null;
-        }
+    public Single<MovieList> getMoviesByGenre(final Genre genre, int page) {
+        return mGenreApi.getMovies(genre.getId(), mApiKey, mLanguage, false, page);
     }
 
     @Override
@@ -84,108 +73,58 @@ public class TmdbRepository implements MediaRepository {
         try {
             return mMovieApi.getMovie(movieId, mApiKey, mLanguage).execute().body();
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get the movie", e);
+            Log.e(TAG, "Error while getting a movie", e);
             return null;
         }
     }
 
     @Override
-    public CastList getCastByMovie(final Movie movie) {
-        try {
-            return mMovieApi.getCastByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the cast by movie", e);
-            return null;
-        }
+    public Single<CastList> getCastByMovie(final Movie movie) {
+        return mMovieApi.getCastByMovie(movie.getId(), mApiKey, mLanguage);
     }
 
     @Override
-    public MovieList getRecommendationByMovie(final Movie movie, final int page) {
-        try {
-            return mMovieApi.getRecommendationByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the recommendations", e);
-            return null;
-        }
+    public Single<MovieList> getRecommendationByMovie(final Movie movie, final int page) {
+        return mMovieApi.getRecommendationByMovie(movie.getId(), mApiKey, mLanguage, page);
     }
 
     @Override
-    public MovieList getSimilarByMovie(final Movie movie, final int page) {
-        try {
-            return mMovieApi.getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the similar", e);
-            return null;
-        }
+    public Single<MovieList> getSimilarByMovie(final Movie movie, final int page) {
+        return mMovieApi.getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page);
     }
 
     @Override
-    public VideoList getVideosByMovie(final Movie movie) {
-        try {
-            return mMovieApi.getVideosByMovie(movie.getId(), mApiKey, mLanguage).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the videos", e);
-            return null;
-        }
+    public Single<VideoList> getVideosByMovie(final Movie movie) {
+        return mMovieApi.getVideosByMovie(movie.getId(), mApiKey, mLanguage);
     }
 
     @Override
-    public MovieList getNowPlayingMovies(int page) {
-        try {
-            return mMovieApi.getNowPlayingMovies(mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the now playing movies", e);
-            return null;
-        }
+    public Single<MovieList> getNowPlayingMovies(int page) {
+        return mMovieApi.getNowPlayingMovies(mApiKey, mLanguage, page);
     }
 
     @Override
-    public MovieList getPopularMovies(int page) {
-        try {
-            return mMovieApi.getPopularMovies(mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the popular movies", e);
-            return null;
-        }
+    public Single<MovieList> getPopularMovies(int page) {
+        return mMovieApi.getPopularMovies(mApiKey, mLanguage, page);
     }
 
     @Override
-    public MovieList getTopRatedMovies(int page) {
-        try {
-            return mMovieApi.getTopRatedMovies(mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the rated movies", e);
-            return null;
-        }
+    public Single<MovieList> getTopRatedMovies(int page) {
+        return mMovieApi.getTopRatedMovies(mApiKey, mLanguage, page);
     }
 
     @Override
-    public MovieList getUpComingMovies(int page) {
-        try {
-            return mMovieApi.getUpComingMovies(mApiKey, mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the up coming movies", e);
-            return null;
-        }
+    public Single<MovieList> getUpComingMovies(int page) {
+        return mMovieApi.getUpComingMovies(mApiKey, mLanguage, page);
     }
 
     @Override
-    public MovieList searchMoviesByQuery(final String query, final int page) {
-        try {
-            return mMovieApi.searchMoviesByQuery(mApiKey, URLEncoder.encode(query, "UTF-8"), mLanguage, page).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to search the movies by query", e);
-            return null;
-        }
+    public Single<MovieList> searchMoviesByQuery(final String query, final int page) {
+        return mMovieApi.searchMoviesByQuery(mApiKey, query, mLanguage, page);
     }
 
     @Override
-    public Cast getCastDetails(final Cast cast) {
-        try {
-            return mPersonApi.getCastDetails(cast.getId(), mApiKey, mLanguage).execute().body();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to search the movies by query", e);
-            return null;
-        }
+    public Single<Cast> getCastDetails(final Cast cast) {
+        return mPersonApi.getCastDetails(cast.getId(), mApiKey, mLanguage);
     }
 }

@@ -14,16 +14,15 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.repository.remote.MediaRepository;
-import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import android.util.Log;
 
-import java.util.List;
+import com.pimenta.bestv.repository.remote.MediaRepository;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.inject.Inject;
 
-import io.reactivex.Maybe;
-import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -32,6 +31,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by marcus on 12-03-2018.
  */
 public class SearchPresenter extends BasePresenter<SearchContract> {
+
+    private static final String TAG = SearchPresenter.class.getSimpleName();
 
     private int mResultPage = 0;
 
@@ -57,27 +58,29 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      */
     public void searchMoviesByQuery(String query) {
         disposeSearchMovie();
-        mDisposable = Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    int resultPage = mResultPage + 1;
-                    final MovieList movieList = mMediaRepository.searchMoviesByQuery(query, resultPage);
-                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                        mResultPage = movieList.getPage();
-                        e.onSuccess(movieList.getMovies());
-                    } else {
-                        e.onComplete();
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
-                    if (mContract != null) {
-                        mContract.onResultLoaded(movies);
-                    }
-                }, throwable -> {
-                    if (mContract != null) {
-                        mContract.onResultLoaded(null);
-                    }
-                });
+        try {
+            String encodeQuery = URLEncoder.encode(query, "UTF-8");
+            int resultPage = mResultPage + 1;
+            mDisposable = mMediaRepository.searchMoviesByQuery(encodeQuery, resultPage)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(movieList -> {
+                        if (mContract != null) {
+                            if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                                mResultPage = movieList.getPage();
+                                mContract.onResultLoaded(movieList.getMovies());
+                            } else {
+                                mContract.onResultLoaded(null);
+                            }
+                        }
+                    }, throwable -> {
+                        if (mContract != null) {
+                            mContract.onResultLoaded(null);
+                        }
+                    });
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "Error while encoding the query", e);
+        }
     }
 
     /**

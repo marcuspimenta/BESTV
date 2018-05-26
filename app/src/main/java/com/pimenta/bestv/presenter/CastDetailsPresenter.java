@@ -22,14 +22,12 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import javax.inject.Inject;
 
-import io.reactivex.Maybe;
-import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -56,14 +54,7 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      * @param cast {@link Cast}
      */
     public void loadCastDetails(Cast cast) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Cast>) e -> {
-                    final Cast castResult = mMediaRepository.getCastDetails(cast);
-                    if (castResult != null) {
-                        e.onSuccess(castResult);
-                    } else {
-                        e.onComplete();
-                    }
-                })
+        mCompositeDisposable.add(mMediaRepository.getCastDetails(cast)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(castResult -> {

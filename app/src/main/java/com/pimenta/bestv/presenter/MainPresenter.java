@@ -15,12 +15,10 @@
 package com.pimenta.bestv.presenter;
 
 import com.pimenta.bestv.manager.RecommendationManager;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -28,11 +26,13 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
 
+    private MediaRepository mMediaRepository;
     private RecommendationManager mRecommendationManager;
 
     @Inject
-    public MainPresenter(RecommendationManager recommendationManager) {
+    public MainPresenter(MediaRepository mediaRepository, RecommendationManager recommendationManager) {
         super();
+        mMediaRepository = mediaRepository;
         mRecommendationManager = recommendationManager;
     }
 
@@ -40,10 +40,8 @@ public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
      * Loads the recommendations
      */
     public void loadRecommendations() {
-        mCompositeDisposable.add(Single.create((SingleOnSubscribe<Void>) e -> mRecommendationManager.loadRecommendations())
+        mCompositeDisposable.add(mMediaRepository.getPopularMovies(1)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+                .subscribe(mRecommendationManager::loadRecommendations));
     }
-
 }

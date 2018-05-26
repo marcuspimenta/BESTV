@@ -19,6 +19,7 @@ import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
 import com.pimenta.bestv.repository.entity.VideoList;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -33,33 +34,33 @@ public interface MovieApi {
     Call<Movie> getMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/{movie_id}/credits")
-    Call<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
+    Single<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/{movie_id}/recommendations")
-    Call<MovieList> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+    Single<MovieList> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/similar")
-    Call<MovieList> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+    Single<MovieList> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/videos")
-    Call<VideoList> getVideosByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
+    Single<VideoList> getVideosByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/now_playing")
-    Call<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/popular")
-    Call<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/top_rated")
-    Call<MovieList> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MovieList> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/upcoming")
-    Call<MovieList> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MovieList> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("search/movie")
-    Call<MovieList> searchMoviesByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
+    Single<MovieList> searchMoviesByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
             @Query("page") int page);
 
 }

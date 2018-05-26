@@ -23,20 +23,16 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.remote.MediaRepository;
-import com.pimenta.bestv.repository.remote.TmdbRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Maybe;
-import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -65,51 +61,42 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      * Loads the now playing {@link List<Movie>}
      */
     public void loadMoviesByType(MovieManager.MovieListType movieListType) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    if (movieListType.equals(MovieManager.MovieListType.FAVORITES)) {
-                        final List<Movie> movies = mMovieManager.getFavoriteMovies();
-                        if (movies != null) {
-                            e.onSuccess(movies);
-                        } else {
-                            e.onError(new AssertionError());
-                        }
-                    } else {
-                        int pageSearch = mCurrentPage + 1;
-                        MovieList movieList = null;
-                        switch (movieListType) {
-                            case NOW_PLAYING:
-                                movieList = mMediaRepository.getNowPlayingMovies(pageSearch);
-                                break;
-                            case POPULAR:
-                                movieList = mMediaRepository.getPopularMovies(pageSearch);
-                                break;
-                            case TOP_RATED:
-                                movieList = mMediaRepository.getTopRatedMovies(pageSearch);
-                                break;
-                            case UP_COMING:
-                                movieList = mMediaRepository.getUpComingMovies(pageSearch);
-                                break;
-                        }
-
-                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                            mCurrentPage = movieList.getPage();
-                            e.onSuccess(movieList.getMovies());
-                        } else {
-                            e.onComplete();
-                        }
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
-                    if (mContract != null) {
-                        mContract.onMoviesLoaded(movies);
-                    }
-                }, throwable -> {
-                    if (mContract != null) {
-                        mContract.onMoviesLoaded(null);
-                    }
-                }));
+        switch (movieListType) {
+            case FAVORITES:
+                mCompositeDisposable.add(mMovieManager.getFavoriteMovies()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(movies -> {
+                            if (mContract != null) {
+                                mContract.onMoviesLoaded(movies);
+                            }
+                        }, throwable -> {
+                            if (mContract != null) {
+                                mContract.onMoviesLoaded(null);
+                            }
+                        }));
+                break;
+            default:
+                int page = mCurrentPage + 1;
+                mCompositeDisposable.add(mMovieManager.loadMoviesByType(page, movieListType)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(movieList -> {
+                            if (mContract != null) {
+                                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                                    mCurrentPage = movieList.getPage();
+                                    mContract.onMoviesLoaded(movieList.getMovies());
+                                } else {
+                                    mContract.onMoviesLoaded(null);
+                                }
+                            }
+                        }, throwable -> {
+                            if (mContract != null) {
+                                mContract.onMoviesLoaded(null);
+                            }
+                        }));
+                break;
+        }
     }
 
     /**
@@ -118,22 +105,18 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      * @param genre {@link Genre}
      */
     public void loadMoviesByGenre(Genre genre) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    int pageSearch = mCurrentPage + 1;
-                    final MovieList movieList = mMediaRepository.getMoviesByGenre(genre, pageSearch);
-
-                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                        mCurrentPage = movieList.getPage();
-                        e.onSuccess(movieList.getMovies());
-                    } else {
-                        e.onComplete();
-                    }
-                })
+        int pageSearch = mCurrentPage + 1;
+        mCompositeDisposable.add(mMediaRepository.getMoviesByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
+                .subscribe(movieList -> {
                     if (mContract != null) {
-                        mContract.onMoviesLoaded(movies);
+                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                            mCurrentPage = movieList.getPage();
+                            mContract.onMoviesLoaded(movieList.getMovies());
+                        } else {
+                            mContract.onMoviesLoaded(null);
+                        }
                     }
                 }, throwable -> {
                     if (mContract != null) {

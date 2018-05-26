@@ -16,26 +16,29 @@ package com.pimenta.bestv.manager;
 
 import android.support.annotation.NonNull;
 
-import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.repository.database.dao.MovieDao;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+
 /**
  * Created by marcus on 05-03-2018.
  */
 public class MovieManagerImpl implements MovieManager {
 
-    private MediaRepository mTmdbConnector;
+    private MediaRepository mMediaRepository;
     private MovieDao mMovieDao;
 
     @Inject
-    public MovieManagerImpl(MediaRepository tmdbConnector, MovieDao movieDao) {
-        mTmdbConnector = tmdbConnector;
+    public MovieManagerImpl(MediaRepository mediaRepository, MovieDao movieDao) {
+        mMediaRepository = mediaRepository;
         mMovieDao = movieDao;
     }
 
@@ -66,16 +69,34 @@ public class MovieManagerImpl implements MovieManager {
     }
 
     @Override
-    public List<Movie> getFavoriteMovies() {
-        final List<Movie> favoriteMovies = mMovieDao.queryForAll();
-        final List<Movie> movies = new ArrayList<>();
-        for (final Movie movie : favoriteMovies) {
-            final Movie detailMovie = mTmdbConnector.getMovie(movie.getId());
-            if (detailMovie != null) {
-                detailMovie.setFavorite(true);
-                movies.add(detailMovie);
+    public Single<List<Movie>> getFavoriteMovies() {
+        return Single.create(e -> {
+            final List<Movie> favoriteMovies = mMovieDao.queryForAll();
+            final List<Movie> movies = new ArrayList<>();
+            for (final Movie movie : favoriteMovies) {
+                final Movie detailMovie = mMediaRepository.getMovie(movie.getId());
+                if (detailMovie != null) {
+                    detailMovie.setFavorite(true);
+                    movies.add(detailMovie);
+                }
             }
+            e.onSuccess(movies);
+        });
+    }
+
+    @Override
+    public Single<MovieList> loadMoviesByType(int page, MovieManager.MovieListType movieListType) {
+        switch (movieListType) {
+            case NOW_PLAYING:
+                return mMediaRepository.getNowPlayingMovies(page);
+            case POPULAR:
+                return mMediaRepository.getPopularMovies(page);
+            case TOP_RATED:
+                return mMediaRepository.getTopRatedMovies(page);
+            case UP_COMING:
+                return mMediaRepository.getUpComingMovies(page);
+            default:
+                return Single.error(new Throwable());
         }
-        return movies;
     }
 }

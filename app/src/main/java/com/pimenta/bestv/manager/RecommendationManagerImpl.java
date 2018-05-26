@@ -23,10 +23,9 @@ import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.remote.MediaRepository;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 
 import java.util.concurrent.ExecutionException;
 
@@ -42,19 +41,16 @@ public class RecommendationManagerImpl implements RecommendationManager {
 
     private Application mApplication;
     private NotificationManager mNotificationManager;
-    private MediaRepository mTmdbConnector;
 
     @Inject
-    public RecommendationManagerImpl(Application application, NotificationManager notificationManager, MediaRepository tmdbConnector) {
+    public RecommendationManagerImpl(Application application, NotificationManager notificationManager) {
         mApplication = application;
         mNotificationManager = notificationManager;
-        mTmdbConnector = tmdbConnector;
     }
 
     @Override
-    public void loadRecommendations() {
+    public void loadRecommendations(MovieList movieList) {
         mNotificationManager.cancelAll();
-        final MovieList movieList = mTmdbConnector.getPopularMovies(1);
         if (movieList != null && movieList.getPage() <= movieList.getTotalPages() && movieList.getMovies() != null) {
             int count = 0;
             for (final Movie movie : movieList.getMovies()) {

@@ -23,15 +23,14 @@ import android.support.annotation.Nullable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.MovieManager;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
-import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.List;
 
@@ -39,6 +38,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Maybe;
 import io.reactivex.MaybeOnSubscribe;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -83,18 +83,18 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      */
     public void setFavoriteMovie(Movie movie) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
-                    boolean result;
-                    if (movie.isFavorite()) {
-                        result = mMovieManager.deleteFavoriteMovie(movie);
-                    } else {
-                        result = mMovieManager.saveFavoriteMovie(movie);
-                    }
-                    if (result) {
-                        e.onSuccess(true);
-                    } else {
-                        e.onComplete();
-                    }
-                })
+            boolean result;
+            if (movie.isFavorite()) {
+                result = mMovieManager.deleteFavoriteMovie(movie);
+            } else {
+                result = mMovieManager.saveFavoriteMovie(movie);
+            }
+            if (result) {
+                e.onSuccess(true);
+            } else {
+                e.onComplete();
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -115,41 +115,30 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadDataByMovie(Movie movie) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<MovieInfo>) e -> {
-                    final MovieInfo movieInfo = new MovieInfo();
-
-                    final CastList castList = mMediaRepository.getCastByMovie(movie);
-                    if (castList != null) {
-                        movieInfo.setCasts(castList.getCasts());
-                    }
-
-                    int recommendedPageSearch = mRecommendedPage + 1;
-                    final MovieList recommendedMovieList = mMediaRepository.getRecommendationByMovie(movie, recommendedPageSearch);
-                    if (recommendedMovieList != null && recommendedMovieList.getPage() <= recommendedMovieList.getTotalPages()) {
-                        mRecommendedPage = recommendedMovieList.getPage();
-                        movieInfo.setRecommendedMovies(recommendedMovieList.getMovies());
-                    }
-
-                    int similarPageSearch = mSimilarPage + 1;
-                    final MovieList similarMovieList = mMediaRepository.getSimilarByMovie(movie, similarPageSearch);
-                    if (similarMovieList != null && similarMovieList.getPage() <= similarMovieList.getTotalPages()) {
-                        mSimilarPage = similarMovieList.getPage();
-                        movieInfo.setSimilarMovies(similarMovieList.getMovies());
-                    }
-
-                    final VideoList videoList = mMediaRepository.getVideosByMovie(movie);
-                    if (videoList != null) {
-                        movieInfo.setVideos(videoList.getVideos());
-                    }
-
-                    e.onSuccess(movieInfo);
-                })
+        int recommendedPageSearch = mRecommendedPage + 1;
+        int similarPageSearch = mSimilarPage + 1;
+        mCompositeDisposable.add(Single.zip(mMediaRepository.getCastByMovie(movie),
+                mMediaRepository.getRecommendationByMovie(movie, recommendedPageSearch),
+                mMediaRepository.getSimilarByMovie(movie, similarPageSearch),
+                mMediaRepository.getVideosByMovie(movie),
+                (castList, recommendedList, similarList, videoList) -> new MovieInfo(castList, recommendedList, similarList, videoList))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
                     if (mContract != null) {
-                        mContract.onDataLoaded(movieInfo.getCasts(), movieInfo.getRecommendedMovies(), movieInfo.getSimilarMovies(),
-                                movieInfo.getVideos());
+                        final MovieList recommendedMovies = movieInfo.getRecommendedMovies();
+                        if (recommendedMovies != null && recommendedMovies.getPage() <= recommendedMovies.getTotalPages()) {
+                            mRecommendedPage = recommendedMovies.getPage();
+                        }
+                        final MovieList similarMovies = movieInfo.getSimilarMovies();
+                        if (similarMovies != null && similarMovies.getPage() <= similarMovies.getTotalPages()) {
+                            mSimilarPage = similarMovies.getPage();
+                        }
+
+                        mContract.onDataLoaded(movieInfo.getCasts() != null ? movieInfo.getCasts().getCasts() : null,
+                                recommendedMovies != null ? recommendedMovies.getMovies() : null,
+                                similarMovies != null ? similarMovies.getMovies() : null,
+                                movieInfo.getVideos() != null ? movieInfo.getVideos().getVideos() : null);
                     }
                 }, throwable -> {
                     if (mContract != null) {
@@ -164,22 +153,18 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadRecommendationByMovie(Movie movie) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    int pageSearch = mRecommendedPage + 1;
-                    final MovieList movieList = mMediaRepository.getRecommendationByMovie(movie, pageSearch);
-
-                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                        mRecommendedPage = movieList.getPage();
-                        e.onSuccess(movieList.getMovies());
-                    } else {
-                        e.onComplete();
-                    }
-                })
+        int pageSearch = mRecommendedPage + 1;
+        mCompositeDisposable.add(mMediaRepository.getRecommendationByMovie(movie, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
+                .subscribe(movieList -> {
                     if (mContract != null) {
-                        mContract.onRecommendationLoaded(movies);
+                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                            mRecommendedPage = movieList.getPage();
+                            mContract.onRecommendationLoaded(movieList.getMovies());
+                        } else {
+                            mContract.onRecommendationLoaded(null);
+                        }
                     }
                 }, throwable -> {
                     if (mContract != null) {
@@ -194,22 +179,18 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @param movie {@link Movie}
      */
     public void loadSimilarByMovie(Movie movie) {
-        mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<List<Movie>>) e -> {
-                    int pageSearch = mSimilarPage + 1;
-                    final MovieList movieList = mMediaRepository.getSimilarByMovie(movie, pageSearch);
-
-                    if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                        mSimilarPage = movieList.getPage();
-                        e.onSuccess(movieList.getMovies());
-                    } else {
-                        e.onComplete();
-                    }
-                })
+        int pageSearch = mSimilarPage + 1;
+        mCompositeDisposable.add(mMediaRepository.getSimilarByMovie(movie, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> {
+                .subscribe(movieList -> {
                     if (mContract != null) {
-                        mContract.onSimilarLoaded(movies);
+                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
+                            mSimilarPage = movieList.getPage();
+                            mContract.onSimilarLoaded(movieList.getMovies());
+                        } else {
+                            mContract.onSimilarLoaded(null);
+                        }
                     }
                 }, throwable -> {
                     if (mContract != null) {
@@ -273,42 +254,32 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      */
     private class MovieInfo {
 
-        private List<Cast> mCasts;
-        private List<Movie> mRecommendedMovies;
-        private List<Movie> mSimilarMovies;
-        private List<Video> mVideos;
+        private CastList mCasts;
+        private MovieList mRecommendedMovies;
+        private MovieList mSimilarMovies;
+        private VideoList mVideos;
 
-        public List<Cast> getCasts() {
+        public MovieInfo(final CastList casts, final MovieList recommendedMovies, final MovieList similarMovies, final VideoList videos) {
+            mCasts = casts;
+            mRecommendedMovies = recommendedMovies;
+            mSimilarMovies = similarMovies;
+            mVideos = videos;
+        }
+
+        public CastList getCasts() {
             return mCasts;
         }
 
-        public void setCasts(final List<Cast> casts) {
-            mCasts = casts;
-        }
-
-        public List<Movie> getRecommendedMovies() {
+        public MovieList getRecommendedMovies() {
             return mRecommendedMovies;
         }
 
-        public void setRecommendedMovies(final List<Movie> recommendedMovies) {
-            mRecommendedMovies = recommendedMovies;
-        }
-
-        public List<Movie> getSimilarMovies() {
+        public MovieList getSimilarMovies() {
             return mSimilarMovies;
         }
 
-        public void setSimilarMovies(final List<Movie> similarMovies) {
-            mSimilarMovies = similarMovies;
-        }
-
-        public List<Video> getVideos() {
+        public VideoList getVideos() {
             return mVideos;
         }
-
-        public void setVideos(final List<Video> videos) {
-            mVideos = videos;
-        }
     }
-
 }

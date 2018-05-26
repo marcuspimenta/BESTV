@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.manager;
 
+import com.pimenta.bestv.repository.entity.MovieList;
+
 /**
  * Created by marcus on 06-03-2018.
  */
@@ -21,7 +23,9 @@ public interface RecommendationManager {
 
     /**
      * Loads the recommendations
+     *
+     * @param movieList {@link MovieList}
      */
-    void loadRecommendations();
+    void loadRecommendations(MovieList movieList);
 
 }
