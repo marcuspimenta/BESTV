@@ -15,7 +15,7 @@
 package com.pimenta.bestv.presenter;
 
 import com.pimenta.bestv.manager.RecommendationManager;
-import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.MediaRepository;
 
 import javax.inject.Inject;
 

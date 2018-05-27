@@ -23,8 +23,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.manager.ImageManager;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import javax.inject.Inject;
 

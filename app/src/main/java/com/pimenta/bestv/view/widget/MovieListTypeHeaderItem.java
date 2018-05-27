@@ -16,21 +16,21 @@ package com.pimenta.bestv.view.widget;
 
 import android.support.v17.leanback.widget.HeaderItem;
 
-import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.MediaRepository;
 
 /**
  * Created by marcus on 11-02-2018.
  */
 public class MovieListTypeHeaderItem extends HeaderItem {
 
-    private MovieManager.MovieListType mMovieListType;
+    private MediaRepository.MovieListType mMovieListType;
 
-    public MovieListTypeHeaderItem(int id, MovieManager.MovieListType movieListType) {
+    public MovieListTypeHeaderItem(int id, MediaRepository.MovieListType movieListType) {
         super(id, movieListType.getName());
         mMovieListType = movieListType;
     }
 
-    public MovieManager.MovieListType getMovieListType() {
+    public MediaRepository.MovieListType getMovieListType() {
         return mMovieListType;
     }
 }

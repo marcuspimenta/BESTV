@@ -24,13 +24,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
 import com.pimenta.bestv.repository.entity.VideoList;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.List;
 
@@ -51,15 +50,13 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     private int mSimilarPage = 0;
 
     private Application mApplication;
-    private MovieManager mMovieManager;
-    private ImageManager mImageManager;
     private MediaRepository mMediaRepository;
+    private ImageManager mImageManager;
 
     @Inject
-    public MovieDetailsPresenter(Application application, MovieManager movieManager, ImageManager imageManager, MediaRepository mediaRepository) {
+    public MovieDetailsPresenter(Application application, MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mApplication = application;
-        mMovieManager = movieManager;
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
     }
@@ -72,7 +69,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      * @return {@code true} if yes, {@code false} otherwise
      */
     public boolean isMovieFavorite(Movie movie) {
-        movie.setFavorite(mMovieManager.isFavorite(movie));
+        movie.setFavorite(mMediaRepository.isFavorite(movie));
         return movie.isFavorite();
     }
 
@@ -85,9 +82,9 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
             boolean result;
             if (movie.isFavorite()) {
-                result = mMovieManager.deleteFavoriteMovie(movie);
+                result = mMediaRepository.deleteFavoriteMovie(movie);
             } else {
-                result = mMovieManager.saveFavoriteMovie(movie);
+                result = mMediaRepository.saveFavoriteMovie(movie);
             }
             if (result) {
                 e.onSuccess(true);

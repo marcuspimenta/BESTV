@@ -38,9 +38,9 @@ import io.reactivex.Single;
 /**
  * Created by marcus on 08-02-2018.
  */
-public class TmdbRepository implements MediaRepository {
+public class TmdbMediaRemote implements MediaRemote {
 
-    private static final String TAG = TmdbRepository.class.getSimpleName();
+    private static final String TAG = TmdbMediaRemote.class.getSimpleName();
 
     private String mApiKey;
     private String mLanguage;
@@ -50,7 +50,7 @@ public class TmdbRepository implements MediaRepository {
     private PersonApi mPersonApi;
 
     @Inject
-    public TmdbRepository(Application application, GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
+    public TmdbMediaRemote(Application application, GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
         mApiKey = application.getString(R.string.tmdb_api_key);
         mLanguage = application.getString(R.string.tmdb_filter_language);
         mGenreApi = genreApi;

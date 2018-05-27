@@ -24,10 +24,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.List;
 
@@ -44,15 +43,13 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     private int mCurrentPage = 0;
 
     private Application mApplication;
-    private MovieManager mMovieManager;
-    private ImageManager mImageManager;
     private MediaRepository mMediaRepository;
+    private ImageManager mImageManager;
 
     @Inject
-    public MovieGridPresenter(Application application, MovieManager movieManager, ImageManager imageManager, MediaRepository mediaRepository) {
+    public MovieGridPresenter(Application application, MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mApplication = application;
-        mMovieManager = movieManager;
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
     }
@@ -60,10 +57,10 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     /**
      * Loads the now playing {@link List<Movie>}
      */
-    public void loadMoviesByType(MovieManager.MovieListType movieListType) {
+    public void loadMoviesByType(MediaRepository.MovieListType movieListType) {
         switch (movieListType) {
             case FAVORITES:
-                mCompositeDisposable.add(mMovieManager.getFavoriteMovies()
+                mCompositeDisposable.add(mMediaRepository.getFavoriteMovies()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movies -> {
@@ -78,7 +75,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                 break;
             default:
                 int page = mCurrentPage + 1;
-                mCompositeDisposable.add(mMovieManager.loadMoviesByType(page, movieListType)
+                mCompositeDisposable.add(mMediaRepository.loadMoviesByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movieList -> {

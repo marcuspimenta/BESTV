@@ -12,8 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.remote;
+package com.pimenta.bestv.repository;
 
+import android.support.annotation.StringRes;
+
+import com.pimenta.bestv.BesTV;
+import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
@@ -27,9 +31,58 @@ import java.util.List;
 import io.reactivex.Single;
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 05-03-2018.
  */
 public interface MediaRepository {
+
+    /**
+     * Checks if the {@link Movie} is favorite
+     *
+     * @return          {@code true} if yes, {@code false} otherwise
+     */
+    boolean isFavorite(Movie movie);
+
+    /**
+     * Checks if there is any {@link Movie} saved as favorite
+     *
+     * @return          {@code true} if there any {@link Movie} saved as favorite,
+     *                  {@code false} otherwise
+     */
+    boolean hasFavoriteMovie();
+
+    /**
+     * Saves a {@link Movie} as favorites
+     *
+     * @param movie     {@link Movie} to be saved as favorite
+     * @return          {@code true} if the {@link Movie} was saved with success,
+     *                  {@code false} otherwise
+     */
+    boolean saveFavoriteMovie(Movie movie);
+
+    /**
+     * Deletes a {@link Movie} from favorites
+     *
+     * @param movie     {@link Movie} to be deleted from favorite
+     * @return          {@code true} if the {@link Movie} was deleted with success,
+     *                  {@code false} otherwise
+     */
+    boolean deleteFavoriteMovie(Movie movie);
+
+    /**
+     * Gets the favorites {@link List<Movie>}
+     *
+     * @return          Favorite {@link Single<List<Movie>>}
+     */
+    Single<List<Movie>> getFavoriteMovies();
+
+    /**
+     * Loads the {@link MovieList} by {@link MediaRepository.MovieListType}
+     *
+     * @param page              Page to be loaded
+     * @param movieListType     {@link MediaRepository.MovieListType}
+     * @return                  {@link Single<MovieList>}
+     */
+    Single<MovieList> loadMoviesByType(int page, MediaRepository.MovieListType movieListType);
 
     /**
      * Gets the {@link GenreList} available at TMDb
@@ -159,4 +212,26 @@ public interface MediaRepository {
      * @return {@link Single<Cast>}
      */
     Single<Cast> getCastDetails(Cast cast);
+
+    /**
+     * Represents the movie list type
+     */
+    enum MovieListType {
+        FAVORITES(R.string.favorites),
+        NOW_PLAYING(R.string.now_playing),
+        POPULAR(R.string.popular),
+        TOP_RATED(R.string.top_rated),
+        UP_COMING(R.string.up_coming);
+
+        private String mName;
+
+        MovieListType(@StringRes int nameResource) {
+            mName = BesTV.get().getString(nameResource);
+        }
+
+        public String getName() {
+            return mName;
+        }
+    }
+
 }

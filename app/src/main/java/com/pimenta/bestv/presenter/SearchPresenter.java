@@ -16,7 +16,7 @@ package com.pimenta.bestv.presenter;
 
 import android.util.Log;
 
-import com.pimenta.bestv.repository.remote.MediaRepository;
+import com.pimenta.bestv.repository.MediaRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

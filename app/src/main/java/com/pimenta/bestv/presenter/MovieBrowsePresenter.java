@@ -17,10 +17,9 @@ package com.pimenta.bestv.presenter;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 
-import com.pimenta.bestv.manager.MovieManager;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.remote.MediaRepository;
 
 import java.util.List;
 
@@ -35,14 +34,12 @@ import io.reactivex.schedulers.Schedulers;
 public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
 
     private DisplayMetrics mDisplayMetrics;
-    private MovieManager mMovieManager;
     private MediaRepository mMediaRepository;
 
     @Inject
-    public MovieBrowsePresenter(DisplayMetrics displayMetrics, MovieManager movieManager, MediaRepository mediaRepository) {
+    public MovieBrowsePresenter(DisplayMetrics displayMetrics, MediaRepository mediaRepository) {
         super();
         mDisplayMetrics = displayMetrics;
-        mMovieManager = movieManager;
         mMediaRepository = mediaRepository;
     }
 
@@ -62,7 +59,7 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      *                  {@code false} otherwise
      */
     public boolean hasFavoriteMovies() {
-        return mMovieManager.hasFavoriteMovie();
+        return mMediaRepository.hasFavoriteMovie();
     }
 
     /**
@@ -70,7 +67,7 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      */
     public void loadData() {
         mCompositeDisposable.add(mMediaRepository.getGenres()
-                .map(genreList -> new Pair<>(mMovieManager.hasFavoriteMovie(), genreList))
+                .map(genreList -> new Pair<>(mMediaRepository.hasFavoriteMovie(), genreList))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

@@ -14,14 +14,14 @@
 
 package com.pimenta.bestv.dagger.module;
 
-import com.pimenta.bestv.repository.remote.MediaRepository;
-import com.pimenta.bestv.repository.remote.TmdbRepository;
+import com.pimenta.bestv.repository.MediaRepositoryImpl;
+import com.pimenta.bestv.repository.remote.MediaRemote;
+import com.pimenta.bestv.repository.remote.TmdbMediaRemote;
 import com.pimenta.bestv.manager.DeviceManager;
 import com.pimenta.bestv.manager.DeviceManagerImpl;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.ImageManagerImpl;
-import com.pimenta.bestv.manager.MovieManager;
-import com.pimenta.bestv.manager.MovieManagerImpl;
+import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.manager.RecommendationManagerImpl;
 
@@ -38,7 +38,7 @@ public interface ImplModule {
 
     @Binds
     @Singleton
-    MediaRepository provideTmdbConnector(TmdbRepository connector);
+    MediaRemote provideMediaRemote(TmdbMediaRemote connector);
 
     @Binds
     @Singleton
@@ -46,7 +46,7 @@ public interface ImplModule {
 
     @Binds
     @Singleton
-    MovieManager provideMovieManager(MovieManagerImpl manager);
+    MediaRepository provideMovieRepository(MediaRepositoryImpl repository);
 
     @Binds
     @Singleton
