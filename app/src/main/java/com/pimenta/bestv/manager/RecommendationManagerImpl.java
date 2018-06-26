@@ -49,7 +49,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
     }
 
     @Override
-    public void loadRecommendations(MovieList movieList) {
+    public boolean loadRecommendations(MovieList movieList) {
         mNotificationManager.cancelAll();
         if (movieList != null && movieList.getPage() <= movieList.getTotalPages() && movieList.getMovies() != null) {
             int count = 0;
@@ -81,13 +81,15 @@ public class RecommendationManagerImpl implements RecommendationManager {
                     mNotificationManager.notify(id, contentRecommendation.getNotificationObject(mApplication));
                     count++;
                     if (count == RECOMMENDATION_NUMBER) {
-                        return;
+                        return true;
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     Log.e(TAG, "Failed to create a recommendation.", e);
+                    return false;
                 }
             }
         }
+        return false;
     }
 
     /**

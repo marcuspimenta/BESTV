@@ -42,10 +42,10 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
      */
     public void loadRecommendations() {
         mCompositeDisposable.add(mMediaRepository.getPopularMovies(1)
+                .map(movieList -> mRecommendationManager.loadRecommendations(movieList))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movieList -> {
-                    mRecommendationManager.loadRecommendations(movieList);
+                .subscribe(aBoolean -> {
                     if (mContract != null) {
                         mContract.onLoadRecommendationFinished();
                     }

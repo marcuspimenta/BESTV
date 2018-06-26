@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -145,5 +146,16 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         }
                     }
                 });
+    }
+
+    /**
+     * Loads the {@link Movie} porter into {@link ImageView}
+     *
+     * @param movie     {@link Movie}
+     * @param imageView {@link ImageView}
+     */
+    public void loadMoviePosterImage(@NonNull Movie movie, ImageView imageView) {
+        mImageManager.loadImageInto(imageView,
+                String.format(mApplication.getResources().getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()));
     }
 }

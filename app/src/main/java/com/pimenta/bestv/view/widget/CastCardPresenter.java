@@ -17,26 +17,24 @@ package com.pimenta.bestv.view.widget;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.entity.Cast;
-
-import javax.inject.Inject;
 
 /**
  * Created by marcus on 16-02-2018.
  */
 public class CastCardPresenter extends Presenter {
 
-    @Inject
-    ImageManager mImageManager;
+    private LoadCastProfileListener mLoadCastProfileListener;
+
+    public void setLoadCastProfileListener(final LoadCastProfileListener loadCastProfileListener) {
+        mLoadCastProfileListener = loadCastProfileListener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent) {
-        BesTV.getApplicationComponent().inject(this);
-
         final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -52,8 +50,9 @@ public class CastCardPresenter extends Presenter {
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_height));
 
-        mImageManager.loadImageInto(cardView.getMainImageView(),
-                String.format(viewHolder.view.getContext().getString(R.string.tmdb_load_image_url_api), cast.getProfilePath()));
+        if (mLoadCastProfileListener != null) {
+            mLoadCastProfileListener.onLoadCastProfile(cast, cardView.getMainImageView());
+        }
     }
 
     @Override
@@ -61,5 +60,11 @@ public class CastCardPresenter extends Presenter {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
+    }
+
+    public interface LoadCastProfileListener {
+
+        void onLoadCastProfile(Cast cast, ImageView imageView);
+
     }
 }

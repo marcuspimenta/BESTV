@@ -17,16 +17,13 @@ package com.pimenta.bestv.view.widget;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.entity.Movie;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import javax.inject.Inject;
 
 /**
  * Created by marcus on 10-02-2018.
@@ -35,13 +32,14 @@ public class MovieCardPresenter extends Presenter {
 
     private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-    @Inject
-    ImageManager mImageManager;
+    private LoadMoviePosterListener mLoadMoviePosterListener;
+
+    public void setLoadMoviePosterListener(final LoadMoviePosterListener loadMoviePosterListener) {
+        mLoadMoviePosterListener = loadMoviePosterListener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        BesTV.getApplicationComponent().inject(this);
-
         final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -59,8 +57,9 @@ public class MovieCardPresenter extends Presenter {
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
 
-        mImageManager.loadImageInto(cardView.getMainImageView(),
-                String.format(viewHolder.view.getContext().getResources().getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()));
+        if (mLoadMoviePosterListener != null) {
+            mLoadMoviePosterListener.onLoadMoviePoster(movie, cardView.getMainImageView());
+        }
     }
 
     @Override
@@ -68,5 +67,11 @@ public class MovieCardPresenter extends Presenter {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
+    }
+
+    public interface LoadMoviePosterListener {
+
+        void onLoadMoviePoster(Movie movie, ImageView imageView);
+
     }
 }

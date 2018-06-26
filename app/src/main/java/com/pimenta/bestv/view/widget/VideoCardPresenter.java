@@ -17,26 +17,24 @@ package com.pimenta.bestv.view.widget;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.entity.Video;
-
-import javax.inject.Inject;
 
 /**
  * Created by marcus on 23-02-2018.
  */
 public class VideoCardPresenter extends Presenter {
 
-    @Inject
-    ImageManager mImageManager;
+    private LoadVideoThumbnailListener mLoadVideoThumbnailListener;
+
+    public void setLoadVideoThumbnailListener(final LoadVideoThumbnailListener loadVideoThumbnailListener) {
+        mLoadVideoThumbnailListener = loadVideoThumbnailListener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        BesTV.getApplicationComponent().inject(this);
-
         final ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -52,8 +50,9 @@ public class VideoCardPresenter extends Presenter {
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.video_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.video_card_height));
 
-        mImageManager.loadImageInto(cardView.getMainImageView(),
-                String.format(viewHolder.view.getContext().getResources().getString(R.string.youtube_thumbnail_base_url), video.getKey()));
+        if (mLoadVideoThumbnailListener != null) {
+            mLoadVideoThumbnailListener.onLoadVideoThumbnail(video, cardView.getMainImageView());
+        }
     }
 
     @Override
@@ -61,5 +60,11 @@ public class VideoCardPresenter extends Presenter {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
+    }
+
+    public interface LoadVideoThumbnailListener {
+
+        void onLoadVideoThumbnail(Video video, ImageView imageView);
+
     }
 }

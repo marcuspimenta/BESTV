@@ -16,12 +16,13 @@ package com.pimenta.bestv.dagger;
 
 import android.app.Application;
 
+import com.pimenta.bestv.broadcastreceiver.BootBroadcastReceiver;
+import com.pimenta.bestv.dagger.module.ApplicationModule;
+import com.pimenta.bestv.service.RecommendationService;
 import com.pimenta.bestv.view.activity.CastDetailsActivity;
 import com.pimenta.bestv.view.activity.MainActivity;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.view.activity.SplashActivity;
-import com.pimenta.bestv.broadcastreceiver.BootBroadcastReceiver;
-import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 import com.pimenta.bestv.view.fragment.ErrorFragment;
 import com.pimenta.bestv.view.fragment.GenreMovieGridFragment;
@@ -30,10 +31,6 @@ import com.pimenta.bestv.view.fragment.MovieDetailsFragment;
 import com.pimenta.bestv.view.fragment.SearchFragment;
 import com.pimenta.bestv.view.fragment.SplashFragment;
 import com.pimenta.bestv.view.fragment.TopMovieGridFragment;
-import com.pimenta.bestv.service.RecommendationService;
-import com.pimenta.bestv.view.widget.CastCardPresenter;
-import com.pimenta.bestv.view.widget.MovieCardPresenter;
-import com.pimenta.bestv.view.widget.VideoCardPresenter;
 
 import javax.inject.Singleton;
 
@@ -77,11 +74,4 @@ public interface ApplicationComponent {
     void inject(CastDetailsFragment fragment);
 
     void inject(ErrorFragment fragment);
-
-    void inject(CastCardPresenter presenter);
-
-    void inject(MovieCardPresenter presenter);
-
-    void inject(VideoCardPresenter presenter);
-
 }

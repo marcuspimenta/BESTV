@@ -129,7 +129,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
         if (videos != null && videos.size() > 0) {
             mActionAdapter.add(new Action(ACTION_VIDEOS, getResources().getString(R.string.videos)));
-            mVideoRowAdapter = new ArrayObjectAdapter(new VideoCardPresenter());
+            VideoCardPresenter videoCardPresenter = new VideoCardPresenter();
+            videoCardPresenter.setLoadVideoThumbnailListener((video, imageView) -> mPresenter.loadVideoThumbnailImage(video, imageView));
+            mVideoRowAdapter = new ArrayObjectAdapter(videoCardPresenter);
             mVideoRowAdapter.addAll(0, videos);
             final HeaderItem recommendedHeader = new HeaderItem(VIDEO_HEADER_ID, getString(R.string.videos));
             mAdapter.add(new ListRow(recommendedHeader, mVideoRowAdapter));
@@ -137,7 +139,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         if (casts != null && casts.size() > 0) {
             mActionAdapter.add(new Action(ACTION_CAST, getResources().getString(R.string.cast)));
-            mCastRowAdapter = new ArrayObjectAdapter(new CastCardPresenter());
+            CastCardPresenter castCardPresenter = new CastCardPresenter();
+            castCardPresenter.setLoadCastProfileListener((cast, imageView) -> mPresenter.loadCastProfileImage(cast, imageView));
+            mCastRowAdapter = new ArrayObjectAdapter(castCardPresenter);
             mCastRowAdapter.addAll(0, casts);
             final HeaderItem header = new HeaderItem(CAST_HEAD_ID, getString(R.string.cast));
             mAdapter.add(new ListRow(header, mCastRowAdapter));
@@ -145,7 +149,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         if (recommendedMovies != null && recommendedMovies.size() > 0) {
             mActionAdapter.add(new Action(ACTION_RECOMMENDED, getResources().getString(R.string.recommended)));
-            mRecommendedRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+            MovieCardPresenter movieCardPresenter = new MovieCardPresenter();
+            movieCardPresenter.setLoadMoviePosterListener((movie, imageView) -> mPresenter.loadMoviePosterImage(movie, imageView));
+            mRecommendedRowAdapter = new ArrayObjectAdapter(movieCardPresenter);
             mRecommendedRowAdapter.addAll(0, recommendedMovies);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
@@ -153,7 +159,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         if (similarMovies != null && similarMovies.size() > 0) {
             mActionAdapter.add(new Action(ACTION_SIMILAR, getResources().getString(R.string.similar)));
-            mSimilarRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+            MovieCardPresenter movieCardPresenter = new MovieCardPresenter();
+            movieCardPresenter.setLoadMoviePosterListener((movie, imageView) -> mPresenter.loadMoviePosterImage(movie, imageView));
+            mSimilarRowAdapter = new ArrayObjectAdapter(movieCardPresenter);
             mSimilarRowAdapter.addAll(0, similarMovies);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));

@@ -25,7 +25,9 @@ public interface RecommendationManager {
      * Loads the recommendations
      *
      * @param movieList {@link MovieList}
+     *
+     * @return {@code true} if success, {@code false} otherwise
      */
-    void loadRecommendations(MovieList movieList);
+    boolean loadRecommendations(MovieList movieList);
 
 }

@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -29,6 +30,7 @@ import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.util.List;
@@ -68,7 +70,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @return {@code true} if yes, {@code false} otherwise
      */
-    public boolean isMovieFavorite(Movie movie) {
+    public boolean isMovieFavorite(@NonNull Movie movie) {
         movie.setFavorite(mMediaRepository.isFavorite(movie));
         return movie.isFavorite();
     }
@@ -78,7 +80,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void setFavoriteMovie(Movie movie) {
+    public void setFavoriteMovie(@NonNull Movie movie) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
             boolean result;
             if (movie.isFavorite()) {
@@ -111,7 +113,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void loadDataByMovie(Movie movie) {
+    public void loadDataByMovie(@NonNull Movie movie) {
         int recommendedPageSearch = mRecommendedPage + 1;
         int similarPageSearch = mSimilarPage + 1;
         mCompositeDisposable.add(Single.zip(mMediaRepository.getCastByMovie(movie),
@@ -149,7 +151,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void loadRecommendationByMovie(Movie movie) {
+    public void loadRecommendationByMovie(@NonNull Movie movie) {
         int pageSearch = mRecommendedPage + 1;
         mCompositeDisposable.add(mMediaRepository.getRecommendationByMovie(movie, pageSearch)
                 .subscribeOn(Schedulers.io())
@@ -175,7 +177,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void loadSimilarByMovie(Movie movie) {
+    public void loadSimilarByMovie(@NonNull Movie movie) {
         int pageSearch = mSimilarPage + 1;
         mCompositeDisposable.add(mMediaRepository.getSimilarByMovie(movie, pageSearch)
                 .subscribeOn(Schedulers.io())
@@ -201,7 +203,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void loadCardImage(Movie movie) {
+    public void loadCardImage(@NonNull Movie movie) {
         mImageManager.loadImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()),
                 new SimpleTarget<Drawable>() {
                     @Override
@@ -226,7 +228,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      *
      * @param movie {@link Movie}
      */
-    public void loadBackdropImage(Movie movie) {
+    public void loadBackdropImage(@NonNull Movie movie) {
         mImageManager.loadBitmapImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()),
                 new SimpleTarget<Bitmap>() {
                     @Override
@@ -244,6 +246,37 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         }
                     }
                 });
+    }
+
+    /**
+     * Loads the {@link Cast} profile into {@link ImageView}
+     *
+     * @param cast      {@link Cast}
+     * @param imageView {@link ImageView}
+     */
+    public void loadCastProfileImage(@NonNull Cast cast, ImageView imageView) {
+        mImageManager.loadImageInto(imageView, String.format(mApplication.getString(R.string.tmdb_load_image_url_api), cast.getProfilePath()));
+    }
+
+    /**
+     * Loads the {@link Movie} porter into {@link ImageView}
+     *
+     * @param movie     {@link Movie}
+     * @param imageView {@link ImageView}
+     */
+    public void loadMoviePosterImage(@NonNull Movie movie, ImageView imageView) {
+        mImageManager.loadImageInto(imageView,
+                String.format(mApplication.getResources().getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()));
+    }
+
+    /**
+     * Loads the {@link Video} thumbnail into {@link ImageView}
+     *
+     * @param video     {@link Video}
+     * @param imageView {@link ImageView}
+     */
+    public void loadVideoThumbnailImage(@NonNull Video video, ImageView imageView) {
+        mImageManager.loadImageInto(imageView, String.format(mApplication.getString(R.string.youtube_thumbnail_base_url), video.getKey()));
     }
 
     /**
