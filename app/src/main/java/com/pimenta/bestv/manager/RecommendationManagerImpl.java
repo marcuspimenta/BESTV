@@ -22,6 +22,7 @@ import android.support.app.recommendation.ContentRecommendation;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieList;
@@ -59,7 +60,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
 
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()
-                            .load(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()))
+                            .load(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()))
                             .submit(mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                                     mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_height))
                             .get();
@@ -72,7 +73,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .setTitle(movie.getTitle())
                             .setContentImage(cardBitmap)
                             .setContentTypes(new String[]{ContentRecommendation.CONTENT_TYPE_MOVIE})
-                            .setBackgroundImageUri(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()))
+                            .setBackgroundImageUri(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getBackdropPath()))
                             .setText(mApplication.getString(R.string.popular))
                             .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),
                                     0, null)

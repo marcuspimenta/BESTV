@@ -14,10 +14,9 @@
 
 package com.pimenta.bestv.repository.remote;
 
-import android.app.Application;
 import android.util.Log;
 
-import com.pimenta.bestv.R;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
@@ -42,17 +41,12 @@ public class TmdbMediaRemote implements MediaRemote {
 
     private static final String TAG = TmdbMediaRemote.class.getSimpleName();
 
-    private String mApiKey;
-    private String mLanguage;
-
     private GenreApi mGenreApi;
     private MovieApi mMovieApi;
     private PersonApi mPersonApi;
 
     @Inject
-    public TmdbMediaRemote(Application application, GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
-        mApiKey = application.getString(R.string.tmdb_api_key);
-        mLanguage = application.getString(R.string.tmdb_filter_language);
+    public TmdbMediaRemote(GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
         mGenreApi = genreApi;
         mMovieApi = movieApi;
         mPersonApi = personApi;
@@ -60,18 +54,18 @@ public class TmdbMediaRemote implements MediaRemote {
 
     @Override
     public Single<GenreList> getGenres() {
-        return mGenreApi.getGenres(mApiKey, mLanguage);
+        return mGenreApi.getGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
     @Override
     public Single<MovieList> getMoviesByGenre(final Genre genre, int page) {
-        return mGenreApi.getMovies(genre.getId(), mApiKey, mLanguage, false, page);
+        return mGenreApi.getMovies(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
     }
 
     @Override
     public Movie getMovie(final int movieId) {
         try {
-            return mMovieApi.getMovie(movieId, mApiKey, mLanguage).execute().body();
+            return mMovieApi.getMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Error while getting a movie", e);
             return null;
@@ -80,51 +74,51 @@ public class TmdbMediaRemote implements MediaRemote {
 
     @Override
     public Single<CastList> getCastByMovie(final Movie movie) {
-        return mMovieApi.getCastByMovie(movie.getId(), mApiKey, mLanguage);
+        return mMovieApi.getCastByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
     @Override
     public Single<MovieList> getRecommendationByMovie(final Movie movie, final int page) {
-        return mMovieApi.getRecommendationByMovie(movie.getId(), mApiKey, mLanguage, page);
+        return mMovieApi.getRecommendationByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<MovieList> getSimilarByMovie(final Movie movie, final int page) {
-        return mMovieApi.getSimilarByMovie(movie.getId(), mApiKey, mLanguage, page);
+        return mMovieApi.getSimilarByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<VideoList> getVideosByMovie(final Movie movie) {
-        return mMovieApi.getVideosByMovie(movie.getId(), mApiKey, mLanguage);
+        return mMovieApi.getVideosByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
     @Override
     public Single<MovieList> getNowPlayingMovies(int page) {
-        return mMovieApi.getNowPlayingMovies(mApiKey, mLanguage, page);
+        return mMovieApi.getNowPlayingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<MovieList> getPopularMovies(int page) {
-        return mMovieApi.getPopularMovies(mApiKey, mLanguage, page);
+        return mMovieApi.getPopularMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<MovieList> getTopRatedMovies(int page) {
-        return mMovieApi.getTopRatedMovies(mApiKey, mLanguage, page);
+        return mMovieApi.getTopRatedMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<MovieList> getUpComingMovies(int page) {
-        return mMovieApi.getUpComingMovies(mApiKey, mLanguage, page);
+        return mMovieApi.getUpComingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<MovieList> searchMoviesByQuery(final String query, final int page) {
-        return mMovieApi.searchMoviesByQuery(mApiKey, query, mLanguage, page);
+        return mMovieApi.searchMoviesByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
     public Single<Cast> getCastDetails(final Cast cast) {
-        return mPersonApi.getCastDetails(cast.getId(), mApiKey, mLanguage);
+        return mPersonApi.getCastDetails(cast.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 }

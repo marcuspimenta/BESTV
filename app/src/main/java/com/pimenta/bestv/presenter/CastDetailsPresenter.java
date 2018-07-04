@@ -21,7 +21,7 @@ import android.support.annotation.Nullable;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.pimenta.bestv.R;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
@@ -74,7 +74,7 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      * @param cast {@link Cast}
      */
     public void loadCastImage(Cast cast) {
-        mImageManager.loadImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), cast.getProfilePath()),
+        mImageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, cast.getProfilePath()),
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {

@@ -22,17 +22,6 @@
     <string name="error_fragment_button">Try again</string>
 
     <!-- TMDb API sources -->
-    <string name="tmdb_api_key">fb5ac484c71e11e6e0fe358946f07b9e</string>
-    <string name="tmdb_filter_language">en-US</string>
     <string name="tmdb_filer_sort_by_desc">created_at.desc</string>
     <string name="tmdb_filer_sort_by_asc">created_at.desc</string>
-    <string name="tmdb_base_url_api">https://api.themoviedb.org/3/</string>
-    <string name="tmdb_load_image_url_api">https://image.tmdb.org/t/p/original%s</string>
-
-    <!-- IP API sources -->
-    <string name="ip_base_url_api">http://ip-api.com/</string>
-
-    <!-- YouTube sources -->
-    <string name="youtube_video_base_url">https://www.youtube.com/watch?v=%s</string>
-    <string name="youtube_thumbnail_base_url">http://img.youtube.com/vi/%s/hqdefault.jpg</string>
 </resources>

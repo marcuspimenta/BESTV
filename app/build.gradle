@@ -8,14 +8,31 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
+        buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
+        buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
+        buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
+        buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"http://img.youtube.com/vi/%s/hqdefault.jpg\""
+        buildConfigField "String", "IP_BASE_URL", "\"http://ip-api.com/\""
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
-        release {
+        debug {
+            buildConfigField "String", "TMDB_API_KEY", "TMDB_API_KEY"
+            debuggable true
+            multiDexEnabled true
             minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            buildConfigField "String", "TMDB_API_KEY", "TMDB_API_KEY"
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

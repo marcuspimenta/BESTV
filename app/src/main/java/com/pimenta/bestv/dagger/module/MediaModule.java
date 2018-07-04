@@ -14,11 +14,9 @@
 
 package com.pimenta.bestv.dagger.module;
 
-import android.app.Application;
-
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import com.pimenta.bestv.R;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
@@ -41,9 +39,9 @@ public class MediaModule {
     @Provides
     @Singleton
     @Named("Tmdb")
-    Retrofit provideTmdbRetrofit(Application application, OkHttpClient okHttpClient, Gson gson) {
+    Retrofit provideTmdbRetrofit(OkHttpClient okHttpClient, Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl(application.getString(R.string.tmdb_base_url_api))
+                .baseUrl(BuildConfig.TMDB_BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

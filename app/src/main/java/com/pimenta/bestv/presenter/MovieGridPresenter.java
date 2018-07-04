@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.presenter;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -23,7 +22,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.pimenta.bestv.R;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
@@ -43,14 +42,12 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
 
     private int mCurrentPage = 0;
 
-    private Application mApplication;
     private MediaRepository mMediaRepository;
     private ImageManager mImageManager;
 
     @Inject
-    public MovieGridPresenter(Application application, MediaRepository mediaRepository, ImageManager imageManager) {
+    public MovieGridPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
         super();
-        mApplication = application;
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
     }
@@ -129,7 +126,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      * @param movie {@link Movie}
      */
     public void loadBackdropImage(@NonNull Movie movie) {
-        mImageManager.loadBitmapImage(String.format(mApplication.getString(R.string.tmdb_load_image_url_api), movie.getBackdropPath()),
+        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getBackdropPath()),
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
@@ -156,6 +153,6 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
      */
     public void loadMoviePosterImage(@NonNull Movie movie, ImageView imageView) {
         mImageManager.loadImageInto(imageView,
-                String.format(mApplication.getResources().getString(R.string.tmdb_load_image_url_api), movie.getPosterPath()));
+                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()));
     }
 }

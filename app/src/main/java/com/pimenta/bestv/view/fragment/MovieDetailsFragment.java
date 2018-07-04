@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.pimenta.bestv.BesTV;
+import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Movie;
@@ -321,7 +322,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                     case VIDEO_HEADER_ID:
                         final Video video = (Video) item;
                         final Intent intent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(String.format(getString(R.string.youtube_video_base_url), video.getKey())));
+                                Uri.parse(String.format(BuildConfig.YOUTUBE_BASE_URL, video.getKey())));
                         try {
                             startActivity(intent);
                         } catch (ActivityNotFoundException e) {
