@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.util.Log;
+
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.repository.MediaRepository;
 
@@ -25,6 +27,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by marcus on 04-05-2018.
  */
 public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
+
+    private static final String TAG = MainPresenter.class.getSimpleName();
 
     private MediaRepository mMediaRepository;
     private RecommendationManager mRecommendationManager;
@@ -41,7 +45,9 @@ public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
      */
     public void loadRecommendations() {
         mCompositeDisposable.add(mMediaRepository.getPopularMovies(1)
+                .map(movieList -> mRecommendationManager.loadRecommendations(movieList))
                 .subscribeOn(Schedulers.io())
-                .subscribe(mRecommendationManager::loadRecommendations));
+                .subscribe(aBoolean -> Log.d(TAG, "Recommendations loaded"),
+                        throwable -> Log.e(TAG, "Error while loading recommendations", throwable)));
     }
 }

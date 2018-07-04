@@ -12,17 +12,29 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenter;
+package com.pimenta.bestv.manager;
 
 import java.util.Set;
 
+import io.reactivex.Single;
+
 /**
- * Created by marcus on 04-05-2018.
+ * Created by marcus on 04/07/18.
  */
-public interface SplashContract extends BasePresenter.Contract {
+public interface PermissionManager {
 
-    void onSplashFinished(boolean success);
+    /**
+     * Verifies if has all the permissions.
+     *
+     * @return {@link Single<Boolean>}
+     */
+    Single<Boolean> hasAllPermissions();
 
-    void onPermissionsLoaded(Set<String> permissions);
+    /**
+     * Gets the permissions.
+     *
+     * @return {@link Set<String>}
+     */
+    Set<String> getPermissions();
 
 }

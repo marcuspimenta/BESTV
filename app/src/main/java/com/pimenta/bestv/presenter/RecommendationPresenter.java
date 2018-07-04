@@ -49,6 +49,10 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
                     if (mContract != null) {
                         mContract.onLoadRecommendationFinished();
                     }
+                }, throwable -> {
+                    if (mContract != null) {
+                        mContract.onLoadRecommendationFinished();
+                    }
                 }));
     }
 

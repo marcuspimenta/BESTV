@@ -24,14 +24,18 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.view.fragment.base.BaseFragment;
 import com.pimenta.bestv.presenter.SplashContract;
 import com.pimenta.bestv.presenter.SplashPresenter;
+import com.pimenta.bestv.view.fragment.base.BaseFragment;
+
+import java.util.Set;
 
 /**
  * Created by marcus on 04-05-2018.
  */
 public class SplashFragment extends BaseFragment<SplashPresenter> implements SplashContract {
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
 
     public static SplashFragment newInstance() {
         return new SplashFragment();
@@ -45,7 +49,7 @@ public class SplashFragment extends BaseFragment<SplashPresenter> implements Spl
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.loadSplash();
+        mPresenter.loadPermissions();
     }
 
     @Override
@@ -54,7 +58,22 @@ public class SplashFragment extends BaseFragment<SplashPresenter> implements Spl
     }
 
     @Override
-    public void onSplashFinished() {
-        finishActivity(Activity.RESULT_OK);
+    public void onSplashFinished(final boolean success) {
+        finishActivity(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+    }
+
+    @Override
+    public void onPermissionsLoaded(final Set<String> permissions) {
+        requestPermissions(permissions.toArray(new String[permissions.size()]), PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                mPresenter.hasAllPermissions();
+                break;
+        }
     }
 }

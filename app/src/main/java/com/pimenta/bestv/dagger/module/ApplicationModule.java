@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.dagger.module;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
@@ -23,6 +24,8 @@ import android.util.DisplayMetrics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -89,5 +92,15 @@ public class ApplicationModule {
     @Singleton
     public Gson provideGson() {
         return new GsonBuilder().create();
+    }
+
+    @Provides
+    @Singleton
+    public Map<String, Boolean> providePermissions() {
+        return new HashMap<String, Boolean>() {{
+            put(Manifest.permission.INTERNET, false);
+            put(Manifest.permission.RECORD_AUDIO, false);
+            put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false);
+        }};
     }
 }

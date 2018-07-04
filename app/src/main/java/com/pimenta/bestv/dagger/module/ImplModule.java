@@ -14,16 +14,20 @@
 
 package com.pimenta.bestv.dagger.module;
 
-import com.pimenta.bestv.repository.MediaRepositoryImpl;
-import com.pimenta.bestv.repository.remote.MediaRemote;
-import com.pimenta.bestv.repository.remote.TmdbMediaRemote;
 import com.pimenta.bestv.manager.DeviceManager;
 import com.pimenta.bestv.manager.DeviceManagerImpl;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.manager.ImageManagerImpl;
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.manager.PermissionManager;
+import com.pimenta.bestv.manager.PermissionManagerImpl;
+import com.pimenta.bestv.manager.PreferenceManager;
+import com.pimenta.bestv.manager.PreferenceManagerImpl;
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.manager.RecommendationManagerImpl;
+import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.MediaRepositoryImpl;
+import com.pimenta.bestv.repository.remote.MediaRemote;
+import com.pimenta.bestv.repository.remote.TmdbMediaRemote;
 
 import javax.inject.Singleton;
 
@@ -55,5 +59,13 @@ public interface ImplModule {
     @Binds
     @Singleton
     RecommendationManager provideRecommendationManager(RecommendationManagerImpl manager);
+
+    @Binds
+    @Singleton
+    PreferenceManager providePreferenceManager(PreferenceManagerImpl manager);
+
+    @Binds
+    @Singleton
+    PermissionManager providePermissionManager(PermissionManagerImpl manager);
 
 }

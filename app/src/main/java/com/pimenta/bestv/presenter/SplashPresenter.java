@@ -14,11 +14,12 @@
 
 package com.pimenta.bestv.presenter;
 
+import com.pimenta.bestv.manager.PermissionManager;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -29,18 +30,51 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
 
     private static final int SPLASH_TIME_LOAD_SECONDS = 3;
 
+    private PermissionManager mPermissionManager;
+
     @Inject
-    public SplashPresenter() {
+    public SplashPresenter(PermissionManager permissionManager) {
         super();
+        mPermissionManager = permissionManager;
     }
 
-    public void loadSplash() {
-        mCompositeDisposable.add(Observable.interval(SPLASH_TIME_LOAD_SECONDS, TimeUnit.SECONDS)
+    /**
+     * Loads all permissions
+     */
+    public void loadPermissions() {
+        mCompositeDisposable.add(mPermissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
+                .delay(SPLASH_TIME_LOAD_SECONDS, TimeUnit.SECONDS)
+                .subscribe(aBoolean -> {
                     if (mContract != null) {
-                        mContract.onSplashFinished();
+                        if (aBoolean) {
+                            mContract.onSplashFinished(true);
+                        } else {
+                            mContract.onPermissionsLoaded(mPermissionManager.getPermissions());
+                        }
+                    }
+                }, throwable -> {
+                    if (mContract != null) {
+                        mContract.onSplashFinished(false);
+                    }
+                }));
+    }
+
+    /**
+     * Verifies if has all permissions
+     */
+    public void hasAllPermissions() {
+        mCompositeDisposable.add(mPermissionManager.hasAllPermissions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (mContract != null) {
+                        mContract.onSplashFinished(aBoolean);
+                    }
+                }, throwable -> {
+                    if (mContract != null) {
+                        mContract.onSplashFinished(false);
                     }
                 }));
     }
