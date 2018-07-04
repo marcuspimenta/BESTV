@@ -3,16 +3,26 @@ Android TV App powered by TMDb.
 It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
 
 ## About
-Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseFragment, SearchFragment, DetailsFragment, VerticalFragment are used.
+Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseSupportFragment, SearchSupportFragment, DetailsSupportFragment, VerticalSupportFragment are used.
 
 ## Implementations
 <ul>
-<li>API The Movie Database (TMDb)</li>
+<li>Android TV Leandback library</li>
+<li>The Movie Database (TMDb) REST API</li>
+<li>MVP architecture
 <li>Dagger 2
 <li>Retrofit 2
 <li>RxJava 2  
 <li>Glide
 </ul>
+
+# API Keys
+BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.
+To be able to run this application you have to create an API KEY from The Movie DB and place it in your gradle file.
+<br>
+```
+buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+```
 
 ## Screenshots
 <p align="center"> <img src="images/device-2018-05-04-091859.png"/> </p>
