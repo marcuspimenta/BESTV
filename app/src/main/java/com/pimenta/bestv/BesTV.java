@@ -15,20 +15,21 @@
 package com.pimenta.bestv;
 
 import android.app.Application;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.pimenta.bestv.dagger.ApplicationComponent;
-import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.dagger.DaggerApplicationComponent;
+import com.pimenta.bestv.dagger.module.ApplicationModule;
 
 /**
  * Created by marcus on 07-02-2018.
  */
 public class BesTV extends Application {
 
-    private static final String TAG = "BesTV";
+    private static final String TAG = BesTV.class.getSimpleName();
 
-    private static volatile ApplicationComponent sApplicationComponent;
+    private static ApplicationComponent sApplicationComponent;
 
     public static BesTV get() {
         return (BesTV) sApplicationComponent.getApplication();
@@ -42,6 +43,21 @@ public class BesTV extends Application {
     public void onCreate() {
         Log.d(TAG, "[onCreate]");
         super.onCreate();
+
+        switch (BuildConfig.BUILD_TYPE) {
+            case "debug":
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                        .detectAll()
+                        .penaltyLog()
+                        .build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                        .detectLeakedSqlLiteObjects()
+                        .detectLeakedClosableObjects()
+                        .penaltyLog()
+                        .penaltyDeath()
+                        .build());
+                break;
+        }
 
         sApplicationComponent = DaggerApplicationComponent
                 .builder()
