@@ -18,9 +18,13 @@ import android.app.Application;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.pimenta.bestv.dagger.ApplicationComponent;
 import com.pimenta.bestv.dagger.DaggerApplicationComponent;
 import com.pimenta.bestv.dagger.module.ApplicationModule;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by marcus on 07-02-2018.
@@ -43,6 +47,7 @@ public class BesTV extends Application {
     public void onCreate() {
         Log.d(TAG, "[onCreate]");
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         switch (BuildConfig.BUILD_TYPE) {
             case "debug":
@@ -57,7 +62,11 @@ public class BesTV extends Application {
                         .penaltyDeath()
                         .build());
                 break;
+            default:
+                Fabric.with(this, new Answers(), new Crashlytics());
+                break;
         }
+
 
         sApplicationComponent = DaggerApplicationComponent
                 .builder()
