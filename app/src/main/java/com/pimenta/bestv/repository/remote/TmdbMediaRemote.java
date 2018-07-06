@@ -23,10 +23,12 @@ import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi;
 
 import java.io.IOException;
 
@@ -44,12 +46,14 @@ public class TmdbMediaRemote implements MediaRemote {
     private GenreApi mGenreApi;
     private MovieApi mMovieApi;
     private PersonApi mPersonApi;
+    private TvShowApi mTvShowApi;
 
     @Inject
-    public TmdbMediaRemote(GenreApi genreApi, MovieApi movieApi, PersonApi personApi) {
+    public TmdbMediaRemote(GenreApi genreApi, MovieApi movieApi, PersonApi personApi, TvShowApi tvShowApi) {
         mGenreApi = genreApi;
         mMovieApi = movieApi;
         mPersonApi = personApi;
+        mTvShowApi = tvShowApi;
     }
 
     @Override
@@ -59,7 +63,7 @@ public class TmdbMediaRemote implements MediaRemote {
 
     @Override
     public Single<MoviePage> getMoviesByGenre(final Genre genre, int page) {
-        return mGenreApi.getMoviesByGenre(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
+        return mMovieApi.getMoviesByGenre(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
     }
 
     @Override
@@ -120,5 +124,35 @@ public class TmdbMediaRemote implements MediaRemote {
     @Override
     public Single<Cast> getCastDetails(final Cast cast) {
         return mPersonApi.getCastDetails(cast.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    }
+
+    @Override
+    public Single<GenreList> getTvShowGenres() {
+        return mGenreApi.getTvShowGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    }
+
+    @Override
+    public Single<TvShowPage> getTvShowByGenre(final Genre genre, final int page) {
+        return mTvShowApi.getTvShowByGenre(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
+    }
+
+    @Override
+    public Single<TvShowPage> getAiringTodayTvShows(final int page) {
+        return mTvShowApi.getAiringTodayTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public Single<TvShowPage> getOnTheAirTvShows(final int page) {
+        return mTvShowApi.getOnTheAirTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public Single<TvShowPage> getPopularTvShows(final int page) {
+        return mTvShowApi.getPopularTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public Single<TvShowPage> getTopRatedTvShows(final int page) {
+        return mTvShowApi.getTopRatedTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 }

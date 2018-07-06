@@ -23,7 +23,9 @@ import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.entity.WorkPage;
 import com.pimenta.bestv.repository.remote.MediaRemote;
 
 import java.util.ArrayList;
@@ -90,16 +92,24 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<MoviePage> loadMoviesByType(int page, MediaRepository.MovieListType movieListType) {
+    public Single<? extends WorkPage> loadWorkByType(int page, WorkType movieListType) {
         switch (movieListType) {
-            case NOW_PLAYING:
+            case NOW_PLAYING_MOVIES:
                 return mMediaRemote.getNowPlayingMovies(page);
-            case POPULAR:
+            case POPULAR_MOVIES:
                 return mMediaRemote.getPopularMovies(page);
-            case TOP_RATED:
+            case TOP_RATED_MOVIES:
                 return mMediaRemote.getTopRatedMovies(page);
-            case UP_COMING:
+            case UP_COMING_MOVIES:
                 return mMediaRemote.getUpComingMovies(page);
+            case AIRING_TODAY_TV_SHOWS:
+                return mMediaRemote.getAiringTodayTvShows(page);
+            case ON_THE_AIR_TV_SHOWS:
+                return mMediaRemote.getOnTheAirTvShows(page);
+            case POPULAR_TV_SHOWS:
+                return mMediaRemote.getPopularTvShows(page);
+            case TOP_RATED_TV_SHOWS:
+                return mMediaRemote.getTopRatedTvShows(page);
             default:
                 return Single.error(new Throwable());
         }
@@ -168,5 +178,15 @@ public class MediaRepositoryImpl implements MediaRepository {
     @Override
     public Single<Cast> getCastDetails(final Cast cast) {
         return mMediaRemote.getCastDetails(cast);
+    }
+
+    @Override
+    public Single<GenreList> getTvShowGenres() {
+        return mMediaRemote.getTvShowGenres();
+    }
+
+    @Override
+    public Single<TvShowPage> getTvShowByGenre(final Genre genre, final int page) {
+        return mMediaRemote.getTvShowByGenre(genre, page);
     }
 }

@@ -30,6 +30,10 @@ import retrofit2.http.Query;
  */
 public interface MovieApi {
 
+    @GET("discover/movie")
+    Single<MoviePage> getMoviesByGenre(@Query("with_genres") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("include_adult") boolean includeAdult, @Query("page") int page);
+
     @GET("movie/{movie_id}")
     Call<Movie> getMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 

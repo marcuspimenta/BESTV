@@ -31,16 +31,16 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
 
     private static final String TYPE = "TYPE";
 
-    private MediaRepository.MovieListType mMovieListType;
+    private MediaRepository.WorkType mWorkType;
 
-    public static TopMovieGridFragment newInstance(MediaRepository.MovieListType movieListType, boolean showProgress) {
+    public static TopMovieGridFragment newInstance(MediaRepository.WorkType workType, boolean showProgress) {
         Bundle args = new Bundle();
-        args.putSerializable(TYPE, movieListType);
+        args.putSerializable(TYPE, workType);
         args.putBoolean(SHOW_PROGRESS, showProgress);
 
         TopMovieGridFragment topMovieGridFragment = new TopMovieGridFragment();
         topMovieGridFragment.setArguments(args);
-        topMovieGridFragment.mMovieListType = movieListType;
+        topMovieGridFragment.mWorkType = workType;
         topMovieGridFragment.mShowProgress = showProgress;
         return topMovieGridFragment;
     }
@@ -49,34 +49,34 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (mMovieListType == null) {
-            mMovieListType = (MediaRepository.MovieListType) getArguments().getSerializable(TYPE);
+        if (mWorkType == null) {
+            mWorkType = (MediaRepository.WorkType) getArguments().getSerializable(TYPE);
             mShowProgress = getArguments().getBoolean(SHOW_PROGRESS);
         }
     }
 
     @Override
     void loadData() {
-        mPresenter.loadMoviesByType(mMovieListType);
+        mPresenter.loadMoviesByType(mWorkType);
     }
 
     @Override
     public void loadMorePages() {
-        if (!mMovieListType.equals(MediaRepository.MovieListType.FAVORITES)) {
+        if (!mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void refreshDada() {
-        if (mMovieListType.equals(MediaRepository.MovieListType.FAVORITES)) {
+        if (mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
             super.loadMorePages();
         }
     }
 
     @Override
     public void onMoviesLoaded(final List<Movie> movies) {
-        if (mMovieListType.equals(MediaRepository.MovieListType.FAVORITES)) {
+        if (mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
             mRowsAdapter.setItems(movies, new DiffCallback<Movie>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {

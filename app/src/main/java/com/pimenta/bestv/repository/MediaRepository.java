@@ -24,7 +24,10 @@ import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShow;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.entity.WorkPage;
 
 import java.util.List;
 
@@ -76,13 +79,13 @@ public interface MediaRepository {
     Single<List<Movie>> getFavoriteMovies();
 
     /**
-     * Loads the {@link MoviePage} by {@link MediaRepository.MovieListType}
+     * Loads the {@link MoviePage} by {@link WorkType}
      *
      * @param page              Page to be loaded
-     * @param movieListType     {@link MediaRepository.MovieListType}
+     * @param movieListType     {@link WorkType}
      * @return                  {@link Single<MoviePage>}
      */
-    Single<MoviePage> loadMoviesByType(int page, MediaRepository.MovieListType movieListType);
+    Single<? extends WorkPage> loadWorkByType(int page, WorkType movieListType);
 
     /**
      * Gets the {@link GenreList} available at TMDb
@@ -192,7 +195,6 @@ public interface MediaRepository {
      */
     Single<MoviePage> getUpComingMovies(int page);
 
-
     /**
      * Searches the movies by a query
      *
@@ -214,18 +216,40 @@ public interface MediaRepository {
     Single<Cast> getCastDetails(Cast cast);
 
     /**
+     * Gets the {@link GenreList} available at TMDb
+     *
+     * @return {@link Single<GenreList>}
+     */
+    Single<GenreList> getTvShowGenres();
+
+    /**
+     * Gets the {@link List<Movie>} by the {@link Genre}
+     *
+     * @param genre {@link Genre} to search the {@link List<TvShow>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getTvShowByGenre(Genre genre, int page);
+
+    /**
      * Represents the movie list type
      */
-    enum MovieListType {
-        FAVORITES(R.string.favorites),
-        NOW_PLAYING(R.string.now_playing),
-        POPULAR(R.string.popular),
-        TOP_RATED(R.string.top_rated),
-        UP_COMING(R.string.up_coming);
+    enum WorkType {
+        FAVORITES_MOVIES(R.string.favorites),
+        NOW_PLAYING_MOVIES(R.string.now_playing),
+        POPULAR_MOVIES(R.string.popular),
+        TOP_RATED_MOVIES(R.string.top_rated),
+        UP_COMING_MOVIES(R.string.up_coming),
+        AIRING_TODAY_TV_SHOWS(R.string.airing_today),
+        ON_THE_AIR_TV_SHOWS(R.string.on_the_air),
+        POPULAR_TV_SHOWS(R.string.popular),
+        TOP_RATED_TV_SHOWS(R.string.top_rated);
 
         private String mName;
 
-        MovieListType(@StringRes int nameResource) {
+        WorkType(@StringRes int nameResource) {
             mName = BesTV.get().getString(nameResource);
         }
 

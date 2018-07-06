@@ -52,7 +52,7 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private static final int FAVORITE_INDEX = 4;
 
     private static final PageRow sFavoritePageRow = new PageRow(
-            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.MovieListType.FAVORITES));
+            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.FAVORITES_MOVIES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
@@ -154,10 +154,10 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private void setupMainList() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.MovieListType.NOW_PLAYING)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.MovieListType.POPULAR)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.MovieListType.TOP_RATED)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.MovieListType.UP_COMING)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.POPULAR_MOVIES)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.TOP_RATED_MOVIES)));
+        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.UP_COMING_MOVIES)));
     }
 
     private class SearchClickListener implements View.OnClickListener {

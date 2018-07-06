@@ -27,6 +27,7 @@ import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MoviePage;
 
 import java.util.List;
 
@@ -55,9 +56,9 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     /**
      * Loads the now playing {@link List<Movie>}
      */
-    public void loadMoviesByType(MediaRepository.MovieListType movieListType) {
+    public void loadMoviesByType(MediaRepository.WorkType movieListType) {
         switch (movieListType) {
-            case FAVORITES:
+            case FAVORITES_MOVIES:
                 mCompositeDisposable.add(mMediaRepository.getFavoriteMovies()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -73,14 +74,22 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                 break;
             default:
                 int page = mCurrentPage + 1;
-                mCompositeDisposable.add(mMediaRepository.loadMoviesByType(page, movieListType)
+                mCompositeDisposable.add(mMediaRepository.loadWorkByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(moviePage -> {
+                        .subscribe(workPage -> {
                             if (mContract != null) {
-                                if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
-                                    mCurrentPage = moviePage.getPage();
-                                    mContract.onMoviesLoaded(moviePage.getMovies());
+                                if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
+                                    mCurrentPage = workPage.getPage();
+
+                                    switch (movieListType) {
+                                        case NOW_PLAYING_MOVIES:
+                                        case POPULAR_MOVIES:
+                                        case TOP_RATED_MOVIES:
+                                        case UP_COMING_MOVIES:
+                                            mContract.onMoviesLoaded(((MoviePage)workPage).getMovies());
+                                            break;
+                                    }
                                 } else {
                                     mContract.onMoviesLoaded(null);
                                 }

@@ -20,7 +20,9 @@ import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.entity.TvShow;
 
 import java.util.List;
 
@@ -159,4 +161,62 @@ public interface MediaRemote {
      * @return {@link Single<Cast>}
      */
     Single<Cast> getCastDetails(Cast cast);
+
+    /**
+     * Gets the {@link GenreList} available at TMDb
+     *
+     * @return {@link Single<GenreList>}
+     */
+    Single<GenreList> getTvShowGenres();
+
+    /**
+     * Gets the {@link List<Movie>} by the {@link Genre}
+     *
+     * @param genre {@link Genre} to search the {@link List<TvShow>}
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getTvShowByGenre(Genre genre, int page);
+
+    /**
+     * Gets the airing today {@link TvShowPage}
+     *
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getAiringTodayTvShows(int page);
+
+    /**
+     * Gets the on the air {@link TvShowPage}
+     *
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getOnTheAirTvShows(int page);
+
+    /**
+     * Gets the popular {@link TvShowPage}
+     *
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getPopularTvShows(int page);
+
+    /**
+     * Gets the top rated {@link TvShowPage}
+     *
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> getTopRatedTvShows(int page);
 }

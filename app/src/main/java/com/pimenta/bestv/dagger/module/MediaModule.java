@@ -20,6 +20,7 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
+import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -64,6 +65,12 @@ public class MediaModule {
     @Singleton
     PersonApi providePersonApi(@Named("Tmdb") Retrofit retrofit) {
         return retrofit.create(PersonApi.class);
+    }
+
+    @Provides
+    @Singleton
+    TvShowApi provideTvShowApi(@Named("Tmdb") Retrofit retrofit) {
+        return retrofit.create(TvShowApi.class);
     }
 
 }
