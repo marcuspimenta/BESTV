@@ -16,7 +16,7 @@ package com.pimenta.bestv.repository.remote.api.tmdb;
 
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.VideoList;
 
 import io.reactivex.Single;
@@ -37,30 +37,30 @@ public interface MovieApi {
     Single<CastList> getCastByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/{movie_id}/recommendations")
-    Single<MovieList> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+    Single<MoviePage> getRecommendationByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/similar")
-    Single<MovieList> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
+    Single<MoviePage> getSimilarByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/videos")
     Single<VideoList> getVideosByMovie(@Path("movie_id") int movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/now_playing")
-    Single<MovieList> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MoviePage> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/popular")
-    Single<MovieList> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MoviePage> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/top_rated")
-    Single<MovieList> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MoviePage> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/upcoming")
-    Single<MovieList> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Single<MoviePage> getUpComingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("search/movie")
-    Single<MovieList> searchMoviesByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
+    Single<MoviePage> searchMoviesByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
             @Query("page") int page);
 
 }

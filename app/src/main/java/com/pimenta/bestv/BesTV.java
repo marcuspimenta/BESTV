@@ -47,7 +47,6 @@ public class BesTV extends Application {
     public void onCreate() {
         Log.d(TAG, "[onCreate]");
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
 
         switch (BuildConfig.BUILD_TYPE) {
             case "debug":
@@ -66,7 +65,6 @@ public class BesTV extends Application {
                 Fabric.with(this, new Answers(), new Crashlytics());
                 break;
         }
-
 
         sApplicationComponent = DaggerApplicationComponent
                 .builder()

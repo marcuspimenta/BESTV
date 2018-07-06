@@ -22,7 +22,7 @@ import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
@@ -53,13 +53,13 @@ public class TmdbMediaRemote implements MediaRemote {
     }
 
     @Override
-    public Single<GenreList> getGenres() {
-        return mGenreApi.getGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    public Single<GenreList> getMovieGenres() {
+        return mGenreApi.getMovieGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
     @Override
-    public Single<MovieList> getMoviesByGenre(final Genre genre, int page) {
-        return mGenreApi.getMovies(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
+    public Single<MoviePage> getMoviesByGenre(final Genre genre, int page) {
+        return mGenreApi.getMoviesByGenre(genre.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page);
     }
 
     @Override
@@ -78,12 +78,12 @@ public class TmdbMediaRemote implements MediaRemote {
     }
 
     @Override
-    public Single<MovieList> getRecommendationByMovie(final Movie movie, final int page) {
+    public Single<MoviePage> getRecommendationByMovie(final Movie movie, final int page) {
         return mMovieApi.getRecommendationByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
-    public Single<MovieList> getSimilarByMovie(final Movie movie, final int page) {
+    public Single<MoviePage> getSimilarByMovie(final Movie movie, final int page) {
         return mMovieApi.getSimilarByMovie(movie.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
@@ -93,27 +93,27 @@ public class TmdbMediaRemote implements MediaRemote {
     }
 
     @Override
-    public Single<MovieList> getNowPlayingMovies(int page) {
+    public Single<MoviePage> getNowPlayingMovies(int page) {
         return mMovieApi.getNowPlayingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
-    public Single<MovieList> getPopularMovies(int page) {
+    public Single<MoviePage> getPopularMovies(int page) {
         return mMovieApi.getPopularMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
-    public Single<MovieList> getTopRatedMovies(int page) {
+    public Single<MoviePage> getTopRatedMovies(int page) {
         return mMovieApi.getTopRatedMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
-    public Single<MovieList> getUpComingMovies(int page) {
+    public Single<MoviePage> getUpComingMovies(int page) {
         return mMovieApi.getUpComingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 
     @Override
-    public Single<MovieList> searchMoviesByQuery(final String query, final int page) {
+    public Single<MoviePage> searchMoviesByQuery(final String query, final int page) {
         return mMovieApi.searchMoviesByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page);
     }
 

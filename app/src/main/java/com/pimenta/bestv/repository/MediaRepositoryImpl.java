@@ -22,7 +22,7 @@ import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.remote.MediaRemote;
 
@@ -90,7 +90,7 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<MovieList> loadMoviesByType(int page, MediaRepository.MovieListType movieListType) {
+    public Single<MoviePage> loadMoviesByType(int page, MediaRepository.MovieListType movieListType) {
         switch (movieListType) {
             case NOW_PLAYING:
                 return mMediaRemote.getNowPlayingMovies(page);
@@ -106,12 +106,12 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<GenreList> getGenres() {
-        return mMediaRemote.getGenres();
+    public Single<GenreList> getMovieGenres() {
+        return mMediaRemote.getMovieGenres();
     }
 
     @Override
-    public Single<MovieList> getMoviesByGenre(final Genre genre, final int page) {
+    public Single<MoviePage> getMoviesByGenre(final Genre genre, final int page) {
         return mMediaRemote.getMoviesByGenre(genre, page);
     }
 
@@ -126,12 +126,12 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<MovieList> getRecommendationByMovie(final Movie movie, final int page) {
+    public Single<MoviePage> getRecommendationByMovie(final Movie movie, final int page) {
         return mMediaRemote.getRecommendationByMovie(movie, page);
     }
 
     @Override
-    public Single<MovieList> getSimilarByMovie(final Movie movie, final int page) {
+    public Single<MoviePage> getSimilarByMovie(final Movie movie, final int page) {
         return mMediaRemote.getSimilarByMovie(movie, page);
     }
 
@@ -141,27 +141,27 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<MovieList> getNowPlayingMovies(final int page) {
+    public Single<MoviePage> getNowPlayingMovies(final int page) {
         return mMediaRemote.getNowPlayingMovies(page);
     }
 
     @Override
-    public Single<MovieList> getPopularMovies(final int page) {
+    public Single<MoviePage> getPopularMovies(final int page) {
         return mMediaRemote.getPopularMovies(page);
     }
 
     @Override
-    public Single<MovieList> getTopRatedMovies(final int page) {
+    public Single<MoviePage> getTopRatedMovies(final int page) {
         return mMediaRemote.getTopRatedMovies(page);
     }
 
     @Override
-    public Single<MovieList> getUpComingMovies(final int page) {
+    public Single<MoviePage> getUpComingMovies(final int page) {
         return mMediaRemote.getUpComingMovies(page);
     }
 
     @Override
-    public Single<MovieList> searchMoviesByQuery(final String query, final int page) {
+    public Single<MoviePage> searchMoviesByQuery(final String query, final int page) {
         return mMediaRemote.searchMoviesByQuery(query, page);
     }
 

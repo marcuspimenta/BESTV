@@ -66,7 +66,7 @@ public class MovieBrowsePresenter extends BasePresenter<MovieBrowseContract> {
      * Loads the {@link List<Genre>} available at TMDb
      */
     public void loadData() {
-        mCompositeDisposable.add(mMediaRepository.getGenres()
+        mCompositeDisposable.add(mMediaRepository.getMovieGenres()
                 .map(genreList -> new Pair<>(mMediaRepository.hasFavoriteMovie(), genreList))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

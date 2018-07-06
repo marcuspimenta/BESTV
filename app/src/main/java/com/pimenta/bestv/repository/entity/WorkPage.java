@@ -19,12 +19,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by marcus on 09-02-2018.
+ * Created by marcus on 06/07/18.
  */
-public class MovieList {
+public abstract class WorkPage<T extends Work> {
 
-    @SerializedName("id")
-    private int mId;
     @SerializedName("page")
     private int mPage;
     @SerializedName("total_pages")
@@ -32,15 +30,7 @@ public class MovieList {
     @SerializedName("total_results")
     private int mTotalResults;
     @SerializedName("results")
-    private List<Movie> mMovies;
-
-    public int getId() {
-        return mId;
-    }
-
-    public void setId(final int id) {
-        mId = id;
-    }
+    protected List<T> mWorks;
 
     public int getPage() {
         return mPage;
@@ -66,11 +56,4 @@ public class MovieList {
         mTotalResults = totalResults;
     }
 
-    public List<Movie> getMovies() {
-        return mMovies;
-    }
-
-    public void setMovies(final List<Movie> movies) {
-        mMovies = movies;
-    }
 }

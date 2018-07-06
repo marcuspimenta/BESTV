@@ -76,11 +76,11 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                 mCompositeDisposable.add(mMediaRepository.loadMoviesByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(movieList -> {
+                        .subscribe(moviePage -> {
                             if (mContract != null) {
-                                if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                                    mCurrentPage = movieList.getPage();
-                                    mContract.onMoviesLoaded(movieList.getMovies());
+                                if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
+                                    mCurrentPage = moviePage.getPage();
+                                    mContract.onMoviesLoaded(moviePage.getMovies());
                                 } else {
                                     mContract.onMoviesLoaded(null);
                                 }
@@ -104,11 +104,11 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
         mCompositeDisposable.add(mMediaRepository.getMoviesByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movieList -> {
+                .subscribe(moviePage -> {
                     if (mContract != null) {
-                        if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                            mCurrentPage = movieList.getPage();
-                            mContract.onMoviesLoaded(movieList.getMovies());
+                        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
+                            mCurrentPage = moviePage.getPage();
+                            mContract.onMoviesLoaded(moviePage.getMovies());
                         } else {
                             mContract.onMoviesLoaded(null);
                         }

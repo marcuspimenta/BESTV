@@ -15,11 +15,11 @@
 package com.pimenta.bestv.repository.remote.api.tmdb;
 
 import com.pimenta.bestv.repository.entity.GenreList;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -28,10 +28,17 @@ import retrofit2.http.Query;
 public interface GenreApi {
 
     @GET("genre/movie/list")
-    Single<GenreList> getGenres(@Query("api_key") String apiKey, @Query("language") String language);
+    Single<GenreList> getMovieGenres(@Query("api_key") String apiKey, @Query("language") String language);
 
-    @GET("genre/{genre_id}/movies")
-    Single<MovieList> getMovies(@Path("genre_id") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
+    @GET("discover/movie")
+    Single<MoviePage> getMoviesByGenre(@Query("with_genres") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("include_adult") boolean includeAdult, @Query("page") int page);
+
+    @GET("genre/tv/list")
+    Single<GenreList> getTvShowGenres(@Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("discover/tv")
+    Single<TvShowPage> getTvShowByGenre(@Query("with_genres") int genreId, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("include_adult") boolean includeAdult, @Query("page") int page);
 
 }

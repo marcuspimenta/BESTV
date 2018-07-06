@@ -64,11 +64,11 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
             mDisposable = mMediaRepository.searchMoviesByQuery(encodeQuery, resultPage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(movieList -> {
+                    .subscribe(moviePage -> {
                         if (mContract != null) {
-                            if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
-                                mResultPage = movieList.getPage();
-                                mContract.onResultLoaded(movieList.getMovies());
+                            if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
+                                mResultPage = moviePage.getPage();
+                                mContract.onResultLoaded(moviePage.getMovies());
                             } else {
                                 mContract.onResultLoaded(null);
                             }

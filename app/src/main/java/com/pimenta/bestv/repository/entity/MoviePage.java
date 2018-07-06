@@ -12,22 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager;
+package com.pimenta.bestv.repository.entity;
 
-import com.pimenta.bestv.repository.entity.MoviePage;
+import java.util.List;
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 09-02-2018.
  */
-public interface RecommendationManager {
+public class MoviePage extends WorkPage<Movie> {
 
-    /**
-     * Loads the recommendations
-     *
-     * @param movieList {@link MoviePage}
-     *
-     * @return {@code true} if success, {@code false} otherwise
-     */
-    boolean loadRecommendations(MoviePage movieList);
+    public List<Movie> getMovies() {
+        return mWorks;
+    }
 
+    public void setMovies(final List<Movie> works) {
+        mWorks = works;
+    }
 }

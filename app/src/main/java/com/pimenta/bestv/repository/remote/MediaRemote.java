@@ -19,7 +19,7 @@ import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.VideoList;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface MediaRemote {
      *
      * @return {@link Single<GenreList>}
      */
-    Single<GenreList> getGenres();
+    Single<GenreList> getMovieGenres();
 
     /**
      * Gets the {@link List<Movie>} by the {@link Genre}
@@ -45,9 +45,9 @@ public interface MediaRemote {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getMoviesByGenre(Genre genre, int page);
+    Single<MoviePage> getMoviesByGenre(Genre genre, int page);
 
     /**
      * Gets the {@link Movie} by the ID
@@ -73,9 +73,9 @@ public interface MediaRemote {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getRecommendationByMovie(Movie movie, int page);
+    Single<MoviePage> getRecommendationByMovie(Movie movie, int page);
 
     /**
      * Gets a list of similar movies. This is not the same as the
@@ -86,9 +86,9 @@ public interface MediaRemote {
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getSimilarByMovie(Movie movie, int page);
+    Single<MoviePage> getSimilarByMovie(Movie movie, int page);
 
     /**
      * Gets the videos from a movie
@@ -100,44 +100,44 @@ public interface MediaRemote {
     Single<VideoList> getVideosByMovie(Movie movie);
 
     /**
-     * Gets the now playing {@link MovieList}
+     * Gets the now playing {@link MoviePage}
      *
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getNowPlayingMovies(int page);
+    Single<MoviePage> getNowPlayingMovies(int page);
 
     /**
-     * Gets the popular {@link MovieList}
+     * Gets the popular {@link MoviePage}
      *
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getPopularMovies(int page);
+    Single<MoviePage> getPopularMovies(int page);
 
     /**
-     * Gets the top rated {@link MovieList}
+     * Gets the top rated {@link MoviePage}
      *
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getTopRatedMovies(int page);
+    Single<MoviePage> getTopRatedMovies(int page);
 
     /**
-     * Gets the up coming {@link MovieList}
+     * Gets the up coming {@link MoviePage}
      *
      * @param page Specify which page to query. Minimum: 1, maximum: 1000,
      *             default: 1
      *
-     * @return {@link Single<MovieList>}
+     * @return {@link Single<MoviePage>}
      */
-    Single<MovieList> getUpComingMovies(int page);
+    Single<MoviePage> getUpComingMovies(int page);
 
 
     /**
@@ -147,9 +147,9 @@ public interface MediaRemote {
      * @param page      Specify which page to query. Minimum: 1, maximum: 1000,
      *                  default: 1
      *
-     * @return          {@link Single<MovieList>}
+     * @return          {@link Single<MoviePage>}
      */
-    Single<MovieList> searchMoviesByQuery(String query, int page);
+    Single<MoviePage> searchMoviesByQuery(String query, int page);
 
     /**
      * Gets the {@link Cast} details by the {@link Cast}

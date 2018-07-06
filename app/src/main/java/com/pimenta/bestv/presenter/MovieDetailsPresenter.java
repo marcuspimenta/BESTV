@@ -28,7 +28,7 @@ import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MovieList;
+import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.VideoList;
 
@@ -122,11 +122,11 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
                     if (mContract != null) {
-                        final MovieList recommendedMovies = movieInfo.getRecommendedMovies();
+                        final MoviePage recommendedMovies = movieInfo.getRecommendedMovies();
                         if (recommendedMovies != null && recommendedMovies.getPage() <= recommendedMovies.getTotalPages()) {
                             mRecommendedPage = recommendedMovies.getPage();
                         }
-                        final MovieList similarMovies = movieInfo.getSimilarMovies();
+                        final MoviePage similarMovies = movieInfo.getSimilarMovies();
                         if (similarMovies != null && similarMovies.getPage() <= similarMovies.getTotalPages()) {
                             mSimilarPage = similarMovies.getPage();
                         }
@@ -282,11 +282,11 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     private class MovieInfo {
 
         private CastList mCasts;
-        private MovieList mRecommendedMovies;
-        private MovieList mSimilarMovies;
+        private MoviePage mRecommendedMovies;
+        private MoviePage mSimilarMovies;
         private VideoList mVideos;
 
-        public MovieInfo(final CastList casts, final MovieList recommendedMovies, final MovieList similarMovies, final VideoList videos) {
+        public MovieInfo(final CastList casts, final MoviePage recommendedMovies, final MoviePage similarMovies, final VideoList videos) {
             mCasts = casts;
             mRecommendedMovies = recommendedMovies;
             mSimilarMovies = similarMovies;
@@ -297,11 +297,11 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
             return mCasts;
         }
 
-        public MovieList getRecommendedMovies() {
+        public MoviePage getRecommendedMovies() {
             return mRecommendedMovies;
         }
 
-        public MovieList getSimilarMovies() {
+        public MoviePage getSimilarMovies() {
             return mSimilarMovies;
         }
 
