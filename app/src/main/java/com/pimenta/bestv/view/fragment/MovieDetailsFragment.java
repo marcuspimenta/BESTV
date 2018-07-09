@@ -55,7 +55,7 @@ import com.pimenta.bestv.view.activity.CastDetailsActivity;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.view.widget.CastCardPresenter;
-import com.pimenta.bestv.view.widget.MovieCardPresenter;
+import com.pimenta.bestv.view.widget.WorkCardPresenter;
 import com.pimenta.bestv.view.widget.MovieDetailsDescriptionPresenter;
 import com.pimenta.bestv.view.widget.VideoCardPresenter;
 
@@ -150,9 +150,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         if (recommendedMovies != null && recommendedMovies.size() > 0) {
             mActionAdapter.add(new Action(ACTION_RECOMMENDED, getResources().getString(R.string.recommended)));
-            MovieCardPresenter movieCardPresenter = new MovieCardPresenter();
-            movieCardPresenter.setLoadMoviePosterListener((movie, imageView) -> mPresenter.loadMoviePosterImage(movie, imageView));
-            mRecommendedRowAdapter = new ArrayObjectAdapter(movieCardPresenter);
+            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+            mRecommendedRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mRecommendedRowAdapter.addAll(0, recommendedMovies);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
@@ -160,9 +160,9 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
         if (similarMovies != null && similarMovies.size() > 0) {
             mActionAdapter.add(new Action(ACTION_SIMILAR, getResources().getString(R.string.similar)));
-            MovieCardPresenter movieCardPresenter = new MovieCardPresenter();
-            movieCardPresenter.setLoadMoviePosterListener((movie, imageView) -> mPresenter.loadMoviePosterImage(movie, imageView));
-            mSimilarRowAdapter = new ArrayObjectAdapter(movieCardPresenter);
+            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+            mSimilarRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mSimilarRowAdapter.addAll(0, similarMovies);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));

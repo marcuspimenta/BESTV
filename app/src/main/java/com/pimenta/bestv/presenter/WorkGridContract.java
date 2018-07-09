@@ -14,15 +14,19 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.repository.entity.Genre;
+import android.graphics.Bitmap;
+
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-public interface MovieBrowseContract extends BasePresenter.Contract {
+public interface WorkGridContract extends BasePresenter.Contract {
 
-    void onDataLoaded(boolean hasFavoriteMovie, List<Genre> genres);
+    void onWorksLoaded(List<? extends Work> works);
+
+    void onBackdropImageLoaded(Bitmap bitmap);
 
 }

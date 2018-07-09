@@ -19,7 +19,9 @@ import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.TvShow;
@@ -38,7 +40,7 @@ public interface MediaRemote {
      *
      * @return {@link Single<GenreList>}
      */
-    Single<GenreList> getMovieGenres();
+    Single<MovieGenreList> getMovieGenres();
 
     /**
      * Gets the {@link List<Movie>} by the {@link Genre}
@@ -167,7 +169,7 @@ public interface MediaRemote {
      *
      * @return {@link Single<GenreList>}
      */
-    Single<GenreList> getTvShowGenres();
+    Single<TvShowGenreList> getTvShowGenres();
 
     /**
      * Gets the {@link List<Movie>} by the {@link Genre}

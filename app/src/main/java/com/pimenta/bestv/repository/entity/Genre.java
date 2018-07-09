@@ -21,12 +21,14 @@ import java.io.Serializable;
 /**
  * Created by marcus on 08-02-2018.
  */
-public class Genre implements Serializable {
+public abstract class Genre implements Serializable {
 
     @SerializedName("id")
     private int mId;
     @SerializedName("name")
     private String mName;
+
+    public abstract Source getSource();
 
     public int getId() {
         return mId;
@@ -42,5 +44,10 @@ public class Genre implements Serializable {
 
     public void setName(final String name) {
         mName = name;
+    }
+
+    public enum Source {
+        MOVIE,
+        TV_SHOW
     }
 }

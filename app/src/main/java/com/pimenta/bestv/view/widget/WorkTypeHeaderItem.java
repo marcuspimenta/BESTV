@@ -21,11 +21,11 @@ import com.pimenta.bestv.repository.MediaRepository;
 /**
  * Created by marcus on 11-02-2018.
  */
-public class MovieListTypeHeaderItem extends HeaderItem {
+public class WorkTypeHeaderItem extends HeaderItem {
 
     private MediaRepository.WorkType mMovieListType;
 
-    public MovieListTypeHeaderItem(int id, MediaRepository.WorkType movieListType) {
+    public WorkTypeHeaderItem(int id, MediaRepository.WorkType movieListType) {
         super(id, movieListType.getName());
         mMovieListType = movieListType;
     }

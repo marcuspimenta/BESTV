@@ -31,6 +31,7 @@ import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -117,7 +118,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                 mMediaRepository.getRecommendationByMovie(movie, recommendedPageSearch),
                 mMediaRepository.getSimilarByMovie(movie, similarPageSearch),
                 mMediaRepository.getVideosByMovie(movie),
-                (castList, recommendedList, similarList, videoList) -> new MovieInfo(castList, recommendedList, similarList, videoList))
+                MovieInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
@@ -132,8 +133,8 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         }
 
                         mContract.onDataLoaded(movieInfo.getCasts() != null ? movieInfo.getCasts().getCasts() : null,
-                                recommendedMovies != null ? recommendedMovies.getMovies() : null,
-                                similarMovies != null ? similarMovies.getMovies() : null,
+                                recommendedMovies != null ? recommendedMovies.getWorks() : null,
+                                similarMovies != null ? similarMovies.getWorks() : null,
                                 movieInfo.getVideos() != null ? movieInfo.getVideos().getVideos() : null);
                     }
                 }, throwable -> {
@@ -157,7 +158,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                     if (mContract != null) {
                         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                             mRecommendedPage = movieList.getPage();
-                            mContract.onRecommendationLoaded(movieList.getMovies());
+                            mContract.onRecommendationLoaded(movieList.getWorks());
                         } else {
                             mContract.onRecommendationLoaded(null);
                         }
@@ -183,7 +184,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                     if (mContract != null) {
                         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                             mSimilarPage = movieList.getPage();
-                            mContract.onSimilarLoaded(movieList.getMovies());
+                            mContract.onSimilarLoaded(movieList.getWorks());
                         } else {
                             mContract.onSimilarLoaded(null);
                         }
@@ -256,14 +257,14 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link Movie} porter into {@link ImageView}
+     * Loads the {@link Work} porter into {@link ImageView}
      *
-     * @param movie     {@link Movie}
+     * @param work      {@link Work}
      * @param imageView {@link ImageView}
      */
-    public void loadMoviePosterImage(@NonNull Movie movie, ImageView imageView) {
+    public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
         mImageManager.loadImageInto(imageView,
-                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()));
+                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
     }
 
     /**

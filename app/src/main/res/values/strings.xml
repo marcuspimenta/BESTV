@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BesTV</string>
-    <string name="genres">GENRES</string>
+    <string name="movies">MOVIES</string>
+    <string name="tv_shows">TV SHOWS</string>
     <string name="favorites">Favorites</string>
     <string name="now_playing">Now playing</string>
     <string name="popular">Popular</string>

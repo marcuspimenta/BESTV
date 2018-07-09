@@ -37,12 +37,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pimenta.bestv.presenter.MovieGridContract;
-import com.pimenta.bestv.presenter.MovieGridPresenter;
+import com.pimenta.bestv.presenter.WorkGridContract;
+import com.pimenta.bestv.presenter.WorkGridPresenter;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseVerticalGridFragment;
-import com.pimenta.bestv.view.widget.MovieCardPresenter;
+import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
 import java.util.Timer;
@@ -51,10 +52,10 @@ import java.util.TimerTask;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment<MovieGridPresenter> implements MovieGridContract,
+public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<WorkGridPresenter> implements WorkGridContract,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
-    private static final String TAG = "AbstractMovieGridFragment";
+    private static final String TAG = "AbstractWorkGridFragment";
     protected static final String SHOW_PROGRESS = "SHOW_PROGRESS";
 
     private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
@@ -62,19 +63,18 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private static final int NUMBER_COLUMNS = 6;
 
     private final Handler mHandler = new Handler();
-    private final BrowseSupportFragment.MainFragmentAdapter<AbstractMovieGridFragment> mMainFragmentAdapter = new BrowseSupportFragment.MainFragmentAdapter<>(this);
+    private final BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> mMainFragmentAdapter = new BrowseSupportFragment.MainFragmentAdapter<>(this);
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
     protected ArrayObjectAdapter mRowsAdapter;
 
-    private Movie mMovieSelected;
+    private Work mWorkSelected;
     protected boolean mShowProgress;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setupUI();
     }
 
@@ -100,7 +100,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (mMovieSelected != null) {
+        if (mWorkSelected != null) {
             loadBackdropImage(false);
             refreshDada();
         }
@@ -121,11 +121,11 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     }
 
     @Override
-    public void onMoviesLoaded(final List<Movie> movies) {
-        if (movies != null) {
-            for (final Movie movie : movies) {
-                if (mRowsAdapter.indexOf(movie) == -1) {
-                    mRowsAdapter.add(movie);
+    public void onWorksLoaded(final List<? extends Work> works) {
+        if (works != null) {
+            for (final Work work : works) {
+                if (mRowsAdapter.indexOf(work) == -1) {
+                    mRowsAdapter.add(work);
                 }
             }
         } else if (mRowsAdapter.size() == 0) {
@@ -169,13 +169,13 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
     private void setupUI() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
 
-        VerticalGridPresenter verticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
+        final VerticalGridPresenter verticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
         verticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
         setGridPresenter(verticalGridPresenter);
 
-        MovieCardPresenter movieCardPresenter = new MovieCardPresenter();
-        movieCardPresenter.setLoadMoviePosterListener((movie, imageView) -> mPresenter.loadMoviePosterImage(movie, imageView));
-        mRowsAdapter = new ArrayObjectAdapter(movieCardPresenter);
+        final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+        workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+        mRowsAdapter = new ArrayObjectAdapter(workCardPresenter);
         setAdapter(mRowsAdapter);
 
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
@@ -191,7 +191,7 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
             @Override
             public void run() {
                 mHandler.post(() -> {
-                    mPresenter.loadBackdropImage(mMovieSelected);
+                    mPresenter.loadBackdropImage(mWorkSelected);
                     mBackgroundTimer.cancel();
                 });
             }
@@ -204,10 +204,10 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            mMovieSelected = (Movie) item;
+            mWorkSelected = (Work) item;
             loadBackdropImage(true);
 
-            if (mRowsAdapter.indexOf(mMovieSelected) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
+            if (mRowsAdapter.indexOf(mWorkSelected) >= mRowsAdapter.size() - NUMBER_COLUMNS) {
                 loadMorePages();
             }
         }
@@ -217,11 +217,12 @@ public abstract class AbstractMovieGridFragment extends BaseVerticalGridFragment
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            final Movie movie = (Movie) item;
-            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                    ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-            startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+            if (item instanceof Movie) {
+                final Movie movie = (Movie) item;
+                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+            }
         }
     }
-
 }

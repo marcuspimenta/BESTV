@@ -26,6 +26,7 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 
 import java.util.concurrent.ExecutionException;
@@ -52,15 +53,15 @@ public class RecommendationManagerImpl implements RecommendationManager {
     @Override
     public boolean loadRecommendations(MoviePage moviePage) {
         mNotificationManager.cancelAll();
-        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages() && moviePage.getMovies() != null) {
+        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages() && moviePage.getWorks() != null) {
             int count = 0;
-            for (final Movie movie : moviePage.getMovies()) {
+            for (final Work work : moviePage.getWorks()) {
                 try {
-                    int id = Long.valueOf(movie.getId()).hashCode();
+                    int id = Long.valueOf(work.getId()).hashCode();
 
                     final Bitmap cardBitmap = Glide.with(mApplication)
                             .asBitmap()
-                            .load(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()))
+                            .load(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()))
                             .submit(mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                                     mApplication.getResources().getDimensionPixelSize(R.dimen.movie_card_height))
                             .get();
@@ -70,12 +71,12 @@ public class RecommendationManagerImpl implements RecommendationManager {
                             .setIdTag(Integer.toString(id))
                             .setGroup(mApplication.getString(R.string.app_name))
                             .setBadgeIcon(R.drawable.movie)
-                            .setTitle(movie.getTitle())
+                            .setTitle(work.getTitle())
                             .setContentImage(cardBitmap)
                             .setContentTypes(new String[]{ContentRecommendation.CONTENT_TYPE_MOVIE})
-                            .setBackgroundImageUri(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getBackdropPath()))
+                            .setBackgroundImageUri(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getBackdropPath()))
                             .setText(mApplication.getString(R.string.popular))
-                            .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(movie, id),
+                            .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(work, id),
                                     0, null)
                             .build();
 
@@ -96,12 +97,13 @@ public class RecommendationManagerImpl implements RecommendationManager {
     /**
      * Builds a {@link Intent} to open the movie details when click in a notification
      *
-     * @param movie                 {@link Movie}
-     * @param notificationId        Notification ID
-     * @return                      {@link Intent}
+     * @param work           {@link Work}
+     * @param notificationId Notification ID
+     *
+     * @return {@link Intent}
      */
-    private Intent buildIntent(Movie movie, int notificationId) {
-        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, movie);
+    private Intent buildIntent(Work work, int notificationId) {
+        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, (Movie) work);
         detailsIntent.setAction(Integer.toString(notificationId));
         return detailsIntent;
     }

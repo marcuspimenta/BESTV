@@ -22,18 +22,18 @@ import com.pimenta.bestv.repository.entity.Genre;
 /**
  * Created by marcus on 11-02-2018.
  */
-public class GenreMovieGridFragment extends AbstractMovieGridFragment {
+public class GenreWorkGridFragment extends AbstractWorkGridFragment {
 
     private static final String GENRE = "GENRE";
 
     private Genre mGenre;
 
-    public static GenreMovieGridFragment newInstance(Genre genre, boolean showProgress) {
+    public static GenreWorkGridFragment newInstance(Genre genre, boolean showProgress) {
         Bundle args = new Bundle();
         args.putSerializable(GENRE, genre);
         args.putBoolean(SHOW_PROGRESS, showProgress);
 
-        GenreMovieGridFragment genreMovieGridFragment = new GenreMovieGridFragment();
+        GenreWorkGridFragment genreMovieGridFragment = new GenreWorkGridFragment();
         genreMovieGridFragment.setArguments(args);
         genreMovieGridFragment.mGenre = genre;
         genreMovieGridFragment.mShowProgress = showProgress;
@@ -52,7 +52,7 @@ public class GenreMovieGridFragment extends AbstractMovieGridFragment {
 
     @Override
     void loadData() {
-        mPresenter.loadMoviesByGenre(mGenre);
+        mPresenter.loadWorkByGenre(mGenre);
     }
 
     @Override

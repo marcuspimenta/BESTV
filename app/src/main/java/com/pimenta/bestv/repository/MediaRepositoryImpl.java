@@ -20,10 +20,10 @@ import com.pimenta.bestv.repository.database.dao.MovieDao;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
-import com.pimenta.bestv.repository.entity.TvShowPage;
+import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.WorkPage;
 import com.pimenta.bestv.repository.remote.MediaRemote;
@@ -60,9 +60,11 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public boolean hasFavoriteMovie() {
-        final List<Movie> favoriteMovies = mMovieDao.queryForAll();
-        return favoriteMovies != null ? favoriteMovies.size() > 0 : false;
+    public Single<Boolean> hasFavoriteMovie() {
+        return Single.create(e -> {
+            final List<Movie> favoriteMovies = mMovieDao.queryForAll();
+            e.onSuccess(favoriteMovies != null && favoriteMovies.size() > 0);
+        });
     }
 
     @Override
@@ -116,13 +118,20 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<GenreList> getMovieGenres() {
+    public Single<MovieGenreList> getMovieGenres() {
         return mMediaRemote.getMovieGenres();
     }
 
     @Override
-    public Single<MoviePage> getMoviesByGenre(final Genre genre, final int page) {
-        return mMediaRemote.getMoviesByGenre(genre, page);
+    public Single<? extends WorkPage> getWorkByGenre(final Genre genre, final int page) {
+        switch (genre.getSource()) {
+            case MOVIE:
+                return mMediaRemote.getMoviesByGenre(genre, page);
+            case TV_SHOW:
+                return mMediaRemote.getTvShowByGenre(genre, page);
+            default:
+                return Single.error(new Throwable());
+        }
     }
 
     @Override
@@ -181,12 +190,7 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<GenreList> getTvShowGenres() {
+    public Single<TvShowGenreList> getTvShowGenres() {
         return mMediaRemote.getTvShowGenres();
-    }
-
-    @Override
-    public Single<TvShowPage> getTvShowByGenre(final Genre genre, final int page) {
-        return mMediaRemote.getTvShowByGenre(genre, page);
     }
 }

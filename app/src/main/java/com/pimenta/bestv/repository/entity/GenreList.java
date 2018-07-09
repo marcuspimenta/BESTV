@@ -21,16 +21,16 @@ import java.util.List;
 /**
  * Created by marcus on 09-02-2018.
  */
-public class GenreList {
+public abstract class GenreList<T extends Genre> {
 
     @SerializedName("genres")
-    private List<Genre> mGenres;
+    private List<T> mGenres;
 
-    public List<Genre> getGenres() {
+    public List<T> getGenres() {
         return mGenres;
     }
 
-    public void setGenres(final List<Genre> genres) {
+    public void setGenres(final List<T> genres) {
         mGenres = genres;
     }
 }

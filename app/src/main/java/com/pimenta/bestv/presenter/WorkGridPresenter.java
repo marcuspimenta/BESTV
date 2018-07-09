@@ -27,7 +27,7 @@ import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 09-02-2018.
  */
-public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
+public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
 
     private int mCurrentPage = 0;
 
@@ -47,7 +47,7 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     private ImageManager mImageManager;
 
     @Inject
-    public MovieGridPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
+    public WorkGridPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
@@ -64,11 +64,11 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movies -> {
                             if (mContract != null) {
-                                mContract.onMoviesLoaded(movies);
+                                mContract.onWorksLoaded(movies);
                             }
                         }, throwable -> {
                             if (mContract != null) {
-                                mContract.onMoviesLoaded(null);
+                                mContract.onWorksLoaded(null);
                             }
                         }));
                 break;
@@ -81,22 +81,14 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
                             if (mContract != null) {
                                 if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
                                     mCurrentPage = workPage.getPage();
-
-                                    switch (movieListType) {
-                                        case NOW_PLAYING_MOVIES:
-                                        case POPULAR_MOVIES:
-                                        case TOP_RATED_MOVIES:
-                                        case UP_COMING_MOVIES:
-                                            mContract.onMoviesLoaded(((MoviePage)workPage).getMovies());
-                                            break;
-                                    }
+                                    mContract.onWorksLoaded(workPage.getWorks());
                                 } else {
-                                    mContract.onMoviesLoaded(null);
+                                    mContract.onWorksLoaded(null);
                                 }
                             }
                         }, throwable -> {
                             if (mContract != null) {
-                                mContract.onMoviesLoaded(null);
+                                mContract.onWorksLoaded(null);
                             }
                         }));
                 break;
@@ -104,38 +96,38 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     }
 
     /**
-     * Loads the {@link List<Movie>} by the {@link Genre}
+     * Loads the {@link List<Work>} by the {@link Genre}
      *
      * @param genre {@link Genre}
      */
-    public void loadMoviesByGenre(Genre genre) {
+    public void loadWorkByGenre(Genre genre) {
         int pageSearch = mCurrentPage + 1;
-        mCompositeDisposable.add(mMediaRepository.getMoviesByGenre(genre, pageSearch)
+        mCompositeDisposable.add(mMediaRepository.getWorkByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(moviePage -> {
+                .subscribe(workPage -> {
                     if (mContract != null) {
-                        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
-                            mCurrentPage = moviePage.getPage();
-                            mContract.onMoviesLoaded(moviePage.getMovies());
+                        if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
+                            mCurrentPage = workPage.getPage();
+                            mContract.onWorksLoaded(workPage.getWorks());
                         } else {
-                            mContract.onMoviesLoaded(null);
+                            mContract.onWorksLoaded(null);
                         }
                     }
                 }, throwable -> {
                     if (mContract != null) {
-                        mContract.onMoviesLoaded(null);
+                        mContract.onWorksLoaded(null);
                     }
                 }));
     }
 
     /**
-     * Loads the {@link android.graphics.drawable.Drawable} from the {@link Movie}
+     * Loads the {@link android.graphics.drawable.Drawable} from the {@link Work}
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadBackdropImage(@NonNull Movie movie) {
-        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getBackdropPath()),
+    public void loadBackdropImage(@NonNull Work work) {
+        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getBackdropPath()),
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
@@ -155,13 +147,12 @@ public class MovieGridPresenter extends BasePresenter<MovieGridContract> {
     }
 
     /**
-     * Loads the {@link Movie} porter into {@link ImageView}
+     * Loads the {@link Work} porter into {@link ImageView}
      *
-     * @param movie     {@link Movie}
+     * @param work     {@link Work}
      * @param imageView {@link ImageView}
      */
-    public void loadMoviePosterImage(@NonNull Movie movie, ImageView imageView) {
-        mImageManager.loadImageInto(imageView,
-                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()));
+    public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
+        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
     }
 }

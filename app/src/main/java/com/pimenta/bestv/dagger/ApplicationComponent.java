@@ -25,12 +25,12 @@ import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.view.activity.SplashActivity;
 import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 import com.pimenta.bestv.view.fragment.ErrorFragment;
-import com.pimenta.bestv.view.fragment.GenreMovieGridFragment;
-import com.pimenta.bestv.view.fragment.MovieBrowseFragment;
+import com.pimenta.bestv.view.fragment.GenreWorkGridFragment;
+import com.pimenta.bestv.view.fragment.WorkBrowseFragment;
 import com.pimenta.bestv.view.fragment.MovieDetailsFragment;
 import com.pimenta.bestv.view.fragment.SearchFragment;
 import com.pimenta.bestv.view.fragment.SplashFragment;
-import com.pimenta.bestv.view.fragment.TopMovieGridFragment;
+import com.pimenta.bestv.view.fragment.TopWorkGridFragment;
 
 import javax.inject.Singleton;
 
@@ -61,11 +61,11 @@ public interface ApplicationComponent {
 
     void inject(SplashFragment fragment);
 
-    void inject(MovieBrowseFragment fragment);
+    void inject(WorkBrowseFragment fragment);
 
-    void inject(GenreMovieGridFragment fragment);
+    void inject(GenreWorkGridFragment fragment);
 
-    void inject(TopMovieGridFragment fragment);
+    void inject(TopWorkGridFragment fragment);
 
     void inject(SearchFragment fragment);
 

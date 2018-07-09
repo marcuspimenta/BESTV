@@ -14,18 +14,9 @@
 
 package com.pimenta.bestv.repository.entity;
 
-import java.util.List;
-
 /**
  * Created by marcus on 09-02-2018.
  */
 public class MoviePage extends WorkPage<Movie> {
 
-    public List<Movie> getMovies() {
-        return mWorks;
-    }
-
-    public void setMovies(final List<Movie> works) {
-        mWorks = works;
-    }
 }

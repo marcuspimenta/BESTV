@@ -41,7 +41,7 @@ import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;
 import com.pimenta.bestv.view.activity.MovieDetailsActivity;
-import com.pimenta.bestv.view.widget.MovieCardPresenter;
+import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         mProgressBarManager.hide();
         if (movies != null && movies.size() > 0) {
             mRowsAdapter.clear();
-            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
             final HeaderItem header = new HeaderItem(getString(R.string.results));
             listRowAdapter.addAll(0, movies);
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
@@ -147,7 +147,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
 
     private void clearAdapter() {
         mRowsAdapter.clear();
-        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new MovieCardPresenter());
+        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
         final HeaderItem header = new HeaderItem(0, getString(R.string.no_results));
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
     }
@@ -164,5 +164,4 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
             }
         }
     }
-
 }

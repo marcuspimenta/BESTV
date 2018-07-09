@@ -68,7 +68,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                         if (mContract != null) {
                             if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
                                 mResultPage = moviePage.getPage();
-                                mContract.onResultLoaded(moviePage.getMovies());
+                                mContract.onResultLoaded(moviePage.getWorks());
                             } else {
                                 mContract.onResultLoaded(null);
                             }

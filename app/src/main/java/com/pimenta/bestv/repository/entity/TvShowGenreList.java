@@ -17,6 +17,6 @@ package com.pimenta.bestv.repository.entity;
 /**
  * Created by marcus on 06/07/18.
  */
-public class TvShowPage extends WorkPage<TvShow> {
+public class TvShowGenreList extends GenreList<TvShowGenre> {
 
 }

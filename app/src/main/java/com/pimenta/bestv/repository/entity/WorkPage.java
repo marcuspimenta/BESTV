@@ -56,4 +56,11 @@ public abstract class WorkPage<T extends Work> {
         mTotalResults = totalResults;
     }
 
+    public List<T> getWorks() {
+        return mWorks;
+    }
+
+    public void setWorks(final List<T> works) {
+        mWorks = works;
+    }
 }

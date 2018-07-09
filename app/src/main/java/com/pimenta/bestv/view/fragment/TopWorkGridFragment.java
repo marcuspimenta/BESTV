@@ -21,24 +21,25 @@ import android.support.v17.leanback.widget.DiffCallback;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class TopMovieGridFragment extends AbstractMovieGridFragment {
+public class TopWorkGridFragment extends AbstractWorkGridFragment {
 
     private static final String TYPE = "TYPE";
 
     private MediaRepository.WorkType mWorkType;
 
-    public static TopMovieGridFragment newInstance(MediaRepository.WorkType workType, boolean showProgress) {
+    public static TopWorkGridFragment newInstance(MediaRepository.WorkType workType, boolean showProgress) {
         Bundle args = new Bundle();
         args.putSerializable(TYPE, workType);
         args.putBoolean(SHOW_PROGRESS, showProgress);
 
-        TopMovieGridFragment topMovieGridFragment = new TopMovieGridFragment();
+        TopWorkGridFragment topMovieGridFragment = new TopWorkGridFragment();
         topMovieGridFragment.setArguments(args);
         topMovieGridFragment.mWorkType = workType;
         topMovieGridFragment.mShowProgress = showProgress;
@@ -75,9 +76,9 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
     }
 
     @Override
-    public void onMoviesLoaded(final List<Movie> movies) {
+    public void onWorksLoaded(final List<? extends Work> works) {
         if (mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
-            mRowsAdapter.setItems(movies, new DiffCallback<Movie>() {
+            mRowsAdapter.setItems(works, new DiffCallback<Movie>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
                     return oldItem.equals(newItem);
@@ -92,7 +93,7 @@ public class TopMovieGridFragment extends AbstractMovieGridFragment {
             getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
             return;
         }
-        super.onMoviesLoaded(movies);
+        super.onWorksLoaded(works);
     }
 
     @Override

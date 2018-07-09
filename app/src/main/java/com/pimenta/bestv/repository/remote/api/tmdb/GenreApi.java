@@ -14,7 +14,8 @@
 
 package com.pimenta.bestv.repository.remote.api.tmdb;
 
-import com.pimenta.bestv.repository.entity.GenreList;
+import com.pimenta.bestv.repository.entity.MovieGenreList;
+import com.pimenta.bestv.repository.entity.TvShowGenreList;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -26,9 +27,9 @@ import retrofit2.http.Query;
 public interface GenreApi {
 
     @GET("genre/movie/list")
-    Single<GenreList> getMovieGenres(@Query("api_key") String apiKey, @Query("language") String language);
+    Single<MovieGenreList> getMovieGenres(@Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("genre/tv/list")
-    Single<GenreList> getTvShowGenres(@Query("api_key") String apiKey, @Query("language") String language);
+    Single<TvShowGenreList> getTvShowGenres(@Query("api_key") String apiKey, @Query("language") String language);
 
 }

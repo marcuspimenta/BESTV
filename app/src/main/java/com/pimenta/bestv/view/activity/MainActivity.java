@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.view.fragment.MovieBrowseFragment;
+import com.pimenta.bestv.view.fragment.WorkBrowseFragment;
 import com.pimenta.bestv.presenter.MainPresenter;
 
 /**
@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         if (savedInstanceState == null) {
             startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
         } else {
-            replaceFragment(MovieBrowseFragment.newInstance());
+            replaceFragment(WorkBrowseFragment.newInstance());
         }
     }
 
@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         switch (requestCode) {
             case SPLASH_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    replaceFragment(MovieBrowseFragment.newInstance());
+                    replaceFragment(WorkBrowseFragment.newInstance());
                 } else {
                     finish();
                 }

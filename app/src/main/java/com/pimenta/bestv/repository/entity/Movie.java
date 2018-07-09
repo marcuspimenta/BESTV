@@ -43,18 +43,22 @@ public class Movie extends Work {
     private boolean mIsAdult;
     private boolean mIsFavorite;
 
+    @Override
     public String getTitle() {
         return mTitle;
     }
 
+    @Override
     public void setTitle(final String title) {
         mTitle = title;
     }
 
+    @Override
     public String getOriginalTitle() {
         return mOriginalTitle;
     }
 
+    @Override
     public void setOriginalTitle(final String originalTitle) {
         mOriginalTitle = originalTitle;
     }

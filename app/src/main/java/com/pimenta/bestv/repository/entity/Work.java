@@ -42,6 +42,14 @@ public abstract class Work implements Serializable {
     @SerializedName("vote_count")
     private float mVoteCount;
 
+    public abstract String getTitle();
+
+    public abstract void setTitle(String title);
+
+    public abstract String getOriginalTitle();
+
+    public abstract void setOriginalTitle(String title);
+
     public int getId() {
         return mId;
     }
@@ -115,7 +123,7 @@ public abstract class Work implements Serializable {
             return false;
         }
 
-        Movie that = (Movie) obj;
+        Work that = (Work) obj;
 
         return mId == that.getId();
     }

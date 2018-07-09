@@ -20,9 +20,10 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
@@ -57,7 +58,7 @@ public class TmdbMediaRemote implements MediaRemote {
     }
 
     @Override
-    public Single<GenreList> getMovieGenres() {
+    public Single<MovieGenreList> getMovieGenres() {
         return mGenreApi.getMovieGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
@@ -127,7 +128,7 @@ public class TmdbMediaRemote implements MediaRemote {
     }
 
     @Override
-    public Single<GenreList> getTvShowGenres() {
+    public Single<TvShowGenreList> getTvShowGenres() {
         return mGenreApi.getTvShowGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 

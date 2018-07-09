@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,14 +28,14 @@ import java.text.SimpleDateFormat;
 /**
  * Created by marcus on 10-02-2018.
  */
-public class MovieCardPresenter extends Presenter {
+public class WorkCardPresenter extends Presenter {
 
     private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-    private LoadMoviePosterListener mLoadMoviePosterListener;
+    private LoadWorkPosterListener mLoadWorkPosterListener;
 
-    public void setLoadMoviePosterListener(final LoadMoviePosterListener loadMoviePosterListener) {
-        mLoadMoviePosterListener = loadMoviePosterListener;
+    public void setLoadWorkPosterListener(final LoadWorkPosterListener loadMoviePosterListener) {
+        mLoadWorkPosterListener = loadMoviePosterListener;
     }
 
     @Override
@@ -48,17 +48,17 @@ public class MovieCardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        final Movie movie = (Movie) item;
+        final Work work = (Work) item;
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
-        cardView.setTitleText(movie.getTitle());
-        if (movie.getReleaseDate() != null) {
+        cardView.setTitleText(work.getTitle());
+        /*if (movie.getReleaseDate() != null) {
             cardView.setContentText(sDateFormat.format(movie.getReleaseDate()));
-        }
+        }*/
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
 
-        if (mLoadMoviePosterListener != null) {
-            mLoadMoviePosterListener.onLoadMoviePoster(movie, cardView.getMainImageView());
+        if (mLoadWorkPosterListener != null) {
+            mLoadWorkPosterListener.onLoadWorkPoster(work, cardView.getMainImageView());
         }
     }
 
@@ -69,9 +69,9 @@ public class MovieCardPresenter extends Presenter {
         cardView.setMainImage(null);
     }
 
-    public interface LoadMoviePosterListener {
+    public interface LoadWorkPosterListener {
 
-        void onLoadMoviePoster(Movie movie, ImageView imageView);
+        void onLoadWorkPoster(Work work, ImageView imageView);
 
     }
 }

@@ -31,35 +31,37 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.presenter.WorkBrowseContract;
+import com.pimenta.bestv.presenter.WorkBrowsePresenter;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.presenter.MovieBrowseContract;
-import com.pimenta.bestv.presenter.MovieBrowsePresenter;
+import com.pimenta.bestv.repository.entity.MovieGenre;
+import com.pimenta.bestv.repository.entity.TvShowGenre;
 import com.pimenta.bestv.view.fragment.base.BaseBrowseFragment;
 import com.pimenta.bestv.view.widget.GenreHeaderItem;
-import com.pimenta.bestv.view.widget.MovieListTypeHeaderItem;
+import com.pimenta.bestv.view.widget.WorkTypeHeaderItem;
 
 import java.util.List;
 
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter> implements MovieBrowseContract {
+public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> implements WorkBrowseContract {
 
-    public static final String TAG = "MovieBrowseFragment";
-    private static final int TOP_MOVIES_LIST_ID = 1;
-    private static final int GENRE_ID = 2;
-    private static final int FAVORITE_INDEX = 4;
+    public static final String TAG = "WorkBrowseFragment";
+    private static final int TOP_WORK_LIST_ID = 1;
+    private static final int WORK_GENRE_ID = 2;
+    private static final int FAVORITE_INDEX = 6;
 
-    private static final PageRow sFavoritePageRow = new PageRow(
-            new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.FAVORITES_MOVIES));
+    private static final PageRow sFavoritePageRow = new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID,
+            MediaRepository.WorkType.FAVORITES_MOVIES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
     private ArrayObjectAdapter mRowsAdapter;
 
-    public static MovieBrowseFragment newInstance() {
-        return new MovieBrowseFragment();
+    public static WorkBrowseFragment newInstance() {
+        return new WorkBrowseFragment();
     }
 
     @Override
@@ -84,7 +86,6 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
         getProgressBarManager().setRootView(container);
         getProgressBarManager().enableProgressBar();
         getProgressBarManager().setInitialDelay(0);
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -104,37 +105,61 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     @Override
     public void onResume() {
         super.onResume();
-        if (mPresenter.hasFavoriteMovies()) {
-            if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
-                mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
-            }
-        } else {
-            if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
-                if (getSelectedPosition() == FAVORITE_INDEX) {
-                    setSelectedPosition(FAVORITE_INDEX - 1);
-                }
-                mRowsAdapter.remove(sFavoritePageRow);
-            }
-        }
+        mPresenter.hasFavoriteMovies();
     }
 
     @Override
-    public void onDataLoaded(final boolean hasFavoriteMovie, final List<Genre> genres) {
+    public void onDataLoaded(final boolean hasFavoriteMovie, final List<MovieGenre> movieGenres, final List<TvShowGenre> tvShowGenres) {
+        mRowsAdapter.add(new DividerRow());
+        mRowsAdapter.add(new SectionRow(getResources().getString(R.string.movies)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.POPULAR_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.TOP_RATED_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.UP_COMING_MOVIES)));
+
         if (hasFavoriteMovie && mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
             mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
         }
 
-        if (genres != null && genres.size() > 0) {
-            mRowsAdapter.add(new DividerRow());
-            mRowsAdapter.add(new SectionRow(getResources().getString(R.string.genres)));
+        if (movieGenres != null) {
+            for (final Genre genre : movieGenres) {
+                mRowsAdapter.add(new PageRow(new GenreHeaderItem(WORK_GENRE_ID, genre)));
+            }
+        }
 
-            for (final Genre genre : genres) {
-                mRowsAdapter.add(new PageRow(new GenreHeaderItem(GENRE_ID, genre)));
+        mRowsAdapter.add(new DividerRow());
+        mRowsAdapter.add(new SectionRow(getResources().getString(R.string.tv_shows)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.TOP_RATED_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.POPULAR_TV_SHOWS)));
+
+        if (tvShowGenres != null) {
+            for (final Genre genre : tvShowGenres) {
+                mRowsAdapter.add(new PageRow(new GenreHeaderItem(WORK_GENRE_ID, genre)));
             }
         }
 
         getProgressBarManager().hide();
         startEntranceTransition();
+    }
+
+    @Override
+    public void onHasFavoriteMovie(final boolean hasFavoriteMovie) {
+        if (mRowsAdapter.size() > 0) {
+            if (hasFavoriteMovie) {
+                if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
+                    mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
+                }
+            } else {
+                if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
+                    if (getSelectedPosition() == FAVORITE_INDEX) {
+                        setSelectedPosition(FAVORITE_INDEX - 1);
+                    }
+                    mRowsAdapter.remove(sFavoritePageRow);
+                }
+            }
+        }
     }
 
     private void setupUIElements() {
@@ -154,10 +179,6 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
     private void setupMainList() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mRowsAdapter);
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.POPULAR_MOVIES)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.TOP_RATED_MOVIES)));
-        mRowsAdapter.add(new PageRow(new MovieListTypeHeaderItem(TOP_MOVIES_LIST_ID, MediaRepository.WorkType.UP_COMING_MOVIES)));
     }
 
     private class SearchClickListener implements View.OnClickListener {
@@ -178,14 +199,14 @@ public class MovieBrowseFragment extends BaseBrowseFragment<MovieBrowsePresenter
 
             final Row row = (Row) rowObj;
             switch ((int) row.getHeaderItem().getId()) {
-                case TOP_MOVIES_LIST_ID:
-                    final MovieListTypeHeaderItem movieListTypeHeaderItem = (MovieListTypeHeaderItem) row.getHeaderItem();
-                    MovieBrowseFragment.this.setTitle(row.getHeaderItem().getName());
-                    return TopMovieGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType(), mShowProgress);
-                case GENRE_ID:
+                case TOP_WORK_LIST_ID:
+                    final WorkTypeHeaderItem movieListTypeHeaderItem = (WorkTypeHeaderItem) row.getHeaderItem();
+                    WorkBrowseFragment.this.setTitle(row.getHeaderItem().getName());
+                    return TopWorkGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType(), mShowProgress);
+                case WORK_GENRE_ID:
                     final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
-                    MovieBrowseFragment.this.setTitle(genreHeaderItem.getGenre().getName());
-                    return GenreMovieGridFragment.newInstance(genreHeaderItem.getGenre(), mShowProgress);
+                    WorkBrowseFragment.this.setTitle(genreHeaderItem.getGenre().getName());
+                    return GenreWorkGridFragment.newInstance(genreHeaderItem.getGenre(), mShowProgress);
             }
 
             throw new IllegalArgumentException(String.format("Invalid row %s", rowObj));

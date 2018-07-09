@@ -21,13 +21,13 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
-import com.pimenta.bestv.repository.entity.TvShow;
-import com.pimenta.bestv.repository.entity.TvShowPage;
+import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.WorkPage;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -41,75 +41,78 @@ public interface MediaRepository {
     /**
      * Checks if the {@link Movie} is favorite
      *
-     * @return          {@code true} if yes, {@code false} otherwise
+     * @return {@code true} if yes, {@code false} otherwise
      */
     boolean isFavorite(Movie movie);
 
     /**
      * Checks if there is any {@link Movie} saved as favorite
      *
-     * @return          {@code true} if there any {@link Movie} saved as favorite,
-     *                  {@code false} otherwise
+     * @return {@link Single<Boolean>}
      */
-    boolean hasFavoriteMovie();
+    Single<Boolean> hasFavoriteMovie();
 
     /**
      * Saves a {@link Movie} as favorites
      *
-     * @param movie     {@link Movie} to be saved as favorite
-     * @return          {@code true} if the {@link Movie} was saved with success,
-     *                  {@code false} otherwise
+     * @param movie {@link Movie} to be saved as favorite
+     *
+     * @return {@code true} if the {@link Movie} was saved with success,
+     * {@code false} otherwise
      */
     boolean saveFavoriteMovie(Movie movie);
 
     /**
      * Deletes a {@link Movie} from favorites
      *
-     * @param movie     {@link Movie} to be deleted from favorite
-     * @return          {@code true} if the {@link Movie} was deleted with success,
-     *                  {@code false} otherwise
+     * @param movie {@link Movie} to be deleted from favorite
+     *
+     * @return {@code true} if the {@link Movie} was deleted with success,
+     * {@code false} otherwise
      */
     boolean deleteFavoriteMovie(Movie movie);
 
     /**
      * Gets the favorites {@link List<Movie>}
      *
-     * @return          Favorite {@link Single<List<Movie>>}
+     * @return Favorite {@link Single<List<Movie>>}
      */
     Single<List<Movie>> getFavoriteMovies();
 
     /**
      * Loads the {@link MoviePage} by {@link WorkType}
      *
-     * @param page              Page to be loaded
-     * @param movieListType     {@link WorkType}
-     * @return                  {@link Single<MoviePage>}
+     * @param page          Page to be loaded
+     * @param movieListType {@link WorkType}
+     *
+     * @return {@link Single<MoviePage>}
      */
     Single<? extends WorkPage> loadWorkByType(int page, WorkType movieListType);
 
     /**
-     * Gets the {@link GenreList} available at TMDb
+     * Gets the {@link MovieGenreList} available at TMDb
      *
-     * @return {@link Single<GenreList>}
+     * @return {@link Single<MovieGenreList>}
      */
-    Single<GenreList> getMovieGenres();
+    Single<MovieGenreList> getMovieGenres();
 
     /**
-     * Gets the {@link List<Movie>} by the {@link Genre}
+     * Gets the {@link List<Work>} by the {@link Genre}
      *
      * @param genre {@link Genre} to search the {@link List<Movie>}
      * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
      *              default: 1
      *
-     * @return {@link Single<MoviePage>}
+     * @return {@link Single<? extends WorkPage>}
      */
-    Single<MoviePage> getMoviesByGenre(Genre genre, int page);
+    Single<? extends WorkPage> getWorkByGenre(Genre genre, int page);
 
     /**
      * Gets the {@link Movie} by the ID
      *
-     * @param movieId   Movie ID
-     * @return          {@link Movie}
+     * @param movieId Movie ID
+     *
+     * @return {@link Movie}
      */
     Movie getMovie(int movieId);
 
@@ -151,7 +154,7 @@ public interface MediaRepository {
      *
      * @param movie {@link Movie}
      *
-     * @return      {@link Single<VideoList>}
+     * @return {@link Single<VideoList>}
      */
     Single<VideoList> getVideosByMovie(Movie movie);
 
@@ -198,11 +201,11 @@ public interface MediaRepository {
     /**
      * Searches the movies by a query
      *
-     * @param query     Query to search the movies
-     * @param page      Specify which page to query. Minimum: 1, maximum: 1000,
-     *                  default: 1
+     * @param query Query to search the movies
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
      *
-     * @return          {@link Single<MoviePage>}
+     * @return {@link Single<MoviePage>}
      */
     Single<MoviePage> searchMoviesByQuery(String query, int page);
 
@@ -216,22 +219,11 @@ public interface MediaRepository {
     Single<Cast> getCastDetails(Cast cast);
 
     /**
-     * Gets the {@link GenreList} available at TMDb
+     * Gets the {@link TvShowGenreList} available at TMDb
      *
-     * @return {@link Single<GenreList>}
+     * @return {@link Single<TvShowGenreList>}
      */
-    Single<GenreList> getTvShowGenres();
-
-    /**
-     * Gets the {@link List<Movie>} by the {@link Genre}
-     *
-     * @param genre {@link Genre} to search the {@link List<TvShow>}
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
-     *
-     * @return {@link Single<TvShowPage>}
-     */
-    Single<TvShowPage> getTvShowByGenre(Genre genre, int page);
+    Single<TvShowGenreList> getTvShowGenres();
 
     /**
      * Represents the movie list type

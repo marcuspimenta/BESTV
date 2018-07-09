@@ -37,20 +37,24 @@ public class TvShow extends Work {
     @SerializedName("first_air_date")
     private String mFirstAirDate;
 
-    public String getName() {
+    @Override
+    public String getTitle() {
         return mName;
     }
 
-    public void setName(final String name) {
-        mName = name;
+    @Override
+    public void setTitle(final String title) {
+        mName = title;
     }
 
-    public String getOriginalName() {
+    @Override
+    public String getOriginalTitle() {
         return mOriginalName;
     }
 
-    public void setOriginalName(final String originalName) {
-        mOriginalName = originalName;
+    @Override
+    public void setOriginalTitle(final String originalTitle) {
+        mOriginalName = originalTitle;
     }
 
     public Date getFirstAirDate() {
