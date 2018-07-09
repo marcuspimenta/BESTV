@@ -57,7 +57,8 @@ public class TvShow extends Work {
         mOriginalName = originalTitle;
     }
 
-    public Date getFirstAirDate() {
+    @Override
+    public Date getReleaseDate() {
         try {
             final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             return dateFormat.parse(mFirstAirDate);
@@ -67,7 +68,8 @@ public class TvShow extends Work {
         return null;
     }
 
-    public void setFirstAirDate(final Date releaseDate) {
+    @Override
+    public void setReleaseDate(final Date releaseDate) {
         mFirstAirDate = releaseDate.toString();
     }
 }

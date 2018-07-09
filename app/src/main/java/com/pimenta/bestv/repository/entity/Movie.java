@@ -63,6 +63,7 @@ public class Movie extends Work {
         mOriginalTitle = originalTitle;
     }
 
+    @Override
     public Date getReleaseDate() {
         try {
             final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,6 +74,7 @@ public class Movie extends Work {
         return null;
     }
 
+    @Override
     public void setReleaseDate(final Date releaseDate) {
         mReleaseDate = releaseDate.toString();
     }

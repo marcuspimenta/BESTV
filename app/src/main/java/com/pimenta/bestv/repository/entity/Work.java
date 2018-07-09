@@ -18,6 +18,7 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by marcus on 06/07/18.
@@ -49,6 +50,10 @@ public abstract class Work implements Serializable {
     public abstract String getOriginalTitle();
 
     public abstract void setOriginalTitle(String title);
+
+    public abstract Date getReleaseDate();
+
+    public abstract void setReleaseDate(Date releaseDate);
 
     public int getId() {
         return mId;

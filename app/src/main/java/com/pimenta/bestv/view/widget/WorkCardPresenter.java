@@ -51,9 +51,9 @@ public class WorkCardPresenter extends Presenter {
         final Work work = (Work) item;
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(work.getTitle());
-        /*if (movie.getReleaseDate() != null) {
-            cardView.setContentText(sDateFormat.format(movie.getReleaseDate()));
-        }*/
+        if (work.getReleaseDate() != null) {
+            cardView.setContentText(sDateFormat.format(work.getReleaseDate()));
+        }
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.movie_card_height));
 
