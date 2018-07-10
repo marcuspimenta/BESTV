@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by marcus on 07-02-2018.
  */
-public interface MovieDetailsContract extends BasePresenter.Contract {
+public interface WorkDetailsContract extends BasePresenter.Contract {
 
     void onResultSetFavoriteMovie(boolean success);
 

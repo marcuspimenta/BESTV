@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.presenter;
 
-import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -36,14 +36,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
 
-    private Application mApplication;
+    private static final String TAG = CastDetailsPresenter.class.getSimpleName();
+
     private MediaRepository mMediaRepository;
     private ImageManager mImageManager;
 
     @Inject
-    public CastDetailsPresenter(Application application, MediaRepository mediaRepository, ImageManager imageManager) {
+    public CastDetailsPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
         super();
-        mApplication = application;
         mMediaRepository = mediaRepository;
         mImageManager = imageManager;
     }
@@ -62,6 +62,7 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
                         mContract.onCastLoaded(castResult);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while getting the cast details", throwable);
                     if (mContract != null) {
                         mContract.onCastLoaded(null);
                     }

@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.util.Log;
+
 import com.pimenta.bestv.manager.PermissionManager;
 
 import java.util.concurrent.TimeUnit;
@@ -27,6 +29,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by marcus on 04-05-2018.
  */
 public class SplashPresenter extends BasePresenter<SplashContract> {
+
+    private static final String TAG = SplashPresenter.class.getSimpleName();
 
     private static final int SPLASH_TIME_LOAD_SECONDS = 3;
 
@@ -55,6 +59,7 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
                         }
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading permissions", throwable);
                     if (mContract != null) {
                         mContract.onSplashFinished(false);
                     }
@@ -73,6 +78,7 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
                         mContract.onSplashFinished(aBoolean);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while checking if has all permissions", throwable);
                     if (mContract != null) {
                         mContract.onSplashFinished(false);
                     }

@@ -55,7 +55,7 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
 
     @Override
     void loadData() {
-        mPresenter.loadMoviesByType(mWorkType);
+        mPresenter.loadWorksByType(mWorkType);
     }
 
     @Override

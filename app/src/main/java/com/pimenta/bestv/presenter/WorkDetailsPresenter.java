@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -45,7 +46,9 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
+public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
+
+    private static final String TAG = WorkDetailsPresenter.class.getSimpleName();
 
     private int mRecommendedPage = 0;
     private int mSimilarPage = 0;
@@ -54,7 +57,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     private ImageManager mImageManager;
 
     @Inject
-    public MovieDetailsPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
+    public WorkDetailsPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
@@ -79,18 +82,18 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      */
     public void setFavorite(@NonNull Work work) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
-            boolean result;
-            if (work.isFavorite()) {
-                result = mMediaRepository.deleteFavorite(work);
-            } else {
-                result = mMediaRepository.saveFavorite(work);
-            }
-            if (result) {
-                e.onSuccess(true);
-            } else {
-                e.onComplete();
-            }
-        })
+                    boolean result;
+                    if (work.isFavorite()) {
+                        result = mMediaRepository.deleteFavorite(work);
+                    } else {
+                        result = mMediaRepository.saveFavorite(work);
+                    }
+                    if (result) {
+                        e.onSuccess(true);
+                    } else {
+                        e.onComplete();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -99,6 +102,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         mContract.onResultSetFavoriteMovie(true);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while settings the work as favorite", throwable);
                     if (mContract != null) {
                         mContract.onResultSetFavoriteMovie(false);
                     }
@@ -137,6 +141,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                                 movieInfo.getVideos() != null ? movieInfo.getVideos().getVideos() : null);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading data by work", throwable);
                     if (mContract != null) {
                         mContract.onDataLoaded(null, null, null, null);
                     }
@@ -163,6 +168,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         }
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading recommendations by work", throwable);
                     if (mContract != null) {
                         mContract.onRecommendationLoaded(null);
                     }
@@ -189,6 +195,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                         }
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading similar by work", throwable);
                     if (mContract != null) {
                         mContract.onSimilarLoaded(null);
                     }
@@ -213,6 +220,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
+                        Log.w(TAG, "Error while loading card image");
                         if (mContract != null) {
                             mContract.onCardImageLoaded(null);
                         }

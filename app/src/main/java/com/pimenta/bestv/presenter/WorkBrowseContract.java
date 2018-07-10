@@ -26,6 +26,6 @@ public interface WorkBrowseContract extends BasePresenter.Contract {
 
     void onDataLoaded(boolean hasFavoriteMovie, List<MovieGenre> movieGenres, List<TvShowGenre> tvShowGenres);
 
-    void onHasFavoriteMovie(boolean hasFavoriteMovie);
+    void onHasFavorite(boolean hasFavoriteMovie);
 
 }

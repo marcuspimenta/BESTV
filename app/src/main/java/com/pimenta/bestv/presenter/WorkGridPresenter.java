@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -26,7 +27,6 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
@@ -41,6 +41,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
 
+    private static final String TAG = WorkGridPresenter.class.getSimpleName();
+
     private int mCurrentPage = 0;
 
     private MediaRepository mMediaRepository;
@@ -54,9 +56,9 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
     }
 
     /**
-     * Loads the now playing {@link List<Movie>}
+     * Loads the {@link List<Work>} by {@link MediaRepository.WorkType}
      */
-    public void loadMoviesByType(MediaRepository.WorkType movieListType) {
+    public void loadWorksByType(MediaRepository.WorkType movieListType) {
         switch (movieListType) {
             case FAVORITES_MOVIES:
                 mCompositeDisposable.add(mMediaRepository.getFavorites()
@@ -67,6 +69,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                                 mContract.onWorksLoaded(movies);
                             }
                         }, throwable -> {
+                            Log.e(TAG, "Error while loading the favorite works", throwable);
                             if (mContract != null) {
                                 mContract.onWorksLoaded(null);
                             }
@@ -87,6 +90,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                                 }
                             }
                         }, throwable -> {
+                            Log.e(TAG, "Error while loading the works by type", throwable);
                             if (mContract != null) {
                                 mContract.onWorksLoaded(null);
                             }
@@ -115,6 +119,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                         }
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading the works by genre", throwable);
                     if (mContract != null) {
                         mContract.onWorksLoaded(null);
                     }
@@ -139,6 +144,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
+                        Log.w(TAG, "Error while loading backdrop image");
                         if (mContract != null) {
                             mContract.onBackdropImageLoaded(null);
                         }

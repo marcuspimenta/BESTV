@@ -105,7 +105,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.hasFavoriteMovies();
+        mPresenter.hasFavorite();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     }
 
     @Override
-    public void onHasFavoriteMovie(final boolean hasFavoriteMovie) {
+    public void onHasFavorite(final boolean hasFavoriteMovie) {
         if (mRowsAdapter.size() > 0) {
             if (hasFavoriteMovie) {
                 if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {

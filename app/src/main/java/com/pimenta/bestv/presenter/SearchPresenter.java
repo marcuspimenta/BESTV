@@ -74,6 +74,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                             }
                         }
                     }, throwable -> {
+                        Log.e(TAG, "Error while searching movies by query", throwable);
                         if (mContract != null) {
                             mContract.onResultLoaded(null);
                         }

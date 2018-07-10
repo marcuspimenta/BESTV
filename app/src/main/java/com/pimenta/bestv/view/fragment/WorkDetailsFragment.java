@@ -46,8 +46,8 @@ import android.widget.ImageView;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.MovieDetailsContract;
-import com.pimenta.bestv.presenter.MovieDetailsPresenter;
+import com.pimenta.bestv.presenter.WorkDetailsContract;
+import com.pimenta.bestv.presenter.WorkDetailsPresenter;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.Work;
@@ -64,7 +64,7 @@ import java.util.List;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsContract {
+public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresenter> implements WorkDetailsContract {
 
     public static final String TAG = "WorkDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";

@@ -15,12 +15,13 @@
 package com.pimenta.bestv.presenter;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
-import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by marcus on 06-02-2018.
  */
 public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
+
+    private static final String TAG = WorkBrowsePresenter.class.getSimpleName();
 
     private DisplayMetrics mDisplayMetrics;
     private MediaRepository mMediaRepository;
@@ -55,19 +58,20 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
     }
 
     /**
-     * Checks if there is any {@link Movie} saved as favorite
+     * Checks if there is any {@link Work} saved as favorite
      */
-    public void hasFavoriteMovies() {
+    public void hasFavorite() {
         mCompositeDisposable.add(mMediaRepository.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (mContract != null) {
-                        mContract.onHasFavoriteMovie(result);
+                        mContract.onHasFavorite(result);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while checking if has any work as favorite", throwable);
                     if (mContract != null) {
-                        mContract.onHasFavoriteMovie(false);
+                        mContract.onHasFavorite(false);
                     }
                 }));
     }
@@ -89,6 +93,7 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
                                 result.getTvShowGenreList() != null ? result.getTvShowGenreList().getGenres() : null);
                     }
                 }, throwable -> {
+                    Log.e(TAG, "Error while loading data", throwable);
                     if (mContract != null) {
                         mContract.onDataLoaded(false, null, null);
                     }
