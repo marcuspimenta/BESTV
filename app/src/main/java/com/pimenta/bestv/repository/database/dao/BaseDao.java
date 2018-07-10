@@ -29,7 +29,7 @@ public interface BaseDao<T> {
     /**
      * @see com.j256.ormlite.dao.Dao#queryForId(Object)
      */
-    T getMovieById(int id);
+    T getById(int id);
 
     /**
      * @see com.j256.ormlite.dao.Dao#create(Object)

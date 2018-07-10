@@ -59,7 +59,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
     public void loadMoviesByType(MediaRepository.WorkType movieListType) {
         switch (movieListType) {
             case FAVORITES_MOVIES:
-                mCompositeDisposable.add(mMediaRepository.getFavoriteMovies()
+                mCompositeDisposable.add(mMediaRepository.getFavorites()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movies -> {

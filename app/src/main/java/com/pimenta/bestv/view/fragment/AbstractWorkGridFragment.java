@@ -39,9 +39,8 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.presenter.WorkGridContract;
 import com.pimenta.bestv.presenter.WorkGridPresenter;
-import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Work;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseVerticalGridFragment;
 import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
@@ -63,7 +62,8 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     private static final int NUMBER_COLUMNS = 6;
 
     private final Handler mHandler = new Handler();
-    private final BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> mMainFragmentAdapter = new BrowseSupportFragment.MainFragmentAdapter<>(this);
+    private final BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> mMainFragmentAdapter =
+            new BrowseSupportFragment.MainFragmentAdapter<>(this);
 
     private Timer mBackgroundTimer;
     private BackgroundManager mBackgroundManager;
@@ -217,12 +217,10 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                final Movie movie = (Movie) item;
-                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
-            }
+            final Work work = (Work) item;
+            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                    ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+            startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
         }
     }
 }

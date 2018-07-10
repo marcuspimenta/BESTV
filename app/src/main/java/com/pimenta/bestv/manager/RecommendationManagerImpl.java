@@ -27,7 +27,7 @@ import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.Work;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 
 import java.util.concurrent.ExecutionException;
 
@@ -103,7 +103,7 @@ public class RecommendationManagerImpl implements RecommendationManager {
      * @return {@link Intent}
      */
     private Intent buildIntent(Work work, int notificationId) {
-        final Intent detailsIntent = MovieDetailsActivity.newInstance(mApplication, (Movie) work);
+        final Intent detailsIntent = WorkDetailsActivity.newInstance(mApplication, (Movie) work);
         detailsIntent.setAction(Integer.toString(notificationId));
         return detailsIntent;
     }

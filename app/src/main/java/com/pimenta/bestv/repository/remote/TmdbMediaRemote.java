@@ -23,6 +23,7 @@ import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShow;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
@@ -155,5 +156,35 @@ public class TmdbMediaRemote implements MediaRemote {
     @Override
     public Single<TvShowPage> getTopRatedTvShows(final int page) {
         return mTvShowApi.getTopRatedTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public TvShow getTvShow(final int tvId) {
+        try {
+            return mTvShowApi.getTvShow(tvId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Error while getting a tv show", e);
+            return null;
+        }
+    }
+
+    @Override
+    public Single<CastList> getCastByTvShow(final TvShow tvShow) {
+        return mTvShowApi.getCastByTvShow(tvShow.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    }
+
+    @Override
+    public Single<TvShowPage> getRecommendationByTvShow(final TvShow tvShow, final int page) {
+        return mTvShowApi.getRecommendationByTvShow(tvShow.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public Single<TvShowPage> getSimilarByTvShow(final TvShow tvShow, final int page) {
+        return mTvShowApi.getSimilarByTvShow(tvShow.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
+
+    @Override
+    public Single<VideoList> getVideosByTvShow(final TvShow tvShow) {
+        return mTvShowApi.getVideosByTvShow(tvShow.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 }

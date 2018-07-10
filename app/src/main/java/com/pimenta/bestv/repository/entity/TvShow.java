@@ -17,6 +17,7 @@ package com.pimenta.bestv.repository.entity;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -26,9 +27,11 @@ import java.util.Date;
 /**
  * Created by marcus on 06/07/18.
  */
+@DatabaseTable(tableName = TvShow.TABLE)
 public class TvShow extends Work {
 
     private static final String TAG = TvShow.class.getSimpleName();
+    public static final String TABLE = "tv_show";
 
     @SerializedName("name")
     private String mName;

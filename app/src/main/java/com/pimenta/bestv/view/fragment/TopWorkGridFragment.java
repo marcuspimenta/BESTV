@@ -15,12 +15,9 @@
 package com.pimenta.bestv.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v17.leanback.widget.DiffCallback;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
@@ -78,7 +75,7 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
     @Override
     public void onWorksLoaded(final List<? extends Work> works) {
         if (mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
-            mRowsAdapter.setItems(works, new DiffCallback<Movie>() {
+            /*mRowsAdapter.setItems(works, new DiffCallback<Movie>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
                     return oldItem.equals(newItem);
@@ -88,7 +85,10 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
                 public boolean areContentsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
                     return oldItem.equals(newItem);
                 }
-            });
+            });*/
+            if (works != null) {
+                mRowsAdapter.setItems(works, null);
+            }
             getProgressBarManager().hide();
             getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
             return;

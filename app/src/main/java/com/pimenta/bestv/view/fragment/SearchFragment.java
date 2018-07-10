@@ -37,10 +37,10 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
 import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
@@ -159,8 +159,8 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
             if (item instanceof Movie) {
                 final Movie movie = (Movie) item;
                 final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(MovieDetailsActivity.newInstance(getContext(), movie), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
+                        ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                startActivityForResult(WorkDetailsActivity.newInstance(getContext(), movie), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
             }
         }
     }

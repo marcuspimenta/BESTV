@@ -27,11 +27,10 @@ import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
-import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.Work;
+import com.pimenta.bestv.repository.entity.WorkPage;
 
 import java.util.List;
 
@@ -62,29 +61,29 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Checks if the {@link Movie} is favorite
+     * Checks if the {@link Work} is favorite
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      *
      * @return {@code true} if yes, {@code false} otherwise
      */
-    public boolean isMovieFavorite(@NonNull Movie movie) {
-        movie.setFavorite(mMediaRepository.isFavorite(movie));
-        return movie.isFavorite();
+    public boolean isFavorite(@NonNull Work work) {
+        work.setFavorite(mMediaRepository.isFavorite(work));
+        return work.isFavorite();
     }
 
     /**
-     * Sets if a {@link Movie} is or not is favorite
+     * Sets if a {@link Work} is or not is favorite
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void setFavoriteMovie(@NonNull Movie movie) {
+    public void setFavorite(@NonNull Work work) {
         mCompositeDisposable.add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
             boolean result;
-            if (movie.isFavorite()) {
-                result = mMediaRepository.deleteFavoriteMovie(movie);
+            if (work.isFavorite()) {
+                result = mMediaRepository.deleteFavorite(work);
             } else {
-                result = mMediaRepository.saveFavoriteMovie(movie);
+                result = mMediaRepository.saveFavorite(work);
             }
             if (result) {
                 e.onSuccess(true);
@@ -95,7 +94,7 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    movie.setFavorite(!movie.isFavorite());
+                    work.setFavorite(!work.isFavorite());
                     if (mContract != null) {
                         mContract.onResultSetFavoriteMovie(true);
                     }
@@ -107,34 +106,34 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link List<Cast>} by the {@link Movie}
+     * Loads the {@link List<Cast>} by the {@link Work}
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadDataByMovie(@NonNull Movie movie) {
+    public void loadDataByWork(@NonNull Work work) {
         int recommendedPageSearch = mRecommendedPage + 1;
         int similarPageSearch = mSimilarPage + 1;
-        mCompositeDisposable.add(Single.zip(mMediaRepository.getCastByMovie(movie),
-                mMediaRepository.getRecommendationByMovie(movie, recommendedPageSearch),
-                mMediaRepository.getSimilarByMovie(movie, similarPageSearch),
-                mMediaRepository.getVideosByMovie(movie),
+        mCompositeDisposable.add(Single.zip(mMediaRepository.getVideosByWork(work),
+                mMediaRepository.getCastByWork(work),
+                mMediaRepository.getRecommendationByWork(work, recommendedPageSearch),
+                mMediaRepository.getSimilarByWork(work, similarPageSearch),
                 MovieInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
                     if (mContract != null) {
-                        final MoviePage recommendedMovies = movieInfo.getRecommendedMovies();
-                        if (recommendedMovies != null && recommendedMovies.getPage() <= recommendedMovies.getTotalPages()) {
-                            mRecommendedPage = recommendedMovies.getPage();
+                        final WorkPage recommendedPage = movieInfo.getRecommendedMovies();
+                        if (recommendedPage != null && recommendedPage.getPage() <= recommendedPage.getTotalPages()) {
+                            mRecommendedPage = recommendedPage.getPage();
                         }
-                        final MoviePage similarMovies = movieInfo.getSimilarMovies();
-                        if (similarMovies != null && similarMovies.getPage() <= similarMovies.getTotalPages()) {
-                            mSimilarPage = similarMovies.getPage();
+                        final WorkPage similarPage = movieInfo.getSimilarMovies();
+                        if (similarPage != null && similarPage.getPage() <= similarPage.getTotalPages()) {
+                            mSimilarPage = similarPage.getPage();
                         }
 
                         mContract.onDataLoaded(movieInfo.getCasts() != null ? movieInfo.getCasts().getCasts() : null,
-                                recommendedMovies != null ? recommendedMovies.getWorks() : null,
-                                similarMovies != null ? similarMovies.getWorks() : null,
+                                recommendedPage != null ? recommendedPage.getWorks() : null,
+                                similarPage != null ? similarPage.getWorks() : null,
                                 movieInfo.getVideos() != null ? movieInfo.getVideos().getVideos() : null);
                     }
                 }, throwable -> {
@@ -145,13 +144,13 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link List<Movie>} recommended by the {@link Movie}
+     * Loads the {@link List<Work>} recommended by the {@link Work}
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadRecommendationByMovie(@NonNull Movie movie) {
+    public void loadRecommendationByWork(@NonNull Work work) {
         int pageSearch = mRecommendedPage + 1;
-        mCompositeDisposable.add(mMediaRepository.getRecommendationByMovie(movie, pageSearch)
+        mCompositeDisposable.add(mMediaRepository.getRecommendationByWork(work, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieList -> {
@@ -171,13 +170,13 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link List<Movie>} similar by the {@link Movie}
+     * Loads the {@link List<Work>} similar by the {@link Work}
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadSimilarByMovie(@NonNull Movie movie) {
+    public void loadSimilarByWork(@NonNull Work work) {
         int pageSearch = mSimilarPage + 1;
-        mCompositeDisposable.add(mMediaRepository.getSimilarByMovie(movie, pageSearch)
+        mCompositeDisposable.add(mMediaRepository.getSimilarByWork(work, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieList -> {
@@ -197,12 +196,12 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link Movie} poster
+     * Loads the {@link Work} poster
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadCardImage(@NonNull Movie movie) {
-        mImageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getPosterPath()),
+    public void loadCardImage(@NonNull Work work) {
+        mImageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()),
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
@@ -222,12 +221,12 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
     }
 
     /**
-     * Loads the {@link Movie} backdrop image using Glide tool
+     * Loads the {@link Work} backdrop image using Glide tool
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work}
      */
-    public void loadBackdropImage(@NonNull Movie movie) {
-        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, movie.getBackdropPath()),
+    public void loadBackdropImage(@NonNull Work work) {
+        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getBackdropPath()),
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
@@ -282,32 +281,32 @@ public class MovieDetailsPresenter extends BasePresenter<MovieDetailsContract> {
      */
     private class MovieInfo {
 
-        private CastList mCasts;
-        private MoviePage mRecommendedMovies;
-        private MoviePage mSimilarMovies;
         private VideoList mVideos;
+        private CastList mCasts;
+        private WorkPage mRecommendedMovies;
+        private WorkPage mSimilarMovies;
 
-        public MovieInfo(final CastList casts, final MoviePage recommendedMovies, final MoviePage similarMovies, final VideoList videos) {
+        public MovieInfo(final VideoList videos, final CastList casts, final WorkPage recommendedMovies, final WorkPage similarMovies) {
+            mVideos = videos;
             mCasts = casts;
             mRecommendedMovies = recommendedMovies;
             mSimilarMovies = similarMovies;
-            mVideos = videos;
+        }
+
+        public VideoList getVideos() {
+            return mVideos;
         }
 
         public CastList getCasts() {
             return mCasts;
         }
 
-        public MoviePage getRecommendedMovies() {
+        public WorkPage getRecommendedMovies() {
             return mRecommendedMovies;
         }
 
-        public MoviePage getSimilarMovies() {
+        public WorkPage getSimilarMovies() {
             return mSimilarMovies;
-        }
-
-        public VideoList getVideos() {
-            return mVideos;
         }
     }
 }

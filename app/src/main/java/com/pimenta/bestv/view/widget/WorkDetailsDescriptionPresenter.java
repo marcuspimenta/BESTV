@@ -16,23 +16,23 @@ package com.pimenta.bestv.view.widget;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class MovieDetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+public class WorkDetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+
+    private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        final Movie movie = (Movie) item;
+        final Work work = (Work) item;
 
-        if (movie != null) {
-            final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-
-            viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-            viewHolder.getBody().setText(movie.getOverview());
+        if (work != null) {
+            viewHolder.getTitle().setText(work.getTitle());
+            viewHolder.getSubtitle().setText(sDateFormat.format(work.getReleaseDate()));
+            viewHolder.getBody().setText(work.getOverview());
         }
     }
 }

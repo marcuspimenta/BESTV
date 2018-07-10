@@ -46,29 +46,29 @@ import android.widget.ImageView;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.entity.Cast;
-import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.presenter.MovieDetailsContract;
 import com.pimenta.bestv.presenter.MovieDetailsPresenter;
+import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.Video;
+import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.CastDetailsActivity;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseDetailsFragment;
 import com.pimenta.bestv.view.widget.CastCardPresenter;
-import com.pimenta.bestv.view.widget.WorkCardPresenter;
-import com.pimenta.bestv.view.widget.MovieDetailsDescriptionPresenter;
 import com.pimenta.bestv.view.widget.VideoCardPresenter;
+import com.pimenta.bestv.view.widget.WorkCardPresenter;
+import com.pimenta.bestv.view.widget.WorkDetailsDescriptionPresenter;
 
 import java.util.List;
 
 /**
  * Created by marcus on 07-02-2018.
  */
-public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsContract {
+public class WorkDetailsFragment extends BaseDetailsFragment<MovieDetailsPresenter> implements MovieDetailsContract {
 
-    public static final String TAG = "MovieDetailsFragment";
+    public static final String TAG = "WorkDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";
-    public static final String MOVIE = "MOVIE";
+    public static final String WORK = "WORK";
 
     private static final int ACTION_FAVORITE = 1;
     private static final int ACTION_VIDEOS = 2;
@@ -91,17 +91,17 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private DetailsOverviewRow mDetailsOverviewRow;
     private DetailsSupportFragmentBackgroundController mDetailsBackground;
 
-    private Movie mMovie;
+    private Work mWork;
 
-    public static MovieDetailsFragment newInstance() {
-        return new MovieDetailsFragment();
+    public static WorkDetailsFragment newInstance() {
+        return new WorkDetailsFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mMovie == null) {
-            mMovie = (Movie) getActivity().getIntent().getSerializableExtra(MOVIE);
+        if (mWork == null) {
+            mWork = (Work) getActivity().getIntent().getSerializableExtra(WORK);
         }
 
         setupDetailsOverviewRow();
@@ -112,22 +112,22 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFavoriteAction = new Action(ACTION_FAVORITE, mPresenter.isMovieFavorite(mMovie) ? getResources().getString(R.string.remove_favorites) :
+        mFavoriteAction = new Action(ACTION_FAVORITE, mPresenter.isFavorite(mWork) ? getResources().getString(R.string.remove_favorites) :
                 getResources().getString(R.string.save_favorites));
         mActionAdapter.add(mFavoriteAction);
-        mPresenter.loadDataByMovie(mMovie);
+        mPresenter.loadDataByWork(mWork);
     }
 
     @Override
     public void onResultSetFavoriteMovie(final boolean success) {
         if (success) {
-            mFavoriteAction.setLabel1(mMovie.isFavorite() ? getResources().getString(R.string.remove_favorites) : getResources().getString(R.string.save_favorites));
+            mFavoriteAction.setLabel1(mWork.isFavorite() ? getResources().getString(R.string.remove_favorites) : getResources().getString(R.string.save_favorites));
             mActionAdapter.notifyItemRangeChanged(mActionAdapter.indexOf(mFavoriteAction), 1);
         }
     }
 
     @Override
-    public void onDataLoaded(final List<Cast> casts, final List<Movie> recommendedMovies, final List<Movie> similarMovies, final List<Video> videos) {
+    public void onDataLoaded(final List<Cast> casts, final List<Work> recommendedWorks, final List<Work> similarWorks, final List<Video> videos) {
         if (videos != null && videos.size() > 0) {
             mActionAdapter.add(new Action(ACTION_VIDEOS, getResources().getString(R.string.videos)));
             VideoCardPresenter videoCardPresenter = new VideoCardPresenter();
@@ -148,44 +148,44 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             mAdapter.add(new ListRow(header, mCastRowAdapter));
         }
 
-        if (recommendedMovies != null && recommendedMovies.size() > 0) {
+        if (recommendedWorks != null && recommendedWorks.size() > 0) {
             mActionAdapter.add(new Action(ACTION_RECOMMENDED, getResources().getString(R.string.recommended)));
             WorkCardPresenter workCardPresenter = new WorkCardPresenter();
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mRecommendedRowAdapter = new ArrayObjectAdapter(workCardPresenter);
-            mRecommendedRowAdapter.addAll(0, recommendedMovies);
+            mRecommendedRowAdapter.addAll(0, recommendedWorks);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
         }
 
-        if (similarMovies != null && similarMovies.size() > 0) {
+        if (similarWorks != null && similarWorks.size() > 0) {
             mActionAdapter.add(new Action(ACTION_SIMILAR, getResources().getString(R.string.similar)));
             WorkCardPresenter workCardPresenter = new WorkCardPresenter();
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mSimilarRowAdapter = new ArrayObjectAdapter(workCardPresenter);
-            mSimilarRowAdapter.addAll(0, similarMovies);
+            mSimilarRowAdapter.addAll(0, similarWorks);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
         }
     }
 
     @Override
-    public void onRecommendationLoaded(final List<Movie> movies) {
-        if (movies != null) {
-            for (final Movie movie : movies) {
-                if (mRecommendedRowAdapter.indexOf(movie) == -1) {
-                    mRecommendedRowAdapter.add(movie);
+    public void onRecommendationLoaded(final List<Work> works) {
+        if (works != null) {
+            for (final Work work : works) {
+                if (mRecommendedRowAdapter.indexOf(work) == -1) {
+                    mRecommendedRowAdapter.add(work);
                 }
             }
         }
     }
 
     @Override
-    public void onSimilarLoaded(final List<Movie> movies) {
-        if (movies != null) {
-            for (final Movie movie : movies) {
-                if (mSimilarRowAdapter.indexOf(movie) == -1) {
-                    mSimilarRowAdapter.add(movie);
+    public void onSimilarLoaded(final List<Work> works) {
+        if (works != null) {
+            for (final Work work : works) {
+                if (mSimilarRowAdapter.indexOf(work) == -1) {
+                    mSimilarRowAdapter.add(work);
                 }
             }
         }
@@ -214,8 +214,8 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
         mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
         mAdapter = new ArrayObjectAdapter(mPresenterSelector);
 
-        mDetailsOverviewRow = new DetailsOverviewRow(mMovie);
-        mPresenter.loadCardImage(mMovie);
+        mDetailsOverviewRow = new DetailsOverviewRow(mWork);
+        mPresenter.loadCardImage(mWork);
 
         mActionAdapter = new ArrayObjectAdapter();
         mDetailsOverviewRow.setActionsAdapter(mActionAdapter);
@@ -227,7 +227,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
 
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new MovieDetailsDescriptionPresenter()) {
+        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new WorkDetailsDescriptionPresenter()) {
 
             private ImageView mDetailsImageView;
 
@@ -254,7 +254,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             int position = 0;
             switch ((int) action.getId()) {
                 case ACTION_FAVORITE:
-                    mPresenter.setFavoriteMovie(mMovie);
+                    mPresenter.setFavorite(mWork);
                     break;
                 case ACTION_SIMILAR:
                     if (mSimilarRowAdapter != null && mSimilarRowAdapter.size() > 0) {
@@ -281,7 +281,7 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
     private void setupBackgroundImage() {
         mDetailsBackground = new DetailsSupportFragmentBackgroundController(this);
         mDetailsBackground.enableParallax();
-        mPresenter.loadBackdropImage(mMovie);
+        mPresenter.loadBackdropImage(mWork);
     }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -291,15 +291,15 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
             if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
                     case RECOMMENDED_HEADER_ID:
-                        final Movie recommendedMovie = (Movie) item;
-                        if (mRecommendedRowAdapter.indexOf(recommendedMovie) >= mRecommendedRowAdapter.size() - 1) {
-                            mPresenter.loadRecommendationByMovie(mMovie);
+                        final Work recommendedWork = (Work) item;
+                        if (mRecommendedRowAdapter.indexOf(recommendedWork) >= mRecommendedRowAdapter.size() - 1) {
+                            mPresenter.loadRecommendationByWork(mWork);
                         }
                         break;
                     case SIMILAR_HEADER_ID:
-                        final Movie similarMovie = (Movie) item;
-                        if (mSimilarRowAdapter.indexOf(similarMovie) >= mSimilarRowAdapter.size() - 1) {
-                            mPresenter.loadSimilarByMovie(mMovie);
+                        final Work similarWork = (Work) item;
+                        if (mSimilarRowAdapter.indexOf(similarWork) >= mSimilarRowAdapter.size() - 1) {
+                            mPresenter.loadSimilarByWork(mWork);
                         }
                         break;
                 }
@@ -331,10 +331,10 @@ public class MovieDetailsFragment extends BaseDetailsFragment<MovieDetailsPresen
                         break;
                     case RECOMMENDED_HEADER_ID:
                     case SIMILAR_HEADER_ID:
-                        final Movie movie = (Movie) item;
+                        final Work work = (Work) item;
                         final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                                ((ImageCardView) itemViewHolder.view).getMainImageView(), MovieDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                        startActivity(MovieDetailsActivity.newInstance(getContext(), movie), bundle);
+                                ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
                         break;
                 }
             }

@@ -42,6 +42,9 @@ public abstract class Work implements Serializable {
     private float mVoteAverage;
     @SerializedName("vote_count")
     private float mVoteCount;
+    @SerializedName("adult")
+    private boolean mIsAdult;
+    private boolean mIsFavorite;
 
     public abstract String getTitle();
 
@@ -117,6 +120,22 @@ public abstract class Work implements Serializable {
 
     public void setVoteCount(final float voteCount) {
         mVoteCount = voteCount;
+    }
+
+    public boolean isAdult() {
+        return mIsAdult;
+    }
+
+    public void setAdult(final boolean adult) {
+        mIsAdult = adult;
+    }
+
+    public boolean isFavorite() {
+        return mIsFavorite;
+    }
+
+    public void setFavorite(final boolean favorite) {
+        mIsFavorite = favorite;
     }
 
     @Override

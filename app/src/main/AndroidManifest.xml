@@ -37,7 +37,7 @@
             android:name=".view.activity.SplashActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.activity.MovieDetailsActivity"
+            android:name=".view.activity.WorkDetailsActivity"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".view.activity.CastDetailsActivity"

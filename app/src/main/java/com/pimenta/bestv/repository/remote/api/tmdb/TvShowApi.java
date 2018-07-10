@@ -14,10 +14,15 @@
 
 package com.pimenta.bestv.repository.remote.api.tmdb;
 
+import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.TvShow;
 import com.pimenta.bestv.repository.entity.TvShowPage;
+import com.pimenta.bestv.repository.entity.VideoList;
 
 import io.reactivex.Single;
+import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -40,5 +45,22 @@ public interface TvShowApi {
 
     @GET("tv/top_rated")
     Single<TvShowPage> getTopRatedTvShows(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+
+    @GET("tv/{tv_id}")
+    Call<TvShow> getTvShow(@Path("tv_id") int tv_id, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("tv/{tv_id}/credits")
+    Single<CastList> getCastByTvShow(@Path("tv_id") int tvId, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("tv/{tv_id}/videos")
+    Single<VideoList> getVideosByTvShow(@Path("tv_id") int tvId, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("tv/{tv_id}/recommendations")
+    Single<TvShowPage> getRecommendationByTvShow(@Path("tv_id") int tvId, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("page") int page);
+
+    @GET("tv/{tv_id}/similar")
+    Single<TvShowPage> getSimilarByTvShow(@Path("tv_id") int tvId, @Query("api_key") String apiKey, @Query("language") String language,
+            @Query("page") int page);
 
 }

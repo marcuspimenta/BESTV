@@ -21,13 +21,13 @@ import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.service.RecommendationService;
 import com.pimenta.bestv.view.activity.CastDetailsActivity;
 import com.pimenta.bestv.view.activity.MainActivity;
-import com.pimenta.bestv.view.activity.MovieDetailsActivity;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.activity.SplashActivity;
 import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 import com.pimenta.bestv.view.fragment.ErrorFragment;
 import com.pimenta.bestv.view.fragment.GenreWorkGridFragment;
 import com.pimenta.bestv.view.fragment.WorkBrowseFragment;
-import com.pimenta.bestv.view.fragment.MovieDetailsFragment;
+import com.pimenta.bestv.view.fragment.WorkDetailsFragment;
 import com.pimenta.bestv.view.fragment.SearchFragment;
 import com.pimenta.bestv.view.fragment.SplashFragment;
 import com.pimenta.bestv.view.fragment.TopWorkGridFragment;
@@ -55,7 +55,7 @@ public interface ApplicationComponent {
 
     void inject(MainActivity activity);
 
-    void inject(MovieDetailsActivity activity);
+    void inject(WorkDetailsActivity activity);
 
     void inject(CastDetailsActivity activity);
 
@@ -69,7 +69,7 @@ public interface ApplicationComponent {
 
     void inject(SearchFragment fragment);
 
-    void inject(MovieDetailsFragment fragment);
+    void inject(WorkDetailsFragment fragment);
 
     void inject(CastDetailsFragment fragment);
 

@@ -58,7 +58,7 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
      * Checks if there is any {@link Movie} saved as favorite
      */
     public void hasFavoriteMovies() {
-        mCompositeDisposable.add(mMediaRepository.hasFavoriteMovie()
+        mCompositeDisposable.add(mMediaRepository.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -78,7 +78,7 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
     public void loadData() {
         mCompositeDisposable.add(Single.zip(mMediaRepository.getMovieGenres(),
                 mMediaRepository.getTvShowGenres(),
-                mMediaRepository.hasFavoriteMovie(),
+                mMediaRepository.hasFavorite(),
                 BrowserWorkInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

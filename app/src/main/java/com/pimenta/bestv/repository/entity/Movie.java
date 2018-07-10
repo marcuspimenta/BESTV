@@ -30,8 +30,8 @@ import java.util.Date;
 @DatabaseTable(tableName = Movie.TABLE)
 public class Movie extends Work {
 
+    private static final String TAG = Movie.class.getSimpleName();
     public static final String TABLE = "movie";
-    private static final String TAG = "Movie";
 
     @SerializedName("title")
     private String mTitle;
@@ -39,9 +39,6 @@ public class Movie extends Work {
     private String mOriginalTitle;
     @SerializedName("release_date")
     private String mReleaseDate;
-    @SerializedName("adult")
-    private boolean mIsAdult;
-    private boolean mIsFavorite;
 
     @Override
     public String getTitle() {
@@ -77,21 +74,5 @@ public class Movie extends Work {
     @Override
     public void setReleaseDate(final Date releaseDate) {
         mReleaseDate = releaseDate.toString();
-    }
-
-    public boolean isAdult() {
-        return mIsAdult;
-    }
-
-    public void setAdult(final boolean adult) {
-        mIsAdult = adult;
-    }
-
-    public boolean isFavorite() {
-        return mIsFavorite;
-    }
-
-    public void setFavorite(final boolean favorite) {
-        mIsFavorite = favorite;
     }
 }

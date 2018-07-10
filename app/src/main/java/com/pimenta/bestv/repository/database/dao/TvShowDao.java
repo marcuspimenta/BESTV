@@ -16,7 +16,7 @@ package com.pimenta.bestv.repository.database.dao;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.pimenta.bestv.repository.database.DatabaseHelper;
-import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.TvShow;
 
 import java.util.List;
 
@@ -24,40 +24,40 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Created by marcus on 15-04-2018.
+ * Created by marcus on 10/07/18.
  */
 @Singleton
-public class MovieDao implements BaseDao<Movie> {
+public class TvShowDao implements BaseDao<TvShow> {
 
-    private RuntimeExceptionDao<Movie, Integer> mMovieDao;
+    private RuntimeExceptionDao<TvShow, Integer> mTvShowDao;
 
     @Inject
-    public MovieDao(DatabaseHelper databaseHelper) {
-        mMovieDao = databaseHelper.getRuntimeExceptionDao(Movie.class);
+    public TvShowDao(DatabaseHelper databaseHelper) {
+        mTvShowDao = databaseHelper.getRuntimeExceptionDao(TvShow.class);
     }
 
     @Override
-    public List<Movie> queryForAll() {
-        return mMovieDao.queryForAll();
+    public List<TvShow> queryForAll() {
+        return mTvShowDao.queryForAll();
     }
 
     @Override
-    public Movie getById(final int id) {
-        return mMovieDao.queryForId(id);
+    public TvShow getById(final int id) {
+        return mTvShowDao.queryForId(id);
     }
 
     @Override
-    public boolean create(final Movie model) {
-        return mMovieDao.create(model) > 0;
+    public boolean create(final TvShow model) {
+        return mTvShowDao.create(model) > 0;
     }
 
     @Override
-    public boolean update(final Movie model) {
-        return mMovieDao.update(model) > 0;
+    public boolean update(final TvShow model) {
+        return mTvShowDao.update(model) > 0;
     }
 
     @Override
-    public boolean delete(final Movie model) {
-        return mMovieDao.delete(model) > 0;
+    public boolean delete(final TvShow model) {
+        return mTvShowDao.delete(model) > 0;
     }
 }

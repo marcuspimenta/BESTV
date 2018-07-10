@@ -22,6 +22,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.TvShow;
 
 import java.sql.SQLException;
 
@@ -48,6 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(final SQLiteDatabase database, final ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Movie.class);
+            TableUtils.createTable(connectionSource, TvShow.class);
         } catch (SQLException e) {
             Log.e(TAG, "Can't create database", e);
             throw new RuntimeException(e);

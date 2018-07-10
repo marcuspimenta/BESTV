@@ -17,14 +17,17 @@ package com.pimenta.bestv.repository;
 import android.support.annotation.NonNull;
 
 import com.pimenta.bestv.repository.database.dao.MovieDao;
+import com.pimenta.bestv.repository.database.dao.TvShowDao;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.TvShow;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.repository.entity.WorkPage;
 import com.pimenta.bestv.repository.remote.MediaRemote;
 
@@ -41,55 +44,83 @@ import io.reactivex.Single;
 public class MediaRepositoryImpl implements MediaRepository {
 
     private MovieDao mMovieDao;
+    private TvShowDao mTvShowDao;
     private MediaRemote mMediaRemote;
 
     @Inject
-    public MediaRepositoryImpl(MovieDao movieDao, MediaRemote mediaRemote) {
+    public MediaRepositoryImpl(MovieDao movieDao, TvShowDao tvShowDao, MediaRemote mediaRemote) {
         mMovieDao = movieDao;
+        mTvShowDao = tvShowDao;
         mMediaRemote = mediaRemote;
     }
 
     @Override
-    public boolean isFavorite(final Movie movie) {
-        final Movie movieFind = mMovieDao.getMovieById(movie.getId());
-        if (movieFind != null) {
-            movie.setId(movieFind.getId());
+    public boolean isFavorite(final Work work) {
+        Work workSaved = null;
+        if (work instanceof Movie) {
+            workSaved = mMovieDao.getById(work.getId());
+        } else if (work instanceof TvShow) {
+            workSaved = mTvShowDao.getById(work.getId());
+        }
+        if (workSaved != null) {
+            work.setId(workSaved.getId());
             return true;
         }
         return false;
     }
 
     @Override
-    public Single<Boolean> hasFavoriteMovie() {
+    public Single<Boolean> hasFavorite() {
         return Single.create(e -> {
-            final List<Movie> favoriteMovies = mMovieDao.queryForAll();
-            e.onSuccess(favoriteMovies != null && favoriteMovies.size() > 0);
+            final List<Movie> favoritesMovies = mMovieDao.queryForAll();
+            final List<TvShow> favoritesTvShows = mTvShowDao.queryForAll();
+            e.onSuccess((favoritesMovies != null && favoritesMovies.size() > 0) || (favoritesTvShows != null && favoritesTvShows.size() > 0));
         });
     }
 
     @Override
-    public boolean saveFavoriteMovie(@NonNull final Movie movie) {
-        return mMovieDao.create(movie);
+    public boolean saveFavorite(@NonNull final Work work) {
+        if (work instanceof Movie) {
+            return mMovieDao.create((Movie) work);
+        } else if (work instanceof TvShow) {
+            return mTvShowDao.create((TvShow) work);
+        }
+        return false;
     }
 
     @Override
-    public boolean deleteFavoriteMovie(@NonNull final Movie movie) {
-        return mMovieDao.delete(movie);
+    public boolean deleteFavorite(@NonNull final Work work) {
+        if (work instanceof Movie) {
+            return mMovieDao.delete((Movie) work);
+        } else if (work instanceof TvShow) {
+            return mTvShowDao.delete((TvShow) work);
+        }
+        return false;
     }
 
     @Override
-    public Single<List<Movie>> getFavoriteMovies() {
+    public Single<List<Work>> getFavorites() {
         return Single.create(e -> {
-            final List<Movie> favoriteMovies = mMovieDao.queryForAll();
-            final List<Movie> movies = new ArrayList<>();
-            for (final Movie movie : favoriteMovies) {
-                final Movie detailMovie = mMediaRemote.getMovie(movie.getId());
-                if (detailMovie != null) {
-                    detailMovie.setFavorite(true);
-                    movies.add(detailMovie);
+            final List<Work> works = new ArrayList<>();
+
+            final List<Movie> favoritesMovies = mMovieDao.queryForAll();
+            for (final Movie movie : favoritesMovies) {
+                final Work detailWork = mMediaRemote.getMovie(movie.getId());
+                if (detailWork != null) {
+                    detailWork.setFavorite(true);
+                    works.add(detailWork);
                 }
             }
-            e.onSuccess(movies);
+
+            final List<TvShow> favoritesTvShows = mTvShowDao.queryForAll();
+            for (final TvShow tvShow : favoritesTvShows) {
+                final Work detailWork = mMediaRemote.getTvShow(tvShow.getId());
+                if (detailWork != null) {
+                    detailWork.setFavorite(true);
+                    works.add(detailWork);
+                }
+            }
+            e.onSuccess(works);
         });
     }
 
@@ -140,23 +171,47 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<CastList> getCastByMovie(final Movie movie) {
-        return mMediaRemote.getCastByMovie(movie);
+    public Single<CastList> getCastByWork(final Work work) {
+        if (work instanceof Movie) {
+            return mMediaRemote.getCastByMovie((Movie) work);
+        } else if (work instanceof TvShow) {
+            return mMediaRemote.getCastByTvShow((TvShow) work);
+        } else {
+            return Single.error(new Throwable());
+        }
     }
 
     @Override
-    public Single<MoviePage> getRecommendationByMovie(final Movie movie, final int page) {
-        return mMediaRemote.getRecommendationByMovie(movie, page);
+    public Single<? extends WorkPage> getRecommendationByWork(final Work work, final int page) {
+        if (work instanceof Movie) {
+            return mMediaRemote.getRecommendationByMovie((Movie) work, page);
+        } else if (work instanceof TvShow) {
+            return mMediaRemote.getRecommendationByTvShow((TvShow) work, page);
+        } else {
+            return Single.error(new Throwable());
+        }
     }
 
     @Override
-    public Single<MoviePage> getSimilarByMovie(final Movie movie, final int page) {
-        return mMediaRemote.getSimilarByMovie(movie, page);
+    public Single<? extends WorkPage> getSimilarByWork(final Work work, final int page) {
+        if (work instanceof Movie) {
+            return mMediaRemote.getSimilarByMovie((Movie) work, page);
+        } else if (work instanceof TvShow) {
+            return mMediaRemote.getSimilarByTvShow((TvShow) work, page);
+        } else {
+            return Single.error(new Throwable());
+        }
     }
 
     @Override
-    public Single<VideoList> getVideosByMovie(final Movie movie) {
-        return mMediaRemote.getVideosByMovie(movie);
+    public Single<VideoList> getVideosByWork(final Work work) {
+        if (work instanceof Movie) {
+            return mMediaRemote.getVideosByMovie((Movie) work);
+        } else if (work instanceof TvShow) {
+            return mMediaRemote.getVideosByTvShow((TvShow) work);
+        } else {
+            return Single.error(new Throwable());
+        }
     }
 
     @Override

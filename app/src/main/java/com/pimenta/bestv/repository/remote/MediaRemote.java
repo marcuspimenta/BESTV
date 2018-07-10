@@ -56,8 +56,9 @@ public interface MediaRemote {
     /**
      * Gets the {@link Movie} by the ID
      *
-     * @param movieId   Movie ID
-     * @return          {@link Movie}
+     * @param movieId Movie ID
+     *
+     * @return {@link Movie}
      */
     Movie getMovie(int movieId);
 
@@ -99,7 +100,7 @@ public interface MediaRemote {
      *
      * @param movie {@link Movie}
      *
-     * @return      {@link Single<VideoList>}
+     * @return {@link Single<VideoList>}
      */
     Single<VideoList> getVideosByMovie(Movie movie);
 
@@ -147,11 +148,11 @@ public interface MediaRemote {
     /**
      * Searches the movies by a query
      *
-     * @param query     Query to search the movies
-     * @param page      Specify which page to query. Minimum: 1, maximum: 1000,
-     *                  default: 1
+     * @param query Query to search the movies
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
      *
-     * @return          {@link Single<MoviePage>}
+     * @return {@link Single<MoviePage>}
      */
     Single<MoviePage> searchMoviesByQuery(String query, int page);
 
@@ -221,4 +222,55 @@ public interface MediaRemote {
      * @return {@link Single<TvShowPage>}
      */
     Single<TvShowPage> getTopRatedTvShows(int page);
+
+    /**
+     * Gets the {@link TvShow} by the ID
+     *
+     * @param tvId TvShow ID
+     *
+     * @return {@link TvShow}
+     */
+    TvShow getTvShow(int tvId);
+
+    /**
+     * Gets the {@link CastList} by the {@link TvShow}
+     *
+     * @param tvShow {@link TvShow} to search the {@link List<CastList>}
+     *
+     * @return {@link Single<CastList>}
+     */
+    Single<CastList> getCastByTvShow(TvShow tvShow);
+
+    /**
+     * Gets a list of recommended tv shows for a tv shows.
+     *
+     * @param tvShow {@link TvShow} to search the {@link List<TvShow>}
+     * @param page   Specify which page to query. Minimum: 1, maximum: 1000,
+     *               default: 1
+     *
+     * @return {@link Single<MoviePage>}
+     */
+    Single<TvShowPage> getRecommendationByTvShow(TvShow tvShow, int page);
+
+    /**
+     * Gets a list of similar tv shows. This is not the same as the
+     * "Recommendation" system you see on the website. These items
+     * are assembled by looking at keywords and genres.
+     *
+     * @param tvShow {@link TvShow} to search the {@link List<TvShow>}
+     * @param page   Specify which page to query. Minimum: 1, maximum: 1000,
+     *               default: 1
+     *
+     * @return {@link Single<MoviePage>}
+     */
+    Single<TvShowPage> getSimilarByTvShow(TvShow tvShow, int page);
+
+    /**
+     * Gets the videos from a tv show
+     *
+     * @param tvShow {@link TvShow}
+     *
+     * @return {@link Single<VideoList>}
+     */
+    Single<VideoList> getVideosByTvShow(TvShow tvShow);
 }

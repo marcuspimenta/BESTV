@@ -18,8 +18,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.pimenta.bestv.repository.entity.Cast;
-import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Video;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -30,11 +30,11 @@ public interface MovieDetailsContract extends BasePresenter.Contract {
 
     void onResultSetFavoriteMovie(boolean success);
 
-    void onDataLoaded(List<Cast> casts, List<Movie> recommendedMovies, List<Movie> similarMovies, List<Video> videos);
+    void onDataLoaded(List<Cast> casts, List<Work> recommendedMovies, List<Work> similarMovies, List<Video> videos);
 
-    void onRecommendationLoaded(List<Movie> movies);
+    void onRecommendationLoaded(List<Work> works);
 
-    void onSimilarLoaded(List<Movie> movies);
+    void onSimilarLoaded(List<Work> works);
 
     void onCardImageLoaded(Drawable resource);
 

@@ -39,45 +39,47 @@ import io.reactivex.Single;
 public interface MediaRepository {
 
     /**
-     * Checks if the {@link Movie} is favorite
+     * Checks if the {@link Work} is favorite
+     *
+     * @param work {@link Work} to verify if is favorite
      *
      * @return {@code true} if yes, {@code false} otherwise
      */
-    boolean isFavorite(Movie movie);
+    boolean isFavorite(Work work);
 
     /**
-     * Checks if there is any {@link Movie} saved as favorite
+     * Checks if there is any {@link Work} saved as favorite
      *
      * @return {@link Single<Boolean>}
      */
-    Single<Boolean> hasFavoriteMovie();
+    Single<Boolean> hasFavorite();
 
     /**
-     * Saves a {@link Movie} as favorites
+     * Saves a {@link Work} as favorites
      *
-     * @param movie {@link Movie} to be saved as favorite
+     * @param work {@link Work} to be saved as favorite
      *
-     * @return {@code true} if the {@link Movie} was saved with success,
+     * @return {@code true} if the {@link Work} was saved with success,
      * {@code false} otherwise
      */
-    boolean saveFavoriteMovie(Movie movie);
+    boolean saveFavorite(Work work);
 
     /**
-     * Deletes a {@link Movie} from favorites
+     * Deletes a {@link Work} from favorites
      *
-     * @param movie {@link Movie} to be deleted from favorite
+     * @param work {@link Work} to be deleted from favorite
      *
-     * @return {@code true} if the {@link Movie} was deleted with success,
+     * @return {@code true} if the {@link Work} was deleted with success,
      * {@code false} otherwise
      */
-    boolean deleteFavoriteMovie(Movie movie);
+    boolean deleteFavorite(Work work);
 
     /**
-     * Gets the favorites {@link List<Movie>}
+     * Gets the favorites {@link List<Work>}
      *
-     * @return Favorite {@link Single<List<Movie>>}
+     * @return Favorite {@link Single<List<Work>>}
      */
-    Single<List<Movie>> getFavoriteMovies();
+    Single<List<Work>> getFavorites();
 
     /**
      * Loads the {@link MoviePage} by {@link WorkType}
@@ -117,46 +119,46 @@ public interface MediaRepository {
     Movie getMovie(int movieId);
 
     /**
-     * Gets the {@link CastList} by the {@link Movie}
+     * Gets the {@link CastList} by the {@link Work}
      *
-     * @param movie {@link Movie} to search the {@link List<CastList>}
+     * @param work {@link Work} to search the {@link List<CastList>}
      *
      * @return {@link Single<CastList>}
      */
-    Single<CastList> getCastByMovie(Movie movie);
+    Single<CastList> getCastByWork(Work work);
 
     /**
-     * Gets a list of recommended movies for a movie.
+     * Gets a list of recommended movies for a work.
      *
-     * @param movie {@link Movie} to search the {@link List<Movie>}
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
+     * @param work {@link Work} to search the {@link List<Work>}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
      *
-     * @return {@link Single<MoviePage>}
+     * @return {@link Single<? extends WorkPage>}
      */
-    Single<MoviePage> getRecommendationByMovie(Movie movie, int page);
+    Single<? extends WorkPage> getRecommendationByWork(Work work, int page);
 
     /**
-     * Gets a list of similar movies. This is not the same as the
+     * Gets a list of similar works. This is not the same as the
      * "Recommendation" system you see on the website. These items
      * are assembled by looking at keywords and genres.
      *
-     * @param movie {@link Movie} to search the {@link List<Movie>}
-     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
-     *              default: 1
+     * @param work {@link Work} to search the {@link List<Work>}
+     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
+     *             default: 1
      *
-     * @return {@link Single<MoviePage>}
+     * @return {@link Single<? extends WorkPage>}
      */
-    Single<MoviePage> getSimilarByMovie(Movie movie, int page);
+    Single<? extends WorkPage> getSimilarByWork(Work work, int page);
 
     /**
-     * Gets the videos from a movie
+     * Gets the {@link VideoList} by the {@link Work}
      *
-     * @param movie {@link Movie}
+     * @param work {@link Work} to search the {@link List<VideoList>}
      *
      * @return {@link Single<VideoList>}
      */
-    Single<VideoList> getVideosByMovie(Movie movie);
+    Single<VideoList> getVideosByWork(Work work);
 
     /**
      * Gets the now playing {@link MoviePage}

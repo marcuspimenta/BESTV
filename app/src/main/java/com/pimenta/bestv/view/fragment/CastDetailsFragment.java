@@ -54,8 +54,8 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
 
     private Cast mCast;
 
-    public static MovieDetailsFragment newInstance() {
-        return new MovieDetailsFragment();
+    public static WorkDetailsFragment newInstance() {
+        return new WorkDetailsFragment();
     }
 
     @Override
