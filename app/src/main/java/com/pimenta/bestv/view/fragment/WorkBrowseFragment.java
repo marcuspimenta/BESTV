@@ -51,13 +51,14 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     public static final String TAG = "WorkBrowseFragment";
     private static final int TOP_WORK_LIST_ID = 1;
     private static final int WORK_GENRE_ID = 2;
-    private static final int FAVORITE_INDEX = 6;
+    private static final int FAVORITE_INDEX = 0;
 
     private static final PageRow sFavoritePageRow = new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID,
             MediaRepository.WorkType.FAVORITES_MOVIES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
+    private boolean mHasFavorite = false;
     private ArrayObjectAdapter mRowsAdapter;
 
     public static WorkBrowseFragment newInstance() {
@@ -105,21 +106,24 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.hasFavorite();
+        if (mRowsAdapter.size() > 0) {
+            mPresenter.hasFavorite();
+        }
     }
 
     @Override
-    public void onDataLoaded(final boolean hasFavoriteMovie, final List<MovieGenre> movieGenres, final List<TvShowGenre> tvShowGenres) {
+    public void onDataLoaded(final boolean hasFavorite, final List<MovieGenre> movieGenres, final List<TvShowGenre> tvShowGenres) {
+        mHasFavorite = hasFavorite;
+        if (hasFavorite) {
+            mRowsAdapter.add(sFavoritePageRow);
+        }
+
         mRowsAdapter.add(new DividerRow());
         mRowsAdapter.add(new SectionRow(getResources().getString(R.string.movies)));
         mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
         mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.POPULAR_MOVIES)));
         mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.TOP_RATED_MOVIES)));
         mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.UP_COMING_MOVIES)));
-
-        if (hasFavoriteMovie && mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
-            mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
-        }
 
         if (movieGenres != null) {
             for (final Genre genre : movieGenres) {
@@ -145,18 +149,16 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     }
 
     @Override
-    public void onHasFavorite(final boolean hasFavoriteMovie) {
-        if (mRowsAdapter.size() > 0) {
-            if (hasFavoriteMovie) {
-                if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
-                    mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
-                }
-            } else {
-                if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
-                    if (getSelectedPosition() == FAVORITE_INDEX) {
-                        setSelectedPosition(FAVORITE_INDEX - 1);
-                    }
-                    mRowsAdapter.remove(sFavoritePageRow);
+    public void onHasFavorite(final boolean hasFavorite) {
+        mHasFavorite = hasFavorite;
+        if (hasFavorite) {
+            if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
+                mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
+            }
+        } else {
+            if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
+                if (getSelectedPosition() == FAVORITE_INDEX) {
+                    setSelectedPosition(FAVORITE_INDEX + 3);
                 }
             }
         }
@@ -195,6 +197,9 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
         public Fragment createFragment(final Object rowObj) {
             if (mCountFragment++ >= 1) {
                 mShowProgress = true;
+            }
+            if (!mHasFavorite && mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
+                mRowsAdapter.remove(sFavoritePageRow);
             }
 
             final Row row = (Row) rowObj;
