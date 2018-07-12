@@ -23,6 +23,6 @@ import java.util.List;
  */
 public interface SearchContract extends BasePresenter.Contract {
 
-    void onResultLoaded(List<Work> works);
+    void onResultLoaded(List<? extends Work> movies, List<? extends Work> tvShows);
 
 }

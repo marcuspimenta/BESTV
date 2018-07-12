@@ -49,7 +49,7 @@ import java.util.List;
  * Created by marcus on 12-03-2018.
  */
 public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchContract,
-        SearchSupportFragment.SearchResultProvider {
+        SearchSupportFragment.SearchResultProvider, OnItemViewClickedListener {
 
     public static final String TAG = "SearchFragment";
     private static final int SEARCH_FRAGMENT_REQUEST_CODE = 1;
@@ -66,7 +66,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         super.onCreate(savedInstanceState);
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setSearchResultProvider(this);
-        setOnItemViewClickedListener(new ItemViewClickedListener());
+        setOnItemViewClickedListener(this);
     }
 
     @Override
@@ -100,14 +100,22 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onResultLoaded(final List<Work> works) {
+    public void onResultLoaded(final List<? extends Work> movies, final List<? extends Work> tvShows) {
         mProgressBarManager.hide();
-        if (works != null && works.size() > 0) {
+        if (movies != null || tvShows != null) {
             mRowsAdapter.clear();
-            final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
-            final HeaderItem header = new HeaderItem(getString(R.string.results));
-            listRowAdapter.addAll(0, works);
-            mRowsAdapter.add(new ListRow(header, listRowAdapter));
+            if (movies != null) {
+                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
+                final HeaderItem header = new HeaderItem(getString(R.string.movies));
+                listRowAdapter.addAll(0, movies);
+                mRowsAdapter.add(new ListRow(header, listRowAdapter));
+            }
+            if (tvShows != null) {
+                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
+                final HeaderItem header = new HeaderItem(getString(R.string.tv_shows));
+                listRowAdapter.addAll(0, tvShows);
+                mRowsAdapter.add(new ListRow(header, listRowAdapter));
+            }
         } else {
             clearAdapter();
         }
@@ -131,10 +139,21 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
+    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+        final Work work = (Work) item;
+        final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+        startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case SEARCH_FRAGMENT_REQUEST_CODE:
-                getView().requestFocus();
+                final View view = getView();
+                if (view != null) {
+                    view.requestFocus();
+                }
                 break;
         }
     }
@@ -150,16 +169,5 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
         final HeaderItem header = new HeaderItem(0, getString(R.string.no_results));
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
-    }
-
-    private final class ItemViewClickedListener implements OnItemViewClickedListener {
-
-        @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            final Work work = (Work) item;
-            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                    ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-            startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
-        }
     }
 }

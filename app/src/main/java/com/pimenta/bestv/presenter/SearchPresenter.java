@@ -18,11 +18,11 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.pimenta.bestv.repository.MediaRepository;
-import com.pimenta.bestv.repository.entity.Work;
+import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.TvShow;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,21 +81,22 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(pair -> {
                         if (mContract != null) {
-                            final List<Work> works = new ArrayList<>();
+                            List<Movie> movies = null;
                             if (pair.first != null && pair.first.getPage() <= pair.first.getTotalPages()) {
                                 mResultMoviePage = pair.first.getPage();
-                                works.addAll(pair.first.getWorks());
+                                movies = pair.first.getWorks();
                             }
+                            List<TvShow> tvShows = null;
                             if (pair.second != null && pair.second.getPage() <= pair.second.getTotalPages()) {
                                 mResultTvShowPage = pair.second.getPage();
-                                works.addAll(pair.second.getWorks());
+                                tvShows = pair.second.getWorks();
                             }
-                            mContract.onResultLoaded(works);
+                            mContract.onResultLoaded(movies, tvShows);
                         }
                     }, throwable -> {
                         Log.e(TAG, "Error while searching movies by query", throwable);
                         if (mContract != null) {
-                            mContract.onResultLoaded(null);
+                            mContract.onResultLoaded(null, null);
                         }
                     });
         } catch (UnsupportedEncodingException e) {
