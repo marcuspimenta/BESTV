@@ -54,14 +54,13 @@ import java.util.TimerTask;
 public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<WorkGridPresenter> implements WorkGridContract,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
-    private static final String TAG = "AbstractWorkGridFragment";
     protected static final String SHOW_PROGRESS = "SHOW_PROGRESS";
 
     private static final int ERROR_FRAGMENT_REQUEST_CODE = 1;
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int NUMBER_COLUMNS = 6;
 
-    private final Handler mHandler = new Handler();
+    private static final Handler sHandler = new Handler();
     private final BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> mMainFragmentAdapter =
             new BrowseSupportFragment.MainFragmentAdapter<>(this);
 
@@ -190,7 +189,7 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
         mBackgroundTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                mHandler.post(() -> {
+                sHandler.post(() -> {
                     mPresenter.loadBackdropImage(mWorkSelected);
                     mBackgroundTimer.cancel();
                 });

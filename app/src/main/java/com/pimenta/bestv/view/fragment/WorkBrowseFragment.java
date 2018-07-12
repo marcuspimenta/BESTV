@@ -37,6 +37,7 @@ import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.MovieGenre;
 import com.pimenta.bestv.repository.entity.TvShowGenre;
+import com.pimenta.bestv.view.activity.SearchActivity;
 import com.pimenta.bestv.view.fragment.base.BaseBrowseFragment;
 import com.pimenta.bestv.view.widget.GenreHeaderItem;
 import com.pimenta.bestv.view.widget.WorkTypeHeaderItem;
@@ -48,7 +49,7 @@ import java.util.List;
  */
 public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> implements WorkBrowseContract {
 
-    public static final String TAG = "WorkBrowseFragment";
+    public static final String TAG = WorkBrowseFragment.class.getSimpleName();
     private static final int TOP_WORK_LIST_ID = 1;
     private static final int WORK_GENRE_ID = 2;
     private static final int FAVORITE_INDEX = 0;
@@ -187,7 +188,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
 
         @Override
         public void onClick(final View v) {
-            addFragment(SearchFragment.newInstance(), SearchFragment.TAG);
+            startActivity(SearchActivity.newInstance(getContext()));
         }
     }
 

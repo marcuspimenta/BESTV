@@ -15,8 +15,11 @@
 package com.pimenta.bestv.view.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.ProgressBarManager;
 import android.support.v17.leanback.app.SearchSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -45,22 +48,32 @@ import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by marcus on 12-03-2018.
  */
 public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchContract,
-        SearchSupportFragment.SearchResultProvider, OnItemViewClickedListener, OnItemViewSelectedListener {
+        SearchSupportFragment.SearchResultProvider {
 
-    public static final String TAG = "SearchFragment";
+    public static final String TAG = SearchFragment.class.getSimpleName();
+
     private static final int SEARCH_FRAGMENT_REQUEST_CODE = 1;
     private static final int MOVIE_HEADER_ID = 1;
     private static final int TV_SHOW_HEADER_ID = 2;
+    private static final int BACKGROUND_UPDATE_DELAY = 300;
 
-    private final ProgressBarManager mProgressBarManager = new ProgressBarManager();
+    private static final Handler sHandler = new Handler();
+    private static final ProgressBarManager sProgressBarManager = new ProgressBarManager();
+
     private ArrayObjectAdapter mRowsAdapter;
     private ArrayObjectAdapter mMovieRowAdapter;
     private ArrayObjectAdapter mTvShowRowAdapter;
+    private BackgroundManager mBackgroundManager;
+
+    private Work mWorkSelected;
+    private Timer mBackgroundTimer;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -69,17 +82,14 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        setSearchResultProvider(this);
-        setOnItemViewClickedListener(this);
-        setOnItemViewSelectedListener(this);
+        setupUI();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mProgressBarManager.setRootView(container);
-        mProgressBarManager.enableProgressBar();
-        mProgressBarManager.setInitialDelay(0);
+        sProgressBarManager.setRootView(container);
+        sProgressBarManager.enableProgressBar();
+        sProgressBarManager.setInitialDelay(0);
 
         final View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
@@ -95,8 +105,19 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mWorkSelected != null) {
+            loadBackdropImage(false);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
-        mProgressBarManager.hide();
+        sProgressBarManager.hide();
+        if (mBackgroundTimer != null) {
+            mBackgroundTimer.cancel();
+        }
         super.onDestroyView();
     }
 
@@ -107,7 +128,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
 
     @Override
     public void onResultLoaded(final List<? extends Work> movies, final List<? extends Work> tvShows) {
-        mProgressBarManager.hide();
+        sProgressBarManager.hide();
         if ((movies != null && movies.size() > 0) || (tvShows != null && tvShows.size() > 0)) {
             mRowsAdapter.clear();
 
@@ -154,6 +175,11 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
+    public void onBackdropImageLoaded(final Bitmap bitmap) {
+        mBackgroundManager.setBitmap(bitmap);
+    }
+
+    @Override
     public ObjectAdapter getResultsAdapter() {
         return mRowsAdapter;
     }
@@ -171,34 +197,6 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-        final Work work = (Work) item;
-        final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-        startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
-    }
-
-    @Override
-    public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-        if (row != null && row.getHeaderItem() != null) {
-            switch ((int) row.getHeaderItem().getId()) {
-                case MOVIE_HEADER_ID:
-                    final Work movie = (Work) item;
-                    if (mMovieRowAdapter.indexOf(movie) >= mMovieRowAdapter.size() - 1) {
-                        mPresenter.loadMovies();
-                    }
-                    break;
-                case TV_SHOW_HEADER_ID:
-                    final Work tvShow = (Work) item;
-                    if (mTvShowRowAdapter.indexOf(tvShow) >= mTvShowRowAdapter.size() - 1) {
-                        mPresenter.loadTvShows();
-                    }
-                    break;
-            }
-        }
-    }
-
-    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case SEARCH_FRAGMENT_REQUEST_CODE:
@@ -210,16 +208,83 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         }
     }
 
+    private void setupUI() {
+        mBackgroundManager = BackgroundManager.getInstance(getActivity());
+        mBackgroundManager.attach(getActivity().getWindow());
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(mPresenter.getDisplayMetrics());
+
+        mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        setSearchResultProvider(this);
+        setOnItemViewSelectedListener(new ItemViewSelectedListener());
+        setOnItemViewClickedListener(new ItemViewClickedListener());
+    }
+
     private void searchQuery(String query) {
         mRowsAdapter.clear();
-        mProgressBarManager.show();
+        sProgressBarManager.show();
         mPresenter.searchWorksByQuery(query);
     }
 
     private void clearAdapter() {
+        mBackgroundManager.setBitmap(null);
         mRowsAdapter.clear();
         final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
         final HeaderItem header = new HeaderItem(0, getString(R.string.no_results));
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
+    }
+
+    private void loadBackdropImage(boolean delay) {
+        if (mWorkSelected == null) {
+            return;
+        }
+
+        if (mBackgroundTimer != null) {
+            mBackgroundTimer.cancel();
+        }
+        mBackgroundTimer = new Timer();
+        mBackgroundTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sHandler.post(() -> {
+                    mPresenter.loadBackdropImage(mWorkSelected);
+                    mBackgroundTimer.cancel();
+                });
+            }
+        }, delay ? BACKGROUND_UPDATE_DELAY : 0);
+    }
+
+    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+
+        @Override
+        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+            mWorkSelected = (Work) item;
+            loadBackdropImage(true);
+
+            if (row != null && row.getHeaderItem() != null) {
+                switch ((int) row.getHeaderItem().getId()) {
+                    case MOVIE_HEADER_ID:
+                        if (mMovieRowAdapter.indexOf(mWorkSelected) >= mMovieRowAdapter.size() - 1) {
+                            mPresenter.loadMovies();
+                        }
+                        break;
+                    case TV_SHOW_HEADER_ID:
+                        if (mTvShowRowAdapter.indexOf(mWorkSelected) >= mTvShowRowAdapter.size() - 1) {
+                            mPresenter.loadTvShows();
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private final class ItemViewClickedListener implements OnItemViewClickedListener {
+
+        @Override
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+            final Work work = (Work) item;
+            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                    ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+            startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
+        }
     }
 }

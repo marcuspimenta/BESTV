@@ -21,6 +21,7 @@ import com.pimenta.bestv.dagger.module.ApplicationModule;
 import com.pimenta.bestv.service.RecommendationService;
 import com.pimenta.bestv.view.activity.CastDetailsActivity;
 import com.pimenta.bestv.view.activity.MainActivity;
+import com.pimenta.bestv.view.activity.SearchActivity;
 import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.activity.SplashActivity;
 import com.pimenta.bestv.view.fragment.CastDetailsFragment;
@@ -54,6 +55,8 @@ public interface ApplicationComponent {
     void inject(SplashActivity activity);
 
     void inject(MainActivity activity);
+
+    void inject(SearchActivity activity);
 
     void inject(WorkDetailsActivity activity);
 

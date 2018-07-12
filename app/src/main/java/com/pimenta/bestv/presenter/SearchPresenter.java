@@ -14,11 +14,17 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
@@ -44,6 +50,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
 
     private static final String TAG = SearchPresenter.class.getSimpleName();
 
+    private DisplayMetrics mDisplayMetrics;
     private MediaRepository mMediaRepository;
     private ImageManager mImageManager;
 
@@ -53,8 +60,9 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
     private Disposable mDisposable;
 
     @Inject
-    public SearchPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
+    public SearchPresenter(DisplayMetrics displayMetrics, MediaRepository mediaRepository, ImageManager imageManager) {
         super();
+        mDisplayMetrics = displayMetrics;
         mMediaRepository = mediaRepository;
         mImageManager = imageManager;
     }
@@ -63,6 +71,15 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
     public void unRegister() {
         disposeSearchMovie();
         super.unRegister();
+    }
+
+    /**
+     * Gets the {@link DisplayMetrics} instance
+     *
+     * @return {@link DisplayMetrics}
+     */
+    public DisplayMetrics getDisplayMetrics() {
+        return mDisplayMetrics;
     }
 
     /**
@@ -169,6 +186,32 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      */
     public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
         mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
+    }
+
+    /**
+     * Loads the {@link android.graphics.drawable.Drawable} from the {@link Work}
+     *
+     * @param work {@link Work}
+     */
+    public void loadBackdropImage(@NonNull Work work) {
+        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getBackdropPath()),
+                new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(resource);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable final Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        Log.w(TAG, "Error while loading backdrop image");
+                        if (mContract != null) {
+                            mContract.onBackdropImageLoaded(null);
+                        }
+                    }
+                });
     }
 
     /**

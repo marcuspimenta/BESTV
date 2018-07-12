@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.graphics.Bitmap;
+
 import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
@@ -28,5 +30,7 @@ public interface SearchContract extends BasePresenter.Contract {
     void onMoviesLoaded(List<? extends Work> movies);
 
     void onTvShowsLoaded(List<? extends Work> tvShows);
+
+    void onBackdropImageLoaded(Bitmap bitmap);
 
 }
