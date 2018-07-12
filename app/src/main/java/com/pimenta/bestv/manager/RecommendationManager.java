@@ -14,7 +14,9 @@
 
 package com.pimenta.bestv.manager;
 
-import com.pimenta.bestv.repository.entity.MoviePage;
+import com.pimenta.bestv.repository.entity.Work;
+
+import java.util.List;
 
 /**
  * Created by marcus on 06-03-2018.
@@ -24,10 +26,10 @@ public interface RecommendationManager {
     /**
      * Loads the recommendations
      *
-     * @param movieList {@link MoviePage}
+     * @param works {@link List<? extends Work>}
      *
      * @return {@code true} if success, {@code false} otherwise
      */
-    boolean loadRecommendations(MoviePage movieList);
+    <T extends Work> boolean loadRecommendations(List<T> works);
 
 }

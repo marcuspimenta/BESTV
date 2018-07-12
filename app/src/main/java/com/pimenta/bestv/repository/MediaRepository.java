@@ -162,46 +162,6 @@ public interface MediaRepository {
     Single<VideoList> getVideosByWork(Work work);
 
     /**
-     * Gets the now playing {@link MoviePage}
-     *
-     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
-     *             default: 1
-     *
-     * @return {@link Single<MoviePage>}
-     */
-    Single<MoviePage> getNowPlayingMovies(int page);
-
-    /**
-     * Gets the popular {@link MoviePage}
-     *
-     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
-     *             default: 1
-     *
-     * @return {@link Single<MoviePage>}
-     */
-    Single<MoviePage> getPopularMovies(int page);
-
-    /**
-     * Gets the top rated {@link MoviePage}
-     *
-     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
-     *             default: 1
-     *
-     * @return {@link Single<MoviePage>}
-     */
-    Single<MoviePage> getTopRatedMovies(int page);
-
-    /**
-     * Gets the up coming {@link MoviePage}
-     *
-     * @param page Specify which page to query. Minimum: 1, maximum: 1000,
-     *             default: 1
-     *
-     * @return {@link Single<MoviePage>}
-     */
-    Single<MoviePage> getUpComingMovies(int page);
-
-    /**
      * Searches the movies by a query
      *
      * @param query Query to search the movies

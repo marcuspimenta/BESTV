@@ -216,26 +216,6 @@ public class MediaRepositoryImpl implements MediaRepository {
     }
 
     @Override
-    public Single<MoviePage> getNowPlayingMovies(final int page) {
-        return mMediaRemote.getNowPlayingMovies(page);
-    }
-
-    @Override
-    public Single<MoviePage> getPopularMovies(final int page) {
-        return mMediaRemote.getPopularMovies(page);
-    }
-
-    @Override
-    public Single<MoviePage> getTopRatedMovies(final int page) {
-        return mMediaRemote.getTopRatedMovies(page);
-    }
-
-    @Override
-    public Single<MoviePage> getUpComingMovies(final int page) {
-        return mMediaRemote.getUpComingMovies(page);
-    }
-
-    @Override
     public Single<MoviePage> searchMoviesByQuery(final String query, final int page) {
         return mMediaRemote.searchMoviesByQuery(query, page);
     }

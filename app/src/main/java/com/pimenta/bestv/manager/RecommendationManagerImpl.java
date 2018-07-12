@@ -25,10 +25,10 @@ import com.bumptech.glide.Glide;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -51,11 +51,11 @@ public class RecommendationManagerImpl implements RecommendationManager {
     }
 
     @Override
-    public boolean loadRecommendations(MoviePage moviePage) {
+    public <T extends Work> boolean loadRecommendations(final List<T> works) {
         mNotificationManager.cancelAll();
-        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages() && moviePage.getWorks() != null) {
+        if (works != null) {
             int count = 0;
-            for (final Work work : moviePage.getWorks()) {
+            for (final Work work : works) {
                 try {
                     int id = Long.valueOf(work.getId()).hashCode();
 
