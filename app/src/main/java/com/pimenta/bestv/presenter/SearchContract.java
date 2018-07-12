@@ -25,4 +25,8 @@ public interface SearchContract extends BasePresenter.Contract {
 
     void onResultLoaded(List<? extends Work> movies, List<? extends Work> tvShows);
 
+    void onMoviesLoaded(List<? extends Work> movies);
+
+    void onTvShowsLoaded(List<? extends Work> tvShows);
+
 }

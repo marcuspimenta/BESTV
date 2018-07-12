@@ -26,6 +26,7 @@ import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.ObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
+import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
@@ -49,13 +50,17 @@ import java.util.List;
  * Created by marcus on 12-03-2018.
  */
 public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchContract,
-        SearchSupportFragment.SearchResultProvider, OnItemViewClickedListener {
+        SearchSupportFragment.SearchResultProvider, OnItemViewClickedListener, OnItemViewSelectedListener {
 
     public static final String TAG = "SearchFragment";
     private static final int SEARCH_FRAGMENT_REQUEST_CODE = 1;
+    private static final int MOVIE_HEADER_ID = 1;
+    private static final int TV_SHOW_HEADER_ID = 2;
 
     private final ProgressBarManager mProgressBarManager = new ProgressBarManager();
     private ArrayObjectAdapter mRowsAdapter;
+    private ArrayObjectAdapter mMovieRowAdapter;
+    private ArrayObjectAdapter mTvShowRowAdapter;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -67,6 +72,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setSearchResultProvider(this);
         setOnItemViewClickedListener(this);
+        setOnItemViewSelectedListener(this);
     }
 
     @Override
@@ -102,26 +108,48 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     @Override
     public void onResultLoaded(final List<? extends Work> movies, final List<? extends Work> tvShows) {
         mProgressBarManager.hide();
-        if (movies != null || tvShows != null) {
+        if ((movies != null && movies.size() > 0) || (tvShows != null && tvShows.size() > 0)) {
             mRowsAdapter.clear();
 
             final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
 
             if (movies != null) {
-                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(workCardPresenter);
-                final HeaderItem header = new HeaderItem(getString(R.string.movies));
-                listRowAdapter.addAll(0, movies);
-                mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                final HeaderItem header = new HeaderItem(MOVIE_HEADER_ID, getString(R.string.movies));
+                mMovieRowAdapter = new ArrayObjectAdapter(workCardPresenter);
+                mMovieRowAdapter.addAll(0, movies);
+                mRowsAdapter.add(new ListRow(header, mMovieRowAdapter));
             }
             if (tvShows != null) {
-                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(workCardPresenter);
-                final HeaderItem header = new HeaderItem(getString(R.string.tv_shows));
-                listRowAdapter.addAll(0, tvShows);
-                mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                final HeaderItem header = new HeaderItem(TV_SHOW_HEADER_ID, getString(R.string.tv_shows));
+                mTvShowRowAdapter = new ArrayObjectAdapter(workCardPresenter);
+                mTvShowRowAdapter.addAll(0, tvShows);
+                mRowsAdapter.add(new ListRow(header, mTvShowRowAdapter));
             }
         } else {
             clearAdapter();
+        }
+    }
+
+    @Override
+    public void onMoviesLoaded(final List<? extends Work> movies) {
+        if (movies != null) {
+            for (final Work work : movies) {
+                if (mMovieRowAdapter.indexOf(work) == -1) {
+                    mMovieRowAdapter.add(work);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onTvShowsLoaded(final List<? extends Work> tvShows) {
+        if (tvShows != null) {
+            for (final Work work : tvShows) {
+                if (mTvShowRowAdapter.indexOf(work) == -1) {
+                    mTvShowRowAdapter.add(work);
+                }
+            }
         }
     }
 
@@ -148,6 +176,26 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                 ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
         startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
+    }
+
+    @Override
+    public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+        if (row != null && row.getHeaderItem() != null) {
+            switch ((int) row.getHeaderItem().getId()) {
+                case MOVIE_HEADER_ID:
+                    final Work movie = (Work) item;
+                    if (mMovieRowAdapter.indexOf(movie) >= mMovieRowAdapter.size() - 1) {
+                        mPresenter.loadMovies();
+                    }
+                    break;
+                case TV_SHOW_HEADER_ID:
+                    final Work tvShow = (Work) item;
+                    if (mTvShowRowAdapter.indexOf(tvShow) >= mTvShowRowAdapter.size() - 1) {
+                        mPresenter.loadTvShows();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override

@@ -112,9 +112,59 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
     }
 
     /**
+     * Load the movies by a query
+     */
+    public void loadMovies() {
+        int resultMoviePage = mResultMoviePage + 1;
+        mCompositeDisposable.add(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(moviePage -> {
+                    if (mContract != null) {
+                        if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
+                            mResultMoviePage = moviePage.getPage();
+                            mContract.onMoviesLoaded(moviePage.getWorks());
+                        } else {
+                            mContract.onMoviesLoaded(null);
+                        }
+                    }
+                }, throwable -> {
+                    Log.e(TAG, "Error while loading movies by query", throwable);
+                    if (mContract != null) {
+                        mContract.onMoviesLoaded(null);
+                    }
+                }));
+    }
+
+    /**
+     * Load the tv shows by a query
+     */
+    public void loadTvShows() {
+        int resultTvShowPage = mResultTvShowPage + 1;
+        mCompositeDisposable.add(mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tvShowPage -> {
+                    if (mContract != null) {
+                        if (tvShowPage != null && tvShowPage.getPage() <= tvShowPage.getTotalPages()) {
+                            mResultTvShowPage = tvShowPage.getPage();
+                            mContract.onTvShowsLoaded(tvShowPage.getWorks());
+                        } else {
+                            mContract.onTvShowsLoaded(null);
+                        }
+                    }
+                }, throwable -> {
+                    Log.e(TAG, "Error while loading tv shows by query", throwable);
+                    if (mContract != null) {
+                        mContract.onTvShowsLoaded(null);
+                    }
+                }));
+    }
+
+    /**
      * Loads the {@link Work} porter into {@link ImageView}
      *
-     * @param work     {@link Work}
+     * @param work      {@link Work}
      * @param imageView {@link ImageView}
      */
     public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
