@@ -128,20 +128,23 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
 
     @Override
     public void onResultLoaded(final List<? extends Work> movies, final List<? extends Work> tvShows) {
+        boolean hasMovies = movies != null && movies.size() > 0;
+        boolean hasTvShows = tvShows != null && tvShows.size() > 0;
+
         sProgressBarManager.hide();
-        if ((movies != null && movies.size() > 0) || (tvShows != null && tvShows.size() > 0)) {
+        if (hasMovies || hasTvShows) {
             mRowsAdapter.clear();
 
             final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
 
-            if (movies != null) {
+            if (hasMovies) {
                 final HeaderItem header = new HeaderItem(MOVIE_HEADER_ID, getString(R.string.movies));
                 mMovieRowAdapter = new ArrayObjectAdapter(workCardPresenter);
                 mMovieRowAdapter.addAll(0, movies);
                 mRowsAdapter.add(new ListRow(header, mMovieRowAdapter));
             }
-            if (tvShows != null) {
+            if (hasTvShows) {
                 final HeaderItem header = new HeaderItem(TV_SHOW_HEADER_ID, getString(R.string.tv_shows));
                 mTvShowRowAdapter = new ArrayObjectAdapter(workCardPresenter);
                 mTvShowRowAdapter.addAll(0, tvShows);
