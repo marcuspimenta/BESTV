@@ -104,14 +104,18 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         mProgressBarManager.hide();
         if (movies != null || tvShows != null) {
             mRowsAdapter.clear();
+
+            final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+
             if (movies != null) {
-                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
+                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(workCardPresenter);
                 final HeaderItem header = new HeaderItem(getString(R.string.movies));
                 listRowAdapter.addAll(0, movies);
                 mRowsAdapter.add(new ListRow(header, listRowAdapter));
             }
             if (tvShows != null) {
-                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
+                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(workCardPresenter);
                 final HeaderItem header = new HeaderItem(getString(R.string.tv_shows));
                 listRowAdapter.addAll(0, tvShows);
                 mRowsAdapter.add(new ListRow(header, listRowAdapter));

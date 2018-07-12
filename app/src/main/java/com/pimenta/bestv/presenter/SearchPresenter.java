@@ -14,12 +14,17 @@
 
 package com.pimenta.bestv.presenter;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.ImageView;
 
+import com.pimenta.bestv.BuildConfig;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.TvShow;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -40,16 +45,18 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
     private static final String TAG = SearchPresenter.class.getSimpleName();
 
     private MediaRepository mMediaRepository;
-    private Disposable mDisposable;
+    private ImageManager mImageManager;
 
     private String mQuery;
     private int mResultMoviePage = 0;
     private int mResultTvShowPage = 0;
+    private Disposable mDisposable;
 
     @Inject
-    public SearchPresenter(MediaRepository mediaRepository) {
+    public SearchPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
         super();
         mMediaRepository = mediaRepository;
+        mImageManager = imageManager;
     }
 
     @Override
@@ -102,6 +109,16 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, "Error while encoding the query", e);
         }
+    }
+
+    /**
+     * Loads the {@link Work} porter into {@link ImageView}
+     *
+     * @param work     {@link Work}
+     * @param imageView {@link ImageView}
+     */
+    public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
+        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
     }
 
     /**
