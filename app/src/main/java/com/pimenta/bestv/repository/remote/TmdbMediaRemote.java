@@ -187,4 +187,9 @@ public class TmdbMediaRemote implements MediaRemote {
     public Single<VideoList> getVideosByTvShow(final TvShow tvShow) {
         return mTvShowApi.getVideosByTvShow(tvShow.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
+
+    @Override
+    public Single<TvShowPage> searchTvShowsByQuery(final String query, final int page) {
+        return mTvShowApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page);
+    }
 }

@@ -25,6 +25,7 @@ import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.WorkPage;
 import com.pimenta.bestv.repository.entity.Work;
@@ -210,6 +211,17 @@ public interface MediaRepository {
      * @return {@link Single<MoviePage>}
      */
     Single<MoviePage> searchMoviesByQuery(String query, int page);
+
+    /**
+     * Searches the tv shows by a query
+     *
+     * @param query Query to search the movies
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> searchTvShowsByQuery(String query, int page);
 
     /**
      * Gets the {@link Cast} details by the {@link Cast}

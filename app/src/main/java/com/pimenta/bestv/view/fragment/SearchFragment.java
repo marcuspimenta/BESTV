@@ -36,11 +36,11 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.repository.entity.Movie;
-import com.pimenta.bestv.view.activity.WorkDetailsActivity;
-import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;
+import com.pimenta.bestv.repository.entity.Work;
+import com.pimenta.bestv.view.activity.WorkDetailsActivity;
+import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
 import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
@@ -100,13 +100,13 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onResultLoaded(final List<Movie> movies) {
+    public void onResultLoaded(final List<Work> works) {
         mProgressBarManager.hide();
-        if (movies != null && movies.size() > 0) {
+        if (works != null && works.size() > 0) {
             mRowsAdapter.clear();
             final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
             final HeaderItem header = new HeaderItem(getString(R.string.results));
-            listRowAdapter.addAll(0, movies);
+            listRowAdapter.addAll(0, works);
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
         } else {
             clearAdapter();
@@ -142,7 +142,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     private void searchQuery(String query) {
         mRowsAdapter.clear();
         mProgressBarManager.show();
-        mPresenter.searchMoviesByQuery(query);
+        mPresenter.searchWorksByQuery(query);
     }
 
     private void clearAdapter() {
@@ -156,12 +156,10 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                final Movie movie = (Movie) item;
-                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(WorkDetailsActivity.newInstance(getContext(), movie), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
-            }
+            final Work work = (Work) item;
+            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                    ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+            startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
         }
     }
 }

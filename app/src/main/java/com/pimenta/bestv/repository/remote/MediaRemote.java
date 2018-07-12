@@ -273,4 +273,15 @@ public interface MediaRemote {
      * @return {@link Single<VideoList>}
      */
     Single<VideoList> getVideosByTvShow(TvShow tvShow);
+
+    /**
+     * Searches the tv shows by a query
+     *
+     * @param query Query to search the movies
+     * @param page  Specify which page to query. Minimum: 1, maximum: 1000,
+     *              default: 1
+     *
+     * @return {@link Single<TvShowPage>}
+     */
+    Single<TvShowPage> searchTvShowsByQuery(String query, int page);
 }

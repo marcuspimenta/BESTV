@@ -26,6 +26,7 @@ import com.pimenta.bestv.repository.entity.MovieGenreList;
 import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.TvShow;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
+import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.repository.entity.WorkPage;
@@ -237,6 +238,11 @@ public class MediaRepositoryImpl implements MediaRepository {
     @Override
     public Single<MoviePage> searchMoviesByQuery(final String query, final int page) {
         return mMediaRemote.searchMoviesByQuery(query, page);
+    }
+
+    @Override
+    public Single<TvShowPage> searchTvShowsByQuery(final String query, final int page) {
+        return mMediaRemote.searchTvShowsByQuery(query, page);
     }
 
     @Override

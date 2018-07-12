@@ -15,14 +15,19 @@
 package com.pimenta.bestv.presenter;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -34,10 +39,12 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
 
     private static final String TAG = SearchPresenter.class.getSimpleName();
 
-    private int mResultPage = 0;
-
     private MediaRepository mMediaRepository;
     private Disposable mDisposable;
+
+    private String mQuery;
+    private int mResultMoviePage = 0;
+    private int mResultTvShowPage = 0;
 
     @Inject
     public SearchPresenter(MediaRepository mediaRepository) {
@@ -56,22 +63,34 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      *
      * @param query Query to search the movies
      */
-    public void searchMoviesByQuery(String query) {
+    public void searchWorksByQuery(String query) {
         disposeSearchMovie();
         try {
-            String encodeQuery = URLEncoder.encode(query, "UTF-8");
-            int resultPage = mResultPage + 1;
-            mDisposable = mMediaRepository.searchMoviesByQuery(encodeQuery, resultPage)
+            String queryEncode = URLEncoder.encode(query, "UTF-8");
+            if (!queryEncode.equals(mQuery)) {
+                mResultMoviePage = 0;
+                mResultTvShowPage = 0;
+            }
+            mQuery = queryEncode;
+            int resultMoviePage = mResultMoviePage + 1;
+            int resultTvShowPage = mResultTvShowPage + 1;
+            mDisposable = Single.zip(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage),
+                    mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage),
+                    Pair::new)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(moviePage -> {
+                    .subscribe(pair -> {
                         if (mContract != null) {
-                            if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
-                                mResultPage = moviePage.getPage();
-                                mContract.onResultLoaded(moviePage.getWorks());
-                            } else {
-                                mContract.onResultLoaded(null);
+                            final List<Work> works = new ArrayList<>();
+                            if (pair.first != null && pair.first.getPage() <= pair.first.getTotalPages()) {
+                                mResultMoviePage = pair.first.getPage();
+                                works.addAll(pair.first.getWorks());
                             }
+                            if (pair.second != null && pair.second.getPage() <= pair.second.getTotalPages()) {
+                                mResultTvShowPage = pair.second.getPage();
+                                works.addAll(pair.second.getWorks());
+                            }
+                            mContract.onResultLoaded(works);
                         }
                     }, throwable -> {
                         Log.e(TAG, "Error while searching movies by query", throwable);

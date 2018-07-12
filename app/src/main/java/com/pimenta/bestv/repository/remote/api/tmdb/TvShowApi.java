@@ -63,4 +63,8 @@ public interface TvShowApi {
     Single<TvShowPage> getSimilarByTvShow(@Path("tv_id") int tvId, @Query("api_key") String apiKey, @Query("language") String language,
             @Query("page") int page);
 
+    @GET("search/tv")
+    Single<TvShowPage> searchTvShowsByQuery(@Query("api_key") String apiKey, @Query("query") String query, @Query("language") String language,
+            @Query("page") int page);
+
 }

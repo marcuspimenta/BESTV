@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.presenter;
 
-import com.pimenta.bestv.repository.entity.Movie;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ import java.util.List;
  */
 public interface SearchContract extends BasePresenter.Contract {
 
-    void onResultLoaded(List<Movie> movies);
+    void onResultLoaded(List<Work> works);
 
 }
