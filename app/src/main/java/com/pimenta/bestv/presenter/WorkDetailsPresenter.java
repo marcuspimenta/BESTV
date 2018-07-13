@@ -121,7 +121,7 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 mMediaRepository.getCastByWork(work),
                 mMediaRepository.getRecommendationByWork(work, recommendedPageSearch),
                 mMediaRepository.getSimilarByWork(work, similarPageSearch),
-                MovieInfo::new)
+                WorkInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
@@ -285,16 +285,16 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
     }
 
     /**
-     * Wrapper class to keep the movie info
+     * Wrapper class to keep the work info
      */
-    private class MovieInfo {
+    private class WorkInfo {
 
         private VideoList mVideos;
         private CastList mCasts;
         private WorkPage mRecommendedMovies;
         private WorkPage mSimilarMovies;
 
-        public MovieInfo(final VideoList videos, final CastList casts, final WorkPage recommendedMovies, final WorkPage similarMovies) {
+        public WorkInfo(final VideoList videos, final CastList casts, final WorkPage recommendedMovies, final WorkPage similarMovies) {
             mVideos = videos;
             mCasts = casts;
             mRecommendedMovies = recommendedMovies;

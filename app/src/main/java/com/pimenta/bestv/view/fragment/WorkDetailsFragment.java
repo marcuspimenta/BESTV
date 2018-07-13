@@ -154,7 +154,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mRecommendedRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mRecommendedRowAdapter.addAll(0, recommendedWorks);
-            final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended_movies));
+            final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
         }
 
@@ -164,7 +164,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
             workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mSimilarRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mSimilarRowAdapter.addAll(0, similarWorks);
-            final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar_movies));
+            final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
         }
     }

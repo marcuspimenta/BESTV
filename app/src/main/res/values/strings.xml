@@ -9,12 +9,10 @@
     <string name="up_coming">Up coming</string>
     <string name="on_the_air">On the air</string>
     <string name="airing_today">Airing today</string>
-    <string name="cast">Cast</string>
-    <string name="videos">Videos</string>
-    <string name="recommended">Recommended</string>
-    <string name="recommended_movies">Recommended movies</string>
-    <string name="similar">Similar</string>
-    <string name="similar_movies">Similar movies</string>
+    <string name="cast">CAST</string>
+    <string name="videos">VIDEOS</string>
+    <string name="recommended">RECOMMENDED</string>
+    <string name="similar">SIMILAR</string>
     <string name="save_favorites">Add to favorites</string>
     <string name="remove_favorites">Remove from favorites</string>
     <string name="results">Results</string>
@@ -23,8 +21,4 @@
     <!-- Error messages -->
     <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>
     <string name="error_fragment_button">Try again</string>
-
-    <!-- TMDb API sources -->
-    <string name="tmdb_filer_sort_by_desc">created_at.desc</string>
-    <string name="tmdb_filer_sort_by_asc">created_at.desc</string>
 </resources>

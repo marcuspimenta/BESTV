@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -25,9 +26,13 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
+import com.pimenta.bestv.repository.entity.Work;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -54,17 +59,22 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      * @param cast {@link Cast}
      */
     public void loadCastDetails(Cast cast) {
-        mCompositeDisposable.add(mMediaRepository.getCastDetails(cast)
+        mCompositeDisposable.add(Single.zip(mMediaRepository.getCastDetails(cast),
+                mMediaRepository.getMovieCreditsByCast(cast),
+                mMediaRepository.getTvShowCreditsByCast(cast),
+                CastInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(castResult -> {
+                .subscribe(castInfo -> {
                     if (mContract != null) {
-                        mContract.onCastLoaded(castResult);
+                        mContract.onCastLoaded(castInfo.getCast(),
+                                castInfo.getCastMovieList() != null ? castInfo.getCastMovieList().getWorks() : null,
+                                castInfo.getCastTvShowList() != null ? castInfo.getCastTvShowList().getWorks() : null);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while getting the cast details", throwable);
                     if (mContract != null) {
-                        mContract.onCastLoaded(null);
+                        mContract.onCastLoaded(null, null, null);
                     }
                 }));
     }
@@ -92,5 +102,44 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
                         }
                     }
                 });
+    }
+
+    /**
+     * Loads the {@link Work} porter into {@link ImageView}
+     *
+     * @param work      {@link Work}
+     * @param imageView {@link ImageView}
+     */
+    public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
+        mImageManager.loadImageInto(imageView,
+                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
+    }
+
+    /**
+     * Wrapper class that keeps the cast info
+     */
+    private class CastInfo {
+
+        private Cast mCast;
+        private CastMovieList mCastMovieList;
+        private CastTvShowList mCastTvShowList;
+
+        public CastInfo(final Cast cast, final CastMovieList castMovieList, final CastTvShowList castTvShowList) {
+            mCast = cast;
+            mCastMovieList = castMovieList;
+            mCastTvShowList = castTvShowList;
+        }
+
+        public Cast getCast() {
+            return mCast;
+        }
+
+        public CastMovieList getCastMovieList() {
+            return mCastMovieList;
+        }
+
+        public CastTvShowList getCastTvShowList() {
+            return mCastTvShowList;
+        }
     }
 }

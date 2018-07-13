@@ -17,13 +17,16 @@ package com.pimenta.bestv.presenter;
 import android.graphics.drawable.Drawable;
 
 import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.Work;
+
+import java.util.List;
 
 /**
  * Created by marcus on 05-04-2018.
  */
 public interface CastDetailsContract extends BasePresenter.Contract {
 
-    void onCastLoaded(Cast cast);
+    void onCastLoaded(Cast cast, List<? extends Work> movies, List<? extends Work> tvShow);
 
     void onCardImageLoaded(Drawable resource);
 
