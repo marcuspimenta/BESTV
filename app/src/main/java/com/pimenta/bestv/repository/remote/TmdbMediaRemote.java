@@ -19,6 +19,8 @@ import android.util.Log;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
@@ -27,9 +29,9 @@ import com.pimenta.bestv.repository.entity.TvShow;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
+import com.pimenta.bestv.repository.remote.api.tmdb.CastApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
-import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi;
 
 import java.io.IOException;
@@ -47,11 +49,11 @@ public class TmdbMediaRemote implements MediaRemote {
 
     private GenreApi mGenreApi;
     private MovieApi mMovieApi;
-    private PersonApi mPersonApi;
+    private CastApi mPersonApi;
     private TvShowApi mTvShowApi;
 
     @Inject
-    public TmdbMediaRemote(GenreApi genreApi, MovieApi movieApi, PersonApi personApi, TvShowApi tvShowApi) {
+    public TmdbMediaRemote(GenreApi genreApi, MovieApi movieApi, CastApi personApi, TvShowApi tvShowApi) {
         mGenreApi = genreApi;
         mMovieApi = movieApi;
         mPersonApi = personApi;
@@ -126,6 +128,16 @@ public class TmdbMediaRemote implements MediaRemote {
     @Override
     public Single<Cast> getCastDetails(final Cast cast) {
         return mPersonApi.getCastDetails(cast.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    }
+
+    @Override
+    public Single<CastMovieList> getMovieCreditsByCast(final Cast cast) {
+        return mPersonApi.getMovieCredits(cast.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
+    }
+
+    @Override
+    public Single<CastTvShowList> getTvShowCreditsByCast(final Cast cast) {
+        return mPersonApi.getTvShowCredits(cast.getId(), BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE);
     }
 
     @Override

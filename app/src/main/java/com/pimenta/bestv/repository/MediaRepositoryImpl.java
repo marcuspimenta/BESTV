@@ -20,6 +20,8 @@ import com.pimenta.bestv.repository.database.dao.MovieDao;
 import com.pimenta.bestv.repository.database.dao.TvShowDao;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
@@ -228,6 +230,16 @@ public class MediaRepositoryImpl implements MediaRepository {
     @Override
     public Single<Cast> getCastDetails(final Cast cast) {
         return mMediaRemote.getCastDetails(cast);
+    }
+
+    @Override
+    public Single<CastMovieList> getMovieCreditsByCast(final Cast cast) {
+        return mMediaRemote.getMovieCreditsByCast(cast);
+    }
+
+    @Override
+    public Single<CastTvShowList> getTvShowCreditsByCast(final Cast cast) {
+        return mMediaRemote.getTvShowCreditsByCast(cast);
     }
 
     @Override

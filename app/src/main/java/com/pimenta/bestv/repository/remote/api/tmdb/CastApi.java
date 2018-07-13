@@ -15,6 +15,8 @@
 package com.pimenta.bestv.repository.remote.api.tmdb;
 
 import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -24,9 +26,15 @@ import retrofit2.http.Query;
 /**
  * Created by marcus on 04-04-2018.
  */
-public interface PersonApi {
+public interface CastApi {
 
     @GET("person/{person_id}")
     Single<Cast> getCastDetails(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("person/{person_id}/movie_credits")
+    Single<CastMovieList> getMovieCredits(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("person/{person_id}/tv_credits")
+    Single<CastTvShowList> getTvShowCredits(@Path("person_id") int personId, @Query("api_key") String apiKey, @Query("language") String language);
 
 }

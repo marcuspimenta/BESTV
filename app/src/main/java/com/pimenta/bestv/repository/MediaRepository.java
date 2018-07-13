@@ -20,6 +20,8 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
@@ -27,8 +29,8 @@ import com.pimenta.bestv.repository.entity.MoviePage;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.TvShowPage;
 import com.pimenta.bestv.repository.entity.VideoList;
-import com.pimenta.bestv.repository.entity.WorkPage;
 import com.pimenta.bestv.repository.entity.Work;
+import com.pimenta.bestv.repository.entity.WorkPage;
 
 import java.util.List;
 
@@ -191,6 +193,24 @@ public interface MediaRepository {
      * @return {@link Single<Cast>}
      */
     Single<Cast> getCastDetails(Cast cast);
+
+    /**
+     * Gets the {@link CastMovieList} details by the {@link Cast}
+     *
+     * @param cast {@link Cast} to search
+     *
+     * @return {@link Single<CastMovieList>}
+     */
+    Single<CastMovieList> getMovieCreditsByCast(Cast cast);
+
+    /**
+     * Gets the {@link CastTvShowList} details by the {@link Cast}
+     *
+     * @param cast {@link Cast} to search
+     *
+     * @return {@link Single<CastTvShowList>}
+     */
+    Single<CastTvShowList> getTvShowCreditsByCast(Cast cast);
 
     /**
      * Gets the {@link TvShowGenreList} available at TMDb

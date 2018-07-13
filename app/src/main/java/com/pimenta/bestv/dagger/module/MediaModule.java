@@ -17,9 +17,9 @@ package com.pimenta.bestv.dagger.module;
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.pimenta.bestv.BuildConfig;
+import com.pimenta.bestv.repository.remote.api.tmdb.CastApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi;
-import com.pimenta.bestv.repository.remote.api.tmdb.PersonApi;
 import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi;
 
 import javax.inject.Named;
@@ -63,8 +63,8 @@ public class MediaModule {
 
     @Provides
     @Singleton
-    PersonApi providePersonApi(@Named("Tmdb") Retrofit retrofit) {
-        return retrofit.create(PersonApi.class);
+    CastApi provideCastApi(@Named("Tmdb") Retrofit retrofit) {
+        return retrofit.create(CastApi.class);
     }
 
     @Provides

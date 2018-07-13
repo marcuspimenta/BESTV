@@ -16,6 +16,8 @@ package com.pimenta.bestv.repository.remote;
 
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
+import com.pimenta.bestv.repository.entity.CastMovieList;
+import com.pimenta.bestv.repository.entity.CastTvShowList;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.GenreList;
 import com.pimenta.bestv.repository.entity.Movie;
@@ -164,6 +166,24 @@ public interface MediaRemote {
      * @return {@link Single<Cast>}
      */
     Single<Cast> getCastDetails(Cast cast);
+
+    /**
+     * Gets the {@link CastMovieList} details by the {@link Cast}
+     *
+     * @param cast {@link Cast} to search
+     *
+     * @return {@link Single<CastMovieList>}
+     */
+    Single<CastMovieList> getMovieCreditsByCast(Cast cast);
+
+    /**
+     * Gets the {@link CastTvShowList} details by the {@link Cast}
+     *
+     * @param cast {@link Cast} to search
+     *
+     * @return {@link Single<CastTvShowList>}
+     */
+    Single<CastTvShowList> getTvShowCreditsByCast(Cast cast);
 
     /**
      * Gets the {@link GenreList} available at TMDb
