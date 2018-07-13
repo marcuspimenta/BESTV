@@ -16,7 +16,7 @@ Sample about Android TV, that shows how to use the Leandback library from Google
 <li>Glide
 </ul>
 
-# API Keys
+## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.
 To be able to run this application you have to create an API KEY from The Movie DB and place it in your gradle file.
 <br>
@@ -24,11 +24,21 @@ To be able to run this application you have to create an API KEY from The Movie 
 buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 ```
 
+## Features
+<ul>
+<li>Show the top movies and tv shows</li>
+<li>Show the top movies and tv shows by genre</li>
+<li>Details about a work including the casts, the videos, the similar and recommended works</li>
+<li>Details about a cast including the credits</li>
+<li>Search the movies and the tv shows by title</li>
+</ul>
+
 ## Screenshots
-<p align="center"> <img src="images/device-2018-05-04-091859.png"/> </p>
-<p align="center"> <img src="images/device-2018-05-04-091948.png"/> </p>
-<p align="center"> <img src="images/device-2018-05-04-092348.png"/> </p>
-<p align="center"> <img src="images/device-2018-05-04-092327.png"/> </p>
+<p align="center"> <img src="images/device-2018-07-13-091451.png"/> </p>
+<p align="center"> <img src="images/device-2018-07-13-091529.png"/> </p>
+<p align="center"> <img src="images/device-2018-07-13-091549.png"/> </p>
+<p align="center"> <img src="images/device-2018-07-13-091713.png"/> </p>
+<p align="center"> <img src="images/device-2018-07-13-091625.png"/> </p>
 
 ## Licence
 ```
