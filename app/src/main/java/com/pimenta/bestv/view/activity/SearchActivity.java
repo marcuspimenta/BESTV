@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
+import com.pimenta.bestv.presenter.BasePresenter;
 import com.pimenta.bestv.presenter.DefaultPresenter;
 import com.pimenta.bestv.view.fragment.SearchFragment;
 

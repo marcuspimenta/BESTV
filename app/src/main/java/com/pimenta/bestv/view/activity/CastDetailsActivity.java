@@ -20,6 +20,7 @@ import android.os.Bundle;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.presenter.BasePresenter;
 import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.presenter.DefaultPresenter;

@@ -43,13 +43,13 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
      * Loads the recommendations
      */
     public void loadRecommendations() {
-        mCompositeDisposable.add(mMediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
+        getCompositeDisposable().add(mMediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
                 .map(workPage -> mRecommendationManager.loadRecommendations(workPage.getWorks()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
-                    if (mContract != null) {
-                        mContract.onLoadRecommendationFinished();
+                    if (getContract() != null) {
+                        getContract().onLoadRecommendationFinished();
                     }
                 }));
     }

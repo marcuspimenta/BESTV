@@ -61,38 +61,38 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
     public void loadWorksByType(MediaRepository.WorkType movieListType) {
         switch (movieListType) {
             case FAVORITES_MOVIES:
-                mCompositeDisposable.add(mMediaRepository.getFavorites()
+                getCompositeDisposable().add(mMediaRepository.getFavorites()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movies -> {
-                            if (mContract != null) {
-                                mContract.onWorksLoaded(movies);
+                            if (getContract() != null) {
+                                getContract().onWorksLoaded(movies);
                             }
                         }, throwable -> {
                             Log.e(TAG, "Error while loading the favorite works", throwable);
-                            if (mContract != null) {
-                                mContract.onWorksLoaded(null);
+                            if (getContract() != null) {
+                                getContract().onWorksLoaded(null);
                             }
                         }));
                 break;
             default:
                 int page = mCurrentPage + 1;
-                mCompositeDisposable.add(mMediaRepository.loadWorkByType(page, movieListType)
+                getCompositeDisposable().add(mMediaRepository.loadWorkByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(workPage -> {
-                            if (mContract != null) {
+                            if (getContract() != null) {
                                 if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
                                     mCurrentPage = workPage.getPage();
-                                    mContract.onWorksLoaded(workPage.getWorks());
+                                    getContract().onWorksLoaded(workPage.getWorks());
                                 } else {
-                                    mContract.onWorksLoaded(null);
+                                    getContract().onWorksLoaded(null);
                                 }
                             }
                         }, throwable -> {
                             Log.e(TAG, "Error while loading the works by type", throwable);
-                            if (mContract != null) {
-                                mContract.onWorksLoaded(null);
+                            if (getContract() != null) {
+                                getContract().onWorksLoaded(null);
                             }
                         }));
                 break;
@@ -106,22 +106,22 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
      */
     public void loadWorkByGenre(Genre genre) {
         int pageSearch = mCurrentPage + 1;
-        mCompositeDisposable.add(mMediaRepository.getWorkByGenre(genre, pageSearch)
+        getCompositeDisposable().add(mMediaRepository.getWorkByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(workPage -> {
-                    if (mContract != null) {
+                    if (getContract() != null) {
                         if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
                             mCurrentPage = workPage.getPage();
-                            mContract.onWorksLoaded(workPage.getWorks());
+                            getContract().onWorksLoaded(workPage.getWorks());
                         } else {
-                            mContract.onWorksLoaded(null);
+                            getContract().onWorksLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading the works by genre", throwable);
-                    if (mContract != null) {
-                        mContract.onWorksLoaded(null);
+                    if (getContract() != null) {
+                        getContract().onWorksLoaded(null);
                     }
                 }));
     }
@@ -136,8 +136,8 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (mContract != null) {
-                            mContract.onBackdropImageLoaded(resource);
+                        if (getContract() != null) {
+                            getContract().onBackdropImageLoaded(resource);
                         }
                     }
 
@@ -145,8 +145,8 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.w(TAG, "Error while loading backdrop image");
-                        if (mContract != null) {
-                            mContract.onBackdropImageLoaded(null);
+                        if (getContract() != null) {
+                            getContract().onBackdropImageLoaded(null);
                         }
                     }
                 });

@@ -59,22 +59,22 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      * @param cast {@link Cast}
      */
     public void loadCastDetails(Cast cast) {
-        mCompositeDisposable.add(Single.zip(mMediaRepository.getCastDetails(cast),
+        getCompositeDisposable().add(Single.zip(mMediaRepository.getCastDetails(cast),
                 mMediaRepository.getMovieCreditsByCast(cast),
                 mMediaRepository.getTvShowCreditsByCast(cast),
                 CastInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(castInfo -> {
-                    if (mContract != null) {
-                        mContract.onCastLoaded(castInfo.getCast(),
+                    if (getContract() != null) {
+                        getContract().onCastLoaded(castInfo.getCast(),
                                 castInfo.getCastMovieList() != null ? castInfo.getCastMovieList().getWorks() : null,
                                 castInfo.getCastTvShowList() != null ? castInfo.getCastTvShowList().getWorks() : null);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while getting the cast details", throwable);
-                    if (mContract != null) {
-                        mContract.onCastLoaded(null, null, null);
+                    if (getContract() != null) {
+                        getContract().onCastLoaded(null, null, null);
                     }
                 }));
     }
@@ -89,16 +89,16 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
-                        if (mContract != null) {
-                            mContract.onCardImageLoaded(resource);
+                        if (getContract() != null) {
+                            getContract().onCardImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (mContract != null) {
-                            mContract.onCardImageLoaded(null);
+                        if (getContract() != null) {
+                            getContract().onCardImageLoaded(null);
                         }
                     }
                 });

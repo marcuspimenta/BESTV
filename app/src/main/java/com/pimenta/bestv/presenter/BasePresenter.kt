@@ -12,34 +12,32 @@
  * the License.
  */
 
-package com.pimenta.bestv.presenter;
+package com.pimenta.bestv.presenter
 
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by marcus on 06-02-2018.
  */
-public abstract class BasePresenter<T extends BasePresenter.Contract> {
+abstract class BasePresenter<T : BasePresenter.Contract> {
 
-    protected T mContract;
-    protected CompositeDisposable mCompositeDisposable;
+    protected var contract: T? = null
+    protected var compositeDisposable: CompositeDisposable? = null
 
-    public BasePresenter() {
-        mCompositeDisposable = new CompositeDisposable();
+    init {
+        compositeDisposable = CompositeDisposable()
     }
 
-    public void register(T contract) {
-        mContract = contract;
+    open fun register(contract: T) {
+        this.contract = contract
     }
 
-    public void unRegister() {
-        mCompositeDisposable.dispose();
-        mCompositeDisposable = null;
-        mContract = null;
+    open fun unRegister() {
+        compositeDisposable?.dispose()
+        compositeDisposable = null
+        contract = null
     }
 
-    public interface Contract {
-
-    }
+    interface Contract
 
 }

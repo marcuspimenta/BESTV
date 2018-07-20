@@ -44,7 +44,7 @@ public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
      * Loads the recommendations
      */
     public void loadRecommendations() {
-        mCompositeDisposable.add(mMediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
+        getCompositeDisposable().add(mMediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
                 .map(workPage -> mRecommendationManager.loadRecommendations(workPage.getWorks()))
                 .subscribeOn(Schedulers.io())
                 .subscribe(aBoolean -> Log.d(TAG, "Recommendations loaded")));

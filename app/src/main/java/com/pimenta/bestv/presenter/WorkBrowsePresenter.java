@@ -61,17 +61,17 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
      * Checks if there is any {@link Work} saved as favorite
      */
     public void hasFavorite() {
-        mCompositeDisposable.add(mMediaRepository.hasFavorite()
+        getCompositeDisposable().add(mMediaRepository.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (mContract != null) {
-                        mContract.onHasFavorite(result);
+                    if (getContract() != null) {
+                        getContract().onHasFavorite(result);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while checking if has any work as favorite", throwable);
-                    if (mContract != null) {
-                        mContract.onHasFavorite(false);
+                    if (getContract() != null) {
+                        getContract().onHasFavorite(false);
                     }
                 }));
     }
@@ -80,22 +80,22 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
      * Loads the {@link List<Genre>} available at TMDb
      */
     public void loadData() {
-        mCompositeDisposable.add(Single.zip(mMediaRepository.getMovieGenres(),
+        getCompositeDisposable().add(Single.zip(mMediaRepository.getMovieGenres(),
                 mMediaRepository.getTvShowGenres(),
                 mMediaRepository.hasFavorite(),
                 BrowserWorkInfo::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (mContract != null) {
-                        mContract.onDataLoaded(result.hasFavoriteMovie(),
+                    if (getContract() != null) {
+                        getContract().onDataLoaded(result.hasFavoriteMovie(),
                                 result.getMovieGenreList() != null ? result.getMovieGenreList().getGenres() : null,
                                 result.getTvShowGenreList() != null ? result.getTvShowGenreList().getGenres() : null);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading data", throwable);
-                    if (mContract != null) {
-                        mContract.onDataLoaded(false, null, null);
+                    if (getContract() != null) {
+                        getContract().onDataLoaded(false, null, null);
                     }
                 }));
     }

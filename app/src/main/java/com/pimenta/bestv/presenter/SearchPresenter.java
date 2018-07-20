@@ -104,7 +104,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(pair -> {
-                        if (mContract != null) {
+                        if (getContract() != null) {
                             List<Movie> movies = null;
                             if (pair.first != null && pair.first.getPage() <= pair.first.getTotalPages()) {
                                 mResultMoviePage = pair.first.getPage();
@@ -115,12 +115,12 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                                 mResultTvShowPage = pair.second.getPage();
                                 tvShows = pair.second.getWorks();
                             }
-                            mContract.onResultLoaded(movies, tvShows);
+                            getContract().onResultLoaded(movies, tvShows);
                         }
                     }, throwable -> {
                         Log.e(TAG, "Error while searching movies by query", throwable);
-                        if (mContract != null) {
-                            mContract.onResultLoaded(null, null);
+                        if (getContract() != null) {
+                            getContract().onResultLoaded(null, null);
                         }
                     });
         } catch (UnsupportedEncodingException e) {
@@ -133,22 +133,22 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      */
     public void loadMovies() {
         int resultMoviePage = mResultMoviePage + 1;
-        mCompositeDisposable.add(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage)
+        getCompositeDisposable().add(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(moviePage -> {
-                    if (mContract != null) {
+                    if (getContract() != null) {
                         if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
                             mResultMoviePage = moviePage.getPage();
-                            mContract.onMoviesLoaded(moviePage.getWorks());
+                            getContract().onMoviesLoaded(moviePage.getWorks());
                         } else {
-                            mContract.onMoviesLoaded(null);
+                            getContract().onMoviesLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading movies by query", throwable);
-                    if (mContract != null) {
-                        mContract.onMoviesLoaded(null);
+                    if (getContract() != null) {
+                        getContract().onMoviesLoaded(null);
                     }
                 }));
     }
@@ -158,22 +158,22 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
      */
     public void loadTvShows() {
         int resultTvShowPage = mResultTvShowPage + 1;
-        mCompositeDisposable.add(mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage)
+        getCompositeDisposable().add(mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tvShowPage -> {
-                    if (mContract != null) {
+                    if (getContract() != null) {
                         if (tvShowPage != null && tvShowPage.getPage() <= tvShowPage.getTotalPages()) {
                             mResultTvShowPage = tvShowPage.getPage();
-                            mContract.onTvShowsLoaded(tvShowPage.getWorks());
+                            getContract().onTvShowsLoaded(tvShowPage.getWorks());
                         } else {
-                            mContract.onTvShowsLoaded(null);
+                            getContract().onTvShowsLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading tv shows by query", throwable);
-                    if (mContract != null) {
-                        mContract.onTvShowsLoaded(null);
+                    if (getContract() != null) {
+                        getContract().onTvShowsLoaded(null);
                     }
                 }));
     }
@@ -198,8 +198,8 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (mContract != null) {
-                            mContract.onBackdropImageLoaded(resource);
+                        if (getContract() != null) {
+                            getContract().onBackdropImageLoaded(resource);
                         }
                     }
 
@@ -207,8 +207,8 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.w(TAG, "Error while loading backdrop image");
-                        if (mContract != null) {
-                            mContract.onBackdropImageLoaded(null);
+                        if (getContract() != null) {
+                            getContract().onBackdropImageLoaded(null);
                         }
                     }
                 });

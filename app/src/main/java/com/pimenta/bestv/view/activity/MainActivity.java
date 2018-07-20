@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.loadRecommendations();
+        getPresenter().loadRecommendations();
 
         if (savedInstanceState == null) {
             startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);

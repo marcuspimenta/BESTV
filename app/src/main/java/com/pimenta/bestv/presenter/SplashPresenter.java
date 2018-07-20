@@ -46,22 +46,22 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
      * Loads all permissions
      */
     public void loadPermissions() {
-        mCompositeDisposable.add(mPermissionManager.hasAllPermissions()
+        getCompositeDisposable().add(mPermissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(SPLASH_TIME_LOAD_SECONDS, TimeUnit.SECONDS)
                 .subscribe(aBoolean -> {
-                    if (mContract != null) {
+                    if (getContract() != null) {
                         if (aBoolean) {
-                            mContract.onSplashFinished(true);
+                            getContract().onSplashFinished(true);
                         } else {
-                            mContract.onPermissionsLoaded(mPermissionManager.getPermissions());
+                            getContract().onPermissionsLoaded(mPermissionManager.getPermissions());
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading permissions", throwable);
-                    if (mContract != null) {
-                        mContract.onSplashFinished(false);
+                    if (getContract() != null) {
+                        getContract().onSplashFinished(false);
                     }
                 }));
     }
@@ -70,17 +70,17 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
      * Verifies if has all permissions
      */
     public void hasAllPermissions() {
-        mCompositeDisposable.add(mPermissionManager.hasAllPermissions()
+        getCompositeDisposable().add(mPermissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
-                    if (mContract != null) {
-                        mContract.onSplashFinished(aBoolean);
+                    if (getContract() != null) {
+                        getContract().onSplashFinished(aBoolean);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while checking if has all permissions", throwable);
-                    if (mContract != null) {
-                        mContract.onSplashFinished(false);
+                    if (getContract() != null) {
+                        getContract().onSplashFinished(false);
                     }
                 }));
     }
