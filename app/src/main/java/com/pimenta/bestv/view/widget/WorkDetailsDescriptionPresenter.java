@@ -27,8 +27,7 @@ public class WorkDetailsDescriptionPresenter extends AbstractDetailsDescriptionP
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        final Work work = (Work) item;
-
+        Work work = (Work) item;
         if (work != null) {
             viewHolder.getTitle().setText(work.getTitle());
             viewHolder.getSubtitle().setText(sDateFormat.format(work.getReleaseDate()));

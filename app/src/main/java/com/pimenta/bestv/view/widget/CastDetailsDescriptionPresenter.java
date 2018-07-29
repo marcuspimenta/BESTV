@@ -25,8 +25,7 @@ public class CastDetailsDescriptionPresenter extends AbstractDetailsDescriptionP
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        final Cast cast = (Cast) item;
-
+        Cast cast = (Cast) item;
         if (cast != null) {
             viewHolder.getTitle().setText(cast.getName());
             //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));

@@ -18,15 +18,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.presenter.BasePresenter;
-import com.pimenta.bestv.presenter.DefaultPresenter;
 import com.pimenta.bestv.view.fragment.SearchFragment;
 
 /**
  * Created by marcus on 12/07/18.
  */
-public class SearchActivity extends BaseActivity<DefaultPresenter> {
+public class SearchActivity extends BaseActivity {
 
     public static Intent newInstance(Context context) {
         return new Intent(context, SearchActivity.class);
@@ -38,8 +35,4 @@ public class SearchActivity extends BaseActivity<DefaultPresenter> {
         replaceFragment(SearchFragment.newInstance());
     }
 
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
-    }
 }

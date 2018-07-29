@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
+import com.pimenta.bestv.presenter.WorkGridPresenter.WorkGridContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Work;
@@ -45,12 +46,11 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
 
     private int mCurrentPage = 0;
 
-    private MediaRepository mMediaRepository;
-    private ImageManager mImageManager;
+    private final MediaRepository mMediaRepository;
+    private final ImageManager mImageManager;
 
     @Inject
     public WorkGridPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
-        super();
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
     }
@@ -160,5 +160,13 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
      */
     public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
         mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
+    }
+
+    public interface WorkGridContract extends BasePresenter.Contract {
+
+        void onWorksLoaded(List<? extends Work> works);
+
+        void onBackdropImageLoaded(Bitmap bitmap);
+
     }
 }

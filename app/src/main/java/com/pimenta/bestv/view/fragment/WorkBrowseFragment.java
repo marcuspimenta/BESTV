@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BackgroundManager;
@@ -31,8 +32,8 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.WorkBrowseContract;
 import com.pimenta.bestv.presenter.WorkBrowsePresenter;
+import com.pimenta.bestv.presenter.WorkBrowsePresenter.WorkBrowseContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.MovieGenre;
@@ -44,10 +45,12 @@ import com.pimenta.bestv.view.widget.WorkTypeHeaderItem;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> implements WorkBrowseContract {
+public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowseContract {
 
     public static final String TAG = WorkBrowseFragment.class.getSimpleName();
     private static final int TOP_WORK_LIST_ID = 1;
@@ -55,12 +58,15 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     private static final int FAVORITE_INDEX = 0;
 
     private static final PageRow sFavoritePageRow = new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID,
-            MediaRepository.WorkType.FAVORITES_MOVIES));
+          MediaRepository.WorkType.FAVORITES_MOVIES));
 
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
     private boolean mHasFavorite = false;
     private ArrayObjectAdapter mRowsAdapter;
+
+    @Inject
+    WorkBrowsePresenter mPresenter;
 
     public static WorkBrowseFragment newInstance() {
         return new WorkBrowseFragment();
@@ -72,19 +78,20 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onAttach(@Nullable Context context) {
+        super.onAttach(context);
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.register(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUIElements();
     }
 
     @Override
-    public void onDestroy() {
-        getProgressBarManager().hide();
-        super.onDestroy();
-    }
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getProgressBarManager().setRootView(container);
         getProgressBarManager().enableProgressBar();
         getProgressBarManager().setInitialDelay(0);
@@ -92,16 +99,11 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProgressBarManager().show();
         setupMainList();
         mPresenter.loadData();
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 
     @Override
@@ -113,7 +115,20 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     }
 
     @Override
-    public void onDataLoaded(final boolean hasFavorite, final List<MovieGenre> movieGenres, final List<TvShowGenre> tvShowGenres) {
+    public void onDestroy() {
+        getProgressBarManager().hide();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
+    }
+
+    @Override
+    public void onDataLoaded(boolean hasFavorite, List<MovieGenre> movieGenres,
+          final List<TvShowGenre> tvShowGenres) {
         mHasFavorite = hasFavorite;
         if (hasFavorite) {
             mRowsAdapter.add(sFavoritePageRow);
@@ -187,7 +202,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     private class SearchClickListener implements View.OnClickListener {
 
         @Override
-        public void onClick(final View v) {
+        public void onClick(View v) {
             startActivity(SearchActivity.newInstance(getContext()));
         }
     }
@@ -195,7 +210,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
     private class PageRowFragmentFactory extends BrowseSupportFragment.FragmentFactory {
 
         @Override
-        public Fragment createFragment(final Object rowObj) {
+        public Fragment createFragment(Object rowObj) {
             if (mCountFragment++ >= 1) {
                 mShowProgress = true;
             }
@@ -203,15 +218,15 @@ public class WorkBrowseFragment extends BaseBrowseFragment<WorkBrowsePresenter> 
                 mRowsAdapter.remove(sFavoritePageRow);
             }
 
-            final Row row = (Row) rowObj;
+            Row row = (Row) rowObj;
             switch ((int) row.getHeaderItem().getId()) {
                 case TOP_WORK_LIST_ID:
-                    final WorkTypeHeaderItem movieListTypeHeaderItem = (WorkTypeHeaderItem) row.getHeaderItem();
-                    WorkBrowseFragment.this.setTitle(row.getHeaderItem().getName());
+                    WorkTypeHeaderItem movieListTypeHeaderItem = (WorkTypeHeaderItem) row.getHeaderItem();
+                    setTitle(row.getHeaderItem().getName());
                     return TopWorkGridFragment.newInstance(movieListTypeHeaderItem.getMovieListType(), mShowProgress);
                 case WORK_GENRE_ID:
-                    final GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
-                    WorkBrowseFragment.this.setTitle(genreHeaderItem.getGenre().getName());
+                    GenreHeaderItem genreHeaderItem = (GenreHeaderItem) row.getHeaderItem();
+                    setTitle(genreHeaderItem.getGenre().getName());
                     return GenreWorkGridFragment.newInstance(genreHeaderItem.getGenre(), mShowProgress);
             }
 

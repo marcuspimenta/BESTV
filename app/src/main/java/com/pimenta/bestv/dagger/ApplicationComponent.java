@@ -52,15 +52,7 @@ public interface ApplicationComponent {
 
     void inject(RecommendationService service);
 
-    void inject(SplashActivity activity);
-
     void inject(MainActivity activity);
-
-    void inject(SearchActivity activity);
-
-    void inject(WorkDetailsActivity activity);
-
-    void inject(CastDetailsActivity activity);
 
     void inject(SplashFragment fragment);
 
@@ -76,5 +68,4 @@ public interface ApplicationComponent {
 
     void inject(CastDetailsFragment fragment);
 
-    void inject(ErrorFragment fragment);
 }

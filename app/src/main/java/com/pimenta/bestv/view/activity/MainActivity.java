@@ -22,17 +22,23 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.view.fragment.WorkBrowseFragment;
 import com.pimenta.bestv.presenter.MainPresenter;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 11-02-2018.
  */
-public class MainActivity extends BaseActivity<MainPresenter> {
+public class MainActivity extends BaseActivity {
+
+    @Inject
+    MainPresenter mPresenter;
 
     private static final int SPLASH_ACTIVITY_REQUEST_CODE = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPresenter().loadRecommendations();
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.loadRecommendations();
 
         if (savedInstanceState == null) {
             startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
@@ -42,8 +48,9 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     }
 
     @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
+    protected void onDestroy() {
+        mPresenter.unRegister();
+        super.onDestroy();
     }
 
     @Override

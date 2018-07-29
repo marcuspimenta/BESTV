@@ -23,7 +23,7 @@ import com.pimenta.bestv.repository.entity.Genre;
  */
 public class GenreHeaderItem extends HeaderItem {
 
-    private Genre mGenre;
+    private final Genre mGenre;
 
     public GenreHeaderItem(int id, Genre genre) {
         super(id, genre.getName());

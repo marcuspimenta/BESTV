@@ -18,15 +18,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.presenter.BasePresenter;
 import com.pimenta.bestv.view.fragment.SplashFragment;
-import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**
  * Created by marcus on 04-05-2018.
  */
-public class SplashActivity extends BaseActivity<DefaultPresenter> {
+public class SplashActivity extends BaseActivity {
 
     public static Intent newInstance(Context context) {
         return new Intent(context, SplashActivity.class);
@@ -38,8 +35,4 @@ public class SplashActivity extends BaseActivity<DefaultPresenter> {
         replaceFragment(SplashFragment.newInstance());
     }
 
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
-    }
 }

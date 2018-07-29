@@ -18,17 +18,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.BasePresenter;
-import com.pimenta.bestv.presenter.DefaultPresenter;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.fragment.WorkDetailsFragment;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class WorkDetailsActivity extends BaseActivity<DefaultPresenter> {
+public class WorkDetailsActivity extends BaseActivity {
 
     public static Intent newInstance(Context context, Work work) {
         final Intent intent = new Intent(context, WorkDetailsActivity.class);
@@ -40,10 +37,5 @@ public class WorkDetailsActivity extends BaseActivity<DefaultPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_details);
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 }

@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.view.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -40,8 +41,8 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.SearchContract;
 import com.pimenta.bestv.presenter.SearchPresenter;
+import com.pimenta.bestv.presenter.SearchPresenter.SearchContract;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseSearchFragment;
@@ -51,10 +52,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchFragment extends BaseSearchFragment<SearchPresenter> implements SearchContract,
+public class SearchFragment extends BaseSearchFragment implements SearchContract,
         SearchSupportFragment.SearchResultProvider {
 
     public static final String TAG = SearchFragment.class.getSimpleName();
@@ -75,8 +78,18 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     private Work mWorkSelected;
     private Timer mBackgroundTimer;
 
+    @Inject
+    SearchPresenter mPresenter;
+
     public static SearchFragment newInstance() {
         return new SearchFragment();
+    }
+
+    @Override
+    public void onAttach(@Nullable Context context) {
+        super.onAttach(context);
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.register(this);
     }
 
     @Override
@@ -91,7 +104,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
         sProgressBarManager.enableProgressBar();
         sProgressBarManager.setInitialDelay(0);
 
-        final View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
             view.setBackgroundColor(getResources().getColor(android.support.v17.leanback.R.color.lb_playback_controls_background_light));
         }
@@ -99,7 +112,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         clearAdapter();
     }
@@ -122,12 +135,13 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
+    public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
     }
 
     @Override
-    public void onResultLoaded(final List<? extends Work> movies, final List<? extends Work> tvShows) {
+    public void onResultLoaded(List<? extends Work> movies, List<? extends Work> tvShows) {
         boolean hasMovies = movies != null && movies.size() > 0;
         boolean hasTvShows = tvShows != null && tvShows.size() > 0;
 
@@ -156,7 +170,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onMoviesLoaded(final List<? extends Work> movies) {
+    public void onMoviesLoaded(List<? extends Work> movies) {
         if (movies != null) {
             for (final Work work : movies) {
                 if (mMovieRowAdapter.indexOf(work) == -1) {
@@ -167,7 +181,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onTvShowsLoaded(final List<? extends Work> tvShows) {
+    public void onTvShowsLoaded(List<? extends Work> tvShows) {
         if (tvShows != null) {
             for (final Work work : tvShows) {
                 if (mTvShowRowAdapter.indexOf(work) == -1) {
@@ -178,7 +192,7 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public void onBackdropImageLoaded(final Bitmap bitmap) {
+    public void onBackdropImageLoaded(Bitmap bitmap) {
         mBackgroundManager.setBitmap(bitmap);
     }
 
@@ -188,22 +202,22 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     }
 
     @Override
-    public boolean onQueryTextChange(final String query) {
+    public boolean onQueryTextChange(String query) {
         searchQuery(query);
         return true;
     }
 
     @Override
-    public boolean onQueryTextSubmit(final String query) {
+    public boolean onQueryTextSubmit(String query) {
         searchQuery(query);
         return true;
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SEARCH_FRAGMENT_REQUEST_CODE:
-                final View view = getView();
+                View view = getView();
                 if (view != null) {
                     view.requestFocus();
                 }
@@ -231,8 +245,8 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
     private void clearAdapter() {
         mBackgroundManager.setBitmap(null);
         mRowsAdapter.clear();
-        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
-        final HeaderItem header = new HeaderItem(0, getString(R.string.no_results));
+        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new WorkCardPresenter());
+        HeaderItem header = new HeaderItem(0, getString(R.string.no_results));
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
     }
 
@@ -284,8 +298,8 @@ public class SearchFragment extends BaseSearchFragment<SearchPresenter> implemen
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            final Work work = (Work) item;
-            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+            Work work = (Work) item;
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
             startActivityForResult(WorkDetailsActivity.newInstance(getContext(), work), SEARCH_FRAGMENT_REQUEST_CODE, bundle);
         }

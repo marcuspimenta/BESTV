@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
+import com.pimenta.bestv.presenter.WorkDetailsPresenter.WorkDetailsContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
@@ -53,12 +54,11 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
     private int mRecommendedPage = 0;
     private int mSimilarPage = 0;
 
-    private MediaRepository mMediaRepository;
-    private ImageManager mImageManager;
+    private final MediaRepository mMediaRepository;
+    private final ImageManager mImageManager;
 
     @Inject
     public WorkDetailsPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
-        super();
         mImageManager = imageManager;
         mMediaRepository = mediaRepository;
     }
@@ -270,8 +270,7 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
      * @param imageView {@link ImageView}
      */
     public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
-        mImageManager.loadImageInto(imageView,
-                String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
+        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
     }
 
     /**
@@ -289,12 +288,12 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
      */
     private class WorkInfo {
 
-        private VideoList mVideos;
-        private CastList mCasts;
-        private WorkPage mRecommendedMovies;
-        private WorkPage mSimilarMovies;
+        private final VideoList mVideos;
+        private final CastList mCasts;
+        private final WorkPage mRecommendedMovies;
+        private final WorkPage mSimilarMovies;
 
-        public WorkInfo(final VideoList videos, final CastList casts, final WorkPage recommendedMovies, final WorkPage similarMovies) {
+        public WorkInfo(VideoList videos, CastList casts, WorkPage recommendedMovies, WorkPage similarMovies) {
             mVideos = videos;
             mCasts = casts;
             mRecommendedMovies = recommendedMovies;
@@ -316,5 +315,21 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
         public WorkPage getSimilarMovies() {
             return mSimilarMovies;
         }
+    }
+
+    public interface WorkDetailsContract extends BasePresenter.Contract {
+
+        void onResultSetFavoriteMovie(boolean success);
+
+        void onDataLoaded(List<Cast> casts, List<Work> recommendedMovies, List<Work> similarMovies, List<Video> videos);
+
+        void onRecommendationLoaded(List<Work> works);
+
+        void onSimilarLoaded(List<Work> works);
+
+        void onCardImageLoaded(Drawable resource);
+
+        void onBackdropImageLoaded(Bitmap bitmap);
+
     }
 }

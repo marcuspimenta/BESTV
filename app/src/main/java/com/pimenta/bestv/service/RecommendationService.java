@@ -20,8 +20,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.presenter.RecommendationContract;
 import com.pimenta.bestv.presenter.RecommendationPresenter;
+import com.pimenta.bestv.presenter.RecommendationPresenter.RecommendationContract;
 
 /**
  * Created by marcus on 07-03-2018.

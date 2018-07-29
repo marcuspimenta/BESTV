@@ -18,17 +18,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.BasePresenter;
-import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 import com.pimenta.bestv.repository.entity.Cast;
-import com.pimenta.bestv.presenter.DefaultPresenter;
+import com.pimenta.bestv.view.fragment.CastDetailsFragment;
 
 /**
  * Created by marcus on 04-04-2018.
  */
-public class CastDetailsActivity extends BaseActivity<DefaultPresenter> {
+public class CastDetailsActivity extends BaseActivity {
 
     public static Intent newInstance(Context context, Cast cast) {
         final Intent intent = new Intent(context, CastDetailsActivity.class);
@@ -40,10 +37,5 @@ public class CastDetailsActivity extends BaseActivity<DefaultPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast_details);
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 }

@@ -17,7 +17,9 @@ package com.pimenta.bestv.presenter;
 import android.util.Log;
 
 import com.pimenta.bestv.manager.PermissionManager;
+import com.pimenta.bestv.presenter.SplashPresenter.SplashContract;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -34,11 +36,10 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
 
     private static final int SPLASH_TIME_LOAD_SECONDS = 3;
 
-    private PermissionManager mPermissionManager;
+    private final PermissionManager mPermissionManager;
 
     @Inject
     public SplashPresenter(PermissionManager permissionManager) {
-        super();
         mPermissionManager = permissionManager;
     }
 
@@ -83,5 +84,13 @@ public class SplashPresenter extends BasePresenter<SplashContract> {
                         getContract().onSplashFinished(false);
                     }
                 }));
+    }
+
+    public interface SplashContract extends BasePresenter.Contract {
+
+        void onSplashFinished(boolean success);
+
+        void onPermissionsLoaded(Set<String> permissions);
+
     }
 }

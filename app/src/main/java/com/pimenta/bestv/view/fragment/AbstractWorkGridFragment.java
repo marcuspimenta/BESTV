@@ -15,6 +15,7 @@
 package com.pimenta.bestv.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -37,8 +38,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pimenta.bestv.presenter.WorkGridContract;
 import com.pimenta.bestv.presenter.WorkGridPresenter;
+import com.pimenta.bestv.presenter.WorkGridPresenter.WorkGridContract;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.WorkDetailsActivity;
 import com.pimenta.bestv.view.fragment.base.BaseVerticalGridFragment;
@@ -48,10 +49,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<WorkGridPresenter> implements WorkGridContract,
+public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment implements WorkGridContract,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     protected static final String SHOW_PROGRESS = "SHOW_PROGRESS";
@@ -71,14 +74,23 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     private Work mWorkSelected;
     protected boolean mShowProgress;
 
+    @Inject
+    WorkGridPresenter mPresenter;
+
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onAttach(@Nullable Context context) {
+        super.onAttach(context);
+        mPresenter.register(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUI();
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getProgressBarManager().setRootView(container);
         getProgressBarManager().enableProgressBar();
         getProgressBarManager().setInitialDelay(0);
@@ -86,7 +98,7 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getMainFragmentAdapter().getFragmentHost().notifyViewCreated(getMainFragmentAdapter());
 
@@ -115,12 +127,18 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     }
 
     @Override
+    public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
+    }
+
+    @Override
     public BrowseSupportFragment.MainFragmentAdapter getMainFragmentAdapter() {
         return mMainFragmentAdapter;
     }
 
     @Override
-    public void onWorksLoaded(final List<? extends Work> works) {
+    public void onWorksLoaded(List<? extends Work> works) {
         if (works != null) {
             for (final Work work : works) {
                 if (mRowsAdapter.indexOf(work) == -1) {
@@ -138,12 +156,12 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     }
 
     @Override
-    public void onBackdropImageLoaded(final Bitmap bitmap) {
+    public void onBackdropImageLoaded(Bitmap bitmap) {
         mBackgroundManager.setBitmap(bitmap);
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ERROR_FRAGMENT_REQUEST_CODE:
                 popBackStack(ErrorFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -168,11 +186,11 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
     private void setupUI() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
 
-        final VerticalGridPresenter verticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
+        VerticalGridPresenter verticalGridPresenter = new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM);
         verticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
         setGridPresenter(verticalGridPresenter);
 
-        final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+        WorkCardPresenter workCardPresenter = new WorkCardPresenter();
         workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
         mRowsAdapter = new ArrayObjectAdapter(workCardPresenter);
         setAdapter(mRowsAdapter);
@@ -216,8 +234,8 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment<
 
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            final Work work = (Work) item;
-            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+            Work work = (Work) item;
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
             startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
         }

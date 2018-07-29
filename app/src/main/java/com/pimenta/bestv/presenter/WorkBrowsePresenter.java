@@ -17,9 +17,12 @@ package com.pimenta.bestv.presenter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.pimenta.bestv.presenter.WorkBrowsePresenter.WorkBrowseContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.MovieGenre;
 import com.pimenta.bestv.repository.entity.MovieGenreList;
+import com.pimenta.bestv.repository.entity.TvShowGenre;
 import com.pimenta.bestv.repository.entity.TvShowGenreList;
 import com.pimenta.bestv.repository.entity.Work;
 
@@ -38,12 +41,11 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
 
     private static final String TAG = WorkBrowsePresenter.class.getSimpleName();
 
-    private DisplayMetrics mDisplayMetrics;
-    private MediaRepository mMediaRepository;
+    private final DisplayMetrics mDisplayMetrics;
+    private final MediaRepository mMediaRepository;
 
     @Inject
     public WorkBrowsePresenter(DisplayMetrics displayMetrics, MediaRepository mediaRepository) {
-        super();
         mDisplayMetrics = displayMetrics;
         mMediaRepository = mediaRepository;
     }
@@ -105,11 +107,11 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
      */
     private class BrowserWorkInfo {
 
-        private MovieGenreList mMovieGenreList;
-        private TvShowGenreList mTvShowGenreList;
-        private boolean mHasFavoriteMovie;
+        private final  MovieGenreList mMovieGenreList;
+        private final TvShowGenreList mTvShowGenreList;
+        private final boolean mHasFavoriteMovie;
 
-        public BrowserWorkInfo(final MovieGenreList movieGenreList, final TvShowGenreList tvShowGenreList, final boolean hasFavoriteMovie) {
+        public BrowserWorkInfo(MovieGenreList movieGenreList, TvShowGenreList tvShowGenreList, boolean hasFavoriteMovie) {
             mMovieGenreList = movieGenreList;
             mTvShowGenreList = tvShowGenreList;
             mHasFavoriteMovie = hasFavoriteMovie;
@@ -126,5 +128,13 @@ public class WorkBrowsePresenter extends BasePresenter<WorkBrowseContract> {
         public boolean hasFavoriteMovie() {
             return mHasFavoriteMovie;
         }
+    }
+
+    public interface WorkBrowseContract extends BasePresenter.Contract {
+
+        void onDataLoaded(boolean hasFavoriteMovie, List<MovieGenre> movieGenres, List<TvShowGenre> tvShowGenres);
+
+        void onHasFavorite(boolean hasFavoriteMovie);
+
     }
 }

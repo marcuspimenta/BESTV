@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
+import com.pimenta.bestv.presenter.SearchPresenter.SearchContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.TvShow;
@@ -50,9 +51,9 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
 
     private static final String TAG = SearchPresenter.class.getSimpleName();
 
-    private DisplayMetrics mDisplayMetrics;
-    private MediaRepository mMediaRepository;
-    private ImageManager mImageManager;
+    private final DisplayMetrics mDisplayMetrics;
+    private final MediaRepository mMediaRepository;
+    private final ImageManager mImageManager;
 
     private String mQuery;
     private int mResultMoviePage = 0;
@@ -61,7 +62,6 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
 
     @Inject
     public SearchPresenter(DisplayMetrics displayMetrics, MediaRepository mediaRepository, ImageManager imageManager) {
-        super();
         mDisplayMetrics = displayMetrics;
         mMediaRepository = mediaRepository;
         mImageManager = imageManager;
@@ -222,5 +222,17 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
             mDisposable.dispose();
             mDisposable = null;
         }
+    }
+
+    public interface SearchContract extends BasePresenter.Contract {
+
+        void onResultLoaded(List<? extends Work> movies, List<? extends Work> tvShows);
+
+        void onMoviesLoaded(List<? extends Work> movies);
+
+        void onTvShowsLoaded(List<? extends Work> tvShows);
+
+        void onBackdropImageLoaded(Bitmap bitmap);
+
     }
 }

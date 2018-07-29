@@ -24,11 +24,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.manager.ImageManager;
+import com.pimenta.bestv.presenter.CastDetailsPresenter.CastDetailsContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastMovieList;
 import com.pimenta.bestv.repository.entity.CastTvShowList;
 import com.pimenta.bestv.repository.entity.Work;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -43,12 +46,11 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
 
     private static final String TAG = CastDetailsPresenter.class.getSimpleName();
 
-    private MediaRepository mMediaRepository;
-    private ImageManager mImageManager;
+    private final MediaRepository mMediaRepository;
+    private final ImageManager mImageManager;
 
     @Inject
     public CastDetailsPresenter(MediaRepository mediaRepository, ImageManager imageManager) {
-        super();
         mMediaRepository = mediaRepository;
         mImageManager = imageManager;
     }
@@ -120,11 +122,11 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
      */
     private class CastInfo {
 
-        private Cast mCast;
-        private CastMovieList mCastMovieList;
-        private CastTvShowList mCastTvShowList;
+        private final Cast mCast;
+        private final CastMovieList mCastMovieList;
+        private final CastTvShowList mCastTvShowList;
 
-        public CastInfo(final Cast cast, final CastMovieList castMovieList, final CastTvShowList castTvShowList) {
+        public CastInfo(Cast cast, CastMovieList castMovieList, CastTvShowList castTvShowList) {
             mCast = cast;
             mCastMovieList = castMovieList;
             mCastTvShowList = castTvShowList;
@@ -141,5 +143,13 @@ public class CastDetailsPresenter extends BasePresenter<CastDetailsContract> {
         public CastTvShowList getCastTvShowList() {
             return mCastTvShowList;
         }
+    }
+
+    public interface CastDetailsContract extends BasePresenter.Contract {
+
+        void onCastLoaded(Cast cast, List<? extends Work> movies, List<? extends Work> tvShow);
+
+        void onCardImageLoaded(Drawable resource);
+
     }
 }

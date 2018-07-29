@@ -12,15 +12,46 @@
  * the License.
  */
 
-package com.pimenta.bestv.view.activity
+package com.pimenta.bestv.view.fragment.base
 
+import android.support.v17.leanback.app.BrowseSupportFragment
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
 
 /**
- * Created by marcus on 14-02-2018.
+ * Created by marcus on 06-02-2018.
  */
-abstract class BaseActivity : FragmentActivity() {
+abstract class BaseBrowseFragment : BrowseSupportFragment() {
+
+    protected lateinit var target: Fragment
+    protected var targetCode: Int = 0
+
+    /**
+     * Optional target for this fragment.  This may be used, for example,
+     * if this fragment is being started by another, and when done wants to
+     * give a result back to the first.  The target set here is retained
+     * across instances via [ FragmentManager.putFragment()][FragmentManager.putFragment].
+     *
+     * @param fragment    The fragment that is the target of this one.
+     * @param requestCode Optional request code, for convenience if you
+     * are going to call back with [.onActivityResult].
+     */
+    fun setTarget(fragment: Fragment, requestCode: Int) {
+        target = fragment
+        targetCode = requestCode
+    }
+
+    /**
+     * Finishes and sets the result that your activity will return to its
+     * caller.
+     *
+     * @param resultCode The result code to propagate back to the originating
+     * activity, often RESULT_CANCELED or RESULT_OK
+     */
+    fun finishActivity(resultCode: Int) {
+        activity?.setResult(resultCode)
+        activity?.finish()
+    }
 
     /**
      * Replace an existing fragment that was added to a container.
@@ -28,7 +59,7 @@ abstract class BaseActivity : FragmentActivity() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
+        val fragmentManager = activity?.supportFragmentManager
         fragmentManager?.beginTransaction()?.replace(android.R.id.content, fragment)?.commit()
     }
 
@@ -39,7 +70,7 @@ abstract class BaseActivity : FragmentActivity() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        val fragmentManager = supportFragmentManager
+        val fragmentManager = activity?.supportFragmentManager
         fragmentManager?.beginTransaction()?.add(android.R.id.content, fragment)?.addToBackStack(tag)?.commit()
     }
 
@@ -52,8 +83,7 @@ abstract class BaseActivity : FragmentActivity() {
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected fun popBackStack(name: String, flags: Int) {
-        val fragmentManager = supportFragmentManager
+        val fragmentManager = activity?.supportFragmentManager
         fragmentManager?.popBackStackImmediate(name, flags)
     }
-
 }

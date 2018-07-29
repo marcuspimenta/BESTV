@@ -15,6 +15,7 @@
 package com.pimenta.bestv.presenter;
 
 import com.pimenta.bestv.manager.RecommendationManager;
+import com.pimenta.bestv.presenter.RecommendationPresenter.RecommendationContract;
 import com.pimenta.bestv.repository.MediaRepository;
 
 import javax.inject.Inject;
@@ -29,12 +30,11 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
 
     private static final String TAG = RecommendationPresenter.class.getSimpleName();
 
-    private MediaRepository mMediaRepository;
-    private RecommendationManager mRecommendationManager;
+    private final MediaRepository mMediaRepository;
+    private final RecommendationManager mRecommendationManager;
 
     @Inject
     public RecommendationPresenter(MediaRepository mediaRepository, RecommendationManager recommendationManager) {
-        super();
         mMediaRepository = mediaRepository;
         mRecommendationManager = recommendationManager;
     }
@@ -54,4 +54,9 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
                 }));
     }
 
+    public interface RecommendationContract extends BasePresenter.Contract {
+
+        void onLoadRecommendationFinished();
+
+    }
 }

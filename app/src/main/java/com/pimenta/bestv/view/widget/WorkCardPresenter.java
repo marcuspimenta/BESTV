@@ -34,13 +34,13 @@ public class WorkCardPresenter extends Presenter {
 
     private LoadWorkPosterListener mLoadWorkPosterListener;
 
-    public void setLoadWorkPosterListener(final LoadWorkPosterListener loadMoviePosterListener) {
+    public void setLoadWorkPosterListener(LoadWorkPosterListener loadMoviePosterListener) {
         mLoadWorkPosterListener = loadMoviePosterListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        final ImageCardView cardView = new ImageCardView(parent.getContext());
+        ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
@@ -48,8 +48,8 @@ public class WorkCardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        final Work work = (Work) item;
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+        Work work = (Work) item;
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(work.getTitle());
         if (work.getReleaseDate() != null) {
             cardView.setContentText(sDateFormat.format(work.getReleaseDate()));
@@ -64,7 +64,7 @@ public class WorkCardPresenter extends Presenter {
 
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
     }

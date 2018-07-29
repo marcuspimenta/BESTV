@@ -15,6 +15,7 @@
 package com.pimenta.bestv.view.fragment;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -46,8 +47,8 @@ import android.widget.ImageView;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.WorkDetailsContract;
 import com.pimenta.bestv.presenter.WorkDetailsPresenter;
+import com.pimenta.bestv.presenter.WorkDetailsPresenter.WorkDetailsContract;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.Work;
@@ -61,10 +62,12 @@ import com.pimenta.bestv.view.widget.WorkDetailsDescriptionPresenter;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresenter> implements WorkDetailsContract {
+public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDetailsContract {
 
     public static final String TAG = "WorkDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";
@@ -93,8 +96,18 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
 
     private Work mWork;
 
+    @Inject
+    WorkDetailsPresenter mPresenter;
+
     public static WorkDetailsFragment newInstance() {
         return new WorkDetailsFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.register(this);
     }
 
     @Override
@@ -110,7 +123,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFavoriteAction = new Action(ACTION_FAVORITE, mPresenter.isFavorite(mWork) ? getResources().getString(R.string.remove_favorites) :
                 getResources().getString(R.string.save_favorites));
@@ -119,7 +132,13 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onResultSetFavoriteMovie(final boolean success) {
+    public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
+    }
+
+    @Override
+    public void onResultSetFavoriteMovie(boolean success) {
         if (success) {
             mFavoriteAction.setLabel1(mWork.isFavorite() ? getResources().getString(R.string.remove_favorites) : getResources().getString(R.string.save_favorites));
             mActionAdapter.notifyItemRangeChanged(mActionAdapter.indexOf(mFavoriteAction), 1);
@@ -127,7 +146,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onDataLoaded(final List<Cast> casts, final List<Work> recommendedWorks, final List<Work> similarWorks, final List<Video> videos) {
+    public void onDataLoaded(List<Cast> casts, List<Work> recommendedWorks, List<Work> similarWorks, List<Video> videos) {
         if (videos != null && videos.size() > 0) {
             mActionAdapter.add(new Action(ACTION_VIDEOS, getResources().getString(R.string.videos)));
             VideoCardPresenter videoCardPresenter = new VideoCardPresenter();
@@ -170,7 +189,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onRecommendationLoaded(final List<Work> works) {
+    public void onRecommendationLoaded(List<Work> works) {
         if (works != null) {
             for (final Work work : works) {
                 if (mRecommendedRowAdapter.indexOf(work) == -1) {
@@ -181,7 +200,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onSimilarLoaded(final List<Work> works) {
+    public void onSimilarLoaded(List<Work> works) {
         if (works != null) {
             for (final Work work : works) {
                 if (mSimilarRowAdapter.indexOf(work) == -1) {
@@ -192,21 +211,16 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
     }
 
     @Override
-    public void onCardImageLoaded(final Drawable resource) {
+    public void onCardImageLoaded(Drawable resource) {
         mDetailsOverviewRow.setImageDrawable(resource);
         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
         setupBackgroundImage();
     }
 
     @Override
-    public void onBackdropImageLoaded(final Bitmap bitmap) {
+    public void onBackdropImageLoaded(Bitmap bitmap) {
         mDetailsBackground.setCoverBitmap(bitmap);
         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 
     private void setupDetailsOverviewRow() {
@@ -232,7 +246,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
             private ImageView mDetailsImageView;
 
             @Override
-            protected RowPresenter.ViewHolder createRowViewHolder(final ViewGroup parent) {
+            protected RowPresenter.ViewHolder createRowViewHolder(ViewGroup parent) {
                 RowPresenter.ViewHolder viewHolder = super.createRowViewHolder(parent);
                 mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image);
                 ViewGroup.LayoutParams lp = mDetailsImageView.getLayoutParams();
@@ -291,13 +305,13 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
             if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
                     case RECOMMENDED_HEADER_ID:
-                        final Work recommendedWork = (Work) item;
+                        Work recommendedWork = (Work) item;
                         if (mRecommendedRowAdapter.indexOf(recommendedWork) >= mRecommendedRowAdapter.size() - 1) {
                             mPresenter.loadRecommendationByWork(mWork);
                         }
                         break;
                     case SIMILAR_HEADER_ID:
-                        final Work similarWork = (Work) item;
+                        Work similarWork = (Work) item;
                         if (mSimilarRowAdapter.indexOf(similarWork) >= mSimilarRowAdapter.size() - 1) {
                             mPresenter.loadSimilarByWork(mWork);
                         }
@@ -314,14 +328,14 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
             if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
                     case CAST_HEAD_ID:
-                        final Cast cast = (Cast) item;
-                        final Bundle castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        Cast cast = (Cast) item;
+                        Bundle castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                                 ((ImageCardView) itemViewHolder.view).getMainImageView(), CastDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                         startActivity(CastDetailsActivity.newInstance(getContext(), cast), castBundle);
                         break;
                     case VIDEO_HEADER_ID:
-                        final Video video = (Video) item;
-                        final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Video video = (Video) item;
+                        Intent intent = new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(String.format(BuildConfig.YOUTUBE_BASE_URL, video.getKey())));
                         try {
                             startActivity(intent);
@@ -331,8 +345,8 @@ public class WorkDetailsFragment extends BaseDetailsFragment<WorkDetailsPresente
                         break;
                     case RECOMMENDED_HEADER_ID:
                     case SIMILAR_HEADER_ID:
-                        final Work work = (Work) item;
-                        final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        Work work = (Work) item;
+                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                                 ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                         startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
                         break;

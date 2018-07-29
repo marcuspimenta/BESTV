@@ -23,7 +23,7 @@ import com.pimenta.bestv.repository.MediaRepository;
  */
 public class WorkTypeHeaderItem extends HeaderItem {
 
-    private MediaRepository.WorkType mMovieListType;
+    private final MediaRepository.WorkType mMovieListType;
 
     public WorkTypeHeaderItem(int id, MediaRepository.WorkType movieListType) {
         super(id, movieListType.getName());

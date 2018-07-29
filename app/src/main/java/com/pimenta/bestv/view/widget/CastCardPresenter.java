@@ -29,22 +29,22 @@ public class CastCardPresenter extends Presenter {
 
     private LoadCastProfileListener mLoadCastProfileListener;
 
-    public void setLoadCastProfileListener(final LoadCastProfileListener loadCastProfileListener) {
+    public void setLoadCastProfileListener(LoadCastProfileListener loadCastProfileListener) {
         mLoadCastProfileListener = loadCastProfileListener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent) {
-        final ImageCardView cardView = new ImageCardView(parent.getContext());
+    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final Object item) {
-        final Cast cast = (Cast) item;
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+    public void onBindViewHolder(ViewHolder viewHolder, Object item) {
+        Cast cast = (Cast) item;
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(cast.getName());
         cardView.setContentText(cast.getCharacter());
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.character_image_card_width),
@@ -56,8 +56,8 @@ public class CastCardPresenter extends Presenter {
     }
 
     @Override
-    public void onUnbindViewHolder(final ViewHolder viewHolder) {
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+    public void onUnbindViewHolder(ViewHolder viewHolder) {
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
     }

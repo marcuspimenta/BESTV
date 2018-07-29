@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.view.fragment;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,8 +41,8 @@ import android.widget.ImageView;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.CastDetailsContract;
 import com.pimenta.bestv.presenter.CastDetailsPresenter;
+import com.pimenta.bestv.presenter.CastDetailsPresenter.CastDetailsContract;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.view.activity.WorkDetailsActivity;
@@ -51,10 +52,12 @@ import com.pimenta.bestv.view.widget.WorkCardPresenter;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 04-04-2018.
  */
-public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresenter> implements CastDetailsContract {
+public class CastDetailsFragment extends BaseDetailsFragment implements CastDetailsContract {
 
     public static final String TAG = "CastDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";
@@ -74,8 +77,18 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
 
     private Cast mCast;
 
+    @Inject
+    CastDetailsPresenter mPresenter;
+
     public static WorkDetailsFragment newInstance() {
         return new WorkDetailsFragment();
+    }
+
+    @Override
+    public void onAttach(@Nullable Context context) {
+        super.onAttach(context);
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.register(this);
     }
 
     @Override
@@ -91,7 +104,7 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getProgressBarManager().setRootView(container);
         getProgressBarManager().enableProgressBar();
         getProgressBarManager().setInitialDelay(0);
@@ -99,16 +112,20 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProgressBarManager().show();
         mPresenter.loadCastDetails(mCast);
     }
 
-    @Override
-    public void onCastLoaded(final Cast cast, final List<? extends Work> movies, final List<? extends Work> tvShow) {
-        getProgressBarManager().hide();
+    @Override public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
+    }
 
+    @Override
+    public void onCastLoaded(Cast cast, List<? extends Work> movies, List<? extends Work> tvShow) {
+        getProgressBarManager().hide();
         if (cast != null) {
             mCast = cast;
             mDetailsOverviewRow.setItem(cast);
@@ -117,34 +134,31 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
 
         if (movies != null && movies.size() > 0) {
             mActionAdapter.add(new Action(ACTION_MOVIES, getResources().getString(R.string.movies)));
-            final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
-            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+            workCardPresenter
+                  .setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mMoviesRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mMoviesRowAdapter.addAll(0, movies);
-            final HeaderItem moviesHeader = new HeaderItem(MOVIES_HEADER_ID, getString(R.string.movies));
+            HeaderItem moviesHeader = new HeaderItem(MOVIES_HEADER_ID, getString(R.string.movies));
             mAdapter.add(new ListRow(moviesHeader, mMoviesRowAdapter));
         }
 
         if (tvShow != null && tvShow.size() > 0) {
             mActionAdapter.add(new Action(ACTION_TV_SHOWS, getResources().getString(R.string.tv_shows)));
-            final WorkCardPresenter workCardPresenter = new WorkCardPresenter();
-            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
+            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
+            workCardPresenter
+                  .setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
             mTvShowsRowAdapter = new ArrayObjectAdapter(workCardPresenter);
             mTvShowsRowAdapter.addAll(0, tvShow);
-            final HeaderItem tvShowsHeader = new HeaderItem(TV_SHOWS_HEADER_ID, getString(R.string.tv_shows));
+            HeaderItem tvShowsHeader = new HeaderItem(TV_SHOWS_HEADER_ID, getString(R.string.tv_shows));
             mAdapter.add(new ListRow(tvShowsHeader, mTvShowsRowAdapter));
         }
     }
 
     @Override
-    public void onCardImageLoaded(final Drawable resource) {
+    public void onCardImageLoaded(Drawable resource) {
         mDetailsOverviewRow.setImageDrawable(resource);
         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 
     private void setupDetailsOverviewRow() {
@@ -164,8 +178,8 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
 
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(
-                new CastDetailsDescriptionPresenter()) {
+        FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(
+              new CastDetailsDescriptionPresenter()) {
 
             private ImageView mDetailsImageView;
 
@@ -184,7 +198,7 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
         detailsPresenter.setBackgroundColor(getResources().getColor(R.color.detail_view_background, getActivity().getTheme()));
 
         // Hook up transition element.
-        final FullWidthDetailsOverviewSharedElementHelper sharedElementHelper = new FullWidthDetailsOverviewSharedElementHelper();
+        FullWidthDetailsOverviewSharedElementHelper sharedElementHelper = new FullWidthDetailsOverviewSharedElementHelper();
         sharedElementHelper.setSharedElementEnterTransition(getActivity(), SHARED_ELEMENT_NAME);
         detailsPresenter.setListener(sharedElementHelper);
         detailsPresenter.setParticipatingEntranceTransition(true);
@@ -208,14 +222,16 @@ public class CastDetailsFragment extends BaseDetailsFragment<CastDetailsPresente
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
 
         @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder,
+              Row row) {
             if (row != null && row.getHeaderItem() != null) {
                 switch ((int) row.getHeaderItem().getId()) {
                     case MOVIES_HEADER_ID:
                     case TV_SHOWS_HEADER_ID:
-                        final Work work = (Work) item;
-                        final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                                ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        Work work = (Work) item;
+                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                              ((ImageCardView) itemViewHolder.view).getMainImageView(),
+                              WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                         startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
                         break;
                 }

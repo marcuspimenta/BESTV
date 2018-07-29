@@ -16,15 +16,13 @@ package com.pimenta.bestv.view.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.view.fragment.base.BaseErrorFragment;
-import com.pimenta.bestv.presenter.DefaultPresenter;
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class ErrorFragment extends BaseErrorFragment<DefaultPresenter> {
+public class ErrorFragment extends BaseErrorFragment {
 
     public static final String TAG = "ErrorFragment";
 
@@ -41,14 +39,9 @@ public class ErrorFragment extends BaseErrorFragment<DefaultPresenter> {
 
         setButtonText(getResources().getString(R.string.error_fragment_button));
         setButtonClickListener(arg -> {
-            if (mTargetFragment != null) {
-                mTargetFragment.onActivityResult(mTargetRequestCode, Activity.RESULT_OK, null);
+            if (getTarget() != null) {
+                getTarget().onActivityResult(getTargetCode(), Activity.RESULT_OK, null);
             }
         });
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 }

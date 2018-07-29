@@ -15,6 +15,7 @@
 package com.pimenta.bestv.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,51 +25,64 @@ import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
-import com.pimenta.bestv.presenter.SplashContract;
 import com.pimenta.bestv.presenter.SplashPresenter;
+import com.pimenta.bestv.presenter.SplashPresenter.SplashContract;
 import com.pimenta.bestv.view.fragment.base.BaseFragment;
 
 import java.util.Set;
 
+import javax.inject.Inject;
+
 /**
  * Created by marcus on 04-05-2018.
  */
-public class SplashFragment extends BaseFragment<SplashPresenter> implements SplashContract {
+public class SplashFragment extends BaseFragment implements SplashContract {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    @Inject
+    SplashPresenter mPresenter;
 
     public static SplashFragment newInstance() {
         return new SplashFragment();
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+    public void onAttach(@Nullable Context context) {
+        super.onAttach(context);
+        BesTV.getApplicationComponent().inject(this);
+        mPresenter.register(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.loadPermissions();
     }
 
     @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
+    public void onDetach() {
+        mPresenter.unRegister();
+        super.onDetach();
     }
 
     @Override
-    public void onSplashFinished(final boolean success) {
+    public void onSplashFinished(boolean success) {
         finishActivity(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
     }
 
     @Override
-    public void onPermissionsLoaded(final Set<String> permissions) {
+    public void onPermissionsLoaded(Set<String> permissions) {
         requestPermissions(permissions.toArray(new String[permissions.size()]), PERMISSION_REQUEST_CODE);
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:

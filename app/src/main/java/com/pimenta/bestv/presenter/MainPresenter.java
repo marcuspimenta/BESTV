@@ -30,12 +30,11 @@ public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
 
     private static final String TAG = MainPresenter.class.getSimpleName();
 
-    private MediaRepository mMediaRepository;
-    private RecommendationManager mRecommendationManager;
+    private final MediaRepository mMediaRepository;
+    private final RecommendationManager mRecommendationManager;
 
     @Inject
     public MainPresenter(MediaRepository mediaRepository, RecommendationManager recommendationManager) {
-        super();
         mMediaRepository = mediaRepository;
         mRecommendationManager = recommendationManager;
     }

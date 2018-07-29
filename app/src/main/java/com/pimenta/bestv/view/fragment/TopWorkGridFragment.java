@@ -14,7 +14,9 @@
 
 package com.pimenta.bestv.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.repository.MediaRepository;
@@ -44,7 +46,13 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onAttach(@Nullable Context context) {
+        BesTV.getApplicationComponent().inject(this);
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (mWorkType == null) {
@@ -73,7 +81,7 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
     }
 
     @Override
-    public void onWorksLoaded(final List<? extends Work> works) {
+    public void onWorksLoaded(List<? extends Work> works) {
         if (mWorkType.equals(MediaRepository.WorkType.FAVORITES_MOVIES)) {
             /*mRowsAdapter.setItems(works, new DiffCallback<Movie>() {
                 @Override
@@ -94,10 +102,5 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
             return;
         }
         super.onWorksLoaded(works);
-    }
-
-    @Override
-    protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
     }
 }

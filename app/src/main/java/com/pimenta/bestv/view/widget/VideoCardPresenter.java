@@ -29,13 +29,13 @@ public class VideoCardPresenter extends Presenter {
 
     private LoadVideoThumbnailListener mLoadVideoThumbnailListener;
 
-    public void setLoadVideoThumbnailListener(final LoadVideoThumbnailListener loadVideoThumbnailListener) {
+    public void setLoadVideoThumbnailListener(LoadVideoThumbnailListener loadVideoThumbnailListener) {
         mLoadVideoThumbnailListener = loadVideoThumbnailListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        final ImageCardView cardView = new ImageCardView(parent.getContext());
+        ImageCardView cardView = new ImageCardView(parent.getContext());
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         return new ViewHolder(cardView);
@@ -43,8 +43,8 @@ public class VideoCardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        final Video video = (Video) item;
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+        Video video = (Video) item;
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(video.getName());
         cardView.setContentText(video.getType());
         cardView.setMainImageDimensions(viewHolder.view.getContext().getResources().getDimensionPixelSize(R.dimen.video_card_width),
@@ -57,7 +57,7 @@ public class VideoCardPresenter extends Presenter {
 
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        final ImageCardView cardView = (ImageCardView) viewHolder.view;
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
     }
