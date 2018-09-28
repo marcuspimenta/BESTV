@@ -26,7 +26,7 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Work;
-import com.pimenta.bestv.view.activity.WorkDetailsActivity;
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

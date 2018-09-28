@@ -38,14 +38,14 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "TMDB_API_KEY"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
             debuggable true
             multiDexEnabled true
             minifyEnabled false
             shrinkResources false
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "TMDB_API_KEY"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
             debuggable false
             minifyEnabled true
             shrinkResources true

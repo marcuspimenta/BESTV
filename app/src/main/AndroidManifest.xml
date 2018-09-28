@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".feature.MainActivity"
             android:banner="@drawable/app_icon_your_company"
             android:icon="@drawable/app_icon_your_company"
             android:label="@string/app_name"
@@ -34,19 +34,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.activity.SplashActivity"
+            android:name=".feature.splash.ui.SplashActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.activity.SearchActivity"
+            android:name=".feature.search.ui.SearchActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.activity.WorkDetailsActivity"
+            android:name=".feature.workdetail.ui.WorkDetailsActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.activity.CastDetailsActivity"
+            android:name=".feature.castdetail.ui.CastDetailsActivity"
             android:screenOrientation="landscape"/>
         <receiver
-            android:name=".broadcastreceiver.BootBroadcastReceiver"
+            android:name=".feature.boot.broadcast.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -54,12 +54,12 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".service.RecommendationService"
+            android:name=".feature.recommendation.RecommendationService"
             android:enabled="true"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="FABRIC_KEY" />
+            android:value="1c63ae626c525fff47fa264f25ad0ea34396dac2" />
     </application>
 
 </manifest>

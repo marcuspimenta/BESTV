@@ -20,9 +20,9 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.pimenta.bestv.dagger.ApplicationComponent;
-import com.pimenta.bestv.dagger.DaggerApplicationComponent;
-import com.pimenta.bestv.dagger.module.ApplicationModule;
+import com.pimenta.bestv.di.ApplicationComponent;
+import com.pimenta.bestv.di.DaggerApplicationComponent;
+import com.pimenta.bestv.di.module.ApplicationModule;
 
 import io.fabric.sdk.android.Fabric;
 
