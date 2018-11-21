@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation;
+package com.pimenta.bestv.feature.recommendation.service;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +20,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.pimenta.bestv.BesTV;
-import com.pimenta.bestv.feature.recommendation.RecommendationPresenter.RecommendationContract;
 import com.pimenta.bestv.feature.base.BaseService;
+import com.pimenta.bestv.feature.recommendation.presenter.RecommendationPresenter;
 
 /**
  * Created by marcus on 07-03-2018.
  */
-public class RecommendationService extends BaseService<RecommendationPresenter> implements RecommendationContract {
+public class RecommendationService extends BaseService<RecommendationPresenter> implements RecommendationPresenter.View {
 
     public static Intent newInstance(Context context) {
         return new Intent(context, RecommendationService.class);

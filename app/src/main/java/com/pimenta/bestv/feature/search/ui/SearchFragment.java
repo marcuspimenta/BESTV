@@ -36,14 +36,12 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment;
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter;
-import com.pimenta.bestv.feature.search.presenter.SearchPresenter.SearchContract;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
 import com.pimenta.bestv.feature.base.BaseSearchFragment;
@@ -58,7 +56,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchFragment extends BaseSearchFragment implements SearchContract,
+public class SearchFragment extends BaseSearchFragment implements SearchPresenter.View,
         SearchSupportFragment.SearchResultProvider {
 
     public static final String TAG = SearchFragment.class.getSimpleName();
@@ -100,12 +98,12 @@ public class SearchFragment extends BaseSearchFragment implements SearchContract
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sProgressBarManager.setRootView(container);
         sProgressBarManager.enableProgressBar();
         sProgressBarManager.setInitialDelay(0);
 
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        android.view.View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
             view.setBackgroundColor(getResources().getColor(android.support.v17.leanback.R.color.lb_playback_controls_background_light));
         }
@@ -113,7 +111,7 @@ public class SearchFragment extends BaseSearchFragment implements SearchContract
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         clearAdapter();
     }
@@ -218,7 +216,7 @@ public class SearchFragment extends BaseSearchFragment implements SearchContract
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SEARCH_FRAGMENT_REQUEST_CODE:
-                View view = getView();
+                android.view.View view = getView();
                 if (view != null) {
                     view.requestFocus();
                 }

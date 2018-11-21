@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter;
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter.WorkBrowseContract;
+import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter.WorkBrowseView;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.MovieGenre;
@@ -50,7 +50,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowseContract {
+public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowseView {
 
     public static final String TAG = WorkBrowseFragment.class.getSimpleName();
     private static final int TOP_WORK_LIST_ID = 1;

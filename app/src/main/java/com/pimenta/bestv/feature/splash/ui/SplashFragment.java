@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter;
-import com.pimenta.bestv.feature.splash.presenter.SplashPresenter.SplashContract;
 import com.pimenta.bestv.feature.base.BaseFragment;
 
 import java.util.Set;
@@ -36,7 +35,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 04-05-2018.
  */
-public class SplashFragment extends BaseFragment implements SplashContract {
+public class SplashFragment extends BaseFragment implements SplashPresenter.View {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 

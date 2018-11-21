@@ -54,7 +54,7 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".feature.recommendation.RecommendationService"
+            android:name=".feature.recommendation.service.RecommendationService"
             android:enabled="true"/>
 
         <meta-data

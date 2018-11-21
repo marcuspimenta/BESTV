@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName
  */
 class CastList {
 
-    @SerializedName("id")
-    var id: Int = 0
-    @SerializedName("cast")
-    var casts: List<Cast>? = null
+    @SerializedName("id") var id: Int = 0
+    @SerializedName("cast") var casts: List<Cast>? = null
 }

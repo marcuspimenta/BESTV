@@ -23,30 +23,17 @@ import java.io.Serializable
  */
 class Cast : Serializable {
 
-    @SerializedName("cast_id")
-    var castId: Int = 0
-    @SerializedName("credit_id")
-    var creditId: String? = null
-    @SerializedName("gender")
-    var gender: Int = 0
-    @SerializedName("id")
-    var id: Int = 0
-    @SerializedName("order")
-    var order: Int = 0
-    @SerializedName("name")
-    var name: String? = null
-    @SerializedName("character")
-    var character: String? = null
-    @SerializedName("profile_path")
-    var profilePath: String? = null
-    @SerializedName("birthday")
-    var birthday: String? = null
-    @SerializedName("deathday")
-    var deathDay: String? = null
-    @SerializedName("biography")
-    var biography: String? = null
-    @SerializedName("popularity")
-    var popularity: Double? = null
-    @SerializedName("place_of_birth")
-    var placeOfBirth: String? = null
+    @SerializedName("cast_id") var castId: Int = 0
+    @SerializedName("credit_id") var creditId: String? = null
+    @SerializedName("gender") var gender: Int = 0
+    @SerializedName("id") var id: Int = 0
+    @SerializedName("order") var order: Int = 0
+    @SerializedName("name") var name: String? = null
+    @SerializedName("character") var character: String? = null
+    @SerializedName("profile_path") var profilePath: String? = null
+    @SerializedName("birthday") var birthday: String? = null
+    @SerializedName("deathday") var deathDay: String? = null
+    @SerializedName("biography") var biography: String? = null
+    @SerializedName("popularity") var popularity: Double? = null
+    @SerializedName("place_of_birth") var placeOfBirth: String? = null
 }

@@ -40,7 +40,6 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -49,7 +48,6 @@ import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment;
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter;
-import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter.WorkDetailsContract;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.Work;
@@ -67,7 +65,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDetailsContract {
+public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDetailsPresenter.WorkDetailsView {
 
     public static final String TAG = "WorkDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";
@@ -123,7 +121,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFavoriteAction = new Action(ACTION_FAVORITE, mPresenter.isFavorite(mWork) ? getResources().getString(R.string.remove_favorites) :
                 getResources().getString(R.string.save_favorites));

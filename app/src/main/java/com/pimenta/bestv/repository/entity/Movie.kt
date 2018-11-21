@@ -27,12 +27,9 @@ import java.util.*
 @DatabaseTable(tableName = Movie.TABLE)
 class Movie : Work() {
 
-    @SerializedName("title")
-    override var title: String? = null
-    @SerializedName("original_title")
-    override var originalTitle: String? = null
-    @SerializedName("release_date")
-    private var releaseDateString: String? = null
+    @SerializedName("title") override var title: String? = null
+    @SerializedName("original_title") override var originalTitle: String? = null
+    @SerializedName("release_date") private var releaseDateString: String? = null
 
     private val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
 

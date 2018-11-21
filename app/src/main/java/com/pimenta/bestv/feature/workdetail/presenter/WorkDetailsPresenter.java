@@ -26,7 +26,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.feature.base.BasePresenter;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter.WorkDetailsContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.CastList;
@@ -48,7 +47,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 07-02-2018.
  */
-public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
+public class WorkDetailsPresenter extends BasePresenter<WorkDetailsPresenter.WorkDetailsView> {
 
     private static final String TAG = WorkDetailsPresenter.class.getSimpleName();
 
@@ -99,13 +98,13 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     work.setFavorite(!work.isFavorite());
-                    if (getContract() != null) {
-                        getContract().onResultSetFavoriteMovie(true);
+                    if (getView() != null) {
+                        getView().onResultSetFavoriteMovie(true);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while settings the work as favorite", throwable);
-                    if (getContract() != null) {
-                        getContract().onResultSetFavoriteMovie(false);
+                    if (getView() != null) {
+                        getView().onResultSetFavoriteMovie(false);
                     }
                 }));
     }
@@ -126,7 +125,7 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieInfo -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         final WorkPage recommendedPage = movieInfo.getRecommendedMovies();
                         if (recommendedPage != null && recommendedPage.getPage() <= recommendedPage.getTotalPages()) {
                             mRecommendedPage = recommendedPage.getPage();
@@ -136,15 +135,15 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                             mSimilarPage = similarPage.getPage();
                         }
 
-                        getContract().onDataLoaded(movieInfo.getCasts() != null ? movieInfo.getCasts().getCasts() : null,
+                        getView().onDataLoaded(movieInfo.getCasts() != null ? movieInfo.getCasts().getCasts() : null,
                                 recommendedPage != null ? recommendedPage.getWorks() : null,
                                 similarPage != null ? similarPage.getWorks() : null,
                                 movieInfo.getVideos() != null ? movieInfo.getVideos().getVideos() : null);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading data by work", throwable);
-                    if (getContract() != null) {
-                        getContract().onDataLoaded(null, null, null, null);
+                    if (getView() != null) {
+                        getView().onDataLoaded(null, null, null, null);
                     }
                 }));
     }
@@ -160,18 +159,18 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieList -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                             mRecommendedPage = movieList.getPage();
-                            getContract().onRecommendationLoaded(movieList.getWorks());
+                            getView().onRecommendationLoaded(movieList.getWorks());
                         } else {
-                            getContract().onRecommendationLoaded(null);
+                            getView().onRecommendationLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading recommendations by work", throwable);
-                    if (getContract() != null) {
-                        getContract().onRecommendationLoaded(null);
+                    if (getView() != null) {
+                        getView().onRecommendationLoaded(null);
                     }
                 }));
     }
@@ -187,18 +186,18 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(movieList -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         if (movieList != null && movieList.getPage() <= movieList.getTotalPages()) {
                             mSimilarPage = movieList.getPage();
-                            getContract().onSimilarLoaded(movieList.getWorks());
+                            getView().onSimilarLoaded(movieList.getWorks());
                         } else {
-                            getContract().onSimilarLoaded(null);
+                            getView().onSimilarLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading similar by work", throwable);
-                    if (getContract() != null) {
-                        getContract().onSimilarLoaded(null);
+                    if (getView() != null) {
+                        getView().onSimilarLoaded(null);
                     }
                 }));
     }
@@ -213,8 +212,8 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull final Drawable resource, @Nullable final Transition<? super Drawable> transition) {
-                        if (getContract() != null) {
-                            getContract().onCardImageLoaded(resource);
+                        if (getView() != null) {
+                            getView().onCardImageLoaded(resource);
                         }
                     }
 
@@ -222,8 +221,8 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.w(TAG, "Error while loading card image");
-                        if (getContract() != null) {
-                            getContract().onCardImageLoaded(null);
+                        if (getView() != null) {
+                            getView().onCardImageLoaded(null);
                         }
                     }
                 });
@@ -239,16 +238,16 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(resource);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(resource);
                         }
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(null);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(null);
                         }
                     }
                 });
@@ -318,7 +317,7 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsContract> {
         }
     }
 
-    public interface WorkDetailsContract extends BasePresenter.Contract {
+    public interface WorkDetailsView extends BasePresenter.BaseView {
 
         void onResultSetFavoriteMovie(boolean success);
 

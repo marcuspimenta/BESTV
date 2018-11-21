@@ -43,7 +43,6 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.R;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment;
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter;
-import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter.CastDetailsContract;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
@@ -58,7 +57,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 04-04-2018.
  */
-public class CastDetailsFragment extends BaseDetailsFragment implements CastDetailsContract {
+public class CastDetailsFragment extends BaseDetailsFragment implements CastDetailsPresenter.View {
 
     public static final String TAG = "CastDetailsFragment";
     public static final String SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME";

@@ -19,20 +19,19 @@ import io.reactivex.disposables.CompositeDisposable
 /**
  * Created by marcus on 06-02-2018.
  */
-abstract class BasePresenter<T : BasePresenter.Contract> {
+abstract class BasePresenter<T : BasePresenter.BaseView> {
 
-    protected var contract: T? = null
+    protected lateinit var view: T
     protected val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
     open fun register(contract: T) {
-        this.contract = contract
+        this.view = contract
     }
 
     open fun unRegister() {
         compositeDisposable.dispose()
-        contract = null
     }
 
-    interface Contract
+    interface BaseView
 
 }

@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 04-05-2018.
  */
-public class MainPresenter extends BasePresenter<BasePresenter.Contract> {
+public class MainPresenter extends BasePresenter<BasePresenter.BaseView> {
 
     private static final String TAG = MainPresenter.class.getSimpleName();
 

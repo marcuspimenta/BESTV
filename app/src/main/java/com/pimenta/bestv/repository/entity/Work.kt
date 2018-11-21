@@ -25,25 +25,15 @@ import java.util.Date
  */
 abstract class Work : Serializable {
 
-    @DatabaseField(id = true, columnName = "id")
-    @SerializedName("id")
-    var id: Int = 0
-    @SerializedName("original_language")
-    var originalLanguage: String? = null
-    @SerializedName("overview")
-    var overview: String? = null
-    @SerializedName("backdrop_path")
-    var backdropPath: String? = null
-    @SerializedName("poster_path")
-    var posterPath: String? = null
-    @SerializedName("popularity")
-    var popularity: Float = 0.toFloat()
-    @SerializedName("vote_average")
-    var voteAverage: Float = 0.toFloat()
-    @SerializedName("vote_count")
-    var voteCount: Float = 0.toFloat()
-    @SerializedName("adult")
-    var isAdult: Boolean = false
+    @DatabaseField(id = true, columnName = "id") @SerializedName("id") var id: Int = 0
+    @SerializedName("original_language") var originalLanguage: String? = null
+    @SerializedName("overview") var overview: String? = null
+    @SerializedName("backdrop_path") var backdropPath: String? = null
+    @SerializedName("poster_path") var posterPath: String? = null
+    @SerializedName("popularity") var popularity: Float = 0.toFloat()
+    @SerializedName("vote_average") var voteAverage: Float = 0.toFloat()
+    @SerializedName("vote_count") var voteCount: Float = 0.toFloat()
+    @SerializedName("adult") var isAdult: Boolean = false
     var isFavorite: Boolean = false
 
     abstract var title: String?

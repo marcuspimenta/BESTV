@@ -26,7 +26,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.feature.base.BasePresenter;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridContract;
+import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Work;
@@ -41,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 09-02-2018.
  */
-public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
+public class WorkGridPresenter extends BasePresenter<WorkGridView> {
 
     private static final String TAG = WorkGridPresenter.class.getSimpleName();
 
@@ -66,13 +66,13 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(movies -> {
-                            if (getContract() != null) {
-                                getContract().onWorksLoaded(movies);
+                            if (getView() != null) {
+                                getView().onWorksLoaded(movies);
                             }
                         }, throwable -> {
                             Log.e(TAG, "Error while loading the favorite works", throwable);
-                            if (getContract() != null) {
-                                getContract().onWorksLoaded(null);
+                            if (getView() != null) {
+                                getView().onWorksLoaded(null);
                             }
                         }));
                 break;
@@ -82,18 +82,18 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(workPage -> {
-                            if (getContract() != null) {
+                            if (getView() != null) {
                                 if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
                                     mCurrentPage = workPage.getPage();
-                                    getContract().onWorksLoaded(workPage.getWorks());
+                                    getView().onWorksLoaded(workPage.getWorks());
                                 } else {
-                                    getContract().onWorksLoaded(null);
+                                    getView().onWorksLoaded(null);
                                 }
                             }
                         }, throwable -> {
                             Log.e(TAG, "Error while loading the works by type", throwable);
-                            if (getContract() != null) {
-                                getContract().onWorksLoaded(null);
+                            if (getView() != null) {
+                                getView().onWorksLoaded(null);
                             }
                         }));
                 break;
@@ -111,18 +111,18 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(workPage -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         if (workPage != null && workPage.getPage() <= workPage.getTotalPages()) {
                             mCurrentPage = workPage.getPage();
-                            getContract().onWorksLoaded(workPage.getWorks());
+                            getView().onWorksLoaded(workPage.getWorks());
                         } else {
-                            getContract().onWorksLoaded(null);
+                            getView().onWorksLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading the works by genre", throwable);
-                    if (getContract() != null) {
-                        getContract().onWorksLoaded(null);
+                    if (getView() != null) {
+                        getView().onWorksLoaded(null);
                     }
                 }));
     }
@@ -137,8 +137,8 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(resource);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(resource);
                         }
                     }
 
@@ -146,8 +146,8 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.w(TAG, "Error while loading backdrop image");
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(null);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(null);
                         }
                     }
                 });
@@ -163,7 +163,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridContract> {
         mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
     }
 
-    public interface WorkGridContract extends BasePresenter.Contract {
+    public interface WorkGridView extends BasePresenter.BaseView {
 
         void onWorksLoaded(List<? extends Work> works);
 

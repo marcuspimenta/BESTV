@@ -49,8 +49,10 @@ abstract class BaseSearchFragment : SearchSupportFragment() {
      * activity, often RESULT_CANCELED or RESULT_OK
      */
     fun finishActivity(resultCode: Int) {
-        activity?.setResult(resultCode)
-        activity?.finish()
+        activity?.run {
+            setResult(resultCode)
+            finish()
+        }
     }
 
     /**
@@ -59,8 +61,10 @@ abstract class BaseSearchFragment : SearchSupportFragment() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = activity?.supportFragmentManager
-        fragmentManager?.beginTransaction()?.replace(android.R.id.content, fragment)?.commit()
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(android.R.id.content, fragment)
+                ?.commit()
     }
 
     /**
@@ -70,8 +74,11 @@ abstract class BaseSearchFragment : SearchSupportFragment() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        val fragmentManager = activity?.supportFragmentManager
-        fragmentManager?.beginTransaction()?.add(android.R.id.content, fragment)?.addToBackStack(tag)?.commit()
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.add(android.R.id.content, fragment)
+                ?.addToBackStack(tag)
+                ?.commit()
     }
 
     /**
@@ -83,7 +90,7 @@ abstract class BaseSearchFragment : SearchSupportFragment() {
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected fun popBackStack(name: String, flags: Int) {
-        val fragmentManager = activity?.supportFragmentManager
-        fragmentManager?.popBackStackImmediate(name, flags)
+        activity?.supportFragmentManager
+                ?.popBackStackImmediate(name, flags)
     }
 }

@@ -18,14 +18,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.pimenta.bestv.feature.base.BasePresenter;
-
 import javax.inject.Inject;
 
 /**
  * Created by marcus on 06-03-2018.
  */
-public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.Contract {
+public abstract class BaseBroadcastReceiver<T extends BasePresenter> extends BroadcastReceiver implements BasePresenter.BaseView {
 
     @Inject
     protected T mPresenter;

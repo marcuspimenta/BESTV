@@ -28,8 +28,9 @@ abstract class BaseActivity : FragmentActivity() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        fragmentManager?.beginTransaction()?.replace(android.R.id.content, fragment)?.commit()
+        supportFragmentManager?.beginTransaction()
+                ?.replace(android.R.id.content, fragment)
+                ?.commit()
     }
 
     /**
@@ -39,8 +40,11 @@ abstract class BaseActivity : FragmentActivity() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        val fragmentManager = supportFragmentManager
-        fragmentManager?.beginTransaction()?.add(android.R.id.content, fragment)?.addToBackStack(tag)?.commit()
+        supportFragmentManager
+                ?.beginTransaction()
+                ?.add(android.R.id.content, fragment)
+                ?.addToBackStack(tag)
+                ?.commit()
     }
 
     /**
@@ -52,8 +56,7 @@ abstract class BaseActivity : FragmentActivity() {
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected fun popBackStack(name: String, flags: Int) {
-        val fragmentManager = supportFragmentManager
-        fragmentManager?.popBackStackImmediate(name, flags)
+        supportFragmentManager?.popBackStackImmediate(name, flags)
     }
 
 }

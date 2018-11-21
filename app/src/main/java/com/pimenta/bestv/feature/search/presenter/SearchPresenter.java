@@ -28,7 +28,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.feature.base.BasePresenter;
 import com.pimenta.bestv.manager.ImageManager;
-import com.pimenta.bestv.feature.search.presenter.SearchPresenter.SearchContract;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.TvShow;
@@ -48,7 +47,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 12-03-2018.
  */
-public class SearchPresenter extends BasePresenter<SearchContract> {
+public class SearchPresenter extends BasePresenter<SearchPresenter.View> {
 
     private static final String TAG = SearchPresenter.class.getSimpleName();
 
@@ -105,7 +104,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(pair -> {
-                        if (getContract() != null) {
+                        if (getView() != null) {
                             List<Movie> movies = null;
                             if (pair.first != null && pair.first.getPage() <= pair.first.getTotalPages()) {
                                 mResultMoviePage = pair.first.getPage();
@@ -116,12 +115,12 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                                 mResultTvShowPage = pair.second.getPage();
                                 tvShows = pair.second.getWorks();
                             }
-                            getContract().onResultLoaded(movies, tvShows);
+                            getView().onResultLoaded(movies, tvShows);
                         }
                     }, throwable -> {
                         Log.e(TAG, "Error while searching movies by query", throwable);
-                        if (getContract() != null) {
-                            getContract().onResultLoaded(null, null);
+                        if (getView() != null) {
+                            getView().onResultLoaded(null, null);
                         }
                     });
         } catch (UnsupportedEncodingException e) {
@@ -138,18 +137,18 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(moviePage -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         if (moviePage != null && moviePage.getPage() <= moviePage.getTotalPages()) {
                             mResultMoviePage = moviePage.getPage();
-                            getContract().onMoviesLoaded(moviePage.getWorks());
+                            getView().onMoviesLoaded(moviePage.getWorks());
                         } else {
-                            getContract().onMoviesLoaded(null);
+                            getView().onMoviesLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading movies by query", throwable);
-                    if (getContract() != null) {
-                        getContract().onMoviesLoaded(null);
+                    if (getView() != null) {
+                        getView().onMoviesLoaded(null);
                     }
                 }));
     }
@@ -163,18 +162,18 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tvShowPage -> {
-                    if (getContract() != null) {
+                    if (getView() != null) {
                         if (tvShowPage != null && tvShowPage.getPage() <= tvShowPage.getTotalPages()) {
                             mResultTvShowPage = tvShowPage.getPage();
-                            getContract().onTvShowsLoaded(tvShowPage.getWorks());
+                            getView().onTvShowsLoaded(tvShowPage.getWorks());
                         } else {
-                            getContract().onTvShowsLoaded(null);
+                            getView().onTvShowsLoaded(null);
                         }
                     }
                 }, throwable -> {
                     Log.e(TAG, "Error while loading tv shows by query", throwable);
-                    if (getContract() != null) {
-                        getContract().onTvShowsLoaded(null);
+                    if (getView() != null) {
+                        getView().onTvShowsLoaded(null);
                     }
                 }));
     }
@@ -199,8 +198,8 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                 new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, @Nullable final Transition<? super Bitmap> transition) {
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(resource);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(resource);
                         }
                     }
 
@@ -208,8 +207,8 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.w(TAG, "Error while loading backdrop image");
-                        if (getContract() != null) {
-                            getContract().onBackdropImageLoaded(null);
+                        if (getView() != null) {
+                            getView().onBackdropImageLoaded(null);
                         }
                     }
                 });
@@ -225,7 +224,7 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
         }
     }
 
-    public interface SearchContract extends BasePresenter.Contract {
+    public interface View extends BasePresenter.BaseView {
 
         void onResultLoaded(List<? extends Work> movies, List<? extends Work> tvShows);
 

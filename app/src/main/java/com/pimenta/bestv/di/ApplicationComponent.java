@@ -18,7 +18,7 @@ import android.app.Application;
 
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver;
 import com.pimenta.bestv.di.module.ApplicationModule;
-import com.pimenta.bestv.feature.recommendation.RecommendationService;
+import com.pimenta.bestv.feature.recommendation.service.RecommendationService;
 import com.pimenta.bestv.feature.MainActivity;
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment;
 import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment;
@@ -45,7 +45,7 @@ public interface ApplicationComponent {
 
     void inject(BootBroadcastReceiver receiver);
 
-    void inject(RecommendationService service);
+    void inject(RecommendationService recommendationService);
 
     void inject(MainActivity activity);
 

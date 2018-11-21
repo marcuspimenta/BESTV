@@ -41,7 +41,7 @@ import android.view.ViewGroup;
 import com.pimenta.bestv.feature.error.ErrorFragment;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment;
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter;
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridContract;
+import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView;
 import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
 import com.pimenta.bestv.feature.base.BaseVerticalGridFragment;
@@ -56,7 +56,7 @@ import javax.inject.Inject;
 /**
  * Created by marcus on 09-02-2018.
  */
-public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment implements WorkGridContract,
+public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment implements WorkGridView,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     protected static final String SHOW_PROGRESS = "SHOW_PROGRESS";

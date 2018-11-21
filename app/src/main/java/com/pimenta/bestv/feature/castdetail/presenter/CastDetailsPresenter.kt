@@ -23,7 +23,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.base.BasePresenter
 import com.pimenta.bestv.manager.ImageManager
-import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter.CastDetailsContract
+import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter.View
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.CastMovieList
@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers
 class CastDetailsPresenter @Inject constructor(
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager
-) : BasePresenter<CastDetailsContract>() {
+) : BasePresenter<View>() {
 
     /**
      * Load the [Cast] details
@@ -60,14 +60,14 @@ class CastDetailsPresenter @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ castInfo ->
-                    contract?.onCastLoaded(
+                    view.onCastLoaded(
                             castInfo.cast,
                             castInfo?.castMovieList?.works,
                             castInfo?.castTvShowList?.works
                     )
                 }, { throwable ->
                     Log.e(TAG, "Error while getting the cast details", throwable)
-                    contract?.onCastLoaded(null, null, null)
+                    view.onCastLoaded(null, null, null)
                 }))
     }
 
@@ -80,12 +80,12 @@ class CastDetailsPresenter @Inject constructor(
         imageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, cast.profilePath),
                 object : SimpleTarget<Drawable>() {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        contract?.onCardImageLoaded(resource)
+                        view.onCardImageLoaded(resource)
                     }
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         super.onLoadFailed(errorDrawable)
-                        contract?.onCardImageLoaded(null)
+                        view.onCardImageLoaded(null)
                     }
                 })
     }
@@ -97,7 +97,12 @@ class CastDetailsPresenter @Inject constructor(
      * @param imageView [ImageView]
      */
     fun loadWorkPosterImage(work: Work, imageView: ImageView) {
-        imageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath))
+        imageManager.loadImageInto(imageView,
+                String.format(
+                        BuildConfig.TMDB_LOAD_IMAGE_BASE_URL,
+                        work.posterPath
+                )
+        )
     }
 
     /**
@@ -109,7 +114,7 @@ class CastDetailsPresenter @Inject constructor(
             val castTvShowList: CastTvShowList
     )
 
-    interface CastDetailsContract : BasePresenter.Contract {
+    interface View : BasePresenter.BaseView {
 
         fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?)
 
@@ -118,6 +123,8 @@ class CastDetailsPresenter @Inject constructor(
     }
 
     companion object {
+
         private val TAG = CastDetailsPresenter::class.java.simpleName
+
     }
 }

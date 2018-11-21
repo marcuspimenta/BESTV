@@ -12,11 +12,10 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation;
+package com.pimenta.bestv.feature.recommendation.presenter;
 
 import com.pimenta.bestv.feature.base.BasePresenter;
 import com.pimenta.bestv.manager.RecommendationManager;
-import com.pimenta.bestv.feature.recommendation.RecommendationPresenter.RecommendationContract;
 import com.pimenta.bestv.repository.MediaRepository;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by marcus on 07-03-2018.
  */
-public class RecommendationPresenter extends BasePresenter<RecommendationContract> {
+public class RecommendationPresenter extends BasePresenter<RecommendationPresenter.View> {
 
     private static final String TAG = RecommendationPresenter.class.getSimpleName();
 
@@ -49,13 +48,13 @@ public class RecommendationPresenter extends BasePresenter<RecommendationContrac
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
-                    if (getContract() != null) {
-                        getContract().onLoadRecommendationFinished();
+                    if (getView() != null) {
+                        getView().onLoadRecommendationFinished();
                     }
                 }));
     }
 
-    public interface RecommendationContract extends BasePresenter.Contract {
+    public interface View extends BasePresenter.BaseView {
 
         void onLoadRecommendationFinished();
 

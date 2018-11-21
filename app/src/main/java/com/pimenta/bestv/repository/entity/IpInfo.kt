@@ -21,32 +21,18 @@ import com.google.gson.annotations.SerializedName
  */
 class IpInfo {
 
-    @SerializedName("as")
-    var `as`: String? = null
-    @SerializedName("city")
-    var city: String? = null
-    @SerializedName("country")
-    var country: String? = null
-    @SerializedName("countryCode")
-    var countryCode: String? = null
-    @SerializedName("isp")
-    var isp: String? = null
-    @SerializedName("lat")
-    var lat: Float = 0.toFloat()
-    @SerializedName("lon")
-    var lon: Float = 0.toFloat()
-    @SerializedName("org")
-    var org: String? = null
-    @SerializedName("query")
-    var query: String? = null
-    @SerializedName("region")
-    var region: String? = null
-    @SerializedName("regionName")
-    var regionName: String? = null
-    @SerializedName("status")
-    var status: String? = null
-    @SerializedName("timezone")
-    var timeZone: String? = null
-    @SerializedName("zip")
-    var zip: String? = null
+    @SerializedName("as") var `as`: String? = null
+    @SerializedName("city") var city: String? = null
+    @SerializedName("country") var country: String? = null
+    @SerializedName("countryCode") var countryCode: String? = null
+    @SerializedName("isp") var isp: String? = null
+    @SerializedName("lat") var lat: Float = 0.toFloat()
+    @SerializedName("lon") var lon: Float = 0.toFloat()
+    @SerializedName("org") var org: String? = null
+    @SerializedName("query") var query: String? = null
+    @SerializedName("region") var region: String? = null
+    @SerializedName("regionName") var regionName: String? = null
+    @SerializedName("status") var status: String? = null
+    @SerializedName("timezone") var timeZone: String? = null
+    @SerializedName("zip") var zip: String? = null
 }

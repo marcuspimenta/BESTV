@@ -23,10 +23,8 @@ import java.io.Serializable
  */
 abstract class Genre : Serializable {
 
-    @SerializedName("id")
-    var id: Int = 0
-    @SerializedName("name")
-    var name: String? = null
+    @SerializedName("id") var id: Int = 0
+    @SerializedName("name") var name: String? = null
 
     abstract val source: Source
 

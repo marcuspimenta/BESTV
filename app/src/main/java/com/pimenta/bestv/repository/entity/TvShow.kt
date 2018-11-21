@@ -27,12 +27,9 @@ import java.util.*
 @DatabaseTable(tableName = TvShow.TABLE)
 class TvShow : Work() {
 
-    @SerializedName("name")
-    override var title: String? = null
-    @SerializedName("original_name")
-    override var originalTitle: String? = null
-    @SerializedName("first_air_date")
-    private var mFirstAirDate: String? = null
+    @SerializedName("name") override var title: String? = null
+    @SerializedName("original_name") override var originalTitle: String? = null
+    @SerializedName("first_air_date") private var mFirstAirDate: String? = null
 
     private val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
 

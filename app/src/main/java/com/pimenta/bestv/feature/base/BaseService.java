@@ -16,14 +16,12 @@ package com.pimenta.bestv.feature.base;
 
 import android.app.Service;
 
-import com.pimenta.bestv.feature.base.BasePresenter;
-
 import javax.inject.Inject;
 
 /**
  * Created by marcus on 07-03-2018.
  */
-public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.Contract {
+public abstract class BaseService<T extends BasePresenter> extends Service implements BasePresenter.BaseView {
 
     @Inject
     protected T mPresenter;
