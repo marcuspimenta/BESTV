@@ -148,7 +148,7 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment 
                 }
             }
         } else if (mRowsAdapter.size() == 0) {
-            final ErrorFragment fragment = ErrorFragment.newInstance();
+            final ErrorFragment fragment = ErrorFragment.Companion.newInstance();
             fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE);
             addFragment(fragment, ErrorFragment.TAG);
         }

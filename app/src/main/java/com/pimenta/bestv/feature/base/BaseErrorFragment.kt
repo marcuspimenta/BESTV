@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentManager
  */
 abstract class BaseErrorFragment : ErrorSupportFragment() {
 
-    protected lateinit var target: Fragment
+    protected var target: Fragment? = null
     protected var targetCode: Int = 0
 
     /**
