@@ -25,8 +25,8 @@ public class WorkTypeHeaderItem extends HeaderItem {
 
     private final MediaRepository.WorkType mMovieListType;
 
-    public WorkTypeHeaderItem(int id, MediaRepository.WorkType movieListType) {
-        super(id, movieListType.getWorkName());
+    public WorkTypeHeaderItem(int id, String name, MediaRepository.WorkType movieListType) {
+        super(id, name);
         mMovieListType = movieListType;
     }
 

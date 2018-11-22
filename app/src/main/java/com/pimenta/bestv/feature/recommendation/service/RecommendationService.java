@@ -51,6 +51,6 @@ public class RecommendationService extends BaseService<RecommendationPresenter> 
 
     @Override
     protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
     }
 }

@@ -47,7 +47,7 @@ public class TopWorkGridFragment extends AbstractWorkGridFragment {
 
     @Override
     public void onAttach(@Nullable Context context) {
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
         super.onAttach(context);
     }
 

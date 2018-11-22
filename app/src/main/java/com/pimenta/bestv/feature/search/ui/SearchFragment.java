@@ -87,7 +87,7 @@ public class SearchFragment extends BaseSearchFragment implements SearchPresente
     @Override
     public void onAttach(@Nullable Context context) {
         super.onAttach(context);
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
         mPresenter.register(this);
     }
 

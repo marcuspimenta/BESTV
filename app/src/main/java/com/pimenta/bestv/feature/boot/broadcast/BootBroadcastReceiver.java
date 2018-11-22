@@ -38,7 +38,7 @@ public class BootBroadcastReceiver extends BaseBroadcastReceiver<BootPresenter> 
 
     @Override
     protected void injectPresenter() {
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
     }
 
 }

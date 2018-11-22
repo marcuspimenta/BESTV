@@ -57,13 +57,11 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
     private static final int WORK_GENRE_ID = 2;
     private static final int FAVORITE_INDEX = 0;
 
-    private static final PageRow sFavoritePageRow = new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID,
-          MediaRepository.WorkType.FAVORITES_MOVIES));
-
     private int mCountFragment = 0;
     private boolean mShowProgress = false;
     private boolean mHasFavorite = false;
     private ArrayObjectAdapter mRowsAdapter;
+    private PageRow mFavoritePageRow;
 
     @Inject
     WorkBrowsePresenter mPresenter;
@@ -80,8 +78,10 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
     @Override
     public void onAttach(@Nullable Context context) {
         super.onAttach(context);
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
         mPresenter.register(this);
+        mFavoritePageRow = new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID,
+                getString(MediaRepository.WorkType.FAVORITES_MOVIES.getResource()), MediaRepository.WorkType.FAVORITES_MOVIES));
     }
 
     @Override
@@ -127,19 +127,18 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
     }
 
     @Override
-    public void onDataLoaded(boolean hasFavorite, List<MovieGenre> movieGenres,
-          final List<TvShowGenre> tvShowGenres) {
+    public void onDataLoaded(boolean hasFavorite, List<MovieGenre> movieGenres, final List<TvShowGenre> tvShowGenres) {
         mHasFavorite = hasFavorite;
         if (hasFavorite) {
-            mRowsAdapter.add(sFavoritePageRow);
+            mRowsAdapter.add(mFavoritePageRow);
         }
 
         mRowsAdapter.add(new DividerRow());
-        mRowsAdapter.add(new SectionRow(getResources().getString(R.string.movies)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.POPULAR_MOVIES)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.TOP_RATED_MOVIES)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.UP_COMING_MOVIES)));
+        mRowsAdapter.add(new SectionRow(getString(R.string.movies)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.NOW_PLAYING_MOVIES.getResource()), MediaRepository.WorkType.NOW_PLAYING_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_MOVIES.getResource()), MediaRepository.WorkType.POPULAR_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_MOVIES.getResource()), MediaRepository.WorkType.TOP_RATED_MOVIES)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.UP_COMING_MOVIES.getResource()), MediaRepository.WorkType.UP_COMING_MOVIES)));
 
         if (movieGenres != null) {
             for (final Genre genre : movieGenres) {
@@ -148,11 +147,11 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
         }
 
         mRowsAdapter.add(new DividerRow());
-        mRowsAdapter.add(new SectionRow(getResources().getString(R.string.tv_shows)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.TOP_RATED_TV_SHOWS)));
-        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, MediaRepository.WorkType.POPULAR_TV_SHOWS)));
+        mRowsAdapter.add(new SectionRow(getString(R.string.tv_shows)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS.getResource()), MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS.getResource()), MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_TV_SHOWS.getResource()), MediaRepository.WorkType.TOP_RATED_TV_SHOWS)));
+        mRowsAdapter.add(new PageRow(new WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_TV_SHOWS.getResource()), MediaRepository.WorkType.POPULAR_TV_SHOWS)));
 
         if (tvShowGenres != null) {
             for (final Genre genre : tvShowGenres) {
@@ -168,11 +167,11 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
     public void onHasFavorite(final boolean hasFavorite) {
         mHasFavorite = hasFavorite;
         if (hasFavorite) {
-            if (mRowsAdapter.indexOf(sFavoritePageRow) == -1) {
-                mRowsAdapter.add(FAVORITE_INDEX, sFavoritePageRow);
+            if (mRowsAdapter.indexOf(mFavoritePageRow) == -1) {
+                mRowsAdapter.add(FAVORITE_INDEX, mFavoritePageRow);
             }
         } else {
-            if (mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
+            if (mRowsAdapter.indexOf(mFavoritePageRow) == FAVORITE_INDEX) {
                 if (getSelectedPosition() == FAVORITE_INDEX) {
                     setSelectedPosition(FAVORITE_INDEX + 3);
                 }
@@ -214,8 +213,8 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
             if (mCountFragment++ >= 1) {
                 mShowProgress = true;
             }
-            if (!mHasFavorite && mRowsAdapter.indexOf(sFavoritePageRow) == FAVORITE_INDEX) {
-                mRowsAdapter.remove(sFavoritePageRow);
+            if (!mHasFavorite && mRowsAdapter.indexOf(mFavoritePageRow) == FAVORITE_INDEX) {
+                mRowsAdapter.remove(mFavoritePageRow);
             }
 
             Row row = (Row) rowObj;

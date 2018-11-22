@@ -208,35 +208,33 @@ interface MediaRepository {
      */
     enum class WorkType {
         FAVORITES_MOVIES {
-            override val workName: String = getString(R.string.favorites)
+            override val resource: Int = R.string.favorites
         },
         NOW_PLAYING_MOVIES {
-            override val workName: String = BesTV.get().getString(R.string.now_playing)
+            override val resource: Int = R.string.now_playing
         },
         POPULAR_MOVIES {
-            override val workName: String = BesTV.get().getString(R.string.popular)
+            override val resource: Int = R.string.popular
         },
         TOP_RATED_MOVIES {
-            override val workName: String = BesTV.get().getString(R.string.top_rated)
+            override val resource: Int = R.string.top_rated
         },
         UP_COMING_MOVIES {
-            override val workName: String = BesTV.get().getString(R.string.up_coming)
+            override val resource: Int = R.string.up_coming
         },
         AIRING_TODAY_TV_SHOWS {
-            override val workName: String = BesTV.get().getString(R.string.airing_today)
+            override val resource: Int = R.string.airing_today
         },
         ON_THE_AIR_TV_SHOWS {
-            override val workName: String = BesTV.get().getString(R.string.on_the_air)
+            override val resource: Int = R.string.on_the_air
         },
         POPULAR_TV_SHOWS {
-            override val workName: String = BesTV.get().getString(R.string.popular)
+            override val resource: Int = R.string.popular
         },
         TOP_RATED_TV_SHOWS {
-            override val workName: String = BesTV.get().getString(R.string.top_rated)
+            override val resource: Int = R.string.top_rated
         };
 
-        abstract val workName: String
-
-        fun getString(@StringRes resource: Int): String = BesTV.get().getString(resource)
+        abstract val resource: Int
     }
 }

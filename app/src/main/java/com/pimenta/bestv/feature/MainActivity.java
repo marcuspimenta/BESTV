@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BesTV.getApplicationComponent().inject(this);
+        BesTV.applicationComponent.inject(this);
         mPresenter.loadRecommendations();
 
         if (savedInstanceState == null) {
