@@ -31,23 +31,13 @@ class TvShowDao @Inject constructor(
 
     private val tvShowDao: RuntimeExceptionDao<TvShow, Int> = databaseHelper.getRuntimeExceptionDao(TvShow::class.java)
 
-    override fun queryForAll(): List<TvShow> {
-        return tvShowDao.queryForAll()
-    }
+    override fun queryForAll(): List<TvShow> = tvShowDao.queryForAll()
 
-    override fun getById(id: Int): TvShow {
-        return tvShowDao.queryForId(id)
-    }
+    override fun getById(id: Int?): TvShow? = tvShowDao.queryForId(id)
 
-    override fun create(model: TvShow): Boolean {
-        return tvShowDao.create(model) > 0
-    }
+    override fun create(model: TvShow): Boolean = tvShowDao.create(model) > 0
 
-    override fun update(model: TvShow): Boolean {
-        return tvShowDao.update(model) > 0
-    }
+    override fun update(model: TvShow): Boolean = tvShowDao.update(model) > 0
 
-    override fun delete(model: TvShow): Boolean {
-        return tvShowDao.delete(model) > 0
-    }
+    override fun delete(model: TvShow): Boolean = tvShowDao.delete(model) > 0
 }

@@ -27,7 +27,7 @@ interface BaseDao<T> {
     /**
      * @see com.j256.ormlite.dao.Dao.queryForId
      */
-    fun getById(id: Int): T?
+    fun getById(id: Int?): T?
 
     /**
      * @see com.j256.ormlite.dao.Dao.create

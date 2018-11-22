@@ -33,7 +33,7 @@ class MovieDao @Inject constructor(
 
     override fun queryForAll(): List<Movie> = movieDao.queryForAll()
 
-    override fun getById(id: Int): Movie? = movieDao.queryForId(id)
+    override fun getById(id: Int?): Movie? = movieDao.queryForId(id)
 
     override fun create(model: Movie): Boolean = movieDao.create(model) > 0
 

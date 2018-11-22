@@ -44,27 +44,25 @@ class ApplicationModule(
 
     @Provides
     @Singleton
-    fun provideApplication(): Application {
-        return mApplication
-    }
+    fun provideApplication(): Application = mApplication
 
     @Provides
     @Singleton
-    fun provideDisplayMetrics(): DisplayMetrics {
-        return DisplayMetrics()
-    }
+    fun provideDisplayMetrics(): DisplayMetrics = DisplayMetrics()
 
     @Provides
     @Singleton
-    fun provideNotificationManager(application: Application): NotificationManager {
-        return application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
+    fun provideGson(): Gson = GsonBuilder().create()
 
     @Provides
     @Singleton
-    fun provideAlarmManager(application: Application): AlarmManager {
-        return application.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
+    fun provideNotificationManager(application: Application): NotificationManager =
+            application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    @Provides
+    @Singleton
+    fun provideAlarmManager(application: Application): AlarmManager =
+            application.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Provides
     @Singleton
@@ -78,12 +76,6 @@ class ApplicationModule(
         httpClient.writeTimeout(30, TimeUnit.SECONDS)
         httpClient.connectTimeout(30, TimeUnit.SECONDS)
         return httpClient.build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideGson(): Gson {
-        return GsonBuilder().create()
     }
 
     @Provides

@@ -329,7 +329,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
                         Cast cast = (Cast) item;
                         Bundle castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                                 ((ImageCardView) itemViewHolder.view).getMainImageView(), CastDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                        startActivity(CastDetailsActivity.newInstance(getContext(), cast), castBundle);
+                        startActivity(CastDetailsActivity.Companion.newInstance(getContext(), cast), castBundle);
                         break;
                     case VIDEO_HEADER_ID:
                         Video video = (Video) item;
@@ -345,7 +345,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
                     case SIMILAR_HEADER_ID:
                         Work work = (Work) item;
                         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                                ((ImageCardView) itemViewHolder.view).getMainImageView(), WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                                ((ImageCardView) itemViewHolder.view).getMainImageView(), SHARED_ELEMENT_NAME).toBundle();
                         startActivity(WorkDetailsActivity.newInstance(getContext(), work), bundle);
                         break;
                 }

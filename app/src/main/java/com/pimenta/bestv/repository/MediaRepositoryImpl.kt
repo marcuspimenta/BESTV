@@ -63,7 +63,7 @@ class MediaRepositoryImpl @Inject constructor(
     override fun hasFavorite(): Single<Boolean> = Single.create { e ->
         val favoritesMovies = movieDao.queryForAll()
         val favoritesTvShows = tvShowDao.queryForAll()
-        e.onSuccess(favoritesMovies != null && favoritesMovies.isNotEmpty() || favoritesTvShows != null && favoritesTvShows.isNotEmpty())
+        e.onSuccess(favoritesMovies.isNotEmpty() || favoritesTvShows.isNotEmpty())
     }
 
     override fun saveFavorite(work: Work): Boolean =
