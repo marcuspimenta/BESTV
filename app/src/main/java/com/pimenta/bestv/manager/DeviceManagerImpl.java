@@ -14,21 +14,19 @@
 
 package com.pimenta.bestv.manager;
 
-import android.util.Log;
-
-import com.pimenta.bestv.repository.remote.api.ip.InfoApi;
 import com.pimenta.bestv.repository.entity.IpInfo;
+import com.pimenta.bestv.repository.remote.api.ip.InfoApi;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 /**
  * Created by marcus on 11-02-2018.
  */
 public class DeviceManagerImpl implements DeviceManager {
-
-    private static final String TAG = "DeviceManagerImpl";
 
     private IpInfo mIpInfo;
     private InfoApi mInfoApi;
@@ -44,8 +42,8 @@ public class DeviceManagerImpl implements DeviceManager {
             if (mInfoApi == null) {
                 mIpInfo = mInfoApi.getIpInfo().execute().body();
             }
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get the ip info", e);
+        } catch (IOException exception) {
+            Timber.e(exception, "Failed to get the ip info");
         }
 
         return mIpInfo != null ? mIpInfo.getCountryCode() : null;

@@ -15,27 +15,24 @@
 package com.pimenta.bestv.feature.castdetail.presenter
 
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.widget.ImageView
-
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter.View
+import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.CastMovieList
 import com.pimenta.bestv.repository.entity.CastTvShowList
 import com.pimenta.bestv.repository.entity.Work
-
-import javax.inject.Inject
-
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 05-04-2018.
@@ -66,7 +63,7 @@ class CastDetailsPresenter @Inject constructor(
                             castInfo?.castTvShowList?.works
                     )
                 }, { throwable ->
-                    Log.e(TAG, "Error while getting the cast details", throwable)
+                    Timber.e(throwable, "Error while getting the cast details")
                     view.onCastLoaded(null, null, null)
                 }))
     }
@@ -119,12 +116,6 @@ class CastDetailsPresenter @Inject constructor(
         fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?)
 
         fun onCardImageLoaded(resource: Drawable?)
-
-    }
-
-    companion object {
-
-        private val TAG = CastDetailsPresenter::class.java.simpleName
 
     }
 }

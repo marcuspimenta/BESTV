@@ -99,6 +99,9 @@ dependencies {
         transitive = true
     }
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
     // Answers
     implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true

@@ -16,16 +16,13 @@ package com.pimenta.bestv.repository.database
 
 import android.app.Application
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper
 import com.j256.ormlite.support.ConnectionSource
 import com.j256.ormlite.table.TableUtils
 import com.pimenta.bestv.repository.entity.Movie
 import com.pimenta.bestv.repository.entity.TvShow
-
+import timber.log.Timber
 import java.sql.SQLException
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,9 +38,9 @@ class DatabaseHelper @Inject constructor(
         try {
             TableUtils.createTable(connectionSource, Movie::class.java)
             TableUtils.createTable(connectionSource, TvShow::class.java)
-        } catch (e: SQLException) {
-            Log.e(TAG, "Can't create database", e)
-            throw RuntimeException(e)
+        } catch (exception: SQLException) {
+            Timber.e(exception, "Can't create database")
+            throw RuntimeException(exception)
         }
     }
 
@@ -52,7 +49,6 @@ class DatabaseHelper @Inject constructor(
     }
 
     companion object {
-        private const val TAG = "DatabaseHelper"
         private const val DATABASE_NAME = "bestv.db"
         private const val DATABASE_VERSION = 1
     }

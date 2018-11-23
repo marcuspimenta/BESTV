@@ -17,10 +17,8 @@ package com.pimenta.bestv.feature.search.presenter
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.Pair
 import android.widget.ImageView
-
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
@@ -28,17 +26,15 @@ import com.pimenta.bestv.feature.base.BasePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.*
-
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
-
-import javax.inject.Inject
-
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
+import javax.inject.Inject
 
 /**
  * Created by marcus on 12-03-2018.
@@ -93,11 +89,11 @@ class SearchPresenter @Inject constructor(
                         }
                         view.onResultLoaded(movies, tvShows)
                     }, { throwable ->
-                        Log.e(TAG, "Error while searching movies by query", throwable)
+                        Timber.e(throwable, "Error while searching movies by query")
                         view.onResultLoaded(null, null)
                     })
-        } catch (e: UnsupportedEncodingException) {
-            Log.e(TAG, "Error while encoding the query", e)
+        } catch (exception: UnsupportedEncodingException) {
+            Timber.e(exception, "Error while encoding the query")
         }
     }
 
@@ -117,7 +113,7 @@ class SearchPresenter @Inject constructor(
                         view.onMoviesLoaded(null)
                     }
                 }, { throwable ->
-                    Log.e(TAG, "Error while loading movies by query", throwable)
+                    Timber.e(throwable, "Error while loading movies by query")
                     view.onMoviesLoaded(null)
                 }))
     }
@@ -138,7 +134,7 @@ class SearchPresenter @Inject constructor(
                         view.onTvShowsLoaded(null)
                     }
                 }, { throwable ->
-                    Log.e(TAG, "Error while loading tv shows by query", throwable)
+                    Timber.e(throwable, "Error while loading tv shows by query")
                     view.onTvShowsLoaded(null)
                 }))
     }
@@ -167,7 +163,7 @@ class SearchPresenter @Inject constructor(
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         super.onLoadFailed(errorDrawable)
-                        Log.w(TAG, "Error while loading backdrop image")
+                        Timber.w("Error while loading backdrop image")
                         view.onBackdropImageLoaded(null)
                     }
                 })
@@ -192,10 +188,5 @@ class SearchPresenter @Inject constructor(
 
         fun onBackdropImageLoaded(bitmap: Bitmap?)
 
-    }
-
-    companion object {
-
-        private val TAG = SearchPresenter::class.java.simpleName
     }
 }

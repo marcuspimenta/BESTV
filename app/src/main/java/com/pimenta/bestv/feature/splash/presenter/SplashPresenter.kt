@@ -14,17 +14,14 @@
 
 package com.pimenta.bestv.feature.splash.presenter
 
-import android.util.Log
-
 import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.manager.PermissionManager
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter.View
-import java.util.concurrent.TimeUnit
-
-import javax.inject.Inject
-
+import com.pimenta.bestv.manager.PermissionManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
@@ -48,7 +45,7 @@ class SplashPresenter @Inject constructor(
                         view.onPermissionsLoaded(mPermissionManager.permissions)
                     }
                 }, { throwable ->
-                    Log.e(TAG, "Error while loading permissions", throwable)
+                    Timber.e(throwable, "Error while loading permissions")
                     view.onSplashFinished(false)
                 }))
     }
@@ -63,7 +60,7 @@ class SplashPresenter @Inject constructor(
                 .subscribe({ result ->
                     view.onSplashFinished(result)
                 }, { throwable ->
-                    Log.e(TAG, "Error while checking if has all permissions", throwable)
+                    Timber.e(throwable, "Error while checking if has all permissions")
                     view.onSplashFinished(false)
                 }))
     }
@@ -77,8 +74,6 @@ class SplashPresenter @Inject constructor(
     }
 
     companion object {
-
-        private val TAG = SplashPresenter::class.java.simpleName
 
         private const val SPLASH_TIME_LOAD_SECONDS = 3
 

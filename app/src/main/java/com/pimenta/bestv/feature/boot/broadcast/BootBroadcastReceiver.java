@@ -22,17 +22,17 @@ import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.feature.base.BaseBroadcastReceiver;
 import com.pimenta.bestv.feature.boot.presenter.BootPresenter;
 
+import timber.log.Timber;
+
 /**
  * Created by marcus on 06-03-2018.
  */
 public class BootBroadcastReceiver extends BaseBroadcastReceiver<BootPresenter> {
 
-    private static final String TAG = "BootBroadcastReceiver";
-
     @Override
     public void onReceive(final Context context, final Intent intent) {
         super.onReceive(context, intent);
-        Log.d(TAG, "Boot initiated");
+        Timber.d("Boot initiated");
         mPresenter.scheduleRecommendationUpdate();
     }
 

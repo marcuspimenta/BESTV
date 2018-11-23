@@ -16,7 +16,6 @@ package com.pimenta.bestv
 
 import android.app.Application
 import android.os.StrictMode
-import android.util.Log
 
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
@@ -25,6 +24,7 @@ import com.pimenta.bestv.di.DaggerApplicationComponent
 import com.pimenta.bestv.di.module.ApplicationModule
 
 import io.fabric.sdk.android.Fabric
+import timber.log.Timber
 
 /**
  * Created by marcus on 07-02-2018.
@@ -32,11 +32,10 @@ import io.fabric.sdk.android.Fabric
 class BesTV : Application() {
 
     override fun onCreate() {
-        Log.d(TAG, "[onCreate]")
         super.onCreate()
-
         when (BuildConfig.BUILD_TYPE) {
             "debug" -> {
+                Timber.plant(Timber.DebugTree())
                 StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                         .detectAll()
                         .penaltyLog()
@@ -48,7 +47,9 @@ class BesTV : Application() {
                         .penaltyDeath()
                         .build())
             }
-            else -> Fabric.with(this, Answers(), Crashlytics())
+            else -> {
+                Fabric.with(this, Answers(), Crashlytics())
+            }
         }
 
         applicationComponent = DaggerApplicationComponent
@@ -58,8 +59,6 @@ class BesTV : Application() {
     }
 
     companion object {
-
-        private val TAG = BesTV::class.java.simpleName
 
         lateinit var applicationComponent: ApplicationComponent
     }

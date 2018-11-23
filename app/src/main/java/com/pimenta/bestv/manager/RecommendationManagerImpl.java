@@ -19,26 +19,26 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.app.recommendation.ContentRecommendation;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
 import com.pimenta.bestv.repository.entity.Movie;
 import com.pimenta.bestv.repository.entity.Work;
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 /**
  * Created by marcus on 06-03-2018.
  */
 public class RecommendationManagerImpl implements RecommendationManager {
 
-    private static final String TAG = "RecommendationManager";
     private static final int RECOMMENDATION_NUMBER = 5;
 
     private Application mApplication;
@@ -85,8 +85,8 @@ public class RecommendationManagerImpl implements RecommendationManager {
                     if (count == RECOMMENDATION_NUMBER) {
                         return true;
                     }
-                } catch (InterruptedException | ExecutionException e) {
-                    Log.e(TAG, "Failed to create a recommendation.", e);
+                } catch (InterruptedException | ExecutionException exception) {
+                    Timber.e(exception, "Failed to create a recommendation.");
                     return false;
                 }
             }
@@ -99,7 +99,6 @@ public class RecommendationManagerImpl implements RecommendationManager {
      *
      * @param work           {@link Work}
      * @param notificationId Notification ID
-     *
      * @return {@link Intent}
      */
     private Intent buildIntent(Work work, int notificationId) {

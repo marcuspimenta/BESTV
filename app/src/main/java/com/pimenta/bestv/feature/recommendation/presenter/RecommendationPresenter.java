@@ -28,8 +28,6 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class RecommendationPresenter extends BasePresenter<RecommendationPresenter.View> {
 
-    private static final String TAG = RecommendationPresenter.class.getSimpleName();
-
     private final MediaRepository mMediaRepository;
     private final RecommendationManager mRecommendationManager;
 

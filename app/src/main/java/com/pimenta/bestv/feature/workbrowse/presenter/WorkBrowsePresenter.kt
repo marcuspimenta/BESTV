@@ -15,23 +15,16 @@
 package com.pimenta.bestv.feature.workbrowse.presenter
 
 import android.util.DisplayMetrics
-import android.util.Log
-
 import com.pimenta.bestv.feature.base.BasePresenter
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter.WorkBrowseView
 import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.MovieGenre
-import com.pimenta.bestv.repository.entity.MovieGenreList
-import com.pimenta.bestv.repository.entity.TvShowGenre
-import com.pimenta.bestv.repository.entity.TvShowGenreList
-import com.pimenta.bestv.repository.entity.Work
-
-import javax.inject.Inject
-
+import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 06-02-2018.
@@ -58,7 +51,7 @@ class WorkBrowsePresenter @Inject constructor(
                 .subscribe({ result ->
                     view.onHasFavorite(result)
                 }, { throwable ->
-                    Log.e(TAG, "Error while checking if has any work as favorite", throwable)
+                    Timber.e(throwable, "Error while checking if has any work as favorite")
                     view.onHasFavorite(false)
                 }))
     }
@@ -82,7 +75,7 @@ class WorkBrowsePresenter @Inject constructor(
                             result.tvShowGenreList?.genres
                     )
                 }, { throwable ->
-                    Log.e(TAG, "Error while loading data", throwable)
+                    Timber.e(throwable, "Error while loading data")
                     view.onDataLoaded(false, null, null)
                 }))
     }
@@ -101,12 +94,6 @@ class WorkBrowsePresenter @Inject constructor(
         fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?)
 
         fun onHasFavorite(hasFavoriteMovie: Boolean)
-
-    }
-
-    companion object {
-
-        private val TAG = WorkBrowsePresenter::class.java.simpleName
 
     }
 }

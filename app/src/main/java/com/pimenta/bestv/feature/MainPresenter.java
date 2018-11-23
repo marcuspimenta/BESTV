@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.feature;
 
-import android.util.Log;
-
 import com.pimenta.bestv.feature.base.BasePresenter;
 import com.pimenta.bestv.manager.RecommendationManager;
 import com.pimenta.bestv.repository.MediaRepository;
@@ -23,13 +21,12 @@ import com.pimenta.bestv.repository.MediaRepository;
 import javax.inject.Inject;
 
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by marcus on 04-05-2018.
  */
 public class MainPresenter extends BasePresenter<BasePresenter.BaseView> {
-
-    private static final String TAG = MainPresenter.class.getSimpleName();
 
     private final MediaRepository mMediaRepository;
     private final RecommendationManager mRecommendationManager;
@@ -47,6 +44,6 @@ public class MainPresenter extends BasePresenter<BasePresenter.BaseView> {
         getCompositeDisposable().add(mMediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
                 .map(workPage -> mRecommendationManager.loadRecommendations(workPage.getWorks()))
                 .subscribeOn(Schedulers.io())
-                .subscribe(aBoolean -> Log.d(TAG, "Recommendations loaded")));
+                .subscribe(aBoolean -> Timber.d("Recommendations loaded")));
     }
 }

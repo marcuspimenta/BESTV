@@ -18,15 +18,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.feature.base.BasePresenter;
-import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView;
+import com.pimenta.bestv.manager.ImageManager;
 import com.pimenta.bestv.repository.MediaRepository;
 import com.pimenta.bestv.repository.entity.Genre;
 import com.pimenta.bestv.repository.entity.Work;
@@ -37,13 +36,12 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by marcus on 09-02-2018.
  */
 public class WorkGridPresenter extends BasePresenter<WorkGridView> {
-
-    private static final String TAG = WorkGridPresenter.class.getSimpleName();
 
     private int mCurrentPage = 0;
 
@@ -70,7 +68,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridView> {
                                 getView().onWorksLoaded(movies);
                             }
                         }, throwable -> {
-                            Log.e(TAG, "Error while loading the favorite works", throwable);
+                            Timber.e(throwable, "Error while loading the favorite works");
                             if (getView() != null) {
                                 getView().onWorksLoaded(null);
                             }
@@ -91,7 +89,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridView> {
                                 }
                             }
                         }, throwable -> {
-                            Log.e(TAG, "Error while loading the works by type", throwable);
+                            Timber.e(throwable, "Error while loading the works by type");
                             if (getView() != null) {
                                 getView().onWorksLoaded(null);
                             }
@@ -120,7 +118,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridView> {
                         }
                     }
                 }, throwable -> {
-                    Log.e(TAG, "Error while loading the works by genre", throwable);
+                    Timber.e(throwable, "Error while loading the works by genre");
                     if (getView() != null) {
                         getView().onWorksLoaded(null);
                     }
@@ -145,7 +143,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridView> {
                     @Override
                     public void onLoadFailed(@Nullable final Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        Log.w(TAG, "Error while loading backdrop image");
+                        Timber.w("Error while loading backdrop image");
                         if (getView() != null) {
                             getView().onBackdropImageLoaded(null);
                         }
@@ -156,7 +154,7 @@ public class WorkGridPresenter extends BasePresenter<WorkGridView> {
     /**
      * Loads the {@link Work} porter into {@link ImageView}
      *
-     * @param work     {@link Work}
+     * @param work      {@link Work}
      * @param imageView {@link ImageView}
      */
     public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
