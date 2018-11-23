@@ -202,7 +202,7 @@ public class WorkBrowseFragment extends BaseBrowseFragment implements WorkBrowse
 
         @Override
         public void onClick(View v) {
-            startActivity(SearchActivity.newInstance(getContext()));
+            startActivity(SearchActivity.Companion.newInstance(getContext()));
         }
     }
 

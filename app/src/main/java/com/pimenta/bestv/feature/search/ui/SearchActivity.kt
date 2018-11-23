@@ -12,27 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.ui;
+package com.pimenta.bestv.feature.search.ui
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 
-import com.pimenta.bestv.feature.base.BaseActivity;
+import com.pimenta.bestv.feature.base.BaseActivity
 
 /**
  * Created by marcus on 12/07/18.
  */
-public class SearchActivity extends BaseActivity {
+class SearchActivity : BaseActivity() {
 
-    public static Intent newInstance(Context context) {
-        return new Intent(context, SearchActivity.class);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        replaceFragment(SearchFragment.newInstance())
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        replaceFragment(SearchFragment.newInstance());
-    }
+    companion object {
 
+        fun newInstance(context: Context): Intent = Intent(context, SearchActivity::class.java)
+
+    }
 }

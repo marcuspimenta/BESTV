@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.repository
 
-import android.support.annotation.StringRes
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
