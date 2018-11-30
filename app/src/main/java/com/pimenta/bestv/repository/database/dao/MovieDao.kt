@@ -24,9 +24,8 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 15-04-2018.
  */
-@Singleton
-class MovieDao @Inject constructor(
-        databaseHelper: DatabaseHelper
+@Singleton class MovieDao @Inject constructor(
+        private val databaseHelper: DatabaseHelper
 ) : BaseDao<Movie> {
 
     private val movieDao: RuntimeExceptionDao<Movie, Int> = databaseHelper.getRuntimeExceptionDao(Movie::class.java)

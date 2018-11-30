@@ -12,18 +12,22 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager;
+package com.pimenta.bestv.manager
+
+import com.pimenta.bestv.repository.entity.Work
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-public interface DeviceManager {
+interface RecommendationManager {
 
     /**
-     * Gets the {@link String} country ISO 3166-1 code
+     * Loads the recommendations
      *
-     * @return {@link String}
+     * @param works [?][<]
+     *
+     * @return `true` if success, `false` otherwise
      */
-    String getCountryCode();
+    fun <T : Work> loadRecommendations(works: List<T>): Boolean
 
 }

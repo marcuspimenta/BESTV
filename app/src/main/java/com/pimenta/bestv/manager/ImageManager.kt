@@ -12,39 +12,41 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager;
+package com.pimenta.bestv.manager
 
-import android.widget.ImageView;
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
 
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.SimpleTarget
 
 /**
  * Created by marcus on 13-03-2018.
  */
-public interface ImageManager {
+interface ImageManager {
 
     /**
-     * Loads an image URL in {@link ImageView}.
+     * Loads an image URL in [ImageView].
      *
-     * @param imageView {@link ImageView}
+     * @param imageView [ImageView]
      * @param imageUrl  Image URL to be loaded
      */
-    void loadImageInto(ImageView imageView, String imageUrl);
+    fun loadImageInto(imageView: ImageView, imageUrl: String)
 
     /**
      * Loads an image URL.
      *
      * @param imageUrl Image URL to be loaded
-     * @param target   {@link SimpleTarget}
+     * @param target   [SimpleTarget]
      */
-    void loadImage(String imageUrl, SimpleTarget target);
+    fun loadImage(imageUrl: String, target: SimpleTarget<Drawable>)
 
     /**
      * Loads an bitmap image URL.
      *
      * @param imageUrl Image URL to be loaded
-     * @param target   {@link SimpleTarget}
+     * @param target   [SimpleTarget]
      */
-    void loadBitmapImage(String imageUrl, SimpleTarget target);
+    fun loadBitmapImage(imageUrl: String, target: SimpleTarget<Bitmap>)
 
 }

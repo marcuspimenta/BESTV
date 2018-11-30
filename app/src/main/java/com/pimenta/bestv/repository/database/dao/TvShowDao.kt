@@ -24,9 +24,8 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 10/07/18.
  */
-@Singleton
-class TvShowDao @Inject constructor(
-        databaseHelper: DatabaseHelper
+@Singleton class TvShowDao @Inject constructor(
+        private val databaseHelper: DatabaseHelper
 ) : BaseDao<TvShow> {
 
     private val tvShowDao: RuntimeExceptionDao<TvShow, Int> = databaseHelper.getRuntimeExceptionDao(TvShow::class.java)

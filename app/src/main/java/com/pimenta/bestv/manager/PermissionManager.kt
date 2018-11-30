@@ -12,29 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager;
+package com.pimenta.bestv.manager
+
+import io.reactivex.Single
 
 /**
  * Created by marcus on 04/07/18.
  */
-public interface PreferenceManager {
+interface PermissionManager {
 
     /**
-     * Gets the {@link String} value from {@link android.content.SharedPreferences}
+     * Gets the permissions.
      *
-     * @param key      Key to get the value
-     * @param defValue Default value
-     *
-     * @return {@link String}
+     * @return [<]
      */
-    String getFromPersistence(String key, String defValue);
+    fun getPermissions(): Set<String>
 
     /**
-     * Applies to persistence in {@link android.content.SharedPreferences}
+     * Verifies if has all the permissions.
      *
-     * @param key   Key to save the value
-     * @param value Value to be saved
+     * @return [<]
      */
-    void applyToPersistence(String key, String value);
+    fun hasAllPermissions(): Single<Boolean>
 
 }

@@ -29,9 +29,8 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 05-03-2018.
  */
-@Singleton
-class DatabaseHelper @Inject constructor(
-        application: Application
+@Singleton class DatabaseHelper @Inject constructor(
+        private val application: Application
 ) : OrmLiteSqliteOpenHelper(application, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(database: SQLiteDatabase, connectionSource: ConnectionSource) {

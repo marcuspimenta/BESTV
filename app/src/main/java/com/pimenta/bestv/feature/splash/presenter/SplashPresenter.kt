@@ -27,14 +27,14 @@ import javax.inject.Inject
  * Created by marcus on 04-05-2018.
  */
 class SplashPresenter @Inject constructor(
-        private val mPermissionManager: PermissionManager
+        private val permissionManager: PermissionManager
 ) : BasePresenter<View>() {
 
     /**
      * Loads all permissions
      */
     fun loadPermissions() {
-        compositeDisposable.add(mPermissionManager.hasAllPermissions()
+        compositeDisposable.add(permissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(SPLASH_TIME_LOAD_SECONDS.toLong(), TimeUnit.SECONDS)
@@ -42,7 +42,7 @@ class SplashPresenter @Inject constructor(
                     if (result) {
                         view.onSplashFinished(true)
                     } else {
-                        view.onPermissionsLoaded(mPermissionManager.permissions)
+                        view.onPermissionsLoaded(permissionManager.getPermissions())
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading permissions")
@@ -54,7 +54,7 @@ class SplashPresenter @Inject constructor(
      * Verifies if has all permissions
      */
     fun hasAllPermissions() {
-        compositeDisposable.add(mPermissionManager.hasAllPermissions()
+        compositeDisposable.add(permissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
