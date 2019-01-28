@@ -46,17 +46,17 @@ import android.widget.ImageView;
 import com.pimenta.bestv.BesTV;
 import com.pimenta.bestv.BuildConfig;
 import com.pimenta.bestv.R;
+import com.pimenta.bestv.feature.base.BaseDetailsFragment;
+import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity;
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment;
+import com.pimenta.bestv.feature.widget.render.WorkDetailsDescriptionRender;
+import com.pimenta.bestv.feature.widget.render.CastCardRender;
+import com.pimenta.bestv.feature.widget.render.VideoCardRender;
+import com.pimenta.bestv.feature.widget.render.WorkCardRenderer;
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter;
 import com.pimenta.bestv.repository.entity.Cast;
 import com.pimenta.bestv.repository.entity.Video;
 import com.pimenta.bestv.repository.entity.Work;
-import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity;
-import com.pimenta.bestv.feature.base.BaseDetailsFragment;
-import com.pimenta.bestv.feature.widget.CastCardPresenter;
-import com.pimenta.bestv.feature.widget.VideoCardPresenter;
-import com.pimenta.bestv.feature.widget.WorkCardPresenter;
-import com.pimenta.bestv.feature.widget.WorkDetailsDescriptionPresenter;
 
 import java.util.List;
 
@@ -147,9 +147,8 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
     public void onDataLoaded(List<Cast> casts, List<? extends Work> recommendedWorks, List<? extends Work> similarWorks, List<? extends Video> videos) {
         if (videos != null && videos.size() > 0) {
             mActionAdapter.add(new Action(ACTION_VIDEOS, getResources().getString(R.string.videos)));
-            VideoCardPresenter videoCardPresenter = new VideoCardPresenter();
-            videoCardPresenter.setLoadVideoThumbnailListener((video, imageView) -> mPresenter.loadVideoThumbnailImage(video, imageView));
-            mVideoRowAdapter = new ArrayObjectAdapter(videoCardPresenter);
+            VideoCardRender videoCardRender = new VideoCardRender();
+            mVideoRowAdapter = new ArrayObjectAdapter(videoCardRender);
             mVideoRowAdapter.addAll(0, videos);
             final HeaderItem recommendedHeader = new HeaderItem(VIDEO_HEADER_ID, getString(R.string.videos));
             mAdapter.add(new ListRow(recommendedHeader, mVideoRowAdapter));
@@ -157,9 +156,8 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
 
         if (casts != null && casts.size() > 0) {
             mActionAdapter.add(new Action(ACTION_CAST, getResources().getString(R.string.cast)));
-            CastCardPresenter castCardPresenter = new CastCardPresenter();
-            castCardPresenter.setLoadCastProfileListener((cast, imageView) -> mPresenter.loadCastProfileImage(cast, imageView));
-            mCastRowAdapter = new ArrayObjectAdapter(castCardPresenter);
+            CastCardRender castCardRender = new CastCardRender();
+            mCastRowAdapter = new ArrayObjectAdapter(castCardRender);
             mCastRowAdapter.addAll(0, casts);
             final HeaderItem header = new HeaderItem(CAST_HEAD_ID, getString(R.string.cast));
             mAdapter.add(new ListRow(header, mCastRowAdapter));
@@ -167,9 +165,8 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
 
         if (recommendedWorks != null && recommendedWorks.size() > 0) {
             mActionAdapter.add(new Action(ACTION_RECOMMENDED, getResources().getString(R.string.recommended)));
-            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
-            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
-            mRecommendedRowAdapter = new ArrayObjectAdapter(workCardPresenter);
+            WorkCardRenderer workCardRenderer = new WorkCardRenderer();
+            mRecommendedRowAdapter = new ArrayObjectAdapter(workCardRenderer);
             mRecommendedRowAdapter.addAll(0, recommendedWorks);
             final HeaderItem recommendedHeader = new HeaderItem(RECOMMENDED_HEADER_ID, getString(R.string.recommended));
             mAdapter.add(new ListRow(recommendedHeader, mRecommendedRowAdapter));
@@ -177,9 +174,8 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
 
         if (similarWorks != null && similarWorks.size() > 0) {
             mActionAdapter.add(new Action(ACTION_SIMILAR, getResources().getString(R.string.similar)));
-            WorkCardPresenter workCardPresenter = new WorkCardPresenter();
-            workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
-            mSimilarRowAdapter = new ArrayObjectAdapter(workCardPresenter);
+            WorkCardRenderer workCardRenderer = new WorkCardRenderer();
+            mSimilarRowAdapter = new ArrayObjectAdapter(workCardRenderer);
             mSimilarRowAdapter.addAll(0, similarWorks);
             final HeaderItem similarHeader = new HeaderItem(SIMILAR_HEADER_ID, getString(R.string.similar));
             mAdapter.add(new ListRow(similarHeader, mSimilarRowAdapter));
@@ -239,7 +235,7 @@ public class WorkDetailsFragment extends BaseDetailsFragment implements WorkDeta
 
     private void setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new WorkDetailsDescriptionPresenter()) {
+        final FullWidthDetailsOverviewRowPresenter detailsPresenter = new FullWidthDetailsOverviewRowPresenter(new WorkDetailsDescriptionRender()) {
 
             private ImageView mDetailsImageView;
 

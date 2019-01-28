@@ -38,14 +38,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pimenta.bestv.feature.base.BaseVerticalGridFragment;
 import com.pimenta.bestv.feature.error.ErrorFragment;
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment;
+import com.pimenta.bestv.feature.widget.render.WorkCardRenderer;
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter;
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView;
-import com.pimenta.bestv.repository.entity.Work;
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity;
-import com.pimenta.bestv.feature.base.BaseVerticalGridFragment;
-import com.pimenta.bestv.feature.widget.WorkCardPresenter;
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment;
+import com.pimenta.bestv.repository.entity.Work;
 
 import java.util.List;
 import java.util.Timer;
@@ -192,9 +192,8 @@ public abstract class AbstractWorkGridFragment extends BaseVerticalGridFragment 
         verticalGridPresenter.setNumberOfColumns(NUMBER_COLUMNS);
         setGridPresenter(verticalGridPresenter);
 
-        WorkCardPresenter workCardPresenter = new WorkCardPresenter();
-        workCardPresenter.setLoadWorkPosterListener((movie, imageView) -> mPresenter.loadWorkPosterImage(movie, imageView));
-        mRowsAdapter = new ArrayObjectAdapter(workCardPresenter);
+        WorkCardRenderer workCardRenderer = new WorkCardRenderer();
+        mRowsAdapter = new ArrayObjectAdapter(workCardRenderer);
         setAdapter(mRowsAdapter);
 
         setOnItemViewSelectedListener(new ItemViewSelectedListener());

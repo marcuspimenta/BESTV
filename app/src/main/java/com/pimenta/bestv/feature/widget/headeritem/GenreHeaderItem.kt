@@ -12,26 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget;
+package com.pimenta.bestv.feature.widget.headeritem
 
-import android.support.v17.leanback.widget.HeaderItem;
+import android.support.v17.leanback.widget.HeaderItem
 
-import com.pimenta.bestv.repository.entity.Genre;
+import com.pimenta.bestv.repository.entity.Genre
 
 /**
  * Created by marcus on 09-02-2018.
  */
-public class GenreHeaderItem extends HeaderItem {
-
-    private final Genre mGenre;
-
-    public GenreHeaderItem(int id, Genre genre) {
-        super(id, genre.getName());
-        mGenre = genre;
-    }
-
-    public Genre getGenre() {
-        return mGenre;
-    }
-
-}
+class GenreHeaderItem(
+        id: Int,
+        val genre: Genre
+) : HeaderItem(id.toLong(), genre.name)

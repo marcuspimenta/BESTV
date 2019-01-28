@@ -45,8 +45,8 @@ import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
-import com.pimenta.bestv.feature.widget.CastDetailsDescriptionPresenter
-import com.pimenta.bestv.feature.widget.WorkCardPresenter
+import com.pimenta.bestv.feature.widget.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
 
 import javax.inject.Inject
 
@@ -109,7 +109,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
         if (movies != null && movies.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            moviesRowAdapter = ArrayObjectAdapter(WorkCardPresenter())
+            moviesRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
             moviesRowAdapter.addAll(0, movies)
             val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
             mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
@@ -117,7 +117,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
         if (tvShow != null && tvShow.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            tvShowsRowAdapter = ArrayObjectAdapter(WorkCardPresenter())
+            tvShowsRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
             tvShowsRowAdapter.addAll(0, tvShow)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
             mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
@@ -146,7 +146,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     private fun setupDetailsOverviewRowPresenter() {
         // Set detail background.
-        val detailsPresenter = object : FullWidthDetailsOverviewRowPresenter(CastDetailsDescriptionPresenter()) {
+        val detailsPresenter = object : FullWidthDetailsOverviewRowPresenter(CastDetailsDescriptionRender()) {
 
             private lateinit var mDetailsImageView: ImageView
 

@@ -12,24 +12,21 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget;
+package com.pimenta.bestv.feature.widget.render
 
-import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
+import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter
 
-import com.pimenta.bestv.repository.entity.Cast;
+import com.pimenta.bestv.repository.entity.Cast
 
 /**
  * Created by marcus on 07-04-2018.
  */
-public class CastDetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
-    @Override
-    protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        Cast cast = (Cast) item;
-        if (cast != null) {
-            viewHolder.getTitle().setText(cast.getName());
-            //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-            viewHolder.getBody().setText(cast.getBiography());
-        }
+    override fun onBindDescription(viewHolder: AbstractDetailsDescriptionPresenter.ViewHolder, item: Any) {
+        val cast = item as Cast
+        viewHolder.title.text = cast.name
+        //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
+        viewHolder.body.text = cast.biography
     }
 }

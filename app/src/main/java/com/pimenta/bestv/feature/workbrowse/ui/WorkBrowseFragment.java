@@ -40,8 +40,8 @@ import com.pimenta.bestv.repository.entity.MovieGenre;
 import com.pimenta.bestv.repository.entity.TvShowGenre;
 import com.pimenta.bestv.feature.search.ui.SearchActivity;
 import com.pimenta.bestv.feature.base.BaseBrowseFragment;
-import com.pimenta.bestv.feature.widget.GenreHeaderItem;
-import com.pimenta.bestv.feature.widget.WorkTypeHeaderItem;
+import com.pimenta.bestv.feature.widget.headeritem.GenreHeaderItem;
+import com.pimenta.bestv.feature.widget.headeritem.WorkTypeHeaderItem;
 
 import java.util.List;
 

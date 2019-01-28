@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -67,7 +66,6 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsPresenter.Wor
      * Checks if the {@link Work} is favorite
      *
      * @param work {@link Work}
-     *
      * @return {@code true} if yes, {@code false} otherwise
      */
     public boolean isFavorite(@NonNull Work work) {
@@ -82,18 +80,18 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsPresenter.Wor
      */
     public void setFavorite(@NonNull Work work) {
         getCompositeDisposable().add(Maybe.create((MaybeOnSubscribe<Boolean>) e -> {
-                    boolean result;
-                    if (work.isFavorite()) {
-                        result = mMediaRepository.deleteFavorite(work);
-                    } else {
-                        result = mMediaRepository.saveFavorite(work);
-                    }
-                    if (result) {
-                        e.onSuccess(true);
-                    } else {
-                        e.onComplete();
-                    }
-                })
+            boolean result;
+            if (work.isFavorite()) {
+                result = mMediaRepository.deleteFavorite(work);
+            } else {
+                result = mMediaRepository.saveFavorite(work);
+            }
+            if (result) {
+                e.onSuccess(true);
+            } else {
+                e.onComplete();
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -251,36 +249,6 @@ public class WorkDetailsPresenter extends BasePresenter<WorkDetailsPresenter.Wor
                         }
                     }
                 });
-    }
-
-    /**
-     * Loads the {@link Cast} profile into {@link ImageView}
-     *
-     * @param cast      {@link Cast}
-     * @param imageView {@link ImageView}
-     */
-    public void loadCastProfileImage(@NonNull Cast cast, ImageView imageView) {
-        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, cast.getProfilePath()));
-    }
-
-    /**
-     * Loads the {@link Work} porter into {@link ImageView}
-     *
-     * @param work      {@link Work}
-     * @param imageView {@link ImageView}
-     */
-    public void loadWorkPosterImage(@NonNull Work work, ImageView imageView) {
-        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.getPosterPath()));
-    }
-
-    /**
-     * Loads the {@link Video} thumbnail into {@link ImageView}
-     *
-     * @param video     {@link Video}
-     * @param imageView {@link ImageView}
-     */
-    public void loadVideoThumbnailImage(@NonNull Video video, ImageView imageView) {
-        mImageManager.loadImageInto(imageView, String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, video.getKey()));
     }
 
     /**

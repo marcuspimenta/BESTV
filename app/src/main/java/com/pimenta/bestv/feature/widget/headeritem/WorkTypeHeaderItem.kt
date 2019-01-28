@@ -12,25 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget;
+package com.pimenta.bestv.feature.widget.headeritem
 
-import android.support.v17.leanback.widget.HeaderItem;
+import android.support.v17.leanback.widget.HeaderItem
 
-import com.pimenta.bestv.repository.MediaRepository;
+import com.pimenta.bestv.repository.MediaRepository
 
 /**
  * Created by marcus on 11-02-2018.
  */
-public class WorkTypeHeaderItem extends HeaderItem {
-
-    private final MediaRepository.WorkType mMovieListType;
-
-    public WorkTypeHeaderItem(int id, String name, MediaRepository.WorkType movieListType) {
-        super(id, name);
-        mMovieListType = movieListType;
-    }
-
-    public MediaRepository.WorkType getMovieListType() {
-        return mMovieListType;
-    }
-}
+class WorkTypeHeaderItem(
+        id: Int,
+        name: String,
+        val movieListType: MediaRepository.WorkType
+) : HeaderItem(id.toLong(), name)

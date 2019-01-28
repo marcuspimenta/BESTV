@@ -22,33 +22,20 @@ import android.os.Handler
 import android.support.v17.leanback.app.BackgroundManager
 import android.support.v17.leanback.app.ProgressBarManager
 import android.support.v17.leanback.app.SearchSupportFragment
-import android.support.v17.leanback.widget.ArrayObjectAdapter
-import android.support.v17.leanback.widget.HeaderItem
-import android.support.v17.leanback.widget.ImageCardView
-import android.support.v17.leanback.widget.ListRow
-import android.support.v17.leanback.widget.ListRowPresenter
-import android.support.v17.leanback.widget.ObjectAdapter
-import android.support.v17.leanback.widget.OnItemViewClickedListener
-import android.support.v17.leanback.widget.OnItemViewSelectedListener
-import android.support.v17.leanback.widget.Presenter
-import android.support.v17.leanback.widget.Row
-import android.support.v17.leanback.widget.RowPresenter
+import android.support.v17.leanback.widget.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.feature.search.presenter.SearchPresenter
-import com.pimenta.bestv.repository.entity.Work
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.base.BaseSearchFragment
-import com.pimenta.bestv.feature.widget.WorkCardPresenter
-import java.util.Timer
-import java.util.TimerTask
-
+import com.pimenta.bestv.feature.search.presenter.SearchPresenter
+import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
+import com.pimenta.bestv.repository.entity.Work
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -56,21 +43,21 @@ import javax.inject.Inject
  */
 class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupportFragment.SearchResultProvider {
 
-    private lateinit var mRowsAdapter: ArrayObjectAdapter
-    private lateinit var mMovieRowAdapter: ArrayObjectAdapter
-    private lateinit var mTvShowRowAdapter: ArrayObjectAdapter
-    private lateinit var mBackgroundManager: BackgroundManager
+    private lateinit var rowsAdapter: ArrayObjectAdapter
+    private lateinit var movieRowAdapter: ArrayObjectAdapter
+    private lateinit var tvShowRowAdapter: ArrayObjectAdapter
+    private lateinit var backgroundManager: BackgroundManager
 
-    private lateinit var mWorkSelected: Work
-    private lateinit var mBackgroundTimer: Timer
+    private lateinit var workSelected: Work
+    private lateinit var backgroundTimer: Timer
 
     @Inject
-    lateinit var mPresenter: SearchPresenter
+    lateinit var presenter: SearchPresenter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         BesTV.applicationComponent.inject(this)
-        mPresenter.register(this)
+        presenter.register(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,46 +82,43 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onResume() {
         super.onResume()
-        if (::mWorkSelected.isInitialized) {
+        if (::workSelected.isInitialized) {
             loadBackdropImage(false)
         }
     }
 
     override fun onDestroyView() {
         sProgressBarManager.hide()
-        if (::mBackgroundTimer.isInitialized) {
-            mBackgroundTimer.cancel()
+        if (::backgroundTimer.isInitialized) {
+            backgroundTimer.cancel()
         }
         super.onDestroyView()
     }
 
     override fun onDetach() {
-        mPresenter.unRegister()
+        presenter.unRegister()
         super.onDetach()
     }
 
     override fun onResultLoaded(movies: List<Work>?, tvShows: List<Work>?) {
-        val hasMovies = movies != null && movies.isNotEmpty()
+        val hasMovies = movies != null && movies?.isNotEmpty()
         val hasTvShows = tvShows != null && tvShows.isNotEmpty()
 
         sProgressBarManager.hide()
         if (hasMovies || hasTvShows) {
-            mRowsAdapter.clear()
-
-            val workCardPresenter = WorkCardPresenter()
-            workCardPresenter.setLoadWorkPosterListener { movie, imageView -> mPresenter.loadWorkPosterImage(movie, imageView) }
+            rowsAdapter.clear()
 
             if (hasMovies) {
                 val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
-                mMovieRowAdapter = ArrayObjectAdapter(workCardPresenter)
-                mMovieRowAdapter.addAll(0, movies!!)
-                mRowsAdapter.add(ListRow(header, mMovieRowAdapter))
+                movieRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
+                movieRowAdapter.addAll(0, movies!!)
+                rowsAdapter.add(ListRow(header, movieRowAdapter))
             }
             if (hasTvShows) {
                 val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
-                mTvShowRowAdapter = ArrayObjectAdapter(workCardPresenter)
-                mTvShowRowAdapter.addAll(0, tvShows!!)
-                mRowsAdapter.add(ListRow(header, mTvShowRowAdapter))
+                tvShowRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
+                tvShowRowAdapter.addAll(0, tvShows!!)
+                rowsAdapter.add(ListRow(header, tvShowRowAdapter))
             }
         } else {
             clearAdapter()
@@ -142,31 +126,31 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun onMoviesLoaded(movies: List<Work>?) {
-        if (movies != null) {
-            for (work in movies) {
-                if (mMovieRowAdapter.indexOf(work) == -1) {
-                    mMovieRowAdapter.add(work)
+        movies?.let {
+            it.forEach { work ->
+                if (movieRowAdapter.indexOf(work) == -1) {
+                    movieRowAdapter.add(work)
                 }
             }
         }
     }
 
     override fun onTvShowsLoaded(tvShows: List<Work>?) {
-        if (tvShows != null) {
-            for (work in tvShows) {
-                if (mTvShowRowAdapter.indexOf(work) == -1) {
-                    mTvShowRowAdapter.add(work)
+        tvShows?.let {
+            it.forEach { work ->
+                if (movieRowAdapter.indexOf(work) == -1) {
+                    movieRowAdapter.add(work)
                 }
             }
         }
     }
 
     override fun onBackdropImageLoaded(bitmap: Bitmap?) {
-        mBackgroundManager.setBitmap(bitmap)
+        backgroundManager.setBitmap(bitmap)
     }
 
     override fun getResultsAdapter(): ObjectAdapter? {
-        return mRowsAdapter
+        return rowsAdapter
     }
 
     override fun onQueryTextChange(query: String): Boolean {
@@ -182,51 +166,50 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             SEARCH_FRAGMENT_REQUEST_CODE -> {
-                val view = view
                 view?.requestFocus()
             }
         }
     }
 
     private fun setupUI() {
-        mBackgroundManager = BackgroundManager.getInstance(activity)
-        mBackgroundManager.attach(activity!!.window)
-        activity!!.windowManager.defaultDisplay.getMetrics(mPresenter.displayMetrics)
+        backgroundManager = BackgroundManager.getInstance(activity)
+        backgroundManager.attach(activity!!.window)
+        activity!!.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
 
-        mRowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
         setSearchResultProvider(this)
         setOnItemViewSelectedListener(ItemViewSelectedListener())
         setOnItemViewClickedListener(ItemViewClickedListener())
     }
 
     private fun searchQuery(query: String) {
-        mRowsAdapter.clear()
+        rowsAdapter.clear()
         sProgressBarManager.show()
-        mPresenter.searchWorksByQuery(query)
+        presenter.searchWorksByQuery(query)
     }
 
     private fun clearAdapter() {
-        mBackgroundManager.setBitmap(null)
-        mRowsAdapter.clear()
-        val listRowAdapter = ArrayObjectAdapter(WorkCardPresenter())
+        backgroundManager.setBitmap(null)
+        rowsAdapter.clear()
+        val listRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
         val header = HeaderItem(0, getString(R.string.no_results))
-        mRowsAdapter.add(ListRow(header, listRowAdapter))
+        rowsAdapter.add(ListRow(header, listRowAdapter))
     }
 
     private fun loadBackdropImage(delay: Boolean) {
-        if (::mWorkSelected.isInitialized) {
+        if (::workSelected.isInitialized) {
             return
         }
 
-        if (::mBackgroundTimer.isInitialized) {
-            mBackgroundTimer.cancel()
+        if (::backgroundTimer.isInitialized) {
+            backgroundTimer.cancel()
         }
-        mBackgroundTimer = Timer()
-        mBackgroundTimer.schedule(object : TimerTask() {
+        backgroundTimer = Timer()
+        backgroundTimer.schedule(object : TimerTask() {
             override fun run() {
                 sHandler.post {
-                    mPresenter.loadBackdropImage(mWorkSelected)
-                    mBackgroundTimer.cancel()
+                    presenter.loadBackdropImage(workSelected)
+                    backgroundTimer.cancel()
                 }
             }
         }, (if (delay) BACKGROUND_UPDATE_DELAY else 0).toLong())
@@ -236,17 +219,17 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item != null) {
-                mWorkSelected = item as Work
+                workSelected = item as Work
                 loadBackdropImage(true)
             }
 
             if (row!!.headerItem != null) {
                 when (row.headerItem.id.toInt()) {
-                    MOVIE_HEADER_ID -> if (::mWorkSelected.isInitialized && mMovieRowAdapter.indexOf(mWorkSelected) >= mMovieRowAdapter.size() - 1) {
-                        mPresenter.loadMovies()
+                    MOVIE_HEADER_ID -> if (::workSelected.isInitialized && movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
+                        presenter.loadMovies()
                     }
-                    TV_SHOW_HEADER_ID -> if (::mWorkSelected.isInitialized && mTvShowRowAdapter.indexOf(mWorkSelected) >= mTvShowRowAdapter.size() - 1) {
-                        mPresenter.loadTvShows()
+                    TV_SHOW_HEADER_ID -> if (::workSelected.isInitialized && tvShowRowAdapter.indexOf(workSelected) >= tvShowRowAdapter.size() - 1) {
+                        presenter.loadTvShows()
                     }
                 }
             }

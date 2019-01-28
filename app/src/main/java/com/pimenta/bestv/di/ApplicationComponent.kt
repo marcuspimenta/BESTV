@@ -15,27 +15,28 @@
 package com.pimenta.bestv.di
 
 import android.app.Application
-
-import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.recommendation.service.RecommendationService
 import com.pimenta.bestv.feature.MainActivity
+import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
-import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment
-import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
+import com.pimenta.bestv.feature.recommendation.service.RecommendationService
 import com.pimenta.bestv.feature.search.ui.SearchFragment
 import com.pimenta.bestv.feature.splash.ui.SplashFragment
+import com.pimenta.bestv.feature.widget.render.CastCardRender
+import com.pimenta.bestv.feature.widget.render.VideoCardRender
+import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment
 import com.pimenta.bestv.feature.workbrowse.ui.TopWorkGridFragment
-
-import javax.inject.Singleton
-
+import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 07-02-2018.
  */
-@Singleton @Component(modules = [ApplicationModule::class])
+@Singleton
+@Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
 
     val application: Application
@@ -59,5 +60,11 @@ interface ApplicationComponent {
     fun inject(fragment: WorkDetailsFragment)
 
     fun inject(fragment: CastDetailsFragment)
+
+    fun inject(render: WorkCardRenderer)
+
+    fun inject(render: CastCardRender)
+
+    fun inject(render: VideoCardRender)
 
 }

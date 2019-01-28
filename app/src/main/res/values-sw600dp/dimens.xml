@@ -7,11 +7,11 @@
     <dimen name="movie_width">240dp</dimen>
     <dimen name="movie_height">340dp</dimen>
 
-    <!-- CastCardPresenter -->
+    <!-- CastCardRender -->
     <dimen name="character_image_card_width">174dp</dimen>
     <dimen name="character_image_card_height">267dp</dimen>
 
-    <!-- VideoCardPresenter -->
+    <!-- VideoCardRender -->
     <dimen name="video_card_width">345dp</dimen>
     <dimen name="video_card_height">186dp</dimen>
 
