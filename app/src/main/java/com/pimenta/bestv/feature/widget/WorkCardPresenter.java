@@ -32,12 +32,6 @@ public class WorkCardPresenter extends Presenter {
 
     private static final DateFormat sDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-    private LoadWorkPosterListener mLoadWorkPosterListener;
-
-    public void setLoadWorkPosterListener(LoadWorkPosterListener loadMoviePosterListener) {
-        mLoadWorkPosterListener = loadMoviePosterListener;
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         ImageCardView cardView = new ImageCardView(parent.getContext());
@@ -67,11 +61,5 @@ public class WorkCardPresenter extends Presenter {
         ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setBadgeImage(null);
         cardView.setMainImage(null);
-    }
-
-    public interface LoadWorkPosterListener {
-
-        void onLoadWorkPoster(Work work, ImageView imageView);
-
     }
 }

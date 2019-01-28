@@ -55,30 +55,30 @@ import javax.inject.Inject
  */
 class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
-    private lateinit var mAdapter: ArrayObjectAdapter
-    private lateinit var mActionAdapter: ArrayObjectAdapter
-    private lateinit var mMoviesRowAdapter: ArrayObjectAdapter
-    private lateinit var mTvShowsRowAdapter: ArrayObjectAdapter
-    private lateinit var mPresenterSelector: ClassPresenterSelector
-    private lateinit var mDetailsOverviewRow: DetailsOverviewRow
-    private lateinit var mCast: Cast
+    private lateinit var mainAdapter: ArrayObjectAdapter
+    private lateinit var actionAdapter: ArrayObjectAdapter
+    private lateinit var moviesRowAdapter: ArrayObjectAdapter
+    private lateinit var tvShowsRowAdapter: ArrayObjectAdapter
+    private lateinit var presenterSelector: ClassPresenterSelector
+    private lateinit var detailsOverviewRow: DetailsOverviewRow
+    private lateinit var cast: Cast
 
     @Inject
-    lateinit var mPresenter: CastDetailsPresenter
+    lateinit var presenter: CastDetailsPresenter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         BesTV.applicationComponent.inject(this)
-        mPresenter.register(this)
+        presenter.register(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mCast = activity?.intent?.getSerializableExtra(CAST) as Cast
+        cast = activity?.intent?.getSerializableExtra(CAST) as Cast
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
-        adapter = mAdapter
+        adapter = mainAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -91,59 +91,55 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBarManager.show()
-        mPresenter.loadCastDetails(mCast)
+        presenter.loadCastDetails(cast)
     }
 
     override fun onDetach() {
-        mPresenter.unRegister()
+        presenter.unRegister()
         super.onDetach()
     }
 
     override fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?) {
         progressBarManager.hide()
         if (cast != null) {
-            mCast = cast
-            mDetailsOverviewRow.item = cast
-            mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size())
+            this.cast = cast
+            detailsOverviewRow.item = cast
+            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
         if (movies != null && movies.isNotEmpty()) {
-            mActionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            val workCardPresenter = WorkCardPresenter()
-            workCardPresenter.setLoadWorkPosterListener { movie, imageView -> mPresenter.loadWorkPosterImage(movie, imageView) }
-            mMoviesRowAdapter = ArrayObjectAdapter(workCardPresenter)
-            mMoviesRowAdapter.addAll(0, movies)
+            actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
+            moviesRowAdapter = ArrayObjectAdapter(WorkCardPresenter())
+            moviesRowAdapter.addAll(0, movies)
             val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
-            mAdapter.add(ListRow(moviesHeader, mMoviesRowAdapter))
+            mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
         }
 
         if (tvShow != null && tvShow.isNotEmpty()) {
-            mActionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            val workCardPresenter = WorkCardPresenter()
-            workCardPresenter.setLoadWorkPosterListener { movie, imageView -> mPresenter.loadWorkPosterImage(movie, imageView) }
-            mTvShowsRowAdapter = ArrayObjectAdapter(workCardPresenter)
-            mTvShowsRowAdapter.addAll(0, tvShow)
+            actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
+            tvShowsRowAdapter = ArrayObjectAdapter(WorkCardPresenter())
+            tvShowsRowAdapter.addAll(0, tvShow)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
-            mAdapter.add(ListRow(tvShowsHeader, mTvShowsRowAdapter))
+            mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
         }
     }
 
     override fun onCardImageLoaded(resource: Drawable?) {
-        mDetailsOverviewRow.imageDrawable = resource
-        mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size())
+        detailsOverviewRow.imageDrawable = resource
+        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
     }
 
     private fun setupDetailsOverviewRow() {
-        mPresenterSelector = ClassPresenterSelector()
-        mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-        mAdapter = ArrayObjectAdapter(mPresenterSelector)
+        presenterSelector = ClassPresenterSelector()
+        presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+        mainAdapter = ArrayObjectAdapter(presenterSelector)
 
-        mDetailsOverviewRow = DetailsOverviewRow(mCast)
-        mPresenter.loadCastImage(mCast)
+        detailsOverviewRow = DetailsOverviewRow(cast)
+        presenter.loadCastImage(cast)
 
-        mActionAdapter = ArrayObjectAdapter()
-        mDetailsOverviewRow.actionsAdapter = mActionAdapter
-        mAdapter.add(mDetailsOverviewRow)
+        actionAdapter = ArrayObjectAdapter()
+        detailsOverviewRow.actionsAdapter = actionAdapter
+        mainAdapter.add(detailsOverviewRow)
 
         onItemViewClickedListener = ItemViewClickedListener()
     }
@@ -176,36 +172,37 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
             var position = 0
             when (action.id.toInt()) {
                 ACTION_TV_SHOWS -> {
-                    if (::mTvShowsRowAdapter.isInitialized && mTvShowsRowAdapter.size() > 0) {
+                    if (::tvShowsRowAdapter.isInitialized && tvShowsRowAdapter.size() > 0) {
                         position++
                     }
-                    if (::mMoviesRowAdapter.isInitialized && mMoviesRowAdapter.size() > 0) {
+                    if (::moviesRowAdapter.isInitialized && moviesRowAdapter.size() > 0) {
                         position++
                     }
                     setSelectedPosition(position)
                 }
                 ACTION_MOVIES -> {
-                    if (::mMoviesRowAdapter.isInitialized && mMoviesRowAdapter.size() > 0) {
+                    if (::moviesRowAdapter.isInitialized && moviesRowAdapter.size() > 0) {
                         position++
                     }
                     setSelectedPosition(position)
                 }
             }
         }
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
+        presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
 
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-            if (row != null && row.headerItem != null) {
-                when (row.headerItem.id.toInt()) {
-                    MOVIES_HEADER_ID, TV_SHOWS_HEADER_ID -> {
-                        val work = item as Work
-                        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, (itemViewHolder.view as ImageCardView).mainImageView,
-                                WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle()
-                        startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
-                    }
+            when (row?.headerItem?.id?.toInt()) {
+                MOVIES_HEADER_ID, TV_SHOWS_HEADER_ID -> {
+                    val work = item as Work
+                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity!!,
+                            (itemViewHolder.view as ImageCardView).mainImageView,
+                            WorkDetailsFragment.SHARED_ELEMENT_NAME
+                    ).toBundle()
+                    startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
                 }
             }
         }
@@ -222,6 +219,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         private const val MOVIES_HEADER_ID = 1
         private const val TV_SHOWS_HEADER_ID = 2
 
-        fun newInstance(): WorkDetailsFragment = WorkDetailsFragment()
+        fun newInstance() = WorkDetailsFragment()
     }
 }

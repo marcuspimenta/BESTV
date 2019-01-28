@@ -39,12 +39,12 @@ import okhttp3.logging.HttpLoggingInterceptor
  */
 @Module(includes = [ImplModule::class, MediaModule::class])
 class ApplicationModule(
-        private val mApplication: Application
+        private val application: Application
 ) {
 
     @Provides
     @Singleton
-    fun provideApplication(): Application = mApplication
+    fun provideApplication(): Application = application
 
     @Provides
     @Singleton

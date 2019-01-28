@@ -35,8 +35,7 @@ import dagger.Component
 /**
  * Created by marcus on 07-02-2018.
  */
-@Singleton
-@Component(modules = [ApplicationModule::class])
+@Singleton @Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
 
     val application: Application

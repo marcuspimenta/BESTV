@@ -16,8 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Created by marcus on 24/05/18.
  */
-@Module
-class IpModule {
+@Module class IpModule {
 
     @Provides
     @Singleton

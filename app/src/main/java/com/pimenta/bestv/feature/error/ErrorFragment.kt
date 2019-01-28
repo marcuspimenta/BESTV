@@ -40,6 +40,6 @@ class ErrorFragment : BaseErrorFragment() {
 
         const val TAG = "ErrorFragment"
 
-        fun newInstance(): ErrorFragment = ErrorFragment()
+        fun newInstance() = ErrorFragment()
     }
 }

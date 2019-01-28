@@ -48,19 +48,21 @@ class CastDetailsPresenter @Inject constructor(
      * @param cast [Cast]
      */
     fun loadCastDetails(cast: Cast) {
-        compositeDisposable.add(Single.zip<Cast, CastMovieList, CastTvShowList, CastInfo>(mediaRepository.getCastDetails(cast),
-                mediaRepository.getMovieCreditsByCast(cast),
-                mediaRepository.getTvShowCreditsByCast(cast),
-                Function3<Cast, CastMovieList, CastTvShowList, CastInfo> { cast, castMovieList, castTvShowList ->
-                    CastInfo(cast, castMovieList, castTvShowList)
-                })
+        compositeDisposable.add(Single.zip<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>>(
+                    mediaRepository.getCastDetails(cast),
+                    mediaRepository.getMovieCreditsByCast(cast),
+                    mediaRepository.getTvShowCreditsByCast(cast),
+                    Function3<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>> {
+                        cast, castMovieList, castTvShowList -> Triple(cast, castMovieList, castTvShowList)
+                    }
+                )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ castInfo ->
+                .subscribe({ triple ->
                     view.onCastLoaded(
-                            castInfo.cast,
-                            castInfo?.castMovieList?.works,
-                            castInfo?.castTvShowList?.works
+                            triple.first,
+                            triple.second.works,
+                            triple.third.works
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
@@ -101,15 +103,6 @@ class CastDetailsPresenter @Inject constructor(
                 )
         )
     }
-
-    /**
-     * Wrapper class that keeps the cast info
-     */
-    private class CastInfo(
-            val cast: Cast,
-            val castMovieList: CastMovieList,
-            val castTvShowList: CastTvShowList
-    )
 
     interface View : BasePresenter.BaseView {
 

@@ -37,8 +37,7 @@ import dagger.Module
 /**
  * Created by marcus on 09-02-2018.
  */
-@Module
-interface ImplModule {
+@Module interface ImplModule {
 
     @Binds
     @Singleton

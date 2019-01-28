@@ -34,8 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Created by marcus on 11-05-2018.
  */
-@Module
-class MediaModule {
+@Module class MediaModule {
 
     @Provides
     @Singleton

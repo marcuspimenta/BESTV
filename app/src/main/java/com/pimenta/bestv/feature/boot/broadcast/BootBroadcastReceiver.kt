@@ -12,31 +12,31 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.ui
+package com.pimenta.bestv.feature.boot.broadcast
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
+import android.util.Log
 
-import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.base.BaseActivity
-import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.BesTV
+import com.pimenta.bestv.feature.base.BaseBroadcastReceiver
+import com.pimenta.bestv.feature.boot.presenter.BootPresenter
+
+import timber.log.Timber
 
 /**
- * Created by marcus on 04-04-2018.
+ * Created by marcus on 06-03-2018.
  */
-class CastDetailsActivity : BaseActivity() {
+class BootBroadcastReceiver : BaseBroadcastReceiver<BootPresenter>() {
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cast_details)
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        Timber.d("Boot initiated")
+        mPresenter.scheduleRecommendationUpdate()
     }
 
-    companion object {
-
-        fun newInstance(context: Context, cast: Cast) =
-                Intent(context, CastDetailsActivity::class.java).apply {
-                    putExtra(CastDetailsFragment.CAST, cast)
-                }
+    override fun injectPresenter() {
+        BesTV.applicationComponent.inject(this)
     }
+
 }

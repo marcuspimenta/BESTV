@@ -12,27 +12,26 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.ui;
+package com.pimenta.bestv.feature.splash.ui
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 
-import com.pimenta.bestv.feature.base.BaseActivity;
+import com.pimenta.bestv.feature.base.BaseActivity
 
 /**
  * Created by marcus on 04-05-2018.
  */
-public class SplashActivity extends BaseActivity {
+class SplashActivity : BaseActivity() {
 
-    public static Intent newInstance(Context context) {
-        return new Intent(context, SplashActivity.class);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        replaceFragment(SplashFragment.newInstance())
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        replaceFragment(SplashFragment.newInstance());
-    }
+    companion object {
 
+        fun newInstance(context: Context) = Intent(context, SplashActivity::class.java)
+    }
 }

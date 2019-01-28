@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
         mPresenter.loadRecommendations();
 
         if (savedInstanceState == null) {
-            startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
+            startActivityForResult(SplashActivity.Companion.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE);
         } else {
             replaceFragment(WorkBrowseFragment.newInstance());
         }

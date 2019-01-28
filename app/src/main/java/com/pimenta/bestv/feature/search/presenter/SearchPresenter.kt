@@ -41,14 +41,14 @@ import javax.inject.Inject
  */
 class SearchPresenter @Inject constructor(
         val displayMetrics: DisplayMetrics,
-        private val mMediaRepository: MediaRepository,
-        private val mImageManager: ImageManager
+        private val mediaRepository: MediaRepository,
+        private val imageManager: ImageManager
 ) : BasePresenter<SearchPresenter.View>() {
 
-    private var mResultMoviePage = 0
-    private var mResultTvShowPage = 0
-    private lateinit var mQuery: String
-    private lateinit var mDisposable: Disposable
+    private var resultMoviePage = 0
+    private var resultTvShowPage = 0
+    private lateinit var query: String
+    private lateinit var disposable: Disposable
 
     override fun unRegister() {
         disposeSearchMovie()
@@ -58,33 +58,37 @@ class SearchPresenter @Inject constructor(
     /**
      * Searches the movies by a query
      *
-     * @param query Query to search the movies
+     * @param text Query to search the movies
      */
-    fun searchWorksByQuery(query: String) {
+    fun searchWorksByQuery(text: String) {
         disposeSearchMovie()
         try {
-            val queryEncode = URLEncoder.encode(query, "UTF-8")
-            if (::mQuery.isInitialized && queryEncode != mQuery) {
-                mResultMoviePage = 0
-                mResultTvShowPage = 0
+            val queryEncode = URLEncoder.encode(text, "UTF-8")
+            if (::query.isInitialized && queryEncode != query) {
+                resultMoviePage = 0
+                resultTvShowPage = 0
             }
-            mQuery = queryEncode
-            val resultMoviePage = mResultMoviePage + 1
-            val resultTvShowPage = mResultTvShowPage + 1
-            mDisposable = Single.zip<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>>(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage),
-                    mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage),
-                    BiFunction<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>> { first, second -> Pair(first, second) })
+            query = queryEncode
+            val resultMoviePage = resultMoviePage + 1
+            val resultTvShowPage = resultTvShowPage + 1
+            disposable = Single.zip<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>>(
+                    mediaRepository.searchMoviesByQuery(query, resultMoviePage),
+                    mediaRepository.searchTvShowsByQuery(query, resultTvShowPage),
+                    BiFunction<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>> {
+                        first, second -> Pair(first, second)
+                    })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ pair ->
                         var movies: List<Movie>? = null
                         if (pair.first != null && pair.first.page <= pair.first.totalPages) {
-                            mResultMoviePage = pair.first.page
+                            this.resultMoviePage = pair.first.page
                             movies = pair.first.works
                         }
+
                         var tvShows: List<TvShow>? = null
                         if (pair.second != null && pair.second.page <= pair.second.totalPages) {
-                            mResultTvShowPage = pair.second.page
+                            this.resultTvShowPage = pair.second.page
                             tvShows = pair.second.works
                         }
                         view.onResultLoaded(movies, tvShows)
@@ -101,13 +105,13 @@ class SearchPresenter @Inject constructor(
      * Load the movies by a query
      */
     fun loadMovies() {
-        val resultMoviePage = mResultMoviePage + 1
-        compositeDisposable.add(mMediaRepository.searchMoviesByQuery(mQuery, resultMoviePage)
+        val resultMoviePage = resultMoviePage + 1
+        compositeDisposable.add(mediaRepository.searchMoviesByQuery(query, resultMoviePage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ moviePage ->
                     if (moviePage != null && moviePage.page <= moviePage.totalPages) {
-                        mResultMoviePage = moviePage.page
+                        this.resultMoviePage = moviePage.page
                         view.onMoviesLoaded(moviePage.works)
                     } else {
                         view.onMoviesLoaded(null)
@@ -122,13 +126,13 @@ class SearchPresenter @Inject constructor(
      * Load the tv shows by a query
      */
     fun loadTvShows() {
-        val resultTvShowPage = mResultTvShowPage + 1
-        compositeDisposable.add(mMediaRepository.searchTvShowsByQuery(mQuery, resultTvShowPage)
+        val resultTvShowPage = resultTvShowPage + 1
+        compositeDisposable.add(mediaRepository.searchTvShowsByQuery(query, resultTvShowPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ tvShowPage ->
                     if (tvShowPage != null && tvShowPage.page <= tvShowPage.totalPages) {
-                        mResultTvShowPage = tvShowPage.page
+                        this.resultTvShowPage = tvShowPage.page
                         view.onTvShowsLoaded(tvShowPage.works)
                     } else {
                         view.onTvShowsLoaded(null)
@@ -146,7 +150,7 @@ class SearchPresenter @Inject constructor(
      * @param imageView [ImageView]
      */
     fun loadWorkPosterImage(work: Work, imageView: ImageView) {
-        mImageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath))
+        imageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath))
     }
 
     /**
@@ -155,7 +159,7 @@ class SearchPresenter @Inject constructor(
      * @param work [Work]
      */
     fun loadBackdropImage(work: Work) {
-        mImageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
+        imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
                 object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         view.onBackdropImageLoaded(resource)
@@ -173,8 +177,8 @@ class SearchPresenter @Inject constructor(
      * Disposes the search movies.
      */
     private fun disposeSearchMovie() {
-        if (::mDisposable.isInitialized && !mDisposable.isDisposed) {
-            mDisposable.dispose()
+        if (::disposable.isInitialized && !disposable.isDisposed) {
+            disposable.dispose()
         }
     }
 
