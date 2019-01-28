@@ -28,12 +28,12 @@ import javax.inject.Inject
 class RecommendationService : Service(), RecommendationPresenter.View {
 
     @Inject
-    lateinit var mPresenter: RecommendationPresenter
+    lateinit var presenter: RecommendationPresenter
 
     override fun onCreate() {
         super.onCreate()
         BesTV.applicationComponent.inject(this)
-        mPresenter.loadRecommendations()
+        presenter.loadRecommendations()
     }
 
     override fun onLoadRecommendationFinished() {

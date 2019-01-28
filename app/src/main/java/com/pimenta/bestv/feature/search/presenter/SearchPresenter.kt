@@ -18,7 +18,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.util.Pair
-import android.widget.ImageView
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
@@ -74,8 +73,8 @@ class SearchPresenter @Inject constructor(
             disposable = Single.zip<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>>(
                     mediaRepository.searchMoviesByQuery(query, resultMoviePage),
                     mediaRepository.searchTvShowsByQuery(query, resultTvShowPage),
-                    BiFunction<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>> {
-                        first, second -> Pair(first, second)
+                    BiFunction<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>> { first, second ->
+                        Pair(first, second)
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -141,16 +140,6 @@ class SearchPresenter @Inject constructor(
                     Timber.e(throwable, "Error while loading tv shows by query")
                     view.onTvShowsLoaded(null)
                 }))
-    }
-
-    /**
-     * Loads the [Work] porter into [ImageView]
-     *
-     * @param work      [Work]
-     * @param imageView [ImageView]
-     */
-    fun loadWorkPosterImage(work: Work, imageView: ImageView) {
-        imageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath))
     }
 
     /**

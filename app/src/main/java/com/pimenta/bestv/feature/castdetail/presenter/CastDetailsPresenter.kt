@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.castdetail.presenter
 
 import android.graphics.drawable.Drawable
-import android.widget.ImageView
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
@@ -49,13 +48,13 @@ class CastDetailsPresenter @Inject constructor(
      */
     fun loadCastDetails(cast: Cast) {
         compositeDisposable.add(Single.zip<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>>(
-                    mediaRepository.getCastDetails(cast),
-                    mediaRepository.getMovieCreditsByCast(cast),
-                    mediaRepository.getTvShowCreditsByCast(cast),
-                    Function3<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>> {
-                        cast, castMovieList, castTvShowList -> Triple(cast, castMovieList, castTvShowList)
-                    }
-                )
+                mediaRepository.getCastDetails(cast),
+                mediaRepository.getMovieCreditsByCast(cast),
+                mediaRepository.getTvShowCreditsByCast(cast),
+                Function3<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>> { cast, castMovieList, castTvShowList ->
+                    Triple(cast, castMovieList, castTvShowList)
+                }
+        )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ triple ->
@@ -87,21 +86,6 @@ class CastDetailsPresenter @Inject constructor(
                         view.onCardImageLoaded(null)
                     }
                 })
-    }
-
-    /**
-     * Loads the [Work] porter into [ImageView]
-     *
-     * @param work      [Work]
-     * @param imageView [ImageView]
-     */
-    fun loadWorkPosterImage(work: Work, imageView: ImageView) {
-        imageManager.loadImageInto(imageView,
-                String.format(
-                        BuildConfig.TMDB_LOAD_IMAGE_BASE_URL,
-                        work.posterPath
-                )
-        )
     }
 
     interface View : BasePresenter.BaseView {
