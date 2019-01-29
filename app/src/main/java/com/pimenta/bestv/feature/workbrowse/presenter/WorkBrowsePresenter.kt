@@ -30,16 +30,9 @@ import javax.inject.Inject
  * Created by marcus on 06-02-2018.
  */
 class WorkBrowsePresenter @Inject constructor(
-        private val displayMetrics: DisplayMetrics,
+        val displayMetrics: DisplayMetrics,
         private val mMediaRepository: MediaRepository
 ) : BasePresenter<WorkBrowseView>() {
-
-    /**
-     * Gets the {@link DisplayMetrics} instance
-     *
-     * @return {@link DisplayMetrics}
-     */
-    fun getDisplayMetrics() = displayMetrics
 
     /**
      * Checks if there is any [Work] saved as favorite

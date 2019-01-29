@@ -46,10 +46,13 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var movieRowAdapter: ArrayObjectAdapter
     private lateinit var tvShowRowAdapter: ArrayObjectAdapter
-    private lateinit var backgroundManager: BackgroundManager
 
     private lateinit var workSelected: Work
     private lateinit var backgroundTimer: Timer
+
+    private val backgroundManager: BackgroundManager by lazy {
+        BackgroundManager.getInstance(activity)
+    }
 
     @Inject
     lateinit var presenter: SearchPresenter
@@ -58,6 +61,10 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         super.onAttach(context)
         BesTV.applicationComponent.inject(this)
         presenter.register(this)
+        activity?.let {
+            backgroundManager.attach(it.window)
+            it.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,12 +103,13 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun onDetach() {
+        backgroundManager.release()
         presenter.unRegister()
         super.onDetach()
     }
 
     override fun onResultLoaded(movies: List<Work>?, tvShows: List<Work>?) {
-        val hasMovies = movies != null && movies?.isNotEmpty()
+        val hasMovies = movies != null && movies.isNotEmpty()
         val hasTvShows = tvShows != null && tvShows.isNotEmpty()
 
         sProgressBarManager.hide()
@@ -172,14 +180,34 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     private fun setupUI() {
-        backgroundManager = BackgroundManager.getInstance(activity)
-        backgroundManager.attach(activity!!.window)
-        activity!!.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
-
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
         setSearchResultProvider(this)
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
-        setOnItemViewClickedListener(ItemViewClickedListener())
+        setOnItemViewSelectedListener { _, item, _, row ->
+            if (item != null) {
+                workSelected = item as Work
+                loadBackdropImage(true)
+            }
+
+            if (row!!.headerItem != null) {
+                when (row.headerItem.id.toInt()) {
+                    MOVIE_HEADER_ID -> if (::workSelected.isInitialized && movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
+                        presenter.loadMovies()
+                    }
+                    TV_SHOW_HEADER_ID -> if (::workSelected.isInitialized && tvShowRowAdapter.indexOf(workSelected) >= tvShowRowAdapter.size() - 1) {
+                        presenter.loadTvShows()
+                    }
+                }
+            }
+        }
+        setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
+            val work = item as Work
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity!!,
+                    (itemViewHolder!!.view as ImageCardView).mainImageView,
+                    WorkDetailsFragment.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivityForResult(WorkDetailsActivity.newInstance(context, work), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
+        }
     }
 
     private fun searchQuery(query: String) {
@@ -197,7 +225,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     private fun loadBackdropImage(delay: Boolean) {
-        if (::workSelected.isInitialized) {
+        if (!::workSelected.isInitialized) {
             return
         }
 
@@ -212,43 +240,10 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
                     backgroundTimer.cancel()
                 }
             }
-        }, (if (delay) BACKGROUND_UPDATE_DELAY else 0).toLong())
-    }
-
-    private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
-
-        override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            if (item != null) {
-                workSelected = item as Work
-                loadBackdropImage(true)
-            }
-
-            if (row!!.headerItem != null) {
-                when (row.headerItem.id.toInt()) {
-                    MOVIE_HEADER_ID -> if (::workSelected.isInitialized && movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
-                        presenter.loadMovies()
-                    }
-                    TV_SHOW_HEADER_ID -> if (::workSelected.isInitialized && tvShowRowAdapter.indexOf(workSelected) >= tvShowRowAdapter.size() - 1) {
-                        presenter.loadTvShows()
-                    }
-                }
-            }
-        }
-    }
-
-    private inner class ItemViewClickedListener : OnItemViewClickedListener {
-
-        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val work = item as Work
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!,
-                    (itemViewHolder!!.view as ImageCardView).mainImageView, WorkDetailsFragment.SHARED_ELEMENT_NAME).toBundle()
-            startActivityForResult(WorkDetailsActivity.newInstance(context, work), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
-        }
+        }, (BACKGROUND_UPDATE_DELAY.takeIf { delay } ?: 0).toLong())
     }
 
     companion object {
-
-        val TAG = SearchFragment::class.java.simpleName
 
         private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
         private const val MOVIE_HEADER_ID = 1

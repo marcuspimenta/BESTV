@@ -17,37 +17,22 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v17.leanback.widget.Action
-import android.support.v17.leanback.widget.ArrayObjectAdapter
-import android.support.v17.leanback.widget.ClassPresenterSelector
-import android.support.v17.leanback.widget.DetailsOverviewRow
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper
-import android.support.v17.leanback.widget.HeaderItem
-import android.support.v17.leanback.widget.ImageCardView
-import android.support.v17.leanback.widget.ListRow
-import android.support.v17.leanback.widget.ListRowPresenter
-import android.support.v17.leanback.widget.OnItemViewClickedListener
-import android.support.v17.leanback.widget.Presenter
-import android.support.v17.leanback.widget.Row
-import android.support.v17.leanback.widget.RowPresenter
+import android.support.v17.leanback.widget.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
-import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.Work
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
+import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.widget.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
-
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
+import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.repository.entity.Work
 import javax.inject.Inject
 
 /**
@@ -74,7 +59,10 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cast = activity?.intent?.getSerializableExtra(CAST) as Cast
+
+        arguments?.let {
+            cast = it.getSerializable(CAST) as Cast
+        }
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -101,26 +89,30 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?) {
         progressBarManager.hide()
-        if (cast != null) {
-            this.cast = cast
-            detailsOverviewRow.item = cast
+        cast?.let {
+            this.cast = it
+            detailsOverviewRow.item = it
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
-        if (movies != null && movies.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            moviesRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
-            moviesRowAdapter.addAll(0, movies)
-            val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
-            mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
+        movies?.let {
+            if (it.isNotEmpty()) {
+                actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
+                moviesRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
+                moviesRowAdapter.addAll(0, it)
+                val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
+                mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
+            }
         }
 
-        if (tvShow != null && tvShow.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            tvShowsRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
-            tvShowsRowAdapter.addAll(0, tvShow)
-            val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
-            mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
+        tvShow?.let {
+            if (it.isNotEmpty()) {
+                actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
+                tvShowsRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
+                tvShowsRowAdapter.addAll(0, it)
+                val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
+                mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
+            }
         }
     }
 
@@ -141,7 +133,15 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
 
-        onItemViewClickedListener = ItemViewClickedListener()
+        setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
+            val work = item as Work
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity!!,
+                    (itemViewHolder.view as ImageCardView).mainImageView,
+                    WorkDetailsFragment.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
+        }
     }
 
     private fun setupDetailsOverviewRowPresenter() {
@@ -191,26 +191,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
     }
 
-    private inner class ItemViewClickedListener : OnItemViewClickedListener {
-
-        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-            when (row?.headerItem?.id?.toInt()) {
-                MOVIES_HEADER_ID, TV_SHOWS_HEADER_ID -> {
-                    val work = item as Work
-                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            activity!!,
-                            (itemViewHolder.view as ImageCardView).mainImageView,
-                            WorkDetailsFragment.SHARED_ELEMENT_NAME
-                    ).toBundle()
-                    startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
-                }
-            }
-        }
-    }
-
     companion object {
 
-        const val TAG = "CastDetailsFragment"
         const val CAST = "CAST"
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
 

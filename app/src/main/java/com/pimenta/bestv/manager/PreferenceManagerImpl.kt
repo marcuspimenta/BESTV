@@ -27,21 +27,21 @@ class PreferenceManagerImpl @Inject constructor(
         private val application: Application
 ) : PreferenceManager {
 
-    private val mSharedPreferences: SharedPreferences by lazy {
+    private val sharedPreferences: SharedPreferences by lazy {
         application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
     override fun getFromPersistence(key: String, defValue: String): String {
-        return mSharedPreferences.getString(key, defValue)
+        return sharedPreferences.getString(key, defValue)
     }
 
     override fun applyToPersistence(key: String, value: String) {
-        mSharedPreferences.edit().putString(key, value).apply()
+        sharedPreferences.edit().putString(key, value).apply()
     }
 
     companion object {
 
-        private val PREFERENCE_NAME = "BesTV"
+        private const val PREFERENCE_NAME = "BesTV"
     }
 
 }
