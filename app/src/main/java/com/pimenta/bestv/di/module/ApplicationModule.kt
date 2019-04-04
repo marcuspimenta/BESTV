@@ -20,19 +20,14 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.util.DisplayMetrics
-
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-
-import java.util.HashMap
-import java.util.concurrent.TimeUnit
-
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.*
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 07-02-2018.
@@ -44,49 +39,44 @@ class ApplicationModule(
 
     @Provides
     @Singleton
-    fun provideApplication(): Application = application
+    fun provideApplication() = application
 
     @Provides
     @Singleton
-    fun provideDisplayMetrics(): DisplayMetrics = DisplayMetrics()
+    fun provideDisplayMetrics() = DisplayMetrics()
 
     @Provides
     @Singleton
-    fun provideGson(): Gson = GsonBuilder().create()
+    fun provideGson() = GsonBuilder().create()
 
     @Provides
     @Singleton
-    fun provideNotificationManager(application: Application): NotificationManager =
+    fun provideNotificationManager(application: Application) =
             application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
     @Singleton
-    fun provideAlarmManager(application: Application): AlarmManager =
+    fun provideAlarmManager(application: Application) =
             application.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BASIC
-
-        val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(logging)
-        httpClient.readTimeout(30, TimeUnit.SECONDS)
-        httpClient.writeTimeout(30, TimeUnit.SECONDS)
-        httpClient.connectTimeout(30, TimeUnit.SECONDS)
-        return httpClient.build()
-    }
+    fun provideOkHttpClient() = OkHttpClient.Builder().apply {
+        addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BASIC
+        })
+        readTimeout(30, TimeUnit.SECONDS)
+        writeTimeout(30, TimeUnit.SECONDS)
+        connectTimeout(30, TimeUnit.SECONDS)
+    }.build()
 
     @Provides
     @Singleton
-    fun providePermissions(): Map<String, Boolean> {
-        return object : HashMap<String, Boolean>() {
-            init {
-                put(Manifest.permission.INTERNET, false)
-                put(Manifest.permission.RECORD_AUDIO, false)
-                put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false)
-            }
+    fun providePermissions(): Map<String, Boolean> = object : HashMap<String, Boolean>() {
+        init {
+            put(Manifest.permission.INTERNET, false)
+            put(Manifest.permission.RECORD_AUDIO, false)
+            put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false)
         }
     }
 }

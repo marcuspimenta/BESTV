@@ -40,12 +40,12 @@ import javax.inject.Inject
  */
 class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
-    private lateinit var mainAdapter: ArrayObjectAdapter
-    private lateinit var actionAdapter: ArrayObjectAdapter
-    private lateinit var moviesRowAdapter: ArrayObjectAdapter
-    private lateinit var tvShowsRowAdapter: ArrayObjectAdapter
-    private lateinit var presenterSelector: ClassPresenterSelector
-    private lateinit var detailsOverviewRow: DetailsOverviewRow
+    private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
+    private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
+    private val moviesRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val tvShowsRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val presenterSelector: ClassPresenterSelector by lazy { ClassPresenterSelector() }
+    private val detailsOverviewRow: DetailsOverviewRow by lazy { DetailsOverviewRow(cast) }
     private lateinit var cast: Cast
 
     @Inject
@@ -59,9 +59,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            cast = it.getSerializable(CAST) as Cast
+        activity?.let {
+            cast = it.intent.getSerializableExtra(CAST) as Cast
         }
 
         setupDetailsOverviewRow()
@@ -98,7 +97,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         movies?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-                moviesRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
                 moviesRowAdapter.addAll(0, it)
                 val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
                 mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
@@ -108,7 +106,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         tvShow?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-                tvShowsRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
                 tvShowsRowAdapter.addAll(0, it)
                 val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
                 mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
@@ -122,14 +119,10 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     }
 
     private fun setupDetailsOverviewRow() {
-        presenterSelector = ClassPresenterSelector()
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-        mainAdapter = ArrayObjectAdapter(presenterSelector)
 
-        detailsOverviewRow = DetailsOverviewRow(cast)
         presenter.loadCastImage(cast)
 
-        actionAdapter = ArrayObjectAdapter()
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
 
@@ -140,7 +133,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
                     (itemViewHolder.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()
-            startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
+            startActivity(WorkDetailsActivity.newInstance(context!!, work), bundle)
         }
     }
 
@@ -172,16 +165,16 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
             var position = 0
             when (action.id.toInt()) {
                 ACTION_TV_SHOWS -> {
-                    if (::tvShowsRowAdapter.isInitialized && tvShowsRowAdapter.size() > 0) {
+                    if (tvShowsRowAdapter.size() > 0) {
                         position++
                     }
-                    if (::moviesRowAdapter.isInitialized && moviesRowAdapter.size() > 0) {
+                    if (moviesRowAdapter.size() > 0) {
                         position++
                     }
                     setSelectedPosition(position)
                 }
                 ACTION_MOVIES -> {
-                    if (::moviesRowAdapter.isInitialized && moviesRowAdapter.size() > 0) {
+                    if (moviesRowAdapter.size() > 0) {
                         position++
                     }
                     setSelectedPosition(position)

@@ -28,9 +28,11 @@ abstract class BaseActivity : FragmentActivity() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager?.beginTransaction()
-                ?.replace(android.R.id.content, fragment)
-                ?.commit()
+        supportFragmentManager?.let {
+            it.beginTransaction()
+                    .replace(android.R.id.content, fragment)
+                    .commit()
+        }
     }
 
     /**
@@ -40,11 +42,12 @@ abstract class BaseActivity : FragmentActivity() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager
-                ?.beginTransaction()
-                ?.add(android.R.id.content, fragment)
-                ?.addToBackStack(tag)
-                ?.commit()
+        supportFragmentManager?.let {
+            it.beginTransaction()
+                    .add(android.R.id.content, fragment)
+                    .addToBackStack(tag)
+                    .commit()
+        }
     }
 
     /**
