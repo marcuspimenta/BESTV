@@ -204,35 +204,15 @@ interface MediaRepository {
     /**
      * Represents the movie list type
      */
-    enum class WorkType {
-        FAVORITES_MOVIES {
-            override val resource: Int = R.string.favorites
-        },
-        NOW_PLAYING_MOVIES {
-            override val resource: Int = R.string.now_playing
-        },
-        POPULAR_MOVIES {
-            override val resource: Int = R.string.popular
-        },
-        TOP_RATED_MOVIES {
-            override val resource: Int = R.string.top_rated
-        },
-        UP_COMING_MOVIES {
-            override val resource: Int = R.string.up_coming
-        },
-        AIRING_TODAY_TV_SHOWS {
-            override val resource: Int = R.string.airing_today
-        },
-        ON_THE_AIR_TV_SHOWS {
-            override val resource: Int = R.string.on_the_air
-        },
-        POPULAR_TV_SHOWS {
-            override val resource: Int = R.string.popular
-        },
-        TOP_RATED_TV_SHOWS {
-            override val resource: Int = R.string.top_rated
-        };
-
-        abstract val resource: Int
+    enum class WorkType(val resource: Int) {
+        FAVORITES_MOVIES(R.string.favorites),
+        NOW_PLAYING_MOVIES(R.string.now_playing),
+        POPULAR_MOVIES(R.string.popular),
+        TOP_RATED_MOVIES(R.string.top_rated),
+        UP_COMING_MOVIES(R.string.up_coming),
+        AIRING_TODAY_TV_SHOWS(R.string.airing_today),
+        ON_THE_AIR_TV_SHOWS(R.string.on_the_air),
+        POPULAR_TV_SHOWS(R.string.popular),
+        TOP_RATED_TV_SHOWS(R.string.top_rated);
     }
 }

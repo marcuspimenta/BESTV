@@ -36,7 +36,10 @@ class Movie : Work() {
     override var releaseDate: Date?
         get() {
             return try {
-                dateFormat.parse(releaseDateString)
+                if (releaseDateString?.isNotEmpty() == true)
+                    dateFormat.parse(releaseDateString)
+                else
+                    null
             } catch (e: ParseException) {
                 Log.e(TAG, "Error to get the release data", e)
                 null

@@ -22,41 +22,25 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v17.leanback.app.DetailsSupportFragmentBackgroundController
-import android.support.v17.leanback.widget.Action
-import android.support.v17.leanback.widget.ArrayObjectAdapter
-import android.support.v17.leanback.widget.ClassPresenterSelector
-import android.support.v17.leanback.widget.DetailsOverviewRow
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper
-import android.support.v17.leanback.widget.HeaderItem
-import android.support.v17.leanback.widget.ImageCardView
-import android.support.v17.leanback.widget.ListRow
-import android.support.v17.leanback.widget.ListRowPresenter
-import android.support.v17.leanback.widget.OnItemViewClickedListener
-import android.support.v17.leanback.widget.OnItemViewSelectedListener
-import android.support.v17.leanback.widget.Presenter
-import android.support.v17.leanback.widget.Row
-import android.support.v17.leanback.widget.RowPresenter
+import android.support.v17.leanback.widget.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.view.ViewGroup
 import android.widget.ImageView
-
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
-import com.pimenta.bestv.feature.widget.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.widget.render.CastCardRender
 import com.pimenta.bestv.feature.widget.render.VideoCardRender
 import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.feature.widget.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.Video
 import com.pimenta.bestv.repository.entity.Work
 import timber.log.Timber
-
 import javax.inject.Inject
 
 /**
@@ -64,27 +48,12 @@ import javax.inject.Inject
  */
 class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDetailsView {
 
-    private lateinit var favoriteAction: Action
-    private lateinit var detailsOverviewRow: DetailsOverviewRow
-
-    private val actionAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter()
-    }
-    private val videoRowAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter(VideoCardRender())
-    }
-    private val castRowAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter(CastCardRender())
-    }
-    private val recommendedRowAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter(WorkCardRenderer())
-    }
-    private val similarRowAdapter: ArrayObjectAdapter  by lazy {
-        ArrayObjectAdapter(WorkCardRenderer())
-    }
-    private val mainAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter(presenterSelector)
-    }
+    private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
+    private val videoRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
+    private val castRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(CastCardRender()) }
+    private val recommendedRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val similarRowAdapter: ArrayObjectAdapter  by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
     private val presenterSelector: ClassPresenterSelector by lazy {
         ClassPresenterSelector().apply {
             addClassPresenter(ListRow::class.java, ListRowPresenter())
@@ -96,6 +65,8 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
         }
     }
 
+    private lateinit var favoriteAction: Action
+    private lateinit var detailsOverviewRow: DetailsOverviewRow
     private lateinit var work: Work
 
     @Inject
@@ -178,21 +149,17 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
     }
 
     override fun onRecommendationLoaded(works: List<Work>?) {
-        works?.let {
-            works.forEach { work ->
-                if (recommendedRowAdapter.indexOf(work) == -1) {
-                    recommendedRowAdapter.add(work)
-                }
+        works?.forEach { work ->
+            if (recommendedRowAdapter.indexOf(work) == -1) {
+                recommendedRowAdapter.add(work)
             }
         }
     }
 
     override fun onSimilarLoaded(works: List<Work>?) {
-        works?.let {
-            works.forEach { work ->
-                if (similarRowAdapter.indexOf(work) == -1) {
-                    similarRowAdapter.add(work)
-                }
+        works?.forEach { work ->
+            if (similarRowAdapter.indexOf(work) == -1) {
+                similarRowAdapter.add(work)
             }
         }
     }
@@ -228,10 +195,10 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
                 mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image)
-                val lp = mDetailsImageView!!.layoutParams
-                lp.width = resources.getDimensionPixelSize(R.dimen.movie_width)
-                lp.height = resources.getDimensionPixelSize(R.dimen.movie_height)
-                mDetailsImageView!!.layoutParams = lp
+                val lp = mDetailsImageView?.layoutParams
+                lp?.width = resources.getDimensionPixelSize(R.dimen.movie_width)
+                lp?.height = resources.getDimensionPixelSize(R.dimen.movie_height)
+                mDetailsImageView?.layoutParams = lp
                 return viewHolder
             }
         }
@@ -297,17 +264,17 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
 
         override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            if (row != null && row.headerItem != null) {
-                when (row.headerItem.id.toInt()) {
-                    RECOMMENDED_HEADER_ID -> {
-                        val recommendedWork = item as Work
-                        if (recommendedRowAdapter.indexOf(recommendedWork) >= recommendedRowAdapter.size() - 1) {
+            when (row?.headerItem?.id?.toInt()) {
+                RECOMMENDED_HEADER_ID -> {
+                    item?.let {
+                        if (recommendedRowAdapter.indexOf(it) >= recommendedRowAdapter.size() - 1) {
                             presenter.loadRecommendationByWork(work)
                         }
                     }
-                    SIMILAR_HEADER_ID -> {
-                        val similarWork = item as Work
-                        if (similarRowAdapter.indexOf(similarWork) >= similarRowAdapter.size() - 1) {
+                }
+                SIMILAR_HEADER_ID -> {
+                    item?.let {
+                        if (similarRowAdapter.indexOf(it) >= similarRowAdapter.size() - 1) {
                             presenter.loadSimilarByWork(work)
                         }
                     }
@@ -319,38 +286,36 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
 
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-            if (row != null && row.headerItem != null) {
-                when (row.headerItem.id.toInt()) {
-                    CAST_HEAD_ID -> {
-                        val cast = item as Cast
-                        val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                activity!!,
-                                (itemViewHolder.view as ImageCardView).mainImageView,
-                                CastDetailsFragment.SHARED_ELEMENT_NAME
-                        ).toBundle()
-                        startActivity(CastDetailsActivity.newInstance(context!!, cast), castBundle)
+            when (row?.headerItem?.id?.toInt()) {
+                CAST_HEAD_ID -> {
+                    val cast = item as Cast
+                    val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity!!,
+                            (itemViewHolder.view as ImageCardView).mainImageView,
+                            CastDetailsFragment.SHARED_ELEMENT_NAME
+                    ).toBundle()
+                    startActivity(CastDetailsActivity.newInstance(context!!, cast), castBundle)
+                }
+                VIDEO_HEADER_ID -> {
+                    val video = item as Video
+                    val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(String.format(BuildConfig.YOUTUBE_BASE_URL, video.key))
+                    )
+                    try {
+                        startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        Timber.e(e, "Failed to play a video")
                     }
-                    VIDEO_HEADER_ID -> {
-                        val video = item as Video
-                        val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(String.format(BuildConfig.YOUTUBE_BASE_URL, video.key))
-                        )
-                        try {
-                            startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            Timber.e(e, "Failed to play a video")
-                        }
-                    }
-                    RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
-                        val work = item as Work
-                        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                activity!!,
-                                (itemViewHolder.view as ImageCardView).mainImageView,
-                                SHARED_ELEMENT_NAME
-                        ).toBundle()
-                        startActivity(WorkDetailsActivity.newInstance(context!!, work), bundle)
-                    }
+                }
+                RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
+                    val work = item as Work
+                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity!!,
+                            (itemViewHolder.view as ImageCardView).mainImageView,
+                            SHARED_ELEMENT_NAME
+                    ).toBundle()
+                    startActivity(WorkDetailsActivity.newInstance(context!!, work), bundle)
                 }
             }
         }

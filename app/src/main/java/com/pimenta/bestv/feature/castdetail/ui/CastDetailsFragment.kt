@@ -127,13 +127,14 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         mainAdapter.add(detailsOverviewRow)
 
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            val work = item as Work
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity!!,
-                    (itemViewHolder.view as ImageCardView).mainImageView,
-                    WorkDetailsFragment.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(WorkDetailsActivity.newInstance(context!!, work), bundle)
+            if (item is Work) {
+                val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        activity!!,
+                        (itemViewHolder.view as ImageCardView).mainImageView,
+                        WorkDetailsFragment.SHARED_ELEMENT_NAME
+                ).toBundle()
+                startActivity(WorkDetailsActivity.newInstance(context!!, item), bundle)
+            }
         }
     }
 

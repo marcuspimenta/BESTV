@@ -45,14 +45,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
     private var showProgress = false
     private var hasFavorite = false
 
-    private val backgroundManager: BackgroundManager by lazy {
-        BackgroundManager.getInstance(activity)
-    }
-
-    private val rowsAdapter: ArrayObjectAdapter by lazy {
-        ArrayObjectAdapter(ListRowPresenter())
-    }
-
+    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
+    private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
     private val favoritePageRow: PageRow by lazy {
         PageRow(
                 WorkTypeHeaderItem(
@@ -126,10 +120,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_MOVIES.resource), MediaRepository.WorkType.TOP_RATED_MOVIES)))
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.UP_COMING_MOVIES.resource), MediaRepository.WorkType.UP_COMING_MOVIES)))
 
-        movieGenres?.let {
-            it.forEach { genre ->
-                rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
-            }
+        movieGenres?.forEach { genre ->
+            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
         }
 
         rowsAdapter.add(DividerRow())
@@ -139,10 +131,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_TV_SHOWS.resource), MediaRepository.WorkType.TOP_RATED_TV_SHOWS)))
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_TV_SHOWS.resource), MediaRepository.WorkType.POPULAR_TV_SHOWS)))
 
-        tvShowGenres?.let {
-            it.forEach { genre ->
-                rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
-            }
+        tvShowGenres?.forEach { genre ->
+            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
         }
 
         progressBarManager.hide()

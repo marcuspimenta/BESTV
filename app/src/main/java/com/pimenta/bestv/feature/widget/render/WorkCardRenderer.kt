@@ -47,7 +47,7 @@ class WorkCardRenderer : Presenter() {
         val work = item as Work
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = work.title
-        work.releaseDate.let {
+        work.releaseDate?.let {
             cardView.contentText = sDateFormat.format(it)
         }
         cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
