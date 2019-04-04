@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.base.BasePresenter
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.*
@@ -40,18 +41,19 @@ import javax.inject.Inject
  */
 class SearchPresenter @Inject constructor(
         val displayMetrics: DisplayMetrics,
+        private val view: View,
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager
-) : BasePresenter<SearchPresenter.View>() {
+) : DisposablePresenter() {
 
     private var resultMoviePage = 0
     private var resultTvShowPage = 0
     private lateinit var query: String
     private lateinit var disposable: Disposable
 
-    override fun unRegister() {
+    override fun dispose() {
         disposeSearchMovie()
-        super.unRegister()
+        super.dispose()
     }
 
     /**

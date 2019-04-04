@@ -56,8 +56,10 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        BesTV.applicationComponent.inject(this)
-        presenter.register(this)
+        BesTV.applicationComponent.getSearchFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
         activity?.let {
             backgroundManager.attach(it.window)
             it.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
@@ -97,7 +99,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onDetach() {
         backgroundManager.release()
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 

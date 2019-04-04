@@ -55,8 +55,6 @@ interface ApplicationComponent {
 
     fun inject(fragment: TopWorkGridFragment)
 
-    fun inject(fragment: SearchFragment)
-
     fun inject(fragment: WorkDetailsFragment)
 
     fun inject(render: WorkCardRenderer)
@@ -66,5 +64,7 @@ interface ApplicationComponent {
     fun inject(render: VideoCardRender)
 
     fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
+
+    fun getSearchFragmentComponent(): SearchFragmentComponent.Builder
 
 }
