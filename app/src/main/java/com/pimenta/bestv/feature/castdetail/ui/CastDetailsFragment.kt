@@ -53,8 +53,10 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        BesTV.applicationComponent.inject(this)
-        presenter.register(this)
+        BesTV.applicationComponent.getCastDetailsFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +84,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     }
 
     override fun onDetach() {
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 

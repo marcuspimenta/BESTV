@@ -59,12 +59,12 @@ interface ApplicationComponent {
 
     fun inject(fragment: WorkDetailsFragment)
 
-    fun inject(fragment: CastDetailsFragment)
-
     fun inject(render: WorkCardRenderer)
 
     fun inject(render: CastCardRender)
 
     fun inject(render: VideoCardRender)
+
+    fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
 
 }

@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter.View
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
@@ -37,9 +37,10 @@ import javax.inject.Inject
  * Created by marcus on 05-04-2018.
  */
 class CastDetailsPresenter @Inject constructor(
+        private val view: View,
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager
-) : BasePresenter<View>() {
+) : DisposablePresenter() {
 
     /**
      * Load the [Cast] details
