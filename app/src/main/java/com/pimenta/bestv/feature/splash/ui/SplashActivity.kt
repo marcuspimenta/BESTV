@@ -32,6 +32,6 @@ class SplashActivity : BaseActivity() {
 
     companion object {
 
-        fun newInstance(context: Context) = Intent(context, SplashActivity::class.java)
+        fun newInstance(context: Context?) = Intent(context, SplashActivity::class.java)
     }
 }

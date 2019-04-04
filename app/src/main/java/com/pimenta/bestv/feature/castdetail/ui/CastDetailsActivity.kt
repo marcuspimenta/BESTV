@@ -34,7 +34,7 @@ class CastDetailsActivity : BaseActivity() {
 
     companion object {
 
-        fun newInstance(context: Context, cast: Cast) =
+        fun newInstance(context: Context?, cast: Cast) =
                 Intent(context, CastDetailsActivity::class.java).apply {
                     putExtra(CastDetailsFragment.CAST, cast)
                 }

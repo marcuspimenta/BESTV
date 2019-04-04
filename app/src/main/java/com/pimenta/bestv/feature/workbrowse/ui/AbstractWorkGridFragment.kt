@@ -50,16 +50,12 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
     private val fragmentAdapter: BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> by lazy {
         BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
     }
+    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
+    protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
 
-    private val backgroundManager: BackgroundManager by lazy {
-        BackgroundManager.getInstance(activity)
-    }
-
-    private lateinit var backgroundTimer: Timer
-    protected lateinit var rowsAdapter: ArrayObjectAdapter
-
-    private lateinit var workSelected: Work
     protected var showProgress: Boolean = false
+    private var workSelected: Work? = null
+    private var backgroundTimer: Timer = Timer()
 
     @Inject
     lateinit var presenter: WorkGridPresenter
@@ -93,7 +89,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
 
     override fun onResume() {
         super.onResume()
-        if (::workSelected.isInitialized) {
+        if (workSelected != null) {
             loadBackdropImage(false)
             refreshDada()
         }
@@ -101,9 +97,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
 
     override fun onDestroy() {
         progressBarManager.hide()
-        if (::backgroundTimer.isInitialized) {
-            backgroundTimer.cancel()
-        }
+        backgroundTimer.cancel()
         super.onDestroy()
     }
 
@@ -162,12 +156,10 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
         verticalGridPresenter.numberOfColumns = NUMBER_COLUMNS
         gridPresenter = verticalGridPresenter
 
-        val workCardRenderer = WorkCardRenderer()
-        rowsAdapter = ArrayObjectAdapter(workCardRenderer)
         adapter = rowsAdapter
 
         setOnItemViewSelectedListener { _, item, _, _ ->
-            workSelected = item as Work
+            workSelected = item as Work?
             loadBackdropImage(true)
 
             if (rowsAdapter.indexOf(workSelected) >= rowsAdapter.size() - NUMBER_COLUMNS) {
@@ -186,22 +178,18 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
     }
 
     private fun loadBackdropImage(delay: Boolean) {
-        if (!::workSelected.isInitialized) {
-            return
-        }
-
-        if (::backgroundTimer.isInitialized) {
+        workSelected?.let {
             backgroundTimer.cancel()
-        }
-        backgroundTimer = Timer()
-        backgroundTimer.schedule(object : TimerTask() {
-            override fun run() {
-                handler.post {
-                    presenter.loadBackdropImage(workSelected)
-                    backgroundTimer.cancel()
+            backgroundTimer = Timer()
+            backgroundTimer.schedule(object : TimerTask() {
+                override fun run() {
+                    handler.post {
+                        presenter.loadBackdropImage(it)
+                        backgroundTimer.cancel()
+                    }
                 }
-            }
-        }, (BACKGROUND_UPDATE_DELAY.takeIf { delay } ?: 0).toLong())
+            }, (BACKGROUND_UPDATE_DELAY.takeIf { delay } ?: 0).toLong())
+        }
     }
 
     abstract fun loadData()

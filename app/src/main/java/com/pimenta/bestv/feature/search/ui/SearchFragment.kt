@@ -70,9 +70,9 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        sProgressBarManager.setRootView(container)
-        sProgressBarManager.enableProgressBar()
-        sProgressBarManager.initialDelay = 0
+        progressBarManager.setRootView(container)
+        progressBarManager.enableProgressBar()
+        progressBarManager.initialDelay = 0
 
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view?.setBackgroundColor(resources.getColor(android.support.v17.leanback.R.color.lb_playback_controls_background_light, null))
@@ -90,7 +90,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun onDestroyView() {
-        sProgressBarManager.hide()
+        progressBarManager.hide()
         backgroundTimer.cancel()
         super.onDestroyView()
     }
@@ -105,7 +105,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         val hasMovies = movies?.isNotEmpty() ?: false
         val hasTvShows = tvShows?.isNotEmpty() ?: false
 
-        sProgressBarManager.hide()
+        progressBarManager.hide()
         if (hasMovies || hasTvShows) {
             rowsAdapter.clear()
 
@@ -169,10 +169,8 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private fun setupUI() {
         setSearchResultProvider(this)
         setOnItemViewSelectedListener { _, item, _, row ->
-            if (item != null) {
-                workSelected = item as Work
-                loadBackdropImage(true)
-            }
+            workSelected = item as Work?
+            loadBackdropImage(true)
 
             when (row?.headerItem?.id?.toInt()) {
                 MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
@@ -196,7 +194,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     private fun searchQuery(query: String) {
         rowsAdapter.clear()
-        sProgressBarManager.show()
+        progressBarManager.show()
         presenter.searchWorksByQuery(query)
     }
 
@@ -214,7 +212,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
             backgroundTimer = Timer()
             backgroundTimer.schedule(object : TimerTask() {
                 override fun run() {
-                    sHandler.post {
+                    handler.post {
                         presenter.loadBackdropImage(it)
                         backgroundTimer.cancel()
                     }
@@ -230,8 +228,8 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         private const val TV_SHOW_HEADER_ID = 2
         private const val BACKGROUND_UPDATE_DELAY = 300
 
-        private val sHandler = Handler()
-        private val sProgressBarManager = ProgressBarManager()
+        private val handler = Handler()
+        private val progressBarManager = ProgressBarManager()
 
         fun newInstance(): SearchFragment = SearchFragment()
     }

@@ -32,7 +32,7 @@ class SearchActivity : BaseActivity() {
 
     companion object {
 
-        fun newInstance(context: Context): Intent = Intent(context, SearchActivity::class.java)
+        fun newInstance(context: Context?): Intent = Intent(context, SearchActivity::class.java)
 
     }
 }

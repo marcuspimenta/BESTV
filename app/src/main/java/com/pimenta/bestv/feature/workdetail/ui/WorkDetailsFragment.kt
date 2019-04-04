@@ -294,7 +294,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             CastDetailsFragment.SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(CastDetailsActivity.newInstance(context!!, cast), castBundle)
+                    startActivity(CastDetailsActivity.newInstance(context, cast), castBundle)
                 }
                 VIDEO_HEADER_ID -> {
                     val video = item as Video
@@ -315,7 +315,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(WorkDetailsActivity.newInstance(context!!, work), bundle)
+                    startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
                 }
             }
         }
