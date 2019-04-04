@@ -33,12 +33,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 <li>Search the movies and the tv shows by title</li>
 </ul>
 
-## Screenshots
-<p align="center"> <img src="images/device-2018-07-13-091451.png"/> </p>
-<p align="center"> <img src="images/device-2018-07-13-091529.png"/> </p>
-<p align="center"> <img src="images/device-2018-07-13-091549.png"/> </p>
-<p align="center"> <img src="images/device-2018-07-13-091713.png"/> </p>
-<p align="center"> <img src="images/device-2018-07-13-091625.png"/> </p>
+![](gif/app.gif)
 
 ## Licence
 ```
