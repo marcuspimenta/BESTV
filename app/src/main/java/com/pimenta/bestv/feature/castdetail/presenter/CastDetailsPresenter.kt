@@ -18,7 +18,6 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.feature.base.BasePresenter
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
@@ -89,7 +88,7 @@ class CastDetailsPresenter @Inject constructor(
                 })
     }
 
-    interface View : BasePresenter.BaseView {
+    interface View {
 
         fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?)
 

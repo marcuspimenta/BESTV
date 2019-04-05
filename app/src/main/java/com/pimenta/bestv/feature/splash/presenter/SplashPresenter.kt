@@ -14,8 +14,7 @@
 
 package com.pimenta.bestv.feature.splash.presenter
 
-import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.feature.splash.presenter.SplashPresenter.View
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.PermissionManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,8 +26,9 @@ import javax.inject.Inject
  * Created by marcus on 04-05-2018.
  */
 class SplashPresenter @Inject constructor(
+        private val view: View,
         private val permissionManager: PermissionManager
-) : BasePresenter<View>() {
+) : DisposablePresenter() {
 
     /**
      * Loads all permissions
@@ -65,7 +65,7 @@ class SplashPresenter @Inject constructor(
                 }))
     }
 
-    interface View : BasePresenter.BaseView {
+    interface View {
 
         fun onSplashFinished(success: Boolean)
 

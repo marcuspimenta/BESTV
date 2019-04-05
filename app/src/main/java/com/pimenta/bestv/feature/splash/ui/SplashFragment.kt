@@ -36,8 +36,10 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        BesTV.applicationComponent.inject(this)
-        presenter.register(this)
+        BesTV.applicationComponent.getSplashFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,7 +52,7 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
     }
 
     override fun onDetach() {
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 

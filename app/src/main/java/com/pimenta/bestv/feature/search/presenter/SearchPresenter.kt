@@ -173,7 +173,7 @@ class SearchPresenter @Inject constructor(
         }
     }
 
-    interface View : BasePresenter.BaseView {
+    interface View {
 
         fun onResultLoaded(movies: List<Work>?, tvShows: List<Work>?)
 

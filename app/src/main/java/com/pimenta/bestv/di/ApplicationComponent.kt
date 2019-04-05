@@ -47,8 +47,6 @@ interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
 
-    fun inject(fragment: SplashFragment)
-
     fun inject(fragment: WorkBrowseFragment)
 
     fun inject(fragment: GenreWorkGridFragment)
@@ -66,5 +64,7 @@ interface ApplicationComponent {
     fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
 
     fun getSearchFragmentComponent(): SearchFragmentComponent.Builder
+
+    fun getSplashFragmentComponent(): SplashFragmentComponent.Builder
 
 }
