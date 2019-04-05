@@ -17,7 +17,7 @@ package com.pimenta.bestv.manager
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Intent
-import android.support.app.recommendation.ContentRecommendation
+import androidx.recommendation.app.ContentRecommendation
 
 import com.bumptech.glide.Glide
 import com.pimenta.bestv.BuildConfig

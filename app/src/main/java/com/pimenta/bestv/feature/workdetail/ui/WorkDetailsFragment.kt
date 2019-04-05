@@ -21,9 +21,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v17.leanback.app.DetailsSupportFragmentBackgroundController
-import android.support.v17.leanback.widget.*
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.leanback.app.DetailsSupportFragmentBackgroundController
+import androidx.leanback.widget.*
+import androidx.core.app.ActivityOptionsCompat
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.pimenta.bestv.BesTV
@@ -72,7 +72,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     @Inject
     lateinit var presenter: WorkDetailsPresenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getWorkDetailsFragmentComponent()
                 .view(this)

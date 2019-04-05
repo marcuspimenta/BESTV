@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.widget.headeritem
 
-import android.support.v17.leanback.widget.HeaderItem
+import androidx.leanback.widget.HeaderItem
 
 import com.pimenta.bestv.repository.entity.Genre
 

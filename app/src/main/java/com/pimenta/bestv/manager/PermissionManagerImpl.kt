@@ -16,7 +16,7 @@ package com.pimenta.bestv.manager
 
 import android.app.Application
 import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 
 import javax.inject.Inject
 

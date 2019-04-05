@@ -16,10 +16,10 @@ package com.pimenta.bestv.feature.workbrowse.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v17.leanback.app.BackgroundManager
-import android.support.v17.leanback.app.BrowseSupportFragment
-import android.support.v17.leanback.widget.*
-import android.support.v4.app.Fragment
+import androidx.leanback.app.BackgroundManager
+import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.widget.*
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +59,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
     @Inject
     lateinit var presenter: WorkBrowsePresenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getWorkBrowseFragmentComponent()
                 .view(this)
@@ -169,9 +169,9 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         prepareEntranceTransition()
     }
 
-    private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fragment>() {
+    private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<androidx.fragment.app.Fragment>() {
 
-        override fun createFragment(rowObj: Any): Fragment {
+        override fun createFragment(rowObj: Any): androidx.fragment.app.Fragment {
             if (countFragment++ >= 1) {
                 showProgress = true
             }

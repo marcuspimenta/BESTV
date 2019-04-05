@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        presenter.unRegister()
+        presenter.dispose()
         super.onDestroy()
     }
 

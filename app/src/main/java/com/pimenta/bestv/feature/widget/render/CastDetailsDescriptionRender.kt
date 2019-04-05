@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.widget.render
 
-import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter
+import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
 
 import com.pimenta.bestv.repository.entity.Cast
 

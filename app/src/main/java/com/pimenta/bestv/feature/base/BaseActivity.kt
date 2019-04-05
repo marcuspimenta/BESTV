@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.feature.base
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 
 /**
  * Created by marcus on 14-02-2018.
@@ -28,11 +28,9 @@ abstract class BaseActivity : FragmentActivity() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager?.let {
-            it.beginTransaction()
-                    .replace(android.R.id.content, fragment)
-                    .commit()
-        }
+        supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .commit()
     }
 
     /**
@@ -42,12 +40,10 @@ abstract class BaseActivity : FragmentActivity() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager?.let {
-            it.beginTransaction()
-                    .add(android.R.id.content, fragment)
-                    .addToBackStack(tag)
-                    .commit()
-        }
+        supportFragmentManager.beginTransaction()
+                .add(android.R.id.content, fragment)
+                .addToBackStack(tag)
+                .commit()
     }
 
     /**
@@ -59,7 +55,7 @@ abstract class BaseActivity : FragmentActivity() {
      * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
      */
     protected fun popBackStack(name: String, flags: Int) {
-        supportFragmentManager?.popBackStackImmediate(name, flags)
+        supportFragmentManager.popBackStackImmediate(name, flags)
     }
 
 }

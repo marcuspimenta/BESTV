@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.feature.base
 
-import android.support.v17.leanback.app.DetailsSupportFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.leanback.app.DetailsSupportFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 /**
  * Created by marcus on 07-02-2018.
@@ -61,11 +61,10 @@ abstract class BaseDetailsFragment : DetailsSupportFragment() {
      * @param fragment The new fragment to place in the container.
      */
     protected fun replaceFragment(fragment: Fragment) {
-        activity?.supportFragmentManager?.let {
-            it.beginTransaction()
-                    .replace(android.R.id.content, fragment)
-                    .commit()
-        }
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(android.R.id.content, fragment)
+                ?.commit()
     }
 
     /**
@@ -75,12 +74,11 @@ abstract class BaseDetailsFragment : DetailsSupportFragment() {
      * @param tag      Optional tag name for the fragment.
      */
     protected fun addFragment(fragment: Fragment, tag: String) {
-        activity?.supportFragmentManager?.let {
-            it.beginTransaction()
-                    .add(android.R.id.content, fragment)
-                    .addToBackStack(tag)
-                    .commit()
-        }
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.add(android.R.id.content, fragment)
+                ?.addToBackStack(tag)
+                ?.commit()
     }
 
     /**

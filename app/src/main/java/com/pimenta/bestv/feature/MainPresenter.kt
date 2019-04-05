@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.feature
 
-import com.pimenta.bestv.feature.base.BasePresenter
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.RecommendationManager
 import com.pimenta.bestv.repository.MediaRepository
-
-import javax.inject.Inject
-
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
@@ -29,7 +27,7 @@ import timber.log.Timber
 class MainPresenter @Inject constructor(
         private val mediaRepository: MediaRepository,
         private val recommendationManager: RecommendationManager
-) : BasePresenter<BasePresenter.BaseView>() {
+) : DisposablePresenter() {
 
     /**
      * Loads the recommendations

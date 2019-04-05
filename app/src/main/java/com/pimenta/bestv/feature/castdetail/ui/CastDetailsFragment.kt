@@ -17,8 +17,8 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v17.leanback.widget.*
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.leanback.widget.*
+import androidx.core.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     @Inject
     lateinit var presenter: CastDetailsPresenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getCastDetailsFragmentComponent()
                 .view(this)

@@ -27,7 +27,7 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
     private lateinit var genre: Genre
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getGenreWorkGridFragmentComponent()
                 .view(this)

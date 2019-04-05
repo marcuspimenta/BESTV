@@ -34,7 +34,7 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
     @Inject
     lateinit var presenter: SplashPresenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getSplashFragmentComponent()
                 .view(this)

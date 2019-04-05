@@ -17,7 +17,6 @@ repositories {
     mavenCentral()
 }
 
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -39,14 +38,14 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
             debuggable true
             multiDexEnabled true
             minifyEnabled false
             shrinkResources false
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -58,10 +57,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:leanback-v17:28.0.0'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:recommendation:28.0.0'
+    implementation 'androidx.leanback:leanback:1.1.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'androidx.recommendation:recommendation:1.0.0'
 
     // Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'

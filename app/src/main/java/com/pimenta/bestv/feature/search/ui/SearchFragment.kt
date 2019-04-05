@@ -19,11 +19,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
-import android.support.v17.leanback.app.BackgroundManager
-import android.support.v17.leanback.app.ProgressBarManager
-import android.support.v17.leanback.app.SearchSupportFragment
-import android.support.v17.leanback.widget.*
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.leanback.app.BackgroundManager
+import androidx.leanback.app.ProgressBarManager
+import androidx.leanback.app.SearchSupportFragment
+import androidx.leanback.widget.*
+import androidx.core.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +54,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     @Inject
     lateinit var presenter: SearchPresenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         BesTV.applicationComponent.getSearchFragmentComponent()
                 .view(this)
@@ -77,7 +77,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         progressBarManager.initialDelay = 0
 
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        view?.setBackgroundColor(resources.getColor(android.support.v17.leanback.R.color.lb_playback_controls_background_light, null))
+        view?.setBackgroundColor(resources.getColor(androidx.leanback.R.color.lb_playback_controls_background_light, null))
         return view
     }
 
