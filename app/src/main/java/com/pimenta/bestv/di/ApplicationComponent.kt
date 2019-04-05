@@ -53,8 +53,6 @@ interface ApplicationComponent {
 
     fun inject(fragment: TopWorkGridFragment)
 
-    fun inject(fragment: WorkDetailsFragment)
-
     fun inject(render: WorkCardRenderer)
 
     fun inject(render: CastCardRender)
@@ -66,5 +64,7 @@ interface ApplicationComponent {
     fun getSearchFragmentComponent(): SearchFragmentComponent.Builder
 
     fun getSplashFragmentComponent(): SplashFragmentComponent.Builder
+
+    fun getWorkDetailsFragmentComponent(): WorkDetailsFragmentComponent.Builder
 
 }

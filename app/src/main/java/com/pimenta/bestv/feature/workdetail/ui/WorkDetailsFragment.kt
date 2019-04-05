@@ -46,7 +46,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDetailsView {
+class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
     private val videoRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
@@ -74,8 +74,10 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        BesTV.applicationComponent.inject(this)
-        presenter.register(this)
+        BesTV.applicationComponent.getWorkDetailsFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +105,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.WorkDeta
     }
 
     override fun onDetach() {
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 

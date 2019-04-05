@@ -16,36 +16,29 @@ package com.pimenta.bestv.feature.workdetail.presenter
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.feature.base.BasePresenter
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.CastList
-import com.pimenta.bestv.repository.entity.Video
-import com.pimenta.bestv.repository.entity.VideoList
-import com.pimenta.bestv.repository.entity.Work
-import com.pimenta.bestv.repository.entity.WorkPage
-
-import javax.inject.Inject
-
+import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 07-02-2018.
  */
 class WorkDetailsPresenter @Inject constructor(
+        private val view: View,
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager
-) : BasePresenter<WorkDetailsPresenter.WorkDetailsView>() {
+) : DisposablePresenter() {
 
     private var recommendedPage = 0
     private var similarPage = 0
@@ -230,7 +223,7 @@ class WorkDetailsPresenter @Inject constructor(
             val similarMovies: WorkPage<*>
     )
 
-    interface WorkDetailsView : BasePresenter.BaseView {
+    interface View {
 
         fun onResultSetFavoriteMovie(success: Boolean)
 

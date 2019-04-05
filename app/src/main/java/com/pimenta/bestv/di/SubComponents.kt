@@ -6,6 +6,8 @@ import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.search.ui.SearchFragment
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashFragment
+import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -21,6 +23,21 @@ interface SplashFragmentComponent {
         fun view(view: SplashPresenter.View): Builder
 
         fun build(): SplashFragmentComponent
+    }
+}
+
+@Subcomponent
+interface WorkDetailsFragmentComponent {
+
+    fun inject(workDetailsFragment: WorkDetailsFragment)
+
+    @Subcomponent.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun view(view: WorkDetailsPresenter.View): Builder
+
+        fun build(): WorkDetailsFragmentComponent
     }
 }
 
