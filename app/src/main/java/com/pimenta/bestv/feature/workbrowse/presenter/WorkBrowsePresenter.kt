@@ -15,8 +15,7 @@
 package com.pimenta.bestv.feature.workbrowse.presenter
 
 import android.util.DisplayMetrics
-import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter.WorkBrowseView
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
@@ -31,8 +30,9 @@ import javax.inject.Inject
  */
 class WorkBrowsePresenter @Inject constructor(
         val displayMetrics: DisplayMetrics,
+        private val view: View,
         private val mMediaRepository: MediaRepository
-) : BasePresenter<WorkBrowseView>() {
+) : DisposablePresenter() {
 
     /**
      * Checks if there is any [Work] saved as favorite
@@ -82,7 +82,7 @@ class WorkBrowsePresenter @Inject constructor(
             val hasFavoriteMovie: Boolean
     )
 
-    interface WorkBrowseView : BasePresenter.BaseView {
+    interface View {
 
         fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?)
 

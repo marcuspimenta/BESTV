@@ -30,7 +30,6 @@ import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.widget.headeritem.GenreHeaderItem
 import com.pimenta.bestv.feature.widget.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter.WorkBrowseView
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.MovieGenre
 import com.pimenta.bestv.repository.entity.TvShowGenre
@@ -39,7 +38,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
+class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
 
     private var countFragment = 0
     private var showProgress = false
@@ -62,8 +61,11 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        BesTV.applicationComponent.inject(this)
-        presenter.register(this)
+        BesTV.applicationComponent.getWorkBrowseFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
+
         activity?.let {
             backgroundManager.attach(it.window)
             it.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
@@ -103,7 +105,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowseView {
 
     override fun onDetach() {
         backgroundManager.release()
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 
