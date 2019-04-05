@@ -7,6 +7,9 @@ import com.pimenta.bestv.feature.search.ui.SearchFragment
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashFragment
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
+import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
+import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment
+import com.pimenta.bestv.feature.workbrowse.ui.TopWorkGridFragment
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
@@ -40,6 +43,36 @@ interface WorkBrowseFragmentComponent {
         fun view(view: WorkBrowsePresenter.View): Builder
 
         fun build(): WorkBrowseFragmentComponent
+    }
+}
+
+@Subcomponent
+interface TopWorkGridFragmentComponent {
+
+    fun inject(topWorkGridFragment: TopWorkGridFragment)
+
+    @Subcomponent.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun view(view: WorkGridPresenter.View): Builder
+
+        fun build(): TopWorkGridFragmentComponent
+    }
+}
+
+@Subcomponent
+interface GenreWorkGridFragmentComponent {
+
+    fun inject(genreWorkGridFragment: GenreWorkGridFragment)
+
+    @Subcomponent.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun view(view: WorkGridPresenter.View): Builder
+
+        fun build(): GenreWorkGridFragmentComponent
     }
 }
 

@@ -29,8 +29,11 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
     private lateinit var workType: MediaRepository.WorkType
 
     override fun onAttach(context: Context?) {
-        BesTV.applicationComponent.inject(this)
         super.onAttach(context)
+        BesTV.applicationComponent.getTopWorkGridFragmentComponent()
+                .view(this)
+                .build()
+                .inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -20,8 +20,7 @@ import android.util.DisplayMetrics
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Genre
@@ -36,9 +35,10 @@ import javax.inject.Inject
  */
 class WorkGridPresenter @Inject constructor(
         val displayMetrics: DisplayMetrics,
+        private val view: View,
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager
-) : BasePresenter<WorkGridView>() {
+) : DisposablePresenter() {
 
     private var currentPage = 0
 
@@ -120,7 +120,7 @@ class WorkGridPresenter @Inject constructor(
                 })
     }
 
-    interface WorkGridView : BasePresenter.BaseView {
+    interface View {
 
         fun onWorksLoaded(works: List<Work>?)
 

@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.workbrowse.ui
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -35,7 +34,6 @@ import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter.WorkGridView
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.repository.entity.Work
@@ -45,7 +43,8 @@ import javax.inject.Inject
 /**
  * Created by marcus on 09-02-2018.
  */
-abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridView, BrowseSupportFragment.MainFragmentAdapterProvider {
+abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPresenter.View,
+        BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private val fragmentAdapter: BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> by lazy {
         BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
@@ -59,11 +58,6 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
 
     @Inject
     lateinit var presenter: WorkGridPresenter
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        presenter.register(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +96,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridVi
     }
 
     override fun onDetach() {
-        presenter.unRegister()
+        presenter.dispose()
         super.onDetach()
     }
 

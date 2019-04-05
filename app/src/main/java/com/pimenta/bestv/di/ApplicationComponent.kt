@@ -18,17 +18,10 @@ import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.MainActivity
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
-import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.recommendation.service.RecommendationService
-import com.pimenta.bestv.feature.search.ui.SearchFragment
-import com.pimenta.bestv.feature.splash.ui.SplashFragment
 import com.pimenta.bestv.feature.widget.render.CastCardRender
 import com.pimenta.bestv.feature.widget.render.VideoCardRender
 import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
-import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment
-import com.pimenta.bestv.feature.workbrowse.ui.TopWorkGridFragment
-import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -47,10 +40,6 @@ interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
 
-    fun inject(fragment: GenreWorkGridFragment)
-
-    fun inject(fragment: TopWorkGridFragment)
-
     fun inject(render: WorkCardRenderer)
 
     fun inject(render: CastCardRender)
@@ -66,5 +55,9 @@ interface ApplicationComponent {
     fun getWorkDetailsFragmentComponent(): WorkDetailsFragmentComponent.Builder
 
     fun getWorkBrowseFragmentComponent(): WorkBrowseFragmentComponent.Builder
+
+    fun getTopWorkGridFragmentComponent(): TopWorkGridFragmentComponent.Builder
+
+    fun getGenreWorkGridFragmentComponent(): GenreWorkGridFragmentComponent.Builder
 
 }
