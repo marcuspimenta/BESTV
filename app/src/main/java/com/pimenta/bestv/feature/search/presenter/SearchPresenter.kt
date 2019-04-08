@@ -21,7 +21,6 @@ import android.util.Pair
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.feature.base.BasePresenter
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
@@ -48,8 +47,8 @@ class SearchPresenter @Inject constructor(
 
     private var resultMoviePage = 0
     private var resultTvShowPage = 0
-    private lateinit var query: String
-    private lateinit var disposable: Disposable
+    private var query: String = ""
+    private var disposable: Disposable? = null
 
     override fun dispose() {
         disposeSearchMovie()
@@ -65,7 +64,7 @@ class SearchPresenter @Inject constructor(
         disposeSearchMovie()
         try {
             val queryEncode = URLEncoder.encode(text, "UTF-8")
-            if (::query.isInitialized && queryEncode != query) {
+            if (queryEncode != query) {
                 resultMoviePage = 0
                 resultTvShowPage = 0
             }
@@ -168,8 +167,10 @@ class SearchPresenter @Inject constructor(
      * Disposes the search movies.
      */
     private fun disposeSearchMovie() {
-        if (::disposable.isInitialized && !disposable.isDisposed) {
-            disposable.dispose()
+        disposable?.let {
+            if (!it.isDisposed) {
+                it.dispose()
+            }
         }
     }
 
