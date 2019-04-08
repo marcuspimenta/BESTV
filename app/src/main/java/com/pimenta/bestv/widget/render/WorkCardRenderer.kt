@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.render
+package com.pimenta.bestv.widget.render
 
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
@@ -20,17 +20,19 @@ import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
 
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.widget.presenter.CastCardPresenter
-import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.widget.presenter.WorkCardPresenter
+import com.pimenta.bestv.repository.entity.Work
+
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 /**
- * Created by marcus on 16-02-2018.
+ * Created by marcus on 10-02-2018.
  */
-class CastCardRender : Presenter() {
+class WorkCardRenderer : Presenter() {
 
     @Inject
-    lateinit var castCardPresenter: CastCardPresenter
+    lateinit var workCardPresenter: WorkCardPresenter
 
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
         BesTV.applicationComponent.inject(this)
@@ -42,19 +44,26 @@ class CastCardRender : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
-        val cast = item as Cast
+        val work = item as Work
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = cast.name
-        cardView.contentText = cast.character
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_height))
+        cardView.titleText = work.title
+        work.releaseDate?.let {
+            cardView.contentText = sDateFormat.format(it)
+        }
+        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
+                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height))
 
-        castCardPresenter.loadCastProfileImage(cast, cardView.mainImageView)
+        workCardPresenter.loadWorkPosterImage(work, cardView.mainImageView)
     }
 
     override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null
+    }
+
+    companion object {
+
+        private val sDateFormat = SimpleDateFormat("MMM dd, yyyy")
     }
 }

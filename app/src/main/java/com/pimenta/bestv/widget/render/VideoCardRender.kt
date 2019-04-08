@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.render
+package com.pimenta.bestv.widget.render
 
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.widget.presenter.VideoCardPresenter
+import com.pimenta.bestv.widget.presenter.VideoCardPresenter
 import com.pimenta.bestv.repository.entity.Video
 import javax.inject.Inject
 

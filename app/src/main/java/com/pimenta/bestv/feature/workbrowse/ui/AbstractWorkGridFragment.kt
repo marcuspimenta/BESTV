@@ -26,13 +26,12 @@ import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
 import androidx.core.app.ActivityOptionsCompat
-import androidx.fragment.app.FragmentManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
-import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment

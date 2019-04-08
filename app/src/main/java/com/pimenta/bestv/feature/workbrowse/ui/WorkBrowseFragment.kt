@@ -19,7 +19,6 @@ import android.os.Bundle
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +26,8 @@ import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.base.BaseBrowseFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
-import com.pimenta.bestv.feature.widget.headeritem.GenreHeaderItem
-import com.pimenta.bestv.feature.widget.headeritem.WorkTypeHeaderItem
+import com.pimenta.bestv.widget.headeritem.GenreHeaderItem
+import com.pimenta.bestv.widget.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.MovieGenre

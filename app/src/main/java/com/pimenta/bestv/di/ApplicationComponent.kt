@@ -19,9 +19,9 @@ import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.MainActivity
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
 import com.pimenta.bestv.feature.recommendation.service.RecommendationService
-import com.pimenta.bestv.feature.widget.render.CastCardRender
-import com.pimenta.bestv.feature.widget.render.VideoCardRender
-import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.widget.render.CastCardRender
+import com.pimenta.bestv.widget.render.VideoCardRender
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import dagger.Component
 import javax.inject.Singleton
 

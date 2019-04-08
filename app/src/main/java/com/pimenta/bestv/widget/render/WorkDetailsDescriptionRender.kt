@@ -12,29 +12,26 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.presenter
+package com.pimenta.bestv.widget.render
 
-import android.widget.ImageView
-import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.manager.ImageManager
+import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
 import com.pimenta.bestv.repository.entity.Work
-import javax.inject.Inject
+import java.text.SimpleDateFormat
 
 /**
- * Created by marcus on 28-01-2019.
+ * Created by marcus on 28-01-2018.
  */
-class WorkCardPresenter @Inject constructor(
-        private val imageManager: ImageManager
-) {
+class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
-    /**
-     * Loads the [Work] porter into [ImageView]
-     *
-     * @param work      [Work]
-     * @param imageView [ImageView]
-     */
-    fun loadWorkPosterImage(work: Work, imageView: ImageView) {
-        imageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath))
+    override fun onBindDescription(viewHolder: AbstractDetailsDescriptionPresenter.ViewHolder, item: Any) {
+        val work = item as Work
+        viewHolder.title.text = work.title
+        viewHolder.subtitle.text = dateFormat.format(work.releaseDate)
+        viewHolder.body.text = work.overview
     }
 
+    companion object {
+
+        private val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+    }
 }

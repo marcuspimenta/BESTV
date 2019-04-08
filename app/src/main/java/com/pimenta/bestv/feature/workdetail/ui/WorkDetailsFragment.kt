@@ -32,10 +32,10 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
-import com.pimenta.bestv.feature.widget.render.CastCardRender
-import com.pimenta.bestv.feature.widget.render.VideoCardRender
-import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
-import com.pimenta.bestv.feature.widget.render.WorkDetailsDescriptionRender
+import com.pimenta.bestv.widget.render.CastCardRender
+import com.pimenta.bestv.widget.render.VideoCardRender
+import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.widget.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.Video

@@ -12,17 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.headeritem
+package com.pimenta.bestv.widget.headeritem
 
 import androidx.leanback.widget.HeaderItem
 
-import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.entity.Genre
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-class WorkTypeHeaderItem(
+class GenreHeaderItem(
         id: Int,
-        name: String,
-        val movieListType: MediaRepository.WorkType
-) : HeaderItem(id.toLong(), name)
+        val genre: Genre
+) : HeaderItem(id.toLong(), genre.name)

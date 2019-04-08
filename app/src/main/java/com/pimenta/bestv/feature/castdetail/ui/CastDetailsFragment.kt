@@ -27,8 +27,8 @@ import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
-import com.pimenta.bestv.feature.widget.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.feature.widget.render.WorkCardRenderer
+import com.pimenta.bestv.widget.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.repository.entity.Cast
@@ -135,7 +135,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
                         (itemViewHolder.view as ImageCardView).mainImageView,
                         WorkDetailsFragment.SHARED_ELEMENT_NAME
                 ).toBundle()
-                startActivity(WorkDetailsActivity.newInstance(context!!, item), bundle)
+                startActivity(WorkDetailsActivity.newInstance(context, item), bundle)
             }
         }
     }

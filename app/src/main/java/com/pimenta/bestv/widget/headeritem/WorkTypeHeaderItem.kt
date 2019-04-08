@@ -12,21 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.render
+package com.pimenta.bestv.widget.headeritem
 
-import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
+import androidx.leanback.widget.HeaderItem
 
-import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.repository.MediaRepository
 
 /**
- * Created by marcus on 07-04-2018.
+ * Created by marcus on 11-02-2018.
  */
-class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
-
-    override fun onBindDescription(viewHolder: AbstractDetailsDescriptionPresenter.ViewHolder, item: Any) {
-        val cast = item as Cast
-        viewHolder.title.text = cast.name
-        //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-        viewHolder.body.text = cast.biography
-    }
-}
+class WorkTypeHeaderItem(
+        id: Int,
+        name: String,
+        val movieListType: MediaRepository.WorkType
+) : HeaderItem(id.toLong(), name)

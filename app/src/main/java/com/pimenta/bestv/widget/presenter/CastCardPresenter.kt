@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.widget.presenter
+package com.pimenta.bestv.widget.presenter
 
 import android.widget.ImageView
 import com.pimenta.bestv.BuildConfig
