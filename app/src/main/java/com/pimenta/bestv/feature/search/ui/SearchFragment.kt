@@ -18,23 +18,22 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.core.app.ActivityOptionsCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.base.BaseSearchFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
-import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import java.util.*
 import javax.inject.Inject
 
@@ -47,6 +46,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private val movieRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val tvShowRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
+    private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
 
     private var workSelected: Work? = null
     private var backgroundTimer: Timer = Timer()
@@ -88,7 +88,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onResume() {
         super.onResume()
-        loadBackdropImage(false)
+        loadBackdropImage()
     }
 
     override fun onDestroyView() {
@@ -172,7 +172,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         setSearchResultProvider(this)
         setOnItemViewSelectedListener { _, item, _, row ->
             workSelected = item as Work?
-            loadBackdropImage(true)
+            loadBackdropImage()
 
             when (row?.headerItem?.id?.toInt()) {
                 MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
@@ -208,18 +208,9 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         rowsAdapter.add(ListRow(header, listRowAdapter))
     }
 
-    private fun loadBackdropImage(delay: Boolean) {
+    private fun loadBackdropImage() {
         workSelected?.let {
-            backgroundTimer.cancel()
-            backgroundTimer = Timer()
-            backgroundTimer.schedule(object : TimerTask() {
-                override fun run() {
-                    handler.post {
-                        presenter.loadBackdropImage(it)
-                        backgroundTimer.cancel()
-                    }
-                }
-            }, (BACKGROUND_UPDATE_DELAY.takeIf { delay } ?: 0).toLong())
+            presenter.loadBackdropImage(it)
         }
     }
 
@@ -228,10 +219,6 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
         private const val MOVIE_HEADER_ID = 1
         private const val TV_SHOW_HEADER_ID = 2
-        private const val BACKGROUND_UPDATE_DELAY = 300
-
-        private val handler = Handler()
-        private val progressBarManager = ProgressBarManager()
 
         fun newInstance(): SearchFragment = SearchFragment()
     }
