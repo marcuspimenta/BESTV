@@ -25,9 +25,12 @@ import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Genre
 import com.pimenta.bestv.repository.entity.Work
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -41,6 +44,12 @@ class WorkGridPresenter @Inject constructor(
 ) : DisposablePresenter() {
 
     private var currentPage = 0
+    private var loadBackdropImageDisposable: Disposable? = null
+
+    override fun dispose() {
+        disposeLoadBackdropImage()
+        super.dispose()
+    }
 
     /**
      * Loads the [<] by [MediaRepository.WorkType]
@@ -101,23 +110,49 @@ class WorkGridPresenter @Inject constructor(
     }
 
     /**
-     * Loads the [android.graphics.drawable.Drawable] from the [Work]
+     * Loads the [Bitmap] from the [Work]
      *
      * @param work [Work]
      */
     fun loadBackdropImage(work: Work) {
-        imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
-                object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        view.onBackdropImageLoaded(resource)
-                    }
+        disposeLoadBackdropImage()
+        loadBackdropImageDisposable = Completable
+                .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
+                            object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    view.onBackdropImageLoaded(resource)
+                                }
 
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        Timber.w("Error while loading backdrop image")
-                        view.onBackdropImageLoaded(null)
-                    }
+                                override fun onLoadFailed(errorDrawable: Drawable?) {
+                                    super.onLoadFailed(errorDrawable)
+                                    Timber.w("Error while loading backdrop image")
+                                    view.onBackdropImageLoaded(null)
+                                }
+                            })
+                }, { throwable ->
+                    Timber.e(throwable, "Error while loading backdrop image")
+                    view.onBackdropImageLoaded(null)
                 })
+    }
+
+    /**
+     * Disposes the load backdrop image.
+     */
+    private fun disposeLoadBackdropImage() {
+        loadBackdropImageDisposable?.let {
+            if (!it.isDisposed) {
+                it.dispose()
+            }
+        }
+    }
+
+    companion object {
+
+        private const val BACKGROUND_UPDATE_DELAY = 300L
     }
 
     interface View {

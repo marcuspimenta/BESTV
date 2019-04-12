@@ -18,25 +18,23 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
-import androidx.core.app.ActivityOptionsCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
-import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.repository.entity.Work
-import java.util.*
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -53,7 +51,6 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     protected var showProgress: Boolean = false
     private var workSelected: Work? = null
-    private var backgroundTimer: Timer = Timer()
 
     @Inject
     lateinit var presenter: WorkGridPresenter
@@ -82,15 +79,14 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun onResume() {
         super.onResume()
-        if (workSelected != null) {
-            loadBackdropImage(false)
+        workSelected?.run {
+            loadBackdropImage()
             refreshDada()
         }
     }
 
     override fun onDestroy() {
         progressBarManager.hide()
-        backgroundTimer.cancel()
         super.onDestroy()
     }
 
@@ -102,16 +98,16 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     override fun getMainFragmentAdapter() = fragmentAdapter
 
     override fun onWorksLoaded(works: List<Work>?) {
-        if (works != null) {
-            works.forEach {
-                if (rowsAdapter.indexOf(it) == -1) {
-                    rowsAdapter.add(it)
-                }
+        works?.forEach {
+            if (rowsAdapter.indexOf(it) == -1) {
+                rowsAdapter.add(it)
             }
-        } else if (rowsAdapter.size() == 0) {
-            val fragment = ErrorFragment.newInstance()
-            fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
-            addFragment(fragment, ErrorFragment.TAG)
+        } ?: run {
+            if (rowsAdapter.size() == 0) {
+                val fragment = ErrorFragment.newInstance()
+                fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+                addFragment(fragment, ErrorFragment.TAG)
+            }
         }
 
         progressBarManager.hide()
@@ -153,7 +149,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
         setOnItemViewSelectedListener { _, item, _, _ ->
             workSelected = item as Work?
-            loadBackdropImage(true)
+            loadBackdropImage()
 
             if (rowsAdapter.indexOf(workSelected) >= rowsAdapter.size() - NUMBER_COLUMNS) {
                 loadMorePages()
@@ -170,18 +166,9 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         }
     }
 
-    private fun loadBackdropImage(delay: Boolean) {
+    private fun loadBackdropImage() {
         workSelected?.let {
-            backgroundTimer.cancel()
-            backgroundTimer = Timer()
-            backgroundTimer.schedule(object : TimerTask() {
-                override fun run() {
-                    handler.post {
-                        presenter.loadBackdropImage(it)
-                        backgroundTimer.cancel()
-                    }
-                }
-            }, (BACKGROUND_UPDATE_DELAY.takeIf { delay } ?: 0).toLong())
+            presenter.loadBackdropImage(it)
         }
     }
 
@@ -192,9 +179,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         const val SHOW_PROGRESS = "SHOW_PROGRESS"
 
         private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-        private const val BACKGROUND_UPDATE_DELAY = 300
         private const val NUMBER_COLUMNS = 6
 
-        private val handler = Handler()
     }
 }
