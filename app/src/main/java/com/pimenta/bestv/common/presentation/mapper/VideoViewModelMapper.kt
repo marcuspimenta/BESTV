@@ -12,29 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.presenter
+package com.pimenta.bestv.common.presentation.mapper
 
-import android.widget.ImageView
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.manager.ImageManager
+import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.repository.entity.Video
-import javax.inject.Inject
 
-/**
- * Created by marcus on 28-01-2019.
- */
-class VideoCardPresenter @Inject constructor(
-        private val imageManager: ImageManager
-) {
+fun Video.toViewModel(): VideoViewModel = VideoViewModel(
+        id = id,
+        name = name,
+        type = type,
+        thumbnailUrl = String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, key),
+        youtubeUrl = String.format(BuildConfig.YOUTUBE_BASE_URL, key)
+)
 
-    /**
-     * Loads the [Video] thumbnail into [ImageView]
-     *
-     * @param video     [Video]
-     * @param imageView [ImageView]
-     */
-    fun loadVideoThumbnailImage(video: Video, imageView: ImageView) {
-        imageManager.loadImageInto(imageView, String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, video.key))
-    }
-
-}

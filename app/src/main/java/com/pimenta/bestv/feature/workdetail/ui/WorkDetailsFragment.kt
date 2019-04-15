@@ -21,25 +21,24 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.leanback.app.DetailsSupportFragmentBackgroundController
-import androidx.leanback.widget.*
-import androidx.core.app.ActivityOptionsCompat
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.leanback.app.DetailsSupportFragmentBackgroundController
+import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
+import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
+import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.widget.render.CastCardRender
 import com.pimenta.bestv.widget.render.VideoCardRender
 import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.widget.render.WorkDetailsDescriptionRender
-import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
-import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.Video
-import com.pimenta.bestv.repository.entity.Work
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -116,7 +115,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         }
     }
 
-    override fun onDataLoaded(casts: List<Cast>?, recommendedWorks: List<Work>?, similarWorks: List<Work>?, videos: List<Video>?) {
+    override fun onDataLoaded(casts: List<Cast>?, recommendedWorks: List<Work>?, similarWorks: List<Work>?, videos: List<VideoViewModel>?) {
         videos?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
@@ -299,10 +298,10 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
                     startActivity(CastDetailsActivity.newInstance(context, cast), castBundle)
                 }
                 VIDEO_HEADER_ID -> {
-                    val video = item as Video
+                    val videoViewModel = item as VideoViewModel
                     val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(String.format(BuildConfig.YOUTUBE_BASE_URL, video.key))
+                            Uri.parse(videoViewModel.youtubeUrl)
                     )
                     try {
                         startActivity(intent)

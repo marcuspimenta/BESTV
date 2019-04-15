@@ -14,44 +14,39 @@
 
 package com.pimenta.bestv.widget.render
 
+import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import android.view.ViewGroup
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.widget.presenter.VideoCardPresenter
-import com.pimenta.bestv.repository.entity.Video
-import javax.inject.Inject
+import com.pimenta.bestv.common.presentation.model.VideoViewModel
+import com.pimenta.bestv.extension.loadImageInto
 
 /**
  * Created by marcus on 23-02-2018.
  */
 class VideoCardRender : Presenter() {
 
-    @Inject
-    lateinit var videoCardPresenter: VideoCardPresenter
-
-    override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
-        BesTV.applicationComponent.inject(this)
-
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        return Presenter.ViewHolder(cardView)
+        return ViewHolder(cardView)
     }
 
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
-        val video = item as Video
+        val videoViewModel = item as VideoViewModel
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = video.name
-        cardView.contentText = video.type
+        cardView.titleText = videoViewModel.name
+        cardView.contentText = videoViewModel.type
         cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_width),
                 viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_height))
 
-        videoCardPresenter.loadVideoThumbnailImage(video, cardView.mainImageView)
+        videoViewModel.thumbnailUrl?.let {
+            cardView.mainImageView.loadImageInto(it)
+        }
     }
 
-    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null

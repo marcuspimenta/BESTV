@@ -19,6 +19,8 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.model.VideoViewModel
+import com.pimenta.bestv.common.usecase.GetVideosUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
@@ -37,7 +39,8 @@ import javax.inject.Inject
 class WorkDetailsPresenter @Inject constructor(
         private val view: View,
         private val mediaRepository: MediaRepository,
-        private val imageManager: ImageManager
+        private val imageManager: ImageManager,
+        private val getVideosUseCase: GetVideosUseCase
 ) : DisposablePresenter() {
 
     private var recommendedPage = 0
@@ -94,11 +97,11 @@ class WorkDetailsPresenter @Inject constructor(
         val similarPageSearch = similarPage + 1
 
         compositeDisposable.add(Single.zip(
-                mediaRepository.getVideosByWork(work),
+                getVideosUseCase(work),
                 mediaRepository.getCastByWork(work),
                 mediaRepository.getRecommendationByWork(work, recommendedPageSearch),
                 mediaRepository.getSimilarByWork(work, similarPageSearch),
-                Function4<VideoList, CastList, WorkPage<*>, WorkPage<*>, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
+                Function4<List<VideoViewModel>?, CastList, WorkPage<*>, WorkPage<*>, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
                     WorkInfo(videos, casts, recommendedMovies, similarMovies)
                 })
                 .subscribeOn(Schedulers.io())
@@ -117,7 +120,7 @@ class WorkDetailsPresenter @Inject constructor(
                             movieInfo.casts.casts,
                             recommendedPage.works,
                             similarPage.works,
-                            movieInfo.videos.videos
+                            movieInfo.videos
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
@@ -217,7 +220,7 @@ class WorkDetailsPresenter @Inject constructor(
      * Wrapper class to keep the work info
      */
     private inner class WorkInfo(
-            val videos: VideoList,
+            val videos: List<VideoViewModel>?,
             val casts: CastList,
             val recommendedMovies: WorkPage<*>,
             val similarMovies: WorkPage<*>
@@ -227,7 +230,7 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onResultSetFavoriteMovie(success: Boolean)
 
-        fun onDataLoaded(casts: List<Cast>?, recommendedMovies: List<Work>?, similarMovies: List<Work>?, videos: List<Video>?)
+        fun onDataLoaded(casts: List<Cast>?, recommendedMovies: List<Work>?, similarMovies: List<Work>?, videos: List<VideoViewModel>?)
 
         fun onRecommendationLoaded(works: List<Work>?)
 

@@ -20,7 +20,6 @@ import com.pimenta.bestv.feature.MainActivity
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
 import com.pimenta.bestv.feature.recommendation.service.RecommendationService
 import com.pimenta.bestv.widget.render.CastCardRender
-import com.pimenta.bestv.widget.render.VideoCardRender
 import com.pimenta.bestv.widget.render.WorkCardRenderer
 import dagger.Component
 import javax.inject.Singleton
@@ -43,8 +42,6 @@ interface ApplicationComponent {
     fun inject(render: WorkCardRenderer)
 
     fun inject(render: CastCardRender)
-
-    fun inject(render: VideoCardRender)
 
     fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
 
