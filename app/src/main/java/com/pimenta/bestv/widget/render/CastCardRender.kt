@@ -14,45 +14,40 @@
 
 package com.pimenta.bestv.widget.render
 
+import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
-
 import com.pimenta.bestv.R
-import com.pimenta.bestv.widget.presenter.CastCardPresenter
-import com.pimenta.bestv.repository.entity.Cast
-import javax.inject.Inject
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.extension.loadImageInto
 
 /**
  * Created by marcus on 16-02-2018.
  */
 class CastCardRender : Presenter() {
 
-    @Inject
-    lateinit var castCardPresenter: CastCardPresenter
-
-    override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
-        BesTV.applicationComponent.inject(this)
-
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        return Presenter.ViewHolder(cardView)
+        return ViewHolder(cardView)
     }
 
-    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
-        val cast = item as Cast
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+        val castViewModel = item as CastViewModel
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = cast.name
-        cardView.contentText = cast.character
+        cardView.titleText = castViewModel.name
+        cardView.contentText = castViewModel.character
         cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_width),
                 viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_height))
 
-        castCardPresenter.loadCastProfileImage(cast, cardView.mainImageView)
+        castViewModel.thumbnailUrl?.let {
+            cardView.mainImageView.loadImageInto(it)
+        }
     }
 
-    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null

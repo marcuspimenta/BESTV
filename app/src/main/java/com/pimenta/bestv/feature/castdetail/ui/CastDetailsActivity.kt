@@ -17,10 +17,9 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.feature.base.BaseActivity
-import com.pimenta.bestv.repository.entity.Cast
 
 /**
  * Created by marcus on 04-04-2018.
@@ -34,9 +33,9 @@ class CastDetailsActivity : BaseActivity() {
 
     companion object {
 
-        fun newInstance(context: Context?, cast: Cast) =
+        fun newInstance(context: Context?, castViewModel: CastViewModel) =
                 Intent(context, CastDetailsActivity::class.java).apply {
-                    putExtra(CastDetailsFragment.CAST, cast)
+                    putExtra(CastDetailsFragment.CAST, castViewModel)
                 }
     }
 }

@@ -14,31 +14,16 @@
 
 package com.pimenta.bestv.repository.remote
 
-import android.util.Log
-
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.CastList
-import com.pimenta.bestv.repository.entity.CastMovieList
-import com.pimenta.bestv.repository.entity.CastTvShowList
-import com.pimenta.bestv.repository.entity.Genre
-import com.pimenta.bestv.repository.entity.Movie
-import com.pimenta.bestv.repository.entity.MovieGenreList
-import com.pimenta.bestv.repository.entity.MoviePage
-import com.pimenta.bestv.repository.entity.TvShow
-import com.pimenta.bestv.repository.entity.TvShowGenreList
-import com.pimenta.bestv.repository.entity.TvShowPage
-import com.pimenta.bestv.repository.entity.VideoList
+import com.pimenta.bestv.repository.entity.*
 import com.pimenta.bestv.repository.remote.api.tmdb.CastApi
 import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi
 import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi
 import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi
-
-import java.io.IOException
-
-import javax.inject.Inject
-
 import io.reactivex.Single
+import timber.log.Timber
+import java.io.IOException
+import javax.inject.Inject
 
 /**
  * Created by marcus on 08-02-2018.
@@ -60,7 +45,7 @@ class TmdbMediaRemote @Inject constructor(
             try {
                 movieApi.getMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
             } catch (e: IOException) {
-                Log.e(TAG, "Error while getting a movie", e)
+                Timber.e(e, "Error while getting a movie")
                 null
             }
 
@@ -122,7 +107,7 @@ class TmdbMediaRemote @Inject constructor(
             try {
                 tvShowApi.getTvShow(tvId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
             } catch (e: IOException) {
-                Log.e(TAG, "Error while getting a tv show", e)
+                Timber.e(e, "Error while getting a tv show")
                 null
             }
 
@@ -140,9 +125,4 @@ class TmdbMediaRemote @Inject constructor(
 
     override fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPage> =
             tvShowApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    companion object {
-
-        private val TAG = TmdbMediaRemote::class.java.simpleName
-    }
 }

@@ -33,7 +33,7 @@ class VideoCardRender : Presenter() {
         return ViewHolder(cardView)
     }
 
-    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val videoViewModel = item as VideoViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = videoViewModel.name

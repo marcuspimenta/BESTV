@@ -23,8 +23,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.widget.render.CastDetailsDescriptionRender
@@ -45,8 +49,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     private val moviesRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val tvShowsRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val presenterSelector: ClassPresenterSelector by lazy { ClassPresenterSelector() }
-    private val detailsOverviewRow: DetailsOverviewRow by lazy { DetailsOverviewRow(cast) }
-    private lateinit var cast: Cast
+    private val detailsOverviewRow: DetailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
+    private lateinit var castViewModel: CastViewModel
 
     @Inject
     lateinit var presenter: CastDetailsPresenter
@@ -62,7 +66,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.let {
-            cast = it.intent.getSerializableExtra(CAST) as Cast
+            castViewModel = it.intent.getSerializableExtra(CAST) as CastViewModel
         }
 
         setupDetailsOverviewRow()
@@ -80,7 +84,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBarManager.show()
-        presenter.loadCastDetails(cast)
+        presenter.loadCastDetails(castViewModel)
     }
 
     override fun onDetach() {
@@ -88,10 +92,10 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onDetach()
     }
 
-    override fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?) {
+    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<Work>?, tvShow: List<Work>?) {
         progressBarManager.hide()
-        cast?.let {
-            this.cast = it
+        castViewModel?.let {
+            this.castViewModel = it
             detailsOverviewRow.item = it
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
@@ -115,15 +119,19 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         }
     }
 
-    override fun onCardImageLoaded(resource: Drawable?) {
-        detailsOverviewRow.imageDrawable = resource
-        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-    }
-
     private fun setupDetailsOverviewRow() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
-        presenter.loadCastImage(cast)
+        castViewModel.loadThumbnail(requireNotNull(context), object : SimpleTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                setCardImage(resource)
+            }
+
+            override fun onLoadFailed(errorDrawable: Drawable?) {
+                super.onLoadFailed(errorDrawable)
+                setCardImage(null)
+            }
+        })
 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
@@ -131,13 +139,18 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
             if (item is Work) {
                 val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity!!,
+                        requireNotNull(activity),
                         (itemViewHolder.view as ImageCardView).mainImageView,
                         WorkDetailsFragment.SHARED_ELEMENT_NAME
                 ).toBundle()
                 startActivity(WorkDetailsActivity.newInstance(context, item), bundle)
             }
         }
+    }
+
+    private fun setCardImage(resource: Drawable?) {
+        detailsOverviewRow.imageDrawable = resource
+        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
     }
 
     private fun setupDetailsOverviewRowPresenter() {
@@ -156,8 +169,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
                 return viewHolder
             }
         }
-        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, activity!!.theme)
-        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, activity!!.theme)
+        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireNotNull(activity).theme)
+        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, requireNotNull(activity).theme)
 
         // Hook up transition element.
         val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()
@@ -196,7 +209,5 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         private const val ACTION_TV_SHOWS = 2
         private const val MOVIES_HEADER_ID = 1
         private const val TV_SHOWS_HEADER_ID = 2
-
-        fun newInstance() = WorkDetailsFragment()
     }
 }

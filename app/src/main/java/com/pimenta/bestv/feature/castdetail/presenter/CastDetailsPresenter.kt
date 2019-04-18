@@ -14,12 +14,10 @@
 
 package com.pimenta.bestv.feature.castdetail.presenter
 
-import android.graphics.drawable.Drawable
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.mapper.toCast
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.CastMovieList
@@ -38,7 +36,7 @@ import javax.inject.Inject
 class CastDetailsPresenter @Inject constructor(
         private val view: View,
         private val mediaRepository: MediaRepository,
-        private val imageManager: ImageManager
+        private val getCastDetailsUseCase: GetCastDetailsUseCase
 ) : DisposablePresenter() {
 
     /**
@@ -46,53 +44,36 @@ class CastDetailsPresenter @Inject constructor(
      *
      * @param cast [Cast]
      */
-    fun loadCastDetails(cast: Cast) {
-        compositeDisposable.add(Single.zip<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>>(
-                mediaRepository.getCastDetails(cast),
-                mediaRepository.getMovieCreditsByCast(cast),
-                mediaRepository.getTvShowCreditsByCast(cast),
-                Function3<Cast, CastMovieList, CastTvShowList, Triple<Cast, CastMovieList, CastTvShowList>> { cast, castMovieList, castTvShowList ->
-                    Triple(cast, castMovieList, castTvShowList)
-                }
-        )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ triple ->
-                    view.onCastLoaded(
-                            triple.first,
-                            triple.second.works,
-                            triple.third.works
-                    )
-                }, { throwable ->
-                    Timber.e(throwable, "Error while getting the cast details")
-                    view.onCastLoaded(null, null, null)
-                }))
-    }
-
-    /**
-     * Loads the [Cast] image
-     *
-     * @param cast [Cast]
-     */
-    fun loadCastImage(cast: Cast) {
-        imageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, cast.profilePath),
-                object : SimpleTarget<Drawable>() {
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        view.onCardImageLoaded(resource)
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        view.onCardImageLoaded(null)
-                    }
-                })
+    fun loadCastDetails(castViewModel: CastViewModel) {
+        compositeDisposable.add(
+                Single.fromCallable { castViewModel.toCast() }
+                        .flatMap {
+                            Single.zip<CastViewModel, CastMovieList, CastTvShowList, Triple<CastViewModel, CastMovieList, CastTvShowList>>(
+                                    getCastDetailsUseCase(it),
+                                    mediaRepository.getMovieCreditsByCast(it),
+                                    mediaRepository.getTvShowCreditsByCast(it),
+                                    Function3<CastViewModel, CastMovieList, CastTvShowList, Triple<CastViewModel, CastMovieList, CastTvShowList>> { castViewModel, castMovieList, castTvShowList ->
+                                        Triple(castViewModel, castMovieList, castTvShowList)
+                                    }
+                            )
+                        }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ triple ->
+                            view.onCastLoaded(
+                                    triple.first,
+                                    triple.second.works,
+                                    triple.third.works
+                            )
+                        }, { throwable ->
+                            Timber.e(throwable, "Error while getting the cast details")
+                            view.onCastLoaded(null, null, null)
+                        }))
     }
 
     interface View {
 
-        fun onCastLoaded(cast: Cast?, movies: List<Work>?, tvShow: List<Work>?)
-
-        fun onCardImageLoaded(resource: Drawable?)
+        fun onCastLoaded(castViewModel: CastViewModel?, movies: List<Work>?, tvShow: List<Work>?)
 
     }
 }

@@ -12,29 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.presenter
+package com.pimenta.bestv.common.usecase
 
-import android.widget.ImageView
-import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.manager.ImageManager
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
+import io.reactivex.Single
 import javax.inject.Inject
 
 /**
- * Created by marcus on 28-01-2019.
+ * Created by marcus on 15-04-2019.
  */
-class CastCardPresenter @Inject constructor(
-        private val imageManager: ImageManager
+class GetCastDetailsUseCase @Inject constructor(
+        private val mediaRepository: MediaRepository
 ) {
 
-    /**
-     * Loads the [Cast] profile into [ImageView]
-     *
-     * @param cast      [Cast]
-     * @param imageView [ImageView]
-     */
-    fun loadCastProfileImage(cast: Cast, imageView: ImageView) {
-        imageManager.loadImageInto(imageView, String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, cast.profilePath))
-    }
-
+    operator fun invoke(cast: Cast): Single<CastViewModel> =
+            mediaRepository.getCastDetails(cast)
+                    .map { it.toViewModel() }
 }

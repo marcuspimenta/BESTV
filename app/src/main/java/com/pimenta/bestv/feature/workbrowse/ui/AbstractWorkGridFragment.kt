@@ -158,7 +158,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
             val work = item as Work
             val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity!!,
+                    requireNotNull(activity),
                     (itemViewHolder.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()

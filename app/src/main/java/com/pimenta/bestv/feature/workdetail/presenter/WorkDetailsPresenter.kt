@@ -19,12 +19,15 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
+import com.pimenta.bestv.common.usecase.GetCastsUseCase
 import com.pimenta.bestv.common.usecase.GetVideosUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.*
+import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.repository.entity.WorkPage
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,7 +43,8 @@ class WorkDetailsPresenter @Inject constructor(
         private val view: View,
         private val mediaRepository: MediaRepository,
         private val imageManager: ImageManager,
-        private val getVideosUseCase: GetVideosUseCase
+        private val getVideosUseCase: GetVideosUseCase,
+        private val getCastsUseCase: GetCastsUseCase
 ) : DisposablePresenter() {
 
     private var recommendedPage = 0
@@ -64,18 +68,18 @@ class WorkDetailsPresenter @Inject constructor(
      */
     fun setFavorite(work: Work) {
         compositeDisposable.add(Maybe.create<Boolean> {
-                    val result = if (work.isFavorite) {
-                        mediaRepository.deleteFavorite(work)
-                    } else {
-                        mediaRepository.saveFavorite(work)
-                    }
+            val result = if (work.isFavorite) {
+                mediaRepository.deleteFavorite(work)
+            } else {
+                mediaRepository.saveFavorite(work)
+            }
 
-                    if (result) {
-                        it.onSuccess(true)
-                    } else {
-                        it.onComplete()
-                    }
-                }
+            if (result) {
+                it.onSuccess(true)
+            } else {
+                it.onComplete()
+            }
+        }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -98,10 +102,10 @@ class WorkDetailsPresenter @Inject constructor(
 
         compositeDisposable.add(Single.zip(
                 getVideosUseCase(work),
-                mediaRepository.getCastByWork(work),
+                getCastsUseCase(work),
                 mediaRepository.getRecommendationByWork(work, recommendedPageSearch),
                 mediaRepository.getSimilarByWork(work, similarPageSearch),
-                Function4<List<VideoViewModel>?, CastList, WorkPage<*>, WorkPage<*>, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
+                Function4<List<VideoViewModel>?, List<CastViewModel>?, WorkPage<*>, WorkPage<*>, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
                     WorkInfo(videos, casts, recommendedMovies, similarMovies)
                 })
                 .subscribeOn(Schedulers.io())
@@ -117,7 +121,7 @@ class WorkDetailsPresenter @Inject constructor(
                     }
 
                     view.onDataLoaded(
-                            movieInfo.casts.casts,
+                            movieInfo.casts,
                             recommendedPage.works,
                             similarPage.works,
                             movieInfo.videos
@@ -221,7 +225,7 @@ class WorkDetailsPresenter @Inject constructor(
      */
     private inner class WorkInfo(
             val videos: List<VideoViewModel>?,
-            val casts: CastList,
+            val casts: List<CastViewModel>?,
             val recommendedMovies: WorkPage<*>,
             val similarMovies: WorkPage<*>
     )
@@ -230,7 +234,7 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onResultSetFavoriteMovie(success: Boolean)
 
-        fun onDataLoaded(casts: List<Cast>?, recommendedMovies: List<Work>?, similarMovies: List<Work>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(casts: List<CastViewModel>?, recommendedMovies: List<Work>?, similarMovies: List<Work>?, videos: List<VideoViewModel>?)
 
         fun onRecommendationLoaded(works: List<Work>?)
 

@@ -12,20 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.render
+package com.pimenta.bestv.common.usecase
 
-import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.entity.Work
+import io.reactivex.Single
+import javax.inject.Inject
 
 /**
- * Created by marcus on 07-04-2018.
+ * Created by marcus on 15-04-2019.
  */
-class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
+class GetCastsUseCase @Inject constructor(
+        private val mediaRepository: MediaRepository
+) {
 
-    override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
-        val castViewModel = item as CastViewModel
-        viewHolder.title.text = castViewModel.name
-        //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-        viewHolder.body.text = castViewModel.biography
-    }
+    operator fun invoke(work: Work): Single<List<CastViewModel>?> =
+            mediaRepository.getCastByWork(work)
+                    .map { it.casts?.map { cast -> cast.toViewModel() } }
 }

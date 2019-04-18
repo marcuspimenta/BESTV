@@ -15,14 +15,19 @@
 package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.repository.entity.Video
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.repository.entity.Cast
 
-fun Video.toViewModel() = VideoViewModel(
+fun Cast.toViewModel() = CastViewModel(
         id = id,
         name = name,
-        type = type,
-        thumbnailUrl = String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, key),
-        youtubeUrl = String.format(BuildConfig.YOUTUBE_BASE_URL, key)
+        character = character,
+        birthday = birthday,
+        deathDay = deathDay,
+        biography = biography,
+        thumbnailUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, profilePath)
 )
 
+fun CastViewModel.toCast() = Cast(
+        id = id
+)

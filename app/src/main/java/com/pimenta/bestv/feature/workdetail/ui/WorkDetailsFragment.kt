@@ -28,12 +28,12 @@ import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
-import com.pimenta.bestv.repository.entity.Cast
 import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.widget.render.CastCardRender
 import com.pimenta.bestv.widget.render.VideoCardRender
@@ -115,7 +115,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         }
     }
 
-    override fun onDataLoaded(casts: List<Cast>?, recommendedWorks: List<Work>?, similarWorks: List<Work>?, videos: List<VideoViewModel>?) {
+    override fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<Work>?, similarWorks: List<Work>?, videos: List<VideoViewModel>?) {
         videos?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
@@ -289,13 +289,13 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
             when (row?.headerItem?.id?.toInt()) {
                 CAST_HEAD_ID -> {
-                    val cast = item as Cast
+                    val castViewModel = item as CastViewModel
                     val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            activity!!,
+                            requireNotNull(activity),
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             CastDetailsFragment.SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(CastDetailsActivity.newInstance(context, cast), castBundle)
+                    startActivity(CastDetailsActivity.newInstance(context, castViewModel), castBundle)
                 }
                 VIDEO_HEADER_ID -> {
                     val videoViewModel = item as VideoViewModel
@@ -312,7 +312,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
                 RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
                     val work = item as Work
                     val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            activity!!,
+                            requireNotNull(activity),
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             SHARED_ELEMENT_NAME
                     ).toBundle()
@@ -336,7 +336,5 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         private const val RECOMMENDED_HEADER_ID = 2
         private const val SIMILAR_HEADER_ID = 3
         private const val CAST_HEAD_ID = 4
-
-        fun newInstance() = WorkDetailsFragment()
     }
 }
