@@ -7,9 +7,9 @@ import com.pimenta.bestv.feature.search.ui.SearchFragment
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashFragment
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
-import com.pimenta.bestv.feature.workbrowse.ui.GenreWorkGridFragment
-import com.pimenta.bestv.feature.workbrowse.ui.TopWorkGridFragment
+import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
+import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
+import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.workbrowse.ui
+package com.pimenta.bestv.feature.workgrid.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -34,9 +34,9 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
+import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
 import com.pimenta.bestv.widget.render.WorkCardRenderer
 import javax.inject.Inject
 

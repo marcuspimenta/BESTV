@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.workbrowse.presenter
+package com.pimenta.bestv.feature.workgrid.presenter
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase

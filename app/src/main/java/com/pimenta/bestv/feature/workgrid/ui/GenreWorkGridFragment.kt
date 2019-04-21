@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.workbrowse.ui
+package com.pimenta.bestv.feature.workgrid.ui
 
 import android.content.Context
 import android.os.Bundle
