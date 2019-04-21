@@ -29,8 +29,6 @@ import java.text.SimpleDateFormat
 class WorkCardRenderer : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        BesTV.applicationComponent.inject(this)
-
         val cardView = ImageCardView(parent.context)
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
