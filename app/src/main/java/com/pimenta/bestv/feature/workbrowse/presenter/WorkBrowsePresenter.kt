@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
+import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,14 +29,14 @@ import javax.inject.Inject
  */
 class WorkBrowsePresenter @Inject constructor(
         private val view: View,
-        private val mMediaRepository: MediaRepository
+        private val workUseCase: WorkUseCase
 ) : DisposablePresenter() {
 
     /**
      * Checks if there is any [Work] saved as favorite
      */
     fun hasFavorite() {
-        compositeDisposable.add(mMediaRepository.hasFavorite()
+        compositeDisposable.add(workUseCase.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -52,9 +52,9 @@ class WorkBrowsePresenter @Inject constructor(
      */
     fun loadData() {
         compositeDisposable.add(Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(
-                mMediaRepository.getMovieGenres(),
-                mMediaRepository.getTvShowGenres(),
-                mMediaRepository.hasFavorite(),
+                workUseCase.getMovieGenres(),
+                workUseCase.getTvShowGenres(),
+                workUseCase.hasFavorite(),
                 Function3<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo> { movieGenreList, tvShowGenreList, hasFavoriteMovie ->
                     BrowserWorkInfo(movieGenreList, tvShowGenreList, hasFavoriteMovie)
                 })

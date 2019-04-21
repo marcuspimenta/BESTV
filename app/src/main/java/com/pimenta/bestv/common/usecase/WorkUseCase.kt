@@ -36,6 +36,12 @@ class WorkUseCase @Inject constructor(
 
     fun deleteFavorite(work: Work) = mediaRepository.deleteFavorite(work)
 
+    fun hasFavorite() = mediaRepository.hasFavorite()
+
+    fun getMovieGenres() = mediaRepository.getMovieGenres()
+    
+    fun getTvShowGenres() = mediaRepository.getTvShowGenres()
+
     fun getFavorites(): Single<List<WorkViewModel>> =
             mediaRepository.getFavorites()
                     .map { it.map { work -> work.toViewModel() } }
