@@ -18,6 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,13 +27,16 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.feature.base.BaseSearchFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.widget.render.WorkCardRenderer
 import java.util.*
 import javax.inject.Inject
@@ -48,8 +52,11 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
     private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
 
-    private var workSelected: Work? = null
+    private var workSelected: WorkViewModel? = null
     private var backgroundTimer: Timer = Timer()
+
+    @Inject
+    lateinit var displayMetrics: DisplayMetrics
 
     @Inject
     lateinit var presenter: SearchPresenter
@@ -62,7 +69,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
                 .inject(this)
         activity?.let {
             backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
+            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
         }
     }
 
@@ -81,7 +88,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         return view
     }
 
-    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clearAdapter()
     }
@@ -103,7 +110,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         super.onDetach()
     }
 
-    override fun onResultLoaded(movies: List<Work>?, tvShows: List<Work>?) {
+    override fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?) {
         val hasMovies = movies?.isNotEmpty() ?: false
         val hasTvShows = tvShows?.isNotEmpty() ?: false
 
@@ -126,7 +133,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         }
     }
 
-    override fun onMoviesLoaded(movies: List<Work>?) {
+    override fun onMoviesLoaded(movies: List<WorkViewModel>?) {
         movies?.forEach { work ->
             if (movieRowAdapter.indexOf(work) == -1) {
                 movieRowAdapter.add(work)
@@ -134,7 +141,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         }
     }
 
-    override fun onTvShowsLoaded(tvShows: List<Work>?) {
+    override fun onTvShowsLoaded(tvShows: List<WorkViewModel>?) {
         tvShows?.forEach { work ->
             if (movieRowAdapter.indexOf(work) == -1) {
                 movieRowAdapter.add(work)
@@ -142,8 +149,12 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
         }
     }
 
-    override fun onBackdropImageLoaded(bitmap: Bitmap?) {
-        backgroundManager.setBitmap(bitmap)
+    override fun loadBackdropImage(workViewModel: WorkViewModel) {
+        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                backgroundManager.setBitmap(resource)
+            }
+        })
     }
 
     override fun getResultsAdapter(): ObjectAdapter? {
@@ -171,7 +182,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private fun setupUI() {
         setSearchResultProvider(this)
         setOnItemViewSelectedListener { _, item, _, row ->
-            workSelected = item as Work?
+            workSelected = item as WorkViewModel?
             loadBackdropImage()
 
             when (row?.headerItem?.id?.toInt()) {
@@ -184,13 +195,13 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
             }
         }
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            val work = item as Work
+            val workViewModel = item as WorkViewModel
             val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity!!,
+                    requireNotNull(activity),
                     (itemViewHolder?.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()
-            startActivityForResult(WorkDetailsActivity.newInstance(context, work), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
+            startActivityForResult(WorkDetailsActivity.newInstance(context, workViewModel), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
         }
     }
 
@@ -210,7 +221,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     private fun loadBackdropImage() {
         workSelected?.let {
-            presenter.loadBackdropImage(it)
+            presenter.countTimerLoadBackdropImage(it)
         }
     }
 

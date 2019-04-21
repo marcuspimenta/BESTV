@@ -14,20 +14,14 @@
 
 package com.pimenta.bestv.feature.workdetail.presenter
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.mapper.toWork
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.common.usecase.GetCastsUseCase
-import com.pimenta.bestv.common.usecase.GetVideosUseCase
+import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.usecase.*
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.manager.ImageManager
-import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Work
-import com.pimenta.bestv.repository.entity.WorkPage
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,10 +35,11 @@ import javax.inject.Inject
  */
 class WorkDetailsPresenter @Inject constructor(
         private val view: View,
-        private val mediaRepository: MediaRepository,
-        private val imageManager: ImageManager,
+        private val workUseCase: WorkUseCase,
         private val getVideosUseCase: GetVideosUseCase,
-        private val getCastsUseCase: GetCastsUseCase
+        private val getCastsUseCase: GetCastsUseCase,
+        private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
+        private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) : DisposablePresenter() {
 
     private var recommendedPage = 0
@@ -53,37 +48,40 @@ class WorkDetailsPresenter @Inject constructor(
     /**
      * Checks if the [Work] is favorite
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      * @return `true` if yes, `false` otherwise
      */
-    fun isFavorite(work: Work): Boolean {
-        work.isFavorite = mediaRepository.isFavorite(work)
-        return work.isFavorite
+    fun isFavorite(workViewModel: WorkViewModel): Boolean {
+        workViewModel.isFavorite = workUseCase.isFavorite(workViewModel.toWork())
+        return workViewModel.isFavorite
     }
 
     /**
      * Sets if a [Work] is or not is favorite
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun setFavorite(work: Work) {
-        compositeDisposable.add(Maybe.create<Boolean> {
-            val result = if (work.isFavorite) {
-                mediaRepository.deleteFavorite(work)
-            } else {
-                mediaRepository.saveFavorite(work)
-            }
+    fun setFavorite(workViewModel: WorkViewModel) {
+        compositeDisposable.add(Maybe.fromCallable { workViewModel.toWork() }
+                .flatMap { work ->
+                    Maybe.create<Boolean> {
+                        val result = if (workViewModel.isFavorite) {
+                            workUseCase.deleteFavorite(work)
+                        } else {
+                            workUseCase.saveFavorite(work)
+                        }
 
-            if (result) {
-                it.onSuccess(true)
-            } else {
-                it.onComplete()
-            }
-        }
+                        if (result) {
+                            it.onSuccess(true)
+                        } else {
+                            it.onComplete()
+                        }
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    work.isFavorite = !work.isFavorite
+                    workViewModel.isFavorite = !workViewModel.isFavorite
                     view.onResultSetFavoriteMovie(true)
                 }, { throwable ->
                     Timber.e(throwable, "Error while settings the work as favorite")
@@ -94,20 +92,22 @@ class WorkDetailsPresenter @Inject constructor(
     /**
      * Loads the [<] by the [Work]
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun loadDataByWork(work: Work) {
+    fun loadDataByWork(workViewModel: WorkViewModel) {
         val recommendedPageSearch = recommendedPage + 1
         val similarPageSearch = similarPage + 1
 
-        compositeDisposable.add(Single.zip(
-                getVideosUseCase(work),
-                getCastsUseCase(work),
-                mediaRepository.getRecommendationByWork(work, recommendedPageSearch),
-                mediaRepository.getSimilarByWork(work, similarPageSearch),
-                Function4<List<VideoViewModel>?, List<CastViewModel>?, WorkPage<*>, WorkPage<*>, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
-                    WorkInfo(videos, casts, recommendedMovies, similarMovies)
-                })
+        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
+                .flatMap {
+                    Single.zip(getVideosUseCase(it),
+                            getCastsUseCase(it),
+                            getRecommendationByWorkUseCase(it, recommendedPageSearch),
+                            getSimilarByWorkUseCase(it, similarPageSearch),
+                            Function4<List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
+                                WorkInfo(videos, casts, recommendedMovies, similarMovies)
+                            })
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieInfo ->
@@ -135,12 +135,13 @@ class WorkDetailsPresenter @Inject constructor(
     /**
      * Loads the [<] recommended by the [Work]
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun loadRecommendationByWork(work: Work) {
+    fun loadRecommendationByWork(workViewModel: WorkViewModel) {
         val pageSearch = recommendedPage + 1
 
-        compositeDisposable.add(mediaRepository.getRecommendationByWork(work, pageSearch)
+        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
+                .flatMap { getRecommendationByWorkUseCase(it, pageSearch) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieList ->
@@ -159,12 +160,13 @@ class WorkDetailsPresenter @Inject constructor(
     /**
      * Loads the [<] similar by the [Work]
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun loadSimilarByWork(work: Work) {
+    fun loadSimilarByWork(workViewModel: WorkViewModel) {
         val pageSearch = similarPage + 1
 
-        compositeDisposable.add(mediaRepository.getSimilarByWork(work, pageSearch)
+        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
+                .flatMap { getSimilarByWorkUseCase(it, pageSearch) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieList ->
@@ -181,68 +183,24 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     /**
-     * Loads the [Work] poster
-     *
-     * @param work [Work]
-     */
-    fun loadCardImage(work: Work) {
-        imageManager.loadImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.posterPath),
-                object : SimpleTarget<Drawable>() {
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        view.onCardImageLoaded(resource)
-
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        Timber.e("Error while loading card image")
-                        view.onCardImageLoaded(null)
-                    }
-                })
-    }
-
-    /**
-     * Loads the [Work] backdrop image using Glide tool
-     *
-     * @param work [Work]
-     */
-    fun loadBackdropImage(work: Work) {
-        imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
-                object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        view.onBackdropImageLoaded(resource)
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        view.onBackdropImageLoaded(null)
-                    }
-                })
-    }
-
-    /**
      * Wrapper class to keep the work info
      */
     private inner class WorkInfo(
             val videos: List<VideoViewModel>?,
             val casts: List<CastViewModel>?,
-            val recommendedMovies: WorkPage<*>,
-            val similarMovies: WorkPage<*>
+            val recommendedMovies: WorkPageViewModel,
+            val similarMovies: WorkPageViewModel
     )
 
     interface View {
 
         fun onResultSetFavoriteMovie(success: Boolean)
 
-        fun onDataLoaded(casts: List<CastViewModel>?, recommendedMovies: List<Work>?, similarMovies: List<Work>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(casts: List<CastViewModel>?, recommendedMovies: List<WorkViewModel>?, similarMovies: List<WorkViewModel>?, videos: List<VideoViewModel>?)
 
-        fun onRecommendationLoaded(works: List<Work>?)
+        fun onRecommendationLoaded(works: List<WorkViewModel>?)
 
-        fun onSimilarLoaded(works: List<Work>?)
-
-        fun onCardImageLoaded(resource: Drawable?)
-
-        fun onBackdropImageLoaded(bitmap: Bitmap?)
+        fun onSimilarLoaded(works: List<WorkViewModel>?)
 
     }
 }

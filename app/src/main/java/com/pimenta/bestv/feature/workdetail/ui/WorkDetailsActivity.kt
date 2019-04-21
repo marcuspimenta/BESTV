@@ -17,10 +17,9 @@ package com.pimenta.bestv.feature.workdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.base.BaseActivity
-import com.pimenta.bestv.repository.entity.Work
 
 /**
  * Created by marcus on 11-02-2018.
@@ -34,9 +33,9 @@ class WorkDetailsActivity : BaseActivity() {
 
     companion object {
 
-        fun newInstance(context: Context?, work: Work) =
+        fun newInstance(context: Context?, workViewModel: WorkViewModel) =
                 Intent(context, WorkDetailsActivity::class.java).apply {
-                    putExtra(WorkDetailsFragment.WORK, work)
+                    putExtra(WorkDetailsFragment.WORK, workViewModel)
                 }
     }
 }

@@ -28,12 +28,15 @@ import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.widget.render.WorkCardRenderer
 import javax.inject.Inject
 
@@ -50,7 +53,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
 
     protected var showProgress: Boolean = false
-    private var workSelected: Work? = null
+    private var workSelected: WorkViewModel? = null
 
     @Inject
     lateinit var presenter: WorkGridPresenter
@@ -97,7 +100,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun getMainFragmentAdapter() = fragmentAdapter
 
-    override fun onWorksLoaded(works: List<Work>?) {
+    override fun onWorksLoaded(works: List<WorkViewModel>?) {
         works?.forEach {
             if (rowsAdapter.indexOf(it) == -1) {
                 rowsAdapter.add(it)
@@ -114,8 +117,12 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
     }
 
-    override fun onBackdropImageLoaded(bitmap: Bitmap?) {
-        backgroundManager.setBitmap(bitmap)
+    override fun loadBackdropImage(workViewModel: WorkViewModel) {
+        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                backgroundManager.setBitmap(resource)
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -148,7 +155,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         adapter = rowsAdapter
 
         setOnItemViewSelectedListener { _, item, _, _ ->
-            workSelected = item as Work?
+            workSelected = item as WorkViewModel?
             loadBackdropImage()
 
             if (rowsAdapter.indexOf(workSelected) >= rowsAdapter.size() - NUMBER_COLUMNS) {
@@ -156,19 +163,19 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
             }
         }
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            val work = item as Work
+            val workViewModel = item as WorkViewModel
             val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     requireNotNull(activity),
                     (itemViewHolder.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()
-            startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
+            startActivity(WorkDetailsActivity.newInstance(context, workViewModel), bundle)
         }
     }
 
     private fun loadBackdropImage() {
         workSelected?.let {
-            presenter.loadBackdropImage(it)
+            presenter.countTimerLoadBackdropImage(it)
         }
     }
 

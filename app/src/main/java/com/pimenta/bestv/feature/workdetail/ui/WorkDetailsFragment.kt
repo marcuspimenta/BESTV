@@ -26,10 +26,11 @@ import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.VideoViewModel
+import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
@@ -66,7 +67,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     private lateinit var favoriteAction: Action
     private lateinit var detailsOverviewRow: DetailsOverviewRow
-    private lateinit var work: Work
+    private lateinit var workViewModel: WorkViewModel
 
     @Inject
     lateinit var presenter: WorkDetailsPresenter
@@ -82,7 +83,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.let {
-            work = it.intent.getSerializableExtra(WORK) as Work
+            workViewModel = it.intent.getSerializableExtra(WORK) as WorkViewModel
         }
 
         setupDetailsOverviewRow()
@@ -94,13 +95,13 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         super.onViewCreated(view, savedInstanceState)
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
-                if (presenter.isFavorite(work))
+                if (presenter.isFavorite(workViewModel))
                     resources.getString(R.string.remove_favorites)
                 else
                     resources.getString(R.string.save_favorites)
         )
         actionAdapter.add(favoriteAction)
-        presenter.loadDataByWork(work)
+        presenter.loadDataByWork(workViewModel)
     }
 
     override fun onDetach() {
@@ -110,12 +111,15 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     override fun onResultSetFavoriteMovie(success: Boolean) {
         if (success) {
-            favoriteAction.label1 = if (work.isFavorite) resources.getString(R.string.remove_favorites) else resources.getString(R.string.save_favorites)
+            favoriteAction.label1 = if (workViewModel.isFavorite)
+                resources.getString(R.string.remove_favorites)
+            else
+                resources.getString(R.string.save_favorites)
             actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
         }
     }
 
-    override fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<Work>?, similarWorks: List<Work>?, videos: List<VideoViewModel>?) {
+    override fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
         videos?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
@@ -149,7 +153,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         }
     }
 
-    override fun onRecommendationLoaded(works: List<Work>?) {
+    override fun onRecommendationLoaded(works: List<WorkViewModel>?) {
         works?.forEach { work ->
             if (recommendedRowAdapter.indexOf(work) == -1) {
                 recommendedRowAdapter.add(work)
@@ -157,7 +161,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         }
     }
 
-    override fun onSimilarLoaded(works: List<Work>?) {
+    override fun onSimilarLoaded(works: List<WorkViewModel>?) {
         works?.forEach { work ->
             if (similarRowAdapter.indexOf(work) == -1) {
                 similarRowAdapter.add(work)
@@ -165,20 +169,22 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         }
     }
 
-    override fun onCardImageLoaded(resource: Drawable?) {
-        detailsOverviewRow.imageDrawable = resource
-        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-        presenter.loadBackdropImage(work)
-    }
-
-    override fun onBackdropImageLoaded(bitmap: Bitmap?) {
-        detailsBackground.coverBitmap = bitmap
-        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-    }
-
     private fun setupDetailsOverviewRow() {
-        detailsOverviewRow = DetailsOverviewRow(work)
-        presenter.loadCardImage(work)
+        detailsOverviewRow = DetailsOverviewRow(workViewModel)
+
+        workViewModel.loadPoster(requireNotNull(context), object : SimpleTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                detailsOverviewRow.imageDrawable = resource
+                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+            }
+        })
+
+        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                detailsBackground.coverBitmap = resource
+                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+            }
+        })
 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
@@ -214,7 +220,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         detailsPresenter.setOnActionClickedListener { action ->
             var position = 0
             when (action.id.toInt()) {
-                ACTION_FAVORITE -> presenter.setFavorite(work)
+                ACTION_FAVORITE -> presenter.setFavorite(workViewModel)
                 ACTION_SIMILAR -> {
                     if (similarRowAdapter.size() > 0) {
                         position++
@@ -269,14 +275,14 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
                 RECOMMENDED_HEADER_ID -> {
                     item?.let {
                         if (recommendedRowAdapter.indexOf(it) >= recommendedRowAdapter.size() - 1) {
-                            presenter.loadRecommendationByWork(work)
+                            presenter.loadRecommendationByWork(workViewModel)
                         }
                     }
                 }
                 SIMILAR_HEADER_ID -> {
                     item?.let {
                         if (similarRowAdapter.indexOf(it) >= similarRowAdapter.size() - 1) {
-                            presenter.loadSimilarByWork(work)
+                            presenter.loadSimilarByWork(workViewModel)
                         }
                     }
                 }
@@ -310,13 +316,13 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
                     }
                 }
                 RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
-                    val work = item as Work
+                    val workViewModel = item as WorkViewModel
                     val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             requireNotNull(activity),
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(WorkDetailsActivity.newInstance(context, work), bundle)
+                    startActivity(WorkDetailsActivity.newInstance(context, workViewModel), bundle)
                 }
             }
         }

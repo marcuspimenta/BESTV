@@ -14,17 +14,11 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.util.DisplayMetrics
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.manager.ImageManager
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Genre
-import com.pimenta.bestv.repository.entity.Work
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -37,10 +31,8 @@ import javax.inject.Inject
  * Created by marcus on 09-02-2018.
  */
 class WorkGridPresenter @Inject constructor(
-        val displayMetrics: DisplayMetrics,
         private val view: View,
-        private val mediaRepository: MediaRepository,
-        private val imageManager: ImageManager
+        private val workUseCase: WorkUseCase
 ) : DisposablePresenter() {
 
     private var currentPage = 0
@@ -57,7 +49,7 @@ class WorkGridPresenter @Inject constructor(
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
-                compositeDisposable.add(mediaRepository.getFavorites()
+                compositeDisposable.add(workUseCase.getFavorites()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ movies ->
@@ -68,7 +60,7 @@ class WorkGridPresenter @Inject constructor(
                         }))
             else -> {
                 val page = currentPage + 1
-                compositeDisposable.add(mediaRepository.loadWorkByType(page, movieListType)
+                compositeDisposable.add(workUseCase.loadWorkByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ workPage ->
@@ -93,7 +85,7 @@ class WorkGridPresenter @Inject constructor(
      */
     fun loadWorkByGenre(genre: Genre) {
         val pageSearch = currentPage + 1
-        compositeDisposable.add(mediaRepository.getWorkByGenre(genre, pageSearch)
+        compositeDisposable.add(workUseCase.getWorkByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ workPage ->
@@ -110,32 +102,20 @@ class WorkGridPresenter @Inject constructor(
     }
 
     /**
-     * Loads the [Bitmap] from the [Work]
+     * Set timer to load the backdrop image
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun loadBackdropImage(work: Work) {
+    fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
                 .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
-                            object : SimpleTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    view.onBackdropImageLoaded(resource)
-                                }
-
-                                override fun onLoadFailed(errorDrawable: Drawable?) {
-                                    super.onLoadFailed(errorDrawable)
-                                    Timber.w("Error while loading backdrop image")
-                                    view.onBackdropImageLoaded(null)
-                                }
-                            })
+                    view.loadBackdropImage(workViewModel)
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading backdrop image")
-                    view.onBackdropImageLoaded(null)
                 })
     }
 
@@ -157,9 +137,9 @@ class WorkGridPresenter @Inject constructor(
 
     interface View {
 
-        fun onWorksLoaded(works: List<Work>?)
+        fun onWorksLoaded(works: List<WorkViewModel>?)
 
-        fun onBackdropImageLoaded(bitmap: Bitmap?)
+        fun loadBackdropImage(workViewModel: WorkViewModel)
 
     }
 }

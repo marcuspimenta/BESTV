@@ -40,7 +40,7 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
         arguments?.let {
             genre = it.getSerializable(GENRE) as Genre
-            showProgress = it.getBoolean(AbstractWorkGridFragment.SHOW_PROGRESS)
+            showProgress = it.getBoolean(SHOW_PROGRESS)
         }
     }
 
@@ -60,7 +60,7 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
                 GenreWorkGridFragment().apply {
                     this.arguments = Bundle().apply {
                         putSerializable(GENRE, genre)
-                        putBoolean(AbstractWorkGridFragment.SHOW_PROGRESS, showProgress)
+                        putBoolean(SHOW_PROGRESS, showProgress)
                     }
                     this.genre = genre
                     this.showProgress = showProgress

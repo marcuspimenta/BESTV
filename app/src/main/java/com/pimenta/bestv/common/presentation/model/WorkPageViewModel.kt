@@ -12,16 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.presentation.model
 
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-
-fun ImageView.loadImageInto(imageUrl: String) {
-    Glide.with(this.context.applicationContext)
-            .load(imageUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(this)
-}
+/**
+ * Created by marcus on 18-04-2019.
+ */
+class WorkPageViewModel(
+        var page: Int,
+        var totalPages: Int,
+        var works: List<WorkViewModel>?
+)

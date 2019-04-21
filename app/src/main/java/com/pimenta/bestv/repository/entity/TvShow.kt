@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.repository.entity
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.table.DatabaseTable
+import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,30 +25,28 @@ import java.util.*
  * Created by marcus on 06/07/18.
  */
 @DatabaseTable(tableName = TvShow.TABLE)
-class TvShow : Work() {
-
-    @SerializedName("name") override var title: String? = null
-    @SerializedName("original_name") override var originalTitle: String? = null
-    @SerializedName("first_air_date") private var mFirstAirDate: String? = null
-
-    private val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
+class TvShow(
+        id: Int = 0,
+        @SerializedName("name") override var title: String? = null,
+        @SerializedName("original_name") override var originalTitle: String? = null,
+        @SerializedName("first_air_date") private var firstAirDate: String? = null
+) : Work(id) {
 
     override var releaseDate: Date?
         get() {
             return try {
-                dateFormat.parse(mFirstAirDate)
+                dateFormat.parse(firstAirDate)
             } catch (e: ParseException) {
-                Log.e(TAG, "Error to get the release data", e)
+                Timber.e(e, "Error to get the release data")
                 null
             }
         }
         set(value) {
-            mFirstAirDate = value.toString()
+            firstAirDate = value.toString()
         }
 
     companion object {
 
-        private val TAG = TvShow::class.java.simpleName
         const val TABLE = "tv_show"
     }
 }

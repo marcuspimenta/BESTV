@@ -16,13 +16,12 @@ package com.pimenta.bestv.feature.castdetail.presenter
 
 import com.pimenta.bestv.common.presentation.mapper.toCast
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
+import com.pimenta.bestv.common.usecase.GetMovieCreditsByCastUseCase
+import com.pimenta.bestv.common.usecase.GetTvShowCreditsByCastUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.CastMovieList
-import com.pimenta.bestv.repository.entity.CastTvShowList
-import com.pimenta.bestv.repository.entity.Work
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function3
@@ -35,8 +34,9 @@ import javax.inject.Inject
  */
 class CastDetailsPresenter @Inject constructor(
         private val view: View,
-        private val mediaRepository: MediaRepository,
-        private val getCastDetailsUseCase: GetCastDetailsUseCase
+        private val getCastDetailsUseCase: GetCastDetailsUseCase,
+        private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
+        private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
 ) : DisposablePresenter() {
 
     /**
@@ -45,35 +45,34 @@ class CastDetailsPresenter @Inject constructor(
      * @param cast [Cast]
      */
     fun loadCastDetails(castViewModel: CastViewModel) {
-        compositeDisposable.add(
-                Single.fromCallable { castViewModel.toCast() }
-                        .flatMap {
-                            Single.zip<CastViewModel, CastMovieList, CastTvShowList, Triple<CastViewModel, CastMovieList, CastTvShowList>>(
-                                    getCastDetailsUseCase(it),
-                                    mediaRepository.getMovieCreditsByCast(it),
-                                    mediaRepository.getTvShowCreditsByCast(it),
-                                    Function3<CastViewModel, CastMovieList, CastTvShowList, Triple<CastViewModel, CastMovieList, CastTvShowList>> { castViewModel, castMovieList, castTvShowList ->
-                                        Triple(castViewModel, castMovieList, castTvShowList)
-                                    }
-                            )
-                        }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ triple ->
-                            view.onCastLoaded(
-                                    triple.first,
-                                    triple.second.works,
-                                    triple.third.works
-                            )
-                        }, { throwable ->
-                            Timber.e(throwable, "Error while getting the cast details")
-                            view.onCastLoaded(null, null, null)
-                        }))
+        compositeDisposable.add(Single.fromCallable { castViewModel.toCast() }
+                .flatMap {
+                    Single.zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
+                            getCastDetailsUseCase(it),
+                            getMovieCreditsByCastUseCase(it),
+                            getTvShowCreditsByCastUseCase(it),
+                            Function3<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>> { castViewModel, castMovieList, castTvShowList ->
+                                Triple(castViewModel, castMovieList, castTvShowList)
+                            }
+                    )
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ triple ->
+                    view.onCastLoaded(
+                            triple.first,
+                            triple.second,
+                            triple.third
+                    )
+                }, { throwable ->
+                    Timber.e(throwable, "Error while getting the cast details")
+                    view.onCastLoaded(null, null, null)
+                }))
     }
 
     interface View {
 
-        fun onCastLoaded(castViewModel: CastViewModel?, movies: List<Work>?, tvShow: List<Work>?)
+        fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?)
 
     }
 }

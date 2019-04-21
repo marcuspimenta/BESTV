@@ -14,17 +14,11 @@
 
 package com.pimenta.bestv.feature.search.presenter
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.util.DisplayMetrics
 import android.util.Pair
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.manager.ImageManager
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,10 +35,8 @@ import javax.inject.Inject
  * Created by marcus on 12-03-2018.
  */
 class SearchPresenter @Inject constructor(
-        val displayMetrics: DisplayMetrics,
         private val view: View,
-        private val mediaRepository: MediaRepository,
-        private val imageManager: ImageManager
+        private val workUseCase: WorkUseCase
 ) : DisposablePresenter() {
 
     private var resultMoviePage = 0
@@ -75,22 +67,22 @@ class SearchPresenter @Inject constructor(
             query = queryEncode
             val resultMoviePage = resultMoviePage + 1
             val resultTvShowPage = resultTvShowPage + 1
-            searchWorkDisposable = Single.zip<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>>(
-                    mediaRepository.searchMoviesByQuery(query, resultMoviePage),
-                    mediaRepository.searchTvShowsByQuery(query, resultTvShowPage),
-                    BiFunction<MoviePage, TvShowPage, Pair<MoviePage, TvShowPage>> { first, second ->
+            searchWorkDisposable = Single.zip<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>>(
+                    workUseCase.searchMoviesByQuery(query, resultMoviePage),
+                    workUseCase.searchTvShowsByQuery(query, resultTvShowPage),
+                    BiFunction<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>> { first, second ->
                         Pair(first, second)
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ pair ->
-                        var movies: List<Movie>? = null
+                        var movies: List<WorkViewModel>? = null
                         if (pair.first != null && pair.first.page <= pair.first.totalPages) {
                             this.resultMoviePage = pair.first.page
                             movies = pair.first.works
                         }
 
-                        var tvShows: List<TvShow>? = null
+                        var tvShows: List<WorkViewModel>? = null
                         if (pair.second != null && pair.second.page <= pair.second.totalPages) {
                             this.resultTvShowPage = pair.second.page
                             tvShows = pair.second.works
@@ -110,7 +102,7 @@ class SearchPresenter @Inject constructor(
      */
     fun loadMovies() {
         val resultMoviePage = resultMoviePage + 1
-        compositeDisposable.add(mediaRepository.searchMoviesByQuery(query, resultMoviePage)
+        compositeDisposable.add(workUseCase.searchMoviesByQuery(query, resultMoviePage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ moviePage ->
@@ -131,7 +123,7 @@ class SearchPresenter @Inject constructor(
      */
     fun loadTvShows() {
         val resultTvShowPage = resultTvShowPage + 1
-        compositeDisposable.add(mediaRepository.searchTvShowsByQuery(query, resultTvShowPage)
+        compositeDisposable.add(workUseCase.searchTvShowsByQuery(query, resultTvShowPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ tvShowPage ->
@@ -148,32 +140,20 @@ class SearchPresenter @Inject constructor(
     }
 
     /**
-     * Loads the [Bitmap] from the [Work]
+     * Set timer to load the backdrop image
      *
-     * @param work [Work]
+     * @param workViewModel [WorkViewModel]
      */
-    fun loadBackdropImage(work: Work) {
+    fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
                 .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    imageManager.loadBitmapImage(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath),
-                            object : SimpleTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    view.onBackdropImageLoaded(resource)
-                                }
-
-                                override fun onLoadFailed(errorDrawable: Drawable?) {
-                                    super.onLoadFailed(errorDrawable)
-                                    Timber.w("Error while loading backdrop image")
-                                    view.onBackdropImageLoaded(null)
-                                }
-                            })
+                    view.loadBackdropImage(workViewModel)
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading backdrop image")
-                    view.onBackdropImageLoaded(null)
                 })
     }
 
@@ -206,13 +186,13 @@ class SearchPresenter @Inject constructor(
 
     interface View {
 
-        fun onResultLoaded(movies: List<Work>?, tvShows: List<Work>?)
+        fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?)
 
-        fun onMoviesLoaded(movies: List<Work>?)
+        fun onMoviesLoaded(movies: List<WorkViewModel>?)
 
-        fun onTvShowsLoaded(tvShows: List<Work>?)
+        fun onTvShowsLoaded(tvShows: List<WorkViewModel>?)
 
-        fun onBackdropImageLoaded(bitmap: Bitmap?)
+        fun loadBackdropImage(workViewModel: WorkViewModel)
 
     }
 }

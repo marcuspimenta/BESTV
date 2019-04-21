@@ -14,34 +14,29 @@
 
 package com.pimenta.bestv.repository.entity
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.table.DatabaseTable
+import timber.log.Timber
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by marcus on 09-02-2018.
  */
 @DatabaseTable(tableName = Movie.TABLE)
-class Movie : Work() {
-
-    @SerializedName("title") override var title: String? = null
-    @SerializedName("original_title") override var originalTitle: String? = null
-    @SerializedName("release_date") private var releaseDateString: String? = null
-
-    private val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
+class Movie(
+        id: Int = 0,
+        @SerializedName("title") override var title: String? = null,
+        @SerializedName("original_title") override var originalTitle: String? = null,
+        @SerializedName("release_date") private var releaseDateString: String? = null
+) : Work(id) {
 
     override var releaseDate: Date?
         get() {
             return try {
-                if (releaseDateString?.isNotEmpty() == true)
-                    dateFormat.parse(releaseDateString)
-                else
-                    null
+                dateFormat.parse(releaseDateString)
             } catch (e: ParseException) {
-                Log.e(TAG, "Error to get the release data", e)
+                Timber.e(e, "Error to get the release data")
                 null
             }
         }
@@ -51,7 +46,6 @@ class Movie : Work() {
 
     companion object {
 
-        private val TAG = Movie::class.java.simpleName
         const val TABLE = "movie"
     }
 }

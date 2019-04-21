@@ -63,8 +63,7 @@ class RecommendationManagerImpl @Inject constructor(
                         .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))
                         .setBackgroundImageUri(String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, work.backdropPath))
                         .setText(application.getString(R.string.popular))
-                        .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(work, id),
-                                0, null)
+                        //.setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY, buildIntent(work, id), 0, null)
                         .build()
 
                 notificationManager.notify(id, contentRecommendation.getNotificationObject(application))
@@ -91,11 +90,11 @@ class RecommendationManagerImpl @Inject constructor(
      * @param notificationId Notification ID
      * @return [Intent]
      */
-    private fun buildIntent(work: Work, notificationId: Int): Intent {
+    /*private fun buildIntent(work: Work, notificationId: Int): Intent {
         val detailsIntent = WorkDetailsActivity.newInstance(application, work)
         detailsIntent.action = Integer.toString(notificationId)
         return detailsIntent
-    }
+    }*/
 
     companion object {
 

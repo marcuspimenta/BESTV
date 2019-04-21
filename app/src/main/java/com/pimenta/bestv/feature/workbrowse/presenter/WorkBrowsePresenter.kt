@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
-import android.util.DisplayMetrics
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.*
@@ -29,7 +28,6 @@ import javax.inject.Inject
  * Created by marcus on 06-02-2018.
  */
 class WorkBrowsePresenter @Inject constructor(
-        val displayMetrics: DisplayMetrics,
         private val view: View,
         private val mMediaRepository: MediaRepository
 ) : DisposablePresenter() {
@@ -53,7 +51,8 @@ class WorkBrowsePresenter @Inject constructor(
      * Loads the [<] available at TMDb
      */
     fun loadData() {
-        compositeDisposable.add(Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(mMediaRepository.getMovieGenres(),
+        compositeDisposable.add(Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(
+                mMediaRepository.getMovieGenres(),
                 mMediaRepository.getTvShowGenres(),
                 mMediaRepository.hasFavorite(),
                 Function3<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo> { movieGenreList, tvShowGenreList, hasFavoriteMovie ->

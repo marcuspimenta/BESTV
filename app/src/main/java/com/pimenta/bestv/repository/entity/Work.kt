@@ -18,23 +18,26 @@ import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.field.DatabaseField
 
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
  * Created by marcus on 06/07/18.
  */
-abstract class Work : Serializable {
+abstract class Work(
+        @DatabaseField(id = true, columnName = "id") @SerializedName("id") var id: Int = 0,
+        @SerializedName("original_language") var originalLanguage: String? = null,
+        @SerializedName("overview") var overview: String? = null,
+        @SerializedName("backdrop_path") var backdropPath: String? = null,
+        @SerializedName("poster_path") var posterPath: String? = null,
+        @SerializedName("popularity") var popularity: Float = 0.toFloat(),
+        @SerializedName("vote_average") var voteAverage: Float = 0.toFloat(),
+        @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
+        @SerializedName("adult") var isAdult: Boolean = false,
+        var isFavorite: Boolean = false
+) : Serializable {
 
-    @DatabaseField(id = true, columnName = "id") @SerializedName("id") var id: Int = 0
-    @SerializedName("original_language") var originalLanguage: String? = null
-    @SerializedName("overview") var overview: String? = null
-    @SerializedName("backdrop_path") var backdropPath: String? = null
-    @SerializedName("poster_path") var posterPath: String? = null
-    @SerializedName("popularity") var popularity: Float = 0.toFloat()
-    @SerializedName("vote_average") var voteAverage: Float = 0.toFloat()
-    @SerializedName("vote_count") var voteCount: Float = 0.toFloat()
-    @SerializedName("adult") var isAdult: Boolean = false
-    var isFavorite: Boolean = false
+    protected val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
 
     abstract var title: String?
 
@@ -52,6 +55,6 @@ abstract class Work : Serializable {
 
         val that = obj as Work?
 
-        return id == that!!.id
+        return id == that?.id
     }
 }

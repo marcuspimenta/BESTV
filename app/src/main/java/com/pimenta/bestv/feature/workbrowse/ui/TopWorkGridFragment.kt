@@ -16,10 +16,9 @@ package com.pimenta.bestv.feature.workbrowse.ui
 
 import android.content.Context
 import android.os.Bundle
-
 import com.pimenta.bestv.BesTV
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.Work
 
 /**
  * Created by marcus on 11-02-2018.
@@ -41,7 +40,7 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
 
         arguments?.let {
             workType = it.getSerializable(TYPE) as MediaRepository.WorkType
-            showProgress = it.getBoolean(AbstractWorkGridFragment.SHOW_PROGRESS)
+            showProgress = it.getBoolean(SHOW_PROGRESS)
         }
     }
 
@@ -61,7 +60,7 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
         }
     }
 
-    override fun onWorksLoaded(works: List<Work>?) {
+    override fun onWorksLoaded(works: List<WorkViewModel>?) {
         if (workType == MediaRepository.WorkType.FAVORITES_MOVIES) {
             /*rowsAdapter.setItems(works, new DiffCallback<Movie>() {
                 @Override
@@ -92,7 +91,7 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
                 TopWorkGridFragment().apply {
                     this.arguments = Bundle().apply {
                         putSerializable(TYPE, workType)
-                        putBoolean(AbstractWorkGridFragment.SHOW_PROGRESS, showProgress)
+                        putBoolean(SHOW_PROGRESS, showProgress)
                     }
                     this.workType = workType
                     this.showProgress = showProgress

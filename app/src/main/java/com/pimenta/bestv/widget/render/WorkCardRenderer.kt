@@ -14,49 +14,45 @@
 
 package com.pimenta.bestv.widget.render
 
+import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
-
 import com.pimenta.bestv.R
-import com.pimenta.bestv.widget.presenter.WorkCardPresenter
-import com.pimenta.bestv.repository.entity.Work
-
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.extension.loadImageInto
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
 /**
  * Created by marcus on 10-02-2018.
  */
 class WorkCardRenderer : Presenter() {
 
-    @Inject
-    lateinit var workCardPresenter: WorkCardPresenter
-
-    override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         BesTV.applicationComponent.inject(this)
 
         val cardView = ImageCardView(parent.context)
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        return Presenter.ViewHolder(cardView)
+        return ViewHolder(cardView)
     }
 
-    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
-        val work = item as Work
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+        val workViewModel = item as WorkViewModel
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = work.title
-        work.releaseDate?.let {
+        cardView.titleText = workViewModel.title
+        workViewModel.releaseDate?.let {
             cardView.contentText = sDateFormat.format(it)
         }
         cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height))
 
-        workCardPresenter.loadWorkPosterImage(work, cardView.mainImageView)
+        workViewModel.posterUrl?.let {
+            cardView.mainImageView.loadImageInto(it)
+        }
     }
 
-    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null

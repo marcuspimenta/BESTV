@@ -17,26 +17,25 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.leanback.widget.*
-import androidx.core.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
-import com.pimenta.bestv.widget.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.widget.render.WorkCardRenderer
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.repository.entity.Cast
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.widget.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.widget.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -92,7 +91,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onDetach()
     }
 
-    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<Work>?, tvShow: List<Work>?) {
+    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
         progressBarManager.hide()
         castViewModel?.let {
             this.castViewModel = it
@@ -124,12 +123,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
         castViewModel.loadThumbnail(requireNotNull(context), object : SimpleTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                setCardImage(resource)
-            }
-
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                super.onLoadFailed(errorDrawable)
-                setCardImage(null)
+                detailsOverviewRow.imageDrawable = resource
+                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
             }
         })
 
@@ -137,7 +132,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         mainAdapter.add(detailsOverviewRow)
 
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            if (item is Work) {
+            if (item is WorkViewModel) {
                 val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         requireNotNull(activity),
                         (itemViewHolder.view as ImageCardView).mainImageView,
@@ -146,11 +141,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
                 startActivity(WorkDetailsActivity.newInstance(context, item), bundle)
             }
         }
-    }
-
-    private fun setCardImage(resource: Drawable?) {
-        detailsOverviewRow.imageDrawable = resource
-        mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
     }
 
     private fun setupDetailsOverviewRowPresenter() {

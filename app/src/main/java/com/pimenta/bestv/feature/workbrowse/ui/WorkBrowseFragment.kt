@@ -16,6 +16,7 @@ package com.pimenta.bestv.feature.workbrowse.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
@@ -56,6 +57,9 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
     }
 
     @Inject
+    lateinit var displayMetrics: DisplayMetrics
+
+    @Inject
     lateinit var presenter: WorkBrowsePresenter
 
     override fun onAttach(context: Context) {
@@ -67,7 +71,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
 
         activity?.let {
             backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(presenter.displayMetrics)
+            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
         }
     }
 

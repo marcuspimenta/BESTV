@@ -16,8 +16,6 @@ package com.pimenta.bestv.di.module
 
 import com.pimenta.bestv.manager.DeviceManager
 import com.pimenta.bestv.manager.DeviceManagerImpl
-import com.pimenta.bestv.manager.ImageManager
-import com.pimenta.bestv.manager.ImageManagerImpl
 import com.pimenta.bestv.manager.PermissionManager
 import com.pimenta.bestv.manager.PermissionManagerImpl
 import com.pimenta.bestv.manager.PreferenceManager
@@ -50,10 +48,6 @@ import dagger.Module
     @Binds
     @Singleton
     fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
-
-    @Binds
-    @Singleton
-    fun provideImageManager(manager: ImageManagerImpl): ImageManager
 
     @Binds
     @Singleton
