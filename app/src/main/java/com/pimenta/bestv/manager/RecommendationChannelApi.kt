@@ -18,17 +18,11 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 23-04-2019.
  */
-interface RecommendationManager {
+class RecommendationChannelApi : RecommendationManager {
 
-    /**
-     * Loads the recommendations
-     *
-     * @param works [?][<]
-     *
-     * @return `true` if success, `false` otherwise
-     */
-    fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean>
-
+    override fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

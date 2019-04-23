@@ -14,28 +14,26 @@
 
 package com.pimenta.bestv.feature
 
+import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
 import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.manager.RecommendationManager
-import com.pimenta.bestv.repository.MediaRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
  */
 class MainPresenter @Inject constructor(
-        private val mediaRepository: MediaRepository,
-        private val recommendationManager: RecommendationManager
+        private val loadRecommendationUseCase: LoadRecommendationUseCase
 ) : DisposablePresenter() {
 
     /**
      * Loads the recommendations
      */
     fun loadRecommendations() {
-        compositeDisposable.add(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
-                .map { workPage -> recommendationManager.loadRecommendations(workPage.works!!) }
+        compositeDisposable.add(loadRecommendationUseCase()
                 .subscribeOn(Schedulers.io())
-                .subscribe { aBoolean -> Timber.d("Recommendations loaded") })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe())
     }
 }
