@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.pimenta.bestv">
+    package="com.pimenta.bestv">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.software.leanback"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name=".BesTV"
@@ -28,34 +28,45 @@
             android:logo="@drawable/app_icon_your_company"
             android:screenOrientation="landscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".feature.splash.ui.SplashActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".feature.search.ui.SearchActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".feature.workdetail.ui.WorkDetailsActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="work" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".feature.castdetail.ui.CastDetailsActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
+
         <receiver
             android:name=".feature.boot.broadcast.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <service
             android:name=".feature.recommendation.service.RecommendationService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

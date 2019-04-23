@@ -32,7 +32,7 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 07-02-2018.
  */
-@Module(includes = [ImplModule::class, MediaModule::class])
+@Module(includes = [ImplModule::class, MediaModule::class, RecommendationModule::class])
 class ApplicationModule(
         private val application: Application
 ) {

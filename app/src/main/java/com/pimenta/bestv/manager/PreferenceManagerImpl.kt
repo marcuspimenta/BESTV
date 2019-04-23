@@ -27,16 +27,23 @@ class PreferenceManagerImpl @Inject constructor(
         private val application: Application
 ) : PreferenceManager {
 
+
     private val sharedPreferences: SharedPreferences by lazy {
         application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
-    override fun getFromPersistence(key: String, defValue: String): String {
-        return sharedPreferences.getString(key, defValue)
+    override fun getStringFromPersistence(key: String, defValue: String) =
+            sharedPreferences.getString(key, defValue) ?: defValue
+
+    override fun applyStringToPersistence(key: String, value: String) {
+        sharedPreferences.edit().putString(key, value).apply()
     }
 
-    override fun applyToPersistence(key: String, value: String) {
-        sharedPreferences.edit().putString(key, value).apply()
+    override fun getLongFromPersistence(key: String, defValue: Long) =
+            sharedPreferences.getLong(key, defValue)
+
+    override fun applyLongToPersistence(key: String, value: Long) {
+        sharedPreferences.edit().putLong(key, value).apply()
     }
 
     companion object {

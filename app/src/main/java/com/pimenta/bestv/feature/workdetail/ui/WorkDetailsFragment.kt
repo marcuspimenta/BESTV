@@ -35,7 +35,6 @@ import com.pimenta.bestv.feature.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
-import com.pimenta.bestv.repository.entity.Work
 import com.pimenta.bestv.widget.render.CastCardRender
 import com.pimenta.bestv.widget.render.VideoCardRender
 import com.pimenta.bestv.widget.render.WorkCardRenderer

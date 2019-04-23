@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.manager
 
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
 
 /**
@@ -29,6 +29,8 @@ interface RecommendationManager {
      *
      * @return `true` if success, `false` otherwise
      */
-    fun <T : Work> loadRecommendations(works: List<T>?): Single<Boolean>
+    fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean>
+
+
 
 }
