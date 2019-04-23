@@ -17,10 +17,7 @@ package com.pimenta.bestv.feature.boot.presenter
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
-import com.pimenta.bestv.feature.base.BasePresenter
-
 import com.pimenta.bestv.feature.recommendation.service.RecommendationService
-
 import javax.inject.Inject
 
 /**
@@ -29,7 +26,7 @@ import javax.inject.Inject
 class BootPresenter @Inject constructor(
         private val application: Application,
         private val alarmManager: AlarmManager
-) : BasePresenter<BasePresenter.BaseView>() {
+) {
 
     /**
      * Schedules the recommendation update

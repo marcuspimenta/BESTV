@@ -14,29 +14,26 @@
 
 package com.pimenta.bestv.feature.boot.broadcast
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.feature.base.BaseBroadcastReceiver
 import com.pimenta.bestv.feature.boot.presenter.BootPresenter
-
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 06-03-2018.
  */
-class BootBroadcastReceiver : BaseBroadcastReceiver<BootPresenter>() {
+class BootBroadcastReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var presenter: BootPresenter
 
     override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
         Timber.d("Boot initiated")
-        mPresenter.scheduleRecommendationUpdate()
-    }
-
-    override fun injectPresenter() {
         BesTV.applicationComponent.inject(this)
+        presenter.scheduleRecommendationUpdate()
     }
 
 }

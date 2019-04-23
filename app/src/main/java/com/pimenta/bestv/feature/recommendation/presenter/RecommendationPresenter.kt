@@ -14,10 +14,8 @@
 
 package com.pimenta.bestv.feature.recommendation.presenter
 
-import android.annotation.SuppressLint
-import com.pimenta.bestv.feature.base.BasePresenter
-import com.pimenta.bestv.manager.RecommendationManager
-import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
+import com.pimenta.bestv.feature.base.DisposablePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -26,23 +24,21 @@ import javax.inject.Inject
  * Created by marcus on 07-03-2018.
  */
 class RecommendationPresenter @Inject constructor(
-        private val mediaRepository: MediaRepository,
-        private val recommendationManager: RecommendationManager
-) : BasePresenter<RecommendationPresenter.View>() {
+        private val service: Service,
+        private val loadRecommendationUseCase: LoadRecommendationUseCase
+) : DisposablePresenter() {
 
     /**
      * Loads the recommendations
      */
-    @SuppressLint("RxSubscribeOnError")
     fun loadRecommendations() {
-        compositeDisposable.add(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
-                .map { workPage -> recommendationManager.loadRecommendations(workPage.works!!) }
+        compositeDisposable.add(loadRecommendationUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result -> view.onLoadRecommendationFinished() })
+                .subscribe { service::onLoadRecommendationFinished })
     }
 
-    interface View : BasePresenter.BaseView {
+    interface Service {
 
         fun onLoadRecommendationFinished()
 

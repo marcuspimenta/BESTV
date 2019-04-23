@@ -33,8 +33,6 @@ interface ApplicationComponent {
 
     fun inject(receiver: BootBroadcastReceiver)
 
-    fun inject(recommendationService: RecommendationService)
-
     fun inject(activity: MainActivity)
 
     fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
@@ -50,5 +48,7 @@ interface ApplicationComponent {
     fun getTopWorkGridFragmentComponent(): TopWorkGridFragmentComponent.Builder
 
     fun getGenreWorkGridFragmentComponent(): GenreWorkGridFragmentComponent.Builder
+
+    fun getRecommendationServiceComponent(): RecommendationServiceComponent.Builder
 
 }

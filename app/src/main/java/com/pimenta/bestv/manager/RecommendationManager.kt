@@ -15,6 +15,7 @@
 package com.pimenta.bestv.manager
 
 import com.pimenta.bestv.repository.entity.Work
+import io.reactivex.Single
 
 /**
  * Created by marcus on 06-03-2018.
@@ -28,6 +29,6 @@ interface RecommendationManager {
      *
      * @return `true` if success, `false` otherwise
      */
-    fun <T : Work> loadRecommendations(works: List<T>): Boolean
+    fun <T : Work> loadRecommendations(works: List<T>?): Single<Boolean>
 
 }

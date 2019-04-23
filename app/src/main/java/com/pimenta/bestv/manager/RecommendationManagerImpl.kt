@@ -18,17 +18,14 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Intent
 import androidx.recommendation.app.ContentRecommendation
-
 import com.bumptech.glide.Glide
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.repository.entity.Work
-import java.util.concurrent.ExecutionException
-
-import javax.inject.Inject
-
+import io.reactivex.Single
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
+import javax.inject.Inject
 
 /**
  * Created by marcus on 06-03-2018.
@@ -38,12 +35,11 @@ class RecommendationManagerImpl @Inject constructor(
         private val notificationManager: NotificationManager
 ) : RecommendationManager {
 
-    override fun <T : Work> loadRecommendations(works: List<T>): Boolean {
+    override fun <T : Work> loadRecommendations(works: List<T>?): Single<Boolean> = Single.create {
         notificationManager.cancelAll()
         var count = 0
-        for (i in works.indices) {
+        works?.forEach { work ->
             try {
-                val work = works[i]
                 val id = java.lang.Long.valueOf(work.id.toLong()).hashCode()
 
                 val cardBitmap = Glide.with(application)
@@ -69,18 +65,17 @@ class RecommendationManagerImpl @Inject constructor(
                 notificationManager.notify(id, contentRecommendation.getNotificationObject(application))
                 count++
                 if (count == RECOMMENDATION_NUMBER) {
-                    return true
+                    it.onSuccess(true)
                 }
             } catch (exception: InterruptedException) {
                 Timber.e(exception, "Failed to create a recommendation.")
-                return false
+                it.onError(exception)
             } catch (exception: ExecutionException) {
                 Timber.e(exception, "Failed to create a recommendation.")
-                return false
+                it.onError(exception)
             }
-
         }
-        return false
+        it.onSuccess(false)
     }
 
     /**
