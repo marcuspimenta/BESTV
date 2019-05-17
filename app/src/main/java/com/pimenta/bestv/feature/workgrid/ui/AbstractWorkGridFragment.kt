@@ -60,6 +60,8 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         setupUI()
     }
 
@@ -91,11 +93,6 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     override fun onDestroy() {
         progressBarManager.hide()
         super.onDestroy()
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun getMainFragmentAdapter() = fragmentAdapter

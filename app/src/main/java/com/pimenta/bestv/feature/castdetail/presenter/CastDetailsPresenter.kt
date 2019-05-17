@@ -20,7 +20,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.common.usecase.GetMovieCreditsByCastUseCase
 import com.pimenta.bestv.common.usecase.GetTvShowCreditsByCastUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,7 +37,7 @@ class CastDetailsPresenter @Inject constructor(
         private val getCastDetailsUseCase: GetCastDetailsUseCase,
         private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
         private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     /**
      * Load the [Cast] details

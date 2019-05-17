@@ -82,6 +82,8 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         activity?.let {
             workViewModel = it.intent.getSerializableExtra(WORK) as WorkViewModel
         }
@@ -102,11 +104,6 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         )
         actionAdapter.add(favoriteAction)
         presenter.loadDataByWork(workViewModel)
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onResultSetFavoriteMovie(success: Boolean) {

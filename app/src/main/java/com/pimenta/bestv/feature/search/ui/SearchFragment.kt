@@ -75,6 +75,8 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         setupUI()
     }
 
@@ -106,7 +108,6 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onDetach() {
         backgroundManager.release()
-        presenter.dispose()
         super.onDetach()
     }
 

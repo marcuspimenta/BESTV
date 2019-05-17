@@ -12,17 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
+package com.pimenta.bestv.feature.base
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import io.reactivex.Single
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 
 /**
- * Created by marcus on 23-04-2019.
+ * Created by marcus on 06-02-2018.
  */
-class RecommendationChannelApi : RecommendationManager {
+abstract class AutoDisposablePresenter : LifecycleObserver, DisposablePresenter() {
 
-    override fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean> = Single.create {
-        it.onSuccess(true)
+    fun bindTo(lifecycle: Lifecycle) {
+        lifecycle.addObserver(this)
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    override fun dispose() {
+        super.dispose()
+    }
+
 }

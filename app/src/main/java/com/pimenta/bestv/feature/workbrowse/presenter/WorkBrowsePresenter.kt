@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.workbrowse.presenter
 
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class WorkBrowsePresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     /**
      * Checks if there is any [Work] saved as favorite

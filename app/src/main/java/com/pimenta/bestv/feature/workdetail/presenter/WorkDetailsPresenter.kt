@@ -20,7 +20,7 @@ import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.*
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.Work
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -40,7 +40,7 @@ class WorkDetailsPresenter @Inject constructor(
         private val getCastsUseCase: GetCastsUseCase,
         private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
         private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     private var recommendedPage = 0
     private var similarPage = 0

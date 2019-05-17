@@ -17,13 +17,13 @@ package com.pimenta.bestv.feature.base
 import io.reactivex.disposables.CompositeDisposable
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 17-05-2018.
  */
 abstract class DisposablePresenter {
 
     protected val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    open fun dispose() {
+    protected open fun dispose() {
         compositeDisposable.dispose()
     }
 

@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.workgrid.presenter
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.entity.Genre
 import io.reactivex.Completable
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class WorkGridPresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     private var currentPage = 0
     private var loadBackdropImageDisposable: Disposable? = null

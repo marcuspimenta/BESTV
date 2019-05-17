@@ -64,6 +64,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         activity?.let {
             castViewModel = it.intent.getSerializableExtra(CAST) as CastViewModel
         }
@@ -84,11 +86,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onViewCreated(view, savedInstanceState)
         progressBarManager.show()
         presenter.loadCastDetails(castViewModel)
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {

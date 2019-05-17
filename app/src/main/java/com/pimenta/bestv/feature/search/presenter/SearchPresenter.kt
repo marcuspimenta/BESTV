@@ -18,7 +18,7 @@ import android.util.Pair
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class SearchPresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     private var resultMoviePage = 0
     private var resultTvShowPage = 0

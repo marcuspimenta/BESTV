@@ -38,14 +38,14 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
             debuggable true
             multiDexEnabled true
             minifyEnabled false
             shrinkResources false
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -61,6 +61,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
     implementation 'com.google.android.material:material:1.1.0-alpha06'
     implementation 'androidx.recommendation:recommendation:1.0.0'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
 
     // Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'

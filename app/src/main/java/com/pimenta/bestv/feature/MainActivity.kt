@@ -42,11 +42,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onDestroy() {
-        presenter.dispose()
-        super.onDestroy()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {

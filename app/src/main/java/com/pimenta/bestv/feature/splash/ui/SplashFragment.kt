@@ -48,12 +48,8 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.bindTo(this.lifecycle)
         presenter.loadPermissions()
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onSplashFinished(success: Boolean) {
