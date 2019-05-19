@@ -12,20 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.render
+package com.pimenta.bestv.common.presentation.ui.render
 
 import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.extension.loadImageInto
 
 /**
- * Created by marcus on 16-02-2018.
+ * Created by marcus on 23-02-2018.
  */
-class CastCardRender : Presenter() {
+class VideoCardRender : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
@@ -35,14 +34,14 @@ class CastCardRender : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val castViewModel = item as CastViewModel
+        val videoViewModel = item as VideoViewModel
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = castViewModel.name
-        cardView.contentText = castViewModel.character
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_height))
+        cardView.titleText = videoViewModel.name
+        cardView.contentText = videoViewModel.type
+        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_width),
+                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_height))
 
-        castViewModel.thumbnailUrl?.let {
+        videoViewModel.thumbnailUrl?.let {
             cardView.mainImageView.loadImageInto(it)
         }
     }

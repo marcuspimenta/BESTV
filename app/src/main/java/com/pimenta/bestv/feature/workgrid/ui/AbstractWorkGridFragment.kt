@@ -38,7 +38,7 @@ import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
-import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**

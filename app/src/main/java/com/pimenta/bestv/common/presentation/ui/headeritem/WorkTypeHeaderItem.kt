@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.headeritem
+package com.pimenta.bestv.common.presentation.ui.headeritem
 
 import androidx.leanback.widget.HeaderItem
 

@@ -12,19 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.render
+package com.pimenta.bestv.common.presentation.ui.render
 
 import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.presentation.model.VideoViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.extension.loadImageInto
+import java.text.SimpleDateFormat
 
 /**
- * Created by marcus on 23-02-2018.
+ * Created by marcus on 10-02-2018.
  */
-class VideoCardRender : Presenter() {
+class WorkCardRenderer : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
@@ -34,14 +35,16 @@ class VideoCardRender : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val videoViewModel = item as VideoViewModel
+        val workViewModel = item as WorkViewModel
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = videoViewModel.name
-        cardView.contentText = videoViewModel.type
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_height))
+        cardView.titleText = workViewModel.title
+        workViewModel.releaseDate?.let {
+            cardView.contentText = sDateFormat.format(it)
+        }
+        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
+                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height))
 
-        videoViewModel.thumbnailUrl?.let {
+        workViewModel.posterUrl?.let {
             cardView.mainImageView.loadImageInto(it)
         }
     }
@@ -50,5 +53,10 @@ class VideoCardRender : Presenter() {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null
+    }
+
+    companion object {
+
+        private val sDateFormat = SimpleDateFormat("MMM dd, yyyy")
     }
 }

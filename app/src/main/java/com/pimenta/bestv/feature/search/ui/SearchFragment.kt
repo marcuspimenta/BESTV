@@ -38,7 +38,7 @@ import com.pimenta.bestv.feature.base.BaseSearchFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import java.util.*
 import javax.inject.Inject
 

@@ -12,20 +12,26 @@
  * the License.
  */
 
-package com.pimenta.bestv.widget.render
+package com.pimenta.bestv.common.presentation.ui.render
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import java.text.SimpleDateFormat
 
 /**
- * Created by marcus on 07-04-2018.
+ * Created by marcus on 28-01-2018.
  */
-class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
+class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
-        val castViewModel = item as CastViewModel
-        viewHolder.title.text = castViewModel.name
-        //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-        viewHolder.body.text = castViewModel.biography
+        val workViewModel = item as WorkViewModel
+        viewHolder.title.text = workViewModel.title
+        viewHolder.subtitle.text = dateFormat.format(workViewModel.releaseDate)
+        viewHolder.body.text = workViewModel.overview
+    }
+
+    companion object {
+
+        private val dateFormat = SimpleDateFormat("MMM dd, yyyy")
     }
 }
