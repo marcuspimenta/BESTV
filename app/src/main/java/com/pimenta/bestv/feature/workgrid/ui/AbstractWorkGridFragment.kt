@@ -85,7 +85,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun onResume() {
         super.onResume()
-        workSelected?.run {
+        workSelected?.let {
             loadBackdropImage()
             refreshDada()
         }
@@ -103,13 +103,12 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
             if (rowsAdapter.indexOf(it) == -1) {
                 rowsAdapter.add(it)
             }
-        } ?: run {
-            if (rowsAdapter.size() == 0) {
-                val fragment = ErrorFragment.newInstance()
-                fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
-                addFragment(fragment, ErrorFragment.TAG)
-            }
+        } ?: if (rowsAdapter.size() == 0) {
+            val fragment = ErrorFragment.newInstance()
+            fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+            addFragment(fragment, ErrorFragment.TAG)
         }
+
 
         progressBarManager.hide()
         mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
