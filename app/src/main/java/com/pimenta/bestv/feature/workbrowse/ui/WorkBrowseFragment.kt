@@ -115,8 +115,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         super.onDetach()
     }
 
-    override fun onDataLoaded(hasFavorite: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?) {
-        this.hasFavorite = hasFavorite
+    override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?) {
+        hasFavorite = hasFavoriteMovie
         if (hasFavorite) {
             rowsAdapter.add(favoritePageRow)
         }
@@ -147,8 +147,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         startEntranceTransition()
     }
 
-    override fun onHasFavorite(hasFavorite: Boolean) {
-        this.hasFavorite = hasFavorite
+    override fun onHasFavorite(hasFavoriteMovie: Boolean) {
+        hasFavorite = hasFavoriteMovie
         if (hasFavorite) {
             if (rowsAdapter.indexOf(favoritePageRow) == -1) {
                 rowsAdapter.add(FAVORITE_INDEX, favoritePageRow)
@@ -163,7 +163,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
     }
 
     private fun setupUIElements() {
-        headersState = BrowseSupportFragment.HEADERS_ENABLED
+        headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         setOnSearchClickedListener {
             startActivity(SearchActivity.newInstance(context))

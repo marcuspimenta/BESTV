@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.workgrid.ui
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,7 @@ import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
@@ -115,9 +116,13 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 backgroundManager.setBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                //DO ANYTHING
             }
         })
     }

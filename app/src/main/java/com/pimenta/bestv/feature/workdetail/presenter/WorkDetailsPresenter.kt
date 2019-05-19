@@ -196,7 +196,7 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onResultSetFavoriteMovie(success: Boolean)
 
-        fun onDataLoaded(casts: List<CastViewModel>?, recommendedMovies: List<WorkViewModel>?, similarMovies: List<WorkViewModel>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?)
 
         fun onRecommendationLoaded(works: List<WorkViewModel>?)
 

@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.widget.*
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
@@ -118,10 +118,14 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     private fun setupDetailsOverviewRow() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
-        castViewModel.loadThumbnail(requireNotNull(context), object : SimpleTarget<Drawable>() {
+        castViewModel.loadThumbnail(requireNotNull(context), object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 detailsOverviewRow.imageDrawable = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                //DO ANYTHING
             }
         })
 
