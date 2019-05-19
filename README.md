@@ -14,6 +14,7 @@ Sample about Android TV, that shows how to use the Leandback library from Google
 <li>Retrofit 2
 <li>RxJava 2  
 <li>Glide
+<li>Lifecycle Architecture Component  
 </ul>
 
 ## API Keys
