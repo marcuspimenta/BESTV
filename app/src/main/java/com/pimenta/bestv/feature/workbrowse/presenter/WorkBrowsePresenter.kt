@@ -15,6 +15,7 @@
 package com.pimenta.bestv.feature.workbrowse.presenter
 
 import com.pimenta.bestv.common.usecase.WorkUseCase
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.*
 import io.reactivex.Single
@@ -36,7 +37,7 @@ class WorkBrowsePresenter @Inject constructor(
      * Checks if there is any [Work] saved as favorite
      */
     fun hasFavorite() {
-        compositeDisposable.add(workUseCase.hasFavorite()
+        workUseCase.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -44,14 +45,14 @@ class WorkBrowsePresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while checking if has any work as favorite")
                     view.onHasFavorite(false)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
      * Loads the [<] available at TMDb
      */
     fun loadData() {
-        compositeDisposable.add(Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(
+        Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(
                 workUseCase.getMovieGenres(),
                 workUseCase.getTvShowGenres(),
                 workUseCase.hasFavorite(),
@@ -69,7 +70,7 @@ class WorkBrowsePresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
                     view.onDataLoaded(false, null, null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**

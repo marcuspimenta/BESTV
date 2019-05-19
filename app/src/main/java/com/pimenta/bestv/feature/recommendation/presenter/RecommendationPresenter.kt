@@ -15,6 +15,7 @@
 package com.pimenta.bestv.feature.recommendation.presenter
 
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.DisposablePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -32,10 +33,11 @@ class RecommendationPresenter @Inject constructor(
      * Loads the recommendations
      */
     fun loadRecommendations() {
-        compositeDisposable.add(loadRecommendationUseCase()
+        loadRecommendationUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { service::onLoadRecommendationFinished })
+                .subscribe { service.onLoadRecommendationFinished() }
+                .addTo(compositeDisposable)
     }
 
     interface Service {

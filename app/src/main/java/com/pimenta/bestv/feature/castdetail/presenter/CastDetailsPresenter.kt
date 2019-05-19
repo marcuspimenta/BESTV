@@ -20,6 +20,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.common.usecase.GetMovieCreditsByCastUseCase
 import com.pimenta.bestv.common.usecase.GetTvShowCreditsByCastUseCase
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
@@ -45,7 +46,7 @@ class CastDetailsPresenter @Inject constructor(
      * @param cast [Cast]
      */
     fun loadCastDetails(castViewModel: CastViewModel) {
-        compositeDisposable.add(Single.fromCallable { castViewModel.toCast() }
+        Single.fromCallable { castViewModel.toCast() }
                 .flatMap {
                     Single.zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
                             getCastDetailsUseCase(it),
@@ -67,7 +68,7 @@ class CastDetailsPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
                     view.onCastLoaded(null, null, null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     interface View {

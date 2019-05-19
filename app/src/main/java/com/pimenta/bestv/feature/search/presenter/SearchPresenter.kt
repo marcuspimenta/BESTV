@@ -18,6 +18,7 @@ import android.util.Pair
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -102,7 +103,7 @@ class SearchPresenter @Inject constructor(
      */
     fun loadMovies() {
         val resultMoviePage = resultMoviePage + 1
-        compositeDisposable.add(workUseCase.searchMoviesByQuery(query, resultMoviePage)
+        workUseCase.searchMoviesByQuery(query, resultMoviePage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ moviePage ->
@@ -115,7 +116,7 @@ class SearchPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading movies by query")
                     view.onMoviesLoaded(null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
@@ -123,7 +124,7 @@ class SearchPresenter @Inject constructor(
      */
     fun loadTvShows() {
         val resultTvShowPage = resultTvShowPage + 1
-        compositeDisposable.add(workUseCase.searchTvShowsByQuery(query, resultTvShowPage)
+        workUseCase.searchTvShowsByQuery(query, resultTvShowPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ tvShowPage ->
@@ -136,7 +137,7 @@ class SearchPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading tv shows by query")
                     view.onTvShowsLoaded(null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
