@@ -14,21 +14,16 @@
 
 package com.pimenta.bestv.feature.search.presenter
 
-import android.util.Pair
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -37,7 +32,8 @@ import javax.inject.Inject
  */
 class SearchPresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase
+        private val workUseCase: WorkUseCase,
+        private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase
 ) : AutoDisposablePresenter() {
 
     private var resultMoviePage = 0
@@ -59,51 +55,36 @@ class SearchPresenter @Inject constructor(
      */
     fun searchWorksByQuery(text: String) {
         disposeSearchWork()
-        try {
-            val queryEncode = URLEncoder.encode(text, "UTF-8")
-            if (queryEncode != query) {
-                resultMoviePage = 0
-                resultTvShowPage = 0
-            }
-            query = queryEncode
-            val resultMoviePage = resultMoviePage + 1
-            val resultTvShowPage = resultTvShowPage + 1
-            searchWorkDisposable = Single.zip<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>>(
-                    workUseCase.searchMoviesByQuery(query, resultMoviePage),
-                    workUseCase.searchTvShowsByQuery(query, resultTvShowPage),
-                    BiFunction<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>> { first, second ->
-                        Pair(first, second)
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ pair ->
-                        var movies: List<WorkViewModel>? = null
-                        if (pair.first != null && pair.first.page <= pair.first.totalPages) {
-                            this.resultMoviePage = pair.first.page
-                            movies = pair.first.works
-                        }
+        resultMoviePage = 0
+        resultTvShowPage = 0
+        query = text
+        searchWorkDisposable = searchWorksByQueryUseCase(text)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ pair ->
+                    var movies: List<WorkViewModel>? = null
+                    if (pair.first != null && pair.first.page <= pair.first.totalPages) {
+                        this.resultMoviePage = pair.first.page
+                        movies = pair.first.works
+                    }
 
-                        var tvShows: List<WorkViewModel>? = null
-                        if (pair.second != null && pair.second.page <= pair.second.totalPages) {
-                            this.resultTvShowPage = pair.second.page
-                            tvShows = pair.second.works
-                        }
-                        view.onResultLoaded(movies, tvShows)
-                    }, { throwable ->
-                        Timber.e(throwable, "Error while searching movies by query")
-                        view.onResultLoaded(null, null)
-                    })
-        } catch (exception: UnsupportedEncodingException) {
-            Timber.e(exception, "Error while encoding the query")
-        }
+                    var tvShows: List<WorkViewModel>? = null
+                    if (pair.second != null && pair.second.page <= pair.second.totalPages) {
+                        this.resultTvShowPage = pair.second.page
+                        tvShows = pair.second.works
+                    }
+                    view.onResultLoaded(movies, tvShows)
+                }, { throwable ->
+                    Timber.e(throwable, "Error while searching movies by query")
+                    view.onResultLoaded(null, null)
+                })
     }
 
     /**
      * Load the movies by a query
      */
     fun loadMovies() {
-        val resultMoviePage = resultMoviePage + 1
-        workUseCase.searchMoviesByQuery(query, resultMoviePage)
+        workUseCase.searchMoviesByQuery(query, resultMoviePage + 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ moviePage ->
@@ -123,8 +104,7 @@ class SearchPresenter @Inject constructor(
      * Load the tv shows by a query
      */
     fun loadTvShows() {
-        val resultTvShowPage = resultTvShowPage + 1
-        workUseCase.searchTvShowsByQuery(query, resultTvShowPage)
+        workUseCase.searchTvShowsByQuery(query, resultTvShowPage + 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ tvShowPage ->

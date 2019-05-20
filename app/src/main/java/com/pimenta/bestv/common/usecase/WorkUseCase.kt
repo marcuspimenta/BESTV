@@ -27,6 +27,7 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class WorkUseCase @Inject constructor(
+        private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
         private val mediaRepository: MediaRepository
 ) {
 
@@ -39,7 +40,7 @@ class WorkUseCase @Inject constructor(
     fun hasFavorite() = mediaRepository.hasFavorite()
 
     fun getMovieGenres() = mediaRepository.getMovieGenres()
-    
+
     fun getTvShowGenres() = mediaRepository.getTvShowGenres()
 
     fun getFavorites(): Single<List<WorkViewModel>> =
@@ -67,23 +68,29 @@ class WorkUseCase @Inject constructor(
                     }
 
     fun searchMoviesByQuery(query: String, page: Int): Single<WorkPageViewModel> =
-            mediaRepository.searchMoviesByQuery(query, page)
-                    .map {
-                        WorkPageViewModel(
-                                it.page,
-                                it.totalPages,
-                                it.works?.map { work -> work.toViewModel() }
-                        )
+            urlEncoderTextUseCase(query)
+                    .flatMap {
+                        mediaRepository.searchMoviesByQuery(it, page)
+                                .map { moviePage ->
+                                    WorkPageViewModel(
+                                            moviePage.page,
+                                            moviePage.totalPages,
+                                            moviePage.works?.map { work -> work.toViewModel() }
+                                    )
+                                }
                     }
 
     fun searchTvShowsByQuery(query: String, page: Int): Single<WorkPageViewModel> =
-            mediaRepository.searchTvShowsByQuery(query, page)
-                    .map {
-                        WorkPageViewModel(
-                                it.page,
-                                it.totalPages,
-                                it.works?.map { work -> work.toViewModel() }
-                        )
+            urlEncoderTextUseCase(query)
+                    .flatMap {
+                        mediaRepository.searchTvShowsByQuery(it, page)
+                                .map { tvShowPage ->
+                                    WorkPageViewModel(
+                                            tvShowPage.page,
+                                            tvShowPage.totalPages,
+                                            tvShowPage.works?.map { work -> work.toViewModel() }
+                                    )
+                                }
                     }
 
 }
