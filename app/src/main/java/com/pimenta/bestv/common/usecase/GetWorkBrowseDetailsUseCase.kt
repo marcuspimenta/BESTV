@@ -27,11 +27,12 @@ class GetWorkBrowseDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Single<Triple<Boolean, MovieGenreList, TvShowGenreList>> =
-            Single.zip<Boolean, MovieGenreList, TvShowGenreList, Triple<Boolean, MovieGenreList, TvShowGenreList>>(
+            Single.zip(
                     workUseCase.hasFavorite(),
                     workUseCase.getMovieGenres(),
                     workUseCase.getTvShowGenres(),
                     Function3 { hasFavoriteMovie, movieGenreList, tvShowGenreList ->
                         Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
-                    })
+                    }
+            )
 }

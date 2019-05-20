@@ -31,7 +31,7 @@ class GetCastDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(cast: Cast): Single<Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>> =
-            Single.zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
+            Single.zip(
                     getCastPersonalDetails(cast),
                     getMovieCreditsByCastUseCase(cast),
                     getTvShowCreditsByCastUseCase(cast),
