@@ -18,7 +18,6 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
-import io.reactivex.Single.zip
 import io.reactivex.functions.Function3
 import javax.inject.Inject
 
@@ -32,7 +31,7 @@ class GetCastDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(cast: Cast): Single<Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>> =
-            zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
+            Single.zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
                     getCastPersonalDetails(cast),
                     getMovieCreditsByCastUseCase(cast),
                     getTvShowCreditsByCastUseCase(cast),
