@@ -14,21 +14,30 @@
 
 package com.pimenta.bestv.common.usecase
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
+import io.reactivex.Single.zip
+import io.reactivex.functions.Function3
 import javax.inject.Inject
 
 /**
  * Created by marcus on 15-04-2019.
  */
 class GetCastDetailsUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+        private val getCastPersonalDetails: GetCastPersonalDetails,
+        private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
+        private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
 ) {
 
-    operator fun invoke(cast: Cast): Single<CastViewModel> =
-            mediaRepository.getCastDetails(cast)
-                    .map { it.toViewModel() }
+    operator fun invoke(cast: Cast): Single<Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>> =
+            zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
+                    getCastPersonalDetails(cast),
+                    getMovieCreditsByCastUseCase(cast),
+                    getTvShowCreditsByCastUseCase(cast),
+                    Function3 { castViewModel, castMovieList, castTvShowList ->
+                        Triple(castViewModel, castMovieList, castTvShowList)
+                    }
+            )
 }

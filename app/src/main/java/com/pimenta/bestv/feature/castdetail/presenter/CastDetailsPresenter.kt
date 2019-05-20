@@ -18,14 +18,11 @@ import com.pimenta.bestv.common.presentation.mapper.toCast
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
-import com.pimenta.bestv.common.usecase.GetMovieCreditsByCastUseCase
-import com.pimenta.bestv.common.usecase.GetTvShowCreditsByCastUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.base.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,9 +32,7 @@ import javax.inject.Inject
  */
 class CastDetailsPresenter @Inject constructor(
         private val view: View,
-        private val getCastDetailsUseCase: GetCastDetailsUseCase,
-        private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
-        private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
+        private val getCastDetailsUseCase: GetCastDetailsUseCase
 ) : AutoDisposablePresenter() {
 
     /**
@@ -47,16 +42,7 @@ class CastDetailsPresenter @Inject constructor(
      */
     fun loadCastDetails(castViewModel: CastViewModel) {
         Single.fromCallable { castViewModel.toCast() }
-                .flatMap {
-                    Single.zip<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>>(
-                            getCastDetailsUseCase(it),
-                            getMovieCreditsByCastUseCase(it),
-                            getTvShowCreditsByCastUseCase(it),
-                            Function3<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?, Triple<CastViewModel, List<WorkViewModel>?, List<WorkViewModel>?>> { castViewModel, castMovieList, castTvShowList ->
-                                Triple(castViewModel, castMovieList, castTvShowList)
-                            }
-                    )
-                }
+                .flatMap { getCastDetailsUseCase(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ triple ->
