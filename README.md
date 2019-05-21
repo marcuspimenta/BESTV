@@ -6,8 +6,9 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseSupportFragment, SearchSupportFragment, DetailsSupportFragment, VerticalSupportFragment are used.
 
 ## Implementations
-- Android TV Leandback library</li>
-- The Movie Database (TMDb) REST API</li>
+- [Android TV Leandback library](https://developer.android.com/tv)
+- [Recommend TV content](https://developer.android.com/training/tv/discovery/recommendations) 
+- [TMDb Rest API](https://www.themoviedb.org/)</li>
 - MVP architecture
 - Dagger 2
 - Retrofit 2
