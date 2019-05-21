@@ -16,7 +16,7 @@ package com.pimenta.bestv.common.presentation.ui.headeritem
 
 import androidx.leanback.widget.HeaderItem
 
-import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.data.repository.MediaRepository
 
 /**
  * Created by marcus on 11-02-2018.

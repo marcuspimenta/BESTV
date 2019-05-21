@@ -18,7 +18,7 @@ import com.pimenta.bestv.common.kotlin.Quadruple
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Single
 import io.reactivex.functions.Function4
 import javax.inject.Inject

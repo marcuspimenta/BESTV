@@ -24,7 +24,7 @@ import com.pimenta.bestv.common.usecase.GetWorkDetailsUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -30,9 +30,9 @@ import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
 import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.MovieGenre
-import com.pimenta.bestv.repository.entity.TvShowGenre
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject

@@ -18,7 +18,7 @@ import android.content.Context
 import android.os.Bundle
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.data.repository.MediaRepository
 
 /**
  * Created by marcus on 11-02-2018.

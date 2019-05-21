@@ -18,9 +18,9 @@ import com.pimenta.bestv.common.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.repository.entity.MovieGenre
-import com.pimenta.bestv.repository.entity.TvShowGenre
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber

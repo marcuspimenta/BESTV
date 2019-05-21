@@ -13,8 +13,8 @@
  */
 package com.pimenta.bestv.common.usecase
 
-import com.pimenta.bestv.repository.entity.MovieGenreList
-import com.pimenta.bestv.repository.entity.TvShowGenreList
+import com.pimenta.bestv.data.entity.MovieGenreList
+import com.pimenta.bestv.data.entity.TvShowGenreList
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject

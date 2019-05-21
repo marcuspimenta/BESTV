@@ -16,7 +16,7 @@ package com.pimenta.bestv.common.usecase
 
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.data.entity.Cast
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject

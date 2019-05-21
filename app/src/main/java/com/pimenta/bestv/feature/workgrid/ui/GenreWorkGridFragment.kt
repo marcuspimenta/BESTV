@@ -18,7 +18,7 @@ import android.content.Context
 import android.os.Bundle
 
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.repository.entity.Genre
+import com.pimenta.bestv.data.entity.Genre
 
 /**
  * Created by marcus on 11-02-2018.

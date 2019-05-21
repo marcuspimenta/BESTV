@@ -18,8 +18,8 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.Genre
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.entity.Genre
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
