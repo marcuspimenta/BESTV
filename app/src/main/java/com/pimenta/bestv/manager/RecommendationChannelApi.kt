@@ -34,10 +34,13 @@ class RecommendationChannelApi constructor(
         private val preferenceManager: PreferenceManager
 ) : RecommendationManager {
 
-    override fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean> = Single.create {
+    override fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean> = Single.fromCallable {
+        val channelId = getChannelId()
+        deleteChannel(channelId)
+
         works?.forEach { workViewModel ->
             val programBuilder = PreviewProgram.Builder()
-            programBuilder.setChannelId(getChannelId())
+            programBuilder.setChannelId(channelId)
                     .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
                     .setTitle(workViewModel.title)
                     .setDescription(workViewModel.overview)
@@ -50,25 +53,30 @@ class RecommendationChannelApi constructor(
             application.contentResolver.insert(TvContractCompat.PreviewPrograms.CONTENT_URI,
                     programBuilder.build().toContentValues())
         }
-        it.onSuccess(true)
+        true
     }
 
-    private fun getChannelId() = preferenceManager.getLongFromPersistence(CHANNEL_ID_KEY, 0L)
-            .takeIf { it != 0L }
-            ?: run {
-                val channelBuilder = Channel.Builder()
-                channelBuilder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
-                        .setDisplayName(application.getString(R.string.app_name))
+    private fun getChannelId() =
+            preferenceManager.getLongFromPersistence(CHANNEL_ID_KEY, 0L)
+                    .takeIf { it != 0L }
+                    ?: run {
+                        val channelBuilder = Channel.Builder()
+                        channelBuilder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
+                                .setDisplayName(application.getString(R.string.app_name))
 
-                val channelUri = application.contentResolver.insert(
-                        TvContractCompat.Channels.CONTENT_URI,
-                        channelBuilder.build().toContentValues()
-                )
+                        val channelUri = application.contentResolver.insert(
+                                TvContractCompat.Channels.CONTENT_URI,
+                                channelBuilder.build().toContentValues()
+                        )
 
-                val channelId = ContentUris.parseId(channelUri)
-                preferenceManager.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
-                channelId
-            }
+                        val channelId = ContentUris.parseId(channelUri)
+                        preferenceManager.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
+                        channelId
+                    }
+
+    private fun deleteChannel(channelId: Long) {
+        application.contentResolver.delete(TvContractCompat.buildChannelUri(channelId), null, null)
+    }
 
     companion object {
         const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"

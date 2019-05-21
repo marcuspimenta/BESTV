@@ -61,22 +61,24 @@ class ApplicationModule(
 
     @Provides
     @Singleton
-    fun provideOkHttpClient() = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
-        })
-        readTimeout(30, TimeUnit.SECONDS)
-        writeTimeout(30, TimeUnit.SECONDS)
-        connectTimeout(30, TimeUnit.SECONDS)
-    }.build()
+    fun provideOkHttpClient() =
+            OkHttpClient.Builder().apply {
+                addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BASIC
+                })
+                readTimeout(30, TimeUnit.SECONDS)
+                writeTimeout(30, TimeUnit.SECONDS)
+                connectTimeout(30, TimeUnit.SECONDS)
+            }.build()
 
     @Provides
     @Singleton
-    fun providePermissions(): Map<String, Boolean> = object : HashMap<String, Boolean>() {
-        init {
-            put(Manifest.permission.INTERNET, false)
-            put(Manifest.permission.RECORD_AUDIO, false)
-            put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false)
-        }
-    }
+    fun providePermissions(): Map<String, Boolean> =
+            object : HashMap<String, Boolean>() {
+                init {
+                    put(Manifest.permission.INTERNET, false)
+                    put(Manifest.permission.RECORD_AUDIO, false)
+                    put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false)
+                }
+            }
 }
