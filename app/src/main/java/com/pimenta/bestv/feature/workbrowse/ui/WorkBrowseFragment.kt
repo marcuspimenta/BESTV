@@ -25,7 +25,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.base.BaseBrowseFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseBrowseFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment

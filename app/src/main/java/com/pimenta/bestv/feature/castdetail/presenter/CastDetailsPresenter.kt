@@ -19,7 +19,7 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.feature.base.AutoDisposablePresenter
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.Cast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

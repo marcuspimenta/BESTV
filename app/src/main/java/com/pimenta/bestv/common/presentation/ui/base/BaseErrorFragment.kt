@@ -12,18 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.base
+package com.pimenta.bestv.common.presentation.ui.base
 
+import androidx.leanback.app.ErrorSupportFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.leanback.app.BrowseSupportFragment
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 11-02-2018.
  */
-abstract class BaseBrowseFragment : BrowseSupportFragment() {
+abstract class BaseErrorFragment : ErrorSupportFragment() {
 
-    protected lateinit var target: Fragment
+    protected var target: Fragment? = null
     protected var targetCode: Int = 0
 
     /**

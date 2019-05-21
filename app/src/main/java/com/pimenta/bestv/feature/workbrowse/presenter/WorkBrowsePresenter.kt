@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workbrowse.presenter
 import com.pimenta.bestv.common.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.feature.base.AutoDisposablePresenter
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.repository.entity.MovieGenre
 import com.pimenta.bestv.repository.entity.TvShowGenre
 import com.pimenta.bestv.repository.entity.Work

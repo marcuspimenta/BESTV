@@ -34,7 +34,7 @@ import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.feature.base.BaseSearchFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseSearchFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment

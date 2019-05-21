@@ -12,24 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.base
+package com.pimenta.bestv.common.mvp
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import io.reactivex.disposables.CompositeDisposable
 
 /**
- * Created by marcus on 06-02-2018.
+ * Created by marcus on 17-05-2018.
  */
-abstract class AutoDisposablePresenter : LifecycleObserver, DisposablePresenter() {
+abstract class DisposablePresenter {
 
-    fun bindTo(lifecycle: Lifecycle) {
-        lifecycle.addObserver(this)
-    }
+    protected val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    override fun dispose() {
-        super.dispose()
+    protected open fun dispose() {
+        compositeDisposable.dispose()
     }
 
 }

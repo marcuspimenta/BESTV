@@ -18,7 +18,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.feature.base.AutoDisposablePresenter
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

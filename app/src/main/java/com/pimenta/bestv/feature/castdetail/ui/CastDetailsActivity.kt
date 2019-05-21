@@ -19,7 +19,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.feature.base.BaseActivity
+import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
 
 /**
  * Created by marcus on 04-04-2018.

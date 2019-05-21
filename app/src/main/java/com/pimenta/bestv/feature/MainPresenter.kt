@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature
 
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
-import com.pimenta.bestv.feature.base.AutoDisposablePresenter
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

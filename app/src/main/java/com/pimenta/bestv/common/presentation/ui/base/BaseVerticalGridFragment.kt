@@ -12,16 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.base
+package com.pimenta.bestv.common.presentation.ui.base
 
-import androidx.leanback.app.DetailsSupportFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.leanback.app.VerticalGridSupportFragment
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 09-02-2018.
  */
-abstract class BaseDetailsFragment : DetailsSupportFragment() {
+abstract class BaseVerticalGridFragment : VerticalGridSupportFragment() {
 
     protected lateinit var target: Fragment
     protected var targetCode: Int = 0

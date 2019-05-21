@@ -18,7 +18,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.feature.base.BaseActivity
+import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
 import com.pimenta.bestv.feature.splash.ui.SplashActivity
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
 import javax.inject.Inject

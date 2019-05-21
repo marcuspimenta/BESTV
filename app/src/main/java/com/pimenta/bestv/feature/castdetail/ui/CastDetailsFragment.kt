@@ -30,7 +30,7 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
-import com.pimenta.bestv.feature.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment

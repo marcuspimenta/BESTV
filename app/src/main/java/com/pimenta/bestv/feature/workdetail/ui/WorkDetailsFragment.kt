@@ -31,7 +31,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.feature.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
