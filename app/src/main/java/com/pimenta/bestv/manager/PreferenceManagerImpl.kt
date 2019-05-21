@@ -31,9 +31,8 @@ class PreferenceManagerImpl @Inject constructor(
         application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
-    override fun getFromPersistence(key: String, defValue: String): String {
-        return sharedPreferences.getString(key, defValue)
-    }
+    override fun getFromPersistence(key: String, defValue: String): String? =
+            sharedPreferences.getString(key, defValue)
 
     override fun applyToPersistence(key: String, value: String) {
         sharedPreferences.edit().putString(key, value).apply()

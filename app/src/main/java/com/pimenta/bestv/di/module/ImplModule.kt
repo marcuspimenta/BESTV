@@ -17,8 +17,10 @@ package com.pimenta.bestv.di.module
 import com.pimenta.bestv.manager.*
 import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.repository.MediaRepositoryImpl
-import com.pimenta.bestv.repository.remote.MediaRemote
-import com.pimenta.bestv.repository.remote.TmdbMediaRemote
+import com.pimenta.bestv.repository.local.MediaLocalRepository
+import com.pimenta.bestv.repository.local.MediaLocalRepositoryImpl
+import com.pimenta.bestv.repository.remote.MediaRemoteRepository
+import com.pimenta.bestv.repository.remote.TmdbMediaRemoteRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -31,7 +33,11 @@ interface ImplModule {
 
     @Binds
     @Singleton
-    fun provideMediaRemote(connector: TmdbMediaRemote): MediaRemote
+    fun provideMediaRemote(connector: TmdbMediaRemoteRepository): MediaRemoteRepository
+
+    @Binds
+    @Singleton
+    fun provideMediaLocal(mediaLocalImplModule: MediaLocalRepositoryImpl): MediaLocalRepository
 
     @Binds
     @Singleton

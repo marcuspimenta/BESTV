@@ -27,7 +27,7 @@ interface PreferenceManager {
      *
      * @return [String]
      */
-    fun getFromPersistence(key: String, defValue: String): String
+    fun getFromPersistence(key: String, defValue: String): String?
 
     /**
      * Applies to persistence in [android.content.SharedPreferences]

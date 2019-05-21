@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.database
+package com.pimenta.bestv.repository.local.database
 
 import android.app.Application
 import android.database.sqlite.SQLiteDatabase

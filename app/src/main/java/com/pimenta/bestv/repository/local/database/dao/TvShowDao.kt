@@ -12,25 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.database.dao
+package com.pimenta.bestv.repository.local.database.dao
 
 import com.j256.ormlite.dao.RuntimeExceptionDao
-import com.pimenta.bestv.repository.database.DatabaseHelper
 import com.pimenta.bestv.repository.entity.TvShow
-
+import com.pimenta.bestv.repository.local.database.DatabaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * Created by marcus on 10/07/18.
  */
-@Singleton class TvShowDao @Inject constructor(
+@Singleton
+class TvShowDao @Inject constructor(
         private val databaseHelper: DatabaseHelper
 ) : BaseDao<TvShow> {
 
     private val tvShowDao: RuntimeExceptionDao<TvShow, Int> = databaseHelper.getRuntimeExceptionDao(TvShow::class.java)
 
-    override fun queryForAll(): List<TvShow> = tvShowDao.queryForAll()
+    override fun getAll(): List<TvShow> = tvShowDao.queryForAll()
 
     override fun getById(id: Int?): TvShow? = tvShowDao.queryForId(id)
 

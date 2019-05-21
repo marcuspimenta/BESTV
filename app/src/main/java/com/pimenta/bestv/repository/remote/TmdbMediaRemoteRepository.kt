@@ -28,12 +28,12 @@ import javax.inject.Inject
 /**
  * Created by marcus on 08-02-2018.
  */
-class TmdbMediaRemote @Inject constructor(
+class TmdbMediaRemoteRepository @Inject constructor(
         private val genreApi: GenreApi,
         private val movieApi: MovieApi,
         private val personApi: CastApi,
         private val tvShowApi: TvShowApi
-) : MediaRemote {
+) : MediaRemoteRepository {
 
     override fun getMovieGenres(): Single<MovieGenreList> =
             genreApi.getMovieGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)

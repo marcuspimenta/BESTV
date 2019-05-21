@@ -38,12 +38,13 @@ class MediaModule {
     @Provides
     @Singleton
     @Named("Tmdb")
-    fun provideTmdbRetrofit(okHttpClient: OkHttpClient, gson: Gson) = Retrofit.Builder()
-            .baseUrl(BuildConfig.TMDB_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
+    fun provideTmdbRetrofit(okHttpClient: OkHttpClient, gson: Gson) =
+            Retrofit.Builder()
+                    .baseUrl(BuildConfig.TMDB_BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build()
 
     @Provides
     @Singleton

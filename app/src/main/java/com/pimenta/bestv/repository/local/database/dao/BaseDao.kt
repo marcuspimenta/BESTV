@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.database.dao
+package com.pimenta.bestv.repository.local.database.dao
 
 /**
  * Created by marcus on 15-04-2018.
@@ -22,7 +22,7 @@ interface BaseDao<T> {
     /**
      * @see com.j256.ormlite.dao.Dao.queryForAll
      */
-    fun queryForAll(): List<T>
+    fun getAll(): List<T>
 
     /**
      * @see com.j256.ormlite.dao.Dao.queryForId

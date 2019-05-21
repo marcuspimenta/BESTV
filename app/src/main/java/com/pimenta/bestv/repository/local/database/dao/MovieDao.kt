@@ -12,25 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.repository.database.dao
+package com.pimenta.bestv.repository.local.database.dao
 
 import com.j256.ormlite.dao.RuntimeExceptionDao
-import com.pimenta.bestv.repository.database.DatabaseHelper
 import com.pimenta.bestv.repository.entity.Movie
-
+import com.pimenta.bestv.repository.local.database.DatabaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * Created by marcus on 15-04-2018.
  */
-@Singleton class MovieDao @Inject constructor(
+@Singleton
+class MovieDao @Inject constructor(
         private val databaseHelper: DatabaseHelper
 ) : BaseDao<Movie> {
 
     private val movieDao: RuntimeExceptionDao<Movie, Int> = databaseHelper.getRuntimeExceptionDao(Movie::class.java)
 
-    override fun queryForAll(): List<Movie> = movieDao.queryForAll()
+    override fun getAll(): List<Movie> = movieDao.queryForAll()
 
     override fun getById(id: Int?): Movie? = movieDao.queryForId(id)
 

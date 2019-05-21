@@ -33,7 +33,7 @@ import io.reactivex.Single
 /**
  * Created by marcus on 08-02-2018.
  */
-interface MediaRemote {
+interface MediaRemoteRepository {
 
     /**
      * Gets the [GenreList] available at TMDb
