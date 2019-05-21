@@ -18,7 +18,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.feature.base.BaseActivity
+import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
 import com.pimenta.bestv.feature.splash.ui.SplashActivity
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
 import javax.inject.Inject
@@ -34,17 +34,13 @@ class MainActivity : BaseActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BesTV.applicationComponent.inject(this)
+        presenter.bindTo(lifecycle)
         presenter.loadRecommendations()
 
         when (savedInstanceState) {
             null -> startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE)
             else -> replaceFragment(WorkBrowseFragment.newInstance())
         }
-    }
-
-    override fun onDestroy() {
-        presenter.dispose()
-        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

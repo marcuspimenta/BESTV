@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.workgrid.ui
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,16 +29,16 @@ import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.feature.base.BaseVerticalGridFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseVerticalGridFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
-import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -60,6 +61,8 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         setupUI()
     }
 
@@ -82,7 +85,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
 
     override fun onResume() {
         super.onResume()
-        workSelected?.run {
+        workSelected?.let {
             loadBackdropImage()
             refreshDada()
         }
@@ -93,11 +96,6 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         super.onDestroy()
     }
 
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
-    }
-
     override fun getMainFragmentAdapter() = fragmentAdapter
 
     override fun onWorksLoaded(works: List<WorkViewModel>?) {
@@ -105,22 +103,25 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
             if (rowsAdapter.indexOf(it) == -1) {
                 rowsAdapter.add(it)
             }
-        } ?: run {
-            if (rowsAdapter.size() == 0) {
-                val fragment = ErrorFragment.newInstance()
-                fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
-                addFragment(fragment, ErrorFragment.TAG)
-            }
+        } ?: if (rowsAdapter.size() == 0) {
+            val fragment = ErrorFragment.newInstance()
+            fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+            addFragment(fragment, ErrorFragment.TAG)
         }
+
 
         progressBarManager.hide()
         mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 backgroundManager.setBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                //DO ANYTHING
             }
         })
     }

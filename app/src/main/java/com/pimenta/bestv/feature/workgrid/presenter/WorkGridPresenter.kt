@@ -16,9 +16,10 @@ package com.pimenta.bestv.feature.workgrid.presenter
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.Genre
+import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.entity.Genre
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -33,7 +34,7 @@ import javax.inject.Inject
 class WorkGridPresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     private var currentPage = 0
     private var loadBackdropImageDisposable: Disposable? = null
@@ -49,7 +50,7 @@ class WorkGridPresenter @Inject constructor(
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
-                compositeDisposable.add(workUseCase.getFavorites()
+                workUseCase.getFavorites()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ movies ->
@@ -57,10 +58,10 @@ class WorkGridPresenter @Inject constructor(
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the favorite works")
                             view.onWorksLoaded(null)
-                        }))
+                        }).addTo(compositeDisposable)
             else -> {
                 val page = currentPage + 1
-                compositeDisposable.add(workUseCase.loadWorkByType(page, movieListType)
+                workUseCase.loadWorkByType(page, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ workPage ->
@@ -73,7 +74,7 @@ class WorkGridPresenter @Inject constructor(
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the works by type")
                             view.onWorksLoaded(null)
-                        }))
+                        }).addTo(compositeDisposable)
             }
         }
     }
@@ -85,7 +86,7 @@ class WorkGridPresenter @Inject constructor(
      */
     fun loadWorkByGenre(genre: Genre) {
         val pageSearch = currentPage + 1
-        compositeDisposable.add(workUseCase.getWorkByGenre(genre, pageSearch)
+        workUseCase.getWorkByGenre(genre, pageSearch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ workPage ->
@@ -98,7 +99,7 @@ class WorkGridPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading the works by genre")
                     view.onWorksLoaded(null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**

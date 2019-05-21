@@ -16,7 +16,7 @@ package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.repository.entity.Video
+import com.pimenta.bestv.data.entity.Video
 
 fun Video.toViewModel() = VideoViewModel(
         id = id,

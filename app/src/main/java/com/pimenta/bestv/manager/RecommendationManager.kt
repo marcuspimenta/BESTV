@@ -31,6 +31,4 @@ interface RecommendationManager {
      */
     fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean>
 
-
-
 }

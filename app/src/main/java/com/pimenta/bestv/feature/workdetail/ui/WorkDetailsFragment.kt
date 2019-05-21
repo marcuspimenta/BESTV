@@ -26,19 +26,19 @@ import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.feature.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
+import com.pimenta.bestv.common.presentation.ui.render.VideoCardRender
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
-import com.pimenta.bestv.widget.render.CastCardRender
-import com.pimenta.bestv.widget.render.VideoCardRender
-import com.pimenta.bestv.widget.render.WorkCardRenderer
-import com.pimenta.bestv.widget.render.WorkDetailsDescriptionRender
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -81,6 +81,8 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         activity?.let {
             workViewModel = it.intent.getSerializableExtra(WORK) as WorkViewModel
         }
@@ -101,11 +103,6 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         )
         actionAdapter.add(favoriteAction)
         presenter.loadDataByWork(workViewModel)
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onResultSetFavoriteMovie(success: Boolean) {
@@ -171,17 +168,25 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     private fun setupDetailsOverviewRow() {
         detailsOverviewRow = DetailsOverviewRow(workViewModel)
 
-        workViewModel.loadPoster(requireNotNull(context), object : SimpleTarget<Drawable>() {
+        workViewModel.loadPoster(requireNotNull(context), object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 detailsOverviewRow.imageDrawable = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
             }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
+            }
         })
 
-        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 detailsBackground.coverBitmap = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
             }
         })
 

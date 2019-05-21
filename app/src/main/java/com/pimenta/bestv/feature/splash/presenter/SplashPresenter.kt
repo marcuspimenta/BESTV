@@ -14,7 +14,8 @@
 
 package com.pimenta.bestv.feature.splash.presenter
 
-import com.pimenta.bestv.feature.base.DisposablePresenter
+import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.manager.PermissionManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,13 +29,13 @@ import javax.inject.Inject
 class SplashPresenter @Inject constructor(
         private val view: View,
         private val permissionManager: PermissionManager
-) : DisposablePresenter() {
+) : AutoDisposablePresenter() {
 
     /**
      * Loads all permissions
      */
     fun loadPermissions() {
-        compositeDisposable.add(permissionManager.hasAllPermissions()
+        permissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(SPLASH_TIME_LOAD_SECONDS.toLong(), TimeUnit.SECONDS)
@@ -47,14 +48,14 @@ class SplashPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading permissions")
                     view.onSplashFinished(false)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
      * Verifies if has all permissions
      */
     fun hasAllPermissions() {
-        compositeDisposable.add(permissionManager.hasAllPermissions()
+        permissionManager.hasAllPermissions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -62,7 +63,7 @@ class SplashPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while checking if has all permissions")
                     view.onSplashFinished(false)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     interface View {

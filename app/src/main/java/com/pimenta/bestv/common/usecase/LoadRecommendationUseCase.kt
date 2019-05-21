@@ -15,8 +15,8 @@
 package com.pimenta.bestv.common.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.manager.RecommendationManager
-import com.pimenta.bestv.repository.MediaRepository
 import io.reactivex.Completable
 import javax.inject.Inject
 

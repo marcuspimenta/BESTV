@@ -17,7 +17,7 @@ import android.app.Activity
 import android.os.Bundle
 
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.base.BaseErrorFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseErrorFragment
 
 /**
  * Created by marcus on 11-02-2018.

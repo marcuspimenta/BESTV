@@ -17,24 +17,24 @@ package com.pimenta.bestv.feature.workbrowse.ui
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
-import androidx.leanback.app.BackgroundManager
-import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.widget.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.leanback.app.BackgroundManager
+import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.base.BaseBrowseFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseBrowseFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
-import com.pimenta.bestv.widget.headeritem.GenreHeaderItem
-import com.pimenta.bestv.widget.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
 import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.entity.MovieGenre
-import com.pimenta.bestv.repository.entity.TvShowGenre
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
+import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
+import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject
 
 /**
@@ -79,6 +79,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         setupUIElements()
     }
 
@@ -110,12 +112,11 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
 
     override fun onDetach() {
         backgroundManager.release()
-        presenter.dispose()
         super.onDetach()
     }
 
-    override fun onDataLoaded(hasFavorite: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?) {
-        this.hasFavorite = hasFavorite
+    override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?) {
+        hasFavorite = hasFavoriteMovie
         if (hasFavorite) {
             rowsAdapter.add(favoritePageRow)
         }
@@ -146,8 +147,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         startEntranceTransition()
     }
 
-    override fun onHasFavorite(hasFavorite: Boolean) {
-        this.hasFavorite = hasFavorite
+    override fun onHasFavorite(hasFavoriteMovie: Boolean) {
+        hasFavorite = hasFavoriteMovie
         if (hasFavorite) {
             if (rowsAdapter.indexOf(favoritePageRow) == -1) {
                 rowsAdapter.add(FAVORITE_INDEX, favoritePageRow)
@@ -162,7 +163,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
     }
 
     private fun setupUIElements() {
-        headersState = BrowseSupportFragment.HEADERS_ENABLED
+        headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         setOnSearchClickedListener {
             startActivity(SearchActivity.newInstance(context))

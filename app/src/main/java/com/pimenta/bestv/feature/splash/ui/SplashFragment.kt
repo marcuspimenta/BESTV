@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.feature.base.BaseFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseFragment
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import javax.inject.Inject
 
@@ -42,6 +42,11 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
                 .inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
@@ -49,11 +54,6 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadPermissions()
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onSplashFinished(success: Boolean) {

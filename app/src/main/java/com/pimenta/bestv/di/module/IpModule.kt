@@ -2,7 +2,7 @@ package com.pimenta.bestv.di.module
 
 import com.google.gson.Gson
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.repository.remote.api.ip.InfoApi
+import com.pimenta.bestv.data.remote.api.ip.InfoApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

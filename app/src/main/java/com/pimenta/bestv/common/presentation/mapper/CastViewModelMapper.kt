@@ -16,7 +16,7 @@ package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.repository.entity.Cast
+import com.pimenta.bestv.data.entity.Cast
 
 fun Cast.toViewModel() = CastViewModel(
         id = id,

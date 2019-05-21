@@ -6,15 +6,15 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseSupportFragment, SearchSupportFragment, DetailsSupportFragment, VerticalSupportFragment are used.
 
 ## Implementations
-<ul>
-<li>Android TV Leandback library</li>
-<li>The Movie Database (TMDb) REST API</li>
-<li>MVP architecture
-<li>Dagger 2
-<li>Retrofit 2
-<li>RxJava 2  
-<li>Glide
-</ul>
+- Android TV Leandback library</li>
+- The Movie Database (TMDb) REST API</li>
+- MVP architecture
+- Dagger 2
+- Retrofit 2
+- RxJava 2  
+- Glide
+- [Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
+- [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
 
 ## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.

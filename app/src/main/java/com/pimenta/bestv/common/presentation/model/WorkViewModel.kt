@@ -20,7 +20,7 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import java.io.Serializable
 import java.util.*
 
@@ -40,14 +40,14 @@ class WorkViewModel(
         var type: WorkType
 ) : Serializable
 
-fun WorkViewModel.loadPoster(context: Context, target: SimpleTarget<Drawable>) {
+fun WorkViewModel.loadPoster(context: Context, target: CustomTarget<Drawable>) {
     Glide.with(context)
             .load(posterUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
             .into(target)
 }
 
-fun WorkViewModel.loadBackdrop(context: Context, target: SimpleTarget<Bitmap>) {
+fun WorkViewModel.loadBackdrop(context: Context, target: CustomTarget<Bitmap>) {
     Glide.with(context)
             .asBitmap()
             .load(backdropUrl)

@@ -23,19 +23,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.widget.*
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
-import com.pimenta.bestv.feature.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.widget.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -64,6 +64,8 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         activity?.let {
             castViewModel = it.intent.getSerializableExtra(CAST) as CastViewModel
         }
@@ -84,11 +86,6 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onViewCreated(view, savedInstanceState)
         progressBarManager.show()
         presenter.loadCastDetails(castViewModel)
-    }
-
-    override fun onDetach() {
-        presenter.dispose()
-        super.onDetach()
     }
 
     override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
@@ -121,10 +118,14 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     private fun setupDetailsOverviewRow() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
-        castViewModel.loadThumbnail(requireNotNull(context), object : SimpleTarget<Drawable>() {
+        castViewModel.loadThumbnail(requireNotNull(context), object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 detailsOverviewRow.imageDrawable = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                //DO ANYTHING
             }
         })
 

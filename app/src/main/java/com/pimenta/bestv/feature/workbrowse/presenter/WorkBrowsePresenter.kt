@@ -14,12 +14,14 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
+import com.pimenta.bestv.common.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.repository.entity.*
-import io.reactivex.Single
+import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,14 +31,15 @@ import javax.inject.Inject
  */
 class WorkBrowsePresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase
-) : DisposablePresenter() {
+        private val workUseCase: WorkUseCase,
+        private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase
+) : AutoDisposablePresenter() {
 
     /**
      * Checks if there is any [Work] saved as favorite
      */
     fun hasFavorite() {
-        compositeDisposable.add(workUseCase.hasFavorite()
+        workUseCase.hasFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -44,42 +47,27 @@ class WorkBrowsePresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while checking if has any work as favorite")
                     view.onHasFavorite(false)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
      * Loads the [<] available at TMDb
      */
     fun loadData() {
-        compositeDisposable.add(Single.zip<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo>(
-                workUseCase.getMovieGenres(),
-                workUseCase.getTvShowGenres(),
-                workUseCase.hasFavorite(),
-                Function3<MovieGenreList, TvShowGenreList, Boolean, BrowserWorkInfo> { movieGenreList, tvShowGenreList, hasFavoriteMovie ->
-                    BrowserWorkInfo(movieGenreList, tvShowGenreList, hasFavoriteMovie)
-                })
+        getWorkBrowseDetailsUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     view.onDataLoaded(
-                            result.hasFavoriteMovie,
-                            result.movieGenreList?.genres,
-                            result.tvShowGenreList?.genres
+                            result.first,
+                            result.second.genres,
+                            result.third.genres
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
                     view.onDataLoaded(false, null, null)
-                }))
+                }).addTo(compositeDisposable)
     }
-
-    /**
-     * Wrapper class to keep the movie info
-     */
-    private inner class BrowserWorkInfo(
-            val movieGenreList: MovieGenreList? = null,
-            val tvShowGenreList: TvShowGenreList? = null,
-            val hasFavoriteMovie: Boolean
-    )
 
     interface View {
 

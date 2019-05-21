@@ -17,10 +17,10 @@ package com.pimenta.bestv.di.module
 import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.repository.remote.api.tmdb.CastApi
-import com.pimenta.bestv.repository.remote.api.tmdb.GenreApi
-import com.pimenta.bestv.repository.remote.api.tmdb.MovieApi
-import com.pimenta.bestv.repository.remote.api.tmdb.TvShowApi
+import com.pimenta.bestv.data.remote.api.tmdb.CastApi
+import com.pimenta.bestv.data.remote.api.tmdb.GenreApi
+import com.pimenta.bestv.data.remote.api.tmdb.MovieApi
+import com.pimenta.bestv.data.remote.api.tmdb.TvShowApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -38,12 +38,13 @@ class MediaModule {
     @Provides
     @Singleton
     @Named("Tmdb")
-    fun provideTmdbRetrofit(okHttpClient: OkHttpClient, gson: Gson) = Retrofit.Builder()
-            .baseUrl(BuildConfig.TMDB_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
+    fun provideTmdbRetrofit(okHttpClient: OkHttpClient, gson: Gson) =
+            Retrofit.Builder()
+                    .baseUrl(BuildConfig.TMDB_BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build()
 
     @Provides
     @Singleton

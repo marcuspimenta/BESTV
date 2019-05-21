@@ -17,9 +17,9 @@ package com.pimenta.bestv.common.presentation.mapper
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.repository.entity.Movie
-import com.pimenta.bestv.repository.entity.TvShow
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.data.entity.Movie
+import com.pimenta.bestv.data.entity.TvShow
+import com.pimenta.bestv.data.entity.Work
 
 fun Work.toViewModel() = WorkViewModel(
         id = id,

@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.search.ui
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -27,17 +28,17 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.feature.base.BaseSearchFragment
+import com.pimenta.bestv.common.presentation.ui.base.BaseSearchFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.widget.render.WorkCardRenderer
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import java.util.*
 import javax.inject.Inject
 
@@ -75,6 +76,8 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.bindTo(this.lifecycle)
+
         setupUI()
     }
 
@@ -106,7 +109,6 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
 
     override fun onDetach() {
         backgroundManager.release()
-        presenter.dispose()
         super.onDetach()
     }
 
@@ -150,9 +152,13 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireNotNull(context), object : SimpleTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 backgroundManager.setBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                //DO ANYTHING
             }
         })
     }

@@ -17,15 +17,17 @@ package com.pimenta.bestv.feature.workdetail.presenter
 import com.pimenta.bestv.common.presentation.mapper.toWork
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.usecase.*
-import com.pimenta.bestv.feature.base.DisposablePresenter
-import com.pimenta.bestv.repository.entity.Work
+import com.pimenta.bestv.common.usecase.GetRecommendationByWorkUseCase
+import com.pimenta.bestv.common.usecase.GetSimilarByWorkUseCase
+import com.pimenta.bestv.common.usecase.GetWorkDetailsUseCase
+import com.pimenta.bestv.common.usecase.WorkUseCase
+import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,11 +38,10 @@ import javax.inject.Inject
 class WorkDetailsPresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase,
-        private val getVideosUseCase: GetVideosUseCase,
-        private val getCastsUseCase: GetCastsUseCase,
         private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
-        private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
-) : DisposablePresenter() {
+        private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
+        private val getWorkDetailsUseCase: GetWorkDetailsUseCase
+) : AutoDisposablePresenter() {
 
     private var recommendedPage = 0
     private var similarPage = 0
@@ -62,7 +63,7 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun setFavorite(workViewModel: WorkViewModel) {
-        compositeDisposable.add(Maybe.fromCallable { workViewModel.toWork() }
+        Maybe.fromCallable { workViewModel.toWork() }
                 .flatMap { work ->
                     Maybe.create<Boolean> {
                         val result = if (workViewModel.isFavorite) {
@@ -86,7 +87,7 @@ class WorkDetailsPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while settings the work as favorite")
                     view.onResultSetFavoriteMovie(false)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
@@ -95,41 +96,30 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadDataByWork(workViewModel: WorkViewModel) {
-        val recommendedPageSearch = recommendedPage + 1
-        val similarPageSearch = similarPage + 1
-
-        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
-                .flatMap {
-                    Single.zip(getVideosUseCase(it),
-                            getCastsUseCase(it),
-                            getRecommendationByWorkUseCase(it, recommendedPageSearch),
-                            getSimilarByWorkUseCase(it, similarPageSearch),
-                            Function4<List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel, WorkInfo> { videos, casts, recommendedMovies, similarMovies ->
-                                WorkInfo(videos, casts, recommendedMovies, similarMovies)
-                            })
-                }
+        Single.fromCallable { workViewModel.toWork() }
+                .flatMap { getWorkDetailsUseCase(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieInfo ->
-                    val recommendedPage = movieInfo.recommendedMovies
+                    val recommendedPage = movieInfo.second
                     if (recommendedPage.page <= recommendedPage.totalPages) {
                         this.recommendedPage = recommendedPage.page
                     }
-                    val similarPage = movieInfo.similarMovies
+                    val similarPage = movieInfo.third
                     if (similarPage.page <= similarPage.totalPages) {
                         this.similarPage = similarPage.page
                     }
 
                     view.onDataLoaded(
-                            movieInfo.casts,
+                            movieInfo.first,
                             recommendedPage.works,
                             similarPage.works,
-                            movieInfo.videos
+                            movieInfo.fourth
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
                     view.onDataLoaded(null, null, null, null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
@@ -138,10 +128,8 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
-        val pageSearch = recommendedPage + 1
-
-        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
-                .flatMap { getRecommendationByWorkUseCase(it, pageSearch) }
+        Single.fromCallable { workViewModel.toWork() }
+                .flatMap { getRecommendationByWorkUseCase(it, recommendedPage + 1) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieList ->
@@ -154,7 +142,7 @@ class WorkDetailsPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading recommendations by work")
                     view.onRecommendationLoaded(null)
-                }))
+                }).addTo(compositeDisposable)
     }
 
     /**
@@ -163,10 +151,8 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
-        val pageSearch = similarPage + 1
-
-        compositeDisposable.add(Single.fromCallable { workViewModel.toWork() }
-                .flatMap { getSimilarByWorkUseCase(it, pageSearch) }
+        Single.fromCallable { workViewModel.toWork() }
+                .flatMap { getSimilarByWorkUseCase(it, similarPage + 1) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieList ->
@@ -179,24 +165,14 @@ class WorkDetailsPresenter @Inject constructor(
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading similar by work")
                     view.onSimilarLoaded(null)
-                }))
+                }).addTo(compositeDisposable)
     }
-
-    /**
-     * Wrapper class to keep the work info
-     */
-    private inner class WorkInfo(
-            val videos: List<VideoViewModel>?,
-            val casts: List<CastViewModel>?,
-            val recommendedMovies: WorkPageViewModel,
-            val similarMovies: WorkPageViewModel
-    )
 
     interface View {
 
         fun onResultSetFavoriteMovie(success: Boolean)
 
-        fun onDataLoaded(casts: List<CastViewModel>?, recommendedMovies: List<WorkViewModel>?, similarMovies: List<WorkViewModel>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?)
 
         fun onRecommendationLoaded(works: List<WorkViewModel>?)
 
