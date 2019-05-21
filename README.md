@@ -14,7 +14,8 @@ Sample about Android TV, that shows how to use the Leandback library from Google
 <li>Retrofit 2
 <li>RxJava 2  
 <li>Glide
-<li>Lifecycle Architecture Component  
+<li>[Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
+<li>[Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)  
 </ul>
 
 ## API Keys
