@@ -14,14 +14,14 @@
 
 package com.pimenta.bestv.feature.castdetail.presenter
 
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.mapper.toCast
+import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
-import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.data.entity.Cast
-import io.reactivex.Single
+import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -41,7 +41,7 @@ class CastDetailsPresenter @Inject constructor(
      * @param cast [Cast]
      */
     fun loadCastDetails(castViewModel: CastViewModel) {
-        Single.fromCallable { castViewModel.toCast() }
+        castViewModel.toCast().toSingle()
                 .flatMap { getCastDetailsUseCase(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

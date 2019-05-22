@@ -15,6 +15,7 @@
 package com.pimenta.bestv.feature.workdetail.presenter
 
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.mapper.toWork
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
@@ -51,7 +52,7 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun setFavorite(workViewModel: WorkViewModel) {
-        Single.fromCallable { workViewModel.toWork() }
+        workViewModel.toWork().toSingle()
                 .flatMap { workUseCase.setFavorite(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +70,7 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadDataByWork(workViewModel: WorkViewModel) {
-        Single.fromCallable { workViewModel.toWork() }
+        workViewModel.toWork().toSingle()
                 .flatMap { getWorkDetailsUseCase(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -102,7 +103,7 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
-        Single.fromCallable { workViewModel.toWork() }
+        workViewModel.toWork().toSingle()
                 .flatMap { getRecommendationByWorkUseCase(it, recommendedPage + 1) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -125,7 +126,7 @@ class WorkDetailsPresenter @Inject constructor(
      * @param workViewModel [WorkViewModel]
      */
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
-        Single.fromCallable { workViewModel.toWork() }
+        workViewModel.toWork().toSingle()
                 .flatMap { getSimilarByWorkUseCase(it, similarPage + 1) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

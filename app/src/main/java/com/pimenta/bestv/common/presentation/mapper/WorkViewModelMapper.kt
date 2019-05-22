@@ -20,6 +20,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.entity.Movie
 import com.pimenta.bestv.data.entity.TvShow
 import com.pimenta.bestv.data.entity.Work
+import io.reactivex.Single
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,11 +32,13 @@ fun Work.toViewModel() = WorkViewModel(
         backdropUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, backdropPath),
         posterUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, posterPath),
         originalTitle = originalTitle,
-        releaseDate = releaseDate?.let {
-            SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
-                    SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
-            )
-        },
+        releaseDate = releaseDate
+                ?.takeUnless { it.isEmpty() || it.isBlank() }
+                ?.let {
+                    SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
+                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
+                    )
+                },
         isFavorite = isFavorite,
         type = if (this is TvShow) WorkType.TV_SHOW else WorkType.MOVIE
 )
@@ -44,3 +47,5 @@ fun WorkViewModel.toWork() = when (type) {
     WorkType.MOVIE -> Movie(id = id, isFavorite = isFavorite)
     WorkType.TV_SHOW -> TvShow(id = id, isFavorite = isFavorite)
 }
+
+fun Work.toSingle() = Single.fromCallable { this }
