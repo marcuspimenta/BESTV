@@ -12,27 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
-
-import io.reactivex.Single
+package com.pimenta.bestv.manager.device
 
 /**
- * Created by marcus on 04/07/18.
+ * Created by marcus on 11-02-2018.
  */
-interface PermissionManager {
+interface DeviceManager {
 
     /**
-     * Gets the permissions.
+     * Gets the [String] country ISO 3166-1 code
      *
-     * @return [<]
+     * @return [String]
      */
-    fun getPermissions(): Set<String>
-
-    /**
-     * Verifies if has all the permissions.
-     *
-     * @return [<]
-     */
-    fun hasAllPermissions(): Single<Boolean>
+    fun getCountryCode(): String
 
 }

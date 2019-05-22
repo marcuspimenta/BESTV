@@ -12,23 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
+package com.pimenta.bestv.manager.permission
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 04/07/18.
  */
-interface RecommendationManager {
+interface PermissionManager {
 
     /**
-     * Loads the recommendations
+     * Gets the permissions.
      *
-     * @param works [?][<]
-     *
-     * @return `true` if success, `false` otherwise
+     * @return [<]
      */
-    fun loadRecommendations(works: List<WorkViewModel>?): Single<Boolean>
+    fun getPermissions(): Set<String>
+
+    /**
+     * Verifies if has all the permissions.
+     *
+     * @return [<]
+     */
+    fun hasAllPermissions(): Single<Boolean>
 
 }

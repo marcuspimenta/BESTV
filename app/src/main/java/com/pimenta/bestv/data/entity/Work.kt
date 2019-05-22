@@ -16,10 +16,7 @@ package com.pimenta.bestv.data.entity
 
 import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.field.DatabaseField
-
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.Date
 
 /**
  * Created by marcus on 06/07/18.
@@ -37,23 +34,21 @@ abstract class Work(
         var isFavorite: Boolean = false
 ) : Serializable {
 
-    protected val dateFormat by lazy { SimpleDateFormat("yyyy-MM-dd") }
-
     abstract var title: String?
 
     abstract var originalTitle: String?
 
-    abstract var releaseDate: Date?
+    abstract var releaseDate: String?
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (obj == null || javaClass != obj.javaClass) {
+        if (other == null || javaClass != other.javaClass) {
             return false
         }
 
-        val that = obj as Work?
+        val that = other as Work?
 
         return id == that?.id
     }

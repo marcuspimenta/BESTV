@@ -38,6 +38,7 @@ import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
+import com.pimenta.bestv.feature.workdetail.intent.WorkProcessor
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -69,6 +70,9 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     private lateinit var workViewModel: WorkViewModel
 
     @Inject
+    lateinit var workProcessor: WorkProcessor
+
+    @Inject
     lateinit var presenter: WorkDetailsPresenter
 
     override fun onAttach(context: Context) {
@@ -83,8 +87,10 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        activity?.let {
-            workViewModel = it.intent.getSerializableExtra(WORK) as WorkViewModel
+        workProcessor(requireNotNull(activity?.intent))?.let {
+            workViewModel = it
+        } ?: run {
+            activity?.finish()
         }
 
         setupDetailsOverviewRow()

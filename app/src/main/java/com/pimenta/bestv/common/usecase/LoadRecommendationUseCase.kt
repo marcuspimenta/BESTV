@@ -16,7 +16,7 @@ package com.pimenta.bestv.common.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.manager.RecommendationManager
+import com.pimenta.bestv.manager.recommendation.RecommendationManager
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -32,8 +32,7 @@ class LoadRecommendationUseCase @Inject constructor(
             mediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES)
                     .map { it.works?.map { work -> work.toViewModel() } }
                     .map { it.take(RECOMMENDATION_NUMBER) }
-                    .flatMap { recommendationManager.loadRecommendations(it) }
-                    .ignoreElement()
+                    .flatMapCompletable { recommendationManager.loadRecommendations(it) }
 
     companion object {
 

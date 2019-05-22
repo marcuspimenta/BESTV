@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
+package com.pimenta.bestv.manager.preference
 
 /**
  * Created by marcus on 04/07/18.

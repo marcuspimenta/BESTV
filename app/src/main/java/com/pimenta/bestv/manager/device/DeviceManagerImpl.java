@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager;
+package com.pimenta.bestv.manager.device;
 
 import com.pimenta.bestv.data.entity.IpInfo;
 import com.pimenta.bestv.data.remote.api.ip.InfoApi;

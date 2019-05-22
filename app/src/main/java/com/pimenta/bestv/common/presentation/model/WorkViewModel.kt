@@ -22,7 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import java.io.Serializable
-import java.util.*
 
 /**
  * Created by marcus on 18-04-2019.
@@ -35,7 +34,7 @@ class WorkViewModel(
         var posterUrl: String?,
         var title: String?,
         var originalTitle: String?,
-        var releaseDate: Date?,
+        var releaseDate: String?,
         var isFavorite: Boolean,
         var type: WorkType
 ) : Serializable

@@ -23,7 +23,7 @@ abstract class DisposablePresenter {
 
     protected val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    protected open fun dispose() {
+    open fun dispose() {
         compositeDisposable.dispose()
     }
 

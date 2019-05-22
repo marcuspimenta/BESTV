@@ -20,7 +20,12 @@ import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import com.pimenta.bestv.data.remote.TmdbMediaRemoteRepository
 import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.data.repository.MediaRepositoryImpl
-import com.pimenta.bestv.manager.*
+import com.pimenta.bestv.manager.device.DeviceManager
+import com.pimenta.bestv.manager.device.DeviceManagerImpl
+import com.pimenta.bestv.manager.permission.PermissionManager
+import com.pimenta.bestv.manager.permission.PermissionManagerImpl
+import com.pimenta.bestv.manager.preference.PreferenceManager
+import com.pimenta.bestv.manager.preference.PreferenceManagerImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton

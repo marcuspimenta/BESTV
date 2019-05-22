@@ -17,9 +17,9 @@ package com.pimenta.bestv.di.module
 import android.app.Application
 import android.app.NotificationManager
 import android.os.Build
-import com.pimenta.bestv.manager.PreferenceManager
-import com.pimenta.bestv.manager.RecommendationChannelApi
-import com.pimenta.bestv.manager.RecommendationRowApi
+import com.pimenta.bestv.manager.preference.PreferenceManager
+import com.pimenta.bestv.manager.recommendation.channel.RecommendationChannelApi
+import com.pimenta.bestv.manager.recommendation.row.RecommendationRowApi
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

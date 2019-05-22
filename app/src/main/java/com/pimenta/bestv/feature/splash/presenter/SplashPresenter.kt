@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.splash.presenter
 
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.manager.PermissionManager
+import com.pimenta.bestv.manager.permission.PermissionManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber

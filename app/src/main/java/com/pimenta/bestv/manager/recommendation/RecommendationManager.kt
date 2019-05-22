@@ -12,18 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
+package com.pimenta.bestv.manager.recommendation
+
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import io.reactivex.Completable
+import io.reactivex.Single
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 06-03-2018.
  */
-interface DeviceManager {
+interface RecommendationManager {
 
     /**
-     * Gets the [String] country ISO 3166-1 code
+     * Loads the recommendations
      *
-     * @return [String]
+     * @param works [?][<]
+     *
+     * @return `true` if success, `false` otherwise
      */
-    fun getCountryCode(): String
+    fun loadRecommendations(works: List<WorkViewModel>?): Completable
 
 }

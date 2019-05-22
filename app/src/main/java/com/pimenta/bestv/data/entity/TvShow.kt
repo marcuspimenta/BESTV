@@ -16,9 +16,6 @@ package com.pimenta.bestv.data.entity
 
 import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.table.DatabaseTable
-import timber.log.Timber
-import java.text.ParseException
-import java.util.*
 
 /**
  * Created by marcus on 06/07/18.
@@ -31,17 +28,12 @@ class TvShow(
         @SerializedName("first_air_date") private var firstAirDate: String? = null
 ) : Work(id) {
 
-    override var releaseDate: Date?
+    override var releaseDate: String?
         get() {
-            return try {
-                dateFormat.parse(firstAirDate)
-            } catch (e: ParseException) {
-                Timber.e(e, "Error to get the release data")
-                null
-            }
+            return firstAirDate
         }
         set(value) {
-            firstAirDate = value.toString()
+            firstAirDate = value
         }
 
     companion object {

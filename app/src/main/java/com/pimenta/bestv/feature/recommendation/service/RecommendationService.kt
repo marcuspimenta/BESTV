@@ -39,6 +39,11 @@ class RecommendationService : Service(), RecommendationPresenter.Service {
         presenter.loadRecommendations()
     }
 
+    override fun onDestroy() {
+        presenter.dispose()
+        super.onDestroy()
+    }
+
     override fun onLoadRecommendationFinished() {
         stopSelf()
     }

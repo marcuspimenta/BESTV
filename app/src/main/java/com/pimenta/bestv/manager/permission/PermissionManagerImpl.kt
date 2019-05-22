@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.manager
+package com.pimenta.bestv.manager.permission
 
 import android.app.Application
 import android.content.pm.PackageManager

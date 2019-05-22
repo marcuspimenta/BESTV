@@ -20,7 +20,6 @@ import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.extension.loadImageInto
-import java.text.SimpleDateFormat
 
 /**
  * Created by marcus on 10-02-2018.
@@ -38,9 +37,7 @@ class WorkCardRenderer : Presenter() {
         val workViewModel = item as WorkViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = workViewModel.title
-        workViewModel.releaseDate?.let {
-            cardView.contentText = sDateFormat.format(it)
-        }
+        cardView.contentText = workViewModel.releaseDate
         cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
                 viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height))
 
@@ -53,10 +50,5 @@ class WorkCardRenderer : Presenter() {
         val cardView = viewHolder.view as ImageCardView
         cardView.badgeImage = null
         cardView.mainImage = null
-    }
-
-    companion object {
-
-        private val sDateFormat = SimpleDateFormat("MMM dd, yyyy")
     }
 }

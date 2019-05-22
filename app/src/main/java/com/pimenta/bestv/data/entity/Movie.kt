@@ -16,9 +16,6 @@ package com.pimenta.bestv.data.entity
 
 import com.google.gson.annotations.SerializedName
 import com.j256.ormlite.table.DatabaseTable
-import timber.log.Timber
-import java.text.ParseException
-import java.util.*
 
 /**
  * Created by marcus on 09-02-2018.
@@ -31,17 +28,12 @@ class Movie(
         @SerializedName("release_date") private var releaseDateString: String? = null
 ) : Work(id) {
 
-    override var releaseDate: Date?
+    override var releaseDate: String?
         get() {
-            return try {
-                dateFormat.parse(releaseDateString)
-            } catch (e: ParseException) {
-                Timber.e(e, "Error to get the release data")
-                null
-            }
+            return releaseDateString
         }
         set(value) {
-            releaseDateString = value.toString()
+            releaseDateString = value
         }
 
     companion object {

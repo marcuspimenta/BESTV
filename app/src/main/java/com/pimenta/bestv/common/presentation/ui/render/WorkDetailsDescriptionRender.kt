@@ -16,7 +16,6 @@ package com.pimenta.bestv.common.presentation.ui.render
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import java.text.SimpleDateFormat
 
 /**
  * Created by marcus on 28-01-2018.
@@ -26,12 +25,8 @@ class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel
         viewHolder.title.text = workViewModel.title
-        viewHolder.subtitle.text = dateFormat.format(workViewModel.releaseDate)
+        viewHolder.subtitle.text = workViewModel.releaseDate
         viewHolder.body.text = workViewModel.overview
     }
 
-    companion object {
-
-        private val dateFormat = SimpleDateFormat("MMM dd, yyyy")
-    }
 }
