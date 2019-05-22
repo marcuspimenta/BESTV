@@ -14,18 +14,17 @@
 
 package com.pimenta.bestv.feature.workdetail.presenter
 
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.mapper.toWork
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.usecase.WorkUseCase
+import com.pimenta.bestv.data.entity.Work
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.workdetail.usecase.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetWorkDetailsUseCase
-import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.data.entity.Work
-import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -47,43 +46,17 @@ class WorkDetailsPresenter @Inject constructor(
     private var similarPage = 0
 
     /**
-     * Checks if the [Work] is favorite
-     *
-     * @param workViewModel [WorkViewModel]
-     * @return `true` if yes, `false` otherwise
-     */
-    fun isFavorite(workViewModel: WorkViewModel): Boolean {
-        workViewModel.isFavorite = workUseCase.isFavorite(workViewModel.toWork())
-        return workViewModel.isFavorite
-    }
-
-    /**
      * Sets if a [Work] is or not is favorite
      *
      * @param workViewModel [WorkViewModel]
      */
     fun setFavorite(workViewModel: WorkViewModel) {
-        Maybe.fromCallable { workViewModel.toWork() }
-                .flatMap { work ->
-                    Maybe.create<Boolean> {
-                        val result = if (workViewModel.isFavorite) {
-                            workUseCase.deleteFavorite(work)
-                        } else {
-                            workUseCase.saveFavorite(work)
-                        }
-
-                        if (result) {
-                            it.onSuccess(true)
-                        } else {
-                            it.onComplete()
-                        }
-                    }
-                }
+        Single.fromCallable { workViewModel.toWork() }
+                .flatMap { workUseCase.setFavorite(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    workViewModel.isFavorite = !workViewModel.isFavorite
-                    view.onResultSetFavoriteMovie(true)
+                    view.onResultSetFavoriteMovie(!workViewModel.isFavorite)
                 }, { throwable ->
                     Timber.e(throwable, "Error while settings the work as favorite")
                     view.onResultSetFavoriteMovie(false)
@@ -101,24 +74,25 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieInfo ->
-                    val recommendedPage = movieInfo.second
+                    val recommendedPage = movieInfo.third
                     if (recommendedPage.page <= recommendedPage.totalPages) {
                         this.recommendedPage = recommendedPage.page
                     }
-                    val similarPage = movieInfo.third
+                    val similarPage = movieInfo.fourth
                     if (similarPage.page <= similarPage.totalPages) {
                         this.similarPage = similarPage.page
                     }
 
                     view.onDataLoaded(
                             movieInfo.first,
+                            movieInfo.second,
                             recommendedPage.works,
                             similarPage.works,
-                            movieInfo.fourth
+                            movieInfo.fifth
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
-                    view.onDataLoaded(null, null, null, null)
+                    view.onDataLoaded(false, null, null, null, null)
                 }).addTo(compositeDisposable)
     }
 
@@ -170,9 +144,9 @@ class WorkDetailsPresenter @Inject constructor(
 
     interface View {
 
-        fun onResultSetFavoriteMovie(success: Boolean)
+        fun onResultSetFavoriteMovie(isFavorite: Boolean)
 
-        fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?)
 
         fun onRecommendationLoaded(works: List<WorkViewModel>?)
 

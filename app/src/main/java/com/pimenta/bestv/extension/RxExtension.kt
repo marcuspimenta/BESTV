@@ -14,9 +14,12 @@
 
 package com.pimenta.bestv.extension
 
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
     compositeDisposable.add(this)
 }
+
+fun Boolean.toSingle() = Single.fromCallable { this }

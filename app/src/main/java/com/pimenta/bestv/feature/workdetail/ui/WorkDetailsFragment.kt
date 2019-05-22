@@ -100,28 +100,27 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        favoriteAction = Action(
-                ACTION_FAVORITE.toLong(),
-                if (presenter.isFavorite(workViewModel))
-                    resources.getString(R.string.remove_favorites)
-                else
-                    resources.getString(R.string.save_favorites)
-        )
-        actionAdapter.add(favoriteAction)
         presenter.loadDataByWork(workViewModel)
     }
 
-    override fun onResultSetFavoriteMovie(success: Boolean) {
-        if (success) {
-            favoriteAction.label1 = if (workViewModel.isFavorite)
-                resources.getString(R.string.remove_favorites)
-            else
-                resources.getString(R.string.save_favorites)
-            actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
-        }
+    override fun onResultSetFavoriteMovie(isFavorite: Boolean) {
+        workViewModel.isFavorite = isFavorite
+        favoriteAction.label1 = resources.getString(R.string.remove_favorites)
+                .takeIf { workViewModel.isFavorite }
+                ?: run { resources.getString(R.string.save_favorites) }
+        actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
-    override fun onDataLoaded(casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
+    override fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
+        workViewModel.isFavorite = isFavorite
+        favoriteAction = Action(
+                ACTION_FAVORITE.toLong(),
+                resources.getString(R.string.remove_favorites)
+                        .takeIf { isFavorite }
+                        ?: run { resources.getString(R.string.save_favorites) }
+        )
+        actionAdapter.add(favoriteAction)
+
         videos?.let {
             if (it.isNotEmpty()) {
                 actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))

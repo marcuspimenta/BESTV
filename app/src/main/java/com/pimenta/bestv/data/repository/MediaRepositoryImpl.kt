@@ -14,10 +14,12 @@
 
 package com.pimenta.bestv.data.repository
 
+import android.util.Pair
 import com.pimenta.bestv.data.entity.*
 import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import java.util.*
 import javax.inject.Inject
 
@@ -29,24 +31,27 @@ class MediaRepositoryImpl @Inject constructor(
         private val mediaRemoteRepository: MediaRemoteRepository
 ) : MediaRepository {
 
-    override fun isFavorite(work: Work): Boolean =
+    override fun isFavorite(work: Work): Single<Boolean> =
             mediaLocalRepository.isFavorite(work)
 
     override fun hasFavorite(): Single<Boolean> =
             mediaLocalRepository.hasFavorite()
 
-    override fun saveFavorite(work: Work): Boolean =
+    override fun saveFavorite(work: Work): Single<Boolean> =
             mediaLocalRepository.saveFavorite(work)
 
-    override fun deleteFavorite(work: Work): Boolean =
+    override fun deleteFavorite(work: Work): Single<Boolean> =
             mediaLocalRepository.deleteFavorite(work)
 
     override fun getFavorites(): Single<List<Work>> =
-            Single.fromCallable {
+            Single.zip<List<Movie>, List<TvShow>, Pair<List<Movie>, List<TvShow>>>(
+                    mediaLocalRepository.getMovies(),
+                    mediaLocalRepository.getTvShows(),
+                    BiFunction { first, second -> Pair(first, second) }
+            ).map {
                 val works = ArrayList<Work>()
 
-                val favoritesMovies = mediaLocalRepository.getMovies()
-                for (movie in favoritesMovies) {
+                it.first.forEach { movie ->
                     val detailWork = mediaRemoteRepository.getMovie(movie.id)
                     if (detailWork != null) {
                         detailWork.isFavorite = true
@@ -54,8 +59,7 @@ class MediaRepositoryImpl @Inject constructor(
                     }
                 }
 
-                val favoritesTvShows = mediaLocalRepository.getTvShows()
-                for (tvShow in favoritesTvShows) {
+                it.second.forEach { tvShow ->
                     val detailWork = mediaRemoteRepository.getTvShow(tvShow.id)
                     if (detailWork != null) {
                         detailWork.isFavorite = true
@@ -86,9 +90,6 @@ class MediaRepositoryImpl @Inject constructor(
                 Genre.Source.MOVIE -> mediaRemoteRepository.getMoviesByGenre(genre, page)
                 Genre.Source.TV_SHOW -> mediaRemoteRepository.getTvShowByGenre(genre, page)
             }
-
-    override fun getMovie(movieId: Int): Movie? =
-            mediaRemoteRepository.getMovie(movieId)
 
     override fun getCastByWork(work: Work): Single<CastList> =
             when (work) {

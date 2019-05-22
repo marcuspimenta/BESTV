@@ -17,9 +17,10 @@ package com.pimenta.bestv.common.usecase
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.data.entity.Genre
 import com.pimenta.bestv.data.entity.Work
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.extension.toSingle
 import com.pimenta.bestv.feature.search.usecase.UrlEncoderTextUseCase
 import io.reactivex.Single
 import javax.inject.Inject
@@ -34,9 +35,15 @@ class WorkUseCase @Inject constructor(
 
     fun isFavorite(work: Work) = mediaRepository.isFavorite(work)
 
-    fun saveFavorite(work: Work) = mediaRepository.saveFavorite(work)
-
-    fun deleteFavorite(work: Work) = mediaRepository.deleteFavorite(work)
+    fun setFavorite(work: Work) =
+            work.isFavorite.toSingle()
+                    .flatMap {
+                        if (it) {
+                            mediaRepository.deleteFavorite(work)
+                        } else {
+                            mediaRepository.saveFavorite(work)
+                        }
+                    }
 
     fun hasFavorite() = mediaRepository.hasFavorite()
 

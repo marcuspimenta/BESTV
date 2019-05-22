@@ -41,6 +41,6 @@ fun Work.toViewModel() = WorkViewModel(
 )
 
 fun WorkViewModel.toWork() = when (type) {
-    WorkType.MOVIE -> Movie(id = id)
-    WorkType.TV_SHOW -> TvShow(id = id)
+    WorkType.MOVIE -> Movie(id = id, isFavorite = isFavorite)
+    WorkType.TV_SHOW -> TvShow(id = id, isFavorite = isFavorite)
 }

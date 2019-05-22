@@ -30,18 +30,15 @@ class MediaLocalRepositoryImpl @Inject constructor(
         private val tvShowDao: TvShowDao
 ) : MediaLocalRepository {
 
-    override fun isFavorite(work: Work): Boolean {
-        var workSaved: Work? = null
-        when (work) {
-            is Movie -> workSaved = movieDao.getById(work.id)
-            is TvShow -> workSaved = tvShowDao.getById(work.id)
-        }
-        if (workSaved != null) {
-            work.id = workSaved.id
-            return true
-        }
-        return false
-    }
+    override fun isFavorite(work: Work): Single<Boolean> =
+            Single.fromCallable {
+                val workSaved: Work? = when (work) {
+                    is Movie -> movieDao.getById(work.id)
+                    is TvShow -> tvShowDao.getById(work.id)
+                    else -> null
+                }
+                workSaved != null
+            }
 
     override fun hasFavorite(): Single<Boolean> =
             Single.fromCallable {
@@ -50,23 +47,27 @@ class MediaLocalRepositoryImpl @Inject constructor(
                 favoritesMovies.isNotEmpty() || favoritesTvShows.isNotEmpty()
             }
 
-    override fun saveFavorite(work: Work): Boolean =
-            when (work) {
-                is Movie -> movieDao.create(work)
-                is TvShow -> tvShowDao.create(work)
-                else -> false
+    override fun saveFavorite(work: Work): Single<Boolean> =
+            Single.fromCallable {
+                when (work) {
+                    is Movie -> movieDao.create(work)
+                    is TvShow -> tvShowDao.create(work)
+                    else -> false
+                }
             }
 
-    override fun deleteFavorite(work: Work): Boolean =
-            when (work) {
-                is Movie -> movieDao.delete(work)
-                is TvShow -> tvShowDao.delete(work)
-                else -> false
+    override fun deleteFavorite(work: Work): Single<Boolean> =
+            Single.fromCallable {
+                when (work) {
+                    is Movie -> movieDao.delete(work)
+                    is TvShow -> tvShowDao.delete(work)
+                    else -> false
+                }
             }
 
-    override fun getMovies(): List<Movie> =
-            movieDao.getAll()
+    override fun getMovies(): Single<List<Movie>> =
+            Single.fromCallable { movieDao.getAll() }
 
-    override fun getTvShows(): List<TvShow> =
-            tvShowDao.getAll()
+    override fun getTvShows(): Single<List<TvShow>> =
+            Single.fromCallable { tvShowDao.getAll() }
 }

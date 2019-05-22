@@ -23,10 +23,11 @@ import com.j256.ormlite.table.DatabaseTable
 @DatabaseTable(tableName = Movie.TABLE)
 class Movie(
         id: Int = 0,
+        isFavorite: Boolean = false,
         @SerializedName("title") override var title: String? = null,
         @SerializedName("original_title") override var originalTitle: String? = null,
         @SerializedName("release_date") private var releaseDateString: String? = null
-) : Work(id) {
+) : Work(id = id, isFavorite = isFavorite) {
 
     override var releaseDate: String?
         get() {

@@ -29,9 +29,9 @@ interface MediaLocalRepository {
      *
      * @param work [Work] to verify if is favorite
      *
-     * @return `true` if yes, `false` otherwise
+     * @return [<]
      */
-    fun isFavorite(work: Work): Boolean
+    fun isFavorite(work: Work): Single<Boolean>
 
     /**
      * Checks if there is any [Work] saved as favorite
@@ -45,33 +45,31 @@ interface MediaLocalRepository {
      *
      * @param work [Work] to be saved as favorite
      *
-     * @return `true` if the [Work] was saved with success,
-     * `false` otherwise
+     * @return [<]
      */
-    fun saveFavorite(work: Work): Boolean
+    fun saveFavorite(work: Work): Single<Boolean>
 
     /**
      * Deletes a [Work] from favorites
      *
      * @param work [Work] to be deleted from favorite
      *
-     * @return `true` if the [Work] was deleted with success,
-     * `false` otherwise
+     * @return [<]
      */
-    fun deleteFavorite(work: Work): Boolean
+    fun deleteFavorite(work: Work): Single<Boolean>
 
     /**
      * Gets the [List<Movie>] saved in local data base
      *
-     * @return [List<Movie>]
+     * @return [<]
      */
-    fun getMovies(): List<Movie>
+    fun getMovies(): Single<List<Movie>>
 
     /**
      * Gets the [List<TvShow>] saved in local data base
      *
-     * @return [List<TvShow>]
+     * @return [<]
      */
-    fun getTvShows(): List<TvShow>
+    fun getTvShows(): Single<List<TvShow>>
 
 }
