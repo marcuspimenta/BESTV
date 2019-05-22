@@ -14,11 +14,12 @@
 
 package com.pimenta.bestv.feature.recommendation.presenter
 
+import com.pimenta.bestv.common.mvp.DisposablePresenter
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.DisposablePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -36,7 +37,12 @@ class RecommendationPresenter @Inject constructor(
         loadRecommendationUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { service.onLoadRecommendationFinished() }
+                .subscribe({
+                    service.onLoadRecommendationFinished()
+                }, {
+                    Timber.e(it, "Error while loading the recommendations")
+                    service.onLoadRecommendationFinished()
+                })
                 .addTo(compositeDisposable)
     }
 
