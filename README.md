@@ -36,6 +36,11 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 
 ![](gif/app.gif)
 
+## References
+- [Android TV Leanback](https://github.com/googlesamples/androidtv-Leanback)
+- [Google Codelab TV Recommendations](https://github.com/googlecodelabs/tv-recommendations)
+- [Android TV application hands on tutorial](https://corochann.com/android-tv-application-hands-on-tutorial)
+
 ## Licence
 ```
 Copyright (c) 2018 Marcus Pimenta
