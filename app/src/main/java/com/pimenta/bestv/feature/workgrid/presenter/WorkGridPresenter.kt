@@ -14,12 +14,12 @@
 
 package com.pimenta.bestv.feature.workgrid.presenter
 
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.data.entity.Genre
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.extension.addTo
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -60,8 +60,7 @@ class WorkGridPresenter @Inject constructor(
                             view.onWorksLoaded(null)
                         }).addTo(compositeDisposable)
             else -> {
-                val page = currentPage + 1
-                workUseCase.loadWorkByType(page, movieListType)
+                workUseCase.loadWorkByType(currentPage + 1, movieListType)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ workPage ->
@@ -85,8 +84,7 @@ class WorkGridPresenter @Inject constructor(
      * @param genre [Genre]
      */
     fun loadWorkByGenre(genre: Genre) {
-        val pageSearch = currentPage + 1
-        workUseCase.getWorkByGenre(genre, pageSearch)
+        workUseCase.getWorkByGenre(genre, currentPage + 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ workPage ->

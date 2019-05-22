@@ -96,7 +96,7 @@ class RecommendationChannelApi constructor(
                     }
 
     private fun buildProgramUri(workViewModel: WorkViewModel): Uri =
-            Uri.parse(Const.SCHEMA_URI_PREFIX + Const.WORK)
+            Uri.parse(Const.SCHEMA_URI_PREFIX.plus(Const.WORK))
                     .buildUpon()
                     .appendQueryParameter(Const.ID, workViewModel.id.toString())
                     .appendQueryParameter(Const.LANGUAGE, workViewModel.originalLanguage)
