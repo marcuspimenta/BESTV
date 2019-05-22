@@ -16,9 +16,8 @@ package com.pimenta.bestv.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.MainActivity
+import com.pimenta.bestv.feature.main.ui.MainActivity
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
-import com.pimenta.bestv.feature.recommendation.service.RecommendationService
 import dagger.Component
 import javax.inject.Singleton
 

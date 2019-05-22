@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature
+package com.pimenta.bestv.feature.main.presenter
 
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
