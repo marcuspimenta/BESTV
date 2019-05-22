@@ -11,8 +11,9 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.workbrowse.usecase
 
+import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.data.entity.MovieGenreList
 import com.pimenta.bestv.data.entity.TvShowGenreList
 import io.reactivex.Single

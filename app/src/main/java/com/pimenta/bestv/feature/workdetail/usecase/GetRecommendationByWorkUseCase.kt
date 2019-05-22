@@ -12,23 +12,29 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.workdetail.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.entity.Cast
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Single
 import javax.inject.Inject
 
 /**
  * Created by marcus on 18-04-2019.
  */
-class GetTvShowCreditsByCastUseCase @Inject constructor(
+class GetRecommendationByWorkUseCase @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(cast: Cast): Single<List<WorkViewModel>?> =
-            mediaRepository.getTvShowCreditsByCast(cast)
-                    .map { it.works?.map { work -> work.toViewModel() } }
+    operator fun invoke(work: Work, page: Int): Single<WorkPageViewModel> =
+            mediaRepository.getRecommendationByWork(work, page)
+                    .map {
+                        WorkPageViewModel(
+                                it.page,
+                                it.totalPages,
+                                it.works?.map { work -> work.toViewModel() }
+                        )
+                    }
 }

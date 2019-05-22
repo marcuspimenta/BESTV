@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.search.presenter
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.usecase.SearchWorksByQueryUseCase
+import com.pimenta.bestv.feature.search.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter

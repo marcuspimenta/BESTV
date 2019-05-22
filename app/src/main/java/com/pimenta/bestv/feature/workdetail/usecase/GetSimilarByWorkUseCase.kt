@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.workdetail.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
@@ -24,12 +24,12 @@ import javax.inject.Inject
 /**
  * Created by marcus on 18-04-2019.
  */
-class GetRecommendationByWorkUseCase @Inject constructor(
+class GetSimilarByWorkUseCase @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(work: Work, page: Int): Single<WorkPageViewModel> =
-            mediaRepository.getRecommendationByWork(work, page)
+            mediaRepository.getSimilarByWork(work, page)
                     .map {
                         WorkPageViewModel(
                                 it.page,

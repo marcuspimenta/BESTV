@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.workdetail.usecase
 
 import com.pimenta.bestv.common.kotlin.Quadruple
 import com.pimenta.bestv.common.presentation.model.CastViewModel

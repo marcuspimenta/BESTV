@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
-import com.pimenta.bestv.common.usecase.GetWorkBrowseDetailsUseCase
+import com.pimenta.bestv.feature.workbrowse.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter

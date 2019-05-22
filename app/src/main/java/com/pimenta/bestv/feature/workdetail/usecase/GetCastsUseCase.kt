@@ -12,18 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.workdetail.usecase
 
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Single
-import java.net.URLEncoder
 import javax.inject.Inject
 
 /**
- * Created by marcus on 20-05-2019.
+ * Created by marcus on 15-04-2019.
  */
-class UrlEncoderTextUseCase @Inject constructor() {
+class GetCastsUseCase @Inject constructor(
+        private val mediaRepository: MediaRepository
+) {
 
-    operator fun invoke(text: String): Single<String> =
-            Single.fromCallable { URLEncoder.encode(text, "UTF-8") }
-
+    operator fun invoke(work: Work): Single<List<CastViewModel>?> =
+            mediaRepository.getCastByWork(work)
+                    .map { it.casts?.map { cast -> cast.toViewModel() } }
 }

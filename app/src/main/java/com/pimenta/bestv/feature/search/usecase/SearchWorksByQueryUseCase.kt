@@ -12,10 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.usecase
+package com.pimenta.bestv.feature.search.usecase
 
 import android.util.Pair
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.common.usecase.WorkUseCase
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
