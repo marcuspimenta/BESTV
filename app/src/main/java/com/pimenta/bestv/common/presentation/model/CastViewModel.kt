@@ -27,12 +27,12 @@ import java.io.Serializable
  */
 class CastViewModel(
         var id: Int,
-        var name: String?,
-        var character: String?,
-        var birthday: String?,
-        var deathDay: String?,
-        var biography: String?,
-        var thumbnailUrl: String?
+        var name: String? = null,
+        var character: String? = null,
+        var birthday: String? = null,
+        var deathDay: String? = null,
+        var biography: String? = null,
+        var thumbnailUrl: String? = null
 ) : Serializable
 
 fun CastViewModel.loadThumbnail(context: Context, target: CustomTarget<Drawable>) {

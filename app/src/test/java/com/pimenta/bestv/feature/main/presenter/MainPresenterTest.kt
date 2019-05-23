@@ -1,5 +1,3 @@
-package com.pimenta.bestv.feature.main.presenter
-
 /*
  * Copyright (C) 2018 Marcus Pimenta
  *
@@ -13,6 +11,8 @@ package com.pimenta.bestv.feature.main.presenter
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
+package com.pimenta.bestv.feature.main.presenter
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
