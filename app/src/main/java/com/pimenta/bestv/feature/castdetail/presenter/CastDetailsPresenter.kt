@@ -22,8 +22,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.entity.Cast
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,7 +31,8 @@ import javax.inject.Inject
  */
 class CastDetailsPresenter @Inject constructor(
         private val view: View,
-        private val getCastDetailsUseCase: GetCastDetailsUseCase
+        private val getCastDetailsUseCase: GetCastDetailsUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     /**
@@ -43,8 +43,8 @@ class CastDetailsPresenter @Inject constructor(
     fun loadCastDetails(castViewModel: CastViewModel) {
         castViewModel.toCast().toSingle()
                 .flatMap { getCastDetailsUseCase(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ triple ->
                     view.onCastLoaded(
                             triple.first,

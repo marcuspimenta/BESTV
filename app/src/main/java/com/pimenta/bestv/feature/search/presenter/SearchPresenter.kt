@@ -14,15 +14,14 @@
 
 package com.pimenta.bestv.feature.search.presenter
 
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.search.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.feature.search.usecase.SearchWorksByQueryUseCase
+import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -33,7 +32,8 @@ import javax.inject.Inject
 class SearchPresenter @Inject constructor(
         private val view: View,
         private val workUseCase: WorkUseCase,
-        private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase
+        private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var resultMoviePage = 0
@@ -59,8 +59,8 @@ class SearchPresenter @Inject constructor(
         resultTvShowPage = 0
         query = text
         searchWorkDisposable = searchWorksByQueryUseCase(text)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ pair ->
                     var movies: List<WorkViewModel>? = null
                     if (pair.first != null && pair.first.page <= pair.first.totalPages) {
@@ -85,8 +85,8 @@ class SearchPresenter @Inject constructor(
      */
     fun loadMovies() {
         workUseCase.searchMoviesByQuery(query, resultMoviePage + 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ moviePage ->
                     if (moviePage != null && moviePage.page <= moviePage.totalPages) {
                         this.resultMoviePage = moviePage.page
@@ -105,8 +105,8 @@ class SearchPresenter @Inject constructor(
      */
     fun loadTvShows() {
         workUseCase.searchTvShowsByQuery(query, resultTvShowPage + 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ tvShowPage ->
                     if (tvShowPage != null && tvShowPage.page <= tvShowPage.totalPages) {
                         this.resultTvShowPage = tvShowPage.page
@@ -129,8 +129,8 @@ class SearchPresenter @Inject constructor(
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
                 .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
                     view.loadBackdropImage(workViewModel)
                 }, { throwable ->

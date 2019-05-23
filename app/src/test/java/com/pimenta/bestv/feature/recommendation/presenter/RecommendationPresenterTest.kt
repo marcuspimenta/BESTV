@@ -1,5 +1,3 @@
-package com.pimenta.bestv.feature.main.presenter
-
 /*
  * Copyright (C) 2018 Marcus Pimenta
  *
@@ -14,7 +12,8 @@ package com.pimenta.bestv.feature.main.presenter
  * the License.
  */
 
-import com.nhaarman.mockitokotlin2.doReturn
+package com.pimenta.bestv.feature.recommendation.presenter
+
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -24,25 +23,27 @@ import io.reactivex.Completable
 import org.junit.Test
 
 /**
- * Created by marcus on 22-05-2018.
+ * Created by marcus on 23-05-2018.
  */
-class MainPresenterTest {
+class RecommendationPresenterTest {
 
+    private val service: RecommendationPresenter.Service = mock()
     private val loadRecommendationUseCase: LoadRecommendationUseCase = mock()
     private val rxSchedulerTest: RxSchedulerTest = RxSchedulerTest()
 
-    private val presenter = MainPresenter(
+    private val presenter = RecommendationPresenter(
+            service,
             loadRecommendationUseCase,
             rxSchedulerTest
     )
 
     @Test
     fun `should do nothing when load the recommendations`() {
-        whenever(loadRecommendationUseCase()).doReturn(Completable.complete())
+        whenever(loadRecommendationUseCase()).thenReturn(Completable.complete())
 
         presenter.loadRecommendations()
 
-        verify(loadRecommendationUseCase).invoke()
+        verify(service).onLoadRecommendationFinished()
     }
 
     @Test
@@ -51,6 +52,6 @@ class MainPresenterTest {
 
         presenter.loadRecommendations()
 
-        verify(loadRecommendationUseCase).invoke()
+        verify(service).onLoadRecommendationFinished()
     }
 }

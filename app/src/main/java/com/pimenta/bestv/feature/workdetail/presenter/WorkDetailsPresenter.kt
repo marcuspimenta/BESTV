@@ -26,9 +26,7 @@ import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.workdetail.usecase.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetWorkDetailsUseCase
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -40,7 +38,8 @@ class WorkDetailsPresenter @Inject constructor(
         private val workUseCase: WorkUseCase,
         private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
         private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
-        private val getWorkDetailsUseCase: GetWorkDetailsUseCase
+        private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var recommendedPage = 0
@@ -54,8 +53,8 @@ class WorkDetailsPresenter @Inject constructor(
     fun setFavorite(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { workUseCase.setFavorite(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
                     view.onResultSetFavoriteMovie(!workViewModel.isFavorite)
                 }, { throwable ->
@@ -72,8 +71,8 @@ class WorkDetailsPresenter @Inject constructor(
     fun loadDataByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getWorkDetailsUseCase(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieInfo ->
                     val recommendedPage = movieInfo.third
                     if (recommendedPage.page <= recommendedPage.totalPages) {
@@ -105,8 +104,8 @@ class WorkDetailsPresenter @Inject constructor(
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getRecommendationByWorkUseCase(it, recommendedPage + 1) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieList ->
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         recommendedPage = movieList.page
@@ -128,8 +127,8 @@ class WorkDetailsPresenter @Inject constructor(
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getSimilarByWorkUseCase(it, similarPage + 1) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieList ->
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         similarPage = movieList.page

@@ -17,8 +17,7 @@ package com.pimenta.bestv.feature.main.presenter
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
 import com.pimenta.bestv.extension.addTo
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,7 +25,8 @@ import javax.inject.Inject
  * Created by marcus on 04-05-2018.
  */
 class MainPresenter @Inject constructor(
-        private val loadRecommendationUseCase: LoadRecommendationUseCase
+        private val loadRecommendationUseCase: LoadRecommendationUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     /**
@@ -34,8 +34,8 @@ class MainPresenter @Inject constructor(
      */
     fun loadRecommendations() {
         loadRecommendationUseCase()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ }, {
                     Timber.e(it, "Error while loading the recommendations")
                 })

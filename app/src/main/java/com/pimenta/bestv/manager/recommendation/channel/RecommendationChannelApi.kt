@@ -71,8 +71,8 @@ class RecommendationChannelApi constructor(
                             }
 
                 }
+                it.onComplete()
             }
-
 
     private fun getChannelId() =
             preferenceManager.getLongFromPersistence(CHANNEL_ID_KEY, 0L)

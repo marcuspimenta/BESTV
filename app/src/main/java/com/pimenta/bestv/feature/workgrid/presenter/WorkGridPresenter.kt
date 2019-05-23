@@ -20,10 +20,9 @@ import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.data.entity.Genre
 import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -33,7 +32,8 @@ import javax.inject.Inject
  */
 class WorkGridPresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase
+        private val workUseCase: WorkUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0
@@ -51,8 +51,8 @@ class WorkGridPresenter @Inject constructor(
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
                 workUseCase.getFavorites()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(rxScheduler.ioScheduler)
+                        .observeOn(rxScheduler.mainScheduler)
                         .subscribe({ movies ->
                             view.onWorksLoaded(movies)
                         }, { throwable ->
@@ -61,8 +61,8 @@ class WorkGridPresenter @Inject constructor(
                         }).addTo(compositeDisposable)
             else -> {
                 workUseCase.loadWorkByType(currentPage + 1, movieListType)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(rxScheduler.ioScheduler)
+                        .observeOn(rxScheduler.mainScheduler)
                         .subscribe({ workPage ->
                             if (workPage != null && workPage.page <= workPage.totalPages) {
                                 currentPage = workPage.page
@@ -85,8 +85,8 @@ class WorkGridPresenter @Inject constructor(
      */
     fun loadWorkByGenre(genre: Genre) {
         workUseCase.getWorkByGenre(genre, currentPage + 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ workPage ->
                     if (workPage != null && workPage.page <= workPage.totalPages) {
                         currentPage = workPage.page
@@ -109,8 +109,8 @@ class WorkGridPresenter @Inject constructor(
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
                 .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
                     view.loadBackdropImage(workViewModel)
                 }, { throwable ->
