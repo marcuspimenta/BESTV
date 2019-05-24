@@ -36,9 +36,9 @@ class SearchPresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
+    private var query: String = ""
     private var resultMoviePage = 0
     private var resultTvShowPage = 0
-    private var query: String = ""
     private var searchWorkDisposable: Disposable? = null
     private var loadBackdropImageDisposable: Disposable? = null
 
@@ -58,13 +58,13 @@ class SearchPresenter @Inject constructor(
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ pair ->
                     var movies: List<WorkViewModel>? = null
-                    if (pair.first != null && pair.first.page <= pair.first.totalPages) {
+                    if (pair.first.page <= pair.first.totalPages) {
                         this.resultMoviePage = pair.first.page
                         movies = pair.first.works
                     }
 
                     var tvShows: List<WorkViewModel>? = null
-                    if (pair.second != null && pair.second.page <= pair.second.totalPages) {
+                    if (pair.second.page <= pair.second.totalPages) {
                         this.resultTvShowPage = pair.second.page
                         tvShows = pair.second.works
                     }

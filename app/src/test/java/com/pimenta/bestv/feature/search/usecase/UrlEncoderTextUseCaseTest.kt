@@ -14,22 +14,27 @@
 
 package com.pimenta.bestv.feature.search.usecase
 
-import io.reactivex.Single
-import java.net.URLEncoder
-import javax.inject.Inject
+import org.junit.Test
 
 /**
- * Created by marcus on 20-05-2019.
+ * Created by marcus on 24-05-2018.
  */
-class UrlEncoderTextUseCase @Inject constructor() {
+class UrlEncoderTextUseCaseTest {
 
-    operator fun invoke(text: String): Single<String> =
-            Single.fromCallable { URLEncoder.encode(text, enc) }
-    
-    companion object {
+    private val useCase = UrlEncoderTextUseCase()
 
-        private const val enc = "UTF-8"
-
+    @Test
+    fun `should return the right data when encoding a text`() {
+        useCase(text)
+                .test()
+                .assertComplete()
+                .assertResult(textEncoded)
     }
 
+    companion object {
+
+        private const val text = "Game of thrones"
+        private const val textEncoded = "Game+of+thrones"
+
+    }
 }

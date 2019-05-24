@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.data.repository
 
-import android.util.Pair
 import com.pimenta.bestv.data.entity.*
 import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
