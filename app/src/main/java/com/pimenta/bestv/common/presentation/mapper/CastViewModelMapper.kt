@@ -26,7 +26,7 @@ fun Cast.toViewModel() = CastViewModel(
         birthday = birthday,
         deathDay = deathDay,
         biography = biography,
-        thumbnailUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, profilePath)
+        thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
 )
 
 fun CastViewModel.toCast() = Cast(

@@ -26,16 +26,16 @@ import java.io.Serializable
 /**
  * Created by marcus on 18-04-2019.
  */
-class WorkViewModel(
+data class WorkViewModel(
         var id: Int,
-        var originalLanguage: String?,
-        var overview: String?,
-        var backdropUrl: String?,
-        var posterUrl: String?,
-        var title: String?,
-        var originalTitle: String?,
-        var releaseDate: String?,
-        var isFavorite: Boolean,
+        var originalLanguage: String? = null,
+        var overview: String? = null,
+        var backdropUrl: String? = null,
+        var posterUrl: String? = null,
+        var title: String? = null,
+        var originalTitle: String? = null,
+        var releaseDate: String? = null,
+        var isFavorite: Boolean = false,
         var type: WorkType
 ) : Serializable
 

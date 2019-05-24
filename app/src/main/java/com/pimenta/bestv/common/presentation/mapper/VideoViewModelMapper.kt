@@ -22,7 +22,7 @@ fun Video.toViewModel() = VideoViewModel(
         id = id,
         name = name,
         type = type,
-        thumbnailUrl = String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, key),
-        youtubeUrl = String.format(BuildConfig.YOUTUBE_BASE_URL, key)
+        thumbnailUrl = key?.let { String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, it) },
+        youtubeUrl = key?.let { String.format(BuildConfig.YOUTUBE_BASE_URL, it) }
 )
 

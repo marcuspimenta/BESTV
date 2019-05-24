@@ -29,8 +29,8 @@ fun Work.toViewModel() = WorkViewModel(
         title = title,
         originalLanguage = originalLanguage,
         overview = overview,
-        backdropUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, backdropPath),
-        posterUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, posterPath),
+        backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
+        posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         originalTitle = originalTitle,
         releaseDate = releaseDate
                 ?.takeUnless { it.isEmpty() || it.isBlank() }

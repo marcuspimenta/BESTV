@@ -25,7 +25,7 @@ import java.io.Serializable
 /**
  * Created by marcus on 15-04-2019.
  */
-class CastViewModel(
+data class CastViewModel(
         var id: Int,
         var name: String? = null,
         var character: String? = null,

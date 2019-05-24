@@ -17,7 +17,7 @@ package com.pimenta.bestv.common.presentation.model
 /**
  * Created by marcus on 18-04-2019.
  */
-class WorkPageViewModel(
+data class WorkPageViewModel(
         var page: Int,
         var totalPages: Int,
         var works: List<WorkViewModel>?
