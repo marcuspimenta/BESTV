@@ -21,7 +21,7 @@ import java.io.Serializable
 /**
  * Created by marcus on 15-02-2018.
  */
-class Cast(
+data class Cast(
         @SerializedName("cast_id") var castId: Int = 0,
         @SerializedName("credit_id") var creditId: String? = null,
         @SerializedName("gender") var gender: Int = 0,

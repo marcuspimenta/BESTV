@@ -19,7 +19,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by marcus on 12/07/18.
  */
-abstract class CastWorkList<T : Work> {
-
-    @SerializedName("cast") var works: List<T>? = null
-}
+abstract class CastWorkList<T : Work>(
+        @SerializedName("cast") var works: List<T>? = null
+)

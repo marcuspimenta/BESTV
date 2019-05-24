@@ -17,7 +17,6 @@ package com.pimenta.bestv.data.entity
 /**
  * Created by marcus on 06/07/18.
  */
-class MovieGenre : Genre() {
-
-    override val source: Genre.Source = Genre.Source.MOVIE
-}
+class MovieGenre(
+        override val source: Source = Source.MOVIE
+) : Genre()

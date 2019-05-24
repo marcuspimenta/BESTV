@@ -21,11 +21,10 @@ import java.io.Serializable
 /**
  * Created by marcus on 22-02-2018.
  */
-class Video : Serializable {
-
-    @SerializedName("id") var id: String? = null
-    @SerializedName("key") var key: String? = null
-    @SerializedName("name") var name: String? = null
-    @SerializedName("site") var site: String? = null
-    @SerializedName("type") var type: String? = null
-}
+data class Video(
+        @SerializedName("id") var id: String? = null,
+        @SerializedName("key") var key: String? = null,
+        @SerializedName("name") var name: String? = null,
+        @SerializedName("site") var site: String? = null,
+        @SerializedName("type") var type: String? = null
+) : Serializable

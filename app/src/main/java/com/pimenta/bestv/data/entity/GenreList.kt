@@ -19,7 +19,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by marcus on 09-02-2018.
  */
-abstract class GenreList<T : Genre> {
-
-    @SerializedName("genres") var genres: List<T>? = null
-}
+abstract class GenreList<T : Genre>(
+        @SerializedName("genres") var genres: List<T>? = null
+)

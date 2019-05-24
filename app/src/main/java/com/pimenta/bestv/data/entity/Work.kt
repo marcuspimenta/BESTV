@@ -52,4 +52,6 @@ abstract class Work(
 
         return id == that?.id
     }
+
+    override fun hashCode() = id.hashCode()
 }

@@ -19,8 +19,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by marcus on 22-02-2018.
  */
-class VideoList {
-
-    @SerializedName("id") var id: Int = 0
-    @SerializedName("results") var videos: List<Video>? = null
-}
+data class VideoList(
+        @SerializedName("id") var id: Int = 0,
+        @SerializedName("results") var videos: List<Video>? = null
+)
