@@ -21,7 +21,6 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.data.entity.Work
 import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.feature.workdetail.usecase.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
@@ -45,11 +44,6 @@ class WorkDetailsPresenter @Inject constructor(
     private var recommendedPage = 0
     private var similarPage = 0
 
-    /**
-     * Sets if a [Work] is or not is favorite
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun setFavorite(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { workUseCase.setFavorite(it) }
@@ -63,11 +57,6 @@ class WorkDetailsPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Loads the [<] by the [Work]
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun loadDataByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getWorkDetailsUseCase(it) }
@@ -96,11 +85,6 @@ class WorkDetailsPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Loads the [<] recommended by the [Work]
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getRecommendationByWorkUseCase(it, recommendedPage + 1) }
@@ -119,11 +103,6 @@ class WorkDetailsPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Loads the [<] similar by the [Work]
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
                 .flatMap { getSimilarByWorkUseCase(it, similarPage + 1) }

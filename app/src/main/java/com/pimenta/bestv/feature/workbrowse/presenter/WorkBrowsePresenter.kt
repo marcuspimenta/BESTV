@@ -37,9 +37,6 @@ class WorkBrowsePresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
-    /**
-     * Checks if there is any [Work] saved as favorite
-     */
     fun hasFavorite() {
         workUseCase.hasFavorite()
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -52,9 +49,6 @@ class WorkBrowsePresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Loads the [<] available at TMDb
-     */
     fun loadData() {
         getWorkBrowseDetailsUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)

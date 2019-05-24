@@ -48,11 +48,6 @@ class SearchPresenter @Inject constructor(
         super.dispose()
     }
 
-    /**
-     * Searches the movies by a query
-     *
-     * @param text Query to search the movies
-     */
     fun searchWorksByQuery(text: String) {
         disposeSearchWork()
         resultMoviePage = 0
@@ -80,9 +75,6 @@ class SearchPresenter @Inject constructor(
                 })
     }
 
-    /**
-     * Load the movies by a query
-     */
     fun loadMovies() {
         workUseCase.searchMoviesByQuery(query, resultMoviePage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -100,9 +92,6 @@ class SearchPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Load the tv shows by a query
-     */
     fun loadTvShows() {
         workUseCase.searchTvShowsByQuery(query, resultTvShowPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -120,11 +109,6 @@ class SearchPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Set timer to load the backdrop image
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
@@ -138,9 +122,6 @@ class SearchPresenter @Inject constructor(
                 })
     }
 
-    /**
-     * Disposes the search works.
-     */
     private fun disposeSearchWork() {
         searchWorkDisposable?.let {
             if (!it.isDisposed) {
@@ -149,9 +130,6 @@ class SearchPresenter @Inject constructor(
         }
     }
 
-    /**
-     * Disposes the load backdrop image.
-     */
     private fun disposeLoadBackdropImage() {
         loadBackdropImageDisposable?.let {
             if (!it.isDisposed) {

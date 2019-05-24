@@ -29,9 +29,6 @@ class MainPresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
-    /**
-     * Loads the recommendations
-     */
     fun loadRecommendations() {
         loadRecommendationUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)

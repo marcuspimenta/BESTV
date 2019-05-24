@@ -28,9 +28,6 @@ class BootPresenter @Inject constructor(
         private val alarmManager: AlarmManager
 ) {
 
-    /**
-     * Schedules the recommendation update
-     */
     fun scheduleRecommendationUpdate() {
         val alarmIntent = PendingIntent.getService(application, 0, RecommendationService.newInstance(application), 0)
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, INITIAL_DELAY, AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)

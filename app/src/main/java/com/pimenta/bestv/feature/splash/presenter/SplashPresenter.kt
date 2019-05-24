@@ -14,12 +14,10 @@
 
 package com.pimenta.bestv.feature.splash.presenter
 
-import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.extension.addTo
 import com.pimenta.bestv.manager.permission.PermissionManager
 import com.pimenta.bestv.scheduler.RxScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -33,9 +31,6 @@ class SplashPresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
-    /**
-     * Loads all permissions
-     */
     fun loadPermissions() {
         permissionManager.hasAllPermissions()
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -53,9 +48,6 @@ class SplashPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Verifies if has all permissions
-     */
     fun hasAllPermissions() {
         permissionManager.hasAllPermissions()
                 .subscribeOn(rxScheduler.ioScheduler)

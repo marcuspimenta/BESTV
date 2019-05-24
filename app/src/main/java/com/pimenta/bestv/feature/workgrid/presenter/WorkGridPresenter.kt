@@ -44,9 +44,6 @@ class WorkGridPresenter @Inject constructor(
         super.dispose()
     }
 
-    /**
-     * Loads the [<] by [MediaRepository.WorkType]
-     */
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
@@ -78,11 +75,6 @@ class WorkGridPresenter @Inject constructor(
         }
     }
 
-    /**
-     * Loads the [<] by the [Genre]
-     *
-     * @param genre [Genre]
-     */
     fun loadWorkByGenre(genre: Genre) {
         workUseCase.getWorkByGenre(genre, currentPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -100,11 +92,6 @@ class WorkGridPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    /**
-     * Set timer to load the backdrop image
-     *
-     * @param workViewModel [WorkViewModel]
-     */
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
@@ -118,9 +105,6 @@ class WorkGridPresenter @Inject constructor(
                 })
     }
 
-    /**
-     * Disposes the load backdrop image.
-     */
     private fun disposeLoadBackdropImage() {
         loadBackdropImageDisposable?.let {
             if (!it.isDisposed) {

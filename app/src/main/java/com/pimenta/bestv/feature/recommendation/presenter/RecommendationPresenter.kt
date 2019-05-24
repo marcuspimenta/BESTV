@@ -30,9 +30,6 @@ class RecommendationPresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : DisposablePresenter() {
 
-    /**
-     * Loads the recommendations
-     */
     fun loadRecommendations() {
         loadRecommendationUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
