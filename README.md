@@ -40,6 +40,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 - [Android TV Leanback](https://github.com/googlesamples/androidtv-Leanback)
 - [Google Codelab TV Recommendations](https://github.com/googlecodelabs/tv-recommendations)
 - [Android TV application hands on tutorial](https://corochann.com/android-tv-application-hands-on-tutorial)
+- [Unit Testing asynchronous RxJava code](https://medium.com/@PaulinaSadowska/writing-unit-tests-on-asynchronous-events-with-rxjava-and-rxkotlin-1616a27f69aa)
 
 ## Licence
 ```
