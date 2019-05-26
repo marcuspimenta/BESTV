@@ -123,17 +123,17 @@ class SearchPresenter @Inject constructor(
     }
 
     private fun disposeSearchWork() {
-        searchWorkDisposable?.let {
-            if (!it.isDisposed) {
-                it.dispose()
+        searchWorkDisposable?.run {
+            if (!isDisposed) {
+                dispose()
             }
         }
     }
 
     private fun disposeLoadBackdropImage() {
-        loadBackdropImageDisposable?.let {
-            if (!it.isDisposed) {
-                it.dispose()
+        loadBackdropImageDisposable?.run {
+            if (!isDisposed) {
+                dispose()
             }
         }
     }

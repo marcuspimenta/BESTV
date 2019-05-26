@@ -27,15 +27,16 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
+import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -66,9 +67,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        activity?.let {
-            castViewModel = it.intent.getSerializableExtra(CAST) as CastViewModel
-        }
+        castViewModel = requireNotNull(activity).intent.getSerializableExtra(CAST) as CastViewModel
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -90,28 +89,24 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
         progressBarManager.hide()
-        castViewModel?.let {
-            this.castViewModel = it
-            detailsOverviewRow.item = it
+        if (castViewModel != null) {
+            this.castViewModel = castViewModel
+            detailsOverviewRow.item = castViewModel
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
-        movies?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-                moviesRowAdapter.addAll(0, it)
-                val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
-                mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
-            }
+        if (movies.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
+            moviesRowAdapter.addAll(0, movies)
+            val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
+            mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
         }
 
-        tvShow?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-                tvShowsRowAdapter.addAll(0, it)
-                val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
-                mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
-            }
+        if (tvShow.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
+            tvShowsRowAdapter.addAll(0, tvShow)
+            val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
+            mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
         }
     }
 

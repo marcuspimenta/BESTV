@@ -106,9 +106,9 @@ class WorkGridPresenter @Inject constructor(
     }
 
     private fun disposeLoadBackdropImage() {
-        loadBackdropImageDisposable?.let {
-            if (!it.isDisposed) {
-                it.dispose()
+        loadBackdropImageDisposable?.run {
+            if (!isDisposed) {
+                dispose()
             }
         }
     }

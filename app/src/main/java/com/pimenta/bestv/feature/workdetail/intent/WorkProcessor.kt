@@ -40,19 +40,19 @@ class WorkProcessor @Inject constructor() {
             intent.getSerializableExtra(WorkDetailsFragment.WORK) as? WorkViewModel
 
     private fun getWorkDeepLink(intent: Intent): WorkViewModel? =
-            intent.data?.let {
-                if (it.pathSegments.first() == Const.WORK) {
+            intent.data?.run {
+                if (pathSegments.first() == Const.WORK) {
                     return WorkViewModel(
-                            id = it.getQueryParameter(Const.ID)?.toInt() ?: 1,
-                            title = it.getQueryParameter(Const.TITLE),
-                            originalLanguage = it.getQueryParameter(Const.LANGUAGE),
-                            overview = it.getQueryParameter(Const.OVERVIEW),
-                            backdropUrl = it.getQueryParameter(Const.BACKGROUNG_URL),
-                            posterUrl = it.getQueryParameter(Const.POSRTER_URL),
-                            originalTitle = it.getQueryParameter(Const.ORIGINAL_TITLE),
-                            releaseDate = it.getQueryParameter(Const.RELEASE_DATE),
-                            isFavorite = it.getQueryParameter(Const.FAVORITE)?.toBoolean() ?: false,
-                            type = WorkType.valueOf(it.getQueryParameter(Const.TYPE) ?: "MOVIE")
+                            id = getQueryParameter(Const.ID)?.toInt() ?: 1,
+                            title = getQueryParameter(Const.TITLE),
+                            originalLanguage = getQueryParameter(Const.LANGUAGE),
+                            overview = getQueryParameter(Const.OVERVIEW),
+                            backdropUrl = getQueryParameter(Const.BACKGROUNG_URL),
+                            posterUrl = getQueryParameter(Const.POSRTER_URL),
+                            originalTitle = getQueryParameter(Const.ORIGINAL_TITLE),
+                            releaseDate = getQueryParameter(Const.RELEASE_DATE),
+                            isFavorite = getQueryParameter(Const.FAVORITE)?.toBoolean() ?: false,
+                            type = WorkType.valueOf(getQueryParameter(Const.TYPE) ?: "MOVIE")
                     )
                 } else {
                     return null

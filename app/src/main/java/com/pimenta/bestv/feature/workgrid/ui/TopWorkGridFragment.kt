@@ -38,9 +38,9 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            workType = it.getSerializable(TYPE) as MediaRepository.WorkType
-            showProgress = it.getBoolean(SHOW_PROGRESS)
+        arguments?.run {
+            workType = getSerializable(TYPE) as MediaRepository.WorkType
+            showProgress = getBoolean(SHOW_PROGRESS)
         }
     }
 
@@ -62,17 +62,6 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
 
     override fun onWorksLoaded(works: List<WorkViewModel>?) {
         if (workType == MediaRepository.WorkType.FAVORITES_MOVIES) {
-            /*rowsAdapter.setItems(works, new DiffCallback<Movie>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
-                    return oldItem.equals(newItem);
-                }
-
-                @Override
-                public boolean areContentsTheSame(@NonNull final Movie oldItem, @NonNull final Movie newItem) {
-                    return oldItem.equals(newItem);
-                }
-            });*/
             if (works != null) {
                 rowsAdapter.setItems(works, null)
             }

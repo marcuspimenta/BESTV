@@ -32,13 +32,14 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.base.BaseSearchFragment
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import java.util.*
 import javax.inject.Inject
 
@@ -68,15 +69,16 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
                 .view(this)
                 .build()
                 .inject(this)
-        activity?.let {
-            backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
+
+        activity?.let {
+            backgroundManager.attach(it.window)
+            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        }
 
         setupUI()
     }
@@ -113,10 +115,10 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     }
 
     override fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?) {
-        val hasMovies = movies?.isNotEmpty() ?: false
-        val hasTvShows = tvShows?.isNotEmpty() ?: false
-
         progressBarManager.hide()
+
+        val hasMovies = movies.isNotNullOrEmpty()
+        val hasTvShows = tvShows.isNotNullOrEmpty()
         if (hasMovies || hasTvShows) {
             rowsAdapter.clear()
 

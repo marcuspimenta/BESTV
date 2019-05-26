@@ -30,6 +30,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
@@ -105,8 +106,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
 
     override fun onResultSetFavoriteMovie(isFavorite: Boolean) {
         workViewModel.isFavorite = isFavorite
-        favoriteAction.label1 = resources.getString(R.string.remove_favorites)
-                .takeIf { workViewModel.isFavorite }
+        favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { workViewModel.isFavorite }
                 ?: run { resources.getString(R.string.save_favorites) }
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
@@ -115,43 +115,35 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
-                resources.getString(R.string.remove_favorites)
-                        .takeIf { isFavorite }
+                resources.getString(R.string.remove_favorites).takeIf { isFavorite }
                         ?: run { resources.getString(R.string.save_favorites) }
         )
         actionAdapter.add(favoriteAction)
 
-        videos?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
-                videoRowAdapter.addAll(0, it)
-                mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(R.string.videos)), videoRowAdapter))
-            }
+        if (videos.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
+            videoRowAdapter.addAll(0, videos)
+            mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(R.string.videos)), videoRowAdapter))
         }
 
-        casts?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_CAST.toLong(), resources.getString(R.string.cast)))
-                castRowAdapter.addAll(0, it)
-                mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(R.string.cast)), castRowAdapter))
-            }
+        if (casts.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_CAST.toLong(), resources.getString(R.string.cast)))
+            castRowAdapter.addAll(0, casts)
+            mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(R.string.cast)), castRowAdapter))
         }
 
-        recommendedWorks?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), resources.getString(R.string.recommended)))
-                recommendedRowAdapter.addAll(0, it)
-                mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(R.string.recommended)), recommendedRowAdapter))
-            }
+        if (recommendedWorks.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), resources.getString(R.string.recommended)))
+            recommendedRowAdapter.addAll(0, recommendedWorks)
+            mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(R.string.recommended)), recommendedRowAdapter))
         }
 
-        similarWorks?.let {
-            if (it.isNotEmpty()) {
-                actionAdapter.add(Action(ACTION_SIMILAR.toLong(), resources.getString(R.string.similar)))
-                similarRowAdapter.addAll(0, it)
-                mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
-            }
+        if (similarWorks.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), resources.getString(R.string.similar)))
+            similarRowAdapter.addAll(0, similarWorks)
+            mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
         }
+
     }
 
     override fun onRecommendationLoaded(works: List<WorkViewModel>?) {

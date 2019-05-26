@@ -38,9 +38,9 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            genre = it.getSerializable(GENRE) as Genre
-            showProgress = it.getBoolean(SHOW_PROGRESS)
+        arguments?.run {
+            genre = getSerializable(GENRE) as Genre
+            showProgress = getBoolean(SHOW_PROGRESS)
         }
     }
 

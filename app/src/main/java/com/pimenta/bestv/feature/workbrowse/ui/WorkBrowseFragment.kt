@@ -20,21 +20,22 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.ui.base.BaseBrowseFragment
+import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
+import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
+import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
 import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
-import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.entity.MovieGenre
-import com.pimenta.bestv.data.entity.TvShowGenre
-import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
-import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject
 
 /**
@@ -70,16 +71,16 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
                 .view(this)
                 .build()
                 .inject(this)
-
-        activity?.let {
-            backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
+
+        activity?.let {
+            backgroundManager.attach(it.window)
+            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        }
 
         setupUIElements()
     }
@@ -175,9 +176,9 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         prepareEntranceTransition()
     }
 
-    private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<androidx.fragment.app.Fragment>() {
+    private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fragment>() {
 
-        override fun createFragment(rowObj: Any): androidx.fragment.app.Fragment {
+        override fun createFragment(rowObj: Any): Fragment {
             if (countFragment++ >= 1) {
                 showProgress = true
             }
