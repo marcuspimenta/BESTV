@@ -32,39 +32,39 @@ class SplashPresenter @Inject constructor(
 ) : AutoDisposablePresenter() {
 
     fun loadPermissions() {
-        permissionManager.hasAllPermissions()
+        permissionManager.loadPermissions()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .delay(SPLASH_TIME_LOAD_SECONDS.toLong(), TimeUnit.SECONDS)
-                .subscribe({ result ->
-                    if (result) {
-                        view.onSplashFinished(true)
+                .subscribe({ permissions ->
+                    if (permissions.isNotEmpty()) {
+                        view.onRequestPermissions(permissions)
                     } else {
-                        view.onPermissionsLoaded(permissionManager.getPermissions())
+                        view.onHasAllPermissions(true)
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading permissions")
-                    view.onSplashFinished(false)
+                    view.onHasAllPermissions(false)
                 }).addTo(compositeDisposable)
     }
 
     fun hasAllPermissions() {
-        permissionManager.hasAllPermissions()
+        permissionManager.loadPermissions()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ result ->
-                    view.onSplashFinished(result)
+                .subscribe({ permissions ->
+                    view.onHasAllPermissions(permissions.isEmpty())
                 }, { throwable ->
                     Timber.e(throwable, "Error while checking if has all permissions")
-                    view.onSplashFinished(false)
+                    view.onHasAllPermissions(false)
                 }).addTo(compositeDisposable)
     }
 
     interface View {
 
-        fun onSplashFinished(success: Boolean)
+        fun onHasAllPermissions(hasAllPermissions: Boolean)
 
-        fun onPermissionsLoaded(permissions: Set<String>)
+        fun onRequestPermissions(permissions: List<String>)
 
     }
 

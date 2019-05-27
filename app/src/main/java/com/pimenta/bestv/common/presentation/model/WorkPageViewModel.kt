@@ -20,5 +20,5 @@ package com.pimenta.bestv.common.presentation.model
 data class WorkPageViewModel(
         var page: Int,
         var totalPages: Int,
-        var works: List<WorkViewModel>?
+        var works: List<WorkViewModel>? = null
 )

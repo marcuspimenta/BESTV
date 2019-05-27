@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.di.module
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.Application
 import android.app.NotificationManager
@@ -25,7 +24,6 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -76,14 +74,4 @@ class ApplicationModule(
                 connectTimeout(30, TimeUnit.SECONDS)
             }.build()
 
-    @Provides
-    @Singleton
-    fun providePermissions(): Map<String, Boolean> =
-            object : HashMap<String, Boolean>() {
-                init {
-                    put(Manifest.permission.INTERNET, false)
-                    put(Manifest.permission.RECORD_AUDIO, false)
-                    put(Manifest.permission.RECEIVE_BOOT_COMPLETED, false)
-                }
-            }
 }

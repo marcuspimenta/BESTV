@@ -17,6 +17,7 @@ package com.pimenta.bestv.manager.permission
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.pimenta.bestv.common.setting.Const
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -24,21 +25,19 @@ import javax.inject.Inject
  * Created by marcus on 04/07/18.
  */
 class PermissionManagerImpl @Inject constructor(
-        private val application: Application,
-        private val permissions: MutableMap<String, Boolean>
+        private val application: Application
 ) : PermissionManager {
 
-    override fun hasAllPermissions(): Single<Boolean> =
+    override fun loadPermissions(): Single<List<String>> =
             Single.fromCallable {
-                var hasAllPermissions = true
-                for (permission in permissions.keys) {
-                    hasAllPermissions = hasAllPermissions and (ContextCompat.checkSelfPermission(application, permission) == PackageManager.PERMISSION_GRANTED)
-                    permissions[permission] = hasAllPermissions
-                }
-                hasAllPermissions
-            }
+                val permissionsNotAccepted = mutableListOf<String>()
+                Const.PERMISSIONS.forEach {
+                    val hasPermission = (ContextCompat.checkSelfPermission(application, it) == PackageManager.PERMISSION_GRANTED)
+                    if (!hasPermission) {
+                        permissionsNotAccepted.add(it)
+                    }
 
-    override fun getPermissions(): Set<String> {
-        return permissions.keys
-    }
+                }
+                permissionsNotAccepted
+            }
 }

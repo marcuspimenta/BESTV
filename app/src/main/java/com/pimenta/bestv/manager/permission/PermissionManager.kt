@@ -22,17 +22,10 @@ import io.reactivex.Single
 interface PermissionManager {
 
     /**
-     * Gets the permissions.
+     * Loads the permissions.
      *
      * @return [<]
      */
-    fun getPermissions(): Set<String>
-
-    /**
-     * Verifies if has all the permissions.
-     *
-     * @return [<]
-     */
-    fun hasAllPermissions(): Single<Boolean>
+    fun loadPermissions(): Single<List<String>>
 
 }
