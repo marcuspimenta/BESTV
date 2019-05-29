@@ -12,15 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.presentation.ui.headeritem
+package com.pimenta.bestv.common.presentation.mapper
 
-import androidx.leanback.widget.HeaderItem
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.common.presentation.model.Source
+import com.pimenta.bestv.data.entity.Genre
+import com.pimenta.bestv.data.entity.MovieGenre
+import com.pimenta.bestv.data.entity.TvShowGenre
+import io.reactivex.Single
 
-/**
- * Created by marcus on 09-02-2018.
- */
-class GenreHeaderItem(
-        id: Int,
-        val genreViewModel: GenreViewModel
-) : HeaderItem(id.toLong(), genreViewModel.name)
+fun Genre.toViewModel() = GenreViewModel(
+        id = id,
+        name = name,
+        source = Source.MOVIE.takeIf { source == Genre.Source.MOVIE } ?: Source.TV_SHOW
+)
+
+fun GenreViewModel.toGenre() = when (source) {
+    Source.MOVIE -> MovieGenre(id = id, name = name)
+    Source.TV_SHOW -> TvShowGenre(id = id, name = name)
+}
+
+fun Genre.toSingle() = Single.fromCallable { this }

@@ -14,16 +14,12 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
-import com.pimenta.bestv.feature.workbrowse.usecase.GetWorkBrowseDetailsUseCase
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.data.entity.MovieGenre
-import com.pimenta.bestv.data.entity.TvShowGenre
-import com.pimenta.bestv.data.entity.Work
+import com.pimenta.bestv.feature.workbrowse.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -56,8 +52,8 @@ class WorkBrowsePresenter @Inject constructor(
                 .subscribe({ result ->
                     view.onDataLoaded(
                             result.first,
-                            result.second.genres,
-                            result.third.genres
+                            result.second,
+                            result.third
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
@@ -67,7 +63,7 @@ class WorkBrowsePresenter @Inject constructor(
 
     interface View {
 
-        fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?)
+        fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?)
 
         fun onHasFavorite(hasFavoriteMovie: Boolean)
 

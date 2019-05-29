@@ -16,16 +16,15 @@ package com.pimenta.bestv.feature.workgrid.ui
 
 import android.content.Context
 import android.os.Bundle
-
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.data.entity.Genre
+import com.pimenta.bestv.common.presentation.model.GenreViewModel
 
 /**
  * Created by marcus on 11-02-2018.
  */
 class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
-    private lateinit var genre: Genre
+    private lateinit var genreViewModel: GenreViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -39,13 +38,13 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.run {
-            genre = getSerializable(GENRE) as Genre
+            genreViewModel = getSerializable(GENRE) as GenreViewModel
             showProgress = getBoolean(SHOW_PROGRESS)
         }
     }
 
     override fun loadData() {
-        presenter.loadWorkByGenre(genre)
+        presenter.loadWorkByGenre(genreViewModel)
     }
 
     override fun refreshDada() {
@@ -56,14 +55,12 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
         private const val GENRE = "GENRE"
 
-        fun newInstance(genre: Genre, showProgress: Boolean) =
+        fun newInstance(genreViewModel: GenreViewModel, showProgress: Boolean) =
                 GenreWorkGridFragment().apply {
                     this.arguments = Bundle().apply {
-                        putSerializable(GENRE, genre)
+                        putSerializable(GENRE, genreViewModel)
                         putBoolean(SHOW_PROGRESS, showProgress)
                     }
-                    this.genre = genre
-                    this.showProgress = showProgress
                 }
     }
 }

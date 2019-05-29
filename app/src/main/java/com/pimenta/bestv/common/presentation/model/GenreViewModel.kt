@@ -12,13 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.entity
+package com.pimenta.bestv.common.presentation.model
+
+import java.io.Serializable
 
 /**
- * Created by marcus on 06/07/18.
+ * Created by marcus on 28-05-2019.
  */
-class TvShowGenre(
-        id: Int = 0,
-        name: String? = null,
-        override val source: Source = Source.TV_SHOW
-) : Genre(id = id, name = name)
+data class GenreViewModel(
+        var id: Int = 0,
+        var name: String? = null,
+        var source: Source = Source.MOVIE
+) : Serializable
+
+enum class Source {
+    MOVIE,
+    TV_SHOW
+}

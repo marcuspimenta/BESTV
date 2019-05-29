@@ -58,4 +58,3 @@ enum class WorkType {
     TV_SHOW,
     MOVIE
 }
-

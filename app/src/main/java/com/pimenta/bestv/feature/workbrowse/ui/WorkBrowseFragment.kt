@@ -26,11 +26,10 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.ui.base.BaseBrowseFragment
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
-import com.pimenta.bestv.data.entity.MovieGenre
-import com.pimenta.bestv.data.entity.TvShowGenre
 import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
@@ -116,7 +115,7 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         super.onDetach()
     }
 
-    override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<MovieGenre>?, tvShowGenres: List<TvShowGenre>?) {
+    override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?) {
         hasFavorite = hasFavoriteMovie
         if (hasFavorite) {
             rowsAdapter.add(favoritePageRow)
@@ -129,8 +128,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_MOVIES.resource), MediaRepository.WorkType.TOP_RATED_MOVIES)))
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.UP_COMING_MOVIES.resource), MediaRepository.WorkType.UP_COMING_MOVIES)))
 
-        movieGenres?.forEach { genre ->
-            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
+        movieGenres?.forEach {
+            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
         }
 
         rowsAdapter.add(DividerRow())
@@ -140,8 +139,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_TV_SHOWS.resource), MediaRepository.WorkType.TOP_RATED_TV_SHOWS)))
         rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_TV_SHOWS.resource), MediaRepository.WorkType.POPULAR_TV_SHOWS)))
 
-        tvShowGenres?.forEach { genre ->
-            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, genre)))
+        tvShowGenres?.forEach {
+            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
         }
 
         progressBarManager.hide()
@@ -195,8 +194,8 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
                 }
                 WORK_GENRE_ID -> {
                     val genreHeaderItem = row.headerItem as GenreHeaderItem
-                    title = genreHeaderItem.genre.name
-                    return GenreWorkGridFragment.newInstance(genreHeaderItem.genre, showProgress)
+                    title = genreHeaderItem.genreViewModel.name
+                    return GenreWorkGridFragment.newInstance(genreHeaderItem.genreViewModel, showProgress)
                 }
             }
 

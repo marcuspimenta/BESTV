@@ -34,11 +34,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.base.BaseVerticalGridFragment
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import javax.inject.Inject
 
 /**
@@ -50,7 +50,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     private val fragmentAdapter: BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> by lazy {
         BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
     }
-    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
+    private val backgroundManager: BackgroundManager? by lazy { activity?.let { BackgroundManager.getInstance(it) } }
     protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
 
     protected var showProgress: Boolean = false
@@ -117,7 +117,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
         workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                backgroundManager.setBitmap(resource)
+                backgroundManager?.setBitmap(resource)
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {

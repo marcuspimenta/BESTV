@@ -13,9 +13,8 @@
  */
 package com.pimenta.bestv.feature.workbrowse.usecase
 
+import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.data.entity.MovieGenreList
-import com.pimenta.bestv.data.entity.TvShowGenreList
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class GetWorkBrowseDetailsUseCase @Inject constructor(
         private val workUseCase: WorkUseCase
 ) {
 
-    operator fun invoke(): Single<Triple<Boolean, MovieGenreList, TvShowGenreList>> =
+    operator fun invoke(): Single<Triple<Boolean, List<GenreViewModel>?, List<GenreViewModel>?>> =
             Single.zip(
                     workUseCase.hasFavorite(),
                     workUseCase.getMovieGenres(),

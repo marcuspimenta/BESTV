@@ -47,15 +47,19 @@ class WorkUseCase @Inject constructor(
 
     fun hasFavorite() = mediaRepository.hasFavorite()
 
-    fun getMovieGenres() = mediaRepository.getMovieGenres()
+    fun getMovieGenres() =
+            mediaRepository.getMovieGenres()
+                    .map { it.genres?.map { genre -> genre.toViewModel() } }
 
-    fun getTvShowGenres() = mediaRepository.getTvShowGenres()
+    fun getTvShowGenres() =
+            mediaRepository.getTvShowGenres()
+                    .map { it.genres?.map { genre -> genre.toViewModel() } }
 
     fun getFavorites(): Single<List<WorkViewModel>> =
             mediaRepository.getFavorites()
                     .map { it.map { work -> work.toViewModel() } }
 
-    fun loadWorkByType(page: Int, movieListType: MediaRepository.WorkType): Single<WorkPageViewModel> =
+    fun loadWorkByType(page: Int, movieListType: MediaRepository.WorkType) =
             mediaRepository.loadWorkByType(page, movieListType)
                     .map {
                         WorkPageViewModel(
@@ -65,7 +69,7 @@ class WorkUseCase @Inject constructor(
                         )
                     }
 
-    fun getWorkByGenre(genre: Genre, page: Int): Single<WorkPageViewModel> =
+    fun getWorkByGenre(genre: Genre, page: Int) =
             mediaRepository.getWorkByGenre(genre, page)
                     .map {
                         WorkPageViewModel(
@@ -75,7 +79,7 @@ class WorkUseCase @Inject constructor(
                         )
                     }
 
-    fun searchMoviesByQuery(query: String, page: Int): Single<WorkPageViewModel> =
+    fun searchMoviesByQuery(query: String, page: Int) =
             urlEncoderTextUseCase(query)
                     .flatMap {
                         mediaRepository.searchMoviesByQuery(it, page)
@@ -88,7 +92,7 @@ class WorkUseCase @Inject constructor(
                                 }
                     }
 
-    fun searchTvShowsByQuery(query: String, page: Int): Single<WorkPageViewModel> =
+    fun searchTvShowsByQuery(query: String, page: Int) =
             urlEncoderTextUseCase(query)
                     .flatMap {
                         mediaRepository.searchTvShowsByQuery(it, page)

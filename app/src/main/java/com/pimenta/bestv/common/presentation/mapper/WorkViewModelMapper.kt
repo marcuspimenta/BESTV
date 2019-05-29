@@ -32,15 +32,14 @@ fun Work.toViewModel() = WorkViewModel(
         backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         originalTitle = originalTitle,
-        releaseDate = releaseDate
-                ?.takeUnless { it.isEmpty() || it.isBlank() }
+        releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
                 ?.let {
                     SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
                             SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
                     )
                 },
         isFavorite = isFavorite,
-        type = if (this is TvShow) WorkType.TV_SHOW else WorkType.MOVIE
+        type = WorkType.TV_SHOW.takeIf { this is TvShow } ?: WorkType.MOVIE
 )
 
 fun WorkViewModel.toWork() = when (type) {
