@@ -272,7 +272,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
 
         override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            when (row?.headerItem?.id?.toInt()) {
+            when (row?.run { id.toInt() }) {
                 RECOMMENDED_HEADER_ID -> {
                     item?.let {
                         if (recommendedRowAdapter.indexOf(it) >= recommendedRowAdapter.size() - 1) {
@@ -294,7 +294,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
 
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-            when (row?.headerItem?.id?.toInt()) {
+            when (row?.run { id.toInt() }) {
                 CAST_HEAD_ID -> {
                     val castViewModel = item as CastViewModel
                     val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(

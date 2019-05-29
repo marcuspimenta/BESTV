@@ -193,7 +193,7 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
             workSelected = item as WorkViewModel?
             loadBackdropImage()
 
-            when (row?.headerItem?.id?.toInt()) {
+            when (row?.run { id.toInt() }) {
                 MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
                     presenter.loadMovies()
                 }
