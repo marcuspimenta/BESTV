@@ -17,6 +17,7 @@ package com.pimenta.bestv.manager.preference
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 import javax.inject.Inject
 
@@ -36,14 +37,18 @@ class PreferenceManagerImpl @Inject constructor(
             sharedPreferences.getString(key, defValue) ?: defValue
 
     override fun applyStringToPersistence(key: String, value: String) {
-        sharedPreferences.edit().putString(key, value).apply()
+        sharedPreferences.edit {
+            putString(key, value)
+        }
     }
 
     override fun getLongFromPersistence(key: String, defValue: Long) =
             sharedPreferences.getLong(key, defValue)
 
     override fun applyLongToPersistence(key: String, value: Long) {
-        sharedPreferences.edit().putLong(key, value).apply()
+        sharedPreferences.edit {
+            putLong(key, value)
+        }
     }
 
     companion object {
