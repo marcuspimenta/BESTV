@@ -35,7 +35,6 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.common.presentation.ui.base.BaseSearchFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
@@ -46,7 +45,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 12-03-2018.
  */
-class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupportFragment.SearchResultProvider {
+class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupportFragment.SearchResultProvider {
 
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
     private val movieRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
@@ -54,14 +53,14 @@ class SearchFragment : BaseSearchFragment(), SearchPresenter.View, SearchSupport
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
     private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
 
-    private var workSelected: WorkViewModel? = null
-    private var backgroundTimer: Timer = Timer()
-
     @Inject
     lateinit var displayMetrics: DisplayMetrics
 
     @Inject
     lateinit var presenter: SearchPresenter
+
+    private var workSelected: WorkViewModel? = null
+    private var backgroundTimer: Timer = Timer()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

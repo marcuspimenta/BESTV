@@ -17,16 +17,17 @@ package com.pimenta.bestv.feature.workdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
+import com.pimenta.bestv.extension.replaceFragment
 import com.pimenta.bestv.feature.workdetail.intent.WorkProcessor
 import javax.inject.Inject
 
 /**
  * Created by marcus on 11-02-2018.
  */
-class WorkDetailsActivity : BaseActivity() {
+class WorkDetailsActivity : FragmentActivity() {
 
     @Inject
     lateinit var workProcessor: WorkProcessor

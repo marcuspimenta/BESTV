@@ -27,7 +27,6 @@ import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.ui.base.BaseBrowseFragment
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.data.repository.MediaRepository
@@ -40,11 +39,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
-
-    private var countFragment = 0
-    private var showProgress = false
-    private var hasFavorite = false
+class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
@@ -63,6 +58,10 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
 
     @Inject
     lateinit var presenter: WorkBrowsePresenter
+
+    private var countFragment = 0
+    private var showProgress = false
+    private var hasFavorite = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
+import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -32,7 +33,6 @@ import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
-import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
@@ -43,7 +43,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 04-04-2018.
  */
-class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
+class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View {
 
     private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
     private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }

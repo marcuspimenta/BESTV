@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.ImageCardView
@@ -33,8 +34,9 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.common.presentation.ui.base.BaseVerticalGridFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.extension.addFragment
+import com.pimenta.bestv.extension.popBackStack
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
@@ -44,7 +46,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 09-02-2018.
  */
-abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPresenter.View,
+abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGridPresenter.View,
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private val fragmentAdapter: BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> by lazy {
@@ -54,10 +56,10 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     protected val showProgress: Boolean by lazy { arguments?.getBoolean(SHOW_PROGRESS) ?: false }
 
-    private var workSelected: WorkViewModel? = null
-
     @Inject
     lateinit var presenter: WorkGridPresenter
+
+    private var workSelected: WorkViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +110,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
         } ?: if (rowsAdapter.size() == 0) {
             val fragment = ErrorFragment.newInstance()
             fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
-            addFragment(fragment, ErrorFragment.TAG)
+            activity.addFragment(fragment, ErrorFragment.TAG)
         }
 
 
@@ -131,7 +133,7 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                activity.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
                     progressBarManager.show()
                     loadData()

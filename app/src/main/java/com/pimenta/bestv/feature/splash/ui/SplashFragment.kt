@@ -20,16 +20,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.presentation.ui.base.BaseFragment
+import com.pimenta.bestv.extension.finishActivity
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
  */
-class SplashFragment : BaseFragment(), SplashPresenter.View {
+class SplashFragment : Fragment(), SplashPresenter.View {
 
     @Inject
     lateinit var presenter: SplashPresenter
@@ -58,7 +59,7 @@ class SplashFragment : BaseFragment(), SplashPresenter.View {
 
     override fun onHasAllPermissions(hasAllPermissions: Boolean) {
         val resultCode = Activity.RESULT_OK.takeIf { hasAllPermissions } ?: Activity.RESULT_CANCELED
-        finishActivity(resultCode)
+        activity.finishActivity(resultCode)
     }
 
     override fun onRequestPermissions(permissions: List<String>) {

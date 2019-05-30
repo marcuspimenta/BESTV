@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.common.presentation.ui.base
 
-import androidx.leanback.app.ErrorSupportFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.leanback.app.ErrorSupportFragment
 
 /**
  * Created by marcus on 11-02-2018.
@@ -39,58 +39,5 @@ abstract class BaseErrorFragment : ErrorSupportFragment() {
     fun setTarget(fragment: Fragment, requestCode: Int) {
         target = fragment
         targetCode = requestCode
-    }
-
-    /**
-     * Finishes and sets the result that your activity will return to its
-     * caller.
-     *
-     * @param resultCode The result code to propagate back to the originating
-     * activity, often RESULT_CANCELED or RESULT_OK
-     */
-    fun finishActivity(resultCode: Int) {
-        activity?.run {
-            setResult(resultCode)
-            finish()
-        }
-    }
-
-    /**
-     * Replace an existing fragment that was added to a container.
-     *
-     * @param fragment The new fragment to place in the container.
-     */
-    protected fun replaceFragment(fragment: Fragment) {
-        activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(android.R.id.content, fragment)
-                ?.commit()
-    }
-
-    /**
-     * Add a fragment to the activity state
-     *
-     * @param fragment The [Fragment] to be added. This fragment must not already be added to the activity.
-     * @param tag      Optional tag name for the fragment.
-     */
-    protected fun addFragment(fragment: Fragment, tag: String) {
-        activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.add(android.R.id.content, fragment)
-                ?.addToBackStack(tag)
-                ?.commit()
-    }
-
-    /**
-     * Pop the last fragment transition from the manager's fragment back stack. If there is nothing to pop, false is returned.
-     * This function is asynchronous -- it enqueues the request to pop, but the action will not be performed until the
-     * application returns to its event loop.
-     *
-     * @param name  The name of a previous back state to look for; if found, all states up to that state will be popped
-     * @param flags Either 0 or POP_BACK_STACK_INCLUSIVE
-     */
-    protected fun popBackStack(name: String, flags: Int) {
-        activity?.supportFragmentManager
-                ?.popBackStackImmediate(name, flags)
     }
 }

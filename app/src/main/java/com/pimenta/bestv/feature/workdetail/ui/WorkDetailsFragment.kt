@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
+import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
@@ -35,7 +36,6 @@ import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.common.presentation.ui.base.BaseDetailsFragment
 import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.common.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
@@ -49,7 +49,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
+class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View {
 
     private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
     private val videoRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
@@ -69,11 +69,11 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     }
     private val workViewModel: WorkViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
 
-    private lateinit var favoriteAction: Action
-    private lateinit var detailsOverviewRow: DetailsOverviewRow
-
     @Inject
     lateinit var presenter: WorkDetailsPresenter
+
+    private lateinit var favoriteAction: Action
+    private lateinit var detailsOverviewRow: DetailsOverviewRow
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

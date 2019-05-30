@@ -17,13 +17,14 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
+import com.pimenta.bestv.extension.replaceFragment
 
 /**
  * Created by marcus on 04-04-2018.
  */
-class CastDetailsActivity : BaseActivity() {
+class CastDetailsActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

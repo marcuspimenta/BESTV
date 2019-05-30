@@ -17,13 +17,13 @@ package com.pimenta.bestv.feature.splash.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-
-import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
+import androidx.fragment.app.FragmentActivity
+import com.pimenta.bestv.extension.replaceFragment
 
 /**
  * Created by marcus on 04-05-2018.
  */
-class SplashActivity : BaseActivity() {
+class SplashActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
