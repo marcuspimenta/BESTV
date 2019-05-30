@@ -85,9 +85,11 @@ class WorkBrowseFragment : BaseBrowseFragment(), WorkBrowsePresenter.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.setRootView(container)
-        progressBarManager.enableProgressBar()
-        progressBarManager.initialDelay = 0
+        progressBarManager.apply {
+            setRootView(container)
+            enableProgressBar()
+            initialDelay = 0
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

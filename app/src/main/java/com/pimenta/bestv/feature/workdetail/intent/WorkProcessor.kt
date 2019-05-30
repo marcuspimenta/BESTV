@@ -18,7 +18,7 @@ import android.content.Intent
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.setting.Const
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import javax.inject.Inject
 
 /**
@@ -37,7 +37,7 @@ class WorkProcessor @Inject constructor() {
     }
 
     private fun getWorkIntent(intent: Intent): WorkViewModel? =
-            intent.getSerializableExtra(WorkDetailsFragment.WORK) as? WorkViewModel
+            intent.getSerializableExtra(WorkDetailsActivity.WORK) as? WorkViewModel
 
     private fun getWorkDeepLink(intent: Intent): WorkViewModel? =
             intent.data?.run {
@@ -47,8 +47,8 @@ class WorkProcessor @Inject constructor() {
                             title = getQueryParameter(Const.TITLE),
                             originalLanguage = getQueryParameter(Const.LANGUAGE),
                             overview = getQueryParameter(Const.OVERVIEW),
-                            backdropUrl = getQueryParameter(Const.BACKGROUNG_URL),
-                            posterUrl = getQueryParameter(Const.POSRTER_URL),
+                            backdropUrl = getQueryParameter(Const.BACKGROUND_URL),
+                            posterUrl = getQueryParameter(Const.POSTER_URL),
                             originalTitle = getQueryParameter(Const.ORIGINAL_TITLE),
                             releaseDate = getQueryParameter(Const.RELEASE_DATE),
                             isFavorite = getQueryParameter(Const.FAVORITE)?.toBoolean() ?: false,

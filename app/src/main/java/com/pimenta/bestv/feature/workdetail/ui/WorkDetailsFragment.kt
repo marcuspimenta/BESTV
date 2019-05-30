@@ -21,9 +21,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.os.bundleOf
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
@@ -39,7 +42,6 @@ import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
-import com.pimenta.bestv.feature.workdetail.intent.WorkProcessor
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -65,13 +67,10 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
             enableParallax()
         }
     }
+    private val workViewModel: WorkViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
 
     private lateinit var favoriteAction: Action
     private lateinit var detailsOverviewRow: DetailsOverviewRow
-    private lateinit var workViewModel: WorkViewModel
-
-    @Inject
-    lateinit var workProcessor: WorkProcessor
 
     @Inject
     lateinit var presenter: WorkDetailsPresenter
@@ -88,19 +87,23 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        workProcessor(requireNotNull(activity?.intent))?.let {
-            workViewModel = it
-        } ?: run {
-            activity?.finish()
-        }
-
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
         adapter = mainAdapter
     }
 
-    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        progressBarManager.apply {
+            setRootView(container)
+            enableProgressBar()
+            initialDelay = 0
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarManager.show()
         presenter.loadDataByWork(workViewModel)
     }
 
@@ -112,6 +115,8 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     }
 
     override fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
+        progressBarManager.hide()
+
         workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
@@ -332,7 +337,7 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
     companion object {
 
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
-        const val WORK = "WORK"
+        private const val WORK = "WORK"
 
         private const val ACTION_FAVORITE = 1
         private const val ACTION_VIDEOS = 2
@@ -343,5 +348,12 @@ class WorkDetailsFragment : BaseDetailsFragment(), WorkDetailsPresenter.View {
         private const val RECOMMENDED_HEADER_ID = 2
         private const val SIMILAR_HEADER_ID = 3
         private const val CAST_HEAD_ID = 4
+
+        fun newInstance(workViewModel: WorkViewModel) =
+                WorkDetailsFragment().apply {
+                    arguments = bundleOf(
+                            WORK to workViewModel
+                    )
+                }
     }
 }

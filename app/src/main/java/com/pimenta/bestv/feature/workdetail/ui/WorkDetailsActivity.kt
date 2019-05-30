@@ -17,25 +17,37 @@ package com.pimenta.bestv.feature.workdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.pimenta.bestv.R
+import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
+import com.pimenta.bestv.feature.workdetail.intent.WorkProcessor
+import javax.inject.Inject
 
 /**
  * Created by marcus on 11-02-2018.
  */
 class WorkDetailsActivity : BaseActivity() {
 
+    @Inject
+    lateinit var workProcessor: WorkProcessor
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_work_details)
+        BesTV.applicationComponent.inject(this)
+
+        when (val workViewModel = workProcessor(intent)) {
+            null -> finish()
+            else -> replaceFragment(WorkDetailsFragment.newInstance(workViewModel))
+        }
     }
 
     companion object {
 
+        const val WORK = "WORK"
+
         fun newInstance(context: Context?, workViewModel: WorkViewModel) =
                 Intent(context, WorkDetailsActivity::class.java).apply {
-                    putExtra(WorkDetailsFragment.WORK, workViewModel)
+                    putExtra(WORK, workViewModel)
                 }
     }
 }

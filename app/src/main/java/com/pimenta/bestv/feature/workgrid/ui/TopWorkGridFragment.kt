@@ -16,6 +16,7 @@ package com.pimenta.bestv.feature.workgrid.ui
 
 import android.content.Context
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.repository.MediaRepository
@@ -25,7 +26,7 @@ import com.pimenta.bestv.data.repository.MediaRepository
  */
 class TopWorkGridFragment : AbstractWorkGridFragment() {
 
-    private lateinit var workType: MediaRepository.WorkType
+    private val workType: MediaRepository.WorkType by lazy { arguments?.getSerializable(TYPE) as MediaRepository.WorkType }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,15 +34,6 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
                 .view(this)
                 .build()
                 .inject(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.run {
-            workType = getSerializable(TYPE) as MediaRepository.WorkType
-            showProgress = getBoolean(SHOW_PROGRESS)
-        }
     }
 
     override fun loadData() {
@@ -78,12 +70,10 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
 
         fun newInstance(workType: MediaRepository.WorkType, showProgress: Boolean) =
                 TopWorkGridFragment().apply {
-                    this.arguments = Bundle().apply {
-                        putSerializable(TYPE, workType)
-                        putBoolean(SHOW_PROGRESS, showProgress)
-                    }
-                    this.workType = workType
-                    this.showProgress = showProgress
+                    arguments = bundleOf(
+                            TYPE to workType,
+                            SHOW_PROGRESS to showProgress
+                    )
                 }
     }
 }

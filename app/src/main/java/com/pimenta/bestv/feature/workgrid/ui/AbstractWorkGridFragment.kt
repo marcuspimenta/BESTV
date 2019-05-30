@@ -52,8 +52,8 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     }
     private val backgroundManager: BackgroundManager? by lazy { activity?.let { BackgroundManager.getInstance(it) } }
     protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    protected val showProgress: Boolean by lazy { arguments?.getBoolean(SHOW_PROGRESS) ?: false }
 
-    protected var showProgress: Boolean = false
     private var workSelected: WorkViewModel? = null
 
     @Inject
@@ -67,9 +67,11 @@ abstract class AbstractWorkGridFragment : BaseVerticalGridFragment(), WorkGridPr
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.setRootView(container)
-        progressBarManager.enableProgressBar()
-        progressBarManager.initialDelay = 0
+        progressBarManager.apply {
+            setRootView(container)
+            enableProgressBar()
+            initialDelay = 0
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

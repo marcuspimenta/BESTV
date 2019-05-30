@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.os.bundleOf
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -67,7 +68,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        castViewModel = requireNotNull(activity).intent.getSerializableExtra(CAST) as CastViewModel
+        castViewModel = arguments?.getSerializable(CAST) as CastViewModel
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -75,9 +76,11 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.setRootView(container)
-        progressBarManager.enableProgressBar()
-        progressBarManager.initialDelay = 0
+        progressBarManager.apply {
+            setRootView(container)
+            enableProgressBar()
+            initialDelay = 0
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -89,6 +92,7 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
 
     override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
         progressBarManager.hide()
+
         if (castViewModel != null) {
             this.castViewModel = castViewModel
             detailsOverviewRow.item = castViewModel
@@ -195,5 +199,12 @@ class CastDetailsFragment : BaseDetailsFragment(), CastDetailsPresenter.View {
         private const val ACTION_TV_SHOWS = 2
         private const val MOVIES_HEADER_ID = 1
         private const val TV_SHOWS_HEADER_ID = 2
+
+        fun newInstance(castViewModel: CastViewModel) =
+                CastDetailsFragment().apply {
+                    arguments = bundleOf(
+                            CAST to castViewModel
+                    )
+                }
     }
 }

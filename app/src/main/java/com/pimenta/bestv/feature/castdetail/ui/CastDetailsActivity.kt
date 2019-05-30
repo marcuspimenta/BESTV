@@ -17,7 +17,6 @@ package com.pimenta.bestv.feature.castdetail.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.ui.base.BaseActivity
 
@@ -28,14 +27,17 @@ class CastDetailsActivity : BaseActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cast_details)
+        val castViewModel = intent.getSerializableExtra(CAST) as CastViewModel
+        replaceFragment(CastDetailsFragment.newInstance(castViewModel))
     }
 
     companion object {
 
+        const val CAST = "CAST"
+
         fun newInstance(context: Context?, castViewModel: CastViewModel) =
                 Intent(context, CastDetailsActivity::class.java).apply {
-                    putExtra(CastDetailsFragment.CAST, castViewModel)
+                    putExtra(CAST, castViewModel)
                 }
     }
 }

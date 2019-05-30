@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.workgrid.ui
 
 import android.content.Context
-import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 
@@ -24,7 +24,7 @@ import com.pimenta.bestv.common.presentation.model.GenreViewModel
  */
 class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
-    private lateinit var genreViewModel: GenreViewModel
+    private val genreViewModel: GenreViewModel by lazy { arguments?.getSerializable(GENRE) as GenreViewModel }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -32,15 +32,6 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
                 .view(this)
                 .build()
                 .inject(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.run {
-            genreViewModel = getSerializable(GENRE) as GenreViewModel
-            showProgress = getBoolean(SHOW_PROGRESS)
-        }
     }
 
     override fun loadData() {
@@ -57,10 +48,10 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
         fun newInstance(genreViewModel: GenreViewModel, showProgress: Boolean) =
                 GenreWorkGridFragment().apply {
-                    this.arguments = Bundle().apply {
-                        putSerializable(GENRE, genreViewModel)
-                        putBoolean(SHOW_PROGRESS, showProgress)
-                    }
+                    arguments = bundleOf(
+                            GENRE to genreViewModel,
+                            SHOW_PROGRESS to showProgress
+                    )
                 }
     }
 }

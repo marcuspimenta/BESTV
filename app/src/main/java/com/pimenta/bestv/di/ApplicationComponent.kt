@@ -18,6 +18,7 @@ import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.main.ui.MainActivity
 import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
+import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -33,6 +34,8 @@ interface ApplicationComponent {
     fun inject(receiver: BootBroadcastReceiver)
 
     fun inject(activity: MainActivity)
+
+    fun inject(activity: WorkDetailsActivity)
 
     fun getCastDetailsFragmentComponent(): CastDetailsFragmentComponent.Builder
 
