@@ -47,13 +47,15 @@ class CastDetailsPresenter @Inject constructor(
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
-                    view.onCastLoaded(null, null, null)
+                    view.onErrorCastDetailsLoaded()
                 }).addTo(compositeDisposable)
     }
 
     interface View {
 
         fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?)
+
+        fun onErrorCastDetailsLoaded()
 
     }
 }

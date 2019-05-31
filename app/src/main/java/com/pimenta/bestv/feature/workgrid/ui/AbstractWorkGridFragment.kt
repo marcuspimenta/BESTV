@@ -108,8 +108,9 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
                 rowsAdapter.add(it)
             }
         } ?: if (rowsAdapter.size() == 0) {
-            val fragment = ErrorFragment.newInstance()
-            fragment.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+            val fragment = ErrorFragment.newInstance().also {
+                it.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+            }
             activity.addFragment(fragment, ErrorFragment.TAG)
         }
 

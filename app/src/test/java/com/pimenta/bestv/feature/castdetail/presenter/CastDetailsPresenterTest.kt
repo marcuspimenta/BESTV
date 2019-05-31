@@ -56,7 +56,7 @@ class CastDetailsPresenterTest {
 
         presenter.loadCastDetails(aCastViewModel)
 
-        verify(view).onCastLoaded(null, null, null)
+        verify(view).onErrorCastDetailsLoaded()
     }
 
     companion object {

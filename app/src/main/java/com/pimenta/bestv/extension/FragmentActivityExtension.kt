@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.extension
 
+import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.transaction
@@ -41,9 +42,19 @@ fun FragmentActivity?.popBackStack(name: String, flags: Int) {
     }
 }
 
-fun FragmentActivity?.finishActivity(resultCode: Int) {
+fun FragmentActivity?.finishActivity(resultCode: Int = Activity.RESULT_OK) {
     this?.run {
         setResult(resultCode)
         finish()
     }
 }
+
+fun FragmentActivity?.getTopFragment(): Fragment? =
+        this?.run {
+            supportFragmentManager.run {
+                when (val size = fragments.size) {
+                    0 -> null
+                    else -> fragments[size - 1]
+                }
+            }
+        }

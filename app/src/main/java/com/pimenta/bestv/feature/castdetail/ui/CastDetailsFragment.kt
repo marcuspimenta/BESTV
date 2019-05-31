@@ -14,7 +14,9 @@
 
 package com.pimenta.bestv.feature.castdetail.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +37,11 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.extension.addFragment
+import com.pimenta.bestv.extension.finishActivity
+import com.pimenta.bestv.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
+import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import javax.inject.Inject
@@ -111,6 +117,29 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
             tvShowsRowAdapter.addAll(0, tvShow)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
             mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
+        }
+    }
+
+    override fun onErrorCastDetailsLoaded() {
+        progressBarManager.hide()
+        val fragment = ErrorFragment.newInstance().also {
+            it.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        activity.addFragment(fragment, ErrorFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                activity.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        progressBarManager.show()
+                        presenter.loadCastDetails(castViewModel)
+                    }
+                    else -> activity.finishActivity()
+                }
+            }
         }
     }
 
@@ -195,6 +224,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         const val CAST = "CAST"
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
 
+        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
         private const val ACTION_MOVIES = 1
         private const val ACTION_TV_SHOWS = 2
         private const val MOVIES_HEADER_ID = 1
