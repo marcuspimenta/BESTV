@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.workdetail.ui
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -40,8 +41,12 @@ import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.common.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.render.WorkDetailsDescriptionRender
+import com.pimenta.bestv.extension.addFragment
+import com.pimenta.bestv.extension.finishActivity
+import com.pimenta.bestv.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
+import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -148,7 +153,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
             similarRowAdapter.addAll(0, similarWorks)
             mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
         }
-
     }
 
     override fun onRecommendationLoaded(works: List<WorkViewModel>?) {
@@ -163,6 +167,29 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         works?.forEach { work ->
             if (similarRowAdapter.indexOf(work) == -1) {
                 similarRowAdapter.add(work)
+            }
+        }
+    }
+
+    override fun onErrorWorkDetailsLoaded() {
+        progressBarManager.hide()
+        val fragment = ErrorFragment.newInstance().also {
+            it.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        activity.addFragment(fragment, ErrorFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                activity.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        progressBarManager.show()
+                        presenter.loadDataByWork(workViewModel)
+                    }
+                    else -> activity.finishActivity()
+                }
             }
         }
     }
@@ -339,6 +366,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
         private const val WORK = "WORK"
 
+        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
         private const val ACTION_FAVORITE = 1
         private const val ACTION_VIDEOS = 2
         private const val ACTION_CAST = 3

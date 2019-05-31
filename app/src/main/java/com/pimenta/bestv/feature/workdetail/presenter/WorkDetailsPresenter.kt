@@ -81,7 +81,7 @@ class WorkDetailsPresenter @Inject constructor(
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
-                    view.onDataLoaded(false, null, null, null, null)
+                    view.onErrorWorkDetailsLoaded()
                 }).addTo(compositeDisposable)
     }
 
@@ -130,6 +130,8 @@ class WorkDetailsPresenter @Inject constructor(
         fun onRecommendationLoaded(works: List<WorkViewModel>?)
 
         fun onSimilarLoaded(works: List<WorkViewModel>?)
+
+        fun onErrorWorkDetailsLoaded()
 
     }
 }

@@ -18,8 +18,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.extension.getTopFragment
 import com.pimenta.bestv.extension.replaceFragment
 import com.pimenta.bestv.feature.workdetail.intent.WorkProcessor
 import javax.inject.Inject
@@ -39,6 +41,13 @@ class WorkDetailsActivity : FragmentActivity() {
         when (val workViewModel = workProcessor(intent)) {
             null -> finish()
             else -> replaceFragment(WorkDetailsFragment.newInstance(workViewModel))
+        }
+    }
+
+    override fun onBackPressed() {
+        val topFragment = getTopFragment()
+        if (topFragment !is ErrorSupportFragment) {
+            super.onBackPressed()
         }
     }
 
