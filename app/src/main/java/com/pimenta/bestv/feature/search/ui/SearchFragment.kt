@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.search.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -36,6 +37,9 @@ import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.extension.addFragment
+import com.pimenta.bestv.extension.popBackStack
+import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
@@ -59,6 +63,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     @Inject
     lateinit var presenter: SearchPresenter
 
+    private var query: String? = null
     private var workSelected: WorkViewModel? = null
     private var backgroundTimer: Timer = Timer()
 
@@ -74,9 +79,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        activity?.let {
-            backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        activity?.run {
+            backgroundManager.attach(window)
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
         }
 
         setupUI()
@@ -164,17 +169,27 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         })
     }
 
+    override fun onErrorSearch() {
+        progressBarManager.hide()
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@SearchFragment, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        activity?.addFragment(fragment, ErrorFragment.TAG)
+    }
+
     override fun getResultsAdapter(): ObjectAdapter? {
         return rowsAdapter
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        searchQuery(query)
+        this.query = query
+        searchByQuery()
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        searchQuery(query)
+        this.query = query
+        searchByQuery()
         return true
     }
 
@@ -182,6 +197,13 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         when (requestCode) {
             SEARCH_FRAGMENT_REQUEST_CODE -> {
                 view?.requestFocus()
+            }
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                if (resultCode == Activity.RESULT_OK) {
+                    progressBarManager.show()
+                    searchByQuery()
+                }
             }
         }
     }
@@ -212,10 +234,12 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         }
     }
 
-    private fun searchQuery(query: String) {
-        rowsAdapter.clear()
-        progressBarManager.show()
-        presenter.searchWorksByQuery(query)
+    private fun searchByQuery() {
+        query?.let {
+            rowsAdapter.clear()
+            progressBarManager.show()
+            presenter.searchWorksByQuery(it)
+        }
     }
 
     private fun clearAdapter() {
@@ -235,6 +259,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     companion object {
 
         private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
+        private const val ERROR_FRAGMENT_REQUEST_CODE = 2
         private const val MOVIE_HEADER_ID = 1
         private const val TV_SHOW_HEADER_ID = 2
 

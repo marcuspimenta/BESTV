@@ -49,15 +49,15 @@ class WorkBrowsePresenter @Inject constructor(
         getWorkBrowseDetailsUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ result ->
+                .subscribe({
                     view.onDataLoaded(
-                            result.first,
-                            result.second,
-                            result.third
+                            it.first,
+                            it.second,
+                            it.third
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
-                    view.onDataLoaded(false, null, null)
+                    view.onErrorDataLoaded()
                 }).addTo(compositeDisposable)
     }
 
@@ -66,6 +66,8 @@ class WorkBrowsePresenter @Inject constructor(
         fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?)
 
         fun onHasFavorite(hasFavoriteMovie: Boolean)
+
+        fun onErrorDataLoaded()
 
     }
 }

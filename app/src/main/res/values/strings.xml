@@ -19,7 +19,7 @@
     <string name="no_results">No results</string>
 
     <!-- Error messages -->
-    <string name="error_fragment_message">Failed to load the movies. Please check if the internet connection is working right.</string>
+    <string name="error_fragment_message">Failed to load the data. Please check if the internet connection is working right.</string>
     <string name="error_fragment_button">Try again</string>
 
     <string name="schema">tvrecommendation</string>

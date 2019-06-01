@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.extension.finishActivity
+import com.pimenta.bestv.extension.finish
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import javax.inject.Inject
 
@@ -59,7 +59,7 @@ class SplashFragment : Fragment(), SplashPresenter.View {
 
     override fun onHasAllPermissions(hasAllPermissions: Boolean) {
         val resultCode = Activity.RESULT_OK.takeIf { hasAllPermissions } ?: Activity.RESULT_CANCELED
-        activity.finishActivity(resultCode)
+        activity?.finish(resultCode)
     }
 
     override fun onRequestPermissions(permissions: List<String>) {

@@ -17,44 +17,28 @@ package com.pimenta.bestv.extension
 import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.transaction
 
-fun FragmentActivity?.replaceFragment(fragment: Fragment) {
-    this?.run {
-        supportFragmentManager.transaction {
-            replace(android.R.id.content, fragment)
-        }
-    }
+fun FragmentActivity.replaceFragment(fragment: Fragment) {
+    supportFragmentManager.replaceFragment(fragment = fragment)
 }
 
-fun FragmentActivity?.addFragment(fragment: Fragment, tag: String) {
-    this?.run {
-        supportFragmentManager.transaction {
-            add(android.R.id.content, fragment)
-            addToBackStack(tag)
-        }
-    }
+fun FragmentActivity.addFragment(fragment: Fragment, tag: String) {
+    supportFragmentManager.addFragment(fragment = fragment, tag = tag)
 }
 
-fun FragmentActivity?.popBackStack(name: String, flags: Int) {
-    this?.run {
-        supportFragmentManager.popBackStackImmediate(name, flags)
-    }
+fun FragmentActivity.popBackStack(name: String, flags: Int) {
+    supportFragmentManager.popBackStackImmediate(name, flags)
 }
 
-fun FragmentActivity?.finishActivity(resultCode: Int = Activity.RESULT_OK) {
-    this?.run {
-        setResult(resultCode)
-        finish()
-    }
+fun FragmentActivity.finish(resultCode: Int = Activity.RESULT_OK) {
+    setResult(resultCode)
+    finish()
 }
 
-fun FragmentActivity?.getTopFragment(): Fragment? =
-        this?.run {
-            supportFragmentManager.run {
-                when (val size = fragments.size) {
-                    0 -> null
-                    else -> fragments[size - 1]
-                }
+fun FragmentActivity.getTopFragment(): Fragment? =
+        supportFragmentManager.run {
+            when (val size = fragments.size) {
+                0 -> null
+                else -> fragments[size - 1]
             }
         }

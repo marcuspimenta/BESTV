@@ -85,7 +85,7 @@ class WorkBrowsePresenterTest {
 
         presenter.loadData()
 
-        verify(view).onDataLoaded(false, null, null)
+        verify(view).onErrorDataLoaded()
     }
 
     companion object {

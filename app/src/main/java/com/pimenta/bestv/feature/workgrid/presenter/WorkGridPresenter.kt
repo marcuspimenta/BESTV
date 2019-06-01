@@ -56,7 +56,7 @@ class WorkGridPresenter @Inject constructor(
                             view.onWorksLoaded(movies)
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the favorite works")
-                            view.onWorksLoaded(null)
+                            view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             else -> {
                 workUseCase.loadWorkByType(currentPage + 1, movieListType)
@@ -71,7 +71,7 @@ class WorkGridPresenter @Inject constructor(
                             }
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the works by type")
-                            view.onWorksLoaded(null)
+                            view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             }
         }
@@ -91,7 +91,7 @@ class WorkGridPresenter @Inject constructor(
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading the works by genre")
-                    view.onWorksLoaded(null)
+                    view.onErrorWorksLoaded()
                 }).addTo(compositeDisposable)
     }
 
@@ -126,6 +126,8 @@ class WorkGridPresenter @Inject constructor(
         fun onWorksLoaded(works: List<WorkViewModel>?)
 
         fun loadBackdropImage(workViewModel: WorkViewModel)
+
+        fun onErrorWorksLoaded()
 
     }
 }

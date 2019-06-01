@@ -14,7 +14,9 @@
 
 package com.pimenta.bestv.feature.workbrowse.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -30,6 +32,9 @@ import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.extension.addFragment
+import com.pimenta.bestv.extension.popBackStack
+import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
@@ -75,9 +80,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
 
-        activity?.let {
-            backgroundManager.attach(it.window)
-            it.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        activity?.run {
+            backgroundManager.attach(window)
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
         }
 
         setupUIElements()
@@ -163,6 +168,26 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         }
     }
 
+    override fun onErrorDataLoaded() {
+        progressBarManager.hide()
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@WorkBrowseFragment, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        activity?.addFragment(fragment, ErrorFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                if (resultCode == Activity.RESULT_OK) {
+                    progressBarManager.show()
+                    presenter.loadData()
+                }
+            }
+        }
+    }
+
     private fun setupUIElements() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
@@ -206,6 +231,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     companion object {
 
+        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
         private const val TOP_WORK_LIST_ID = 1
         private const val WORK_GENRE_ID = 2
         private const val FAVORITE_INDEX = 0

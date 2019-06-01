@@ -38,7 +38,6 @@ import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.extension.addFragment
-import com.pimenta.bestv.extension.finishActivity
 import com.pimenta.bestv.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.error.ErrorFragment
@@ -122,22 +121,21 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun onErrorCastDetailsLoaded() {
         progressBarManager.hide()
-        val fragment = ErrorFragment.newInstance().also {
-            it.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@CastDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        activity.addFragment(fragment, ErrorFragment.TAG)
+        activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         progressBarManager.show()
                         presenter.loadCastDetails(castViewModel)
                     }
-                    else -> activity.finishActivity()
                 }
             }
         }

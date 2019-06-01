@@ -70,8 +70,8 @@ class SearchPresenter @Inject constructor(
                     }
                     view.onResultLoaded(movies, tvShows)
                 }, { throwable ->
-                    Timber.e(throwable, "Error while searching movies by query")
-                    view.onResultLoaded(null, null)
+                    Timber.e(throwable, "Error while searching by query")
+                    view.onErrorSearch()
                 })
     }
 
@@ -152,6 +152,8 @@ class SearchPresenter @Inject constructor(
         fun onTvShowsLoaded(tvShows: List<WorkViewModel>?)
 
         fun loadBackdropImage(workViewModel: WorkViewModel)
+
+        fun onErrorSearch()
 
     }
 }

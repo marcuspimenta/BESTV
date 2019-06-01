@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
+import androidx.leanback.R
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
@@ -53,8 +54,8 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
     }
     private val backgroundManager: BackgroundManager? by lazy { activity?.let { BackgroundManager.getInstance(it) } }
+    private val showProgress: Boolean by lazy { arguments?.getBoolean(SHOW_PROGRESS) ?: false }
     protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    protected val showProgress: Boolean by lazy { arguments?.getBoolean(SHOW_PROGRESS) ?: false }
 
     @Inject
     lateinit var presenter: WorkGridPresenter
@@ -107,13 +108,7 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
             if (rowsAdapter.indexOf(it) == -1) {
                 rowsAdapter.add(it)
             }
-        } ?: if (rowsAdapter.size() == 0) {
-            val fragment = ErrorFragment.newInstance().also {
-                it.setTarget(this, ERROR_FRAGMENT_REQUEST_CODE)
-            }
-            activity.addFragment(fragment, ErrorFragment.TAG)
         }
-
 
         progressBarManager.hide()
         mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
@@ -131,10 +126,18 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         })
     }
 
+    override fun onErrorWorksLoaded() {
+        progressBarManager.hide()
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@AbstractWorkGridFragment, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        fragmentManager?.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                fragmentManager?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
                     progressBarManager.show()
                     loadData()

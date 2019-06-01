@@ -18,7 +18,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
+import com.pimenta.bestv.extension.getTopFragment
 import com.pimenta.bestv.extension.replaceFragment
 import com.pimenta.bestv.feature.main.presenter.MainPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashActivity
@@ -55,6 +57,13 @@ class MainActivity : FragmentActivity() {
                     finish()
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        val topFragment = getTopFragment()
+        if (topFragment !is ErrorSupportFragment) {
+            super.onBackPressed()
         }
     }
 

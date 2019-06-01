@@ -65,7 +65,7 @@ class SearchPresenterTest {
 
         presenter.searchWorksByQuery(query)
 
-        verify(view).onResultLoaded(null, null)
+        verify(view).onErrorSearch()
     }
 
     @Test

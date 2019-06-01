@@ -18,6 +18,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.ErrorSupportFragment
+import com.pimenta.bestv.extension.getTopFragment
 import com.pimenta.bestv.extension.replaceFragment
 
 /**
@@ -28,6 +30,13 @@ class SearchActivity : FragmentActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         replaceFragment(SearchFragment.newInstance())
+    }
+
+    override fun onBackPressed() {
+        val topFragment = getTopFragment()
+        if (topFragment !is ErrorSupportFragment) {
+            super.onBackPressed()
+        }
     }
 
     companion object {

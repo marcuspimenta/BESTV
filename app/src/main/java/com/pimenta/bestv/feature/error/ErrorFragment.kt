@@ -15,14 +15,13 @@ package com.pimenta.bestv.feature.error
 
 import android.app.Activity
 import android.os.Bundle
-
+import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.presentation.ui.base.BaseErrorFragment
 
 /**
  * Created by marcus on 11-02-2018.
  */
-class ErrorFragment : BaseErrorFragment() {
+class ErrorFragment : ErrorSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +31,7 @@ class ErrorFragment : BaseErrorFragment() {
 
         buttonText = resources.getString(R.string.error_fragment_button)
         setButtonClickListener {
-            target?.onActivityResult(targetCode, Activity.RESULT_OK, null)
+            targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
         }
     }
 
