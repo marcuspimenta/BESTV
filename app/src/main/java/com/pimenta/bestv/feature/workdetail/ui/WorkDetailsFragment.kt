@@ -107,8 +107,15 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBarManager.show()
         presenter.loadDataByWork(workViewModel)
+    }
+
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
+
+    override fun onHideProgress() {
+        progressBarManager.hide()
     }
 
     override fun onResultSetFavoriteMovie(isFavorite: Boolean) {
@@ -119,8 +126,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     }
 
     override fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
-        progressBarManager.hide()
-
         workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
@@ -171,7 +176,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     }
 
     override fun onErrorWorkDetailsLoaded() {
-        progressBarManager.hide()
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@WorkDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -184,7 +188,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                 activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        progressBarManager.show()
                         presenter.loadDataByWork(workViewModel)
                     }
                 }

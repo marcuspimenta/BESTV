@@ -58,6 +58,7 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadDataByWork(workViewModel: WorkViewModel) {
+        view.onShowProgress()
         workViewModel.toWork().toSingle()
                 .flatMap { getWorkDetailsUseCase(it) }
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -79,8 +80,10 @@ class WorkDetailsPresenter @Inject constructor(
                             similarPage.works,
                             movieInfo.fifth
                     )
+                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
+                    view.onHideProgress()
                     view.onErrorWorkDetailsLoaded()
                 }).addTo(compositeDisposable)
     }
@@ -122,6 +125,10 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     interface View {
+
+        fun onShowProgress()
+
+        fun onHideProgress()
 
         fun onResultSetFavoriteMovie(isFavorite: Boolean)
 
