@@ -46,11 +46,10 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
         private const val GENRE = "GENRE"
 
-        fun newInstance(genreViewModel: GenreViewModel, showProgress: Boolean) =
+        fun newInstance(genreViewModel: GenreViewModel) =
                 GenreWorkGridFragment().apply {
                     arguments = bundleOf(
-                            GENRE to genreViewModel,
-                            SHOW_PROGRESS to showProgress
+                            GENRE to genreViewModel
                     )
                 }
     }

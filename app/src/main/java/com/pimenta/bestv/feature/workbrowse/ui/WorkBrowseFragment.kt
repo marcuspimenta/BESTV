@@ -64,8 +64,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     @Inject
     lateinit var presenter: WorkBrowsePresenter
 
-    private var countFragment = 0
-    private var showProgress = false
     private var hasFavorite = false
 
     override fun onAttach(context: Context) {
@@ -99,7 +97,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBarManager.show()
+
         adapter = rowsAdapter
         presenter.loadData()
     }
@@ -111,14 +109,17 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         }
     }
 
-    override fun onDestroy() {
-        progressBarManager.hide()
-        super.onDestroy()
-    }
-
     override fun onDetach() {
         backgroundManager.release()
         super.onDetach()
+    }
+
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
+
+    override fun onHideProgress() {
+        progressBarManager.hide()
     }
 
     override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?) {
@@ -149,7 +150,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
         }
 
-        progressBarManager.hide()
         startEntranceTransition()
     }
 
@@ -169,7 +169,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     }
 
     override fun onErrorDataLoaded() {
-        progressBarManager.hide()
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@WorkBrowseFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -181,7 +180,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
-                    progressBarManager.show()
                     presenter.loadData()
                 }
             }
@@ -204,9 +202,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fragment>() {
 
         override fun createFragment(rowObj: Any): Fragment {
-            if (countFragment++ >= 1) {
-                showProgress = true
-            }
             if (!hasFavorite && rowsAdapter.indexOf(favoritePageRow) == FAVORITE_INDEX) {
                 rowsAdapter.remove(favoritePageRow)
             }
@@ -216,12 +211,12 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
                 TOP_WORK_LIST_ID -> {
                     val movieListTypeHeaderItem = row.headerItem as WorkTypeHeaderItem
                     title = row.headerItem.name
-                    return TopWorkGridFragment.newInstance(movieListTypeHeaderItem.movieListType, showProgress)
+                    return TopWorkGridFragment.newInstance(movieListTypeHeaderItem.movieListType)
                 }
                 WORK_GENRE_ID -> {
                     val genreHeaderItem = row.headerItem as GenreHeaderItem
                     title = genreHeaderItem.genreViewModel.name
-                    return GenreWorkGridFragment.newInstance(genreHeaderItem.genreViewModel, showProgress)
+                    return GenreWorkGridFragment.newInstance(genreHeaderItem.genreViewModel)
                 }
             }
 

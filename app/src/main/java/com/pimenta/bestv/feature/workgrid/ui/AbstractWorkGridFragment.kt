@@ -33,11 +33,11 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.extension.addFragment
-import com.pimenta.bestv.extension.popBackStack
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
@@ -54,8 +54,8 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
     }
     private val backgroundManager: BackgroundManager? by lazy { activity?.let { BackgroundManager.getInstance(it) } }
-    private val showProgress: Boolean by lazy { arguments?.getBoolean(SHOW_PROGRESS) ?: false }
-    protected val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
 
     @Inject
     lateinit var presenter: WorkGridPresenter
@@ -82,35 +82,28 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         super.onViewCreated(view, savedInstanceState)
         mainFragmentAdapter.fragmentHost.notifyViewCreated(mainFragmentAdapter)
 
-        if (showProgress) {
-            progressBarManager.show()
-        }
         loadData()
     }
 
     override fun onResume() {
         super.onResume()
-        workSelected?.let {
-            loadBackdropImage()
-            refreshDada()
-        }
-    }
 
-    override fun onDestroy() {
-        progressBarManager.hide()
-        super.onDestroy()
+        loadBackdropImage()
+        refreshDada()
     }
 
     override fun getMainFragmentAdapter() = fragmentAdapter
 
-    override fun onWorksLoaded(works: List<WorkViewModel>?) {
-        works?.forEach {
-            if (rowsAdapter.indexOf(it) == -1) {
-                rowsAdapter.add(it)
-            }
-        }
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
 
+    override fun onHideProgress() {
         progressBarManager.hide()
+    }
+
+    override fun onWorksLoaded(works: List<WorkViewModel>) {
+        rowsAdapter.setItems(works, workDiffCallback)
         mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
     }
 
@@ -127,7 +120,6 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
     }
 
     override fun onErrorWorksLoaded() {
-        progressBarManager.hide()
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@AbstractWorkGridFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -139,7 +131,6 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 fragmentManager?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
-                    progressBarManager.show()
                     loadData()
                 }
             }
@@ -147,13 +138,13 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
     }
 
     open fun loadMorePages() {
-        progressBarManager.show()
         loadData()
     }
 
     open fun refreshDada() {
-        progressBarManager.show()
-        loadData()
+        workSelected?.let {
+            loadData()
+        }
     }
 
     private fun setupUI() {
@@ -165,10 +156,12 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
 
         setOnItemViewSelectedListener { _, item, _, _ ->
             workSelected = item as WorkViewModel?
-            loadBackdropImage()
+            workSelected?.let {
+                loadBackdropImage()
 
-            if (rowsAdapter.indexOf(workSelected) >= rowsAdapter.size() - NUMBER_COLUMNS) {
-                loadMorePages()
+                if (rowsAdapter.indexOf(it) >= rowsAdapter.size() - NUMBER_COLUMNS) {
+                    loadMorePages()
+                }
             }
         }
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
@@ -191,8 +184,6 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
     abstract fun loadData()
 
     companion object {
-
-        const val SHOW_PROGRESS = "SHOW_PROGRESS"
 
         private const val ERROR_FRAGMENT_REQUEST_CODE = 1
         private const val NUMBER_COLUMNS = 6

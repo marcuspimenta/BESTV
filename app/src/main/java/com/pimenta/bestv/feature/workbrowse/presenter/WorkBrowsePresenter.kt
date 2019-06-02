@@ -33,6 +33,11 @@ class WorkBrowsePresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
+    override fun dispose() {
+        view.onHideProgress()
+        super.dispose()
+    }
+
     fun hasFavorite() {
         workUseCase.hasFavorite()
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -46,6 +51,7 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun loadData() {
+        view.onShowProgress()
         getWorkBrowseDetailsUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
@@ -55,13 +61,19 @@ class WorkBrowsePresenter @Inject constructor(
                             it.second,
                             it.third
                     )
+                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
+                    view.onHideProgress()
                     view.onErrorDataLoaded()
                 }).addTo(compositeDisposable)
     }
 
     interface View {
+
+        fun onShowProgress()
+
+        fun onHideProgress()
 
         fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?)
 

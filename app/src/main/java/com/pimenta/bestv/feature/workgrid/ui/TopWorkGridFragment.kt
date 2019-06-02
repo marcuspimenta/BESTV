@@ -15,10 +15,8 @@
 package com.pimenta.bestv.feature.workgrid.ui
 
 import android.content.Context
-import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.repository.MediaRepository
 
 /**
@@ -52,27 +50,14 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
         }
     }
 
-    override fun onWorksLoaded(works: List<WorkViewModel>?) {
-        if (workType == MediaRepository.WorkType.FAVORITES_MOVIES) {
-            if (works != null) {
-                rowsAdapter.setItems(works, null)
-            }
-            progressBarManager.hide()
-            mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
-            return
-        }
-        super.onWorksLoaded(works)
-    }
-
     companion object {
 
         private const val TYPE = "TYPE"
 
-        fun newInstance(workType: MediaRepository.WorkType, showProgress: Boolean) =
+        fun newInstance(workType: MediaRepository.WorkType) =
                 TopWorkGridFragment().apply {
                     arguments = bundleOf(
-                            TYPE to workType,
-                            SHOW_PROGRESS to showProgress
+                            TYPE to workType
                     )
                 }
     }

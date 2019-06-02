@@ -40,13 +40,16 @@ class WorkGridPresenter @Inject constructor(
 
     private var currentPage = 0
     private var loadBackdropImageDisposable: Disposable? = null
+    private val works = mutableListOf<WorkViewModel>()
 
     override fun dispose() {
+        view.onHideProgress()
         disposeLoadBackdropImage()
         super.dispose()
     }
 
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
+        view.onShowProgress()
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
                 workUseCase.getFavorites()
@@ -54,8 +57,10 @@ class WorkGridPresenter @Inject constructor(
                         .observeOn(rxScheduler.mainScheduler)
                         .subscribe({ movies ->
                             view.onWorksLoaded(movies)
+                            view.onHideProgress()
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the favorite works")
+                            view.onHideProgress()
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             else -> {
@@ -65,12 +70,15 @@ class WorkGridPresenter @Inject constructor(
                         .subscribe({ workPage ->
                             if (workPage != null && workPage.page <= workPage.totalPages) {
                                 currentPage = workPage.page
-                                view.onWorksLoaded(workPage.works)
-                            } else {
-                                view.onWorksLoaded(null)
+                                workPage.works?.let {
+                                    works.addAll(it)
+                                    view.onWorksLoaded(works)
+                                }
                             }
+                            view.onHideProgress()
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the works by type")
+                            view.onHideProgress()
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             }
@@ -78,6 +86,7 @@ class WorkGridPresenter @Inject constructor(
     }
 
     fun loadWorkByGenre(genreViewModel: GenreViewModel) {
+        view.onShowProgress()
         genreViewModel.toGenre().toSingle()
                 .flatMap { workUseCase.getWorkByGenre(it, currentPage + 1) }
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -85,12 +94,15 @@ class WorkGridPresenter @Inject constructor(
                 .subscribe({ workPage ->
                     if (workPage != null && workPage.page <= workPage.totalPages) {
                         currentPage = workPage.page
-                        view.onWorksLoaded(workPage.works)
-                    } else {
-                        view.onWorksLoaded(null)
+                        workPage.works?.let {
+                            works.addAll(it)
+                            view.onWorksLoaded(works)
+                        }
                     }
+                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading the works by genre")
+                    view.onHideProgress()
                     view.onErrorWorksLoaded()
                 }).addTo(compositeDisposable)
     }
@@ -123,7 +135,11 @@ class WorkGridPresenter @Inject constructor(
 
     interface View {
 
-        fun onWorksLoaded(works: List<WorkViewModel>?)
+        fun onShowProgress()
+
+        fun onHideProgress()
+
+        fun onWorksLoaded(works: List<WorkViewModel>)
 
         fun loadBackdropImage(workViewModel: WorkViewModel)
 

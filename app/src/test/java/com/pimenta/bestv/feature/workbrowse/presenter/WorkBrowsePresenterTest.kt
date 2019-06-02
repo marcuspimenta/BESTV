@@ -77,6 +77,7 @@ class WorkBrowsePresenterTest {
         presenter.loadData()
 
         verify(view).onDataLoaded(true, moveGenres, tvShowGenres)
+        verify(view).onHideProgress()
     }
 
     @Test
@@ -85,6 +86,7 @@ class WorkBrowsePresenterTest {
 
         presenter.loadData()
 
+        verify(view).onHideProgress()
         verify(view).onErrorDataLoaded()
     }
 
