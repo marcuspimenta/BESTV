@@ -17,7 +17,9 @@ package com.pimenta.bestv.feature.main.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.extension.getTopFragment
@@ -32,12 +34,21 @@ import javax.inject.Inject
  */
 class MainActivity : FragmentActivity() {
 
+    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
+
+    @Inject
+    lateinit var displayMetrics: DisplayMetrics
+
     @Inject
     lateinit var presenter: MainPresenter
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BesTV.applicationComponent.inject(this)
+
+        backgroundManager.attach(window)
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
         presenter.bindTo(lifecycle)
         presenter.loadRecommendations()
 
@@ -65,6 +76,11 @@ class MainActivity : FragmentActivity() {
         if (topFragment !is ErrorSupportFragment) {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        backgroundManager.release()
+        super.onDestroy()
     }
 
     companion object {

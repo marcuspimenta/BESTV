@@ -17,18 +17,32 @@ package com.pimenta.bestv.feature.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ErrorSupportFragment
+import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.extension.getTopFragment
 import com.pimenta.bestv.extension.replaceFragment
+import javax.inject.Inject
 
 /**
  * Created by marcus on 12/07/18.
  */
 class SearchActivity : FragmentActivity() {
 
+    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
+
+    @Inject
+    lateinit var displayMetrics: DisplayMetrics
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BesTV.applicationComponent.inject(this)
+
+        backgroundManager.attach(window)
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        
         replaceFragment(SearchFragment.newInstance())
     }
 
@@ -37,6 +51,11 @@ class SearchActivity : FragmentActivity() {
         if (topFragment !is ErrorSupportFragment) {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        backgroundManager.release()
+        super.onDestroy()
     }
 
     companion object {

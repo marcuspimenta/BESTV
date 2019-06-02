@@ -20,7 +20,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,9 +56,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
 
     @Inject
-    lateinit var displayMetrics: DisplayMetrics
-
-    @Inject
     lateinit var presenter: SearchPresenter
 
     private var query: String? = null
@@ -76,11 +72,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
-
-        activity?.run {
-            backgroundManager.attach(window)
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-        }
 
         setupUI()
     }
@@ -103,11 +94,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     override fun onResume() {
         super.onResume()
         loadBackdropImage()
-    }
-
-    override fun onDetach() {
-        backgroundManager.release()
-        super.onDetach()
     }
 
     override fun onShowProgress() {

@@ -18,12 +18,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
@@ -46,7 +44,6 @@ import javax.inject.Inject
  */
 class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
-    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
     private val favoritePageRow: PageRow by lazy {
         PageRow(
@@ -57,9 +54,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
                 )
         )
     }
-
-    @Inject
-    lateinit var displayMetrics: DisplayMetrics
 
     @Inject
     lateinit var presenter: WorkBrowsePresenter
@@ -77,11 +71,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
-
-        activity?.run {
-            backgroundManager.attach(window)
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-        }
 
         setupUIElements()
     }
@@ -107,11 +96,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         if (rowsAdapter.size() > 0) {
             presenter.hasFavorite()
         }
-    }
-
-    override fun onDetach() {
-        backgroundManager.release()
-        super.onDetach()
     }
 
     override fun onShowProgress() {
