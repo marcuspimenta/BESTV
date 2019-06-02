@@ -35,6 +35,7 @@ class CastDetailsPresenter @Inject constructor(
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
+        view.onShowProgress()
         castViewModel.toCast().toSingle()
                 .flatMap { getCastDetailsUseCase(it) }
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -45,13 +46,19 @@ class CastDetailsPresenter @Inject constructor(
                             triple.second,
                             triple.third
                     )
+                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
+                    view.onHideProgress()
                     view.onErrorCastDetailsLoaded()
                 }).addTo(compositeDisposable)
     }
 
     interface View {
+
+        fun onShowProgress()
+
+        fun onHideProgress()
 
         fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?)
 

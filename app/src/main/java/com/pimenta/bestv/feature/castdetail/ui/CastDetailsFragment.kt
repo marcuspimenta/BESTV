@@ -91,13 +91,18 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBarManager.show()
         presenter.loadCastDetails(castViewModel)
     }
 
-    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
-        progressBarManager.hide()
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
 
+    override fun onHideProgress() {
+        progressBarManager.hide()
+    }
+
+    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
         if (castViewModel != null) {
             this.castViewModel = castViewModel
             detailsOverviewRow.item = castViewModel
@@ -120,7 +125,6 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     }
 
     override fun onErrorCastDetailsLoaded() {
-        progressBarManager.hide()
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@CastDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -133,7 +137,6 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
                 activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        progressBarManager.show()
                         presenter.loadCastDetails(castViewModel)
                     }
                 }
