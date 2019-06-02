@@ -43,7 +43,6 @@ import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -65,7 +64,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
 
     private var query: String? = null
     private var workSelected: WorkViewModel? = null
-    private var backgroundTimer: Timer = Timer()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -107,37 +105,38 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         loadBackdropImage()
     }
 
-    override fun onDestroyView() {
-        progressBarManager.hide()
-        backgroundTimer.cancel()
-        super.onDestroyView()
-    }
-
     override fun onDetach() {
         backgroundManager.release()
         super.onDetach()
     }
 
-    override fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?) {
-        progressBarManager.hide()
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
 
+    override fun onHideProgress() {
+        progressBarManager.hide()
+    }
+
+    override fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?) {
         val hasMovies = movies.isNotNullOrEmpty()
         val hasTvShows = tvShows.isNotNullOrEmpty()
-        if (hasMovies || hasTvShows) {
-            rowsAdapter.clear()
+        when {
+            hasMovies || hasTvShows -> {
+                rowsAdapter.clear()
 
-            if (hasMovies) {
-                val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
-                movieRowAdapter.addAll(0, movies)
-                rowsAdapter.add(ListRow(header, movieRowAdapter))
+                if (hasMovies) {
+                    val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
+                    movieRowAdapter.addAll(0, movies)
+                    rowsAdapter.add(ListRow(header, movieRowAdapter))
+                }
+                if (hasTvShows) {
+                    val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
+                    tvShowRowAdapter.addAll(0, tvShows)
+                    rowsAdapter.add(ListRow(header, tvShowRowAdapter))
+                }
             }
-            if (hasTvShows) {
-                val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
-                tvShowRowAdapter.addAll(0, tvShows)
-                rowsAdapter.add(ListRow(header, tvShowRowAdapter))
-            }
-        } else {
-            clearAdapter()
+            else -> clearAdapter()
         }
     }
 
@@ -170,7 +169,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     override fun onErrorSearch() {
-        progressBarManager.hide()
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@SearchFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -182,14 +180,12 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        this.query = query
-        searchByQuery()
+        searchByQuery(query)
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        this.query = query
-        searchByQuery()
+        searchByQuery(query)
         return true
     }
 
@@ -201,8 +197,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
-                    progressBarManager.show()
-                    searchByQuery()
+                    searchByQuery(query)
                 }
             }
         }
@@ -234,15 +229,21 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         }
     }
 
-    private fun searchByQuery() {
+    private fun searchByQuery(query: String?) {
         query?.let {
-            rowsAdapter.clear()
-            progressBarManager.show()
-            presenter.searchWorksByQuery(it)
+            when {
+                it.isBlank() || it.isEmpty() -> clearAdapter()
+                else -> {
+                    this.query = it
+                    rowsAdapter.clear()
+                    presenter.searchWorksByQuery(it)
+                }
+            }
         }
     }
 
     private fun clearAdapter() {
+        presenter.disposeLoadBackdropImage()
         backgroundManager.setBitmap(null)
         rowsAdapter.clear()
         val listRowAdapter = ArrayObjectAdapter(WorkCardRenderer())

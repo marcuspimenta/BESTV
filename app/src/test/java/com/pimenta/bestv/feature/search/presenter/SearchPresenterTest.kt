@@ -56,7 +56,9 @@ class SearchPresenterTest {
 
         presenter.searchWorksByQuery(query)
 
+        verify(view).onShowProgress()
         verify(view).onResultLoaded(result.first.works, result.second.works)
+        verify(view).onHideProgress()
     }
 
     @Test
@@ -65,6 +67,7 @@ class SearchPresenterTest {
 
         presenter.searchWorksByQuery(query)
 
+        verify(view).onHideProgress()
         verify(view).onErrorSearch()
     }
 

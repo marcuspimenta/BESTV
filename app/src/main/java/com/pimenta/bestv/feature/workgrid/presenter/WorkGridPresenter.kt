@@ -43,7 +43,6 @@ class WorkGridPresenter @Inject constructor(
     private val works = mutableListOf<WorkViewModel>()
 
     override fun dispose() {
-        view.onHideProgress()
         disposeLoadBackdropImage()
         super.dispose()
     }

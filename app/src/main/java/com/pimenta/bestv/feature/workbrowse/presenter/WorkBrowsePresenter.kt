@@ -33,11 +33,6 @@ class WorkBrowsePresenter @Inject constructor(
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
-    override fun dispose() {
-        view.onHideProgress()
-        super.dispose()
-    }
-
     fun hasFavorite() {
         workUseCase.hasFavorite()
                 .subscribeOn(rxScheduler.ioScheduler)

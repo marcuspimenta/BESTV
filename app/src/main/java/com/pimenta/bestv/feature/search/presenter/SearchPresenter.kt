@@ -53,6 +53,7 @@ class SearchPresenter @Inject constructor(
         resultMoviePage = 0
         resultTvShowPage = 0
         query = text
+        view.onShowProgress()
         searchWorkDisposable = searchWorksByQueryUseCase(text)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
@@ -69,8 +70,10 @@ class SearchPresenter @Inject constructor(
                         tvShows = pair.second.works
                     }
                     view.onResultLoaded(movies, tvShows)
+                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while searching by query")
+                    view.onHideProgress()
                     view.onErrorSearch()
                 })
     }
@@ -122,16 +125,16 @@ class SearchPresenter @Inject constructor(
                 })
     }
 
-    private fun disposeSearchWork() {
-        searchWorkDisposable?.run {
+    fun disposeLoadBackdropImage() {
+        loadBackdropImageDisposable?.run {
             if (!isDisposed) {
                 dispose()
             }
         }
     }
 
-    private fun disposeLoadBackdropImage() {
-        loadBackdropImageDisposable?.run {
+    private fun disposeSearchWork() {
+        searchWorkDisposable?.run {
             if (!isDisposed) {
                 dispose()
             }
@@ -144,6 +147,10 @@ class SearchPresenter @Inject constructor(
     }
 
     interface View {
+
+        fun onShowProgress()
+
+        fun onHideProgress()
 
         fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?)
 

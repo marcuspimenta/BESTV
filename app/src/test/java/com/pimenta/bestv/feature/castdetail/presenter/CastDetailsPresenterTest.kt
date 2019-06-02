@@ -47,8 +47,9 @@ class CastDetailsPresenterTest {
 
         presenter.loadCastDetails(aCastViewModel)
 
-        verify(view).onCastLoaded(result.first, result.second, result.third)
         verify(view).onShowProgress()
+        verify(view).onCastLoaded(result.first, result.second, result.third)
+        verify(view).onHideProgress()
     }
 
     @Test
