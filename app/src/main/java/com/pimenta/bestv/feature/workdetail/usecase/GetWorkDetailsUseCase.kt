@@ -35,13 +35,13 @@ class GetWorkDetailsUseCase @Inject constructor(
         private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) {
 
-    operator fun invoke(work: Work): Single<Quintuple<Boolean, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel, List<VideoViewModel>?>> =
+    operator fun invoke(work: Work): Single<Quintuple<Boolean, List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel>> =
             Single.zip(
                     workUseCase.isFavorite(work),
+                    getVideosUseCase(work),
                     getCastsUseCase(work),
                     getRecommendationByWorkUseCase(work, 1),
                     getSimilarByWorkUseCase(work, 1),
-                    getVideosUseCase(work),
                     Function5 { isFavorite, casts, recommendedMovies, similarMovies, videos ->
                         Quintuple(isFavorite, casts, recommendedMovies, similarMovies, videos)
                     }

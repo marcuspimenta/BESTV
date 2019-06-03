@@ -36,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
+import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.common.presentation.ui.render.VideoCardRender
@@ -61,6 +62,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     private val recommendedRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val similarRowAdapter: ArrayObjectAdapter  by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
+    private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
     private val presenterSelector: ClassPresenterSelector by lazy {
         ClassPresenterSelector().apply {
             addClassPresenter(ListRow::class.java, ListRowPresenter())
@@ -125,12 +127,12 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
-    override fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?) {
+    override fun onDataLoaded(isFavorite: Boolean, videos: List<VideoViewModel>?, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>, similarWorks: List<WorkViewModel>) {
         workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
                 resources.getString(R.string.remove_favorites).takeIf { isFavorite }
-                        ?: run { resources.getString(R.string.save_favorites) }
+                        ?: resources.getString(R.string.save_favorites)
         )
         actionAdapter.add(favoriteAction)
 
@@ -146,33 +148,25 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
             mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(R.string.cast)), castRowAdapter))
         }
 
-        if (recommendedWorks.isNotNullOrEmpty()) {
+        if (recommendedWorks.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), resources.getString(R.string.recommended)))
-            recommendedRowAdapter.addAll(0, recommendedWorks)
+            recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
             mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(R.string.recommended)), recommendedRowAdapter))
         }
 
-        if (similarWorks.isNotNullOrEmpty()) {
+        if (similarWorks.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_SIMILAR.toLong(), resources.getString(R.string.similar)))
-            similarRowAdapter.addAll(0, similarWorks)
+            similarRowAdapter.setItems(similarWorks, workDiffCallback)
             mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
         }
     }
 
-    override fun onRecommendationLoaded(works: List<WorkViewModel>?) {
-        works?.forEach { work ->
-            if (recommendedRowAdapter.indexOf(work) == -1) {
-                recommendedRowAdapter.add(work)
-            }
-        }
+    override fun onRecommendationLoaded(works: List<WorkViewModel>) {
+        recommendedRowAdapter.setItems(works, workDiffCallback)
     }
 
-    override fun onSimilarLoaded(works: List<WorkViewModel>?) {
-        works?.forEach { work ->
-            if (similarRowAdapter.indexOf(work) == -1) {
-                similarRowAdapter.add(work)
-            }
-        }
+    override fun onSimilarLoaded(works: List<WorkViewModel>) {
+        similarRowAdapter.setItems(works, workDiffCallback)
     }
 
     override fun onErrorWorkDetailsLoaded() {

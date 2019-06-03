@@ -43,6 +43,8 @@ class WorkDetailsPresenter @Inject constructor(
 
     private var recommendedPage = 0
     private var similarPage = 0
+    private val recommendedWorks = mutableListOf<WorkViewModel>()
+    private val similarWorks = mutableListOf<WorkViewModel>()
 
     fun setFavorite(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
@@ -64,21 +66,28 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieInfo ->
-                    val recommendedPage = movieInfo.third
+                    val recommendedPage = movieInfo.fourth
                     if (recommendedPage.page <= recommendedPage.totalPages) {
                         this.recommendedPage = recommendedPage.page
+                        recommendedPage.works?.let {
+                            recommendedWorks.addAll(it)
+                        }
                     }
-                    val similarPage = movieInfo.fourth
+
+                    val similarPage = movieInfo.fifth
                     if (similarPage.page <= similarPage.totalPages) {
                         this.similarPage = similarPage.page
+                        similarPage.works?.let {
+                            similarWorks.addAll(it)
+                        }
                     }
 
                     view.onDataLoaded(
                             movieInfo.first,
                             movieInfo.second,
-                            recommendedPage.works,
-                            similarPage.works,
-                            movieInfo.fifth
+                            movieInfo.third,
+                            recommendedWorks,
+                            similarWorks
                     )
                     view.onHideProgress()
                 }, { throwable ->
@@ -96,13 +105,13 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribe({ movieList ->
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         recommendedPage = movieList.page
-                        view.onRecommendationLoaded(movieList.works)
-                    } else {
-                        view.onRecommendationLoaded(null)
+                        movieList.works?.let {
+                            recommendedWorks.addAll(it)
+                            view.onRecommendationLoaded(recommendedWorks)
+                        }
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading recommendations by work")
-                    view.onRecommendationLoaded(null)
                 }).addTo(compositeDisposable)
     }
 
@@ -114,13 +123,13 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribe({ movieList ->
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         similarPage = movieList.page
-                        view.onSimilarLoaded(movieList.works)
-                    } else {
-                        view.onSimilarLoaded(null)
+                        movieList.works?.let {
+                            similarWorks.addAll(it)
+                            view.onSimilarLoaded(similarWorks)
+                        }
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading similar by work")
-                    view.onSimilarLoaded(null)
                 }).addTo(compositeDisposable)
     }
 
@@ -132,11 +141,11 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onResultSetFavoriteMovie(isFavorite: Boolean)
 
-        fun onDataLoaded(isFavorite: Boolean, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>?, similarWorks: List<WorkViewModel>?, videos: List<VideoViewModel>?)
+        fun onDataLoaded(isFavorite: Boolean, videos: List<VideoViewModel>?, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>, similarWorks: List<WorkViewModel>)
 
-        fun onRecommendationLoaded(works: List<WorkViewModel>?)
+        fun onRecommendationLoaded(works: List<WorkViewModel>)
 
-        fun onSimilarLoaded(works: List<WorkViewModel>?)
+        fun onSimilarLoaded(works: List<WorkViewModel>)
 
         fun onErrorWorkDetailsLoaded()
 
