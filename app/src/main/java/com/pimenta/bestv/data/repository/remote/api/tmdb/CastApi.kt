@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote.api.tmdb
+package com.pimenta.bestv.data.repository.remote.api.tmdb
 
 import com.pimenta.bestv.data.entity.Cast
 import com.pimenta.bestv.data.entity.CastMovieList

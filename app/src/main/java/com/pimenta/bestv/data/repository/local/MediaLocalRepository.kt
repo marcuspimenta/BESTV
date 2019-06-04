@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local
+package com.pimenta.bestv.data.repository.local
 
 import com.pimenta.bestv.data.entity.Movie
 import com.pimenta.bestv.data.entity.TvShow

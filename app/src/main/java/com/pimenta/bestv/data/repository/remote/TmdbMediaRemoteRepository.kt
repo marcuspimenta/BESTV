@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote
+package com.pimenta.bestv.data.repository.remote
 
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.data.entity.*
-import com.pimenta.bestv.data.remote.api.tmdb.CastApi
-import com.pimenta.bestv.data.remote.api.tmdb.GenreApi
-import com.pimenta.bestv.data.remote.api.tmdb.MovieApi
-import com.pimenta.bestv.data.remote.api.tmdb.TvShowApi
+import com.pimenta.bestv.data.repository.remote.api.tmdb.CastApi
+import com.pimenta.bestv.data.repository.remote.api.tmdb.GenreApi
+import com.pimenta.bestv.data.repository.remote.api.tmdb.MovieApi
+import com.pimenta.bestv.data.repository.remote.api.tmdb.TvShowApi
 import io.reactivex.Single
 import timber.log.Timber
 import java.io.IOException

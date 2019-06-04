@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote
+package com.pimenta.bestv.data.repository.remote
 
 import com.pimenta.bestv.data.entity.Cast
 import com.pimenta.bestv.data.entity.CastList

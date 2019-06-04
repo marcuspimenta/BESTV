@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.di.module
 
-import com.pimenta.bestv.data.local.MediaLocalRepository
-import com.pimenta.bestv.data.local.MediaLocalRepositoryImpl
-import com.pimenta.bestv.data.remote.MediaRemoteRepository
-import com.pimenta.bestv.data.remote.TmdbMediaRemoteRepository
+import com.pimenta.bestv.data.repository.local.MediaLocalRepository
+import com.pimenta.bestv.data.repository.local.MediaLocalRepositoryImpl
+import com.pimenta.bestv.data.repository.remote.MediaRemoteRepository
+import com.pimenta.bestv.data.repository.remote.TmdbMediaRemoteRepository
 import com.pimenta.bestv.data.repository.MediaRepository
 import com.pimenta.bestv.data.repository.MediaRepositoryImpl
 import com.pimenta.bestv.manager.device.DeviceManager

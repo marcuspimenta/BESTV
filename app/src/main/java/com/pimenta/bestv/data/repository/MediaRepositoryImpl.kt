@@ -15,8 +15,8 @@
 package com.pimenta.bestv.data.repository
 
 import com.pimenta.bestv.data.entity.*
-import com.pimenta.bestv.data.local.MediaLocalRepository
-import com.pimenta.bestv.data.remote.MediaRemoteRepository
+import com.pimenta.bestv.data.repository.local.MediaLocalRepository
+import com.pimenta.bestv.data.repository.remote.MediaRemoteRepository
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import java.util.*

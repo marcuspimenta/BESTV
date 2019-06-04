@@ -12,31 +12,31 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.database.dao
+package com.pimenta.bestv.data.repository.local.database.dao
 
 import com.j256.ormlite.dao.RuntimeExceptionDao
-import com.pimenta.bestv.data.entity.TvShow
-import com.pimenta.bestv.data.local.database.DatabaseHelper
+import com.pimenta.bestv.data.entity.Movie
+import com.pimenta.bestv.data.repository.local.database.DatabaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 10/07/18.
+ * Created by marcus on 15-04-2018.
  */
 @Singleton
-class TvShowDao @Inject constructor(
+class MovieDao @Inject constructor(
         private val databaseHelper: DatabaseHelper
-) : BaseDao<TvShow> {
+) : BaseDao<Movie> {
 
-    private val tvShowDao: RuntimeExceptionDao<TvShow, Int> = databaseHelper.getRuntimeExceptionDao(TvShow::class.java)
+    private val movieDao: RuntimeExceptionDao<Movie, Int> = databaseHelper.getRuntimeExceptionDao(Movie::class.java)
 
-    override fun getAll(): List<TvShow> = tvShowDao.queryForAll()
+    override fun getAll(): List<Movie> = movieDao.queryForAll()
 
-    override fun getById(id: Int?): TvShow? = tvShowDao.queryForId(id)
+    override fun getById(id: Int?): Movie? = movieDao.queryForId(id)
 
-    override fun create(model: TvShow): Boolean = tvShowDao.create(model) > 0
+    override fun create(model: Movie): Boolean = movieDao.create(model) > 0
 
-    override fun update(model: TvShow): Boolean = tvShowDao.update(model) > 0
+    override fun update(model: Movie): Boolean = movieDao.update(model) > 0
 
-    override fun delete(model: TvShow): Boolean = tvShowDao.delete(model) > 0
+    override fun delete(model: Movie): Boolean = movieDao.delete(model) > 0
 }

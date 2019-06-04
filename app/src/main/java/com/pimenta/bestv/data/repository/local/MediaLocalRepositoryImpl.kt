@@ -12,13 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local
+package com.pimenta.bestv.data.repository.local
 
 import com.pimenta.bestv.data.entity.Movie
 import com.pimenta.bestv.data.entity.TvShow
 import com.pimenta.bestv.data.entity.Work
-import com.pimenta.bestv.data.local.database.dao.MovieDao
-import com.pimenta.bestv.data.local.database.dao.TvShowDao
+import com.pimenta.bestv.data.repository.local.database.dao.MovieDao
+import com.pimenta.bestv.data.repository.local.database.dao.TvShowDao
 import io.reactivex.Single
 import javax.inject.Inject
 

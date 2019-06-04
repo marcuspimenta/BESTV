@@ -15,7 +15,7 @@
 package com.pimenta.bestv.manager.device;
 
 import com.pimenta.bestv.data.entity.IpInfo;
-import com.pimenta.bestv.data.remote.api.ip.InfoApi;
+import com.pimenta.bestv.data.repository.remote.api.ip.InfoApi;
 
 import java.io.IOException;
 

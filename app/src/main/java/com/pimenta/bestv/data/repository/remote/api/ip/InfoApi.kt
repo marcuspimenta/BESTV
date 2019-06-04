@@ -12,35 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.database.dao
+package com.pimenta.bestv.data.repository.remote.api.ip
+
+import com.pimenta.bestv.data.entity.IpInfo
+
+import retrofit2.Call
+import retrofit2.http.GET
 
 /**
- * Created by marcus on 15-04-2018.
+ * Created by marcus on 11-02-2018.
  */
-interface BaseDao<T> {
+interface InfoApi {
 
-    /**
-     * @see com.j256.ormlite.dao.Dao.queryForAll
-     */
-    fun getAll(): List<T>
+    @get:GET("json")
+    val ipInfo: Call<IpInfo>
 
-    /**
-     * @see com.j256.ormlite.dao.Dao.queryForId
-     */
-    fun getById(id: Int?): T?
-
-    /**
-     * @see com.j256.ormlite.dao.Dao.create
-     */
-    fun create(model: T): Boolean
-
-    /**
-     * @see com.j256.ormlite.dao.Dao.update
-     */
-    fun update(model: T): Boolean
-
-    /**
-     * @see com.j256.ormlite.dao.Dao.delete
-     */
-    fun delete(model: T): Boolean
 }

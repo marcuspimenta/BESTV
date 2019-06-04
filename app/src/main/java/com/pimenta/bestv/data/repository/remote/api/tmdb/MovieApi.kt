@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote.api.tmdb
+package com.pimenta.bestv.data.repository.remote.api.tmdb
 
 import com.pimenta.bestv.data.entity.CastList
-import com.pimenta.bestv.data.entity.TvShow
-import com.pimenta.bestv.data.entity.TvShowPage
+import com.pimenta.bestv.data.entity.Movie
+import com.pimenta.bestv.data.entity.MoviePage
 import com.pimenta.bestv.data.entity.VideoList
 
 import io.reactivex.Single
@@ -26,90 +26,90 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * Created by marcus on 06/07/18.
+ * Created by marcus on 11-02-2018.
  */
-interface TvShowApi {
+interface MovieApi {
 
-    @GET("discover/tv")
-    fun getTvShowByGenre(
+    @GET("discover/movie")
+    fun getMoviesByGenre(
             @Query("with_genres") genreId: Int,
             @Query("api_key") apiKey: String,
             @Query("language") language: String,
-            @Query("include_adult") includeAdult:
-            Boolean, @Query("page") page: Int
-    ): Single<TvShowPage>
-
-    @GET("tv/airing_today")
-    fun getAiringTodayTvShows(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
+            @Query("include_adult") includeAdult: Boolean,
             @Query("page") page: Int
-    ): Single<TvShowPage>
+    ): Single<MoviePage>
 
-    @GET("tv/on_the_air")
-    fun getOnTheAirTvShows(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
-    ): Single<TvShowPage>
-
-    @GET("tv/popular")
-    fun getPopularTvShows(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
-    ): Single<TvShowPage>
-
-    @GET("tv/top_rated")
-    fun getTopRatedTvShows(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
-    ): Single<TvShowPage>
-
-    @GET("tv/{tv_id}")
-    fun getTvShow(
-            @Path("tv_id") tv_id: Int,
+    @GET("movie/{movie_id}")
+    fun getMovie(
+            @Path("movie_id") movie_id: Int,
             @Query("api_key") apiKey: String,
             @Query("language") language: String
-    ): Call<TvShow>
+    ): Call<Movie>
 
-    @GET("tv/{tv_id}/credits")
-    fun getCastByTvShow(
-            @Path("tv_id") tvId: Int,
+    @GET("movie/{movie_id}/credits")
+    fun getCastByMovie(
+            @Path("movie_id") movie_id: Int,
             @Query("api_key") apiKey: String,
             @Query("language") language: String
     ): Single<CastList>
 
-    @GET("tv/{tv_id}/videos")
-    fun getVideosByTvShow(
-            @Path("tv_id") tvId: Int,
+    @GET("movie/{movie_id}/recommendations")
+    fun getRecommendationByMovie(
+            @Path("movie_id") movie_id: Int,
+            @Query("api_key") apiKey: String,
+            @Query("language") language: String,
+            @Query("page") page: Int
+    ): Single<MoviePage>
+
+    @GET("movie/{movie_id}/similar")
+    fun getSimilarByMovie(
+            @Path("movie_id") movie_id: Int,
+            @Query("api_key") apiKey: String,
+            @Query("language") language: String,
+            @Query("page") page: Int
+    ): Single<MoviePage>
+
+    @GET("movie/{movie_id}/videos")
+    fun getVideosByMovie(
+            @Path("movie_id") movie_id: Int,
             @Query("api_key") apiKey: String,
             @Query("language") language: String
     ): Single<VideoList>
 
-    @GET("tv/{tv_id}/recommendations")
-    fun getRecommendationByTvShow(
-            @Path("tv_id") tvId: Int,
+    @GET("movie/now_playing")
+    fun getNowPlayingMovies(
             @Query("api_key") apiKey: String,
             @Query("language") language: String,
             @Query("page") page: Int
-    ): Single<TvShowPage>
+    ): Single<MoviePage>
 
-    @GET("tv/{tv_id}/similar")
-    fun getSimilarByTvShow(
-            @Path("tv_id") tvId: Int,
+    @GET("movie/popular")
+    fun getPopularMovies(
             @Query("api_key") apiKey: String,
             @Query("language") language: String,
             @Query("page") page: Int
-    ): Single<TvShowPage>
+    ): Single<MoviePage>
 
-    @GET("search/tv")
-    fun searchTvShowsByQuery(
+    @GET("movie/top_rated")
+    fun getTopRatedMovies(
+            @Query("api_key") apiKey: String,
+            @Query("language") language: String,
+            @Query("page") page: Int
+    ): Single<MoviePage>
+
+    @GET("movie/upcoming")
+    fun getUpComingMovies(
+            @Query("api_key") apiKey: String,
+            @Query("language") language: String,
+            @Query("page") page: Int
+    ): Single<MoviePage>
+
+    @GET("search/movie")
+    fun searchMoviesByQuery(
             @Query("api_key") apiKey: String,
             @Query("query") query: String,
             @Query("language") language: String,
             @Query("page") page: Int
-    ): Single<TvShowPage>
+    ): Single<MoviePage>
 
 }
