@@ -32,8 +32,8 @@ class PermissionManagerImpl @Inject constructor(
             Single.fromCallable {
                 val permissionsNotAccepted = mutableListOf<String>()
                 Const.PERMISSIONS.forEach {
-                    val hasPermission = (ContextCompat.checkSelfPermission(application, it) == PackageManager.PERMISSION_GRANTED)
-                    if (!hasPermission) {
+                    val permissionDenied = (ContextCompat.checkSelfPermission(application, it) == PackageManager.PERMISSION_DENIED)
+                    if (permissionDenied) {
                         permissionsNotAccepted.add(it)
                     }
 
