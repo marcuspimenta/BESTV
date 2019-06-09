@@ -47,6 +47,7 @@ class MainActivity : FragmentActivity() {
         BesTV.applicationComponent.inject(this)
 
         backgroundManager.attach(window)
+        backgroundManager.setBitmap(null)
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         presenter.bindTo(lifecycle)

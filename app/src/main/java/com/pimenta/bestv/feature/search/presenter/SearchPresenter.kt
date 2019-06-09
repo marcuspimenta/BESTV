@@ -18,6 +18,7 @@ import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.extension.hasNoContent
 import com.pimenta.bestv.feature.search.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
@@ -42,35 +43,55 @@ class SearchPresenter @Inject constructor(
     private var searchWorkDisposable: Disposable? = null
     private var loadBackdropImageDisposable: Disposable? = null
 
+    private val movies = mutableListOf<WorkViewModel>()
+    private val tvShows = mutableListOf<WorkViewModel>()
+
     override fun dispose() {
         disposeSearchWork()
         disposeLoadBackdropImage()
         super.dispose()
     }
 
-    fun searchWorksByQuery(text: String) {
+    fun searchWorksByQuery(text: String?) {
         disposeSearchWork()
+
+        if (text == null || text.hasNoContent()) {
+            view.onHideProgress()
+            view.onClear()
+            return
+        }
+
+        query = text
         resultMoviePage = 0
         resultTvShowPage = 0
-        query = text
+        movies.clear()
+        tvShows.clear()
+
         view.onShowProgress()
-        searchWorkDisposable = searchWorksByQueryUseCase(text)
+        searchWorkDisposable = searchWorksByQueryUseCase(query)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ pair ->
-                    var movies: List<WorkViewModel>? = null
                     if (pair.first.page <= pair.first.totalPages) {
                         this.resultMoviePage = pair.first.page
-                        movies = pair.first.works
+                        pair.first.works?.let {
+                            movies.addAll(it)
+                        }
                     }
 
-                    var tvShows: List<WorkViewModel>? = null
                     if (pair.second.page <= pair.second.totalPages) {
                         this.resultTvShowPage = pair.second.page
-                        tvShows = pair.second.works
+                        pair.second.works?.let {
+                            tvShows.addAll(it)
+                        }
                     }
-                    view.onResultLoaded(movies, tvShows)
                     view.onHideProgress()
+
+                    if (movies.isNotEmpty() || tvShows.isNotEmpty()) {
+                        view.onResultLoaded(movies, tvShows)
+                    } else {
+                        view.onClear()
+                    }
                 }, { throwable ->
                     Timber.e(throwable, "Error while searching by query")
                     view.onHideProgress()
@@ -85,13 +106,13 @@ class SearchPresenter @Inject constructor(
                 .subscribe({ moviePage ->
                     if (moviePage != null && moviePage.page <= moviePage.totalPages) {
                         this.resultMoviePage = moviePage.page
-                        view.onMoviesLoaded(moviePage.works)
-                    } else {
-                        view.onMoviesLoaded(null)
+                        moviePage.works?.let {
+                            movies.addAll(it)
+                            view.onMoviesLoaded(movies)
+                        }
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading movies by query")
-                    view.onMoviesLoaded(null)
                 }).addTo(compositeDisposable)
     }
 
@@ -102,13 +123,13 @@ class SearchPresenter @Inject constructor(
                 .subscribe({ tvShowPage ->
                     if (tvShowPage != null && tvShowPage.page <= tvShowPage.totalPages) {
                         this.resultTvShowPage = tvShowPage.page
-                        view.onTvShowsLoaded(tvShowPage.works)
-                    } else {
-                        view.onTvShowsLoaded(null)
+                        tvShowPage.works?.let {
+                            tvShows.addAll(it)
+                            view.onTvShowsLoaded(tvShows)
+                        }
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading tv shows by query")
-                    view.onTvShowsLoaded(null)
                 }).addTo(compositeDisposable)
     }
 
@@ -125,7 +146,7 @@ class SearchPresenter @Inject constructor(
                 })
     }
 
-    fun disposeLoadBackdropImage() {
+    private fun disposeLoadBackdropImage() {
         loadBackdropImageDisposable?.run {
             if (!isDisposed) {
                 dispose()
@@ -152,11 +173,13 @@ class SearchPresenter @Inject constructor(
 
         fun onHideProgress()
 
-        fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?)
+        fun onClear()
 
-        fun onMoviesLoaded(movies: List<WorkViewModel>?)
+        fun onResultLoaded(movies: List<WorkViewModel>, tvShows: List<WorkViewModel>)
 
-        fun onTvShowsLoaded(tvShows: List<WorkViewModel>?)
+        fun onMoviesLoaded(movies: List<WorkViewModel>)
+
+        fun onTvShowsLoaded(tvShows: List<WorkViewModel>)
 
         fun loadBackdropImage(workViewModel: WorkViewModel)
 

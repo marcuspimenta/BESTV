@@ -14,10 +14,7 @@
 
 package com.pimenta.bestv.feature.search.presenter
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
@@ -57,7 +54,7 @@ class SearchPresenterTest {
         presenter.searchWorksByQuery(query)
 
         verify(view).onShowProgress()
-        verify(view).onResultLoaded(result.first.works, result.second.works)
+        verify(view).onResultLoaded(aMovieList, aTvShowList)
         verify(view).onHideProgress()
     }
 
@@ -72,12 +69,32 @@ class SearchPresenterTest {
     }
 
     @Test
+    fun `should not search the works when the query is null`() {
+        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.error(Throwable()))
+
+        presenter.searchWorksByQuery(null)
+
+        verify(view).onHideProgress()
+        verify(view).onClear()
+    }
+
+    @Test
+    fun `should not search the works when the query is empty`() {
+        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.error(Throwable()))
+
+        presenter.searchWorksByQuery("")
+
+        verify(view).onHideProgress()
+        verify(view).onClear()
+    }
+
+    @Test
     fun `should return the right data when loading the movies`() {
         whenever(workUseCase.searchMoviesByQuery(any(), any())).thenReturn(Single.just(aMoviePageViewModel))
 
         presenter.loadMovies()
 
-        verify(view).onMoviesLoaded(aMoviePageViewModel.works)
+        verify(view).onMoviesLoaded(aMovieList)
     }
 
     @Test
@@ -86,7 +103,7 @@ class SearchPresenterTest {
 
         presenter.loadMovies()
 
-        verify(view).onMoviesLoaded(null)
+        verifyZeroInteractions(view)
     }
 
     @Test
@@ -95,7 +112,7 @@ class SearchPresenterTest {
 
         presenter.loadTvShows()
 
-        verify(view).onTvShowsLoaded(aTvShowPageViewModel.works)
+        verify(view).onTvShowsLoaded(aTvShowList)
     }
 
     @Test
@@ -104,7 +121,7 @@ class SearchPresenterTest {
 
         presenter.loadTvShows()
 
-        verify(view).onTvShowsLoaded(null)
+        verifyZeroInteractions(view)
     }
 
     @Test
@@ -153,30 +170,34 @@ class SearchPresenterTest {
                 type = WorkType.TV_SHOW
         )
 
+        private val aMovieList = listOf(
+                WorkViewModel(
+                        id = 1,
+                        title = "Batman",
+                        originalTitle = "Batman",
+                        type = WorkType.MOVIE
+                )
+        )
+
         private val aMoviePageViewModel = WorkPageViewModel(
                 page = 1,
                 totalPages = 10,
-                works = listOf(
-                        WorkViewModel(
-                                id = 1,
-                                title = "Batman",
-                                originalTitle = "Batman",
-                                type = WorkType.MOVIE
-                        )
+                works = aMovieList
+        )
+
+        private val aTvShowList = listOf(
+                WorkViewModel(
+                        id = 1,
+                        title = "Batman",
+                        originalTitle = "Batman",
+                        type = WorkType.TV_SHOW
                 )
         )
 
         private val aTvShowPageViewModel = WorkPageViewModel(
                 page = 1,
                 totalPages = 10,
-                works = listOf(
-                        WorkViewModel(
-                                id = 1,
-                                title = "Batman",
-                                originalTitle = "Batman",
-                                type = WorkType.TV_SHOW
-                        )
-                )
+                works = aTvShowList
         )
 
     }

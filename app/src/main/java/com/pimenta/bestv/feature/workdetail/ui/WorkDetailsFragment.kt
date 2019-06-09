@@ -35,7 +35,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
+import com.pimenta.bestv.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.render.CastCardRender

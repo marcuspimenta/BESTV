@@ -32,7 +32,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.kotlin.isNotNullOrEmpty
+import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
@@ -54,6 +54,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     private val tvShowRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
     private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
+    private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
 
     @Inject
     lateinit var presenter: SearchPresenter
@@ -86,11 +87,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        clearAdapter()
-    }
-
     override fun onResume() {
         super.onResume()
         loadBackdropImage()
@@ -104,42 +100,34 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         progressBarManager.hide()
     }
 
-    override fun onResultLoaded(movies: List<WorkViewModel>?, tvShows: List<WorkViewModel>?) {
-        val hasMovies = movies.isNotNullOrEmpty()
-        val hasTvShows = tvShows.isNotNullOrEmpty()
-        when {
-            hasMovies || hasTvShows -> {
-                rowsAdapter.clear()
+    override fun onClear() {
+        backgroundManager.setBitmap(null)
+        rowsAdapter.clear()
+        rowsAdapter.add(ListRow(HeaderItem(0, getString(R.string.no_results)),
+                ArrayObjectAdapter(WorkCardRenderer())))
+    }
 
-                if (hasMovies) {
-                    val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
-                    movieRowAdapter.addAll(0, movies)
-                    rowsAdapter.add(ListRow(header, movieRowAdapter))
-                }
-                if (hasTvShows) {
-                    val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
-                    tvShowRowAdapter.addAll(0, tvShows)
-                    rowsAdapter.add(ListRow(header, tvShowRowAdapter))
-                }
-            }
-            else -> clearAdapter()
+    override fun onResultLoaded(movies: List<WorkViewModel>, tvShows: List<WorkViewModel>) {
+        rowsAdapter.clear()
+
+        if (movies.isNotEmpty()) {
+            val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
+            movieRowAdapter.setItems(movies, workDiffCallback)
+            rowsAdapter.add(ListRow(header, movieRowAdapter))
+        }
+        if (tvShows.isNotEmpty()) {
+            val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
+            tvShowRowAdapter.setItems(tvShows, workDiffCallback)
+            rowsAdapter.add(ListRow(header, tvShowRowAdapter))
         }
     }
 
-    override fun onMoviesLoaded(movies: List<WorkViewModel>?) {
-        movies?.forEach { work ->
-            if (movieRowAdapter.indexOf(work) == -1) {
-                movieRowAdapter.add(work)
-            }
-        }
+    override fun onMoviesLoaded(movies: List<WorkViewModel>) {
+        movieRowAdapter.setItems(movies, workDiffCallback)
     }
 
-    override fun onTvShowsLoaded(tvShows: List<WorkViewModel>?) {
-        tvShows?.forEach { work ->
-            if (movieRowAdapter.indexOf(work) == -1) {
-                movieRowAdapter.add(work)
-            }
-        }
+    override fun onTvShowsLoaded(tvShows: List<WorkViewModel>) {
+        tvShowRowAdapter.setItems(tvShows, workDiffCallback)
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
@@ -161,17 +149,17 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun getResultsAdapter(): ObjectAdapter? {
-        return rowsAdapter
-    }
+    override fun getResultsAdapter() = rowsAdapter
 
-    override fun onQueryTextChange(query: String): Boolean {
-        searchByQuery(query)
+    override fun onQueryTextChange(text: String): Boolean {
+        query = text
+        presenter.searchWorksByQuery(query)
         return true
     }
 
-    override fun onQueryTextSubmit(query: String): Boolean {
-        searchByQuery(query)
+    override fun onQueryTextSubmit(text: String): Boolean {
+        query = text
+        presenter.searchWorksByQuery(query)
         return true
     }
 
@@ -183,7 +171,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
-                    searchByQuery(query)
+                    presenter.searchWorksByQuery(query)
                 }
             }
         }
@@ -213,28 +201,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             ).toBundle()
             startActivityForResult(WorkDetailsActivity.newInstance(context, workViewModel), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
         }
-    }
-
-    private fun searchByQuery(query: String?) {
-        query?.let {
-            when {
-                it.isBlank() || it.isEmpty() -> clearAdapter()
-                else -> {
-                    this.query = it
-                    rowsAdapter.clear()
-                    presenter.searchWorksByQuery(it)
-                }
-            }
-        }
-    }
-
-    private fun clearAdapter() {
-        presenter.disposeLoadBackdropImage()
-        backgroundManager.setBitmap(null)
-        rowsAdapter.clear()
-        val listRowAdapter = ArrayObjectAdapter(WorkCardRenderer())
-        val header = HeaderItem(0, getString(R.string.no_results))
-        rowsAdapter.add(ListRow(header, listRowAdapter))
     }
 
     private fun loadBackdropImage() {
