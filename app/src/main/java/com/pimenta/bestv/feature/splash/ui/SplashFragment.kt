@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.extension.finish
+import com.pimenta.bestv.common.extension.finish
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
 import javax.inject.Inject
 

@@ -20,7 +20,7 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.entity.Genre
 import com.pimenta.bestv.data.entity.Work
 import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.extension.toSingle
+import com.pimenta.bestv.common.extension.toSingle
 import com.pimenta.bestv.feature.search.usecase.UrlEncoderTextUseCase
 import io.reactivex.Single
 import javax.inject.Inject

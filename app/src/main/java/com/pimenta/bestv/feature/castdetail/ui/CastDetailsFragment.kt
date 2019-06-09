@@ -31,14 +31,14 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
-import com.pimenta.bestv.extension.isNotNullOrEmpty
+import com.pimenta.bestv.common.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.extension.addFragment
-import com.pimenta.bestv.extension.popBackStack
+import com.pimenta.bestv.common.extension.addFragment
+import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity

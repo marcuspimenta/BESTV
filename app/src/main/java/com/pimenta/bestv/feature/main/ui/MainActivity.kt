@@ -22,8 +22,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.extension.getTopFragment
-import com.pimenta.bestv.extension.replaceFragment
+import com.pimenta.bestv.common.extension.getTopFragment
+import com.pimenta.bestv.common.extension.replaceFragment
 import com.pimenta.bestv.feature.main.presenter.MainPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashActivity
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment

@@ -12,16 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
+import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
-fun ImageView.loadImageInto(imageUrl: String) {
-    Glide.with(this.context.applicationContext)
-            .load(imageUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(this)
+fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
+    compositeDisposable.add(this)
 }
+
+fun Boolean.toSingle() = Single.fromCallable { this }

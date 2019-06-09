@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
 import android.app.Activity
 import androidx.fragment.app.Fragment

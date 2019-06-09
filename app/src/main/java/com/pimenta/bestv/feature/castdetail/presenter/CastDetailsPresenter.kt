@@ -19,7 +19,7 @@ import com.pimenta.bestv.common.presentation.mapper.toCast
 import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber

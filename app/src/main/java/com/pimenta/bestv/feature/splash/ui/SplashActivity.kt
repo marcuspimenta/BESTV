@@ -18,7 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.extension.replaceFragment
+import com.pimenta.bestv.common.extension.replaceFragment
 
 /**
  * Created by marcus on 04-05-2018.

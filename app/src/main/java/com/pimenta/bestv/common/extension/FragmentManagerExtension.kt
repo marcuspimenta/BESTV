@@ -12,14 +12,22 @@
  * the License.
  */
 
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
-import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.transaction
 
-fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
-    compositeDisposable.add(this)
+fun FragmentManager.replaceFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment) {
+    transaction {
+        replace(containerViewId, fragment)
+    }
 }
 
-fun Boolean.toSingle() = Single.fromCallable { this }
+fun FragmentManager.addFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment, tag: String) {
+    transaction {
+        add(containerViewId, fragment)
+        addToBackStack(tag)
+    }
+}

@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.recommendation.presenter
 
 import com.pimenta.bestv.common.mvp.DisposablePresenter
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
-import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject

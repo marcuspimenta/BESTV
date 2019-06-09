@@ -1,3 +1,3 @@
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
 fun String.hasNoContent() = isEmpty() && isBlank()

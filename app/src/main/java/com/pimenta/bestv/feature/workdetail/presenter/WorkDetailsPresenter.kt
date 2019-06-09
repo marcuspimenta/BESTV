@@ -21,7 +21,7 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.workdetail.usecase.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetWorkDetailsUseCase

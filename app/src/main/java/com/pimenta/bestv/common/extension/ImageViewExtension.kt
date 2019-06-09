@@ -12,22 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
-import androidx.annotation.IdRes
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.transaction
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 
-fun FragmentManager.replaceFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment) {
-    transaction {
-        replace(containerViewId, fragment)
-    }
-}
-
-fun FragmentManager.addFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment, tag: String) {
-    transaction {
-        add(containerViewId, fragment)
-        addToBackStack(tag)
-    }
+fun ImageView.loadImageInto(imageUrl: String) {
+    Glide.with(this.context.applicationContext)
+            .load(imageUrl)
+            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+            .into(this)
 }

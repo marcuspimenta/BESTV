@@ -19,7 +19,7 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.extension.loadImageInto
+import com.pimenta.bestv.common.extension.loadImageInto
 
 /**
  * Created by marcus on 16-02-2018.

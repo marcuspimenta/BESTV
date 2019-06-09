@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.splash.presenter
 
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.manager.permission.PermissionManager
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber

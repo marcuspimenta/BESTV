@@ -1,4 +1,4 @@
-package com.pimenta.bestv.extension
+package com.pimenta.bestv.common.extension
 
 /**
  * Returns `true` if this nullable collection is not either null or empty.

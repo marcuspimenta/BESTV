@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workbrowse.presenter
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.extension.addTo
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.workbrowse.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
