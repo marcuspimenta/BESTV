@@ -31,14 +31,14 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
+import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadThumbnail
 import com.pimenta.bestv.common.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
@@ -56,7 +56,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     private val tvShowsRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val presenterSelector: ClassPresenterSelector by lazy { ClassPresenterSelector() }
     private val detailsOverviewRow: DetailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
-    private lateinit var castViewModel: CastViewModel
+    private val castViewModel: CastViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
 
     @Inject
     lateinit var presenter: CastDetailsPresenter
@@ -72,8 +72,6 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.bindTo(this.lifecycle)
-
-        castViewModel = arguments?.getSerializable(CAST) as CastViewModel
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -103,9 +101,8 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     }
 
     override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
-        if (castViewModel != null) {
-            this.castViewModel = castViewModel
-            detailsOverviewRow.item = castViewModel
+        castViewModel?.let {
+            detailsOverviewRow.item = it
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
