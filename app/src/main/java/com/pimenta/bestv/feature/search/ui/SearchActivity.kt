@@ -20,9 +20,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.common.extension.getTopFragment
 import com.pimenta.bestv.common.extension.replaceFragment
 import javax.inject.Inject
 
@@ -45,13 +43,6 @@ class SearchActivity : FragmentActivity() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         replaceFragment(SearchFragment.newInstance())
-    }
-
-    override fun onBackPressed() {
-        val topFragment = getTopFragment()
-        if (topFragment !is ErrorSupportFragment) {
-            super.onBackPressed()
-        }
     }
 
     override fun onDestroy() {

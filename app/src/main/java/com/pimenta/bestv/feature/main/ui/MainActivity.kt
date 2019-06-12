@@ -20,9 +20,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.common.extension.getTopFragment
 import com.pimenta.bestv.common.extension.replaceFragment
 import com.pimenta.bestv.feature.main.presenter.MainPresenter
 import com.pimenta.bestv.feature.splash.ui.SplashActivity
@@ -69,13 +67,6 @@ class MainActivity : FragmentActivity() {
                     finish()
                 }
             }
-        }
-    }
-
-    override fun onBackPressed() {
-        val topFragment = getTopFragment()
-        if (topFragment !is ErrorSupportFragment) {
-            super.onBackPressed()
         }
     }
 

@@ -15,6 +15,7 @@ package com.pimenta.bestv.feature.error
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.leanback.app.ErrorSupportFragment
 import com.pimenta.bestv.R
 
@@ -33,6 +34,14 @@ class ErrorFragment : ErrorSupportFragment() {
         setButtonClickListener {
             targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        // DON'T ALLOW TO CLOSE THE FRAGMENT WHEN PRESS BACK BUTTON
+                    }
+                }
+        )
     }
 
     companion object {
