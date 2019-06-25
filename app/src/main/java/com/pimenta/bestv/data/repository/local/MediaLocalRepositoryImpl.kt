@@ -19,6 +19,7 @@ import com.pimenta.bestv.data.entity.TvShow
 import com.pimenta.bestv.data.entity.Work
 import com.pimenta.bestv.data.repository.local.database.dao.MovieDao
 import com.pimenta.bestv.data.repository.local.database.dao.TvShowDao
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -47,21 +48,19 @@ class MediaLocalRepositoryImpl @Inject constructor(
                 favoritesMovies.isNotEmpty() || favoritesTvShows.isNotEmpty()
             }
 
-    override fun saveFavorite(work: Work): Single<Boolean> =
-            Single.fromCallable {
+    override fun saveFavorite(work: Work): Completable =
+            Completable.create {
                 when (work) {
                     is Movie -> movieDao.create(work)
                     is TvShow -> tvShowDao.create(work)
-                    else -> false
                 }
             }
 
-    override fun deleteFavorite(work: Work): Single<Boolean> =
-            Single.fromCallable {
+    override fun deleteFavorite(work: Work): Completable =
+            Completable.create {
                 when (work) {
                     is Movie -> movieDao.delete(work)
                     is TvShow -> tvShowDao.delete(work)
-                    else -> false
                 }
             }
 

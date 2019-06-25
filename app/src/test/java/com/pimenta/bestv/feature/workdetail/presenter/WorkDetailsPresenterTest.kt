@@ -25,6 +25,7 @@ import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetWorkDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import com.pimenta.bestv.scheduler.RxSchedulerTest
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
 
@@ -52,7 +53,7 @@ class WorkDetailsPresenterTest {
     fun `should set a work as favorite`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(workUseCase.setFavorite(any())).thenReturn(Single.just(true))
+        whenever(workUseCase.setFavorite(any())).thenReturn(Completable.complete())
 
         presenter.setFavorite(workViewModel)
 
@@ -63,7 +64,7 @@ class WorkDetailsPresenterTest {
     fun `should remove a work from favorite`() {
         val workViewModel = aWorkViewModel(favorite = true)
 
-        whenever(workUseCase.setFavorite(any())).thenReturn(Single.just(true))
+        whenever(workUseCase.setFavorite(any())).thenReturn(Completable.complete())
 
         presenter.setFavorite(workViewModel)
 
@@ -74,7 +75,7 @@ class WorkDetailsPresenterTest {
     fun `should return false if a error happens while setting a work as favorite`() {
         val workViewModel = aWorkViewModel(favorite = true)
 
-        whenever(workUseCase.setFavorite(any())).thenReturn(Single.error(Throwable()))
+        whenever(workUseCase.setFavorite(any())).thenReturn(Completable.error(Throwable()))
 
         presenter.setFavorite(workViewModel)
 

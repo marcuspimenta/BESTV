@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.workdetail.presenter
 
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.mapper.toWork
@@ -21,7 +22,6 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.workdetail.usecase.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.usecase.GetWorkDetailsUseCase
@@ -48,7 +48,7 @@ class WorkDetailsPresenter @Inject constructor(
 
     fun setFavorite(workViewModel: WorkViewModel) {
         workViewModel.toWork().toSingle()
-                .flatMap { workUseCase.setFavorite(it) }
+                .flatMapCompletable { workUseCase.setFavorite(it) }
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({

@@ -14,19 +14,19 @@
 
 package com.pimenta.bestv.data.entity
 
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
-import com.j256.ormlite.table.DatabaseTable
 
 /**
  * Created by marcus on 09-02-2018.
  */
-@DatabaseTable(tableName = Movie.TABLE)
+@Entity(tableName = Movie.TABLE)
 class Movie(
         id: Int = 0,
         isFavorite: Boolean = false,
         @SerializedName("title") override var title: String? = null,
         @SerializedName("original_title") override var originalTitle: String? = null,
-        @SerializedName("release_date") private var releaseDateString: String? = null
+        @SerializedName("release_date") var releaseDateString: String? = null
 ) : Work(id = id, isFavorite = isFavorite) {
 
     override var releaseDate: String?

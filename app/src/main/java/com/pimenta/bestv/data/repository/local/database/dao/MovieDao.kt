@@ -14,29 +14,27 @@
 
 package com.pimenta.bestv.data.repository.local.database.dao
 
-import com.j256.ormlite.dao.RuntimeExceptionDao
+import androidx.room.*
 import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.repository.local.database.DatabaseHelper
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by marcus on 15-04-2018.
  */
-@Singleton
-class MovieDao @Inject constructor(
-        private val databaseHelper: DatabaseHelper
-) : BaseDao<Movie> {
+@Dao
+interface MovieDao {
 
-    private val movieDao: RuntimeExceptionDao<Movie, Int> = databaseHelper.getRuntimeExceptionDao(Movie::class.java)
+    @Query("SELECT * FROM movie")
+    fun getAll(): List<Movie>
 
-    override fun getAll(): List<Movie> = movieDao.queryForAll()
+    @Query("SELECT * FROM movie WHERE id LIKE :id")
+    fun getById(id: Int?): Movie?
 
-    override fun getById(id: Int?): Movie? = movieDao.queryForId(id)
+    @Insert
+    fun create(model: Movie)
 
-    override fun create(model: Movie): Boolean = movieDao.create(model) > 0
+    @Update
+    fun update(model: Movie)
 
-    override fun update(model: Movie): Boolean = movieDao.update(model) > 0
-
-    override fun delete(model: Movie): Boolean = movieDao.delete(model) > 0
+    @Delete
+    fun delete(model: Movie)
 }

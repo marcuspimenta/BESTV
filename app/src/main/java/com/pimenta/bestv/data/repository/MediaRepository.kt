@@ -16,6 +16,7 @@ package com.pimenta.bestv.data.repository
 
 import com.pimenta.bestv.R
 import com.pimenta.bestv.data.entity.*
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -67,7 +68,7 @@ interface MediaRepository {
      *
      * @return [<]
      */
-    fun saveFavorite(work: Work): Single<Boolean>
+    fun saveFavorite(work: Work): Completable
 
     /**
      * Deletes a [Work] from favorites
@@ -76,7 +77,7 @@ interface MediaRepository {
      *
      * @return [<]
      */
-    fun deleteFavorite(work: Work): Single<Boolean>
+    fun deleteFavorite(work: Work): Completable
 
     /**
      * Loads the [MoviePage] by [WorkType]

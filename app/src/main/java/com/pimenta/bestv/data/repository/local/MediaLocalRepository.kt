@@ -17,6 +17,7 @@ package com.pimenta.bestv.data.repository.local
 import com.pimenta.bestv.data.entity.Movie
 import com.pimenta.bestv.data.entity.TvShow
 import com.pimenta.bestv.data.entity.Work
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -47,7 +48,7 @@ interface MediaLocalRepository {
      *
      * @return [<]
      */
-    fun saveFavorite(work: Work): Single<Boolean>
+    fun saveFavorite(work: Work): Completable
 
     /**
      * Deletes a [Work] from favorites
@@ -56,7 +57,7 @@ interface MediaLocalRepository {
      *
      * @return [<]
      */
-    fun deleteFavorite(work: Work): Single<Boolean>
+    fun deleteFavorite(work: Work): Completable
 
     /**
      * Gets the [List<Movie>] saved in local data base

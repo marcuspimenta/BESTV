@@ -17,6 +17,7 @@ package com.pimenta.bestv.data.repository
 import com.pimenta.bestv.data.entity.*
 import com.pimenta.bestv.data.repository.local.MediaLocalRepository
 import com.pimenta.bestv.data.repository.remote.MediaRemoteRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import java.util.*
@@ -36,10 +37,10 @@ class MediaRepositoryImpl @Inject constructor(
     override fun hasFavorite(): Single<Boolean> =
             mediaLocalRepository.hasFavorite()
 
-    override fun saveFavorite(work: Work): Single<Boolean> =
+    override fun saveFavorite(work: Work): Completable =
             mediaLocalRepository.saveFavorite(work)
 
-    override fun deleteFavorite(work: Work): Single<Boolean> =
+    override fun deleteFavorite(work: Work): Completable =
             mediaLocalRepository.deleteFavorite(work)
 
     override fun getFavorites(): Single<List<Work>> =

@@ -12,29 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.repository.local.database.dao
+package com.pimenta.bestv.data.repository.local.database
 
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.pimenta.bestv.data.entity.Movie
 import com.pimenta.bestv.data.entity.TvShow
+import com.pimenta.bestv.data.repository.local.database.dao.MovieDao
+import com.pimenta.bestv.data.repository.local.database.dao.TvShowDao
 
 /**
- * Created by marcus on 10/07/18.
+ * Created by marcus on 05-03-2018.
  */
-@Dao
-interface TvShowDao {
+@Database(
+        entities = [Movie::class, TvShow::class],
+        version = 1,
+        exportSchema = false
+)
+abstract class MediaDatabase : RoomDatabase() {
 
-    @Query("SELECT * FROM tv_show")
-    fun getAll(): List<TvShow>
+    abstract fun movieDao(): MovieDao
 
-    @Query("SELECT * FROM tv_show WHERE id LIKE :id")
-    fun getById(id: Int?): TvShow?
+    abstract fun tvShowDao(): TvShowDao
 
-    @Insert
-    fun create(model: TvShow)
-
-    @Update
-    fun update(model: TvShow)
-
-    @Delete
-    fun delete(model: TvShow)
 }

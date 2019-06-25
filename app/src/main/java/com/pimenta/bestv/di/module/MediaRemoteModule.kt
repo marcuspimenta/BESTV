@@ -33,7 +33,7 @@ import javax.inject.Singleton
  * Created by marcus on 11-05-2018.
  */
 @Module
-class MediaModule {
+class MediaRemoteModule {
 
     @Provides
     @Singleton

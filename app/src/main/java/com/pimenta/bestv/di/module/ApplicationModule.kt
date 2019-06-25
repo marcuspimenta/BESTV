@@ -32,7 +32,8 @@ import javax.inject.Singleton
  */
 @Module(includes = [
     ImplModule::class,
-    MediaModule::class,
+    MediaLocalModule::class,
+    MediaRemoteModule::class,
     RecommendationModule::class,
     SchedulerModule::class
 ])

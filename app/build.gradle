@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -55,12 +56,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.leanback:leanback:1.1.0-alpha02'
     implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
     implementation 'androidx.recommendation:recommendation:1.0.0'
-    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'androidx.fragment:fragment-ktx:1.0.0'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
 
     // Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
@@ -89,9 +90,11 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    // OrmLite
-    implementation 'com.j256.ormlite:ormlite-core:5.1'
-    implementation 'com.j256.ormlite:ormlite-android:5.1'
+    // Room components
+    implementation "androidx.room:room-runtime:2.1.0"
+    implementation "androidx.room:room-ktx:2.1.0"
+    kapt "androidx.room:room-compiler:2.1.0"
+    androidTestImplementation "androidx.room:room-testing:2.1.0"
 
     // Crashlytics
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
@@ -114,6 +117,6 @@ dependencies {
 
     // Mockito
     testImplementation 'org.mockito:mockito-inline:2.8.47'
-    testImplementation "org.mockito:mockito-core:2.27.0"
+    testImplementation "org.mockito:mockito-core:2.28.2"
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
 }

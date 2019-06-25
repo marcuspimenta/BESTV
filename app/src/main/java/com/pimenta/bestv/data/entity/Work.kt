@@ -14,15 +14,15 @@
 
 package com.pimenta.bestv.data.entity
 
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.j256.ormlite.field.DatabaseField
 import java.io.Serializable
 
 /**
  * Created by marcus on 06/07/18.
  */
 abstract class Work(
-        @DatabaseField(id = true, columnName = "id") @SerializedName("id") var id: Int = 0,
+        @PrimaryKey @SerializedName("id") var id: Int = 0,
         @SerializedName("original_language") var originalLanguage: String? = null,
         @SerializedName("overview") var overview: String? = null,
         @SerializedName("backdrop_path") var backdropPath: String? = null,
