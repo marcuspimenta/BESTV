@@ -14,13 +14,15 @@
 
 package com.pimenta.bestv.feature.splash.presenter
 
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.extension.addTo
+import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.manager.permission.PermissionManager
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private const val SPLASH_TIME_LOAD_SECONDS = 4
 
 /**
  * Created by marcus on 04-05-2018.
@@ -68,9 +70,4 @@ class SplashPresenter @Inject constructor(
 
     }
 
-    companion object {
-
-        private const val SPLASH_TIME_LOAD_SECONDS = 3
-
-    }
 }

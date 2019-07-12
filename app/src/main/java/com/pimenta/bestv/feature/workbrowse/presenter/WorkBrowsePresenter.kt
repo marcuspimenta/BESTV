@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.feature.workbrowse.presenter
 
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.workbrowse.usecase.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
@@ -46,20 +46,19 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun loadData() {
-        view.onShowProgress()
         getWorkBrowseDetailsUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
+                .doOnSubscribe { view.onShowProgress() }
+                .doOnTerminate { view.onHideProgress() }
                 .subscribe({
                     view.onDataLoaded(
                             it.first,
                             it.second,
                             it.third
                     )
-                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
-                    view.onHideProgress()
                     view.onErrorDataLoaded()
                 }).addTo(compositeDisposable)
     }

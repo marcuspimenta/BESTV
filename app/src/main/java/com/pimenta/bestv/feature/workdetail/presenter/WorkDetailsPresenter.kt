@@ -60,11 +60,12 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadDataByWork(workViewModel: WorkViewModel) {
-        view.onShowProgress()
         workViewModel.toWork().toSingle()
                 .flatMap { getWorkDetailsUseCase(it) }
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
+                .doOnSubscribe { view.onShowProgress() }
+                .doOnTerminate { view.onHideProgress() }
                 .subscribe({ movieInfo ->
                     val recommendedPage = movieInfo.fourth
                     if (recommendedPage.page <= recommendedPage.totalPages) {
@@ -89,10 +90,8 @@ class WorkDetailsPresenter @Inject constructor(
                             recommendedWorks,
                             similarWorks
                     )
-                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
-                    view.onHideProgress()
                     view.onErrorWorkDetailsLoaded()
                 }).addTo(compositeDisposable)
     }

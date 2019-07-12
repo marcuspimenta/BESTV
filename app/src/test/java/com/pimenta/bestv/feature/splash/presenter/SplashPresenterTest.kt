@@ -52,7 +52,7 @@ class SplashPresenterTest {
 
         presenter.loadPermissions()
 
-        testScheduler.advanceTimeBy(3, TimeUnit.SECONDS)
+        testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
 
         verify(view).onRequestPermissions(permissions)
     }
@@ -66,7 +66,7 @@ class SplashPresenterTest {
 
         presenter.loadPermissions()
 
-        testScheduler.advanceTimeBy(3, TimeUnit.SECONDS)
+        testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
 
         verify(view).onHasAllPermissions(true)
     }
@@ -80,7 +80,7 @@ class SplashPresenterTest {
 
         presenter.loadPermissions()
 
-        testScheduler.advanceTimeBy(3, TimeUnit.SECONDS)
+        testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
 
         verify(view).onHasAllPermissions(false)
     }

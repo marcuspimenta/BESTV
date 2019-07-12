@@ -20,6 +20,8 @@ import android.app.PendingIntent
 import com.pimenta.bestv.feature.recommendation.service.RecommendationService
 import javax.inject.Inject
 
+private const val INITIAL_DELAY: Long = 5000
+
 /**
  * Created by marcus on 06-03-2018.
  */
@@ -33,8 +35,4 @@ class BootPresenter @Inject constructor(
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, INITIAL_DELAY, AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)
     }
 
-    companion object {
-
-        private const val INITIAL_DELAY: Long = 5000
-    }
 }

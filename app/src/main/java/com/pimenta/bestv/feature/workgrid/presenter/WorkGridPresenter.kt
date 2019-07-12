@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.workgrid.presenter
 
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.mapper.toGenre
 import com.pimenta.bestv.common.presentation.mapper.toSingle
@@ -21,13 +22,14 @@ import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
 import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private const val BACKGROUND_UPDATE_DELAY = 300L
 
 /**
  * Created by marcus on 09-02-2018.
@@ -48,24 +50,25 @@ class WorkGridPresenter @Inject constructor(
     }
 
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
-        view.onShowProgress()
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
                 workUseCase.getFavorites()
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
+                        .doOnSubscribe { view.onShowProgress() }
+                        .doOnTerminate { view.onHideProgress() }
                         .subscribe({ movies ->
                             view.onWorksLoaded(movies)
-                            view.onHideProgress()
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the favorite works")
-                            view.onHideProgress()
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             else -> {
                 workUseCase.loadWorkByType(currentPage + 1, movieListType)
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
+                        .doOnSubscribe { view.onShowProgress() }
+                        .doOnTerminate { view.onHideProgress() }
                         .subscribe({ workPage ->
                             if (workPage != null && workPage.page <= workPage.totalPages) {
                                 currentPage = workPage.page
@@ -74,10 +77,8 @@ class WorkGridPresenter @Inject constructor(
                                     view.onWorksLoaded(works)
                                 }
                             }
-                            view.onHideProgress()
                         }, { throwable ->
                             Timber.e(throwable, "Error while loading the works by type")
-                            view.onHideProgress()
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             }
@@ -85,11 +86,12 @@ class WorkGridPresenter @Inject constructor(
     }
 
     fun loadWorkByGenre(genreViewModel: GenreViewModel) {
-        view.onShowProgress()
         genreViewModel.toGenre().toSingle()
                 .flatMap { workUseCase.getWorkByGenre(it, currentPage + 1) }
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
+                .doOnSubscribe { view.onShowProgress() }
+                .doOnTerminate { view.onHideProgress() }
                 .subscribe({ workPage ->
                     if (workPage != null && workPage.page <= workPage.totalPages) {
                         currentPage = workPage.page
@@ -98,10 +100,8 @@ class WorkGridPresenter @Inject constructor(
                             view.onWorksLoaded(works)
                         }
                     }
-                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading the works by genre")
-                    view.onHideProgress()
                     view.onErrorWorksLoaded()
                 }).addTo(compositeDisposable)
     }
@@ -125,11 +125,6 @@ class WorkGridPresenter @Inject constructor(
                 dispose()
             }
         }
-    }
-
-    companion object {
-
-        private const val BACKGROUND_UPDATE_DELAY = 300L
     }
 
     interface View {

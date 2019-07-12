@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.feature.recommendation.presenter
 
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.DisposablePresenter
 import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
-import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,11 +34,9 @@ class RecommendationPresenter @Inject constructor(
         loadRecommendationUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
-                .subscribe({
-                    service.onLoadRecommendationFinished()
-                }, {
+                .doOnTerminate { service.onLoadRecommendationFinished() }
+                .subscribe({}, {
                     Timber.e(it, "Error while loading the recommendations")
-                    service.onLoadRecommendationFinished()
                 })
                 .addTo(compositeDisposable)
     }

@@ -14,12 +14,12 @@
 
 package com.pimenta.bestv.feature.castdetail.presenter
 
+import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.mapper.toCast
 import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
@@ -35,21 +35,20 @@ class CastDetailsPresenter @Inject constructor(
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
-        view.onShowProgress()
         castViewModel.toCast().toSingle()
                 .flatMap { getCastDetailsUseCase(it) }
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
+                .doOnSubscribe { view.onShowProgress() }
+                .doOnTerminate { view.onHideProgress() }
                 .subscribe({ triple ->
                     view.onCastLoaded(
                             triple.first,
                             triple.second,
                             triple.third
                     )
-                    view.onHideProgress()
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
-                    view.onHideProgress()
                     view.onErrorCastDetailsLoaded()
                 }).addTo(compositeDisposable)
     }

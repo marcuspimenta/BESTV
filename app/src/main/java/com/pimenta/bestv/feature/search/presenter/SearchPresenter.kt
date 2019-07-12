@@ -14,11 +14,11 @@
 
 package com.pimenta.bestv.feature.search.presenter
 
+import com.pimenta.bestv.common.extension.addTo
+import com.pimenta.bestv.common.extension.hasNoContent
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.common.extension.addTo
-import com.pimenta.bestv.common.extension.hasNoContent
 import com.pimenta.bestv.feature.search.usecase.SearchWorksByQueryUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
@@ -26,6 +26,8 @@ import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private const val BACKGROUND_UPDATE_DELAY = 300L
 
 /**
  * Created by marcus on 12-03-2018.
@@ -67,10 +69,11 @@ class SearchPresenter @Inject constructor(
         movies.clear()
         tvShows.clear()
 
-        view.onShowProgress()
         searchWorkDisposable = searchWorksByQueryUseCase(query)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
+                .doOnSubscribe { view.onShowProgress() }
+                .doOnTerminate { view.onHideProgress() }
                 .subscribe({ pair ->
                     if (pair.first.page <= pair.first.totalPages) {
                         this.resultMoviePage = pair.first.page
@@ -85,7 +88,6 @@ class SearchPresenter @Inject constructor(
                             tvShows.addAll(it)
                         }
                     }
-                    view.onHideProgress()
 
                     if (movies.isNotEmpty() || tvShows.isNotEmpty()) {
                         view.onResultLoaded(movies, tvShows)
@@ -94,7 +96,6 @@ class SearchPresenter @Inject constructor(
                     }
                 }, { throwable ->
                     Timber.e(throwable, "Error while searching by query")
-                    view.onHideProgress()
                     view.onErrorSearch()
                 })
     }
@@ -160,11 +161,6 @@ class SearchPresenter @Inject constructor(
                 dispose()
             }
         }
-    }
-
-    companion object {
-
-        private const val BACKGROUND_UPDATE_DELAY = 300L
     }
 
     interface View {
