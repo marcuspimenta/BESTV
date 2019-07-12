@@ -21,11 +21,6 @@ import io.reactivex.Single
  */
 interface PermissionManager {
 
-    /**
-     * Loads the permissions.
-     *
-     * @return [<]
-     */
     fun loadPermissions(): Single<List<String>>
 
 }

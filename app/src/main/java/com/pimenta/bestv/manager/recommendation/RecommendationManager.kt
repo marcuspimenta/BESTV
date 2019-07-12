@@ -16,20 +16,12 @@ package com.pimenta.bestv.manager.recommendation
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Completable
-import io.reactivex.Single
 
 /**
  * Created by marcus on 06-03-2018.
  */
 interface RecommendationManager {
 
-    /**
-     * Loads the recommendations
-     *
-     * @param works [?][<]
-     *
-     * @return `true` if success, `false` otherwise
-     */
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
 
 }

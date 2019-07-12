@@ -15,6 +15,7 @@
 package com.pimenta.bestv.manager.recommendation.channel
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
 import androidx.tvprovider.media.tv.Channel
@@ -78,9 +79,15 @@ class RecommendationChannelApi constructor(
             preferenceManager.getLongFromPersistence(CHANNEL_ID_KEY, 0L)
                     .takeUnless { it == 0L }
                     ?: run {
+
+                        val resources = application.resources
+                        val uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.app_icon) + '/'.toString() + resources.getResourceTypeName(R.drawable.app_icon) + '/'.toString() + resources.getResourceEntryName(R.drawable.app_icon))
+
                         val channelBuilder = Channel.Builder()
                         channelBuilder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
                                 .setDisplayName(application.getString(R.string.app_name))
+                                .setAppLinkIconUri(Uri.parse("https://github.com/Fleker/CumulusTV/blob/master/app/src/m" +
+                                        "ain/res/drawable-xhdpi/ic_play_action_normal.png?raw=true"))
 
                         val channelUri = application.contentResolver.insert(
                                 TvContractCompat.Channels.CONTENT_URI,

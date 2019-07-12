@@ -25,52 +25,16 @@ import io.reactivex.Single
  */
 interface MediaLocalRepository {
 
-    /**
-     * Checks if the [Work] is favorite
-     *
-     * @param work [Work] to verify if is favorite
-     *
-     * @return [<]
-     */
     fun isFavorite(work: Work): Single<Boolean>
 
-    /**
-     * Checks if there is any [Work] saved as favorite
-     *
-     * @return [<]
-     */
     fun hasFavorite(): Single<Boolean>
 
-    /**
-     * Saves a [Work] as favorites
-     *
-     * @param work [Work] to be saved as favorite
-     *
-     * @return [<]
-     */
     fun saveFavorite(work: Work): Completable
 
-    /**
-     * Deletes a [Work] from favorites
-     *
-     * @param work [Work] to be deleted from favorite
-     *
-     * @return [<]
-     */
     fun deleteFavorite(work: Work): Completable
 
-    /**
-     * Gets the [List<Movie>] saved in local data base
-     *
-     * @return [<]
-     */
     fun getMovies(): Single<List<Movie>>
 
-    /**
-     * Gets the [List<TvShow>] saved in local data base
-     *
-     * @return [<]
-     */
     fun getTvShows(): Single<List<TvShow>>
 
 }

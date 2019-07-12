@@ -19,40 +19,12 @@ package com.pimenta.bestv.manager.preference
  */
 interface PreferenceManager {
 
-    /**
-     * Gets the [String] value from [android.content.SharedPreferences]
-     *
-     * @param key      Key to get the value
-     * @param defValue Default value
-     *
-     * @return [String]
-     */
     fun getStringFromPersistence(key: String, defValue: String): String
 
-    /**
-     * Applies to persistence in [android.content.SharedPreferences]
-     *
-     * @param key   Key to save the value
-     * @param value Value to be saved
-     */
     fun applyStringToPersistence(key: String, value: String)
 
-    /**
-     * Gets the [Long] value from [android.content.SharedPreferences]
-     *
-     * @param key      Key to get the value
-     * @param defValue Default value
-     *
-     * @return [Long]
-     */
     fun getLongFromPersistence(key: String, defValue: Long): Long
 
-    /**
-     * Applies to persistence in [android.content.SharedPreferences]
-     *
-     * @param key   Key to save the value
-     * @param value Value to be saved
-     */
     fun applyLongToPersistence(key: String, value: Long)
 
 }
