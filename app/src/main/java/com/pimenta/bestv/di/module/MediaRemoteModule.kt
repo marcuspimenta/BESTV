@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.di.module
 
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.data.repository.remote.api.tmdb.CastApi
@@ -24,9 +24,10 @@ import com.pimenta.bestv.data.repository.remote.api.tmdb.TvShowApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -37,34 +38,43 @@ class MediaRemoteModule {
 
     @Provides
     @Singleton
-    @Named("Tmdb")
-    fun provideTmdbRetrofit(okHttpClient: OkHttpClient, gson: Gson) =
-            Retrofit.Builder()
-                    .baseUrl(BuildConfig.TMDB_BASE_URL)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
+    fun provideTmdbRetrofit(): Retrofit {
+        val okHttpClient = OkHttpClient.Builder().apply {
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BASIC
+            })
+            readTimeout(15, TimeUnit.SECONDS)
+            writeTimeout(15, TimeUnit.SECONDS)
+            connectTimeout(15, TimeUnit.SECONDS)
+        }.build()
+
+        return Retrofit.Builder()
+                .baseUrl(BuildConfig.TMDB_BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+    }
 
     @Provides
     @Singleton
-    fun provideMovieApi(@Named("Tmdb") retrofit: Retrofit) =
+    fun provideMovieApi(retrofit: Retrofit) =
             retrofit.create(MovieApi::class.java)
 
     @Provides
     @Singleton
-    fun providePersonGenreApi(@Named("Tmdb") retrofit: Retrofit) =
+    fun providePersonGenreApi(retrofit: Retrofit) =
             retrofit.create(GenreApi::class.java)
 
 
     @Provides
     @Singleton
-    fun provideCastApi(@Named("Tmdb") retrofit: Retrofit) =
+    fun provideCastApi(retrofit: Retrofit) =
             retrofit.create(CastApi::class.java)
 
     @Provides
     @Singleton
-    fun provideTvShowApi(@Named("Tmdb") retrofit: Retrofit) =
+    fun provideTvShowApi(retrofit: Retrofit) =
             retrofit.create(TvShowApi::class.java)
 
 }

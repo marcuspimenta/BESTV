@@ -31,7 +31,6 @@ android {
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
         buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
         buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
-        buildConfigField "String", "IP_BASE_URL", "\"http://ip-api.com/\""
     }
     buildTypes {
         debug {

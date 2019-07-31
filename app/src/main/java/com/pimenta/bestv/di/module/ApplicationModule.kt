@@ -51,10 +51,6 @@ class ApplicationModule(
 
     @Provides
     @Singleton
-    fun provideGson() = GsonBuilder().create()
-
-    @Provides
-    @Singleton
     fun provideNotificationManager(application: Application) =
             application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -62,17 +58,5 @@ class ApplicationModule(
     @Singleton
     fun provideAlarmManager(application: Application) =
             application.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-    @Provides
-    @Singleton
-    fun provideOkHttpClient() =
-            OkHttpClient.Builder().apply {
-                addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                })
-                readTimeout(15, TimeUnit.SECONDS)
-                writeTimeout(15, TimeUnit.SECONDS)
-                connectTimeout(15, TimeUnit.SECONDS)
-            }.build()
 
 }

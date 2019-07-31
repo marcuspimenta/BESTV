@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.di.module
 
+import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.data.repository.MediaRepositoryImpl
 import com.pimenta.bestv.data.repository.local.MediaLocalRepository
 import com.pimenta.bestv.data.repository.local.MediaLocalRepositoryImpl
 import com.pimenta.bestv.data.repository.remote.MediaRemoteRepository
 import com.pimenta.bestv.data.repository.remote.TmdbMediaRemoteRepository
-import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.repository.MediaRepositoryImpl
-import com.pimenta.bestv.manager.device.DeviceManager
-import com.pimenta.bestv.manager.device.DeviceManagerImpl
 import com.pimenta.bestv.manager.permission.PermissionManager
 import com.pimenta.bestv.manager.permission.PermissionManagerImpl
 import com.pimenta.bestv.manager.preference.PreferenceManager
@@ -47,10 +45,6 @@ interface ImplModule {
     @Binds
     @Singleton
     fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
-
-    @Binds
-    @Singleton
-    fun provideDeviceManager(manager: DeviceManagerImpl): DeviceManager
 
     @Binds
     @Singleton
