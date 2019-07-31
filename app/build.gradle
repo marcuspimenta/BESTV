@@ -55,7 +55,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.leanback:leanback:1.1.0-alpha02'
-    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.recommendation:recommendation:1.0.0'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.core:core-ktx:1.0.2'
@@ -111,6 +111,9 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Lottie
+    implementation "com.airbnb.android:lottie:3.0.6"
 
     // JUnit
     testImplementation 'junit:junit:4.12'

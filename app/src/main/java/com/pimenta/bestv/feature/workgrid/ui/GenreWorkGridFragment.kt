@@ -19,6 +19,8 @@ import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 
+private const val GENRE = "GENRE"
+
 /**
  * Created by marcus on 11-02-2018.
  */
@@ -43,8 +45,6 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
     }
 
     companion object {
-
-        private const val GENRE = "GENRE"
 
         fun newInstance(genreViewModel: GenreViewModel) =
                 GenreWorkGridFragment().apply {

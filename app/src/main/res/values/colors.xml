@@ -1,15 +1,7 @@
 <resources>
-    <color name="background_gradient_start">#000000</color>
-    <color name="background_gradient_end">#DDDDDD</color>
-    <color name="fastlane_background">#0096a6</color>
-    <color name="search_opaque">#ffaa3f</color>
-    <color name="selected_background">#ffaa3f</color>
-    <color name="default_background">#3d3d3d</color>
-    <color name="lb_browse_header_color">@android:color/white</color>
-
-    <color name="primary_color">#780000</color>
-    <color name="primary_dark_color">#570000</color>
-    <color name="background_color">#cc0a0a0a</color>
+    <color name="primary_color">#650000</color>
+    <color name="primary_dark_color">#250000</color>
+    <color name="background_color">#000000</color>
     <color name="lb_default_brand_color">@color/primary_color</color>
     <color name="lb_default_brand_color_dark">@color/background_color</color>
     <color name="lb_basic_card_info_bg_color">@color/primary_color</color>

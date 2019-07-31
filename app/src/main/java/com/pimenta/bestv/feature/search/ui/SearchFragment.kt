@@ -32,17 +32,22 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.extension.addFragment
+import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import javax.inject.Inject
+
+private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
+private const val ERROR_FRAGMENT_REQUEST_CODE = 2
+private const val MOVIE_HEADER_ID = 1
+private const val TV_SHOW_HEADER_ID = 2
 
 /**
  * Created by marcus on 12-03-2018.
@@ -77,14 +82,17 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         setupUI()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.setRootView(container)
-        progressBarManager.enableProgressBar()
-        progressBarManager.initialDelay = 0
-
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        view?.setBackgroundColor(resources.getColor(androidx.leanback.R.color.lb_playback_controls_background_light, null))
-        return view
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(resources.getColor(androidx.leanback.R.color.lb_playback_controls_background_light, null))
+        progressBarManager.apply {
+            enableProgressBar()
+            setProgressBarView(
+                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                        (view.parent as ViewGroup).addView(it)
+                    })
+            initialDelay = 0
+        }
     }
 
     override fun onResume() {
@@ -210,11 +218,6 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     companion object {
-
-        private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
-        private const val ERROR_FRAGMENT_REQUEST_CODE = 2
-        private const val MOVIE_HEADER_ID = 1
-        private const val TV_SHOW_HEADER_ID = 2
 
         fun newInstance(): SearchFragment = SearchFragment()
     }

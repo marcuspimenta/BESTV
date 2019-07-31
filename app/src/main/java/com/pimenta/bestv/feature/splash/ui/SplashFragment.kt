@@ -16,6 +16,7 @@ package com.pimenta.bestv.feature.splash.ui
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,10 @@ import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.finish
 import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
+import kotlinx.android.synthetic.main.fragment_splash.*
 import javax.inject.Inject
+
+private const val PERMISSION_REQUEST_CODE = 1
 
 /**
  * Created by marcus on 04-05-2018.
@@ -45,15 +49,20 @@ class SplashFragment : Fragment(), SplashPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.bindTo(this.lifecycle)
+        presenter.bindTo(lifecycle)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_splash, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_splash, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        animationVideoView.setVideoURI(
+                Uri.parse("android.resource://" + requireActivity().packageName + "/raw/splash_animation")
+        )
+        animationVideoView.start()
+
         presenter.loadPermissions()
     }
 
@@ -74,8 +83,6 @@ class SplashFragment : Fragment(), SplashPresenter.View {
     }
 
     companion object {
-
-        private const val PERMISSION_REQUEST_CODE = 1
 
         fun newInstance() = SplashFragment()
     }

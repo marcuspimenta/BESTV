@@ -26,18 +26,23 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.extension.addFragment
+import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
 import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
 import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
 import javax.inject.Inject
+
+private const val ERROR_FRAGMENT_REQUEST_CODE = 1
+private const val TOP_WORK_LIST_ID = 1
+private const val WORK_GENRE_ID = 2
+private const val FAVORITE_INDEX = 0
 
 /**
  * Created by marcus on 07-02-2018.
@@ -75,17 +80,16 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         setupUIElements()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.apply {
-            setRootView(container)
-            enableProgressBar()
-            initialDelay = 0
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarManager.apply {
+            enableProgressBar()
+            setProgressBarView(
+                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                        (view.parent as ViewGroup).addView(it)
+                    })
+            initialDelay = 0
+        }
 
         adapter = rowsAdapter
         presenter.loadData()
@@ -209,11 +213,6 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     }
 
     companion object {
-
-        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-        private const val TOP_WORK_LIST_ID = 1
-        private const val WORK_GENRE_ID = 2
-        private const val FAVORITE_INDEX = 0
 
         fun newInstance() = WorkBrowseFragment()
     }

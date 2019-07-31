@@ -34,11 +34,3 @@ fun FragmentActivity.finish(resultCode: Int = Activity.RESULT_OK) {
     setResult(resultCode)
     finish()
 }
-
-fun FragmentActivity.getTopFragment(): Fragment? =
-        supportFragmentManager.run {
-            when (val size = fragments.size) {
-                0 -> null
-                else -> fragments[size - 1]
-            }
-        }

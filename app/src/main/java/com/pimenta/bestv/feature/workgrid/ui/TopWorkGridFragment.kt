@@ -19,6 +19,8 @@ import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.data.repository.MediaRepository
 
+private const val TYPE = "TYPE"
+
 /**
  * Created by marcus on 11-02-2018.
  */
@@ -51,8 +53,6 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
     }
 
     companion object {
-
-        private const val TYPE = "TYPE"
 
         fun newInstance(workType: MediaRepository.WorkType) =
                 TopWorkGridFragment().apply {

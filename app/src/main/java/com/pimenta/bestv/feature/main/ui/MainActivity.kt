@@ -27,6 +27,8 @@ import com.pimenta.bestv.feature.splash.ui.SplashActivity
 import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
 import javax.inject.Inject
 
+private const val SPLASH_ACTIVITY_REQUEST_CODE = 1
+
 /**
  * Created by marcus on 11-02-2018.
  */
@@ -75,8 +77,4 @@ class MainActivity : FragmentActivity() {
         super.onDestroy()
     }
 
-    companion object {
-
-        private const val SPLASH_ACTIVITY_REQUEST_CODE = 0
-    }
 }

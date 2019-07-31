@@ -45,6 +45,12 @@ import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import javax.inject.Inject
 
+private const val ERROR_FRAGMENT_REQUEST_CODE = 1
+private const val ACTION_MOVIES = 1
+private const val ACTION_TV_SHOWS = 2
+private const val MOVIES_HEADER_ID = 1
+private const val TV_SHOWS_HEADER_ID = 2
+
 /**
  * Created by marcus on 04-04-2018.
  */
@@ -78,17 +84,16 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         adapter = mainAdapter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.apply {
-            setRootView(container)
-            enableProgressBar()
-            initialDelay = 0
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarManager.apply {
+            enableProgressBar()
+            setProgressBarView(
+                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                        (view.parent as ViewGroup).addView(it)
+                    })
+            initialDelay = 0
+        }
         presenter.loadCastDetails(castViewModel)
     }
 
@@ -221,12 +226,6 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
         const val CAST = "CAST"
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
-
-        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-        private const val ACTION_MOVIES = 1
-        private const val ACTION_TV_SHOWS = 2
-        private const val MOVIES_HEADER_ID = 1
-        private const val TV_SHOWS_HEADER_ID = 2
 
         fun newInstance(castViewModel: CastViewModel) =
                 CastDetailsFragment().apply {

@@ -33,16 +33,19 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.VerticalGridPresenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
 import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
 import javax.inject.Inject
+
+private const val ERROR_FRAGMENT_REQUEST_CODE = 1
+private const val NUMBER_COLUMNS = 6
 
 /**
  * Created by marcus on 09-02-2018.
@@ -51,7 +54,7 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private val fragmentAdapter: BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment> by lazy {
-        BrowseSupportFragment.MainFragmentAdapter<AbstractWorkGridFragment>(this)
+        BrowseSupportFragment.MainFragmentAdapter(this)
     }
     private val backgroundManager: BackgroundManager? by lazy { activity?.let { BackgroundManager.getInstance(it) } }
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
@@ -69,19 +72,18 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         setupUI()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.apply {
-            setRootView(container)
-            enableProgressBar()
-            initialDelay = 0
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainFragmentAdapter.fragmentHost.notifyViewCreated(mainFragmentAdapter)
+        progressBarManager.apply {
+            enableProgressBar()
+            setProgressBarView(
+                    LayoutInflater.from(context).inflate(com.pimenta.bestv.R.layout.view_load, null).also {
+                        (view.parent as ViewGroup).addView(it)
+                    })
+            initialDelay = 0
+        }
 
+        mainFragmentAdapter.fragmentHost.notifyViewCreated(mainFragmentAdapter)
         loadData()
     }
 
@@ -90,6 +92,11 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
 
         loadBackdropImage()
         refreshDada()
+    }
+
+    override fun onDestroy() {
+        progressBarManager.hide()
+        super.onDestroy()
     }
 
     override fun getMainFragmentAdapter() = fragmentAdapter
@@ -183,10 +190,4 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
 
     abstract fun loadData()
 
-    companion object {
-
-        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-        private const val NUMBER_COLUMNS = 6
-
-    }
 }

@@ -35,21 +35,33 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
+import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
+import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.common.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.render.WorkDetailsDescriptionRender
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
 import timber.log.Timber
 import javax.inject.Inject
+
+private const val WORK = "WORK"
+private const val ERROR_FRAGMENT_REQUEST_CODE = 1
+private const val ACTION_FAVORITE = 1
+private const val ACTION_VIDEOS = 2
+private const val ACTION_CAST = 3
+private const val ACTION_RECOMMENDED = 4
+private const val ACTION_SIMILAR = 5
+private const val VIDEO_HEADER_ID = 1
+private const val RECOMMENDED_HEADER_ID = 2
+private const val SIMILAR_HEADER_ID = 3
+private const val CAST_HEAD_ID = 4
 
 /**
  * Created by marcus on 07-02-2018.
@@ -98,17 +110,16 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         adapter = mainAdapter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        progressBarManager.apply {
-            setRootView(container)
-            enableProgressBar()
-            initialDelay = 0
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarManager.apply {
+            enableProgressBar()
+            setProgressBarView(
+                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                        (view.parent as ViewGroup).addView(it)
+                    })
+            initialDelay = 0
+        }
         presenter.loadDataByWork(workViewModel)
     }
 
@@ -359,18 +370,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     companion object {
 
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
-        private const val WORK = "WORK"
-
-        private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-        private const val ACTION_FAVORITE = 1
-        private const val ACTION_VIDEOS = 2
-        private const val ACTION_CAST = 3
-        private const val ACTION_RECOMMENDED = 4
-        private const val ACTION_SIMILAR = 5
-        private const val VIDEO_HEADER_ID = 1
-        private const val RECOMMENDED_HEADER_ID = 2
-        private const val SIMILAR_HEADER_ID = 3
-        private const val CAST_HEAD_ID = 4
 
         fun newInstance(workViewModel: WorkViewModel) =
                 WorkDetailsFragment().apply {
