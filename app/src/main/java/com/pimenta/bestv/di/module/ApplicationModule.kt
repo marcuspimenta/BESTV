@@ -19,12 +19,8 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.util.DisplayMetrics
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**

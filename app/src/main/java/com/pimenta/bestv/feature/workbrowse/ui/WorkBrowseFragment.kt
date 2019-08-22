@@ -31,7 +31,7 @@ import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.common.presentation.ui.headeritem.WorkTypeHeaderItem
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.feature.error.ErrorFragment
 import com.pimenta.bestv.feature.search.ui.SearchActivity
 import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter

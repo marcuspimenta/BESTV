@@ -16,8 +16,8 @@ package com.pimenta.bestv.feature.castdetail.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.entity.Cast
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.CastResponse
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class GetCastPersonalDetails @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(cast: Cast): Single<CastViewModel> =
-            mediaRepository.getCastDetails(cast)
+    operator fun invoke(castId: Int): Single<CastViewModel> =
+            mediaRepository.getCastDetails(castId)
                     .map { it.toViewModel() }
 }

@@ -16,8 +16,8 @@ package com.pimenta.bestv.feature.workdetail.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.entity.Work
+import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.repository.MediaRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -28,7 +28,12 @@ class GetVideosUseCase @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(work: Work): Single<List<VideoViewModel>?> =
-            mediaRepository.getVideosByWork(work)
-                    .map { it.videos?.map { video -> video.toViewModel() } }
+    operator fun invoke(workType: WorkType, workId: Int): Single<List<VideoViewModel>?> =
+            when (workType) {
+                WorkType.MOVIE -> mediaRepository.getVideosByMovie(workId)
+                        .map { it.videos?.map { video -> video.toViewModel() } }
+                WorkType.TV_SHOW -> mediaRepository.getVideosByTvShow(workId)
+                        .map { it.videos?.map { video -> video.toViewModel() } }
+            }
+
 }

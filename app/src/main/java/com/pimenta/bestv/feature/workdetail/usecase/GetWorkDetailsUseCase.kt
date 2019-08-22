@@ -18,8 +18,8 @@ import com.pimenta.bestv.common.kotlin.Quintuple
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.data.entity.Work
 import io.reactivex.Single
 import io.reactivex.functions.Function5
 import javax.inject.Inject
@@ -35,13 +35,13 @@ class GetWorkDetailsUseCase @Inject constructor(
         private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) {
 
-    operator fun invoke(work: Work): Single<Quintuple<Boolean, List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel>> =
+    operator fun invoke(workViewModel: WorkViewModel): Single<Quintuple<Boolean, List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel>> =
             Single.zip(
-                    workUseCase.isFavorite(work),
-                    getVideosUseCase(work),
-                    getCastsUseCase(work),
-                    getRecommendationByWorkUseCase(work, 1),
-                    getSimilarByWorkUseCase(work, 1),
+                    workUseCase.isFavorite(workViewModel),
+                    getVideosUseCase(workViewModel.type, workViewModel.id),
+                    getCastsUseCase(workViewModel.type, workViewModel.id),
+                    getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
+                    getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     Function5 { isFavorite, casts, recommendedMovies, similarMovies, videos ->
                         Quintuple(isFavorite, casts, recommendedMovies, similarMovies, videos)
                     }

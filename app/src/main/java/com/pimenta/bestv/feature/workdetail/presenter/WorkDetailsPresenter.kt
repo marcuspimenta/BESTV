@@ -16,8 +16,6 @@ package com.pimenta.bestv.feature.workdetail.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.mapper.toSingle
-import com.pimenta.bestv.common.presentation.mapper.toWork
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
@@ -47,8 +45,7 @@ class WorkDetailsPresenter @Inject constructor(
     private val similarWorks = mutableListOf<WorkViewModel>()
 
     fun setFavorite(workViewModel: WorkViewModel) {
-        workViewModel.toWork().toSingle()
-                .flatMapCompletable { workUseCase.setFavorite(it) }
+        workUseCase.setFavorite(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
@@ -60,8 +57,7 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadDataByWork(workViewModel: WorkViewModel) {
-        workViewModel.toWork().toSingle()
-                .flatMap { getWorkDetailsUseCase(it) }
+        getWorkDetailsUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
@@ -97,8 +93,7 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
-        workViewModel.toWork().toSingle()
-                .flatMap { getRecommendationByWorkUseCase(it, recommendedPage + 1) }
+        getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, recommendedPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieList ->
@@ -115,8 +110,7 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
-        workViewModel.toWork().toSingle()
-                .flatMap { getSimilarByWorkUseCase(it, similarPage + 1) }
+        getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, similarPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ movieList ->

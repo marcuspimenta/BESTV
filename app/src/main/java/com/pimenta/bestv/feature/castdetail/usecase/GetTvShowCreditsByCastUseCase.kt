@@ -16,8 +16,7 @@ package com.pimenta.bestv.feature.castdetail.usecase
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.repository.MediaRepository
-import com.pimenta.bestv.data.entity.Cast
+import com.pimenta.bestv.repository.MediaRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ class GetTvShowCreditsByCastUseCase @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(cast: Cast): Single<List<WorkViewModel>?> =
-            mediaRepository.getTvShowCreditsByCast(cast)
+    operator fun invoke(castId: Int): Single<List<WorkViewModel>?> =
+            mediaRepository.getTvShowCreditsByCast(castId)
                     .map { it.works?.map { work -> work.toViewModel() } }
 }

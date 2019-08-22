@@ -16,10 +16,10 @@ package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.entity.Cast
+import com.pimenta.bestv.repository.remote.entity.CastResponse
 import io.reactivex.Single
 
-fun Cast.toViewModel() = CastViewModel(
+fun CastResponse.toViewModel() = CastViewModel(
         id = id,
         name = name,
         character = character,
@@ -28,9 +28,3 @@ fun Cast.toViewModel() = CastViewModel(
         biography = biography,
         thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
 )
-
-fun CastViewModel.toCast() = Cast(
-        id = id
-)
-
-fun Cast.toSingle() = Single.fromCallable { this }

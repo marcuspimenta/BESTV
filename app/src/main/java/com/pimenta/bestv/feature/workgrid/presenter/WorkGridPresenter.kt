@@ -16,12 +16,10 @@ package com.pimenta.bestv.feature.workgrid.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.mapper.toGenre
-import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.usecase.WorkUseCase
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
@@ -86,8 +84,7 @@ class WorkGridPresenter @Inject constructor(
     }
 
     fun loadWorkByGenre(genreViewModel: GenreViewModel) {
-        genreViewModel.toGenre().toSingle()
-                .flatMap { workUseCase.getWorkByGenre(it, currentPage + 1) }
+        workUseCase.getWorkByGenre(genreViewModel, currentPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }

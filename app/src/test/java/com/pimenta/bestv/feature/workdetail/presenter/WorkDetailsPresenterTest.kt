@@ -124,7 +124,7 @@ class WorkDetailsPresenterTest {
     fun `should load the recommended works and show them`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getRecommendationByWorkUseCase(any(), any())).thenReturn(Single.just(recommendedPage))
+        whenever(getRecommendationByWorkUseCase(any(), any(), any())).thenReturn(Single.just(recommendedPage))
 
 
         presenter.loadRecommendationByWork(workViewModel)
@@ -142,7 +142,7 @@ class WorkDetailsPresenterTest {
     fun `should not show any data when a error happens while loading the recommended works`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getRecommendationByWorkUseCase(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(getRecommendationByWorkUseCase(any(), any(), any())).thenReturn(Single.error(Throwable()))
 
         presenter.loadRecommendationByWork(workViewModel)
 
@@ -153,7 +153,7 @@ class WorkDetailsPresenterTest {
     fun `should load the similar works and show them`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getSimilarByWorkUseCase(any(), any())).thenReturn(Single.just(similarPage))
+        whenever(getSimilarByWorkUseCase(any(), any(), any())).thenReturn(Single.just(similarPage))
 
         presenter.loadSimilarByWork(workViewModel)
 
@@ -170,7 +170,7 @@ class WorkDetailsPresenterTest {
     fun `should not show any data when a error happens while loading the similar works`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getSimilarByWorkUseCase(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(getSimilarByWorkUseCase(any(), any(), any())).thenReturn(Single.error(Throwable()))
 
         presenter.loadSimilarByWork(workViewModel)
 

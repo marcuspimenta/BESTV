@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.common.usecase
 
-import com.pimenta.bestv.common.extension.toSingle
+import com.pimenta.bestv.common.presentation.mapper.toMovieDbModel
+import com.pimenta.bestv.common.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.entity.Genre
-import com.pimenta.bestv.data.entity.Work
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.feature.search.usecase.UrlEncoderTextUseCase
+import com.pimenta.bestv.repository.MediaRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -33,17 +31,29 @@ class WorkUseCase @Inject constructor(
         private val mediaRepository: MediaRepository
 ) {
 
-    fun isFavorite(work: Work) = mediaRepository.isFavorite(work)
+    fun isFavorite(workViewModel: WorkViewModel) =
+            when (workViewModel.type) {
+                WorkType.MOVIE -> mediaRepository.isFavoriteMovie(workViewModel.id)
+                WorkType.TV_SHOW -> mediaRepository.isFavoriteTvShow(workViewModel.id)
+            }
 
-    fun setFavorite(work: Work) =
-            work.isFavorite.toSingle()
-                    .flatMapCompletable {
-                        if (it) {
-                            mediaRepository.deleteFavorite(work)
-                        } else {
-                            mediaRepository.saveFavorite(work)
-                        }
+    fun setFavorite(workViewModel: WorkViewModel) =
+            when (workViewModel.type) {
+                WorkType.MOVIE -> {
+                    if (workViewModel.isFavorite) {
+                        mediaRepository.deleteFavoriteMovie(workViewModel.toMovieDbModel())
+                    } else {
+                        mediaRepository.saveFavoriteMovie(workViewModel.toMovieDbModel())
                     }
+                }
+                WorkType.TV_SHOW -> {
+                    if (workViewModel.isFavorite) {
+                        mediaRepository.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
+                    } else {
+                        mediaRepository.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
+                    }
+                }
+            }
 
     fun hasFavorite() = mediaRepository.hasFavorite()
 
@@ -69,15 +79,26 @@ class WorkUseCase @Inject constructor(
                         )
                     }
 
-    fun getWorkByGenre(genre: Genre, page: Int) =
-            mediaRepository.getWorkByGenre(genre, page)
-                    .map {
-                        WorkPageViewModel(
-                                it.page,
-                                it.totalPages,
-                                it.works?.map { work -> work.toViewModel() }
-                        )
-                    }
+    fun getWorkByGenre(genreViewModel: GenreViewModel, page: Int) =
+            when (genreViewModel.source) {
+                Source.MOVIE -> mediaRepository.getMovieByGenre(genreViewModel.id, page)
+                        .map {
+                            WorkPageViewModel(
+                                    it.page,
+                                    it.totalPages,
+                                    it.works?.map { work -> work.toViewModel() }
+                            )
+                        }
+                Source.TV_SHOW -> mediaRepository.getTvShowByGenre(genreViewModel.id, page)
+                        .map {
+                            WorkPageViewModel(
+                                    it.page,
+                                    it.totalPages,
+                                    it.works?.map { work -> work.toViewModel() }
+                            )
+                        }
+            }
+
 
     fun searchMoviesByQuery(query: String, page: Int) =
             urlEncoderTextUseCase(query)

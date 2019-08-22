@@ -14,18 +14,32 @@
 
 package com.pimenta.bestv.feature.castdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.entity.Cast
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.CastResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-05-2018.
  */
+private const val CAST_ID = 1
+private val CAST_DETAILED = CastResponse(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
+
+private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
+
 class GetCastPersonalDetailsTest {
 
     private val mediaRepository: MediaRepository = mock()
@@ -36,42 +50,20 @@ class GetCastPersonalDetailsTest {
 
     @Test
     fun `should return the right data when loading the cast personal details`() {
-        whenever(mediaRepository.getCastDetails(any())).thenReturn(Single.just(aCastDetailed))
+        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertComplete()
-                .assertResult(aCastDetailedViewModel)
+                .assertResult(CAST_DETAILED_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getCastDetails(any())).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val aCast = Cast(
-                id = 1
-        )
-
-        private val aCastDetailed = Cast(
-                id = 1,
-                name = "Carlos",
-                character = "Batman",
-                birthday = "1990-07-13"
-        )
-
-        private val aCastDetailedViewModel = CastViewModel(
-                id = 1,
-                name = "Carlos",
-                character = "Batman",
-                birthday = "1990-07-13"
-        )
-
     }
 }

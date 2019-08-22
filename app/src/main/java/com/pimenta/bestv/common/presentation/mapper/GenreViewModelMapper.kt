@@ -16,20 +16,13 @@ package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.data.entity.Genre
-import com.pimenta.bestv.data.entity.MovieGenre
-import com.pimenta.bestv.data.entity.TvShowGenre
+import com.pimenta.bestv.repository.remote.entity.GenreResponse
+import com.pimenta.bestv.repository.remote.entity.MovieGenreResponse
+import com.pimenta.bestv.repository.remote.entity.TvShowGenreResponse
 import io.reactivex.Single
 
-fun Genre.toViewModel() = GenreViewModel(
+fun GenreResponse.toViewModel() = GenreViewModel(
         id = id,
         name = name,
-        source = Source.MOVIE.takeIf { source == Genre.Source.MOVIE } ?: Source.TV_SHOW
+        source = Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE } ?: Source.TV_SHOW
 )
-
-fun GenreViewModel.toGenre() = when (source) {
-    Source.MOVIE -> MovieGenre(id = id, name = name)
-    Source.TV_SHOW -> TvShowGenre(id = id, name = name)
-}
-
-fun Genre.toSingle() = Single.fromCallable { this }

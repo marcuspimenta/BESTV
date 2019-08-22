@@ -14,22 +14,43 @@
 
 package com.pimenta.bestv.feature.workdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.entity.TvShow
-import com.pimenta.bestv.data.entity.TvShowPage
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.TvShowPageResponse
+import com.pimenta.bestv.repository.remote.entity.TvShowResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-06-2018.
  */
+private const val MOVIE_ID = 1
+private val WORK_PAGE = TvShowPageResponse().apply {
+    page = 1
+    totalPages = 1
+    works = listOf(
+            TvShowResponse(
+                    id = 1,
+                    title = "Title"
+            )
+    )
+}
+private val WORK_PAEG_VIEW_MODEL = WorkPageViewModel(
+        page = 1,
+        totalPages = 1,
+        works = listOf(
+                WorkViewModel(
+                        id = 1,
+                        title = "Title",
+                        type = WorkType.TV_SHOW
+                )
+        )
+)
+
 class GetSimilarByWorkUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
@@ -37,50 +58,20 @@ class GetSimilarByWorkUseCaseTest {
 
     @Test
     fun `should return the right data when loading the similar works`() {
-        whenever(mediaRepository.getSimilarByWork(any(), any())).thenReturn(Single.just(workPage))
+        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1)).thenReturn(Single.just(WORK_PAGE))
 
-        useCase(movie, 1)
+        useCase(WorkType.MOVIE, MOVIE_ID, 1)
                 .test()
                 .assertComplete()
-                .assertResult(workPageViewModel)
+                .assertResult(WORK_PAEG_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getSimilarByWork(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1)).thenReturn(Single.error(Throwable()))
 
-        useCase(movie, 1)
+        useCase(WorkType.MOVIE, MOVIE_ID, 1)
                 .test()
                 .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val movie = Movie(
-                id = 1
-        )
-
-        private val workPage = TvShowPage().apply {
-            page = 1
-            totalPages = 1
-            works = listOf(
-                    TvShow(
-                            id = 1,
-                            title = "Title"
-                    )
-            )
-        }
-
-        private val workPageViewModel = WorkPageViewModel(
-                page = 1,
-                totalPages = 1,
-                works = listOf(
-                        WorkViewModel(
-                                id = 1,
-                                title = "Title",
-                                type = WorkType.TV_SHOW
-                        )
-                )
-        )
     }
 }

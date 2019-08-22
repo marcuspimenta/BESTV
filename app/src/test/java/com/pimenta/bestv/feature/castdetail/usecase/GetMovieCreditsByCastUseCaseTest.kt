@@ -14,21 +14,33 @@
 
 package com.pimenta.bestv.feature.castdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.entity.Cast
-import com.pimenta.bestv.data.entity.CastMovieList
-import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.CastMovieListResponse
+import com.pimenta.bestv.repository.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 24-05-2018.
  */
+private const val CAST_ID = 1
+private val MOVIE = MovieResponse(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman"
+)
+
+private val WORK_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.MOVIE
+)
+
 class GetMovieCreditsByCastUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
@@ -39,14 +51,14 @@ class GetMovieCreditsByCastUseCaseTest {
 
     @Test
     fun `should return the right data when loading the movies by cast`() {
-        val castMovieList = CastMovieList()
-        castMovieList.works = listOf(aMovie)
+        val castMovieList = CastMovieListResponse()
+        castMovieList.works = listOf(MOVIE)
 
-        val workViewModels = listOf(aWorkViewModel)
+        val workViewModels = listOf(WORK_VIEW_MODEL)
 
-        whenever(mediaRepository.getMovieCreditsByCast(any())).thenReturn(Single.just(castMovieList))
+        whenever(mediaRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.just(castMovieList))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertComplete()
                 .assertResult(workViewModels)
@@ -54,32 +66,11 @@ class GetMovieCreditsByCastUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getMovieCreditsByCast(any())).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val aCast = Cast(
-                id = 1
-        )
-
-        private val aMovie = Movie(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman"
-        )
-
-        private val aWorkViewModel = WorkViewModel(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman",
-                type = WorkType.MOVIE
-        )
-
     }
 
 }

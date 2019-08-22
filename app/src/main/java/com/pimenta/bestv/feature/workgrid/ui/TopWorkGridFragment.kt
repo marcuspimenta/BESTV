@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workgrid.ui
 import android.content.Context
 import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
 
 private const val TYPE = "TYPE"
 

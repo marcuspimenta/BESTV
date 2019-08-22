@@ -37,5 +37,4 @@ class SearchWorksByQueryUseCase @Inject constructor(
                                 BiFunction { first, second -> Pair(first, second) }
                         )
                     }
-
 }

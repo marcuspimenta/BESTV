@@ -14,20 +14,36 @@
 
 package com.pimenta.bestv.feature.workdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.entity.Video
-import com.pimenta.bestv.data.entity.VideoList
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.VideoListResponse
+import com.pimenta.bestv.repository.remote.entity.VideoResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-06-2018.
  */
+private const val MOVIE_ID = 1
+private val VIDEO_LIST = VideoListResponse(
+        id = 1,
+        videos = listOf(
+                VideoResponse(
+                        id = "1",
+                        name = "VideoResponse"
+                )
+        )
+)
+private val VIDEO_VIEW_MODELS = listOf(
+        VideoViewModel(
+                id = "1",
+                name = "VideoResponse"
+        )
+)
+
 class GetVideosUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
@@ -35,44 +51,20 @@ class GetVideosUseCaseTest {
 
     @Test
     fun `should return the right data when loading the videos`() {
-        whenever(mediaRepository.getVideosByWork(any())).thenReturn(Single.just(videoList))
+        whenever(mediaRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
-        useCase(movie)
+        useCase(WorkType.MOVIE, MOVIE_ID)
                 .test()
                 .assertComplete()
-                .assertResult(videoViewModels)
+                .assertResult(VIDEO_VIEW_MODELS)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getVideosByWork(any())).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase(movie)
+        useCase(WorkType.MOVIE, MOVIE_ID)
                 .test()
                 .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val movie = Movie(
-                id = 1
-        )
-
-        private val videoList = VideoList(
-                id = 1,
-                videos = listOf(
-                        Video(
-                                id = "1",
-                                name = "Video"
-                        )
-                )
-        )
-
-        private val videoViewModels = listOf(
-                VideoViewModel(
-                        id = "1",
-                        name = "Video"
-                )
-        )
     }
 }

@@ -16,8 +16,6 @@ package com.pimenta.bestv.feature.castdetail.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.mapper.toCast
-import com.pimenta.bestv.common.presentation.mapper.toSingle
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.castdetail.usecase.GetCastDetailsUseCase
@@ -35,8 +33,7 @@ class CastDetailsPresenter @Inject constructor(
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
-        castViewModel.toCast().toSingle()
-                .flatMap { getCastDetailsUseCase(it) }
+        getCastDetailsUseCase(castViewModel.id)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }

@@ -14,66 +14,24 @@
 
 package com.pimenta.bestv.feature.workdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.entity.Cast
-import com.pimenta.bestv.data.entity.CastList
-import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.CastListResponse
+import com.pimenta.bestv.repository.remote.entity.CastResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-06-2018.
  */
-class GetCastsUseCaseTest {
-
-    private val mediaRepository: MediaRepository = mock()
-    private val useCase = GetCastsUseCase(mediaRepository)
-
-    @Test
-    fun `should return the right data when loading the casts`() {
-        whenever(mediaRepository.getCastByWork(any())).thenReturn(Single.just(castList))
-
-        useCase(movie)
-                .test()
-                .assertComplete()
-                .assertResult(castViewModels)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getCastByWork(any())).thenReturn(Single.error(Throwable()))
-
-        useCase(movie)
-                .test()
-                .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val movie = Movie(
-                id = 1
-        )
-
-        private val castList = CastList(
-                id = 1,
-                casts = listOf(
-                        Cast(
-                                id = 1,
-                                name = "Name",
-                                character = "Character",
-                                birthday = "Birthday",
-                                deathDay = null,
-                                biography = null
-                        )
-                )
-        )
-
-        private val castViewModels = listOf(
-                CastViewModel(
+private const val MOVIE_ID = 1
+private val CAST_LIST = CastListResponse(
+        id = 1,
+        casts = listOf(
+                CastResponse(
                         id = 1,
                         name = "Name",
                         character = "Character",
@@ -82,5 +40,40 @@ class GetCastsUseCaseTest {
                         biography = null
                 )
         )
+)
+private val CAST_VIEW_MODELS = listOf(
+        CastViewModel(
+                id = 1,
+                name = "Name",
+                character = "Character",
+                birthday = "Birthday",
+                deathDay = null,
+                biography = null
+        )
+)
+
+class GetCastsUseCaseTest {
+
+    private val mediaRepository: MediaRepository = mock()
+    private val useCase = GetCastsUseCase(mediaRepository)
+
+    @Test
+    fun `should return the right data when loading the casts`() {
+        whenever(mediaRepository.getCastByMovie(MOVIE_ID)).thenReturn(Single.just(CAST_LIST))
+
+        useCase(WorkType.MOVIE, MOVIE_ID)
+                .test()
+                .assertComplete()
+                .assertResult(CAST_VIEW_MODELS)
     }
+
+    @Test
+    fun `should return an error when some exception happens`() {
+        whenever(mediaRepository.getCastByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+
+        useCase(WorkType.MOVIE, MOVIE_ID)
+                .test()
+                .assertError(Throwable::class.java)
+    }
+
 }

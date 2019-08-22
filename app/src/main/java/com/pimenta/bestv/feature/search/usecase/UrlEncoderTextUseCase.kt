@@ -21,15 +21,12 @@ import javax.inject.Inject
 /**
  * Created by marcus on 20-05-2019.
  */
+
+private const val enc = "UTF-8"
+
 class UrlEncoderTextUseCase @Inject constructor() {
 
     operator fun invoke(text: String): Single<String> =
             Single.fromCallable { URLEncoder.encode(text, enc) }
-    
-    companion object {
-
-        private const val enc = "UTF-8"
-
-    }
 
 }

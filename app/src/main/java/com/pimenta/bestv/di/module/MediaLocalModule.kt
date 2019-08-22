@@ -16,7 +16,7 @@ package com.pimenta.bestv.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.pimenta.bestv.data.repository.local.database.MediaDatabase
+import com.pimenta.bestv.repository.local.db.MediaDb
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -30,16 +30,16 @@ class MediaLocalModule {
     @Provides
     @Singleton
     fun provideLocalDatabase(application: Application) =
-            Room.databaseBuilder(application, MediaDatabase::class.java, "bestv.db")
+            Room.databaseBuilder(application, MediaDb::class.java, "bestv.db")
                     .build()
 
     @Provides
     @Singleton
-    fun provideMovieDao(mediaDatabase: MediaDatabase) =
-            mediaDatabase.movieDao()
+    fun provideMovieDao(mediaDb: MediaDb) =
+            mediaDb.movieDao()
 
     @Provides
     @Singleton
-    fun provideTvShowDao(mediaDatabase: MediaDatabase) =
-            mediaDatabase.tvShowDao()
+    fun provideTvShowDao(mediaDb: MediaDb) =
+            mediaDb.tvShowDao()
 }

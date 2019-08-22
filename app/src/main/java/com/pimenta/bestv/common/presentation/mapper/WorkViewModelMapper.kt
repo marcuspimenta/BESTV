@@ -17,14 +17,14 @@ package com.pimenta.bestv.common.presentation.mapper
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.entity.Movie
-import com.pimenta.bestv.data.entity.TvShow
-import com.pimenta.bestv.data.entity.Work
-import io.reactivex.Single
+import com.pimenta.bestv.repository.local.entity.MovieDbModel
+import com.pimenta.bestv.repository.local.entity.TvShowDbModel
+import com.pimenta.bestv.repository.remote.entity.TvShowResponse
+import com.pimenta.bestv.repository.remote.entity.WorkResponse
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Work.toViewModel() = WorkViewModel(
+fun WorkResponse.toViewModel() = WorkViewModel(
         id = id,
         title = title,
         originalLanguage = originalLanguage,
@@ -39,12 +39,11 @@ fun Work.toViewModel() = WorkViewModel(
                     )
                 },
         isFavorite = isFavorite,
-        type = WorkType.TV_SHOW.takeIf { this is TvShow } ?: WorkType.MOVIE
+        type = WorkType.TV_SHOW.takeIf { this is TvShowResponse } ?: WorkType.MOVIE
 )
 
-fun WorkViewModel.toWork() = when (type) {
-    WorkType.MOVIE -> Movie(id = id, isFavorite = isFavorite)
-    WorkType.TV_SHOW -> TvShow(id = id, isFavorite = isFavorite)
-}
+fun WorkViewModel.toMovieDbModel() =
+        MovieDbModel(id = id)
 
-fun Work.toSingle() = Single.fromCallable { this }
+fun WorkViewModel.toTvShowDbModel() =
+        TvShowDbModel(id = id)

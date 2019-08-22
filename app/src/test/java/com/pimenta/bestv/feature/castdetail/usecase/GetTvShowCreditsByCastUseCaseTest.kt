@@ -14,21 +14,33 @@
 
 package com.pimenta.bestv.feature.castdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.entity.Cast
-import com.pimenta.bestv.data.entity.CastTvShowList
-import com.pimenta.bestv.data.entity.TvShow
-import com.pimenta.bestv.data.repository.MediaRepository
+import com.pimenta.bestv.repository.MediaRepository
+import com.pimenta.bestv.repository.remote.entity.CastTvShowListResponse
+import com.pimenta.bestv.repository.remote.entity.TvShowResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 24-05-2018.
  */
+private const val CAST_ID = 1
+private val TV_SHOW = TvShowResponse(
+        id = 1,
+        title = "Arrow",
+        originalTitle = "Arrow"
+)
+
+private val WORK_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Arrow",
+        originalTitle = "Arrow",
+        type = WorkType.TV_SHOW
+)
+
 class GetTvShowCreditsByCastUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
@@ -39,14 +51,14 @@ class GetTvShowCreditsByCastUseCaseTest {
 
     @Test
     fun `should return the right data when loading the tv shows by cast`() {
-        val castTvShowList = CastTvShowList()
-        castTvShowList.works = listOf(aTvShow)
+        val castTvShowList = CastTvShowListResponse()
+        castTvShowList.works = listOf(TV_SHOW)
 
-        val workViewModels = listOf(aWorkViewModel)
+        val workViewModels = listOf(WORK_VIEW_MODEL)
 
-        whenever(mediaRepository.getTvShowCreditsByCast(any())).thenReturn(Single.just(castTvShowList))
+        whenever(mediaRepository.getTvShowCreditsByCast(CAST_ID)).thenReturn(Single.just(castTvShowList))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertComplete()
                 .assertResult(workViewModels)
@@ -54,32 +66,10 @@ class GetTvShowCreditsByCastUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getTvShowCreditsByCast(any())).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getTvShowCreditsByCast(CAST_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertError(Throwable::class.java)
     }
-
-    companion object {
-
-        private val aCast = Cast(
-                id = 1
-        )
-
-        private val aTvShow = TvShow(
-                id = 1,
-                title = "Arrow",
-                originalTitle = "Arrow"
-        )
-
-        private val aWorkViewModel = WorkViewModel(
-                id = 1,
-                title = "Arrow",
-                originalTitle = "Arrow",
-                type = WorkType.TV_SHOW
-        )
-
-    }
-
 }

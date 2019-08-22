@@ -14,17 +14,23 @@
 
 package com.pimenta.bestv.feature.castdetail.usecase
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.entity.Cast
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-05-2018.
  */
+private const val CAST_ID = 1
+private val CAST_DETAILED = CastViewModel(
+        id = CAST_ID,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
+
 class GetCastDetailsUseCaseTest {
 
     private val getCastPersonalDetails: GetCastPersonalDetails = mock()
@@ -39,43 +45,28 @@ class GetCastDetailsUseCaseTest {
 
     @Test
     fun `should return the correct data when load the cast details`() {
-        whenever(getCastPersonalDetails(any())).thenReturn(Single.just(aCastDetailedViewModel))
-        whenever(getMovieCreditsByCastUseCase(any())).thenReturn(Single.just(emptyList()))
-        whenever(getTvShowCreditsByCastUseCase(any())).thenReturn(Single.just(emptyList()))
+        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
+        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
+        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertNoErrors()
                 .assertComplete()
                 .assertResult(
-                        Triple(aCastDetailedViewModel, emptyList(), emptyList())
+                        Triple(CAST_DETAILED, emptyList(), emptyList())
                 )
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getCastPersonalDetails(any())).thenReturn(Single.just(aCastDetailedViewModel))
-        whenever(getMovieCreditsByCastUseCase(any())).thenReturn(Single.error(Throwable()))
-        whenever(getTvShowCreditsByCastUseCase(any())).thenReturn(Single.just(emptyList()))
+        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
+        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(Single.error(Throwable()))
+        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
 
-        useCase(aCast)
+        useCase(CAST_ID)
                 .test()
                 .assertError(Throwable::class.java)
-    }
-
-    companion object {
-
-        private val aCast = Cast(
-                id = 1
-        )
-
-        private val aCastDetailedViewModel = CastViewModel(
-                id = 1,
-                name = "Carlos",
-                character = "Batman",
-                birthday = "1990-07-13"
-        )
-
     }
 
 }
