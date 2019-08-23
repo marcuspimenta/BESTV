@@ -19,10 +19,10 @@ import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import com.pimenta.bestv.feature.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.domain.GetWorkDetailsUseCase
+import com.pimenta.bestv.feature.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +32,7 @@ import javax.inject.Inject
  */
 class WorkDetailsPresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase,
+        private val setFavoriteUseCase: SetFavoriteUseCase,
         private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
         private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
         private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
@@ -45,7 +45,7 @@ class WorkDetailsPresenter @Inject constructor(
     private val similarWorks = mutableListOf<WorkViewModel>()
 
     fun setFavorite(workViewModel: WorkViewModel) {
-        workUseCase.setFavorite(workViewModel)
+        setFavoriteUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({

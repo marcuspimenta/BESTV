@@ -12,20 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.feature.main.domain
 
-import io.reactivex.Single
-import java.net.URLEncoder
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
- * Created by marcus on 20-05-2019.
+ * Created by marcus on 23-08-2019.
  */
-private const val enc = "UTF-8"
+class GetTvShowGenresUseCase @Inject constructor(
+        private val mediaRepository: MediaRepository
+) {
 
-class UrlEncoderTextUseCase @Inject constructor() {
-
-    operator fun invoke(text: String): Single<String> =
-            Single.fromCallable { URLEncoder.encode(text, enc) }
-
+    operator fun invoke() =
+            mediaRepository.getTvShowGenres()
+                    .map { it.genres?.map { genre -> genre.toViewModel() } }
 }

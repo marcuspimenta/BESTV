@@ -18,7 +18,8 @@ import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.extension.hasNoContent
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
+import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
@@ -34,8 +35,9 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  */
 class SearchPresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase,
         private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
+        private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
+        private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -101,7 +103,7 @@ class SearchPresenter @Inject constructor(
     }
 
     fun loadMovies() {
-        workUseCase.searchMoviesByQuery(query, resultMoviePage + 1)
+        searchMoviesByQueryUseCase(query, resultMoviePage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ moviePage ->
@@ -118,7 +120,7 @@ class SearchPresenter @Inject constructor(
     }
 
     fun loadTvShows() {
-        workUseCase.searchTvShowsByQuery(query, resultTvShowPage + 1)
+        searchTvShowsByQueryUseCase(query, resultTvShowPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ tvShowPage ->

@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.search.domain
 
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -25,15 +24,16 @@ import javax.inject.Inject
  */
 class SearchWorksByQueryUseCase @Inject constructor(
         private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
-        private val workUseCase: WorkUseCase
+        private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
+        private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
 ) {
 
     operator fun invoke(query: String): Single<Pair<WorkPageViewModel, WorkPageViewModel>> =
             urlEncoderTextUseCase(query)
                     .flatMap {
                         Single.zip<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>>(
-                                workUseCase.searchMoviesByQuery(it, 1),
-                                workUseCase.searchTvShowsByQuery(it, 1),
+                                searchMoviesByQueryUseCase(it, 1),
+                                searchTvShowsByQueryUseCase(it, 1),
                                 BiFunction { first, second -> Pair(first, second) }
                         )
                     }

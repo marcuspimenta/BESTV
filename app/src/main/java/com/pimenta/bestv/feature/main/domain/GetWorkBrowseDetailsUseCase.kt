@@ -11,10 +11,10 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject
@@ -23,14 +23,16 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetWorkBrowseDetailsUseCase @Inject constructor(
-        private val workUseCase: WorkUseCase
+        private val hasFavoriteUseCase: HasFavoriteUseCase,
+        private val getMovieGenresUseCase: GetMovieGenresUseCase,
+        private val getTvShowGenresUseCase: GetTvShowGenresUseCase
 ) {
 
     operator fun invoke(): Single<Triple<Boolean, List<GenreViewModel>?, List<GenreViewModel>?>> =
             Single.zip(
-                    workUseCase.hasFavorite(),
-                    workUseCase.getMovieGenres(),
-                    workUseCase.getTvShowGenres(),
+                    hasFavoriteUseCase(),
+                    getMovieGenresUseCase(),
+                    getTvShowGenresUseCase(),
                     Function3 { hasFavoriteMovie, movieGenreList, tvShowGenreList ->
                         Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
                     }

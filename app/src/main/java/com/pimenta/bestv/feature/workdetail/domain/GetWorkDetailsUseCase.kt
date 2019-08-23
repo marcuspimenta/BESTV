@@ -19,7 +19,6 @@ import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import io.reactivex.Single
 import io.reactivex.functions.Function5
 import javax.inject.Inject
@@ -28,7 +27,7 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetWorkDetailsUseCase @Inject constructor(
-        private val workUseCase: WorkUseCase,
+        private val isFavoriteUseCase: IsFavoriteUseCase,
         private val getVideosUseCase: GetVideosUseCase,
         private val getCastsUseCase: GetCastsUseCase,
         private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
@@ -37,7 +36,7 @@ class GetWorkDetailsUseCase @Inject constructor(
 
     operator fun invoke(workViewModel: WorkViewModel): Single<Quintuple<Boolean, List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel>> =
             Single.zip(
-                    workUseCase.isFavorite(workViewModel),
+                    isFavoriteUseCase(workViewModel),
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),
                     getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),

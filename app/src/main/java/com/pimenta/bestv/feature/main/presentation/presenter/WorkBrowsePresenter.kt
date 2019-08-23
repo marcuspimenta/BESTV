@@ -17,8 +17,8 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
+import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,13 +28,13 @@ import javax.inject.Inject
  */
 class WorkBrowsePresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase,
+        private val hasFavoriteUseCase: HasFavoriteUseCase,
         private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun hasFavorite() {
-        workUseCase.hasFavorite()
+        hasFavoriteUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ result ->

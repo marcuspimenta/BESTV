@@ -18,8 +18,10 @@ import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
+import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
@@ -34,7 +36,9 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  */
 class WorkGridPresenter @Inject constructor(
         private val view: View,
-        private val workUseCase: WorkUseCase,
+        private val getFavoritesUseCase: GetFavoritesUseCase,
+        private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+        private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -50,7 +54,7 @@ class WorkGridPresenter @Inject constructor(
     fun loadWorksByType(movieListType: MediaRepository.WorkType) {
         when (movieListType) {
             MediaRepository.WorkType.FAVORITES_MOVIES ->
-                workUseCase.getFavorites()
+                getFavoritesUseCase()
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
                         .doOnSubscribe { view.onShowProgress() }
@@ -62,7 +66,7 @@ class WorkGridPresenter @Inject constructor(
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             else -> {
-                workUseCase.loadWorkByType(currentPage + 1, movieListType)
+                loadWorkByTypeUseCase(currentPage + 1, movieListType)
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
                         .doOnSubscribe { view.onShowProgress() }
@@ -84,7 +88,7 @@ class WorkGridPresenter @Inject constructor(
     }
 
     fun loadWorkByGenre(genreViewModel: GenreViewModel) {
-        workUseCase.getWorkByGenre(genreViewModel, currentPage + 1)
+        getWorkByGenreUseCase(genreViewModel, currentPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
