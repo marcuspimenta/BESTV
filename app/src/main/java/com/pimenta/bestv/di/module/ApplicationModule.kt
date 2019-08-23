@@ -19,6 +19,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.util.DisplayMetrics
+import com.pimenta.bestv.BuildConfig
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,13 +27,15 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 07-02-2018.
  */
-@Module(includes = [
-    ImplModule::class,
-    MediaLocalModule::class,
-    MediaRemoteModule::class,
-    RecommendationModule::class,
-    SchedulerModule::class
-])
+@Module(
+        includes = [
+            ImplModule::class,
+            MediaLocalModule::class,
+            MediaRemoteModule::class,
+            RecommendationModule::class,
+            SchedulerModule::class
+        ]
+)
 class ApplicationModule(
         private val application: Application
 ) {
@@ -54,5 +57,10 @@ class ApplicationModule(
     @Singleton
     fun provideAlarmManager(application: Application) =
             application.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(application: Application) =
+            application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
 }

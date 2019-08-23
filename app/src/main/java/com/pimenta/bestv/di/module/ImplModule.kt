@@ -14,16 +14,12 @@
 
 package com.pimenta.bestv.di.module
 
-import com.pimenta.bestv.repository.MediaRepository
-import com.pimenta.bestv.repository.MediaRepositoryImpl
-import com.pimenta.bestv.repository.local.MediaLocalRepository
-import com.pimenta.bestv.repository.local.MediaLocalRepositoryImpl
-import com.pimenta.bestv.repository.remote.MediaRemoteRepository
-import com.pimenta.bestv.repository.remote.TmdbMediaRemoteRepository
-import com.pimenta.bestv.manager.permission.PermissionManager
-import com.pimenta.bestv.manager.permission.PermissionManagerImpl
-import com.pimenta.bestv.manager.preference.PreferenceManager
-import com.pimenta.bestv.manager.preference.PreferenceManagerImpl
+import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaRepositoryImpl
+import com.pimenta.bestv.data.local.MediaLocalRepository
+import com.pimenta.bestv.data.local.MediaLocalRepositoryImpl
+import com.pimenta.bestv.data.remote.MediaRemoteRepository
+import com.pimenta.bestv.data.remote.TmdbMediaRemoteRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -45,13 +41,5 @@ interface ImplModule {
     @Binds
     @Singleton
     fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
-
-    @Binds
-    @Singleton
-    fun providePreferenceManager(manager: PreferenceManagerImpl): PreferenceManager
-
-    @Binds
-    @Singleton
-    fun providePermissionManager(manager: PermissionManagerImpl): PermissionManager
 
 }

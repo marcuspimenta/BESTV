@@ -17,10 +17,10 @@ package com.pimenta.bestv.di.module
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.repository.remote.api.CastApi
-import com.pimenta.bestv.repository.remote.api.GenreApi
-import com.pimenta.bestv.repository.remote.api.MovieApi
-import com.pimenta.bestv.repository.remote.api.TvShowApi
+import com.pimenta.bestv.data.remote.api.CastApi
+import com.pimenta.bestv.data.remote.api.GenreApi
+import com.pimenta.bestv.data.remote.api.MovieApi
+import com.pimenta.bestv.data.remote.api.TvShowApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

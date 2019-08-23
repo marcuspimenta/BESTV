@@ -17,9 +17,9 @@ package com.pimenta.bestv.di.module
 import android.app.Application
 import android.app.NotificationManager
 import android.os.Build
-import com.pimenta.bestv.manager.preference.PreferenceManager
-import com.pimenta.bestv.manager.recommendation.channel.RecommendationChannelApi
-import com.pimenta.bestv.manager.recommendation.row.RecommendationRowApi
+import com.pimenta.bestv.data.local.provider.channel.RecommendationChannelApi
+import com.pimenta.bestv.data.local.provider.row.RecommendationRowApi
+import com.pimenta.bestv.data.local.sharedpreferences.LocalSettings
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -33,10 +33,10 @@ class RecommendationModule {
     @Provides
     @Singleton
     fun provideRecommendationManager(application: Application,
-                                     preferenceManager: PreferenceManager,
+                                     localSettings: LocalSettings,
                                      notificationManager: NotificationManager) =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                RecommendationChannelApi(application, preferenceManager)
+                RecommendationChannelApi(application, localSettings)
             else
                 RecommendationRowApi(application, notificationManager)
 

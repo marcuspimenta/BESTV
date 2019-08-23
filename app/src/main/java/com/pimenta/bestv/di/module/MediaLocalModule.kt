@@ -16,7 +16,7 @@ package com.pimenta.bestv.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.pimenta.bestv.repository.local.db.MediaDb
+import com.pimenta.bestv.data.local.db.MediaDb
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

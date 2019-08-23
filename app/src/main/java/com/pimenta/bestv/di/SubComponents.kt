@@ -14,21 +14,21 @@
 
 package com.pimenta.bestv.di
 
-import com.pimenta.bestv.feature.castdetail.presenter.CastDetailsPresenter
-import com.pimenta.bestv.feature.castdetail.ui.CastDetailsFragment
-import com.pimenta.bestv.feature.recommendation.presenter.RecommendationPresenter
-import com.pimenta.bestv.feature.recommendation.service.RecommendationService
-import com.pimenta.bestv.feature.search.presenter.SearchPresenter
-import com.pimenta.bestv.feature.search.ui.SearchFragment
-import com.pimenta.bestv.feature.splash.presenter.SplashPresenter
-import com.pimenta.bestv.feature.splash.ui.SplashFragment
-import com.pimenta.bestv.feature.workbrowse.presenter.WorkBrowsePresenter
-import com.pimenta.bestv.feature.workbrowse.ui.WorkBrowseFragment
-import com.pimenta.bestv.feature.workdetail.presenter.WorkDetailsPresenter
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsFragment
-import com.pimenta.bestv.feature.workgrid.presenter.WorkGridPresenter
-import com.pimenta.bestv.feature.workgrid.ui.GenreWorkGridFragment
-import com.pimenta.bestv.feature.workgrid.ui.TopWorkGridFragment
+import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPresenter
+import com.pimenta.bestv.feature.castdetail.presentation.ui.fragment.CastDetailsFragment
+import com.pimenta.bestv.feature.recommendation.presentation.presenter.RecommendationPresenter
+import com.pimenta.bestv.feature.recommendation.presentation.service.RecommendationService
+import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
+import com.pimenta.bestv.feature.search.presentation.ui.fragment.SearchFragment
+import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
+import com.pimenta.bestv.feature.splash.presentation.ui.fragment.SplashFragment
+import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
+import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
+import com.pimenta.bestv.feature.workdetail.presentation.presenter.WorkDetailsPresenter
+import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
+import com.pimenta.bestv.feature.main.presentation.ui.fragment.GenreWorkGridFragment
+import com.pimenta.bestv.feature.main.presentation.ui.fragment.TopWorkGridFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 

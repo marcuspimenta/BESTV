@@ -16,8 +16,7 @@ package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.repository.remote.entity.CastResponse
-import io.reactivex.Single
+import com.pimenta.bestv.data.remote.entity.CastResponse
 
 fun CastResponse.toViewModel() = CastViewModel(
         id = id,

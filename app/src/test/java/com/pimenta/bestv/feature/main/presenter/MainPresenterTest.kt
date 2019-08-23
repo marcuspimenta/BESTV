@@ -18,7 +18,8 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.usecase.LoadRecommendationUseCase
+import com.pimenta.bestv.feature.main.presentation.presenter.MainPresenter
+import com.pimenta.bestv.feature.recommendation.domain.LoadRecommendationUseCase
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Completable
 import org.junit.Test

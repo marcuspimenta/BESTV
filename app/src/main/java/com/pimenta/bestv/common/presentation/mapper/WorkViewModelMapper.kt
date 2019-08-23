@@ -17,10 +17,10 @@ package com.pimenta.bestv.common.presentation.mapper
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.repository.local.entity.MovieDbModel
-import com.pimenta.bestv.repository.local.entity.TvShowDbModel
-import com.pimenta.bestv.repository.remote.entity.TvShowResponse
-import com.pimenta.bestv.repository.remote.entity.WorkResponse
+import com.pimenta.bestv.data.local.entity.MovieDbModel
+import com.pimenta.bestv.data.local.entity.TvShowDbModel
+import com.pimenta.bestv.data.remote.entity.TvShowResponse
+import com.pimenta.bestv.data.remote.entity.WorkResponse
 import java.text.SimpleDateFormat
 import java.util.*
 

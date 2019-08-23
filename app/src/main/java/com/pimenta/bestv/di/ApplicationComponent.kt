@@ -16,10 +16,10 @@ package com.pimenta.bestv.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.boot.broadcast.BootBroadcastReceiver
-import com.pimenta.bestv.feature.main.ui.MainActivity
-import com.pimenta.bestv.feature.search.ui.SearchActivity
-import com.pimenta.bestv.feature.workdetail.ui.WorkDetailsActivity
+import com.pimenta.bestv.feature.recommendation.presentation.broadcast.BootBroadcastReceiver
+import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
+import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
+import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import dagger.Component
 import javax.inject.Singleton
 
