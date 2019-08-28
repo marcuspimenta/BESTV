@@ -18,7 +18,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.kotlin.Quintuple
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.common.domain.WorkUseCase
 import io.reactivex.Single
 import org.junit.Test
 
@@ -53,13 +52,13 @@ private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetWorkDetailsUseCaseTest {
 
-    private val workUseCase: WorkUseCase = mock()
+    private val isFavoriteUseCase: IsFavoriteUseCase = mock()
     private val getVideosUseCase: GetVideosUseCase = mock()
     private val getCastsUseCase: GetCastsUseCase = mock()
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
-            workUseCase,
+            isFavoriteUseCase,
             getVideosUseCase,
             getCastsUseCase,
             getRecommendationByWorkUseCase,
@@ -69,11 +68,16 @@ class GetWorkDetailsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the work details`() {
-        whenever(workUseCase.isFavorite(WORK_VIEW_MODEL)).thenReturn(Single.just(true))
-        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
-        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id)).thenReturn(Single.just(CAST_VIEW_MODELS))
-        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1)).thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
-        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1)).thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+        whenever(isFavoriteUseCase(WORK_VIEW_MODEL))
+                .thenReturn(Single.just(true))
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
+                .thenReturn(Single.just(VIDEO_VIEW_MODELS))
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
+                .thenReturn(Single.just(CAST_VIEW_MODELS))
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
+                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
+                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
 
         useCase(WORK_VIEW_MODEL)
                 .test()
@@ -83,11 +87,16 @@ class GetWorkDetailsUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(workUseCase.isFavorite(WORK_VIEW_MODEL)).thenReturn(Single.just(true))
-        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
-        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id)).thenReturn(Single.error(Throwable()))
-        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1)).thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
-        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(isFavoriteUseCase(WORK_VIEW_MODEL))
+                .thenReturn(Single.just(true))
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
+                .thenReturn(Single.just(VIDEO_VIEW_MODELS))
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
+                .thenReturn(Single.error(Throwable()))
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
+                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(WORK_VIEW_MODEL)
                 .test()

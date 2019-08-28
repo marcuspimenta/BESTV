@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.domain
+package com.pimenta.bestv.data.local.permission
 
 import android.app.Application
 import android.content.pm.PackageManager
@@ -22,13 +22,13 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 /**
- * Created by marcus on 22/08/19.
+ * Created by marcus on 2019-08-28.
  */
-class LoadPermissionsUseCase @Inject constructor(
+class LocalPermissions @Inject constructor(
         private val application: Application
 ) {
 
-    operator fun invoke(): Single<List<String>> =
+    fun loadPermissionsNotAccepted(): Single<List<String>> =
             Single.fromCallable {
                 val permissionsNotAccepted = mutableListOf<String>()
                 Const.PERMISSIONS.forEach {

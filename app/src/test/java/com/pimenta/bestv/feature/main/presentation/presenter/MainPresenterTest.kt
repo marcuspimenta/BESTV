@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.presenter
+package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock

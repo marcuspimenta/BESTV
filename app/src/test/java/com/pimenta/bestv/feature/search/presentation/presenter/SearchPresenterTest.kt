@@ -18,7 +18,8 @@ import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
+import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import com.pimenta.bestv.scheduler.RxSchedulerTest
@@ -31,75 +32,126 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by marcus on 24-05-2018.
  */
+private const val QUERY = "Batman"
+private val WORK_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Game of thrones",
+        originalTitle = "Game of thrones",
+        type = WorkType.TV_SHOW
+)
+private val OTHER_WORK_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Arrow",
+        originalTitle = "Arrow",
+        type = WorkType.TV_SHOW
+)
+private val MOVIE_LIST = listOf(
+        WorkViewModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkType.MOVIE
+        )
+)
+private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+        page = 1,
+        totalPages = 10,
+        works = MOVIE_LIST
+)
+private val TV_SHOW_LIST = listOf(
+        WorkViewModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkType.TV_SHOW
+        )
+)
+private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+        page = 1,
+        totalPages = 10,
+        works = TV_SHOW_LIST
+)
+
 class SearchPresenterTest {
 
     private val view: SearchPresenter.View = mock()
-    private val workUseCase: WorkUseCase = mock()
     private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase = mock()
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
     private val rxScheduler: RxScheduler = RxSchedulerTest()
 
     private val presenter = SearchPresenter(
             view,
-            workUseCase,
             searchWorksByQueryUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
             rxScheduler
     )
 
     @Test
     fun `should search the works by query`() {
-        val result = Pair(aMoviePageViewModel, aTvShowPageViewModel)
+        val result = Pair(MOVIE_PAGE_VIEW_MODEL, TV_SHOW_PAGE_VIEW_MODEL)
 
-        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.just(result))
+        whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(Single.just(result))
 
-        presenter.searchWorksByQuery(query)
+        presenter.searchWorksByQuery(QUERY)
 
-        verify(view).onShowProgress()
-        verify(view).onResultLoaded(aMovieList, aTvShowList)
-        verify(view).onHideProgress()
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onResultLoaded(MOVIE_LIST, TV_SHOW_LIST)
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should return null if an error happens while searching the works by query`() {
-        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.error(Throwable()))
+        whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(Single.error(Throwable()))
 
-        presenter.searchWorksByQuery(query)
+        presenter.searchWorksByQuery(QUERY)
 
-        verify(view).onHideProgress()
-        verify(view).onErrorSearch()
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onErrorSearch()
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should not search the works when the query is null`() {
-        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.error(Throwable()))
-
         presenter.searchWorksByQuery(null)
 
-        verify(view).onHideProgress()
-        verify(view).onClear()
+        inOrder(view) {
+            verify(view).onHideProgress()
+            verify(view).onClear()
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should not search the works when the query is empty`() {
-        whenever(searchWorksByQueryUseCase(any())).thenReturn(Single.error(Throwable()))
-
         presenter.searchWorksByQuery("")
 
-        verify(view).onHideProgress()
-        verify(view).onClear()
+        inOrder(view) {
+            verify(view).onHideProgress()
+            verify(view).onClear()
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should return the right data when loading the movies`() {
-        whenever(workUseCase.searchMoviesByQuery(any(), any())).thenReturn(Single.just(aMoviePageViewModel))
+        whenever(searchMoviesByQueryUseCase(any(), any())).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
 
         presenter.loadMovies()
 
-        verify(view).onMoviesLoaded(aMovieList)
+        verify(view, only()).onMoviesLoaded(MOVIE_LIST)
     }
 
     @Test
     fun `should return null if an error happens while loading the movies`() {
-        whenever(workUseCase.searchMoviesByQuery(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(searchMoviesByQueryUseCase(any(), any())).thenReturn(Single.error(Throwable()))
 
         presenter.loadMovies()
 
@@ -108,16 +160,16 @@ class SearchPresenterTest {
 
     @Test
     fun `should return the right data when loading the tv shows`() {
-        whenever(workUseCase.searchTvShowsByQuery(any(), any())).thenReturn(Single.just(aTvShowPageViewModel))
+        whenever(searchTvShowsByQueryUseCase(any(), any())).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
 
         presenter.loadTvShows()
 
-        verify(view).onTvShowsLoaded(aTvShowList)
+        verify(view, only()).onTvShowsLoaded(TV_SHOW_LIST)
     }
 
     @Test
     fun `should return null if an error happens while loading the tv shows`() {
-        whenever(workUseCase.searchTvShowsByQuery(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(searchTvShowsByQueryUseCase(any(), any())).thenReturn(Single.error(Throwable()))
 
         presenter.loadTvShows()
 
@@ -129,11 +181,11 @@ class SearchPresenterTest {
         val testScheduler = TestScheduler()
         RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
 
-        presenter.countTimerLoadBackdropImage(aWorkViewModel)
+        presenter.countTimerLoadBackdropImage(WORK_VIEW_MODEL)
 
         testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
 
-        verify(view).loadBackdropImage(aWorkViewModel)
+        verify(view, only()).loadBackdropImage(WORK_VIEW_MODEL)
     }
 
     @Test
@@ -141,64 +193,15 @@ class SearchPresenterTest {
         val testScheduler = TestScheduler()
         RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
 
-        presenter.countTimerLoadBackdropImage(aWorkViewModel)
+        presenter.countTimerLoadBackdropImage(WORK_VIEW_MODEL)
 
         testScheduler.advanceTimeBy(100L, TimeUnit.MILLISECONDS)
 
-        presenter.countTimerLoadBackdropImage(otherWorkViewModel)
+        presenter.countTimerLoadBackdropImage(OTHER_WORK_VIEW_MODEL)
 
         testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
 
-        verify(view).loadBackdropImage(otherWorkViewModel)
+        verify(view, only()).loadBackdropImage(OTHER_WORK_VIEW_MODEL)
     }
 
-    companion object {
-
-        private const val query = "Batman"
-
-        private val aWorkViewModel = WorkViewModel(
-                id = 1,
-                title = "Game of thrones",
-                originalTitle = "Game of thrones",
-                type = WorkType.TV_SHOW
-        )
-
-        private val otherWorkViewModel = WorkViewModel(
-                id = 1,
-                title = "Arrow",
-                originalTitle = "Arrow",
-                type = WorkType.TV_SHOW
-        )
-
-        private val aMovieList = listOf(
-                WorkViewModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkType.MOVIE
-                )
-        )
-
-        private val aMoviePageViewModel = WorkPageViewModel(
-                page = 1,
-                totalPages = 10,
-                works = aMovieList
-        )
-
-        private val aTvShowList = listOf(
-                WorkViewModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkType.TV_SHOW
-                )
-        )
-
-        private val aTvShowPageViewModel = WorkPageViewModel(
-                page = 1,
-                totalPages = 10,
-                works = aTvShowList
-        )
-
-    }
 }

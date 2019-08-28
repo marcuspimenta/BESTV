@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.feature.castdetail.presentation.presenter
 
-import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
@@ -27,6 +27,16 @@ import org.junit.Test
 /**
  * Created by marcus on 23-05-2018.
  */
+private val CAST_VIEW_MODEL = CastViewModel(
+        id = 1
+)
+private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
+
 class CastDetailsPresenterTest {
 
     private val view: CastDetailsPresenter.View = mock()
@@ -41,39 +51,31 @@ class CastDetailsPresenterTest {
 
     @Test
     fun `should load the cast details`() {
-        val result = Triple(aCastDetailedViewModel, null, null)
+        val result = Triple(CAST_DETAILED_VIEW_MODEL, null, null)
 
-        whenever(getCastDetailsUseCase(any())).thenReturn(Single.just(result))
+        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenReturn(Single.just(result))
 
-        presenter.loadCastDetails(aCastViewModel)
+        presenter.loadCastDetails(CAST_VIEW_MODEL)
 
-        verify(view).onShowProgress()
-        verify(view).onCastLoaded(result.first, result.second, result.third)
-        verify(view).onHideProgress()
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onCastLoaded(result.first, result.second, result.third)
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should load nothing if an error happens`() {
-        whenever(getCastDetailsUseCase(any())).thenReturn(Single.error(Throwable()))
+        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenReturn(Single.error(Throwable()))
 
-        presenter.loadCastDetails(aCastViewModel)
+        presenter.loadCastDetails(CAST_VIEW_MODEL)
 
-        verify(view).onHideProgress()
-        verify(view).onErrorCastDetailsLoaded()
-    }
-
-    companion object {
-
-        private val aCastViewModel = CastViewModel(
-                id = 1
-        )
-
-        private val aCastDetailedViewModel = CastViewModel(
-                id = 1,
-                name = "Carlos",
-                character = "Batman",
-                birthday = "1990-07-13"
-        )
-
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onErrorCastDetailsLoaded()
+        }
+        verifyNoMoreInteractions(view)
     }
 }

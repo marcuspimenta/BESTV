@@ -58,7 +58,8 @@ class GetRecommendationByWorkUseCaseTest {
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1)).thenReturn(Single.just(WORK_PAGE))
+        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1))
+                .thenReturn(Single.just(WORK_PAGE))
 
         useCase(WorkType.MOVIE, MOVIE_ID, 1)
                 .test()
@@ -68,7 +69,8 @@ class GetRecommendationByWorkUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1)).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, MOVIE_ID, 1)
                 .test()

@@ -12,25 +12,29 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.feature.recommendation.domain
 
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.pimenta.bestv.data.local.alarm.LocalAlarm
 import org.junit.Test
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 2019-08-27.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+class ScheduleRecommendationUseCaseTest {
 
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = UrlEncoderTextUseCase()
+    private val localAlarm: LocalAlarm = mock()
+    private val useCase = ScheduleRecommendationUseCase(
+            localAlarm
+    )
 
     @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
+    fun `should load the schedule to update the recommendations`() {
+        useCase()
+
+        verify(localAlarm).scheduleRecommendationUpdate()
     }
+
+
 }

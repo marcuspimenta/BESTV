@@ -16,9 +16,10 @@ package com.pimenta.bestv.feature.splash.presentation.presenter
 
 import android.Manifest
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.feature.splash.domain.LoadPermissionsUseCase
+import com.pimenta.bestv.feature.splash.domain.GetPermissionsNotAcceptedUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Single
@@ -33,12 +34,12 @@ import java.util.concurrent.TimeUnit
 class SplashPresenterTest {
 
     private val view: SplashPresenter.View = mock()
-    private val loadPermissionsUseCase: LoadPermissionsUseCase = mock()
+    private val getPermissionsNotAcceptedUseCase: GetPermissionsNotAcceptedUseCase = mock()
     private val rxScheduler: RxScheduler = RxSchedulerTest()
 
     private val presenter = SplashPresenter(
             view,
-            loadPermissionsUseCase,
+            getPermissionsNotAcceptedUseCase,
             rxScheduler
     )
 
@@ -48,69 +49,41 @@ class SplashPresenterTest {
         RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
 
         val permissions = listOf(Manifest.permission.RECORD_AUDIO)
-        whenever(loadPermissionsUseCase()).thenReturn(Single.just(permissions))
+        whenever(getPermissionsNotAcceptedUseCase()).thenReturn(Single.just(permissions))
 
         presenter.loadPermissions()
 
         testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
 
-        verify(view).onRequestPermissions(permissions)
-    }
-
-    @Test
-    fun `should return true if has all permissions`() {
-        val testScheduler = TestScheduler()
-        RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
-
-        whenever(loadPermissionsUseCase()).thenReturn(Single.just(emptyList()))
-
-        presenter.loadPermissions()
-
-        testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
-
-        verify(view).onHasAllPermissions(true)
-    }
-
-    @Test
-    fun `should return false if an exception happens while loading the permissions`() {
-        val testScheduler = TestScheduler()
-        RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
-
-        whenever(loadPermissionsUseCase()).thenReturn(Single.error(Throwable()))
-
-        presenter.loadPermissions()
-
-        testScheduler.advanceTimeBy(4, TimeUnit.SECONDS)
-
-        verify(view).onHasAllPermissions(false)
+        verify(view, only()).onRequestPermissions(permissions)
     }
 
     @Test
     fun `should return true if has all permissions accepted`() {
-        whenever(loadPermissionsUseCase()).thenReturn(Single.just(emptyList()))
+        whenever(getPermissionsNotAcceptedUseCase()).thenReturn(Single.just(emptyList()))
 
         presenter.hasAllPermissions()
 
-        verify(view).onHasAllPermissions(true)
+        verify(view, only()).onHasAllPermissions(true)
     }
 
     @Test
     fun `should return false if has not all permissions accepted`() {
         val permissions = listOf(Manifest.permission.RECORD_AUDIO)
-        whenever(loadPermissionsUseCase()).thenReturn(Single.just(permissions))
+        whenever(getPermissionsNotAcceptedUseCase()).thenReturn(Single.just(permissions))
 
         presenter.hasAllPermissions()
 
-        verify(view).onHasAllPermissions(false)
+        verify(view, only()).onHasAllPermissions(false)
     }
 
     @Test
     fun `should return false if an exception happens while checking if has all permissions accepted`() {
-        whenever(loadPermissionsUseCase()).thenReturn(Single.error(Throwable()))
+        whenever(getPermissionsNotAcceptedUseCase()).thenReturn(Single.error(Throwable()))
 
         presenter.hasAllPermissions()
 
-        verify(view).onHasAllPermissions(false)
+        verify(view, only()).onHasAllPermissions(false)
     }
 
 }

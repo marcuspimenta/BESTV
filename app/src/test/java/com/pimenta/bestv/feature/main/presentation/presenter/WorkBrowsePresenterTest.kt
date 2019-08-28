@@ -12,16 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.presenter
+package com.pimenta.bestv.feature.main.presentation.presenter
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.common.domain.WorkUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
+import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Single
@@ -30,55 +27,77 @@ import org.junit.Test
 /**
  * Created by marcus on 28-05-2019.
  */
+private val MOVIE_GENRES = listOf(
+        GenreViewModel(
+                id = 1,
+                name = "Action",
+                source = Source.MOVIE
+        )
+)
+private val TV_SHOW_GENRES = listOf(
+        GenreViewModel(
+                id = 2,
+                name = "Action",
+                source = Source.TV_SHOW
+        )
+)
+
 class WorkBrowsePresenterTest {
 
     private val view: WorkBrowsePresenter.View = mock()
-    private val workUseCase: WorkUseCase = mock()
+    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
     private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase = mock()
     private val rxScheduler: RxScheduler = RxSchedulerTest()
 
     private val presenter = WorkBrowsePresenter(
             view,
-            workUseCase,
+            hasFavoriteUseCase,
             getWorkBrowseDetailsUseCase,
             rxScheduler
     )
 
     @Test
     fun `should return true if there is some favorite works`() {
-        whenever(workUseCase.hasFavorite()).thenReturn(Single.just(true))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
 
         presenter.hasFavorite()
 
         verify(view).onHasFavorite(true)
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should return false if there is not any favorite works`() {
-        whenever(workUseCase.hasFavorite()).thenReturn(Single.just(false))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
 
         presenter.hasFavorite()
 
         verify(view).onHasFavorite(false)
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should return false if an exception happens while checking if there is some favorite works`() {
-        whenever(workUseCase.hasFavorite()).thenReturn(Single.error(Throwable()))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.error(Throwable()))
 
         presenter.hasFavorite()
 
         verify(view).onHasFavorite(false)
+        verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `should load the right data when loading the browse details`() {
-        whenever(getWorkBrowseDetailsUseCase()).thenReturn(Single.just(Triple(true, moveGenres, tvShowGenres)))
+        whenever(getWorkBrowseDetailsUseCase()).thenReturn(Single.just(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES)))
 
         presenter.loadData()
 
-        verify(view).onDataLoaded(true, moveGenres, tvShowGenres)
-        verify(view).onHideProgress()
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onDataLoaded(true, MOVIE_GENRES, TV_SHOW_GENRES)
+        }
+        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -87,27 +106,12 @@ class WorkBrowsePresenterTest {
 
         presenter.loadData()
 
-        verify(view).onHideProgress()
-        verify(view).onErrorDataLoaded()
-    }
-
-    companion object {
-
-        private val moveGenres = listOf(
-                GenreViewModel(
-                        id = 1,
-                        name = "Action",
-                        source = Source.MOVIE
-                )
-        )
-
-        private val tvShowGenres = listOf(
-                GenreViewModel(
-                        id = 2,
-                        name = "Action",
-                        source = Source.TV_SHOW
-                )
-        )
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onHideProgress()
+            verify(view).onErrorDataLoaded()
+        }
+        verifyNoMoreInteractions(view)
     }
 
 }

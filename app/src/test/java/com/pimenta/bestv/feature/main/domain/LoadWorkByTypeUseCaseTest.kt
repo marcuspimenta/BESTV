@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.workdetail.domain
+package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -20,59 +20,62 @@ import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
-import com.pimenta.bestv.data.remote.entity.TvShowResponse
+import com.pimenta.bestv.data.remote.entity.MoviePageResponse
+import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 23-06-2018.
+ * Created by marcus on 2019-08-26.
  */
-private const val MOVIE_ID = 1
-private val WORK_PAGE = TvShowPageResponse().apply {
+private val WORK_PAGE = MoviePageResponse().apply {
     page = 1
     totalPages = 1
     works = listOf(
-            TvShowResponse(
+            MovieResponse(
                     id = 1,
-                    title = "Title"
+                    title = "Batman",
+                    originalTitle = "Batman"
             )
     )
 }
-private val WORK_PAEG_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
         works = listOf(
                 WorkViewModel(
                         id = 1,
-                        title = "Title",
-                        type = WorkType.TV_SHOW
+                        title = "Batman",
+                        originalTitle = "Batman",
+                        type = WorkType.MOVIE
                 )
         )
 )
 
-class GetSimilarByWorkUseCaseTest {
+class LoadWorkByTypeUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
-    private val useCase = GetSimilarByWorkUseCase(mediaRepository)
+    private val useCase = LoadWorkByTypeUseCase(
+            mediaRepository
+    )
 
     @Test
-    fun `should return the right data when loading the similar works`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+    fun `should return the right data when loading the works by type`() {
+        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.just(WORK_PAGE))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES)
                 .test()
                 .assertComplete()
-                .assertResult(WORK_PAEG_VIEW_MODEL)
+                .assertResult(MOVIE_PAGE_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES)
                 .test()
                 .assertError(Throwable::class.java)
     }

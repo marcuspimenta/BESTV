@@ -12,25 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.feature.splash.domain
 
-import org.junit.Test
+import com.pimenta.bestv.data.local.permission.LocalPermissions
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 22/08/19.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+class GetPermissionsNotAcceptedUseCase @Inject constructor(
+        private val localPermissions: LocalPermissions
+) {
 
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    operator fun invoke() =
+            localPermissions.loadPermissionsNotAccepted()
 }

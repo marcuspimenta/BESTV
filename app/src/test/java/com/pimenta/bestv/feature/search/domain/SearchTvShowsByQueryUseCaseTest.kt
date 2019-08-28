@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.workdetail.domain
+package com.pimenta.bestv.feature.search.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -26,53 +26,56 @@ import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 23-06-2018.
+ * Created by marcus on 2019-08-28.
  */
-private const val MOVIE_ID = 1
 private val WORK_PAGE = TvShowPageResponse().apply {
     page = 1
     totalPages = 1
     works = listOf(
             TvShowResponse(
                     id = 1,
-                    title = "Title"
+                    title = "Batman",
+                    originalTitle = "Batman"
             )
     )
 }
-private val WORK_PAEG_VIEW_MODEL = WorkPageViewModel(
+private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
         works = listOf(
                 WorkViewModel(
                         id = 1,
-                        title = "Title",
+                        title = "Batman",
+                        originalTitle = "Batman",
                         type = WorkType.TV_SHOW
                 )
         )
 )
 
-class GetSimilarByWorkUseCaseTest {
+class SearchTvShowsByQueryUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
-    private val useCase = GetSimilarByWorkUseCase(mediaRepository)
+    private val useCase = SearchTvShowsByQueryUseCase(
+            mediaRepository
+    )
 
     @Test
-    fun `should return the right data when loading the similar works`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+    fun `should return the right data when searching tv show by query`() {
+        whenever(mediaRepository.searchTvShowsByQuery("Batman", 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase("Batman", 1)
                 .test()
                 .assertComplete()
-                .assertResult(WORK_PAEG_VIEW_MODEL)
+                .assertResult(TV_SHOW_PAGE_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+        whenever(mediaRepository.searchTvShowsByQuery("Batman", 1))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase("Batman", 1)
                 .test()
                 .assertError(Throwable::class.java)
     }

@@ -14,37 +14,65 @@
 
 package com.pimenta.bestv.feature.search.domain
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.domain.WorkUseCase
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 24-05-2018.
  */
+private const val QUERY = "Batman"
+private const val QUERY_ENCODED = "Batman"
+private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+        page = 1,
+        totalPages = 10,
+        works = listOf(
+                WorkViewModel(
+                        id = 1,
+                        title = "Batman",
+                        originalTitle = "Batman",
+                        type = WorkType.MOVIE
+                )
+        )
+)
+
+private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+        page = 1,
+        totalPages = 10,
+        works = listOf(
+                WorkViewModel(
+                        id = 1,
+                        title = "Batman",
+                        originalTitle = "Batman",
+                        type = WorkType.TV_SHOW
+                )
+        )
+)
+
 class SearchWorksByQueryUseCaseTest {
 
     private val urlEncoderTextUseCase: UrlEncoderTextUseCase = mock()
-    private val workUseCase: WorkUseCase = mock()
-
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
     private val useCase = SearchWorksByQueryUseCase(
-            urlEncoderTextUseCase, workUseCase
+            urlEncoderTextUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase
     )
 
     @Test
     fun `should return the right data when searching works by query`() {
-        val result = Pair(aMoviePageViewModel, aTvShowPageViewModel)
+        val result = Pair(MOVIE_PAGE_VIEW_MODEL, TV_SHOW_PAGE_VIEW_MODEL)
 
-        whenever(urlEncoderTextUseCase(any())).thenReturn(Single.just(queryEncoded))
-        whenever(workUseCase.searchMoviesByQuery(any(), any())).thenReturn(Single.just(aMoviePageViewModel))
-        whenever(workUseCase.searchTvShowsByQuery(any(), any())).thenReturn(Single.just(aTvShowPageViewModel))
+        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(Single.just(QUERY_ENCODED))
+        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
+        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
 
-        useCase(query)
+        useCase(QUERY)
                 .test()
                 .assertComplete()
                 .assertResult(result)
@@ -52,45 +80,13 @@ class SearchWorksByQueryUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(urlEncoderTextUseCase(any())).thenReturn(Single.just(queryEncoded))
-        whenever(workUseCase.searchMoviesByQuery(any(), any())).thenReturn(Single.error(Throwable()))
-        whenever(workUseCase.searchTvShowsByQuery(any(), any())).thenReturn(Single.error(Throwable()))
+        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(Single.just(QUERY_ENCODED))
+        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(Single.error(Throwable()))
+        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.error(Throwable()))
 
-        useCase(query)
+        useCase(QUERY)
                 .test()
                 .assertError(Throwable::class.java)
     }
 
-    companion object {
-
-        private const val query = "Batman"
-        private const val queryEncoded = "Batman"
-
-        private val aMoviePageViewModel = WorkPageViewModel(
-                page = 1,
-                totalPages = 10,
-                works = listOf(
-                        WorkViewModel(
-                                id = 1,
-                                title = "Batman",
-                                originalTitle = "Batman",
-                                type = WorkType.MOVIE
-                        )
-                )
-        )
-
-        private val aTvShowPageViewModel = WorkPageViewModel(
-                page = 1,
-                totalPages = 10,
-                works = listOf(
-                        WorkViewModel(
-                                id = 1,
-                                title = "Batman",
-                                originalTitle = "Batman",
-                                type = WorkType.TV_SHOW
-                        )
-                )
-        )
-
-    }
 }

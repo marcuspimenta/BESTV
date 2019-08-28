@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.splash.presentation.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.feature.splash.domain.LoadPermissionsUseCase
+import com.pimenta.bestv.feature.splash.domain.GetPermissionsNotAcceptedUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -29,12 +29,12 @@ private const val SPLASH_TIME_LOAD_SECONDS = 4
  */
 class SplashPresenter @Inject constructor(
         private val view: View,
-        private val loadPermissionsUseCase: LoadPermissionsUseCase,
+        private val getPermissionsNotAcceptedUseCase: GetPermissionsNotAcceptedUseCase,
         private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadPermissions() {
-        loadPermissionsUseCase()
+        getPermissionsNotAcceptedUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .delay(SPLASH_TIME_LOAD_SECONDS.toLong(), TimeUnit.SECONDS)
@@ -51,7 +51,7 @@ class SplashPresenter @Inject constructor(
     }
 
     fun hasAllPermissions() {
-        loadPermissionsUseCase()
+        getPermissionsNotAcceptedUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ permissions ->

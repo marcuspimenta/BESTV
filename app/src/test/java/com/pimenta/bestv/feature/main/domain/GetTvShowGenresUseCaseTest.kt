@@ -18,21 +18,24 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
+import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.remote.entity.TvShowGenreListResponse
+import com.pimenta.bestv.data.remote.entity.TvShowGenreResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 28-05-2019.
+ * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRES = listOf(
-        GenreViewModel(
-                id = 1,
-                name = "Action",
-                source = Source.MOVIE
-        )
-)
-
-private val TV_SHOW_GENRES = listOf(
+private val TV_SHOW_GENRES = TvShowGenreListResponse().apply {
+    genres = listOf(
+            TvShowGenreResponse(
+                    id = 2,
+                    name = "Action"
+            )
+    )
+}
+private val TV_SHOW_GENRES_VIEW_MODEL = listOf(
         GenreViewModel(
                 id = 2,
                 name = "Action",
@@ -40,38 +43,30 @@ private val TV_SHOW_GENRES = listOf(
         )
 )
 
-class GetWorkBrowseDetailsUseCaseTest {
+class GetTvShowGenresUseCaseTest {
 
-    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
-    private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()
-    private val getTvShowGenresUseCase: GetTvShowGenresUseCase = mock()
-
-    private val useCase = GetWorkBrowseDetailsUseCase(
-            hasFavoriteUseCase,
-            getMovieGenresUseCase,
-            getTvShowGenresUseCase
+    private val mediaRepository: MediaRepository = mock()
+    private val useCase = GetTvShowGenresUseCase(
+            mediaRepository
     )
 
     @Test
-    fun `should return the right data when loading the browse details`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
-        whenever(getMovieGenresUseCase()).thenReturn(Single.just(MOVIE_GENRES))
-        whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
+    fun `should return the right data when loading the tv show genres`() {
+        whenever(mediaRepository.getTvShowGenres()).thenReturn(Single.just(TV_SHOW_GENRES))
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES))
+                .assertResult(TV_SHOW_GENRES_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
-        whenever(getMovieGenresUseCase()).thenReturn(Single.error(Throwable()))
-        whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
+        whenever(mediaRepository.getTvShowGenres()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()
                 .assertError(Throwable::class.java)
     }
+
 }
