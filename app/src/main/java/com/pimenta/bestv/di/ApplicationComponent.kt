@@ -16,9 +16,17 @@ package com.pimenta.bestv.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.recommendation.presentation.broadcast.BootBroadcastReceiver
+import com.pimenta.bestv.feature.castdetail.di.CastDetailsFragmentComponent
+import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
+import com.pimenta.bestv.feature.main.di.TopWorkGridFragmentComponent
+import com.pimenta.bestv.feature.main.di.WorkBrowseFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
+import com.pimenta.bestv.feature.recommendation.di.RecommendationServiceComponent
+import com.pimenta.bestv.feature.recommendation.presentation.broadcast.BootBroadcastReceiver
+import com.pimenta.bestv.feature.search.di.SearchFragmentComponent
 import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
+import com.pimenta.bestv.feature.splash.di.SplashFragmentComponent
+import com.pimenta.bestv.feature.workdetail.di.WorkDetailsFragmentComponent
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import dagger.Component
 import javax.inject.Singleton
@@ -27,7 +35,11 @@ import javax.inject.Singleton
  * Created by marcus on 07-02-2018.
  */
 @Singleton
-@Component(modules = [ApplicationModule::class])
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface ApplicationComponent {
 
     val application: Application
