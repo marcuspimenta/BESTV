@@ -98,8 +98,8 @@ class SearchPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onResultLoaded(MOVIE_LIST, TV_SHOW_LIST)
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -112,8 +112,8 @@ class SearchPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorSearch()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }

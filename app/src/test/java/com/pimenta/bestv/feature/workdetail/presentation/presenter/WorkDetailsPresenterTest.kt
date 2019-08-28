@@ -134,8 +134,8 @@ class WorkDetailsPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onDataLoaded(true, null, null, recommendedWorks, similarWorks)
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -150,8 +150,8 @@ class WorkDetailsPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorWorkDetailsLoaded()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }

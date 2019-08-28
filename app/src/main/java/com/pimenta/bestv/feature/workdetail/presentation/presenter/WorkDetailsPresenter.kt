@@ -61,7 +61,7 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
-                .doOnTerminate { view.onHideProgress() }
+                .doFinally { view.onHideProgress() }
                 .subscribe({ movieInfo ->
                     val recommendedPage = movieInfo.fourth
                     if (recommendedPage.page <= recommendedPage.totalPages) {

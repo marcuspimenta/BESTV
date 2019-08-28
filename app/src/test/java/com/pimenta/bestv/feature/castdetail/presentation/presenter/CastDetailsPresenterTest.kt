@@ -59,8 +59,8 @@ class CastDetailsPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onCastLoaded(result.first, result.second, result.third)
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -73,8 +73,8 @@ class CastDetailsPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorCastDetailsLoaded()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }

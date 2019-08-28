@@ -58,7 +58,7 @@ class WorkGridPresenter @Inject constructor(
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
                         .doOnSubscribe { view.onShowProgress() }
-                        .doOnTerminate { view.onHideProgress() }
+                        .doFinally { view.onHideProgress() }
                         .subscribe({ movies ->
                             view.onWorksLoaded(movies)
                         }, { throwable ->
@@ -70,7 +70,7 @@ class WorkGridPresenter @Inject constructor(
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
                         .doOnSubscribe { view.onShowProgress() }
-                        .doOnTerminate { view.onHideProgress() }
+                        .doFinally { view.onHideProgress() }
                         .subscribe({ workPage ->
                             if (workPage != null && workPage.page <= workPage.totalPages) {
                                 currentPage = workPage.page
@@ -92,7 +92,7 @@ class WorkGridPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
-                .doOnTerminate { view.onHideProgress() }
+                .doFinally { view.onHideProgress() }
                 .subscribe({ workPage ->
                     if (workPage != null && workPage.page <= workPage.totalPages) {
                         currentPage = workPage.page

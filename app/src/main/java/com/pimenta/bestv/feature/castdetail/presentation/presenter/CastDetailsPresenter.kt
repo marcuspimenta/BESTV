@@ -37,7 +37,7 @@ class CastDetailsPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
-                .doOnTerminate { view.onHideProgress() }
+                .doFinally { view.onHideProgress() }
                 .subscribe({ triple ->
                     view.onCastLoaded(
                             triple.first,

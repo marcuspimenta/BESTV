@@ -75,7 +75,7 @@ class SearchPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
-                .doOnTerminate { view.onHideProgress() }
+                .doFinally { view.onHideProgress() }
                 .subscribe({ pair ->
                     if (pair.first.page <= pair.first.totalPages) {
                         this.resultMoviePage = pair.first.page

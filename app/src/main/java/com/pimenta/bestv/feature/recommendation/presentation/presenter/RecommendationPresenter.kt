@@ -34,7 +34,7 @@ class RecommendationPresenter @Inject constructor(
         loadRecommendationUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
-                .doOnTerminate { service.onLoadRecommendationFinished() }
+                .doFinally { service.onLoadRecommendationFinished() }
                 .subscribe({}, {
                     Timber.e(it, "Error while loading the recommendations")
                 })

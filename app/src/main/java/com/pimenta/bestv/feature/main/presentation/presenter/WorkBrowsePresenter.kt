@@ -50,7 +50,7 @@ class WorkBrowsePresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
-                .doOnTerminate { view.onHideProgress() }
+                .doFinally { view.onHideProgress() }
                 .subscribe({
                     view.onDataLoaded(
                             it.first,

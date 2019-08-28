@@ -81,8 +81,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -95,8 +95,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorWorksLoaded()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -109,8 +109,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -123,8 +123,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorWorksLoaded()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -150,8 +150,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
@@ -164,8 +164,8 @@ class WorkGridPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onHideProgress()
             verify(view).onErrorWorksLoaded()
+            verify(view).onHideProgress()
         }
         verifyNoMoreInteractions(view)
     }
