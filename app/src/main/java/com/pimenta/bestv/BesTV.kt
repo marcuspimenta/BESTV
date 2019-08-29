@@ -16,9 +16,6 @@ package com.pimenta.bestv
 
 import android.app.Application
 import android.os.StrictMode
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
-import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
 /**
@@ -41,9 +38,6 @@ class BesTV : Application() {
                         .penaltyLog()
                         .penaltyDeath()
                         .build())
-            }
-            else -> {
-                Fabric.with(this, Answers(), Crashlytics())
             }
         }
     }
