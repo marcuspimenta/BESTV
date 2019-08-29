@@ -16,6 +16,8 @@ package com.pimenta.bestv.feature.main.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
+import com.pimenta.bestv.di.module.MediaModule
+import com.pimenta.bestv.di.module.SchedulerModule
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
 import dagger.BindsInstance
@@ -28,7 +30,9 @@ import javax.inject.Singleton
 @Singleton
 @Component(
         modules = [
-            ApplicationModule::class
+            ApplicationModule::class,
+            MediaModule::class,
+            SchedulerModule::class
         ]
 )
 interface WorkBrowseFragmentComponent {

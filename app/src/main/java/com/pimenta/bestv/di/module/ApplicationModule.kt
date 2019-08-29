@@ -26,16 +26,7 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 07-02-2018.
  */
-@Module(
-        includes = [
-            ImplModule::class,
-            DisplayMetricsModule::class,
-            MediaLocalModule::class,
-            MediaRemoteModule::class,
-            RecommendationModule::class,
-            SchedulerModule::class
-        ]
-)
+@Module
 class ApplicationModule {
 
     @Provides

@@ -27,8 +27,14 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 09-02-2018.
  */
-@Module
-interface ImplModule {
+@Module(
+        includes = [
+            MediaLocalModule::class,
+            MediaRemoteModule::class,
+            RecommendationModule::class
+        ]
+)
+interface MediaModule {
 
     @Binds
     @Singleton

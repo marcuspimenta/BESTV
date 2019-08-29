@@ -16,6 +16,8 @@ package com.pimenta.bestv.feature.search.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
+import com.pimenta.bestv.di.module.MediaModule
+import com.pimenta.bestv.di.module.SchedulerModule
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.feature.search.presentation.ui.fragment.SearchFragment
 import dagger.BindsInstance
@@ -28,7 +30,9 @@ import javax.inject.Singleton
 @Singleton
 @Component(
         modules = [
-            ApplicationModule::class
+            ApplicationModule::class,
+            MediaModule::class,
+            SchedulerModule::class
         ]
 )
 interface SearchFragmentComponent {
