@@ -24,17 +24,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.main.di.WorkBrowseFragmentComponent
+import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.WorkTypeHeaderItem
-import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import javax.inject.Inject
 
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
@@ -65,9 +65,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getWorkBrowseFragmentComponent()
-                .view(this)
-                .build()
+        WorkBrowseFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 

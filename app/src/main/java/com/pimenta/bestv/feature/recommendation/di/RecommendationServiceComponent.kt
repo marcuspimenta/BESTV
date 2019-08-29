@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.recommendation.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.recommendation.presentation.presenter.RecommendationPresenter
 import com.pimenta.bestv.feature.recommendation.presentation.service.RecommendationService
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface RecommendationServiceComponent {
 
     fun inject(recommendationService: RecommendationService)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun service(service: RecommendationPresenter.Service): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): RecommendationServiceComponent
+    }
+
+    companion object {
+        fun build(service: RecommendationPresenter.Service, application: Application): RecommendationServiceComponent =
+                DaggerRecommendationServiceComponent
+                        .builder()
+                        .service(service)
+                        .application(application)
+                        .build()
     }
 }

@@ -16,14 +16,13 @@ package com.pimenta.bestv.feature.main.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
-import com.pimenta.bestv.feature.main.presentation.ui.fragment.GenreWorkGridFragment
+import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 2019-08-28.
+ * Created by marcus on 2019-08-29.
  */
 @Singleton
 @Component(
@@ -31,27 +30,23 @@ import javax.inject.Singleton
             ApplicationModule::class
         ]
 )
-interface GenreWorkGridFragmentComponent {
+interface MainActivityComponent {
 
-    fun inject(genreWorkGridFragment: GenreWorkGridFragment)
+    fun inject(activity: MainActivity)
 
     @Component.Builder
     interface Builder {
 
         @BindsInstance
-        fun view(view: WorkGridPresenter.View): Builder
-
-        @BindsInstance
         fun application(application: Application): Builder
 
-        fun build(): GenreWorkGridFragmentComponent
+        fun build(): MainActivityComponent
     }
 
     companion object {
-        fun build(view: WorkGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
-                DaggerGenreWorkGridFragmentComponent
+        fun build(application: Application): MainActivityComponent =
+                DaggerMainActivityComponent
                         .builder()
-                        .view(view)
                         .application(application)
                         .build()
     }

@@ -16,13 +16,8 @@ package com.pimenta.bestv
 
 import android.app.Application
 import android.os.StrictMode
-
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
-import com.pimenta.bestv.di.ApplicationComponent
-import com.pimenta.bestv.di.DaggerApplicationComponent
-import com.pimenta.bestv.di.module.ApplicationModule
-
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
@@ -51,15 +46,5 @@ class BesTV : Application() {
                 Fabric.with(this, Answers(), Crashlytics())
             }
         }
-
-        applicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(ApplicationModule(this))
-                .build()
-    }
-
-    companion object {
-
-        lateinit var applicationComponent: ApplicationComponent
     }
 }

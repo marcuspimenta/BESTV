@@ -14,25 +14,46 @@
 
 package com.pimenta.bestv.feature.castdetail.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.castdetail.presentation.ui.fragment.CastDetailsFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface CastDetailsFragmentComponent {
 
     fun inject(castDetailsFragment: CastDetailsFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: CastDetailsPresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): CastDetailsFragmentComponent
     }
+
+    companion object {
+        fun build(view: CastDetailsPresenter.View, application: Application): CastDetailsFragmentComponent =
+                DaggerCastDetailsFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
+    }
+
 }

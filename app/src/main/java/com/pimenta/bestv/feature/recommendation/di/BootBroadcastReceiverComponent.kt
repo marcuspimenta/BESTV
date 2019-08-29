@@ -12,18 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.di
+package com.pimenta.bestv.feature.recommendation.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
-import com.pimenta.bestv.feature.main.presentation.ui.fragment.GenreWorkGridFragment
+import com.pimenta.bestv.feature.recommendation.presentation.broadcast.BootBroadcastReceiver
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 2019-08-28.
+ * Created by marcus on 2019-08-29.
  */
 @Singleton
 @Component(
@@ -31,29 +30,24 @@ import javax.inject.Singleton
             ApplicationModule::class
         ]
 )
-interface GenreWorkGridFragmentComponent {
+interface BootBroadcastReceiverComponent {
 
-    fun inject(genreWorkGridFragment: GenreWorkGridFragment)
+    fun inject(broadcastReceiver: BootBroadcastReceiver)
 
     @Component.Builder
     interface Builder {
 
         @BindsInstance
-        fun view(view: WorkGridPresenter.View): Builder
-
-        @BindsInstance
         fun application(application: Application): Builder
 
-        fun build(): GenreWorkGridFragmentComponent
+        fun build(): BootBroadcastReceiverComponent
     }
 
     companion object {
-        fun build(view: WorkGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
-                DaggerGenreWorkGridFragmentComponent
+        fun build(application: Application): BootBroadcastReceiverComponent =
+                DaggerBootBroadcastReceiverComponent
                         .builder()
-                        .view(view)
                         .application(application)
                         .build()
     }
-
 }

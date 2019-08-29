@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.splash.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
 import com.pimenta.bestv.feature.splash.presentation.ui.fragment.SplashFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface SplashFragmentComponent {
 
     fun inject(splashFragment: SplashFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: SplashPresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): SplashFragmentComponent
+    }
+
+    companion object {
+        fun build(view: SplashPresenter.View, application: Application): SplashFragmentComponent =
+                DaggerSplashFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
     }
 }

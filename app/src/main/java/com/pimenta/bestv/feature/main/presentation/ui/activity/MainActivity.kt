@@ -20,11 +20,11 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.extension.replaceFragment
+import com.pimenta.bestv.feature.main.di.MainActivityComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.MainPresenter
-import com.pimenta.bestv.feature.splash.presentation.ui.activity.SplashActivity
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
+import com.pimenta.bestv.feature.splash.presentation.ui.activity.SplashActivity
 import javax.inject.Inject
 
 private const val SPLASH_ACTIVITY_REQUEST_CODE = 1
@@ -44,7 +44,7 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BesTV.applicationComponent.inject(this)
+        MainActivityComponent.build(application).inject(this)
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)

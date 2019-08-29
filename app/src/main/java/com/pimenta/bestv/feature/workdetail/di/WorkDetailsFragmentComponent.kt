@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.workdetail.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface WorkDetailsFragmentComponent {
 
     fun inject(workDetailsFragment: WorkDetailsFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: WorkDetailsPresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): WorkDetailsFragmentComponent
+    }
+
+    companion object {
+        fun build(view: WorkDetailsPresenter.View, application: Application): WorkDetailsFragmentComponent =
+                DaggerWorkDetailsFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
     }
 }

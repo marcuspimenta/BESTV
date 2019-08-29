@@ -14,10 +14,11 @@
 
 package com.pimenta.bestv.feature.recommendation.presentation.broadcast
 
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.pimenta.bestv.BesTV
+import com.pimenta.bestv.feature.recommendation.di.BootBroadcastReceiverComponent
 import com.pimenta.bestv.feature.recommendation.presentation.presenter.BootPresenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +33,8 @@ class BootBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("Boot initiated")
-        BesTV.applicationComponent.inject(this)
+        BootBroadcastReceiverComponent.build(context.applicationContext as Application)
+                .inject(this)
         presenter.scheduleRecommendationUpdate()
     }
 

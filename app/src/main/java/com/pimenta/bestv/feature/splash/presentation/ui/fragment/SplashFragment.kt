@@ -22,9 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.finish
+import com.pimenta.bestv.feature.splash.di.SplashFragmentComponent
 import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
 import kotlinx.android.synthetic.main.fragment_splash.*
 import javax.inject.Inject
@@ -41,9 +41,7 @@ class SplashFragment : Fragment(), SplashPresenter.View {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getSplashFragmentComponent()
-                .view(this)
-                .build()
+        SplashFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 

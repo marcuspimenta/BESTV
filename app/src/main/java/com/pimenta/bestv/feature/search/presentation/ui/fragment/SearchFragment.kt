@@ -30,15 +30,15 @@ import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.feature.search.di.SearchFragmentComponent
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
@@ -69,9 +69,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getSearchFragmentComponent()
-                .view(this)
-                .build()
+        SearchFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 

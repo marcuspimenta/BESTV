@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.main.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface WorkBrowseFragmentComponent {
 
     fun inject(workBrowseFragment: WorkBrowseFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: WorkBrowsePresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): WorkBrowseFragmentComponent
+    }
+
+    companion object {
+        fun build(view: WorkBrowsePresenter.View, application: Application): WorkBrowseFragmentComponent =
+                DaggerWorkBrowseFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
     }
 }

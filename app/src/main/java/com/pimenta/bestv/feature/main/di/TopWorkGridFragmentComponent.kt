@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.main.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.TopWorkGridFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface TopWorkGridFragmentComponent {
 
     fun inject(topWorkGridFragment: TopWorkGridFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: WorkGridPresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): TopWorkGridFragmentComponent
+    }
+
+    companion object {
+        fun build(view: WorkGridPresenter.View, application: Application): TopWorkGridFragmentComponent =
+                DaggerTopWorkGridFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
     }
 }

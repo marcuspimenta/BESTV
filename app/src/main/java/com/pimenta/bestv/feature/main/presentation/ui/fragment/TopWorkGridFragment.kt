@@ -16,8 +16,8 @@ package com.pimenta.bestv.feature.main.presentation.ui.fragment
 
 import android.content.Context
 import androidx.core.os.bundleOf
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.main.di.TopWorkGridFragmentComponent
 
 private const val TYPE = "TYPE"
 
@@ -30,9 +30,7 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getTopWorkGridFragmentComponent()
-                .view(this)
-                .build()
+        TopWorkGridFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 

@@ -14,25 +14,45 @@
 
 package com.pimenta.bestv.feature.search.di
 
+import android.app.Application
+import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.feature.search.presentation.ui.fragment.SearchFragment
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Subcomponent
+@Singleton
+@Component(
+        modules = [
+            ApplicationModule::class
+        ]
+)
 interface SearchFragmentComponent {
 
     fun inject(searchFragment: SearchFragment)
 
-    @Subcomponent.Builder
+    @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun view(view: SearchPresenter.View): Builder
 
+        @BindsInstance
+        fun application(application: Application): Builder
+
         fun build(): SearchFragmentComponent
+    }
+
+    companion object {
+        fun build(view: SearchPresenter.View, application: Application): SearchFragmentComponent =
+                DaggerSearchFragmentComponent
+                        .builder()
+                        .view(view)
+                        .application(application)
+                        .build()
     }
 }

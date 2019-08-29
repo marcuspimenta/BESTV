@@ -18,6 +18,7 @@ import android.content.Context
 import androidx.core.os.bundleOf
 import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
 
 private const val GENRE = "GENRE"
 
@@ -30,9 +31,7 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getGenreWorkGridFragmentComponent()
-                .view(this)
-                .build()
+        GenreWorkGridFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 

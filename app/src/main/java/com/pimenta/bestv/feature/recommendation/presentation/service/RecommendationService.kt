@@ -18,7 +18,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import com.pimenta.bestv.BesTV
+import com.pimenta.bestv.feature.recommendation.di.RecommendationServiceComponent
 import com.pimenta.bestv.feature.recommendation.presentation.presenter.RecommendationPresenter
 import javax.inject.Inject
 
@@ -32,9 +32,7 @@ class RecommendationService : Service(), RecommendationPresenter.Service {
 
     override fun onCreate() {
         super.onCreate()
-        BesTV.applicationComponent.getRecommendationServiceComponent()
-                .service(this)
-                .build()
+        RecommendationServiceComponent.build(this, application)
                 .inject(this)
         presenter.loadRecommendations()
     }

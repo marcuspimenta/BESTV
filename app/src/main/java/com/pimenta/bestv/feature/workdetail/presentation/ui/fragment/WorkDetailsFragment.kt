@@ -33,22 +33,22 @@ import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.feature.workdetail.presentation.ui.render.CastCardRender
-import com.pimenta.bestv.feature.workdetail.presentation.ui.render.VideoCardRender
+import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.feature.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
 import com.pimenta.bestv.feature.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.feature.castdetail.presentation.ui.fragment.CastDetailsFragment
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.feature.workdetail.di.WorkDetailsFragmentComponent
 import com.pimenta.bestv.feature.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
+import com.pimenta.bestv.feature.workdetail.presentation.ui.render.CastCardRender
+import com.pimenta.bestv.feature.workdetail.presentation.ui.render.VideoCardRender
+import com.pimenta.bestv.feature.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -73,7 +73,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     private val videoRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
     private val castRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(CastCardRender()) }
     private val recommendedRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val similarRowAdapter: ArrayObjectAdapter  by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val similarRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
     private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
     private val presenterSelector: ClassPresenterSelector by lazy {
@@ -96,9 +96,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        BesTV.applicationComponent.getWorkDetailsFragmentComponent()
-                .view(this)
-                .build()
+        WorkDetailsFragmentComponent.build(this, requireActivity().application)
                 .inject(this)
     }
 
