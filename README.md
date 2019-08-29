@@ -5,17 +5,35 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 ## About
 Sample about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseSupportFragment, SearchSupportFragment, DetailsSupportFragment, VerticalSupportFragment are used.
 
-## Implementations
-- [Android TV Leandback library](https://developer.android.com/tv)
-- [Recommend TV content](https://developer.android.com/training/tv/discovery/recommendations) 
-- [TMDb Rest API](https://www.themoviedb.org/)</li>
-- MVP architecture
-- Dagger 2
-- Retrofit 2
-- RxJava 2  
-- Glide
-- [Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
-- [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
+## Project
+- 100% [Kotlin](https://kotlinlang.org/)
+- Android TV
+- Clean Architecture
+- Android Architecture Components
+- Dependency Injection
+
+## Tech-stack
+This project uses the popular libraries and tools of the Android ecosystem.
+- Tech-stack
+    - [Kotlin](https://kotlinlang.org/)
+    - Android TV
+        - [Leandback library](https://developer.android.com/tv)
+        - [Recommend TV content](https://developer.android.com/training/tv/discovery/recommendations)
+    - Android Architecture Components
+        - [ROOM](https://developer.android.com/topic/libraries/architecture/room) local data storage
+        - [Lifecycle-aware components](https://developer.android.com/topic/libraries/architecture/lifecycle)
+    - [Retrofit](https://square.github.io/retrofit/) networking 
+    - [Dagger](https://dagger.dev/android.html) dependency injection
+    - [RxAndroid](https://github.com/ReactiveX/RxAndroid) reactive components
+    - [Glide](https://github.com/bumptech/glide) image loading library
+    - [Lottie](http://airbnb.io/lottie) animation library 
+- Architecture
+    - MVP
+    - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
+- Tests
+    - [Unit Tests](https://en.wikipedia.org/wiki/Unit_testing)
+    - [Mockito](https://github.com/mockito/mockito) 
+    - [Mockito-Kotlin](https://github.com/nhaarman/mockito-kotlin)
 
 ## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.
@@ -41,6 +59,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 - [Google Codelab TV Recommendations](https://github.com/googlecodelabs/tv-recommendations)
 - [Android TV application hands on tutorial](https://corochann.com/android-tv-application-hands-on-tutorial)
 - [Unit Testing asynchronous RxJava code](https://medium.com/@PaulinaSadowska/writing-unit-tests-on-asynchronous-events-with-rxjava-and-rxkotlin-1616a27f69aa)
+- [Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
 
 ## Licence
 ```
