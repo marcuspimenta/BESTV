@@ -1,9 +1,11 @@
 # BesTV
-<img src="/app/src/main/res/drawable/app_icon.png" align="right" hspace="10" height="150" width="150">
-Android TV App powered by TMDb. It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
+<img src="/app/src/main/res/drawable/app_icon.png" align="left" hspace="10" height="150" width="150">
 
-The goal of the project is to have a guide line about Android TV, that shows how to use the Leandback library from Google. The main widgets like BrowseSupportFragment, SearchSupportFragment, DetailsSupportFragment, VerticalSupportFragment are used.
+Android TV App powered by [TMDb](https://www.themoviedb.org/)
 
+It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
+
+The goal of the project is to have a guide line about Android TV, that shows how to use the Leandback library from Google. The project also uses the popular libraries and tools of the Android ecosystem. The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
 
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
