@@ -25,9 +25,9 @@ import javax.inject.Inject
  * Created by marcus on 07-03-2018.
  */
 class RecommendationPresenter @Inject constructor(
-        private val service: Service,
-        private val loadRecommendationUseCase: LoadRecommendationUseCase,
-        private val rxScheduler: RxScheduler
+    private val service: Service,
+    private val loadRecommendationUseCase: LoadRecommendationUseCase,
+    private val rxScheduler: RxScheduler
 ) : DisposablePresenter() {
 
     fun loadRecommendations() {
@@ -44,6 +44,5 @@ class RecommendationPresenter @Inject constructor(
     interface Service {
 
         fun onLoadRecommendationFinished()
-
     }
 }

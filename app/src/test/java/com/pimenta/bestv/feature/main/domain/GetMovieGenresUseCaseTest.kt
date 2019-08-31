@@ -68,5 +68,4 @@ class GetMovieGenresUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

@@ -27,9 +27,9 @@ import javax.inject.Inject
  * Created by marcus on 05-04-2018.
  */
 class CastDetailsPresenter @Inject constructor(
-        private val view: View,
-        private val getCastDetailsUseCase: GetCastDetailsUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val getCastDetailsUseCase: GetCastDetailsUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
@@ -59,6 +59,5 @@ class CastDetailsPresenter @Inject constructor(
         fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?)
 
         fun onErrorCastDetailsLoaded()
-
     }
 }

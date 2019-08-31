@@ -25,7 +25,7 @@ class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val castViewModel = item as CastViewModel
         viewHolder.title.text = castViewModel.name
-        //viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
+        // viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
         viewHolder.body.text = castViewModel.biography
     }
 }

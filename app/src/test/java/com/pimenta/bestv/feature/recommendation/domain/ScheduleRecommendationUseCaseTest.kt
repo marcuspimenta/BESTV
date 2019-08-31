@@ -35,6 +35,4 @@ class ScheduleRecommendationUseCaseTest {
 
         verify(localAlarm).scheduleRecommendationUpdate()
     }
-
-
 }

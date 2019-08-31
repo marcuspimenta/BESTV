@@ -68,5 +68,4 @@ class GetTvShowGenresUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

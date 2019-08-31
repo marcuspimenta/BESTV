@@ -24,7 +24,7 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetCastPersonalDetails @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(castId: Int): Single<CastViewModel> =

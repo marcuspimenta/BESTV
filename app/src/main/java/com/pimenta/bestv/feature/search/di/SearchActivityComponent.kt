@@ -38,5 +38,4 @@ interface SearchActivityComponent {
                         .builder()
                         .build()
     }
-
 }

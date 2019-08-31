@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 23/08/19.
  */
 class LocalSettings @Inject constructor(
-        private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences
 ) {
 
     fun getLongFromPersistence(key: String, defValue: Long) =

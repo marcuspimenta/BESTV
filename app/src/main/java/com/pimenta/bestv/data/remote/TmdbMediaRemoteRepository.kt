@@ -29,10 +29,10 @@ import javax.inject.Inject
  * Created by marcus on 08-02-2018.
  */
 class TmdbMediaRemoteRepository @Inject constructor(
-        private val genreApi: GenreApi,
-        private val movieApi: MovieApi,
-        private val personApi: CastApi,
-        private val tvShowApi: TvShowApi
+    private val genreApi: GenreApi,
+    private val movieApi: MovieApi,
+    private val personApi: CastApi,
+    private val tvShowApi: TvShowApi
 ) : MediaRemoteRepository {
 
     override fun getMovieGenres(): Single<MovieGenreListResponse> =

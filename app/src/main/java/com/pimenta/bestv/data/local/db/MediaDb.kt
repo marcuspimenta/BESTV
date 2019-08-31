@@ -37,5 +37,4 @@ abstract class MediaDb : RoomDatabase() {
     abstract fun movieDao(): MovieDao
 
     abstract fun tvShowDao(): TvShowDao
-
 }

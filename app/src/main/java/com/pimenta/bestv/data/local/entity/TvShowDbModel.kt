@@ -19,5 +19,5 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tv_show")
 data class TvShowDbModel(
-        @PrimaryKey val id: Int = 0
+    @PrimaryKey val id: Int = 0
 )

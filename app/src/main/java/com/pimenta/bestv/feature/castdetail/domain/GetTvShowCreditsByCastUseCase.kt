@@ -24,7 +24,7 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetTvShowCreditsByCastUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(castId: Int): Single<List<WorkViewModel>?> =

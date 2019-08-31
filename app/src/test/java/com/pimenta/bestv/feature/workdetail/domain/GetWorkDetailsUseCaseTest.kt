@@ -65,7 +65,6 @@ class GetWorkDetailsUseCaseTest {
             getSimilarByWorkUseCase
     )
 
-
     @Test
     fun `should return the right data when loading the work details`() {
         whenever(isFavoriteUseCase(WORK_VIEW_MODEL))

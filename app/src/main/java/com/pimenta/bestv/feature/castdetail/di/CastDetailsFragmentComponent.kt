@@ -59,5 +59,4 @@ interface CastDetailsFragmentComponent {
                         .application(application)
                         .build()
     }
-
 }

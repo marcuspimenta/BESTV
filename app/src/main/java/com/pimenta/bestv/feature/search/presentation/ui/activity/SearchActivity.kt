@@ -54,6 +54,5 @@ class SearchActivity : FragmentActivity() {
     companion object {
 
         fun newInstance(context: Context?): Intent = Intent(context, SearchActivity::class.java)
-
     }
 }

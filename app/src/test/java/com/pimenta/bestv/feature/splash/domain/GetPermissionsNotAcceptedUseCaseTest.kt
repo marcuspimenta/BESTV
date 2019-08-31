@@ -51,5 +51,4 @@ class GetPermissionsNotAcceptedUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

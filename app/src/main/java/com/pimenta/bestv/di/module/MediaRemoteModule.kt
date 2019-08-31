@@ -66,7 +66,6 @@ class MediaRemoteModule {
     fun providePersonGenreApi(retrofit: Retrofit) =
             retrofit.create(GenreApi::class.java)
 
-
     @Provides
     @Singleton
     fun provideCastApi(retrofit: Retrofit) =
@@ -76,5 +75,4 @@ class MediaRemoteModule {
     @Singleton
     fun provideTvShowApi(retrofit: Retrofit) =
             retrofit.create(TvShowApi::class.java)
-
 }

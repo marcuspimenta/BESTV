@@ -143,7 +143,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {
-                //DO ANYTHING
+                // DO ANYTHING
             }
         })
     }

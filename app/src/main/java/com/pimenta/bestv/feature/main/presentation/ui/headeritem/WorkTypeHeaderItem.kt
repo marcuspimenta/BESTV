@@ -22,7 +22,7 @@ import com.pimenta.bestv.data.MediaRepository
  * Created by marcus on 11-02-2018.
  */
 class WorkTypeHeaderItem(
-        id: Int,
-        name: String,
-        val movieListType: MediaRepository.WorkType
+    id: Int,
+    name: String,
+    val movieListType: MediaRepository.WorkType
 ) : HeaderItem(id.toLong(), name)

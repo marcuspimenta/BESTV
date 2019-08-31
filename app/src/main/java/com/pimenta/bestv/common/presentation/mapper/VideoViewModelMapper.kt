@@ -25,4 +25,3 @@ fun VideoResponse.toViewModel() = VideoViewModel(
         thumbnailUrl = key?.let { String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, it) },
         youtubeUrl = key?.let { String.format(BuildConfig.YOUTUBE_BASE_URL, it) }
 )
-

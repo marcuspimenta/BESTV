@@ -154,7 +154,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {
-                //DO ANYTHING
+                // DO ANYTHING
             }
         })
 

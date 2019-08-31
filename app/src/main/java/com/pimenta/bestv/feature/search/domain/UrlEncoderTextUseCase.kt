@@ -27,5 +27,4 @@ class UrlEncoderTextUseCase @Inject constructor() {
 
     operator fun invoke(text: String): Single<String> =
             Single.fromCallable { URLEncoder.encode(text, enc) }
-
 }

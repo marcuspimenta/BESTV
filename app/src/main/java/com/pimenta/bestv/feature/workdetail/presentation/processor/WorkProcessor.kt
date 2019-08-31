@@ -58,5 +58,4 @@ class WorkProcessor @Inject constructor() {
                     return null
                 }
             }
-
 }

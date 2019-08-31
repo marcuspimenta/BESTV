@@ -27,16 +27,16 @@ import java.io.Serializable
  * Created by marcus on 18-04-2019.
  */
 data class WorkViewModel(
-        var id: Int,
-        var originalLanguage: String? = null,
-        var overview: String? = null,
-        var backdropUrl: String? = null,
-        var posterUrl: String? = null,
-        var title: String? = null,
-        var originalTitle: String? = null,
-        var releaseDate: String? = null,
-        var isFavorite: Boolean = false,
-        var type: WorkType
+    var id: Int,
+    var originalLanguage: String? = null,
+    var overview: String? = null,
+    var backdropUrl: String? = null,
+    var posterUrl: String? = null,
+    var title: String? = null,
+    var originalTitle: String? = null,
+    var releaseDate: String? = null,
+    var isFavorite: Boolean = false,
+    var type: WorkType
 ) : Serializable
 
 fun WorkViewModel.loadPoster(context: Context, target: CustomTarget<Drawable>) {

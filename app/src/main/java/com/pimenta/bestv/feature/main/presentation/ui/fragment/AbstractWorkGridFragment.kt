@@ -121,7 +121,7 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {
-                //DO ANYTHING
+                // DO ANYTHING
             }
         })
     }
@@ -189,5 +189,4 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
     }
 
     abstract fun loadData()
-
 }

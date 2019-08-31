@@ -20,8 +20,8 @@ import com.google.gson.annotations.SerializedName
  * Created by marcus on 06/07/18.
  */
 abstract class WorkPageResponse<T : WorkResponse>(
-        @SerializedName("page") var page: Int = 0,
-        @SerializedName("total_pages") var totalPages: Int = 0,
-        @SerializedName("total_results") var totalResults: Int = 0,
-        @SerializedName("results") var works: List<T>? = null
+    @SerializedName("page") var page: Int = 0,
+    @SerializedName("total_pages") var totalPages: Int = 0,
+    @SerializedName("total_results") var totalResults: Int = 0,
+    @SerializedName("results") var works: List<T>? = null
 )

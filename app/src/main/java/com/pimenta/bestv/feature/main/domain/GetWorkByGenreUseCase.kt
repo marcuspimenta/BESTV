@@ -25,7 +25,7 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class GetWorkByGenreUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(genreViewModel: GenreViewModel, page: Int) =

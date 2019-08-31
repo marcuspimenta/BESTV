@@ -127,5 +127,4 @@ class GetWorkByGenreUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

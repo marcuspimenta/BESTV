@@ -72,5 +72,4 @@ class GetMovieCreditsByCastUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

@@ -21,6 +21,6 @@ import com.pimenta.bestv.common.presentation.model.GenreViewModel
  * Created by marcus on 09-02-2018.
  */
 class GenreHeaderItem(
-        id: Int,
-        val genreViewModel: GenreViewModel
+    id: Int,
+    val genreViewModel: GenreViewModel
 ) : HeaderItem(id.toLong(), genreViewModel.name)

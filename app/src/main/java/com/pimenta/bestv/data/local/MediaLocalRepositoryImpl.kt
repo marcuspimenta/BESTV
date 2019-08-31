@@ -27,8 +27,8 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2018.
  */
 class MediaLocalRepositoryImpl @Inject constructor(
-        private val movieDao: MovieDao,
-        private val tvShowDao: TvShowDao
+    private val movieDao: MovieDao,
+    private val tvShowDao: TvShowDao
 ) : MediaLocalRepository {
 
     override fun hasFavorite(): Single<Boolean> =

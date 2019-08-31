@@ -35,5 +35,4 @@ class BootPresenterTest {
 
         verify(scheduleRecommendationUseCase).invoke()
     }
-
 }

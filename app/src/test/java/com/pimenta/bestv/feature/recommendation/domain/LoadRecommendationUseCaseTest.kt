@@ -84,5 +84,4 @@ class LoadRecommendationUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

@@ -21,6 +21,6 @@ import io.reactivex.schedulers.Schedulers
  * Created by marcus on 23-05-2018.
  */
 class RxSchedulerTest(
-        ioScheduler: Scheduler = Schedulers.trampoline(),
-        mainScheduler: Scheduler = Schedulers.trampoline()
+    ioScheduler: Scheduler = Schedulers.trampoline(),
+    mainScheduler: Scheduler = Schedulers.trampoline()
 ) : RxScheduler(ioScheduler, mainScheduler)

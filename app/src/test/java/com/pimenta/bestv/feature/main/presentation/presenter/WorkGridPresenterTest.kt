@@ -197,5 +197,4 @@ class WorkGridPresenterTest {
 
         verify(view, times(1)).loadBackdropImage(TV_SHOW_VIEW_MODEL)
     }
-
 }

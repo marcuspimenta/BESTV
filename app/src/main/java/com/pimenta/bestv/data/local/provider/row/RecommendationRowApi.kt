@@ -28,8 +28,8 @@ import io.reactivex.Completable
  * Created by marcus on 23-04-2019.
  */
 class RecommendationRowApi constructor(
-        private val application: Application,
-        private val notificationManager: NotificationManager
+    private val application: Application,
+    private val notificationManager: NotificationManager
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =

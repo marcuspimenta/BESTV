@@ -56,5 +56,4 @@ interface MainActivityComponent {
                         .application(application)
                         .build()
     }
-
 }

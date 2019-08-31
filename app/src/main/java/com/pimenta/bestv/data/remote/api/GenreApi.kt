@@ -28,14 +28,13 @@ interface GenreApi {
 
     @GET("genre/movie/list")
     fun getMovieGenres(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<MovieGenreListResponse>
 
     @GET("genre/tv/list")
     fun getTvShowGenres(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<TvShowGenreListResponse>
-
 }

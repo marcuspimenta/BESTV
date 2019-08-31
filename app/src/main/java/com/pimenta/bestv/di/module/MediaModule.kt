@@ -47,5 +47,4 @@ interface MediaModule {
     @Binds
     @Singleton
     fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
-
 }

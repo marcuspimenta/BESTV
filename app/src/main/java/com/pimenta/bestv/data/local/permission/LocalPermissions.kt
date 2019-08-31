@@ -25,7 +25,7 @@ import javax.inject.Inject
  * Created by marcus on 2019-08-28.
  */
 class LocalPermissions @Inject constructor(
-        private val application: Application
+    private val application: Application
 ) {
 
     fun loadPermissionsNotAccepted(): Single<List<String>> =
@@ -36,7 +36,6 @@ class LocalPermissions @Inject constructor(
                     if (permissionDenied) {
                         permissionsNotAccepted.add(it)
                     }
-
                 }
                 permissionsNotAccepted
             }

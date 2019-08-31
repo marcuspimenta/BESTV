@@ -26,13 +26,13 @@ import java.io.Serializable
  * Created by marcus on 15-04-2019.
  */
 data class CastViewModel(
-        var id: Int,
-        var name: String? = null,
-        var character: String? = null,
-        var birthday: String? = null,
-        var deathDay: String? = null,
-        var biography: String? = null,
-        var thumbnailUrl: String? = null
+    var id: Int,
+    var name: String? = null,
+    var character: String? = null,
+    var birthday: String? = null,
+    var deathDay: String? = null,
+    var biography: String? = null,
+    var thumbnailUrl: String? = null
 ) : Serializable
 
 fun CastViewModel.loadThumbnail(context: Context, target: CustomTarget<Drawable>) {

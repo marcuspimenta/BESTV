@@ -37,5 +37,4 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                 .inject(this)
         presenter.scheduleRecommendationUpdate()
     }
-
 }

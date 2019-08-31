@@ -31,5 +31,4 @@ abstract class AutoDisposablePresenter : LifecycleObserver, DisposablePresenter(
     override fun dispose() {
         super.dispose()
     }
-
 }

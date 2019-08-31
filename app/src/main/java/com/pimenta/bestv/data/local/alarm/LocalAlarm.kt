@@ -26,13 +26,12 @@ private const val INITIAL_DELAY = 5000L
  * Created by marcus on 23-08-2019.
  */
 class LocalAlarm @Inject constructor(
-        private val application: Application,
-        private val alarmManager: AlarmManager
+    private val application: Application,
+    private val alarmManager: AlarmManager
 ) {
 
     fun scheduleRecommendationUpdate() {
         val alarmIntent = PendingIntent.getService(application, 0, RecommendationService.newInstance(application), 0)
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, INITIAL_DELAY, AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)
     }
-
 }

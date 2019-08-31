@@ -32,12 +32,13 @@ class RecommendationModule {
 
     @Provides
     @Singleton
-    fun provideRecommendationManager(application: Application,
-                                     localSettings: LocalSettings,
-                                     notificationManager: NotificationManager) =
+    fun provideRecommendationManager(
+        application: Application,
+        localSettings: LocalSettings,
+        notificationManager: NotificationManager
+    ) =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 RecommendationChannelApi(application, localSettings)
             else
                 RecommendationRowApi(application, notificationManager)
-
 }

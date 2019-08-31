@@ -86,5 +86,4 @@ class IsFavoriteUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

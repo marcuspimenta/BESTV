@@ -32,84 +32,83 @@ interface MovieApi {
 
     @GET("discover/movie")
     fun getMoviesByGenre(
-            @Query("with_genres") genreId: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("include_adult") includeAdult: Boolean,
-            @Query("page") page: Int
+        @Query("with_genres") genreId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("include_adult") includeAdult: Boolean,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/{movie_id}")
     fun getMovie(
-            @Path("movie_id") movie_id: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Call<MovieResponse>
 
     @GET("movie/{movie_id}/credits")
     fun getCastByMovie(
-            @Path("movie_id") movie_id: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<CastListResponse>
 
     @GET("movie/{movie_id}/recommendations")
     fun getRecommendationByMovie(
-            @Path("movie_id") movie_id: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/{movie_id}/similar")
     fun getSimilarByMovie(
-            @Path("movie_id") movie_id: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/{movie_id}/videos")
     fun getVideosByMovie(
-            @Path("movie_id") movie_id: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<VideoListResponse>
 
     @GET("movie/now_playing")
     fun getNowPlayingMovies(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/top_rated")
     fun getTopRatedMovies(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("movie/upcoming")
     fun getUpComingMovies(
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
 
     @GET("search/movie")
     fun searchMoviesByQuery(
-            @Query("api_key") apiKey: String,
-            @Query("query") query: String,
-            @Query("language") language: String,
-            @Query("page") page: Int
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
     ): Single<MoviePageResponse>
-
 }

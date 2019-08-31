@@ -20,9 +20,9 @@ import java.io.Serializable
  * Created by marcus on 28-05-2019.
  */
 data class GenreViewModel(
-        var id: Int = 0,
-        var name: String? = null,
-        var source: Source = Source.MOVIE
+    var id: Int = 0,
+    var name: String? = null,
+    var source: Source = Source.MOVIE
 ) : Serializable
 
 enum class Source {

@@ -23,7 +23,7 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class SearchTvShowsByQueryUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(query: String, page: Int) =
@@ -35,5 +35,4 @@ class SearchTvShowsByQueryUseCase @Inject constructor(
                                 tvShowPage.works?.map { work -> work.toViewModel() }
                         )
                     }
-
 }

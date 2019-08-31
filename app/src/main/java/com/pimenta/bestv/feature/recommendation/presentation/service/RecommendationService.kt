@@ -54,5 +54,4 @@ class RecommendationService : Service(), RecommendationPresenter.Service {
 
         fun newInstance(context: Context) = Intent(context, RecommendationService::class.java)
     }
-
 }

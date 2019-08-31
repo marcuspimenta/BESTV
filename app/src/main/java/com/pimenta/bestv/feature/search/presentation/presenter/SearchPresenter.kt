@@ -34,11 +34,11 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  * Created by marcus on 12-03-2018.
  */
 class SearchPresenter @Inject constructor(
-        private val view: View,
-        private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
-        private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
-        private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var query: String = ""
@@ -182,6 +182,5 @@ class SearchPresenter @Inject constructor(
         fun loadBackdropImage(workViewModel: WorkViewModel)
 
         fun onErrorSearch()
-
     }
 }

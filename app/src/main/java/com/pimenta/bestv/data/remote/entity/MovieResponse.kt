@@ -22,11 +22,11 @@ import com.google.gson.annotations.SerializedName
  */
 @Entity(tableName = MovieResponse.TABLE)
 class MovieResponse(
-        id: Int = 0,
-        isFavorite: Boolean = false,
-        @SerializedName("title") override var title: String? = null,
-        @SerializedName("original_title") override var originalTitle: String? = null,
-        @SerializedName("release_date") var releaseDateString: String? = null
+    id: Int = 0,
+    isFavorite: Boolean = false,
+    @SerializedName("title") override var title: String? = null,
+    @SerializedName("original_title") override var originalTitle: String? = null,
+    @SerializedName("release_date") var releaseDateString: String? = null
 ) : WorkResponse(id = id, isFavorite = isFavorite) {
 
     override var releaseDate: String?

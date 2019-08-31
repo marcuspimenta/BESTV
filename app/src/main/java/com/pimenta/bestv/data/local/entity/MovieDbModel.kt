@@ -19,5 +19,5 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "movie")
 data class MovieDbModel(
-        @PrimaryKey val id: Int = 0
+    @PrimaryKey val id: Int = 0
 )

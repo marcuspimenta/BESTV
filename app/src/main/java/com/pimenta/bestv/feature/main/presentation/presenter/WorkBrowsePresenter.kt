@@ -27,10 +27,10 @@ import javax.inject.Inject
  * Created by marcus on 06-02-2018.
  */
 class WorkBrowsePresenter @Inject constructor(
-        private val view: View,
-        private val hasFavoriteUseCase: HasFavoriteUseCase,
-        private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val hasFavoriteUseCase: HasFavoriteUseCase,
+    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun hasFavorite() {
@@ -74,6 +74,5 @@ class WorkBrowsePresenter @Inject constructor(
         fun onHasFavorite(hasFavoriteMovie: Boolean)
 
         fun onErrorDataLoaded()
-
     }
 }

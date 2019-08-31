@@ -59,5 +59,4 @@ interface GenreWorkGridFragmentComponent {
                         .application(application)
                         .build()
     }
-
 }

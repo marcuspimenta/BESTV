@@ -35,11 +35,11 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  * Created by marcus on 09-02-2018.
  */
 class WorkGridPresenter @Inject constructor(
-        private val view: View,
-        private val getFavoritesUseCase: GetFavoritesUseCase,
-        private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
-        private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0
@@ -139,6 +139,5 @@ class WorkGridPresenter @Inject constructor(
         fun loadBackdropImage(workViewModel: WorkViewModel)
 
         fun onErrorWorksLoaded()
-
     }
 }

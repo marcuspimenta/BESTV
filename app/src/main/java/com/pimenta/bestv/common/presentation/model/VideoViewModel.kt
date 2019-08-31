@@ -18,9 +18,9 @@ package com.pimenta.bestv.common.presentation.model
  * Created by marcus on 12-04-2019.
  */
 data class VideoViewModel(
-        var id: String? = null,
-        var name: String? = null,
-        var type: String? = null,
-        var thumbnailUrl: String? = null,
-        var youtubeUrl: String? = null
+    var id: String? = null,
+    var name: String? = null,
+    var type: String? = null,
+    var thumbnailUrl: String? = null,
+    var youtubeUrl: String? = null
 )

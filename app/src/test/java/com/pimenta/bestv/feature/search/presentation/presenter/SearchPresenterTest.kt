@@ -203,5 +203,4 @@ class SearchPresenterTest {
 
         verify(view, only()).loadBackdropImage(OTHER_WORK_VIEW_MODEL)
     }
-
 }

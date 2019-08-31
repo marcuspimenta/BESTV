@@ -64,5 +64,4 @@ class GetFavoritesUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

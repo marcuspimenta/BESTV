@@ -162,7 +162,6 @@ class WorkDetailsPresenterTest {
 
         whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1)).thenReturn(Single.just(RECOMMENDED_PAGE))
 
-
         presenter.loadRecommendationByWork(workViewModel)
 
         val recommendedWorks = mutableListOf<WorkViewModel>().apply {
@@ -212,5 +211,4 @@ class WorkDetailsPresenterTest {
 
         verifyZeroInteractions(view)
     }
-
 }

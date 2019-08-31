@@ -48,5 +48,4 @@ class HasFavoriteUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

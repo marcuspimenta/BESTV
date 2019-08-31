@@ -68,5 +68,4 @@ class GetCastDetailsUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

@@ -23,9 +23,9 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetWorkBrowseDetailsUseCase @Inject constructor(
-        private val hasFavoriteUseCase: HasFavoriteUseCase,
-        private val getMovieGenresUseCase: GetMovieGenresUseCase,
-        private val getTvShowGenresUseCase: GetTvShowGenresUseCase
+    private val hasFavoriteUseCase: HasFavoriteUseCase,
+    private val getMovieGenresUseCase: GetMovieGenresUseCase,
+    private val getTvShowGenresUseCase: GetTvShowGenresUseCase
 ) {
 
     operator fun invoke(): Single<Triple<Boolean, List<GenreViewModel>?, List<GenreViewModel>?>> =

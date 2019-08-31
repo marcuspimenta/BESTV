@@ -76,5 +76,4 @@ class MainActivity : FragmentActivity() {
         backgroundManager.release()
         super.onDestroy()
     }
-
 }

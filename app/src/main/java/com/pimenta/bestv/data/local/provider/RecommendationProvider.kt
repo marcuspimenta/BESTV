@@ -23,5 +23,4 @@ import io.reactivex.Completable
 interface RecommendationProvider {
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
-
 }

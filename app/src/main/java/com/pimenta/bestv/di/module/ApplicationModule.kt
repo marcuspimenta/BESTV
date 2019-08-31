@@ -43,5 +43,4 @@ class ApplicationModule {
     @Singleton
     fun provideSharedPreferences(application: Application) =
             application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
-
 }

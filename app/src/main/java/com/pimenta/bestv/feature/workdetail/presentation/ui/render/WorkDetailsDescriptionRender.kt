@@ -28,5 +28,4 @@ class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
         viewHolder.subtitle.text = workViewModel.releaseDate
         viewHolder.body.text = workViewModel.overview
     }
-
 }

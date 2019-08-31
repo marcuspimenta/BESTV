@@ -22,9 +22,9 @@ import java.io.Serializable
  * Created by marcus on 22-02-2018.
  */
 data class VideoResponse(
-        @SerializedName("id") var id: String? = null,
-        @SerializedName("key") var key: String? = null,
-        @SerializedName("name") var name: String? = null,
-        @SerializedName("site") var site: String? = null,
-        @SerializedName("type") var type: String? = null
+    @SerializedName("id") var id: String? = null,
+    @SerializedName("key") var key: String? = null,
+    @SerializedName("name") var name: String? = null,
+    @SerializedName("site") var site: String? = null,
+    @SerializedName("type") var type: String? = null
 ) : Serializable

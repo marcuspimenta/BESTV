@@ -30,23 +30,23 @@ interface CastApi {
 
     @GET("person/{person_id}")
     fun getCastDetails(
-            @Path("person_id") personId: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<CastResponse>
 
     @GET("person/{person_id}/movie_credits")
     fun getMovieCredits(
-            @Path("person_id") personId: Int,
-            @Query("api_key") apiKey:
-            String, @Query("language") language: String
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey:
+        String,
+        @Query("language") language: String
     ): Single<CastMovieListResponse>
 
     @GET("person/{person_id}/tv_credits")
     fun getTvShowCredits(
-            @Path("person_id") personId: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Single<CastTvShowListResponse>
-
 }

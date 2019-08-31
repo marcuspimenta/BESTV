@@ -106,6 +106,4 @@ class SetFavoriteUseCaseTest {
 
         verify(mediaRepository, only()).deleteFavoriteTvShow(dbModel)
     }
-
-
 }

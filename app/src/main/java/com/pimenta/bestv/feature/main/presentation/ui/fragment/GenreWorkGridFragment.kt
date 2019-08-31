@@ -16,7 +16,6 @@ package com.pimenta.bestv.feature.main.presentation.ui.fragment
 
 import android.content.Context
 import androidx.core.os.bundleOf
-import com.pimenta.bestv.BesTV
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
 

@@ -28,9 +28,9 @@ private const val SPLASH_TIME_LOAD_SECONDS = 4
  * Created by marcus on 04-05-2018.
  */
 class SplashPresenter @Inject constructor(
-        private val view: View,
-        private val getPermissionsNotAcceptedUseCase: GetPermissionsNotAcceptedUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val getPermissionsNotAcceptedUseCase: GetPermissionsNotAcceptedUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadPermissions() {
@@ -67,7 +67,5 @@ class SplashPresenter @Inject constructor(
         fun onHasAllPermissions(hasAllPermissions: Boolean)
 
         fun onRequestPermissions(permissions: List<String>)
-
     }
-
 }

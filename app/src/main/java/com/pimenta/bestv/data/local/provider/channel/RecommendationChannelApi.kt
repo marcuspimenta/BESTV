@@ -32,8 +32,8 @@ import io.reactivex.Completable
  * Created by marcus on 23-04-2019.
  */
 class RecommendationChannelApi constructor(
-        private val application: Application,
-        private val localSettings: LocalSettings
+    private val application: Application,
+    private val localSettings: LocalSettings
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =
@@ -69,7 +69,6 @@ class RecommendationChannelApi constructor(
 
                                 localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
                             }
-
                 }
                 it.onComplete()
             }
@@ -119,6 +118,5 @@ class RecommendationChannelApi constructor(
     companion object {
 
         const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"
-
     }
 }

@@ -21,11 +21,10 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class ScheduleRecommendationUseCase @Inject constructor(
-        private val localAlarm: LocalAlarm
+    private val localAlarm: LocalAlarm
 ) {
 
     operator fun invoke() {
         localAlarm.scheduleRecommendationUpdate()
     }
-
 }

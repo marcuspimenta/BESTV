@@ -14,5 +14,4 @@
 
 package com.pimenta.bestv.feature.workdetail.presentation.processor
 
-class WorkProcessorTest {
-}
+class WorkProcessorTest

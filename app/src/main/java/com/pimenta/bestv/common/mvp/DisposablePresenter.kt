@@ -26,5 +26,4 @@ abstract class DisposablePresenter {
     open fun dispose() {
         compositeDisposable.dispose()
     }
-
 }

@@ -88,5 +88,4 @@ class SearchWorksByQueryUseCaseTest {
                 .test()
                 .assertError(Throwable::class.java)
     }
-
 }

@@ -85,5 +85,4 @@ class SplashPresenterTest {
 
         verify(view, only()).onHasAllPermissions(false)
     }
-
 }

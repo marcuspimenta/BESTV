@@ -41,5 +41,4 @@ interface MediaLocalRepository {
     fun getMovies(): Single<List<MovieDbModel>>
 
     fun getTvShows(): Single<List<TvShowDbModel>>
-
 }

@@ -25,7 +25,7 @@ private const val RECOMMENDATION_NUMBER = 5
  * Created by marcus on 23-04-2019.
  */
 class LoadRecommendationUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(): Completable =
@@ -33,5 +33,4 @@ class LoadRecommendationUseCase @Inject constructor(
                     .map { it.works?.map { work -> work.toViewModel() } }
                     .map { it.take(RECOMMENDATION_NUMBER) }
                     .flatMapCompletable { mediaRepository.loadRecommendations(it) }
-
 }

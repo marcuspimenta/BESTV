@@ -42,6 +42,5 @@ class Const {
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.RECEIVE_BOOT_COMPLETED
         )
-
     }
 }

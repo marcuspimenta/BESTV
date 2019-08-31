@@ -25,8 +25,8 @@ import javax.inject.Inject
  * Created by marcus on 04-05-2018.
  */
 class MainPresenter @Inject constructor(
-        private val loadRecommendationUseCase: LoadRecommendationUseCase,
-        private val rxScheduler: RxScheduler
+    private val loadRecommendationUseCase: LoadRecommendationUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadRecommendations() {

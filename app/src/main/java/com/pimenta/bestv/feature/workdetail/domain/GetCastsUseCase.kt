@@ -25,7 +25,7 @@ import javax.inject.Inject
  * Created by marcus on 15-04-2019.
  */
 class GetCastsUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int): Single<List<CastViewModel>?> =
@@ -35,5 +35,4 @@ class GetCastsUseCase @Inject constructor(
                 WorkType.TV_SHOW -> mediaRepository.getCastByTvShow(workId)
                         .map { it.casts?.map { cast -> cast.toViewModel() } }
             }
-
 }

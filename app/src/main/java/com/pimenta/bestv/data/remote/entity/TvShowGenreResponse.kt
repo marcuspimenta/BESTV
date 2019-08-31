@@ -18,7 +18,7 @@ package com.pimenta.bestv.data.remote.entity
  * Created by marcus on 06/07/18.
  */
 class TvShowGenreResponse(
-        id: Int = 0,
-        name: String? = null,
-        override val source: Source = Source.TV_SHOW
+    id: Int = 0,
+    name: String? = null,
+    override val source: Source = Source.TV_SHOW
 ) : GenreResponse(id = id, name = name)

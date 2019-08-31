@@ -21,7 +21,7 @@ import javax.inject.Inject
  * Created by marcus on 22/08/19.
  */
 class GetPermissionsNotAcceptedUseCase @Inject constructor(
-        private val localPermissions: LocalPermissions
+    private val localPermissions: LocalPermissions
 ) {
 
     operator fun invoke() =
