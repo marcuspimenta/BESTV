@@ -39,24 +39,17 @@ interface WorkDetailsFragmentComponent {
 
     fun inject(workDetailsFragment: WorkDetailsFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: WorkDetailsPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): WorkDetailsFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: WorkDetailsPresenter.View,
+                @BindsInstance application: Application
+        ): WorkDetailsFragmentComponent
     }
 
     companion object {
-        fun build(view: WorkDetailsPresenter.View, application: Application): WorkDetailsFragmentComponent =
-                DaggerWorkDetailsFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: WorkDetailsPresenter.View, application: Application): WorkDetailsFragmentComponent =
+                DaggerWorkDetailsFragmentComponent.factory()
+                        .create(view, application)
     }
 }

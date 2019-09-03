@@ -39,24 +39,17 @@ interface GenreWorkGridFragmentComponent {
 
     fun inject(genreWorkGridFragment: GenreWorkGridFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: WorkGridPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): GenreWorkGridFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: WorkGridPresenter.View,
+                @BindsInstance application: Application
+        ): GenreWorkGridFragmentComponent
     }
 
     companion object {
-        fun build(view: WorkGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
-                DaggerGenreWorkGridFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: WorkGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
+                DaggerGenreWorkGridFragmentComponent.factory()
+                        .create(view, application)
     }
 }

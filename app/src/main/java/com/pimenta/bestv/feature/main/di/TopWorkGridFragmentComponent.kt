@@ -39,24 +39,17 @@ interface TopWorkGridFragmentComponent {
 
     fun inject(topWorkGridFragment: TopWorkGridFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: WorkGridPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): TopWorkGridFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: WorkGridPresenter.View,
+                @BindsInstance application: Application
+        ): TopWorkGridFragmentComponent
     }
 
     companion object {
-        fun build(view: WorkGridPresenter.View, application: Application): TopWorkGridFragmentComponent =
-                DaggerTopWorkGridFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: WorkGridPresenter.View, application: Application): TopWorkGridFragmentComponent =
+                DaggerTopWorkGridFragmentComponent.factory()
+                        .create(view, application)
     }
 }

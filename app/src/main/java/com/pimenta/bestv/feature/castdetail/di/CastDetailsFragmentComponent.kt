@@ -39,24 +39,17 @@ interface CastDetailsFragmentComponent {
 
     fun inject(castDetailsFragment: CastDetailsFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: CastDetailsPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): CastDetailsFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: CastDetailsPresenter.View,
+                @BindsInstance application: Application
+        ): CastDetailsFragmentComponent
     }
 
     companion object {
-        fun build(view: CastDetailsPresenter.View, application: Application): CastDetailsFragmentComponent =
-                DaggerCastDetailsFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: CastDetailsPresenter.View, application: Application): CastDetailsFragmentComponent =
+                DaggerCastDetailsFragmentComponent.factory()
+                        .create(view, application)
     }
 }

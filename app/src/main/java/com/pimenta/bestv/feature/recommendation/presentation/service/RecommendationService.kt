@@ -32,7 +32,7 @@ class RecommendationService : Service(), RecommendationPresenter.Service {
 
     override fun onCreate() {
         super.onCreate()
-        RecommendationServiceComponent.build(this, application)
+        RecommendationServiceComponent.create(this, application)
                 .inject(this)
         presenter.loadRecommendations()
     }

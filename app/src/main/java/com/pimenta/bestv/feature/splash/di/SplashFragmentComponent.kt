@@ -37,24 +37,17 @@ interface SplashFragmentComponent {
 
     fun inject(splashFragment: SplashFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: SplashPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): SplashFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: SplashPresenter.View,
+                @BindsInstance application: Application
+        ): SplashFragmentComponent
     }
 
     companion object {
-        fun build(view: SplashPresenter.View, application: Application): SplashFragmentComponent =
-                DaggerSplashFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: SplashPresenter.View, application: Application): SplashFragmentComponent =
+                DaggerSplashFragmentComponent.factory()
+                        .create(view, application)
     }
 }

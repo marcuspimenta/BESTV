@@ -41,7 +41,7 @@ class SplashFragment : Fragment(), SplashPresenter.View {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        SplashFragmentComponent.build(this, requireActivity().application)
+        SplashFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

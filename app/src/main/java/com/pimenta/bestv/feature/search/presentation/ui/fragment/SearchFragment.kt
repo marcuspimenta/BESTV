@@ -69,7 +69,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        SearchFragmentComponent.build(this, requireActivity().application)
+        SearchFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

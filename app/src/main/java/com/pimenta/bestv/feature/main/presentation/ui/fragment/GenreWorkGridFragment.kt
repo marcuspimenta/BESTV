@@ -30,7 +30,7 @@ class GenreWorkGridFragment : AbstractWorkGridFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GenreWorkGridFragmentComponent.build(this, requireActivity().application)
+        GenreWorkGridFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

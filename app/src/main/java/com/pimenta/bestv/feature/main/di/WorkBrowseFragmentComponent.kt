@@ -39,24 +39,17 @@ interface WorkBrowseFragmentComponent {
 
     fun inject(workBrowseFragment: WorkBrowseFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: WorkBrowsePresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): WorkBrowseFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: WorkBrowsePresenter.View,
+                @BindsInstance application: Application
+        ): WorkBrowseFragmentComponent
     }
 
     companion object {
-        fun build(view: WorkBrowsePresenter.View, application: Application): WorkBrowseFragmentComponent =
-                DaggerWorkBrowseFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: WorkBrowsePresenter.View, application: Application): WorkBrowseFragmentComponent =
+                DaggerWorkBrowseFragmentComponent.factory()
+                        .create(view, application)
     }
 }

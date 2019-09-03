@@ -44,7 +44,7 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MainActivityComponent.build(application).inject(this)
+        MainActivityComponent.create(application).inject(this)
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)

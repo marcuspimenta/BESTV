@@ -69,7 +69,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        CastDetailsFragmentComponent.build(this, requireActivity().application)
+        CastDetailsFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

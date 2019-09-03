@@ -39,24 +39,17 @@ interface SearchFragmentComponent {
 
     fun inject(searchFragment: SearchFragment)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun view(view: SearchPresenter.View): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): SearchFragmentComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance view: SearchPresenter.View,
+                @BindsInstance application: Application
+        ): SearchFragmentComponent
     }
 
     companion object {
-        fun build(view: SearchPresenter.View, application: Application): SearchFragmentComponent =
-                DaggerSearchFragmentComponent
-                        .builder()
-                        .view(view)
-                        .application(application)
-                        .build()
+        fun create(view: SearchPresenter.View, application: Application): SearchFragmentComponent =
+                DaggerSearchFragmentComponent.factory()
+                        .create(view, application)
     }
 }

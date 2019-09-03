@@ -65,7 +65,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        WorkBrowseFragmentComponent.build(this, requireActivity().application)
+        WorkBrowseFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

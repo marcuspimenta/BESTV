@@ -39,24 +39,17 @@ interface RecommendationServiceComponent {
 
     fun inject(recommendationService: RecommendationService)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun service(service: RecommendationPresenter.Service): Builder
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): RecommendationServiceComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+                @BindsInstance service: RecommendationPresenter.Service,
+                @BindsInstance application: Application
+        ): RecommendationServiceComponent
     }
 
     companion object {
-        fun build(service: RecommendationPresenter.Service, application: Application): RecommendationServiceComponent =
-                DaggerRecommendationServiceComponent
-                        .builder()
-                        .service(service)
-                        .application(application)
-                        .build()
+        fun create(service: RecommendationPresenter.Service, application: Application): RecommendationServiceComponent =
+                DaggerRecommendationServiceComponent.factory()
+                        .create(service, application)
     }
 }

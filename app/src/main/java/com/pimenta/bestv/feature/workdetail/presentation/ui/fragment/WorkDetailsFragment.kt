@@ -96,7 +96,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        WorkDetailsFragmentComponent.build(this, requireActivity().application)
+        WorkDetailsFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

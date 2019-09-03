@@ -30,7 +30,7 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        TopWorkGridFragmentComponent.build(this, requireActivity().application)
+        TopWorkGridFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
     }
 

@@ -33,7 +33,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("Boot initiated")
-        BootBroadcastReceiverComponent.build(context.applicationContext as Application)
+        BootBroadcastReceiverComponent.create(context.applicationContext as Application)
                 .inject(this)
         presenter.scheduleRecommendationUpdate()
     }

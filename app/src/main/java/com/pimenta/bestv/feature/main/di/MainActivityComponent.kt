@@ -40,20 +40,14 @@ interface MainActivityComponent {
 
     fun inject(activity: MainActivity)
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): MainActivityComponent
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance application: Application): MainActivityComponent
     }
 
     companion object {
-        fun build(application: Application): MainActivityComponent =
-                DaggerMainActivityComponent
-                        .builder()
-                        .application(application)
-                        .build()
+        fun create(application: Application): MainActivityComponent =
+                DaggerMainActivityComponent.factory()
+                        .create(application)
     }
 }
