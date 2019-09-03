@@ -62,6 +62,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 - [Android TV application hands on tutorial](https://corochann.com/android-tv-application-hands-on-tutorial)
 - [Unit Testing asynchronous RxJava code](https://medium.com/@PaulinaSadowska/writing-unit-tests-on-asynchronous-events-with-rxjava-and-rxkotlin-1616a27f69aa)
 - [Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
+- [Dagger2: @Component.Factory and @SubComponent.Factory](https://android.jlelse.eu/dagger2-component-factory-and-subcomponent-factory-b181ec96b213)
 
 ## Licence
 ```
