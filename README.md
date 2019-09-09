@@ -1,11 +1,13 @@
-# BesTV
+# BESTV
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.50-blue.svg)](https://kotlinlang.org)
+
 <img src="/app/src/main/res/drawable/app_icon.png" align="left" hspace="20" height="150" width="150">
 
 Android TV App powered by [TMDb](https://www.themoviedb.org/)
 
 It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
 
-The goal of the project is to have a guide line about Android TV, that shows how to use the Leandback library from Google. The project also uses the popular libraries and tools of the Android ecosystem. 
+The goal of the project is to be a guide line about Android TV, that shows how to use the Leandback library from Google. The project also uses the popular libraries and tools from the Android ecosystem. 
 
 
 The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
@@ -18,7 +20,7 @@ The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSuppo
 - Dependency Injection
 
 ## Tech-stack
-This project uses the popular libraries and tools of the Android ecosystem.
+This project uses the popular libraries and tools from the Android ecosystem.
 - Tech-stack
     - [Kotlin](https://kotlinlang.org/)
     - Android TV
@@ -39,6 +41,8 @@ This project uses the popular libraries and tools of the Android ecosystem.
     - [Unit Tests](https://en.wikipedia.org/wiki/Unit_testing)
     - [Mockito](https://github.com/mockito/mockito) 
     - [Mockito-Kotlin](https://github.com/nhaarman/mockito-kotlin)
+- Gradle
+    - [Ktlint plugin](https://github.com/JLLeitschuh/ktlint-gradle)
 
 ## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.
