@@ -42,8 +42,8 @@ interface WorkDetailsFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: WorkDetailsPresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: WorkDetailsPresenter.View,
+            @BindsInstance application: Application
         ): WorkDetailsFragmentComponent
     }
 

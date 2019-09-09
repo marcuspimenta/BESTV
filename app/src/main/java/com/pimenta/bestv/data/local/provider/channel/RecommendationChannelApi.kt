@@ -36,8 +36,8 @@ import io.reactivex.Completable
 private const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"
 
 class RecommendationChannelApi constructor(
-        private val application: Application,
-        private val localSettings: LocalSettings
+    private val application: Application,
+    private val localSettings: LocalSettings
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =

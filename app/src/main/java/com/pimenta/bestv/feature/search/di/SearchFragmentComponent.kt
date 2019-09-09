@@ -42,8 +42,8 @@ interface SearchFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: SearchPresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: SearchPresenter.View,
+            @BindsInstance application: Application
         ): SearchFragmentComponent
     }
 

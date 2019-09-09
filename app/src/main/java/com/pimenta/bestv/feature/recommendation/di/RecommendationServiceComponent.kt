@@ -42,8 +42,8 @@ interface RecommendationServiceComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance service: RecommendationPresenter.Service,
-                @BindsInstance application: Application
+            @BindsInstance service: RecommendationPresenter.Service,
+            @BindsInstance application: Application
         ): RecommendationServiceComponent
     }
 

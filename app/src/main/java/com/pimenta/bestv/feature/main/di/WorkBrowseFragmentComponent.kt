@@ -42,8 +42,8 @@ interface WorkBrowseFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: WorkBrowsePresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: WorkBrowsePresenter.View,
+            @BindsInstance application: Application
         ): WorkBrowseFragmentComponent
     }
 

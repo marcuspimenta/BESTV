@@ -40,8 +40,8 @@ interface SplashFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: SplashPresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: SplashPresenter.View,
+            @BindsInstance application: Application
         ): SplashFragmentComponent
     }
 

@@ -42,8 +42,8 @@ interface TopWorkGridFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: WorkGridPresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: WorkGridPresenter.View,
+            @BindsInstance application: Application
         ): TopWorkGridFragmentComponent
     }
 
