@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.leanback.app.DetailsSupportFragment
@@ -49,7 +50,6 @@ import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetails
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
-import timber.log.Timber
 import javax.inject.Inject
 
 private const val WORK = "WORK"
@@ -350,7 +350,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                     try {
                         startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
-                        Timber.e(e, "Failed to play a video")
+                        Toast.makeText(requireContext(), R.string.failed_open_video, Toast.LENGTH_LONG).show()
                     }
                 }
                 RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {

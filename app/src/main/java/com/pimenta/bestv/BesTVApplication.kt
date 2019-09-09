@@ -36,7 +36,6 @@ class BesTVApplication : Application() {
                         .detectLeakedSqlLiteObjects()
                         .detectLeakedClosableObjects()
                         .penaltyLog()
-                        //.penaltyDeath()
                         .build())
             }
         }
