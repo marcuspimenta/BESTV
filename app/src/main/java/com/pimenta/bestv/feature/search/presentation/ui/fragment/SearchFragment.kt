@@ -205,7 +205,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
                     (itemViewHolder?.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()
-            startActivityForResult(WorkDetailsActivity.newInstance(context, workViewModel), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
+            startActivityForResult(WorkDetailsActivity.newInstance(requireContext(), workViewModel), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
         }
     }
 

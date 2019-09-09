@@ -47,7 +47,7 @@ class WorkDetailsActivity : FragmentActivity() {
 
         const val WORK = "WORK"
 
-        fun newInstance(context: Context?, workViewModel: WorkViewModel) =
+        fun newInstance(context: Context, workViewModel: WorkViewModel) =
                 Intent(context, WorkDetailsActivity::class.java).apply {
                     putExtra(WORK, workViewModel)
                 }

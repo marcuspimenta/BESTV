@@ -339,7 +339,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             CastDetailsFragment.SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(CastDetailsActivity.newInstance(context, castViewModel), castBundle)
+                    startActivity(CastDetailsActivity.newInstance(requireContext(), castViewModel), castBundle)
                 }
                 VIDEO_HEADER_ID -> {
                     val videoViewModel = item as VideoViewModel
@@ -360,7 +360,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                             (itemViewHolder.view as ImageCardView).mainImageView,
                             SHARED_ELEMENT_NAME
                     ).toBundle()
-                    startActivity(WorkDetailsActivity.newInstance(context, workViewModel), bundle)
+                    startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
                 }
             }
         }

@@ -168,7 +168,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
                         (itemViewHolder.view as ImageCardView).mainImageView,
                         WorkDetailsFragment.SHARED_ELEMENT_NAME
                 ).toBundle()
-                startActivity(WorkDetailsActivity.newInstance(context, item), bundle)
+                startActivity(WorkDetailsActivity.newInstance(requireContext(), item), bundle)
             }
         }
     }

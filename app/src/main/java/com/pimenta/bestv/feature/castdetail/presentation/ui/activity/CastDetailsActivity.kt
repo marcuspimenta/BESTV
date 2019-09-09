@@ -37,7 +37,7 @@ class CastDetailsActivity : FragmentActivity() {
 
         const val CAST = "CAST"
 
-        fun newInstance(context: Context?, castViewModel: CastViewModel) =
+        fun newInstance(context: Context, castViewModel: CastViewModel) =
                 Intent(context, CastDetailsActivity::class.java).apply {
                     putExtra(CAST, castViewModel)
                 }

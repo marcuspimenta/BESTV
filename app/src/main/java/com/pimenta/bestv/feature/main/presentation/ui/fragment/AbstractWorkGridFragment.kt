@@ -178,7 +178,7 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
                     (itemViewHolder.view as ImageCardView).mainImageView,
                     WorkDetailsFragment.SHARED_ELEMENT_NAME
             ).toBundle()
-            startActivity(WorkDetailsActivity.newInstance(context, workViewModel), bundle)
+            startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
         }
     }
 

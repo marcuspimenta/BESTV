@@ -15,6 +15,7 @@
 package com.pimenta.bestv.feature.main.presentation.ui.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -75,5 +76,10 @@ class MainActivity : FragmentActivity() {
     override fun onDestroy() {
         backgroundManager.release()
         super.onDestroy()
+    }
+
+    companion object {
+
+        fun newInstance(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

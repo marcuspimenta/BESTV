@@ -174,7 +174,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         setOnSearchClickedListener {
-            startActivity(SearchActivity.newInstance(context))
+            startActivity(SearchActivity.newInstance(requireContext()))
         }
 
         searchAffordanceColor = resources.getColor(R.color.background_color, activity!!.theme)
