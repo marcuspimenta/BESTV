@@ -21,7 +21,7 @@ import timber.log.Timber
 /**
  * Created by marcus on 07-02-2018.
  */
-class BesTV : Application() {
+class BesTVApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

@@ -14,7 +14,7 @@
         android:required="true" />
 
     <application
-        android:name=".BesTV"
+        android:name=".BesTVApplication"
         android:allowBackup="true"
         android:banner="@drawable/app_banner"
         android:icon="@drawable/app_banner"
