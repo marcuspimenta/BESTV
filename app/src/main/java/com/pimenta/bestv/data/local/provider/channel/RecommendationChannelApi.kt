@@ -15,10 +15,11 @@
 package com.pimenta.bestv.data.local.provider.channel
 
 import android.app.Application
-import android.content.ContentResolver
 import android.content.ContentUris
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.tvprovider.media.tv.Channel
+import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.R
@@ -26,14 +27,17 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.setting.Const
 import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.local.sharedpreferences.LocalSettings
+import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import io.reactivex.Completable
 
 /**
  * Created by marcus on 23-04-2019.
  */
+private const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"
+
 class RecommendationChannelApi constructor(
-    private val application: Application,
-    private val localSettings: LocalSettings
+        private val application: Application,
+        private val localSettings: LocalSettings
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =
@@ -42,7 +46,7 @@ class RecommendationChannelApi constructor(
 
                 works?.forEach { workViewModel ->
                     val programBuilder = PreviewProgram.Builder()
-                    programBuilder.setChannelId(channelId)
+                            .setChannelId(channelId)
                             .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
                             .setTitle(workViewModel.title)
                             .setDescription(workViewModel.overview)
@@ -51,7 +55,7 @@ class RecommendationChannelApi constructor(
                             .setInternalProviderId(workViewModel.id.toString())
 
                     localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)
-                            .takeUnless { it == 0L }
+                            .takeUnless { workId -> workId == 0L }
                             ?.let {
                                 application.contentResolver.update(
                                         TvContractCompat.buildProgramUri(channelId),
@@ -61,13 +65,13 @@ class RecommendationChannelApi constructor(
                                 )
                             }
                             ?: run {
-                                val programUri = application.contentResolver.insert(
+                                application.contentResolver.insert(
                                         TvContractCompat.PreviewPrograms.CONTENT_URI,
                                         programBuilder.build().toContentValues()
-                                )
-                                val programId = ContentUris.parseId(programUri)
-
-                                localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
+                                )?.let { programUri ->
+                                    val programId = ContentUris.parseId(programUri)
+                                    localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
+                                }
                             }
                 }
                 it.onComplete()
@@ -77,32 +81,33 @@ class RecommendationChannelApi constructor(
             localSettings.getLongFromPersistence(CHANNEL_ID_KEY, 0L)
                     .takeUnless { it == 0L }
                     ?: run {
-
-                        val resources = application.resources
-                        val uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.app_icon) + '/'.toString() + resources.getResourceTypeName(R.drawable.app_icon) + '/'.toString() + resources.getResourceEntryName(R.drawable.app_icon))
-
                         val channelBuilder = Channel.Builder()
-                        channelBuilder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
-                                .setDisplayName(application.getString(R.string.app_name))
-                                .setAppLinkIconUri(Uri.parse("https://github.com/Fleker/CumulusTV/blob/master/app/src/m" +
-                                        "ain/res/drawable-xhdpi/ic_play_action_normal.png?raw=true"))
+                                .setType(TvContractCompat.Channels.TYPE_PREVIEW)
+                                .setDisplayName(application.getString(R.string.popular))
+                                .setAppLinkIntent(MainActivity.newInstance(application))
 
                         val channelUri = application.contentResolver.insert(
                                 TvContractCompat.Channels.CONTENT_URI,
                                 channelBuilder.build().toContentValues()
                         )
-
                         val channelId = ContentUris.parseId(channelUri)
 
-                        TvContractCompat.requestChannelBrowsable(application, channelId)
+                        TvContractCompat.requestChannelBrowsable(
+                                application,
+                                channelId
+                        )
+                        ChannelLogoUtils.storeChannelLogo(
+                                application,
+                                channelId,
+                                BitmapFactory.decodeResource(application.resources, R.drawable.app_icon)
+                        )
 
                         localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
                         channelId
                     }
 
     private fun buildProgramUri(workViewModel: WorkViewModel): Uri =
-            Uri.parse(Const.SCHEMA_URI_PREFIX.plus(Const.WORK))
-                    .buildUpon()
+            Uri.parse(Const.SCHEMA_URI_PREFIX.plus(Const.WORK)).buildUpon()
                     .appendQueryParameter(Const.ID, workViewModel.id.toString())
                     .appendQueryParameter(Const.LANGUAGE, workViewModel.originalLanguage)
                     .appendQueryParameter(Const.OVERVIEW, workViewModel.overview)
@@ -114,9 +119,4 @@ class RecommendationChannelApi constructor(
                     .appendQueryParameter(Const.FAVORITE, workViewModel.isFavorite.toString())
                     .appendQueryParameter(Const.TYPE, workViewModel.type.toString())
                     .build()
-
-    companion object {
-
-        const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"
-    }
 }
