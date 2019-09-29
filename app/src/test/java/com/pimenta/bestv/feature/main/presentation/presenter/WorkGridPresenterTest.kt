@@ -83,8 +83,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -97,8 +97,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorWorksLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -111,8 +111,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -125,8 +125,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorWorksLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -138,8 +138,8 @@ class WorkGridPresenterTest {
         inOrder(view) {
             verify(view).onShowProgress()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -152,8 +152,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -166,8 +166,8 @@ class WorkGridPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorWorksLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test

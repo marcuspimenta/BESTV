@@ -136,8 +136,8 @@ class WorkDetailsPresenterTest {
             verify(view).onShowProgress()
             verify(view).onDataLoaded(true, null, null, recommendedWorks, similarWorks)
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -152,8 +152,8 @@ class WorkDetailsPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorWorkDetailsLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test

@@ -61,8 +61,8 @@ class CastDetailsPresenterTest {
             verify(view).onShowProgress()
             verify(view).onCastLoaded(result.first, result.second, result.third)
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -75,7 +75,7 @@ class CastDetailsPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorCastDetailsLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 }

@@ -100,8 +100,8 @@ class SearchPresenterTest {
             verify(view).onShowProgress()
             verify(view).onResultLoaded(MOVIE_LIST, TV_SHOW_LIST)
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -114,8 +114,8 @@ class SearchPresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorSearch()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -125,8 +125,8 @@ class SearchPresenterTest {
         inOrder(view) {
             verify(view).onHideProgress()
             verify(view).onClear()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -136,8 +136,8 @@ class SearchPresenterTest {
         inOrder(view) {
             verify(view).onHideProgress()
             verify(view).onClear()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test

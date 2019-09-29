@@ -96,8 +96,8 @@ class WorkBrowsePresenterTest {
             verify(view).onShowProgress()
             verify(view).onDataLoaded(true, MOVIE_GENRES, TV_SHOW_GENRES)
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -110,7 +110,7 @@ class WorkBrowsePresenterTest {
             verify(view).onShowProgress()
             verify(view).onErrorDataLoaded()
             verify(view).onHideProgress()
+            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(view)
     }
 }
