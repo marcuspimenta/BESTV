@@ -131,6 +131,15 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                WorkDetailsFragment.SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
@@ -163,12 +172,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
             if (item is WorkViewModel) {
-                val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        requireNotNull(activity),
-                        (itemViewHolder.view as ImageCardView).mainImageView,
-                        WorkDetailsFragment.SHARED_ELEMENT_NAME
-                ).toBundle()
-                startActivity(WorkDetailsActivity.newInstance(requireContext(), item), bundle)
+                presenter.workClicked(itemViewHolder, item)
             }
         }
     }

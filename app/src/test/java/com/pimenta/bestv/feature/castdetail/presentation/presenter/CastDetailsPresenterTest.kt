@@ -14,11 +14,10 @@
 
 package com.pimenta.bestv.feature.castdetail.presentation.presenter
 
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import androidx.leanback.widget.Presenter
+import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Single
@@ -77,5 +76,15 @@ class CastDetailsPresenterTest {
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }
+    }
+
+    @Test
+    fun `should open work details when a work is clicked`() {
+        val itemViewHolder = mock<Presenter.ViewHolder>()
+        val movieWorkViewModel = mock<WorkViewModel>()
+
+        presenter.workClicked(itemViewHolder, movieWorkViewModel)
+
+        verify(view, only()).openWorkDetails(itemViewHolder, movieWorkViewModel)
     }
 }
