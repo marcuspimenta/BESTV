@@ -63,6 +63,10 @@ class WorkBrowsePresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
+    fun searchClicked() {
+        view.openSearchView()
+    }
+
     interface View {
 
         fun onShowProgress()
@@ -74,5 +78,7 @@ class WorkBrowsePresenter @Inject constructor(
         fun onHasFavorite(hasFavoriteMovie: Boolean)
 
         fun onErrorDataLoaded()
+
+        fun openSearchView()
     }
 }

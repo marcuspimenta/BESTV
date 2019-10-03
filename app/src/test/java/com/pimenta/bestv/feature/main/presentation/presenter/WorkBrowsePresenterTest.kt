@@ -113,4 +113,11 @@ class WorkBrowsePresenterTest {
             verifyNoMoreInteractions()
         }
     }
+
+    @Test
+    fun `should open the search view when click in the search icon`() {
+        presenter.searchClicked()
+
+        verify(view, only()).openSearchView()
+    }
 }

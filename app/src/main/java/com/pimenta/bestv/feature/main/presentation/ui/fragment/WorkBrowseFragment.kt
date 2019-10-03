@@ -159,6 +159,10 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
+    override fun openSearchView() {
+        startActivity(SearchActivity.newInstance(requireContext()))
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
@@ -174,7 +178,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         setOnSearchClickedListener {
-            startActivity(SearchActivity.newInstance(requireContext()))
+            presenter.searchClicked()
         }
 
         searchAffordanceColor = resources.getColor(R.color.background_color, activity!!.theme)
