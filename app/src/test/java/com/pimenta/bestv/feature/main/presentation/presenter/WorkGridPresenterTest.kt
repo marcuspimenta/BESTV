@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.main.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.data.MediaRepository
@@ -196,5 +197,14 @@ class WorkGridPresenterTest {
         testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
 
         verify(view, times(1)).loadBackdropImage(TV_SHOW_VIEW_MODEL)
+    }
+
+    @Test
+    fun `should open work details when a work is clicked`() {
+        val itemViewHolder = mock<Presenter.ViewHolder>()
+
+        presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
+
+        verify(view, only()).openWorkDetails(itemViewHolder, MOVIE_VIEW_MODEL)
     }
 }

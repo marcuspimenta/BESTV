@@ -57,7 +57,7 @@ class SplashFragment : Fragment(), SplashPresenter.View {
         super.onViewCreated(view, savedInstanceState)
 
         animationVideoView.setVideoURI(
-                Uri.parse("android.resource://" + requireActivity().packageName + "/raw/splash_animation")
+                Uri.parse("android.resource://com.pimenta.bestv/raw/splash_animation")
         )
         animationVideoView.start()
 

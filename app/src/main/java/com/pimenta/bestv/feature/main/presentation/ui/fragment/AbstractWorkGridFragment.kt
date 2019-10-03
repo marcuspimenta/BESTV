@@ -27,21 +27,18 @@ import androidx.leanback.R
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.FocusHighlight
-import androidx.leanback.widget.ImageCardView
-import androidx.leanback.widget.VerticalGridPresenter
+import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.model.loadBackdrop
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
 import javax.inject.Inject
 
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
@@ -133,6 +130,15 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
         fragmentManager?.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
     }
 
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                WorkDetailsFragment.SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
@@ -172,13 +178,9 @@ abstract class AbstractWorkGridFragment : VerticalGridSupportFragment(), WorkGri
             }
         }
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            val workViewModel = item as WorkViewModel
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    requireNotNull(activity),
-                    (itemViewHolder.view as ImageCardView).mainImageView,
-                    WorkDetailsFragment.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+            if (item is WorkViewModel) {
+                presenter.workClicked(itemViewHolder, item)
+            }
         }
     }
 

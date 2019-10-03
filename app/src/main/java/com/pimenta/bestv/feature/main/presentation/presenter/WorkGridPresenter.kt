@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.main.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
@@ -120,6 +121,10 @@ class WorkGridPresenter @Inject constructor(
                 })
     }
 
+    fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        view.openWorkDetails(itemViewHolder, workViewModel)
+    }
+
     private fun disposeLoadBackdropImage() {
         loadBackdropImageDisposable?.run {
             if (!isDisposed) {
@@ -139,5 +144,7 @@ class WorkGridPresenter @Inject constructor(
         fun loadBackdropImage(workViewModel: WorkViewModel)
 
         fun onErrorWorksLoaded()
+
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
     }
 }

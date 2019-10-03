@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.castdetail.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxSchedulerTest
@@ -34,6 +35,12 @@ private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
         name = "Carlos",
         character = "Batman",
         birthday = "1990-07-13"
+)
+private val MOVIE_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.MOVIE
 )
 
 class CastDetailsPresenterTest {
@@ -81,10 +88,9 @@ class CastDetailsPresenterTest {
     @Test
     fun `should open work details when a work is clicked`() {
         val itemViewHolder = mock<Presenter.ViewHolder>()
-        val movieWorkViewModel = mock<WorkViewModel>()
 
-        presenter.workClicked(itemViewHolder, movieWorkViewModel)
+        presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, movieWorkViewModel)
+        verify(view, only()).openWorkDetails(itemViewHolder, MOVIE_VIEW_MODEL)
     }
 }
