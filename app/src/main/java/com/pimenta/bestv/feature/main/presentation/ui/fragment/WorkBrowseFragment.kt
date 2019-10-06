@@ -156,7 +156,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@WorkBrowseFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        activity?.addFragment(fragment, ErrorFragment.TAG)
+        requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
     override fun openSearch() {
@@ -166,7 +166,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
                     presenter.loadData()
                 }

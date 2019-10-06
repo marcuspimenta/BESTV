@@ -128,7 +128,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@CastDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        activity?.addFragment(fragment, ErrorFragment.TAG)
+        requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
@@ -143,7 +143,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         presenter.loadCastDetails(castViewModel)

@@ -152,7 +152,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@SearchFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        activity?.addFragment(fragment, ErrorFragment.TAG)
+        requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
@@ -184,7 +184,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
                 view?.requestFocus()
             }
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
                     presenter.searchWorksByQuery(query)
                 }

@@ -183,7 +183,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@WorkDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        activity?.addFragment(fragment, ErrorFragment.TAG)
+        requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
@@ -207,7 +207,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                activity?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         presenter.loadDataByWork(workViewModel)

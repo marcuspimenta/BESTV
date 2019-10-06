@@ -66,7 +66,7 @@ class SplashFragment : Fragment(), SplashPresenter.View {
 
     override fun onHasAllPermissions(hasAllPermissions: Boolean) {
         val resultCode = Activity.RESULT_OK.takeIf { hasAllPermissions } ?: Activity.RESULT_CANCELED
-        activity?.finish(resultCode)
+        requireActivity().finish(resultCode)
     }
 
     override fun onRequestPermissions(permissions: List<String>) {
