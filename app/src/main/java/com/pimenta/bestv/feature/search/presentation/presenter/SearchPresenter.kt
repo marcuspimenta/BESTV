@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.search.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.extension.hasNoContent
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
@@ -149,6 +150,10 @@ class SearchPresenter @Inject constructor(
                 })
     }
 
+    fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        view.openWorkDetails(itemViewHolder, workViewModel)
+    }
+
     private fun disposeLoadBackdropImage() {
         loadBackdropImageDisposable?.run {
             if (!isDisposed) {
@@ -182,5 +187,7 @@ class SearchPresenter @Inject constructor(
         fun loadBackdropImage(workViewModel: WorkViewModel)
 
         fun onErrorSearch()
+
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
     }
 }

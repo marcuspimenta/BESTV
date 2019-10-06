@@ -155,6 +155,15 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                WorkDetailsFragment.SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+    }
+
     override fun getResultsAdapter() = rowsAdapter
 
     override fun onQueryTextChange(text: String): Boolean {
@@ -199,13 +208,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             }
         }
         setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
-            val workViewModel = item as WorkViewModel
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    requireNotNull(activity),
-                    (itemViewHolder?.view as ImageCardView).mainImageView,
-                    WorkDetailsFragment.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivityForResult(WorkDetailsActivity.newInstance(requireContext(), workViewModel), SEARCH_FRAGMENT_REQUEST_CODE, bundle)
+            if (item is WorkViewModel) {
+                presenter.workClicked(itemViewHolder, item)
+            }
         }
     }
 

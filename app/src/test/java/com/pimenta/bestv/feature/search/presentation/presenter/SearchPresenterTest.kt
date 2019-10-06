@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.search.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
@@ -202,5 +203,14 @@ class SearchPresenterTest {
         testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
 
         verify(view, only()).loadBackdropImage(OTHER_WORK_VIEW_MODEL)
+    }
+
+    @Test
+    fun `should open work details when a work is clicked`() {
+        val itemViewHolder = mock<Presenter.ViewHolder>()
+
+        presenter.workClicked(itemViewHolder, WORK_VIEW_MODEL)
+
+        verify(view, only()).openWorkDetails(itemViewHolder, WORK_VIEW_MODEL)
     }
 }
