@@ -14,8 +14,10 @@
 
 package com.pimenta.bestv.feature.workdetail.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.kotlin.Quintuple
+import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
@@ -53,6 +55,18 @@ private val SIMILAR_PAGE = WorkPageViewModel(
                         type = WorkType.MOVIE
                 )
         )
+)
+private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
+private val MOVIE_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.MOVIE
 )
 
 private fun aWorkViewModel(favorite: Boolean = false) = WorkViewModel(
@@ -210,5 +224,23 @@ class WorkDetailsPresenterTest {
         presenter.loadSimilarByWork(workViewModel)
 
         verifyZeroInteractions(view)
+    }
+
+    @Test
+    fun `should open work details when a work is clicked`() {
+        val itemViewHolder = mock<Presenter.ViewHolder>()
+
+        presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
+
+        verify(view, only()).openWorkDetails(itemViewHolder, MOVIE_VIEW_MODEL)
+    }
+
+    @Test
+    fun `should open cast details when a cast is clicked`() {
+        val itemViewHolder = mock<Presenter.ViewHolder>()
+
+        presenter.castClicked(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
+
+        verify(view, only()).openCastDetails(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
     }
 }

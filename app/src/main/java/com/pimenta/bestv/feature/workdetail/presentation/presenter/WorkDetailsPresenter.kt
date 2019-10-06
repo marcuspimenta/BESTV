@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.workdetail.presentation.presenter
 
+import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.CastViewModel
@@ -126,6 +127,14 @@ class WorkDetailsPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
+    fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        view.openWorkDetails(itemViewHolder, workViewModel)
+    }
+
+    fun castClicked(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
+        view.openCastDetails(itemViewHolder, castViewModel)
+    }
+
     interface View {
 
         fun onShowProgress()
@@ -141,5 +150,9 @@ class WorkDetailsPresenter @Inject constructor(
         fun onSimilarLoaded(works: List<WorkViewModel>)
 
         fun onErrorWorkDetailsLoaded()
+
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
+
+        fun openCastDetails(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel)
     }
 }

@@ -186,6 +186,24 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+    }
+
+    override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
+        val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                CastDetailsFragment.SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(CastDetailsActivity.newInstance(requireContext(), castViewModel), castBundle)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
@@ -333,13 +351,9 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
             when (row?.run { id.toInt() }) {
                 CAST_HEAD_ID -> {
-                    val castViewModel = item as CastViewModel
-                    val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            requireNotNull(activity),
-                            (itemViewHolder.view as ImageCardView).mainImageView,
-                            CastDetailsFragment.SHARED_ELEMENT_NAME
-                    ).toBundle()
-                    startActivity(CastDetailsActivity.newInstance(requireContext(), castViewModel), castBundle)
+                    if (item is CastViewModel) {
+                        presenter.castClicked(itemViewHolder, item)
+                    }
                 }
                 VIDEO_HEADER_ID -> {
                     val videoViewModel = item as VideoViewModel
@@ -354,13 +368,9 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                     }
                 }
                 RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
-                    val workViewModel = item as WorkViewModel
-                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            requireNotNull(activity),
-                            (itemViewHolder.view as ImageCardView).mainImageView,
-                            SHARED_ELEMENT_NAME
-                    ).toBundle()
-                    startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+                    if (item is WorkViewModel) {
+                        presenter.workClicked(itemViewHolder, item)
+                    }
                 }
             }
         }
