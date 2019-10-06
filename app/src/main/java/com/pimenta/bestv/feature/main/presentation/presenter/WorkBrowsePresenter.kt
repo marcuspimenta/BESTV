@@ -64,7 +64,7 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun searchClicked() {
-        view.openSearchView()
+        view.openSearch()
     }
 
     interface View {
@@ -79,6 +79,6 @@ class WorkBrowsePresenter @Inject constructor(
 
         fun onErrorDataLoaded()
 
-        fun openSearchView()
+        fun openSearch()
     }
 }

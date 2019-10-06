@@ -62,8 +62,7 @@ class WorkBrowsePresenterTest {
 
         presenter.hasFavorite()
 
-        verify(view).onHasFavorite(true)
-        verifyNoMoreInteractions(view)
+        verify(view, only()).onHasFavorite(true)
     }
 
     @Test
@@ -72,8 +71,7 @@ class WorkBrowsePresenterTest {
 
         presenter.hasFavorite()
 
-        verify(view).onHasFavorite(false)
-        verifyNoMoreInteractions(view)
+        verify(view, only()).onHasFavorite(false)
     }
 
     @Test
@@ -82,8 +80,7 @@ class WorkBrowsePresenterTest {
 
         presenter.hasFavorite()
 
-        verify(view).onHasFavorite(false)
-        verifyNoMoreInteractions(view)
+        verify(view, only()).onHasFavorite(false)
     }
 
     @Test
@@ -118,6 +115,6 @@ class WorkBrowsePresenterTest {
     fun `should open the search view when click in the search icon`() {
         presenter.searchClicked()
 
-        verify(view, only()).openSearchView()
+        verify(view, only()).openSearch()
     }
 }

@@ -159,7 +159,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         activity?.addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openSearchView() {
+    override fun openSearch() {
         startActivity(SearchActivity.newInstance(requireContext()))
     }
 
