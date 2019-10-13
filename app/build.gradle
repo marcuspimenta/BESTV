@@ -57,7 +57,7 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.fragment:fragment-ktx:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0-alpha04'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0-beta01'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -82,11 +82,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     // Room components
-    implementation "androidx.room:room-runtime:2.1.0"
-    implementation "androidx.room:room-ktx:2.1.0"
-    implementation "androidx.room:room-rxjava2:2.1.0"
-    kapt "androidx.room:room-compiler:2.1.0"
-    androidTestImplementation "androidx.room:room-testing:2.1.0"
+    implementation "androidx.room:room-runtime:2.2.0"
+    implementation "androidx.room:room-ktx:2.2.0"
+    implementation "androidx.room:room-rxjava2:2.2.0"
+    kapt "androidx.room:room-compiler:2.2.0"
+    androidTestImplementation "androidx.room:room-testing:2.2.0"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
