@@ -49,21 +49,21 @@ interface MediaRepository {
 
     fun loadWorkByType(page: Int, movieListType: WorkType): Single<out WorkPageResponse<*>>
 
-    fun getMovieByGenre(genreId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getMovieByGenre(genreId: Int, page: Int): Single<MoviePageResponse>
 
-    fun getTvShowByGenre(genreId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse>
 
     fun getCastByMovie(workId: Int): Single<CastListResponse>
 
     fun getCastByTvShow(workId: Int): Single<CastListResponse>
 
-    fun getRecommendationByMovie(workId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getRecommendationByMovie(workId: Int, page: Int): Single<MoviePageResponse>
 
-    fun getRecommendationByTvShow(workId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getRecommendationByTvShow(workId: Int, page: Int): Single<TvShowPageResponse>
 
-    fun getSimilarByMovie(workId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getSimilarByMovie(workId: Int, page: Int): Single<MoviePageResponse>
 
-    fun getSimilarByTvShow(workId: Int, page: Int): Single<out WorkPageResponse<*>>
+    fun getSimilarByTvShow(workId: Int, page: Int): Single<TvShowPageResponse>
 
     fun getVideosByMovie(workId: Int): Single<VideoListResponse>
 

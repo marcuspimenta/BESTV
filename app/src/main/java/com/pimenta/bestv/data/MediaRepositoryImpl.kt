@@ -31,9 +31,9 @@ import javax.inject.Inject
  * Created by marcus on 05-03-2018.
  */
 class MediaRepositoryImpl @Inject constructor(
-    private val mediaLocalRepository: MediaLocalRepository,
-    private val mediaRemoteRepository: MediaRemoteRepository,
-    private val recommendationProvider: RecommendationProvider
+        private val mediaLocalRepository: MediaLocalRepository,
+        private val mediaRemoteRepository: MediaRemoteRepository,
+        private val recommendationProvider: RecommendationProvider
 ) : MediaRepository {
 
     override fun hasFavorite(): Single<Boolean> =
@@ -95,10 +95,10 @@ class MediaRepositoryImpl @Inject constructor(
     override fun getMovieGenres(): Single<MovieGenreListResponse> =
             mediaRemoteRepository.getMovieGenres()
 
-    override fun getMovieByGenre(genreId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getMovieByGenre(genreId: Int, page: Int): Single<MoviePageResponse> =
             mediaRemoteRepository.getMoviesByGenre(genreId, page)
 
-    override fun getTvShowByGenre(genreId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse> =
             mediaRemoteRepository.getTvShowByGenre(genreId, page)
 
     override fun getCastByMovie(workId: Int): Single<CastListResponse> =
@@ -107,16 +107,16 @@ class MediaRepositoryImpl @Inject constructor(
     override fun getCastByTvShow(workId: Int): Single<CastListResponse> =
             mediaRemoteRepository.getCastByTvShow(workId)
 
-    override fun getRecommendationByMovie(workId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getRecommendationByMovie(workId: Int, page: Int): Single<MoviePageResponse> =
             mediaRemoteRepository.getRecommendationByMovie(workId, page)
 
-    override fun getRecommendationByTvShow(workId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getRecommendationByTvShow(workId: Int, page: Int): Single<TvShowPageResponse> =
             mediaRemoteRepository.getRecommendationByTvShow(workId, page)
 
-    override fun getSimilarByMovie(workId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getSimilarByMovie(workId: Int, page: Int): Single<MoviePageResponse> =
             mediaRemoteRepository.getSimilarByMovie(workId, page)
 
-    override fun getSimilarByTvShow(workId: Int, page: Int): Single<out WorkPageResponse<*>> =
+    override fun getSimilarByTvShow(workId: Int, page: Int): Single<TvShowPageResponse> =
             mediaRemoteRepository.getSimilarByTvShow(workId, page)
 
     override fun getVideosByMovie(workId: Int): Single<VideoListResponse> =
