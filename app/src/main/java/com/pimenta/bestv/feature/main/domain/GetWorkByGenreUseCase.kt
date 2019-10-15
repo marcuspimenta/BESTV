@@ -25,26 +25,18 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class GetWorkByGenreUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+        private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(genreViewModel: GenreViewModel, page: Int) =
             when (genreViewModel.source) {
                 Source.MOVIE -> mediaRepository.getMovieByGenre(genreViewModel.id, page)
-                        .map {
-                            WorkPageViewModel(
-                                    it.page,
-                                    it.totalPages,
-                                    it.works?.map { work -> work.toViewModel() }
-                            )
-                        }
                 Source.TV_SHOW -> mediaRepository.getTvShowByGenre(genreViewModel.id, page)
-                        .map {
-                            WorkPageViewModel(
-                                    it.page,
-                                    it.totalPages,
-                                    it.works?.map { work -> work.toViewModel() }
-                            )
-                        }
+            }.map {
+                WorkPageViewModel(
+                        it.page,
+                        it.totalPages,
+                        it.works?.map { work -> work.toViewModel() }
+                )
             }
 }

@@ -25,14 +25,16 @@ import javax.inject.Inject
  * Created by marcus on 15-04-2019.
  */
 class GetVideosUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+        private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int): Single<List<VideoViewModel>?> =
             when (workType) {
                 WorkType.MOVIE -> mediaRepository.getVideosByMovie(workId)
-                        .map { it.videos?.map { video -> video.toViewModel() } }
                 WorkType.TV_SHOW -> mediaRepository.getVideosByTvShow(workId)
-                        .map { it.videos?.map { video -> video.toViewModel() } }
+            }.map {
+                it.videos?.map { video ->
+                    video.toViewModel()
+                }
             }
 }

@@ -18,44 +18,53 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.local.entity.MovieDbModel
+import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 2019-08-23.
+ * Created by marcus on 15-10-2019.
  */
-private val WORK_VIEW_MODEL = WorkViewModel(
+private val MOVIE_DB = MovieDbModel(
+        id = 1
+)
+private val MOVIE_RESPONSE = MovieResponse(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman"
+)
+private val MOVIE_VIEW_MODEL = WorkViewModel(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
+        isFavorite = true,
         type = WorkType.MOVIE
 )
 
-class GetFavoritesUseCaseTest {
+class GetFavoriteMoviesUseCaseTest {
 
-    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
-    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
+    private val mediaRepository: MediaRepository = mock()
 
-    private val useCase = GetFavoritesUseCase(
-            getFavoriteMoviesUseCase,
-            getFavoriteTvShowsUseCase
+    private val useCase = GetFavoriteMoviesUseCase(
+            mediaRepository
     )
 
     @Test
-    fun `should return the right data when loading the favorites`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
+    fun `should return the right data when loading the favorites movies`() {
+        whenever(mediaRepository.getFavoriteMovies()).thenReturn(Single.just(listOf(MOVIE_DB)))
+        whenever(mediaRepository.getMovie(MOVIE_DB.id)).thenReturn(MOVIE_RESPONSE)
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(listOf(WORK_VIEW_MODEL))
+                .assertResult(listOf(MOVIE_VIEW_MODEL))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getFavoriteMovies()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

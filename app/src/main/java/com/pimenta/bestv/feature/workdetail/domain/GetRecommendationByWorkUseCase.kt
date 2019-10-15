@@ -31,20 +31,12 @@ class GetRecommendationByWorkUseCase @Inject constructor(
     operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =
             when (workType) {
                 WorkType.MOVIE -> mediaRepository.getRecommendationByMovie(workId, page)
-                        .map {
-                            WorkPageViewModel(
-                                    it.page,
-                                    it.totalPages,
-                                    it.works?.map { work -> work.toViewModel() }
-                            )
-                        }
                 WorkType.TV_SHOW -> mediaRepository.getRecommendationByTvShow(workId, page)
-                        .map {
-                            WorkPageViewModel(
-                                    it.page,
-                                    it.totalPages,
-                                    it.works?.map { work -> work.toViewModel() }
-                            )
-                        }
+            }.map {
+                WorkPageViewModel(
+                        it.page,
+                        it.totalPages,
+                        it.works?.map { work -> work.toViewModel() }
+                )
             }
 }

@@ -14,28 +14,29 @@
 
 package com.pimenta.bestv.feature.main.domain
 
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-
+import com.pimenta.bestv.data.MediaRepository
+import java.util.*
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 13-10-2019.
  */
-class GetFavoritesUseCase @Inject constructor(
-        private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
-        private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
+class GetFavoriteMoviesUseCase @Inject constructor(
+        private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke() =
-            Single.zip(
-                    getFavoriteMoviesUseCase(),
-                    getFavoriteTvShowsUseCase(),
-                    BiFunction<List<WorkViewModel>, List<WorkViewModel>, List<WorkViewModel>> { first, second ->
-                        first.toMutableList().apply {
-                            addAll(second)
+            mediaRepository.getFavoriteMovies()
+                    .map {
+                        val works = ArrayList<WorkViewModel>()
+                        it.forEach { movie ->
+                            mediaRepository.getMovie(movie.id)?.let { movieResponse ->
+                                movieResponse.isFavorite = true
+                                works.add(movieResponse.toViewModel())
+                            }
                         }
+                        works.toList()
                     }
-            )
 }

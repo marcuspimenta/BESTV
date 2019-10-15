@@ -23,8 +23,6 @@ import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -57,27 +55,17 @@ class MediaRepositoryImpl @Inject constructor(
     override fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
             mediaLocalRepository.deleteFavoriteTvShow(tvShowDbModel)
 
-    override fun getFavorites(): Single<List<WorkResponse>> =
-            Single.zip<List<MovieDbModel>, List<TvShowDbModel>, Pair<List<MovieDbModel>, List<TvShowDbModel>>>(
-                    mediaLocalRepository.getMovies(),
-                    mediaLocalRepository.getTvShows(),
-                    BiFunction { first, second -> Pair(first, second) }
-            ).map {
-                val works = ArrayList<WorkResponse>()
-                it.first.forEach { movie ->
-                    mediaRemoteRepository.getMovie(movie.id)?.let { movieResponse ->
-                        movieResponse.isFavorite = true
-                        works.add(movieResponse)
-                    }
-                }
-                it.second.forEach { tvShow ->
-                    mediaRemoteRepository.getTvShow(tvShow.id)?.let { tvShowResponse ->
-                        tvShowResponse.isFavorite = true
-                        works.add(tvShowResponse)
-                    }
-                }
-                works
-            }
+    override fun getFavoriteMovies(): Single<List<MovieDbModel>> =
+            mediaLocalRepository.getMovies()
+
+    override fun getFavoriteTvShows(): Single<List<TvShowDbModel>> =
+            mediaLocalRepository.getTvShows()
+
+    override fun getMovie(movieId: Int): MovieResponse? =
+            mediaRemoteRepository.getMovie(movieId)
+
+    override fun getTvShow(tvId: Int): TvShowResponse? =
+            mediaRemoteRepository.getTvShow(tvId)
 
     override fun loadWorkByType(page: Int, movieListType: MediaRepository.WorkType): Single<out WorkPageResponse<*>> =
             when (movieListType) {

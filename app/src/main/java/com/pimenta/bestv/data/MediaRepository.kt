@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.data
 
+import androidx.annotation.StringRes
 import com.pimenta.bestv.R
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.local.entity.MovieDbModel
@@ -41,7 +42,13 @@ interface MediaRepository {
 
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
 
-    fun getFavorites(): Single<List<WorkResponse>>
+    fun getFavoriteMovies(): Single<List<MovieDbModel>>
+
+    fun getFavoriteTvShows(): Single<List<TvShowDbModel>>
+
+    fun getMovie(movieId: Int): MovieResponse?
+
+    fun getTvShow(tvId: Int): TvShowResponse?
 
     fun getMovieGenres(): Single<MovieGenreListResponse>
 
@@ -81,7 +88,7 @@ interface MediaRepository {
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
 
-    enum class WorkType(val resource: Int) {
+    enum class WorkType(@StringRes val resource: Int) {
         FAVORITES_MOVIES(R.string.favorites),
         NOW_PLAYING_MOVIES(R.string.now_playing),
         POPULAR_MOVIES(R.string.popular),

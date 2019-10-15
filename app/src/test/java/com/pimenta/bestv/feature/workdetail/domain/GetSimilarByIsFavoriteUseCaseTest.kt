@@ -20,8 +20,8 @@ import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
-import com.pimenta.bestv.data.remote.entity.TvShowResponse
+import com.pimenta.bestv.data.remote.entity.MoviePageResponse
+import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
@@ -29,24 +29,24 @@ import org.junit.Test
  * Created by marcus on 23-06-2018.
  */
 private const val MOVIE_ID = 1
-private val WORK_PAGE = TvShowPageResponse().apply {
+private val WORK_PAGE = MoviePageResponse().apply {
     page = 1
     totalPages = 1
     works = listOf(
-            TvShowResponse(
+            MovieResponse(
                     id = 1,
                     title = "Title"
             )
     )
 }
-private val WORK_PAEG_VIEW_MODEL = WorkPageViewModel(
+private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
         works = listOf(
                 WorkViewModel(
                         id = 1,
                         title = "Title",
-                        type = WorkType.TV_SHOW
+                        type = WorkType.MOVIE
                 )
         )
 )
@@ -64,7 +64,7 @@ class GetSimilarByWorkUseCaseTest {
         useCase(WorkType.MOVIE, MOVIE_ID, 1)
                 .test()
                 .assertComplete()
-                .assertResult(WORK_PAEG_VIEW_MODEL)
+                .assertResult(WORK_PAGE_VIEW_MODEL)
     }
 
     @Test

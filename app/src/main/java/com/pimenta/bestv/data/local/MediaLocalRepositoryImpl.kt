@@ -32,13 +32,13 @@ class MediaLocalRepositoryImpl @Inject constructor(
 ) : MediaLocalRepository {
 
     override fun hasFavorite(): Single<Boolean> =
-            Single.zip<List<MovieDbModel>, List<TvShowDbModel>, Pair<List<MovieDbModel>, List<TvShowDbModel>>>(
+            Single.zip<List<MovieDbModel>, List<TvShowDbModel>, Boolean>(
                     movieDao.getAll(),
                     tvShowDao.getAll(),
-                    BiFunction { first, second -> Pair(first, second) }
-            ).map {
-                it.first.isNotEmpty() || it.second.isNotEmpty()
-            }
+                    BiFunction { first, second ->
+                        first.isNotEmpty() || second.isNotEmpty()
+                    }
+            )
 
     override fun isFavoriteMovie(movieId: Int): Single<Boolean> =
             movieDao.getById(movieId)
