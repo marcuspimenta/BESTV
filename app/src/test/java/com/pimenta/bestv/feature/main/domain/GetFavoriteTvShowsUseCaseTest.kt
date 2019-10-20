@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import com.pimenta.bestv.data.remote.entity.TvShowResponse
 import io.reactivex.Single
@@ -45,16 +45,16 @@ private val TV_SHOW_VIEW_MODEL = WorkViewModel(
 
 class GetFavoriteTvShowsUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
     private val useCase = GetFavoriteTvShowsUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the favorites movies`() {
-        whenever(mediaRepository.getFavoriteTvShows()).thenReturn(Single.just(listOf(TV_SHOW_DB)))
-        whenever(mediaRepository.getTvShow(TV_SHOW_DB.id)).thenReturn(TV_SHOW_RESPONSE)
+        whenever(mediaDataSource.getFavoriteTvShows()).thenReturn(Single.just(listOf(TV_SHOW_DB)))
+        whenever(mediaDataSource.getTvShow(TV_SHOW_DB.id)).thenReturn(TV_SHOW_RESPONSE)
 
         useCase()
                 .test()
@@ -64,7 +64,7 @@ class GetFavoriteTvShowsUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getFavoriteTvShows()).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getFavoriteTvShows()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

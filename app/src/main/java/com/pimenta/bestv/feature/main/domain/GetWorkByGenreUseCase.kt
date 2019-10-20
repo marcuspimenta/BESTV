@@ -18,20 +18,20 @@ import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class GetWorkByGenreUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+        private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(genreViewModel: GenreViewModel, page: Int) =
             when (genreViewModel.source) {
-                Source.MOVIE -> mediaRepository.getMovieByGenre(genreViewModel.id, page)
-                Source.TV_SHOW -> mediaRepository.getTvShowByGenre(genreViewModel.id, page)
+                Source.MOVIE -> mediaDataSource.getMovieByGenre(genreViewModel.id, page)
+                Source.TV_SHOW -> mediaDataSource.getTvShowByGenre(genreViewModel.id, page)
             }.map {
                 WorkPageViewModel(
                         it.page,

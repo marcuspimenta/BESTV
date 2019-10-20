@@ -14,12 +14,12 @@
 
 package com.pimenta.bestv.di.module
 
-import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.MediaRepositoryImpl
+import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaDataSourceImpl
 import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.local.MediaLocalRepositoryImpl
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
-import com.pimenta.bestv.data.remote.TmdbMediaRemoteRepository
+import com.pimenta.bestv.data.remote.MediaRemoteRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -38,13 +38,13 @@ interface MediaModule {
 
     @Binds
     @Singleton
-    fun provideMediaRemote(connector: TmdbMediaRemoteRepository): MediaRemoteRepository
+    fun provideMediaRemote(mediaRemoteRepository: MediaRemoteRepositoryImpl): MediaRemoteRepository
 
     @Binds
     @Singleton
-    fun provideMediaLocal(mediaLocalImplModule: MediaLocalRepositoryImpl): MediaLocalRepository
+    fun provideMediaLocal(mediaLocalRepository: MediaLocalRepositoryImpl): MediaLocalRepository
 
     @Binds
     @Singleton
-    fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
+    fun provideMovieRepository(repository: MediaDataSourceImpl): MediaDataSource
 }

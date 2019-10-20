@@ -18,30 +18,30 @@ import com.pimenta.bestv.common.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.common.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class SetFavoriteUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =
             when (workViewModel.type) {
                 WorkType.MOVIE -> {
                     if (workViewModel.isFavorite) {
-                        mediaRepository.deleteFavoriteMovie(workViewModel.toMovieDbModel())
+                        mediaDataSource.deleteFavoriteMovie(workViewModel.toMovieDbModel())
                     } else {
-                        mediaRepository.saveFavoriteMovie(workViewModel.toMovieDbModel())
+                        mediaDataSource.saveFavoriteMovie(workViewModel.toMovieDbModel())
                     }
                 }
                 WorkType.TV_SHOW -> {
                     if (workViewModel.isFavorite) {
-                        mediaRepository.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
+                        mediaDataSource.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
                     } else {
-                        mediaRepository.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
+                        mediaDataSource.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
                     }
                 }
             }

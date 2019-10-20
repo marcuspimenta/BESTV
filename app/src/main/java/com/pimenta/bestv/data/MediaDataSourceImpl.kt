@@ -28,11 +28,11 @@ import javax.inject.Inject
 /**
  * Created by marcus on 05-03-2018.
  */
-class MediaRepositoryImpl @Inject constructor(
+class MediaDataSourceImpl @Inject constructor(
         private val mediaLocalRepository: MediaLocalRepository,
         private val mediaRemoteRepository: MediaRemoteRepository,
         private val recommendationProvider: RecommendationProvider
-) : MediaRepository {
+) : MediaDataSource {
 
     override fun hasFavorite(): Single<Boolean> =
             mediaLocalRepository.hasFavorite()
@@ -67,16 +67,16 @@ class MediaRepositoryImpl @Inject constructor(
     override fun getTvShow(tvId: Int): TvShowResponse? =
             mediaRemoteRepository.getTvShow(tvId)
 
-    override fun loadWorkByType(page: Int, movieListType: MediaRepository.WorkType): Single<out WorkPageResponse<*>> =
+    override fun loadWorkByType(page: Int, movieListType: MediaDataSource.WorkType): Single<out WorkPageResponse<*>> =
             when (movieListType) {
-                MediaRepository.WorkType.NOW_PLAYING_MOVIES -> mediaRemoteRepository.getNowPlayingMovies(page)
-                MediaRepository.WorkType.POPULAR_MOVIES -> mediaRemoteRepository.getPopularMovies(page)
-                MediaRepository.WorkType.TOP_RATED_MOVIES -> mediaRemoteRepository.getTopRatedMovies(page)
-                MediaRepository.WorkType.UP_COMING_MOVIES -> mediaRemoteRepository.getUpComingMovies(page)
-                MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS -> mediaRemoteRepository.getAiringTodayTvShows(page)
-                MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS -> mediaRemoteRepository.getOnTheAirTvShows(page)
-                MediaRepository.WorkType.POPULAR_TV_SHOWS -> mediaRemoteRepository.getPopularTvShows(page)
-                MediaRepository.WorkType.TOP_RATED_TV_SHOWS -> mediaRemoteRepository.getTopRatedTvShows(page)
+                MediaDataSource.WorkType.NOW_PLAYING_MOVIES -> mediaRemoteRepository.getNowPlayingMovies(page)
+                MediaDataSource.WorkType.POPULAR_MOVIES -> mediaRemoteRepository.getPopularMovies(page)
+                MediaDataSource.WorkType.TOP_RATED_MOVIES -> mediaRemoteRepository.getTopRatedMovies(page)
+                MediaDataSource.WorkType.UP_COMING_MOVIES -> mediaRemoteRepository.getUpComingMovies(page)
+                MediaDataSource.WorkType.AIRING_TODAY_TV_SHOWS -> mediaRemoteRepository.getAiringTodayTvShows(page)
+                MediaDataSource.WorkType.ON_THE_AIR_TV_SHOWS -> mediaRemoteRepository.getOnTheAirTvShows(page)
+                MediaDataSource.WorkType.POPULAR_TV_SHOWS -> mediaRemoteRepository.getPopularTvShows(page)
+                MediaDataSource.WorkType.TOP_RATED_TV_SHOWS -> mediaRemoteRepository.getTopRatedTvShows(page)
                 else -> Single.error(Throwable())
             }
 

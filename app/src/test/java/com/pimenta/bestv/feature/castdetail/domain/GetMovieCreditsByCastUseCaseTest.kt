@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.CastMovieListResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
@@ -43,10 +43,10 @@ private val WORK_VIEW_MODEL = WorkViewModel(
 
 class GetMovieCreditsByCastUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
     private val useCase = GetMovieCreditsByCastUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
@@ -56,7 +56,7 @@ class GetMovieCreditsByCastUseCaseTest {
 
         val workViewModels = listOf(WORK_VIEW_MODEL)
 
-        whenever(mediaRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.just(castMovieList))
+        whenever(mediaDataSource.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.just(castMovieList))
 
         useCase(CAST_ID)
                 .test()
@@ -66,7 +66,7 @@ class GetMovieCreditsByCastUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
                 .test()

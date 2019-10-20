@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.castdetail.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -24,10 +24,10 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetTvShowCreditsByCastUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(castId: Int): Single<List<WorkViewModel>?> =
-            mediaRepository.getTvShowCreditsByCast(castId)
+            mediaDataSource.getTvShowCreditsByCast(castId)
                     .map { it.works?.map { work -> work.toViewModel() } }
 }

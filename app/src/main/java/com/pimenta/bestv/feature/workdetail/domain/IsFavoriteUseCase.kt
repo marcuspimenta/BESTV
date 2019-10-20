@@ -16,19 +16,19 @@ package com.pimenta.bestv.feature.workdetail.domain
 
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 18-04-2019.
  */
 class IsFavoriteUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =
             when (workViewModel.type) {
-                WorkType.MOVIE -> mediaRepository.isFavoriteMovie(workViewModel.id)
-                WorkType.TV_SHOW -> mediaRepository.isFavoriteTvShow(workViewModel.id)
+                WorkType.MOVIE -> mediaDataSource.isFavoriteMovie(workViewModel.id)
+                WorkType.TV_SHOW -> mediaDataSource.isFavoriteTvShow(workViewModel.id)
             }
 }

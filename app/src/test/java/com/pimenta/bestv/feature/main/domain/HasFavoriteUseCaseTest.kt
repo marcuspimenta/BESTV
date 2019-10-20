@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import io.reactivex.Single
 import org.junit.Test
 
@@ -25,14 +25,14 @@ import org.junit.Test
  */
 class HasFavoriteUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
     private val useCase = HasFavoriteUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when checking if there is favorite works`() {
-        whenever(mediaRepository.hasFavorite()).thenReturn(Single.just(true))
+        whenever(mediaDataSource.hasFavorite()).thenReturn(Single.just(true))
 
         useCase()
                 .test()
@@ -42,7 +42,7 @@ class HasFavoriteUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.hasFavorite()).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.hasFavorite()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

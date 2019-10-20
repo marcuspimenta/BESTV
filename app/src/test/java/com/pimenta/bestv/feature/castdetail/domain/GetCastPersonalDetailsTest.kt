@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.castdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.CastResponse
 import io.reactivex.Single
 import org.junit.Test
@@ -42,15 +42,15 @@ private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
 
 class GetCastPersonalDetailsTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
     private val useCase = GetCastPersonalDetails(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the cast personal details`() {
-        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
+        whenever(mediaDataSource.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
 
         useCase(CAST_ID)
                 .test()
@@ -60,7 +60,7 @@ class GetCastPersonalDetailsTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
                 .test()

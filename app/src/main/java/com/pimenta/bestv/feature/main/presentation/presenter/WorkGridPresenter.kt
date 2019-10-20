@@ -19,7 +19,7 @@ import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
@@ -52,9 +52,9 @@ class WorkGridPresenter @Inject constructor(
         super.dispose()
     }
 
-    fun loadWorksByType(movieListType: MediaRepository.WorkType) {
+    fun loadWorksByType(movieListType: MediaDataSource.WorkType) {
         when (movieListType) {
-            MediaRepository.WorkType.FAVORITES_MOVIES ->
+            MediaDataSource.WorkType.FAVORITES_MOVIES ->
                 getFavoritesUseCase()
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)

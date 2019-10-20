@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -25,13 +25,13 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetSimilarByWorkUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+        private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =
             when (workType) {
-                WorkType.MOVIE -> mediaRepository.getSimilarByMovie(workId, page)
-                WorkType.TV_SHOW -> mediaRepository.getSimilarByTvShow(workId, page)
+                WorkType.MOVIE -> mediaDataSource.getSimilarByMovie(workId, page)
+                WorkType.TV_SHOW -> mediaDataSource.getSimilarByTvShow(workId, page)
             }.map {
                 WorkPageViewModel(
                         it.page,

@@ -19,7 +19,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
@@ -54,17 +54,17 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class LoadWorkByTypeUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
     private val useCase = LoadWorkByTypeUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the works by type`() {
-        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES))
+        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.just(WORK_PAGE))
 
-        useCase(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES)
+        useCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
                 .test()
                 .assertComplete()
                 .assertResult(MOVIE_PAGE_VIEW_MODEL)
@@ -72,10 +72,10 @@ class LoadWorkByTypeUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES))
+        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(1, MediaRepository.WorkType.NOW_PLAYING_MOVIES)
+        useCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
                 .test()
                 .assertError(Throwable::class.java)
     }

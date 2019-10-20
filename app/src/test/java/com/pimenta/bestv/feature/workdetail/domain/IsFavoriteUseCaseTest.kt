@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import io.reactivex.Single
 import org.junit.Test
 
@@ -40,14 +40,14 @@ private val TV_SHOW_VIEW_MODEL = WorkViewModel(
 
 class IsFavoriteUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
     private val useCase = IsFavoriteUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return true if a movie is favorite`() {
-        whenever(mediaRepository.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
+        whenever(mediaDataSource.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
                 .thenReturn(Single.just(true))
 
         useCase(MOVIE_VIEW_MODEL)
@@ -58,7 +58,7 @@ class IsFavoriteUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when checking if a movie is favorite`() {
-        whenever(mediaRepository.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
+        whenever(mediaDataSource.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
                 .thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_VIEW_MODEL)
@@ -68,7 +68,7 @@ class IsFavoriteUseCaseTest {
 
     @Test
     fun `should return true if a tv show is favorite`() {
-        whenever(mediaRepository.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
+        whenever(mediaDataSource.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
                 .thenReturn(Single.just(true))
 
         useCase(TV_SHOW_VIEW_MODEL)
@@ -79,7 +79,7 @@ class IsFavoriteUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when checking if a tv show is favorite`() {
-        whenever(mediaRepository.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
+        whenever(mediaDataSource.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
                 .thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_VIEW_MODEL)

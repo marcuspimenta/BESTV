@@ -29,7 +29,7 @@ import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.feature.main.di.WorkBrowseFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.GenreHeaderItem
@@ -52,8 +52,8 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         PageRow(
                 WorkTypeHeaderItem(
                         TOP_WORK_LIST_ID,
-                        getString(MediaRepository.WorkType.FAVORITES_MOVIES.resource),
-                        MediaRepository.WorkType.FAVORITES_MOVIES
+                        getString(MediaDataSource.WorkType.FAVORITES_MOVIES.resource),
+                        MediaDataSource.WorkType.FAVORITES_MOVIES
                 )
         )
     }
@@ -114,10 +114,10 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
         rowsAdapter.add(DividerRow())
         rowsAdapter.add(SectionRow(getString(R.string.movies)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.NOW_PLAYING_MOVIES.resource), MediaRepository.WorkType.NOW_PLAYING_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_MOVIES.resource), MediaRepository.WorkType.POPULAR_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_MOVIES.resource), MediaRepository.WorkType.TOP_RATED_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.UP_COMING_MOVIES.resource), MediaRepository.WorkType.UP_COMING_MOVIES)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.NOW_PLAYING_MOVIES.resource), MediaDataSource.WorkType.NOW_PLAYING_MOVIES)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.POPULAR_MOVIES.resource), MediaDataSource.WorkType.POPULAR_MOVIES)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.TOP_RATED_MOVIES.resource), MediaDataSource.WorkType.TOP_RATED_MOVIES)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.UP_COMING_MOVIES.resource), MediaDataSource.WorkType.UP_COMING_MOVIES)))
 
         movieGenres?.forEach {
             rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
@@ -125,10 +125,10 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
         rowsAdapter.add(DividerRow())
         rowsAdapter.add(SectionRow(getString(R.string.tv_shows)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS.resource), MediaRepository.WorkType.AIRING_TODAY_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS.resource), MediaRepository.WorkType.ON_THE_AIR_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.TOP_RATED_TV_SHOWS.resource), MediaRepository.WorkType.TOP_RATED_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaRepository.WorkType.POPULAR_TV_SHOWS.resource), MediaRepository.WorkType.POPULAR_TV_SHOWS)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.AIRING_TODAY_TV_SHOWS.resource), MediaDataSource.WorkType.AIRING_TODAY_TV_SHOWS)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.ON_THE_AIR_TV_SHOWS.resource), MediaDataSource.WorkType.ON_THE_AIR_TV_SHOWS)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.TOP_RATED_TV_SHOWS.resource), MediaDataSource.WorkType.TOP_RATED_TV_SHOWS)))
+        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(MediaDataSource.WorkType.POPULAR_TV_SHOWS.resource), MediaDataSource.WorkType.POPULAR_TV_SHOWS)))
 
         tvShowGenres?.forEach {
             rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))

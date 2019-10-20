@@ -26,7 +26,7 @@ import io.reactivex.Single
 /**
  * Created by marcus on 05-03-2018.
  */
-interface MediaRepository {
+interface MediaDataSource {
 
     fun hasFavorite(): Single<Boolean>
 

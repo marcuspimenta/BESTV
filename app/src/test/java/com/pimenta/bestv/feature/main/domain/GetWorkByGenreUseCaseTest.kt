@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.main.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
@@ -85,14 +85,14 @@ private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetWorkByGenreUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
     private val useCase = GetWorkByGenreUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading a movie page`() {
-        whenever(mediaRepository.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.just(WORK_PAGE))
+        whenever(mediaDataSource.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.just(WORK_PAGE))
 
         useCase(MOVIE_GENRE, 1)
                 .test()
@@ -102,7 +102,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when loading a movie page`() {
-        whenever(mediaRepository.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_GENRE, 1)
                 .test()
@@ -111,7 +111,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return the right data when loading a tv show page`() {
-        whenever(mediaRepository.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.just(TV_SHOW_PAGE))
+        whenever(mediaDataSource.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.just(TV_SHOW_PAGE))
 
         useCase(TV_SHOW_GENRE, 1)
                 .test()
@@ -121,7 +121,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when loading a tv show page`() {
-        whenever(mediaRepository.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_GENRE, 1)
                 .test()

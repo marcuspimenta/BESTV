@@ -14,15 +14,15 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class HasFavoriteUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke() = mediaRepository.hasFavorite()
+    operator fun invoke() = mediaDataSource.hasFavorite()
 }

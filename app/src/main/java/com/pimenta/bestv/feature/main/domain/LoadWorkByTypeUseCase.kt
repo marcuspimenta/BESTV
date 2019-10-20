@@ -16,18 +16,18 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class LoadWorkByTypeUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke(page: Int, movieListType: MediaRepository.WorkType) =
-            mediaRepository.loadWorkByType(page, movieListType)
+    operator fun invoke(page: Int, movieListType: MediaDataSource.WorkType) =
+            mediaDataSource.loadWorkByType(page, movieListType)
                     .map {
                         WorkPageViewModel(
                                 it.page,

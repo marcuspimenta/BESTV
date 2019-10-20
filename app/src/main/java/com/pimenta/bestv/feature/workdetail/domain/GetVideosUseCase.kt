@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -25,13 +25,13 @@ import javax.inject.Inject
  * Created by marcus on 15-04-2019.
  */
 class GetVideosUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+        private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int): Single<List<VideoViewModel>?> =
             when (workType) {
-                WorkType.MOVIE -> mediaRepository.getVideosByMovie(workId)
-                WorkType.TV_SHOW -> mediaRepository.getVideosByTvShow(workId)
+                WorkType.MOVIE -> mediaDataSource.getVideosByMovie(workId)
+                WorkType.TV_SHOW -> mediaDataSource.getVideosByTvShow(workId)
             }.map {
                 it.videos?.map { video ->
                     video.toViewModel()

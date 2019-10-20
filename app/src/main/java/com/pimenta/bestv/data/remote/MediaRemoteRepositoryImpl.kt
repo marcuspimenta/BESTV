@@ -28,7 +28,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 08-02-2018.
  */
-class TmdbMediaRemoteRepository @Inject constructor(
+class MediaRemoteRepositoryImpl @Inject constructor(
     private val genreApi: GenreApi,
     private val movieApi: MovieApi,
     private val personApi: CastApi,

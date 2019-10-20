@@ -20,7 +20,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Completable
@@ -56,28 +56,28 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class LoadRecommendationUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val mediaDataSource: MediaDataSource = mock()
     private val useCase = LoadRecommendationUseCase(
-            mediaRepository
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES))
+        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.POPULAR_MOVIES))
                 .thenReturn(Single.just(WORK_PAGE))
-        whenever(mediaRepository.loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works))
+        whenever(mediaDataSource.loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works))
                 .thenReturn(Completable.complete())
 
         useCase()
                 .test()
                 .assertComplete()
 
-        verify(mediaRepository).loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works)
+        verify(mediaDataSource).loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.loadWorkByType(1, MediaRepository.WorkType.POPULAR_MOVIES))
+        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.POPULAR_MOVIES))
                 .thenReturn(Single.error(Throwable()))
 
         useCase()

@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.main.presentation.ui.fragment
 
 import android.content.Context
 import androidx.core.os.bundleOf
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.feature.main.di.TopWorkGridFragmentComponent
 
 private const val TYPE = "TYPE"
@@ -26,7 +26,7 @@ private const val TYPE = "TYPE"
  */
 class TopWorkGridFragment : AbstractWorkGridFragment() {
 
-    private val workType: MediaRepository.WorkType by lazy { arguments?.getSerializable(TYPE) as MediaRepository.WorkType }
+    private val workType: MediaDataSource.WorkType by lazy { arguments?.getSerializable(TYPE) as MediaDataSource.WorkType }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -39,20 +39,20 @@ class TopWorkGridFragment : AbstractWorkGridFragment() {
     }
 
     override fun loadMorePages() {
-        if (workType != MediaRepository.WorkType.FAVORITES_MOVIES) {
+        if (workType != MediaDataSource.WorkType.FAVORITES_MOVIES) {
             super.loadMorePages()
         }
     }
 
     override fun refreshDada() {
-        if (workType == MediaRepository.WorkType.FAVORITES_MOVIES) {
+        if (workType == MediaDataSource.WorkType.FAVORITES_MOVIES) {
             super.loadMorePages()
         }
     }
 
     companion object {
 
-        fun newInstance(workType: MediaRepository.WorkType) =
+        fun newInstance(workType: MediaDataSource.WorkType) =
                 TopWorkGridFragment().apply {
                     arguments = bundleOf(
                             TYPE to workType
