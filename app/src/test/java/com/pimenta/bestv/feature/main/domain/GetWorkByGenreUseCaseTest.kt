@@ -17,7 +17,6 @@ package com.pimenta.bestv.feature.main.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
@@ -32,17 +31,6 @@ private val MOVIE_GENRE = GenreViewModel(
         id = 1,
         source = Source.MOVIE
 )
-private val WORK_PAGE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
 private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
@@ -59,17 +47,6 @@ private val TV_SHOW_GENRE = GenreViewModel(
         id = 1,
         source = Source.TV_SHOW
 )
-private val TV_SHOW_PAGE = TvShowPageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            TvShowResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
 private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
@@ -85,14 +62,17 @@ private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetWorkByGenreUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val getMovieByGenreUseCase: GetMovieByGenreUseCase = mock()
+    private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase = mock()
+
     private val useCase = GetWorkByGenreUseCase(
-            mediaDataSource
+            getMovieByGenreUseCase,
+            getTvShowByGenreUseCase
     )
 
     @Test
     fun `should return the right data when loading a movie page`() {
-        whenever(mediaDataSource.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.just(WORK_PAGE))
+        whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
 
         useCase(MOVIE_GENRE, 1)
                 .test()
@@ -102,7 +82,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when loading a movie page`() {
-        whenever(mediaDataSource.getMovieByGenre(MOVIE_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_GENRE, 1)
                 .test()
@@ -111,7 +91,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return the right data when loading a tv show page`() {
-        whenever(mediaDataSource.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.just(TV_SHOW_PAGE))
+        whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1)).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
 
         useCase(TV_SHOW_GENRE, 1)
                 .test()
@@ -121,7 +101,7 @@ class GetWorkByGenreUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when loading a tv show page`() {
-        whenever(mediaDataSource.getTvShowByGenre(TV_SHOW_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1)).thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_GENRE, 1)
                 .test()

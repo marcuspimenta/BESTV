@@ -23,18 +23,18 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class SearchWorksByQueryUseCase @Inject constructor(
-    private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
-    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
-    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
+        private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
+        private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
+        private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
 ) {
 
-    operator fun invoke(query: String): Single<Pair<WorkPageViewModel, WorkPageViewModel>> =
+    operator fun invoke(query: String) =
             urlEncoderTextUseCase(query)
                     .flatMap {
                         Single.zip<WorkPageViewModel, WorkPageViewModel, Pair<WorkPageViewModel, WorkPageViewModel>>(
                                 searchMoviesByQueryUseCase(it, 1),
                                 searchTvShowsByQueryUseCase(it, 1),
-                                BiFunction { first, second -> Pair(first, second) }
+                                BiFunction { first, second -> first to second }
                         )
                     }
 }

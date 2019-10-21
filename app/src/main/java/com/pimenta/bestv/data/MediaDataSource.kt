@@ -42,9 +42,9 @@ interface MediaDataSource {
 
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
 
-    fun getFavoriteMovies(): Single<List<MovieDbModel>>
+    fun getFavoriteMovieIds(): Single<List<MovieDbModel>>
 
-    fun getFavoriteTvShows(): Single<List<TvShowDbModel>>
+    fun getFavoriteTvShowIds(): Single<List<TvShowDbModel>>
 
     fun getMovie(movieId: Int): MovieResponse?
 

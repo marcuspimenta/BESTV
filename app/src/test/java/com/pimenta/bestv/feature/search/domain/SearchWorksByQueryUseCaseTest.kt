@@ -66,7 +66,7 @@ class SearchWorksByQueryUseCaseTest {
 
     @Test
     fun `should return the right data when searching works by query`() {
-        val result = Pair(MOVIE_PAGE_VIEW_MODEL, TV_SHOW_PAGE_VIEW_MODEL)
+        val result = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
 
         whenever(urlEncoderTextUseCase(QUERY)).thenReturn(Single.just(QUERY_ENCODED))
         whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))

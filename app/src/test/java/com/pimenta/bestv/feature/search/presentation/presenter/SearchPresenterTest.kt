@@ -91,7 +91,7 @@ class SearchPresenterTest {
 
     @Test
     fun `should search the works by query`() {
-        val result = Pair(MOVIE_PAGE_VIEW_MODEL, TV_SHOW_PAGE_VIEW_MODEL)
+        val result = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
 
         whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(Single.just(result))
 

@@ -55,10 +55,10 @@ class MediaDataSourceImpl @Inject constructor(
     override fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
             mediaLocalRepository.deleteFavoriteTvShow(tvShowDbModel)
 
-    override fun getFavoriteMovies(): Single<List<MovieDbModel>> =
+    override fun getFavoriteMovieIds(): Single<List<MovieDbModel>> =
             mediaLocalRepository.getMovies()
 
-    override fun getFavoriteTvShows(): Single<List<TvShowDbModel>> =
+    override fun getFavoriteTvShowIds(): Single<List<TvShowDbModel>> =
             mediaLocalRepository.getTvShows()
 
     override fun getMovie(movieId: Int): MovieResponse? =

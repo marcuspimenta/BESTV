@@ -16,50 +16,39 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.local.entity.MovieDbModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 15-10-2019.
+ * Created by marcus on 2019-10-21.
  */
 private val MOVIE_DB = MovieDbModel(
         id = 1
 )
-private val MOVIE_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        isFavorite = true,
-        type = WorkType.MOVIE
-)
 
-class GetFavoriteMoviesUseCaseTest {
+class GetFavoriteMovieIdsUseCaseTest {
 
-    private val getFavoriteMovieIdsUseCase: GetFavoriteMovieIdsUseCase = mock()
-    private val getMovieUseCase: GetMovieUseCase = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
-    private val useCase = GetFavoriteMoviesUseCase(
-            getFavoriteMovieIdsUseCase,
-            getMovieUseCase
+    private val useCase = GetFavoriteMovieIdsUseCase(
+            mediaDataSource
     )
 
     @Test
-    fun `should return the right data when loading the favorites movies`() {
-        whenever(getFavoriteMovieIdsUseCase()).thenReturn(Single.just(listOf(MOVIE_DB)))
-        whenever(getMovieUseCase(MOVIE_DB.id)).thenReturn(MOVIE_VIEW_MODEL)
+    fun `should return the right data when loading the favorites movie ids`() {
+        whenever(mediaDataSource.getFavoriteMovieIds()).thenReturn(Single.just(listOf(MOVIE_DB)))
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(listOf(MOVIE_VIEW_MODEL))
+                .assertResult(listOf(MOVIE_DB))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getFavoriteMovieIdsUseCase()).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getFavoriteMovieIds()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

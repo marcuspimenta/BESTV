@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
 import java.util.*
 import javax.inject.Inject
 
@@ -24,19 +22,20 @@ import javax.inject.Inject
  * Created by marcus on 13-10-2019.
  */
 class GetFavoriteTvShowsUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+        private val getFavoriteTvShowIdsUseCase: GetFavoriteTvShowIdsUseCase,
+        private val getTvShowUseCase: GetTvShowUseCase
 ) {
 
     operator fun invoke() =
-            mediaDataSource.getFavoriteTvShows()
+            getFavoriteTvShowIdsUseCase()
                     .map {
-                        val works = ArrayList<WorkViewModel>()
-                        it.forEach { movie ->
-                            mediaDataSource.getTvShow(movie.id)?.let { movieResponse ->
-                                movieResponse.isFavorite = true
-                                works.add(movieResponse.toViewModel())
+                        val tvShows = ArrayList<WorkViewModel>()
+                        it.forEach { tvShowDbModel ->
+                            getTvShowUseCase(tvShowDbModel.id)?.let { tvShowViewModel ->
+                                tvShowViewModel.isFavorite = true
+                                tvShows.add(tvShowViewModel)
                             }
                         }
-                        works.toList()
+                        tvShows.toList()
                     }
 }

@@ -14,21 +14,16 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.model.Source
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 2019-10-20.
  */
-class GetWorkByGenreUseCase @Inject constructor(
-        private val getMovieByGenreUseCase: GetMovieByGenreUseCase,
-        private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
+class GetFavoriteMovieIdsUseCase @Inject constructor(
+        private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke(genreViewModel: GenreViewModel, page: Int) =
-            when (genreViewModel.source) {
-                Source.MOVIE -> getMovieByGenreUseCase(genreViewModel.id, page)
-                Source.TV_SHOW -> getTvShowByGenreUseCase(genreViewModel.id, page)
-            }
+    operator fun invoke() =
+            mediaDataSource.getFavoriteMovieIds()
 }

@@ -14,16 +14,25 @@
 
 package com.pimenta.bestv.feature.main.domain
 
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 2019-10-20.
  */
-class HasFavoriteUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+class GetMovieByGenreUseCase @Inject constructor(
+        private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke() =
-            mediaDataSource.hasFavorite()
+    operator fun invoke(genreId: Int, page: Int) =
+            mediaDataSource.getMovieByGenre(genreId, page)
+                    .map {
+                        WorkPageViewModel(
+                                it.page,
+                                it.totalPages,
+                                it.works?.map { work -> work.toViewModel() }
+                        )
+                    }
 }

@@ -16,50 +16,39 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 15-10-2019.
+ * Created by marcus on 2019-10-21.
  */
 private val TV_SHOW_DB = TvShowDbModel(
         id = 1
 )
-private val TV_SHOW_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        isFavorite = true,
-        type = WorkType.TV_SHOW
-)
 
-class GetFavoriteTvShowsUseCaseTest {
+class GetFavoriteTvShowIdsUseCaseTest {
 
-    private val getFavoriteTvShowIdsUseCase: GetFavoriteTvShowIdsUseCase = mock()
-    private val getTvShowUseCase: GetTvShowUseCase = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
-    private val useCase = GetFavoriteTvShowsUseCase(
-            getFavoriteTvShowIdsUseCase,
-            getTvShowUseCase
+    private val useCase = GetFavoriteTvShowIdsUseCase(
+            mediaDataSource
     )
 
     @Test
-    fun `should return the right data when loading the favorites movies`() {
-        whenever(getFavoriteTvShowIdsUseCase()).thenReturn(Single.just(listOf(TV_SHOW_DB)))
-        whenever(getTvShowUseCase(TV_SHOW_DB.id)).thenReturn(TV_SHOW_VIEW_MODEL)
+    fun `should return the right data when loading the favorites tv show ids`() {
+        whenever(mediaDataSource.getFavoriteTvShowIds()).thenReturn(Single.just(listOf(TV_SHOW_DB)))
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(listOf(TV_SHOW_VIEW_MODEL))
+                .assertResult(listOf(TV_SHOW_DB))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getFavoriteTvShowIdsUseCase()).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getFavoriteTvShowIds()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()
