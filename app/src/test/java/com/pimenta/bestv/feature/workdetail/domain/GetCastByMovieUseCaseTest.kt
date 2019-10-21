@@ -17,14 +17,29 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.remote.entity.CastListResponse
+import com.pimenta.bestv.data.remote.entity.CastResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 23-06-2018.
+ * Created by marcus on 21-10-2019.
  */
 private const val WORK_ID = 1
+private val CAST_LIST = CastListResponse(
+        id = 1,
+        casts = listOf(
+                CastResponse(
+                        id = 1,
+                        name = "Name",
+                        character = "Character",
+                        birthday = "Birthday",
+                        deathDay = null,
+                        biography = null
+                )
+        )
+)
 private val CAST_VIEW_MODELS = listOf(
         CastViewModel(
                 id = 1,
@@ -36,21 +51,19 @@ private val CAST_VIEW_MODELS = listOf(
         )
 )
 
-class GetCastsUseCaseTest {
+class GetCastByMovieUseCaseTest {
 
-    private val getCastByMovieUseCase: GetCastByMovieUseCase = mock()
-    private val getCastByTvShowUseCase: GetCastByTvShowUseCase = mock()
+    private val mediaDataSource: MediaDataSource = mock()
 
-    private val useCase = GetCastsUseCase(
-            getCastByMovieUseCase,
-            getCastByTvShowUseCase
+    private val useCase = GetCastByMovieUseCase(
+            mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the casts by movie`() {
-        whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.just(CAST_VIEW_MODELS))
+        whenever(mediaDataSource.getCastByMovie(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
-        useCase(WorkType.MOVIE, WORK_ID)
+        useCase(WORK_ID)
                 .test()
                 .assertComplete()
                 .assertResult(CAST_VIEW_MODELS)
@@ -58,28 +71,9 @@ class GetCastsUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when loading the casts by movie`() {
-        whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.error(Throwable()))
+        whenever(mediaDataSource.getCastByMovie(WORK_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase(WorkType.MOVIE, WORK_ID)
-                .test()
-                .assertError(Throwable::class.java)
-    }
-
-    @Test
-    fun `should return the right data when loading the casts by tv show`() {
-        whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.just(CAST_VIEW_MODELS))
-
-        useCase(WorkType.TV_SHOW, WORK_ID)
-                .test()
-                .assertComplete()
-                .assertResult(CAST_VIEW_MODELS)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when loading the casts by tv show`() {
-        whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.error(Throwable()))
-
-        useCase(WorkType.TV_SHOW, WORK_ID)
+        useCase(WORK_ID)
                 .test()
                 .assertError(Throwable::class.java)
     }

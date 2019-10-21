@@ -14,20 +14,22 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 15-04-2019.
+ * Created by marcus on 2019-10-21.
  */
-class GetCastsUseCase @Inject constructor(
-        private val getCastByMovieUseCase: GetCastByMovieUseCase,
-        private val getCastByTvShowUseCase: GetCastByTvShowUseCase
+class GetCastByTvShowUseCase @Inject constructor(
+        private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int) =
-            when (workType) {
-                WorkType.MOVIE -> getCastByMovieUseCase(workId)
-                WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)
-            }
+    operator fun invoke(workId: Int) =
+            mediaDataSource.getCastByTvShow(workId)
+                    .map {
+                        it.casts?.map { cast ->
+                            cast.toViewModel()
+                        }
+                    }
 }
