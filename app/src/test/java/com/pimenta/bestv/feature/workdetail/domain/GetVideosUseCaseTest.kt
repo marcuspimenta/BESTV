@@ -18,9 +18,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.data.MediaDataSource
-import com.pimenta.bestv.data.remote.entity.VideoListResponse
-import com.pimenta.bestv.data.remote.entity.VideoResponse
 import io.reactivex.Single
 import org.junit.Test
 
@@ -28,15 +25,6 @@ import org.junit.Test
  * Created by marcus on 23-06-2018.
  */
 private const val MOVIE_ID = 1
-private val VIDEO_LIST = VideoListResponse(
-        id = 1,
-        videos = listOf(
-                VideoResponse(
-                        id = "1",
-                        name = "VideoResponse"
-                )
-        )
-)
 private val VIDEO_VIEW_MODELS = listOf(
         VideoViewModel(
                 id = "1",
@@ -46,12 +34,17 @@ private val VIDEO_VIEW_MODELS = listOf(
 
 class GetVideosUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
-    private val useCase = GetVideosUseCase(mediaDataSource)
+    private val getVideosByMovieUseCase: GetVideosByMovieUseCase = mock()
+    private val getVideosByTvShowUseCase: GetVideosByTvShowUseCase = mock()
+
+    private val useCase = GetVideosUseCase(
+            getVideosByMovieUseCase,
+            getVideosByTvShowUseCase
+    )
 
     @Test
-    fun `should return the right data when loading the videos`() {
-        whenever(mediaDataSource.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
+    fun `should return the right data when loading the videos by movie`() {
+        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
 
         useCase(WorkType.MOVIE, MOVIE_ID)
                 .test()
@@ -60,10 +53,29 @@ class GetVideosUseCaseTest {
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when loading the videos by movie abd some exception happens`() {
+        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, MOVIE_ID)
+                .test()
+                .assertError(Throwable::class.java)
+    }
+
+    @Test
+    fun `should return the right data when loading the videos by tv show`() {
+        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
+
+        useCase(WorkType.TV_SHOW, MOVIE_ID)
+                .test()
+                .assertComplete()
+                .assertResult(VIDEO_VIEW_MODELS)
+    }
+
+    @Test
+    fun `should return an error when loading the videos by tv show abd some exception happens`() {
+        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+
+        useCase(WorkType.TV_SHOW, MOVIE_ID)
                 .test()
                 .assertError(Throwable::class.java)
     }
