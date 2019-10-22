@@ -14,19 +14,17 @@
 
 package com.pimenta.bestv.data.remote.entity
 
-import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 /**
  * Created by marcus on 06/07/18.
  */
-@Entity(tableName = TvShowResponse.TABLE)
 class TvShowResponse(
-    id: Int = 0,
-    isFavorite: Boolean = false,
-    @SerializedName("name") override var title: String? = null,
-    @SerializedName("original_name") override var originalTitle: String? = null,
-    @SerializedName("first_air_date") var firstAirDate: String? = null
+        id: Int = 0,
+        isFavorite: Boolean = false,
+        @SerializedName("name") override var title: String? = null,
+        @SerializedName("original_name") override var originalTitle: String? = null,
+        @SerializedName("first_air_date") var firstAirDate: String? = null
 ) : WorkResponse(id = id, isFavorite = isFavorite) {
 
     override var releaseDate: String?
@@ -36,9 +34,4 @@ class TvShowResponse(
         set(value) {
             firstAirDate = value
         }
-
-    companion object {
-
-        const val TABLE = "tv_show"
-    }
 }
