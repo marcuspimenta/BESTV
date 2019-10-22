@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
@@ -28,11 +27,5 @@ class GetTvShowByGenreUseCase @Inject constructor(
 
     operator fun invoke(genreId: Int, page: Int) =
             mediaDataSource.getTvShowByGenre(genreId, page)
-                    .map {
-                        WorkPageViewModel(
-                                it.page,
-                                it.totalPages,
-                                it.works?.map { work -> work.toViewModel() }
-                        )
-                    }
+                    .map { it.toViewModel() }
 }

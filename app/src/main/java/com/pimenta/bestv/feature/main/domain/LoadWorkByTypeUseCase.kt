@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.data.MediaDataSource
 import javax.inject.Inject
 
@@ -23,16 +22,10 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class LoadWorkByTypeUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+        private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(page: Int, movieListType: MediaDataSource.WorkType) =
             mediaDataSource.loadWorkByType(page, movieListType)
-                    .map {
-                        WorkPageViewModel(
-                                it.page,
-                                it.totalPages,
-                                it.works?.map { work -> work.toViewModel() }
-                        )
-                    }
+                    .map { it.toViewModel() }
 }
