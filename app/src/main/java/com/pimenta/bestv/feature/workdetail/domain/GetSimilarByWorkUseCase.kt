@@ -25,7 +25,7 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetSimilarByWorkUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =

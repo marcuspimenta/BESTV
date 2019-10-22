@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class LoadWorkByTypeUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(page: Int, movieListType: MediaDataSource.WorkType) =

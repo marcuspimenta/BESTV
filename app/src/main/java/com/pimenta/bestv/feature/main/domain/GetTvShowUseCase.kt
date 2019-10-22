@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 2019-10-20.
  */
 class GetTvShowUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(tvShowId: Int) =

@@ -22,8 +22,8 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class GetWorkByGenreUseCase @Inject constructor(
-        private val getMovieByGenreUseCase: GetMovieByGenreUseCase,
-        private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
+    private val getMovieByGenreUseCase: GetMovieByGenreUseCase,
+    private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
 ) {
 
     operator fun invoke(genreViewModel: GenreViewModel, page: Int) =

@@ -21,8 +21,8 @@ import javax.inject.Inject
  * Created by marcus on 15-04-2019.
  */
 class GetCastsUseCase @Inject constructor(
-        private val getCastByMovieUseCase: GetCastByMovieUseCase,
-        private val getCastByTvShowUseCase: GetCastByTvShowUseCase
+    private val getCastByMovieUseCase: GetCastByMovieUseCase,
+    private val getCastByTvShowUseCase: GetCastByTvShowUseCase
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int) =

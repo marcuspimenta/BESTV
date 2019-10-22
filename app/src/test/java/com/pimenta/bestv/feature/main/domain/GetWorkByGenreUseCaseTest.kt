@@ -17,10 +17,6 @@ package com.pimenta.bestv.feature.main.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.data.remote.entity.MoviePageResponse
-import com.pimenta.bestv.data.remote.entity.MovieResponse
-import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
-import com.pimenta.bestv.data.remote.entity.TvShowResponse
 import io.reactivex.Single
 import org.junit.Test
 

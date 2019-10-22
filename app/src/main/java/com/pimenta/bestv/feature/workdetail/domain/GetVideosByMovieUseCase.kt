@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 22-10-2019.
  */
 class GetVideosByMovieUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+    private val mediaDataSource: MediaDataSource
 ) {
 
     operator fun invoke(workId: Int) =

@@ -20,11 +20,11 @@ import com.google.gson.annotations.SerializedName
  * Created by marcus on 06/07/18.
  */
 class TvShowResponse(
-        id: Int = 0,
-        isFavorite: Boolean = false,
-        @SerializedName("name") override var title: String? = null,
-        @SerializedName("original_name") override var originalTitle: String? = null,
-        @SerializedName("first_air_date") var firstAirDate: String? = null
+    id: Int = 0,
+    isFavorite: Boolean = false,
+    @SerializedName("name") override var title: String? = null,
+    @SerializedName("original_name") override var originalTitle: String? = null,
+    @SerializedName("first_air_date") var firstAirDate: String? = null
 ) : WorkResponse(id = id, isFavorite = isFavorite) {
 
     override var releaseDate: String?

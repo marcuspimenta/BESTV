@@ -21,16 +21,16 @@ import java.io.Serializable
  * Created by marcus on 06/07/18.
  */
 abstract class WorkResponse(
-        @SerializedName("id") var id: Int = 0,
-        @SerializedName("original_language") var originalLanguage: String? = null,
-        @SerializedName("overview") var overview: String? = null,
-        @SerializedName("backdrop_path") var backdropPath: String? = null,
-        @SerializedName("poster_path") var posterPath: String? = null,
-        @SerializedName("popularity") var popularity: Float = 0.toFloat(),
-        @SerializedName("vote_average") var voteAverage: Float = 0.toFloat(),
-        @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
-        @SerializedName("adult") var isAdult: Boolean = false,
-        var isFavorite: Boolean = false
+    @SerializedName("id") var id: Int = 0,
+    @SerializedName("original_language") var originalLanguage: String? = null,
+    @SerializedName("overview") var overview: String? = null,
+    @SerializedName("backdrop_path") var backdropPath: String? = null,
+    @SerializedName("poster_path") var posterPath: String? = null,
+    @SerializedName("popularity") var popularity: Float = 0.toFloat(),
+    @SerializedName("vote_average") var voteAverage: Float = 0.toFloat(),
+    @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
+    @SerializedName("adult") var isAdult: Boolean = false,
+    var isFavorite: Boolean = false
 ) : Serializable {
 
     abstract var title: String?

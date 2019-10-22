@@ -29,9 +29,9 @@ import javax.inject.Inject
  * Created by marcus on 05-03-2018.
  */
 class MediaDataSourceImpl @Inject constructor(
-        private val mediaLocalRepository: MediaLocalRepository,
-        private val mediaRemoteRepository: MediaRemoteRepository,
-        private val recommendationProvider: RecommendationProvider
+    private val mediaLocalRepository: MediaLocalRepository,
+    private val mediaRemoteRepository: MediaRemoteRepository,
+    private val recommendationProvider: RecommendationProvider
 ) : MediaDataSource {
 
     override fun hasFavorite(): Single<Boolean> =

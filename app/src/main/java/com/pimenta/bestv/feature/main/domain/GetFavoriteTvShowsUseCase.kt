@@ -22,8 +22,8 @@ import javax.inject.Inject
  * Created by marcus on 13-10-2019.
  */
 class GetFavoriteTvShowsUseCase @Inject constructor(
-        private val getFavoriteTvShowIdsUseCase: GetFavoriteTvShowIdsUseCase,
-        private val getTvShowUseCase: GetTvShowUseCase
+    private val getFavoriteTvShowIdsUseCase: GetFavoriteTvShowIdsUseCase,
+    private val getTvShowUseCase: GetTvShowUseCase
 ) {
 
     operator fun invoke() =
