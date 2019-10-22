@@ -15,22 +15,17 @@
 package com.pimenta.bestv.feature.workdetail.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.data.MediaDataSource
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
- * Created by marcus on 18-04-2019.
+ * Created by marcus on 22-10-2019.
  */
-class GetSimilarByWorkUseCase @Inject constructor(
+class GetRecommendationByMovieUseCase @Inject constructor(
         private val mediaDataSource: MediaDataSource
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =
-            when (workType) {
-                WorkType.MOVIE -> mediaDataSource.getSimilarByMovie(workId, page)
-                WorkType.TV_SHOW -> mediaDataSource.getSimilarByTvShow(workId, page)
-            }.map { it.toViewModel() }
+    operator fun invoke(workId: Int, page: Int) =
+            mediaDataSource.getRecommendationByMovie(workId, page)
+                    .map { it.toViewModel() }
 }

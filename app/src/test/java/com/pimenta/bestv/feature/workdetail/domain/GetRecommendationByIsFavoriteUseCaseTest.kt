@@ -19,26 +19,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
-import com.pimenta.bestv.data.remote.entity.MoviePageResponse
-import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-06-2018.
  */
-private const val MOVIE_ID = 1
-private val WORK_PAGE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Title"
-            )
-    )
-}
+private const val WORK_ID = 1
 private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
@@ -53,26 +40,52 @@ private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetRecommendationByWorkUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
-    private val useCase = GetRecommendationByWorkUseCase(mediaDataSource)
+    private val getRecommendationByMovieUseCase: GetRecommendationByMovieUseCase = mock()
+    private val getRecommendationByTvShowUseCase: GetRecommendationByTvShowUseCase = mock()
+
+    private val useCase = GetRecommendationByWorkUseCase(
+            getRecommendationByMovieUseCase,
+            getRecommendationByTvShowUseCase
+    )
 
     @Test
-    fun `should return the right data when loading the recommendations`() {
-        whenever(mediaDataSource.getRecommendationByMovie(MOVIE_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+    fun `should return the right data when loading the recommendations by movie`() {
+        whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
+                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase(WorkType.MOVIE, WORK_ID, 1)
                 .test()
                 .assertComplete()
                 .assertResult(WORK_PAGE_VIEW_MODEL)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getRecommendationByMovie(MOVIE_ID, 1))
+    fun `should return an error when loading the recommendations by movie and some exception happens`() {
+        whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(WorkType.MOVIE, MOVIE_ID, 1)
+        useCase(WorkType.MOVIE, WORK_ID, 1)
+                .test()
+                .assertError(Throwable::class.java)
+    }
+
+    @Test
+    fun `should return the right data when loading the recommendations by tv show`() {
+        whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
+                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+
+        useCase(WorkType.TV_SHOW, WORK_ID, 1)
+                .test()
+                .assertComplete()
+                .assertResult(WORK_PAGE_VIEW_MODEL)
+    }
+
+    @Test
+    fun `should return an error when loading the recommendations by tv show and some exception happens`() {
+        whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
+                .thenReturn(Single.error(Throwable()))
+
+        useCase(WorkType.TV_SHOW, WORK_ID, 1)
                 .test()
                 .assertError(Throwable::class.java)
     }
