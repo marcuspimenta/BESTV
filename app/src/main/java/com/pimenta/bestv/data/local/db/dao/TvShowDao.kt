@@ -17,6 +17,7 @@ package com.pimenta.bestv.data.local.db.dao
 import androidx.room.*
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 /**
@@ -28,8 +29,8 @@ interface TvShowDao {
     @Query("SELECT * FROM tv_show")
     fun getAll(): Single<List<TvShowDbModel>>
 
-    @Query("SELECT COUNT(*) FROM tv_show WHERE id LIKE :id")
-    fun getById(id: Int?): Single<Int>
+    @Query("SELECT * FROM tv_show WHERE id LIKE :id")
+    fun getById(id: Int?): Maybe<TvShowDbModel>
 
     @Insert
     fun create(model: TvShowDbModel): Completable

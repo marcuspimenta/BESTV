@@ -22,6 +22,7 @@ import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -37,11 +38,11 @@ class MediaDataSourceImpl @Inject constructor(
     override fun hasFavorite(): Single<Boolean> =
             mediaLocalRepository.hasFavorite()
 
-    override fun isFavoriteMovie(movieId: Int): Single<Boolean> =
-            mediaLocalRepository.isFavoriteMovie(movieId)
+    override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
+            mediaLocalRepository.getFavoriteMovie(movieId)
 
-    override fun isFavoriteTvShow(tvShowId: Int): Single<Boolean> =
-            mediaLocalRepository.isFavoriteTvShow(tvShowId)
+    override fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel> =
+            mediaLocalRepository.getFavoriteTvShow(tvShowId)
 
     override fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable =
             mediaLocalRepository.saveFavoriteMovie(movieDbModel)

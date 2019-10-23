@@ -18,8 +18,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
-import io.reactivex.Single
+import com.pimenta.bestv.data.local.entity.MovieDbModel
+import com.pimenta.bestv.data.local.entity.TvShowDbModel
+import io.reactivex.Maybe
 import org.junit.Test
 
 /**
@@ -27,49 +28,66 @@ import org.junit.Test
  */
 private val MOVIE_VIEW_MODEL = WorkViewModel(
         id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
         type = WorkType.MOVIE
 )
 private val TV_SHOW_VIEW_MODEL = WorkViewModel(
         id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
         type = WorkType.TV_SHOW
+)
+private val MOVIE_DB_MODEL = MovieDbModel(
+        id = 1
+)
+private val TV_SHOW_DB_MODEL = TvShowDbModel(
+        id = 1
 )
 
 class IsFavoriteUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val getFavoriteMovieUseCase: GetFavoriteMovieUseCase = mock()
+    private val getFavoriteTvShowUseCase: GetFavoriteTvShowUseCase = mock()
+
     private val useCase = IsFavoriteUseCase(
-            mediaDataSource
+            getFavoriteMovieUseCase,
+            getFavoriteTvShowUseCase
     )
 
     @Test
     fun `should return true if a movie is favorite`() {
-        whenever(mediaDataSource.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
-                .thenReturn(Single.just(true))
+        whenever(getFavoriteMovieUseCase(MOVIE_VIEW_MODEL.id))
+                .thenReturn(Maybe.just(MOVIE_DB_MODEL))
 
         useCase(MOVIE_VIEW_MODEL)
                 .test()
                 .assertComplete()
                 .assertResult(true)
+    }
+
+    @Test
+    fun `should return false if a movie is not favorite`() {
+        whenever(getFavoriteMovieUseCase(MOVIE_VIEW_MODEL.id))
+                .thenReturn(Maybe.empty())
+
+        useCase(MOVIE_VIEW_MODEL)
+                .test()
+                .assertComplete()
+                .assertResult(false)
     }
 
     @Test
     fun `should return an error when some exception happens when checking if a movie is favorite`() {
-        whenever(mediaDataSource.isFavoriteMovie(MOVIE_VIEW_MODEL.id))
-                .thenReturn(Single.error(Throwable()))
+        whenever(getFavoriteMovieUseCase(MOVIE_VIEW_MODEL.id))
+                .thenReturn(Maybe.error(Throwable()))
 
         useCase(MOVIE_VIEW_MODEL)
                 .test()
-                .assertError(Throwable::class.java)
+                .assertComplete()
+                .assertResult(false)
     }
 
     @Test
     fun `should return true if a tv show is favorite`() {
-        whenever(mediaDataSource.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
-                .thenReturn(Single.just(true))
+        whenever(getFavoriteTvShowUseCase(TV_SHOW_VIEW_MODEL.id))
+                .thenReturn(Maybe.just(TV_SHOW_DB_MODEL))
 
         useCase(TV_SHOW_VIEW_MODEL)
                 .test()
@@ -78,12 +96,24 @@ class IsFavoriteUseCaseTest {
     }
 
     @Test
-    fun `should return an error when some exception happens when checking if a tv show is favorite`() {
-        whenever(mediaDataSource.isFavoriteTvShow(TV_SHOW_VIEW_MODEL.id))
-                .thenReturn(Single.error(Throwable()))
+    fun `should return false if a tv show is not favorite`() {
+        whenever(getFavoriteTvShowUseCase(TV_SHOW_VIEW_MODEL.id))
+                .thenReturn(Maybe.empty())
 
         useCase(TV_SHOW_VIEW_MODEL)
                 .test()
-                .assertError(Throwable::class.java)
+                .assertComplete()
+                .assertResult(false)
+    }
+
+    @Test
+    fun `should return an error when some exception happens when checking if a tv show is favorite`() {
+        whenever(getFavoriteTvShowUseCase(TV_SHOW_VIEW_MODEL.id))
+                .thenReturn(Maybe.error(Throwable()))
+
+        useCase(TV_SHOW_VIEW_MODEL)
+                .test()
+                .assertComplete()
+                .assertResult(false)
     }
 }

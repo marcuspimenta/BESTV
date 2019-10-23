@@ -19,6 +19,7 @@ import com.pimenta.bestv.data.local.db.dao.TvShowDao
 import com.pimenta.bestv.data.local.entity.MovieDbModel
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -40,13 +41,11 @@ class MediaLocalRepositoryImpl @Inject constructor(
                     }
             )
 
-    override fun isFavoriteMovie(movieId: Int): Single<Boolean> =
+    override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
             movieDao.getById(movieId)
-                    .map { it == 1 }
 
-    override fun isFavoriteTvShow(tvShowId: Int): Single<Boolean> =
+    override fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel> =
             tvShowDao.getById(tvShowId)
-                    .map { it == 1 }
 
     override fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable =
             movieDao.create(movieDbModel)
