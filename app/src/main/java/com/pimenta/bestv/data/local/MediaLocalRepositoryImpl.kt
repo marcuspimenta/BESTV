@@ -21,7 +21,6 @@ import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 /**
@@ -31,15 +30,6 @@ class MediaLocalRepositoryImpl @Inject constructor(
     private val movieDao: MovieDao,
     private val tvShowDao: TvShowDao
 ) : MediaLocalRepository {
-
-    override fun hasFavorite(): Single<Boolean> =
-            Single.zip<List<MovieDbModel>, List<TvShowDbModel>, Boolean>(
-                    movieDao.getAll(),
-                    tvShowDao.getAll(),
-                    BiFunction { first, second ->
-                        first.isNotEmpty() || second.isNotEmpty()
-                    }
-            )
 
     override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
             movieDao.getById(movieId)

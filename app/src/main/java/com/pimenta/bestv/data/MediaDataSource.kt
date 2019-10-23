@@ -29,8 +29,6 @@ import io.reactivex.Single
  */
 interface MediaDataSource {
 
-    fun hasFavorite(): Single<Boolean>
-
     fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel>
 
     fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel>

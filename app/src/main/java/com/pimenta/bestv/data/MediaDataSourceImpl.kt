@@ -35,9 +35,6 @@ class MediaDataSourceImpl @Inject constructor(
     private val recommendationProvider: RecommendationProvider
 ) : MediaDataSource {
 
-    override fun hasFavorite(): Single<Boolean> =
-            mediaLocalRepository.hasFavorite()
-
     override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
             mediaLocalRepository.getFavoriteMovie(movieId)
 

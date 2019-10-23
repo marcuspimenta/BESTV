@@ -16,23 +16,35 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.common.presentation.model.WorkType
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-26.
  */
+private val WORK_VIEW_MODEL = WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.MOVIE
+)
+
 class HasFavoriteUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
+    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
+
     private val useCase = HasFavoriteUseCase(
-            mediaDataSource
+            getFavoriteMoviesUseCase,
+            getFavoriteTvShowsUseCase
     )
 
     @Test
-    fun `should return the right data when checking if there is favorite works`() {
-        whenever(mediaDataSource.hasFavorite()).thenReturn(Single.just(true))
+    fun `should return true if there is at least one favorite work`() {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
 
         useCase()
                 .test()
@@ -41,8 +53,20 @@ class HasFavoriteUseCaseTest {
     }
 
     @Test
+    fun `should return false if there is no favorite work`() {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(emptyList()))
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
+
+        useCase()
+                .test()
+                .assertComplete()
+                .assertResult(false)
+    }
+
+    @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.hasFavorite()).thenReturn(Single.error(Throwable()))
+        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

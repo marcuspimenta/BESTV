@@ -25,8 +25,6 @@ import io.reactivex.Single
  */
 interface MediaLocalRepository {
 
-    fun hasFavorite(): Single<Boolean>
-
     fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel>
 
     fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel>

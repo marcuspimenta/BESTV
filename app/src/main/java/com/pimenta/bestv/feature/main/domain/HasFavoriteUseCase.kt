@@ -14,16 +14,25 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class HasFavoriteUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
+    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
 ) {
 
     operator fun invoke() =
-            mediaDataSource.hasFavorite()
+            Single.zip(
+                    getFavoriteMoviesUseCase(),
+                    getFavoriteTvShowsUseCase(),
+                    BiFunction<List<WorkViewModel>, List<WorkViewModel>, Boolean> { first, second ->
+                        first.isNotEmpty() || second.isNotEmpty()
+                    }
+            )
 }
