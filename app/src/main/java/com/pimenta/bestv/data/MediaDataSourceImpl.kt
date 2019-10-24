@@ -30,9 +30,9 @@ import javax.inject.Inject
  * Created by marcus on 05-03-2018.
  */
 class MediaDataSourceImpl @Inject constructor(
-    private val mediaLocalRepository: MediaLocalRepository,
-    private val mediaRemoteRepository: MediaRemoteRepository,
-    private val recommendationProvider: RecommendationProvider
+        private val mediaLocalRepository: MediaLocalRepository,
+        private val mediaRemoteRepository: MediaRemoteRepository,
+        private val recommendationProvider: RecommendationProvider
 ) : MediaDataSource {
 
     override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
@@ -64,19 +64,6 @@ class MediaDataSourceImpl @Inject constructor(
 
     override fun getTvShow(tvId: Int): TvShowResponse? =
             mediaRemoteRepository.getTvShow(tvId)
-
-    override fun loadWorkByType(page: Int, movieListType: MediaDataSource.WorkType): Single<out WorkPageResponse<*>> =
-            when (movieListType) {
-                MediaDataSource.WorkType.NOW_PLAYING_MOVIES -> mediaRemoteRepository.getNowPlayingMovies(page)
-                MediaDataSource.WorkType.POPULAR_MOVIES -> mediaRemoteRepository.getPopularMovies(page)
-                MediaDataSource.WorkType.TOP_RATED_MOVIES -> mediaRemoteRepository.getTopRatedMovies(page)
-                MediaDataSource.WorkType.UP_COMING_MOVIES -> mediaRemoteRepository.getUpComingMovies(page)
-                MediaDataSource.WorkType.AIRING_TODAY_TV_SHOWS -> mediaRemoteRepository.getAiringTodayTvShows(page)
-                MediaDataSource.WorkType.ON_THE_AIR_TV_SHOWS -> mediaRemoteRepository.getOnTheAirTvShows(page)
-                MediaDataSource.WorkType.POPULAR_TV_SHOWS -> mediaRemoteRepository.getPopularTvShows(page)
-                MediaDataSource.WorkType.TOP_RATED_TV_SHOWS -> mediaRemoteRepository.getTopRatedTvShows(page)
-                else -> Single.error(Throwable())
-            }
 
     override fun getMovieGenres(): Single<MovieGenreListResponse> =
             mediaRemoteRepository.getMovieGenres()
@@ -131,4 +118,28 @@ class MediaDataSourceImpl @Inject constructor(
 
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =
             recommendationProvider.loadRecommendations(works)
+
+    override fun getNowPlayingMovies(page: Int): Single<MoviePageResponse> =
+            mediaRemoteRepository.getNowPlayingMovies(page)
+
+    override fun getPopularMovies(page: Int): Single<MoviePageResponse> =
+            mediaRemoteRepository.getPopularMovies(page)
+
+    override fun getTopRatedMovies(page: Int): Single<MoviePageResponse> =
+            mediaRemoteRepository.getTopRatedMovies(page)
+
+    override fun getUpComingMovies(page: Int): Single<MoviePageResponse> =
+            mediaRemoteRepository.getUpComingMovies(page)
+
+    override fun getAiringTodayTvShows(page: Int): Single<TvShowPageResponse> =
+            mediaRemoteRepository.getAiringTodayTvShows(page)
+
+    override fun getOnTheAirTvShows(page: Int): Single<TvShowPageResponse> =
+            mediaRemoteRepository.getOnTheAirTvShows(page)
+
+    override fun getPopularTvShows(page: Int): Single<TvShowPageResponse> =
+            mediaRemoteRepository.getPopularTvShows(page)
+
+    override fun getTopRatedTvShows(page: Int): Single<TvShowPageResponse> =
+            mediaRemoteRepository.getTopRatedTvShows(page)
 }
