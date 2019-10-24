@@ -14,30 +14,34 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
+import io.reactivex.Single
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class LoadWorkByTypeUseCase @Inject constructor(
-        private val mediaDataSource: MediaDataSource
+    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
+    private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase,
+    private val getAiringTodayTvShowsUseCase: GetAiringTodayTvShowsUseCase,
+    private val getOnTheAirTvShowsUseCase: GetOnTheAirTvShowsUseCase,
+    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase,
+    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase
 ) {
 
-    operator fun invoke(page: Int, movieListType: MediaDataSource.WorkType) =
-            mediaDataSource.loadWorkByType(page, movieListType)
-                    .map { it.toViewModel() }
-
-    /*override fun loadWorkByType(page: Int, movieListType: MediaDataSource.WorkType): Single<out WorkPageResponse<*>> =
-            when (movieListType) {
-                MediaDataSource.WorkType.NOW_PLAYING_MOVIES -> mediaRemoteRepository.getNowPlayingMovies(page)
-                MediaDataSource.WorkType.POPULAR_MOVIES -> mediaRemoteRepository.getPopularMovies(page)
-                MediaDataSource.WorkType.TOP_RATED_MOVIES -> mediaRemoteRepository.getTopRatedMovies(page)
-                MediaDataSource.WorkType.UP_COMING_MOVIES -> mediaRemoteRepository.getUpComingMovies(page)
-                MediaDataSource.WorkType.AIRING_TODAY_TV_SHOWS -> mediaRemoteRepository.getAiringTodayTvShows(page)
-                MediaDataSource.WorkType.ON_THE_AIR_TV_SHOWS -> mediaRemoteRepository.getOnTheAirTvShows(page)
-                MediaDataSource.WorkType.POPULAR_TV_SHOWS -> mediaRemoteRepository.getPopularTvShows(page)
-                MediaDataSource.WorkType.TOP_RATED_TV_SHOWS -> mediaRemoteRepository.getTopRatedTvShows(page)
+    operator fun invoke(page: Int, topWorkTypeViewModel: TopWorkTypeViewModel) =
+            when (topWorkTypeViewModel) {
+                TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
+                TopWorkTypeViewModel.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
+                TopWorkTypeViewModel.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
+                TopWorkTypeViewModel.UP_COMING_MOVIES -> getUpComingMoviesUseCase(page)
+                TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> getAiringTodayTvShowsUseCase(page)
+                TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
+                TopWorkTypeViewModel.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
+                TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
                 else -> Single.error(Throwable())
-            }*/
+            }
 }

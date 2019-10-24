@@ -15,8 +15,7 @@
 package com.pimenta.bestv.feature.main.presentation.ui.headeritem
 
 import androidx.leanback.widget.HeaderItem
-
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
 
 /**
  * Created by marcus on 11-02-2018.
@@ -24,5 +23,5 @@ import com.pimenta.bestv.data.MediaDataSource
 class WorkTypeHeaderItem(
     id: Int,
     name: String,
-    val movieListType: MediaDataSource.WorkType
+    val topWorkTypeViewModel: TopWorkTypeViewModel
 ) : HeaderItem(id.toLong(), name)

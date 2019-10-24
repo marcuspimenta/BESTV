@@ -17,7 +17,6 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.presentation.model.*
-import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
@@ -78,7 +77,7 @@ class WorkGridPresenterTest {
     fun `should show the favorite works when loading them`() {
         whenever(getFavoritesUseCase()).thenReturn(Single.just(listOf(MOVIE_VIEW_MODEL)))
 
-        presenter.loadWorksByType(MediaDataSource.WorkType.FAVORITES_MOVIES)
+        presenter.loadWorksByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -92,7 +91,7 @@ class WorkGridPresenterTest {
     fun `should show an error message if an error happens while loading the favorite works`() {
         whenever(getFavoritesUseCase()).thenReturn(Single.error(Throwable()))
 
-        presenter.loadWorksByType(MediaDataSource.WorkType.FAVORITES_MOVIES)
+        presenter.loadWorksByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -104,9 +103,10 @@ class WorkGridPresenterTest {
 
     @Test
     fun `should show the works when loading them by type`() {
-        whenever(loadWorkByTypeUseCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
+        whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
+                .thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
 
-        presenter.loadWorksByType(MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
+        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -118,9 +118,10 @@ class WorkGridPresenterTest {
 
     @Test
     fun `should show an error message if an error happens while loading the works by type`() {
-        whenever(loadWorkByTypeUseCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)).thenReturn(Single.error(Throwable()))
+        whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
+                .thenReturn(Single.error(Throwable()))
 
-        presenter.loadWorksByType(MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
+        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -132,9 +133,10 @@ class WorkGridPresenterTest {
 
     @Test
     fun `should not show any work if any work is found when loading the works by type`() {
-        whenever(loadWorkByTypeUseCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)).thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
+        whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
+                .thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
 
-        presenter.loadWorksByType(MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
+        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()

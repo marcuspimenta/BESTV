@@ -29,7 +29,7 @@ class LoadRecommendationUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Completable =
-            mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.POPULAR_MOVIES)
+            mediaDataSource.getPopularMovies(1)
                     .map { it.works?.map { work -> work.toViewModel() } }
                     .map { it.take(RECOMMENDATION_NUMBER) }
                     .flatMapCompletable { mediaDataSource.loadRecommendations(it) }

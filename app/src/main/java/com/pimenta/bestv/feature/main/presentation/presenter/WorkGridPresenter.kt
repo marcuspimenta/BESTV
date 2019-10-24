@@ -18,8 +18,8 @@ import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
 import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
@@ -52,9 +52,9 @@ class WorkGridPresenter @Inject constructor(
         super.dispose()
     }
 
-    fun loadWorksByType(movieListType: MediaDataSource.WorkType) {
-        when (movieListType) {
-            MediaDataSource.WorkType.FAVORITES_MOVIES ->
+    fun loadWorksByType(topWorkTypeViewModel: TopWorkTypeViewModel) {
+        when (topWorkTypeViewModel) {
+            TopWorkTypeViewModel.FAVORITES_MOVIES ->
                 getFavoritesUseCase()
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
@@ -67,7 +67,7 @@ class WorkGridPresenter @Inject constructor(
                             view.onErrorWorksLoaded()
                         }).addTo(compositeDisposable)
             else -> {
-                loadWorkByTypeUseCase(currentPage + 1, movieListType)
+                loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
                         .subscribeOn(rxScheduler.ioScheduler)
                         .observeOn(rxScheduler.mainScheduler)
                         .doOnSubscribe { view.onShowProgress() }

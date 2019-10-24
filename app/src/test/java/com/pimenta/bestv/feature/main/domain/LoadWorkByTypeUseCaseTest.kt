@@ -16,29 +16,16 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
-import com.pimenta.bestv.data.remote.entity.MoviePageResponse
-import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val WORK_PAGE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
 private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
         page = 1,
         totalPages = 1,
@@ -54,17 +41,31 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class LoadWorkByTypeUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase = mock()
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase = mock()
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mock()
+    private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase = mock()
+    private val getAiringTodayTvShowsUseCase: GetAiringTodayTvShowsUseCase = mock()
+    private val getOnTheAirTvShowsUseCase: GetOnTheAirTvShowsUseCase = mock()
+    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mock()
+    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mock()
+
     private val useCase = LoadWorkByTypeUseCase(
-            mediaDataSource
+            getNowPlayingMoviesUseCase,
+            getPopularMoviesUseCase,
+            getTopRatedMoviesUseCase,
+            getUpComingMoviesUseCase,
+            getAiringTodayTvShowsUseCase,
+            getOnTheAirTvShowsUseCase,
+            getPopularTvShowsUseCase,
+            getTopRatedTvShowsUseCase
     )
 
     @Test
     fun `should return the right data when loading the works by type`() {
-        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.just(WORK_PAGE))
+        whenever(getNowPlayingMoviesUseCase(1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
 
-        useCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
+        useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
                 .test()
                 .assertComplete()
                 .assertResult(MOVIE_PAGE_VIEW_MODEL)
@@ -72,10 +73,9 @@ class LoadWorkByTypeUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.error(Throwable()))
+        whenever(getNowPlayingMoviesUseCase(1)).thenReturn(Single.error(Throwable()))
 
-        useCase(1, MediaDataSource.WorkType.NOW_PLAYING_MOVIES)
+        useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
                 .test()
                 .assertError(Throwable::class.java)
     }

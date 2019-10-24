@@ -57,13 +57,14 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 class LoadRecommendationUseCaseTest {
 
     private val mediaDataSource: MediaDataSource = mock()
+
     private val useCase = LoadRecommendationUseCase(
             mediaDataSource
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.POPULAR_MOVIES))
+        whenever(mediaDataSource.getPopularMovies(1))
                 .thenReturn(Single.just(WORK_PAGE))
         whenever(mediaDataSource.loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works))
                 .thenReturn(Completable.complete())
@@ -77,7 +78,7 @@ class LoadRecommendationUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.loadWorkByType(1, MediaDataSource.WorkType.POPULAR_MOVIES))
+        whenever(mediaDataSource.getPopularMovies(1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase()
