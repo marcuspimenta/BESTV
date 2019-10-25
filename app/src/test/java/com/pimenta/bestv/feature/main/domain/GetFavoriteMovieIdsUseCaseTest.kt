@@ -38,7 +38,7 @@ class GetFavoriteMovieIdsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the favorites movie ids`() {
-        whenever(mediaRepository.getFavoriteMovieIds()).thenReturn(Single.just(listOf(MOVIE_DB)))
+        whenever(mediaRepository.getFavoriteMovies()).thenReturn(Single.just(listOf(MOVIE_DB)))
 
         useCase()
                 .test()
@@ -48,7 +48,7 @@ class GetFavoriteMovieIdsUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getFavoriteMovieIds()).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getFavoriteMovies()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

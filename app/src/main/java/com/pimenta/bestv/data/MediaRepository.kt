@@ -19,7 +19,6 @@ import com.pimenta.bestv.data.local.entity.MovieDbModel
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 /**
@@ -27,9 +26,9 @@ import io.reactivex.Single
  */
 interface MediaRepository {
 
-    fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel>
+    fun isFavoriteMovie(movieId: Int): Single<Boolean>
 
-    fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel>
+    fun isFavoriteTvShow(tvShowId: Int): Single<Boolean>
 
     fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable
 
@@ -39,13 +38,9 @@ interface MediaRepository {
 
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
 
-    fun getFavoriteMovieIds(): Single<List<MovieDbModel>>
+    fun getFavoriteMovies(): Single<List<MovieResponse>>
 
-    fun getFavoriteTvShowIds(): Single<List<TvShowDbModel>>
-
-    fun getMovie(movieId: Int): MovieResponse?
-
-    fun getTvShow(tvId: Int): TvShowResponse?
+    fun getFavoriteTvShows(): Single<List<TvShowResponse>>
 
     fun getMovieGenres(): Single<MovieGenreListResponse>
 

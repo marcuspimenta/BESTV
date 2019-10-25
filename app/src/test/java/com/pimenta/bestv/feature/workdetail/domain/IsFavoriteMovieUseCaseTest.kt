@@ -17,41 +17,45 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.local.entity.MovieDbModel
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-10-2018.
  */
 private const val MOVIE_ID = 1
-private val MOVIE_DB_MODEL = MovieDbModel(
-        id = 1
-)
 
-class GetFavoriteMovieUseCaseTest {
+class IsFavoriteMovieUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
 
-    private val useCase = GetFavoriteMovieUseCase(
+    private val useCase = IsFavoriteMovieUseCase(
             mediaRepository
     )
 
     @Test
-    fun `should return when loading a favorite movie`() {
-        whenever(mediaRepository.getFavoriteMovie(MOVIE_ID))
-                .thenReturn(Maybe.just(MOVIE_DB_MODEL))
+    fun `should return true if a movie is favorite`() {
+        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.just(true))
 
         useCase(MOVIE_ID)
                 .test()
                 .assertComplete()
-                .assertResult(MOVIE_DB_MODEL)
+                .assertResult(true)
+    }
+
+    @Test
+    fun `should return false if a movie is not favorite`() {
+        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.just(false))
+
+        useCase(MOVIE_ID)
+                .test()
+                .assertComplete()
+                .assertResult(false)
     }
 
     @Test
     fun `should return an error when some exception happens when checking if a movie is favorite`() {
-        whenever(mediaRepository.getFavoriteMovie(MOVIE_ID))
-                .thenReturn(Maybe.error(Throwable()))
+        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID)
                 .test()

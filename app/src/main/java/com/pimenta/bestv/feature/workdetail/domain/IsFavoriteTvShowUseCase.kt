@@ -12,19 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
- * Created by marcus on 2019-10-20.
+ * Created by marcus on 18-04-2019.
  */
-class GetMovieUseCase @Inject constructor(
+class IsFavoriteTvShowUseCase @Inject constructor(
     private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(movieId: Int) =
-            mediaRepository.getMovie(movieId)?.toViewModel()
+    operator fun invoke(tvShowId: Int) =
+            mediaRepository.isFavoriteTvShow(tvShowId)
 }

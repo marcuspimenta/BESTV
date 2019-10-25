@@ -14,28 +14,18 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import java.util.*
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 13-10-2019.
  */
 class GetFavoriteMoviesUseCase @Inject constructor(
-    private val getFavoriteMovieIdsUseCase: GetFavoriteMovieIdsUseCase,
-    private val getMovieUseCase: GetMovieUseCase
+        private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke() =
-            getFavoriteMovieIdsUseCase()
-                    .map {
-                        val movies = ArrayList<WorkViewModel>()
-                        it.forEach { movieDbModel ->
-                            getMovieUseCase(movieDbModel.id)?.let { movieViewModel ->
-                                movieViewModel.isFavorite = true
-                                movies.add(movieViewModel)
-                            }
-                        }
-                        movies.toList()
-                    }
+            mediaRepository.getFavoriteMovies()
+                    .map { it.map { work -> work.toViewModel() } }
 }

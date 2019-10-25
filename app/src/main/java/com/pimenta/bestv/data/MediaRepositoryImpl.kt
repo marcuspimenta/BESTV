@@ -22,7 +22,6 @@ import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -30,16 +29,26 @@ import javax.inject.Inject
  * Created by marcus on 05-03-2018.
  */
 class MediaRepositoryImpl @Inject constructor(
-    private val mediaLocalRepository: MediaLocalRepository,
-    private val mediaRemoteRepository: MediaRemoteRepository,
-    private val recommendationProvider: RecommendationProvider
+        private val mediaLocalRepository: MediaLocalRepository,
+        private val mediaRemoteRepository: MediaRemoteRepository,
+        private val recommendationProvider: RecommendationProvider
 ) : MediaRepository {
 
-    override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
+    override fun isFavoriteMovie(movieId: Int): Single<Boolean> =
             mediaLocalRepository.getFavoriteMovie(movieId)
+                    .toSingle().map {
+                        true
+                    }.onErrorReturn {
+                        false
+                    }
 
-    override fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel> =
+    override fun isFavoriteTvShow(tvShowId: Int): Single<Boolean> =
             mediaLocalRepository.getFavoriteTvShow(tvShowId)
+                    .toSingle().map {
+                        true
+                    }.onErrorReturn {
+                        false
+                    }
 
     override fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable =
             mediaLocalRepository.saveFavoriteMovie(movieDbModel)
@@ -53,17 +62,31 @@ class MediaRepositoryImpl @Inject constructor(
     override fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
             mediaLocalRepository.deleteFavoriteTvShow(tvShowDbModel)
 
-    override fun getFavoriteMovieIds(): Single<List<MovieDbModel>> =
+    override fun getFavoriteMovies(): Single<List<MovieResponse>> =
             mediaLocalRepository.getMovies()
+                    .map {
+                        val movies = mutableListOf<MovieResponse>()
+                        it.forEach { movieDbModel ->
+                            mediaRemoteRepository.getMovie(movieDbModel.id)?.let { movieViewModel ->
+                                movieViewModel.isFavorite = true
+                                movies.add(movieViewModel)
+                            }
+                        }
+                        movies.toList()
+                    }
 
-    override fun getFavoriteTvShowIds(): Single<List<TvShowDbModel>> =
+    override fun getFavoriteTvShows(): Single<List<TvShowResponse>> =
             mediaLocalRepository.getTvShows()
-
-    override fun getMovie(movieId: Int): MovieResponse? =
-            mediaRemoteRepository.getMovie(movieId)
-
-    override fun getTvShow(tvId: Int): TvShowResponse? =
-            mediaRemoteRepository.getTvShow(tvId)
+                    .map {
+                        val tvShows = mutableListOf<TvShowResponse>()
+                        it.forEach { tvShowDbModel ->
+                            mediaRemoteRepository.getTvShow(tvShowDbModel.id)?.let { tvShowViewModel ->
+                                tvShowViewModel.isFavorite = true
+                                tvShows.add(tvShowViewModel)
+                            }
+                        }
+                        tvShows.toList()
+                    }
 
     override fun getMovieGenres(): Single<MovieGenreListResponse> =
             mediaRemoteRepository.getMovieGenres()

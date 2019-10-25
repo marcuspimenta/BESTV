@@ -17,41 +17,45 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 23-10-2018.
  */
 private const val TV_SHOW_ID = 1
-private val TV_SHOW_DB_MODEL = TvShowDbModel(
-        id = 1
-)
 
-class GetFavoriteTvShowUseCaseTest {
+class IsFavoriteTvShowUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
 
-    private val useCase = GetFavoriteTvShowUseCase(
+    private val useCase = IsFavoriteTvShowUseCase(
             mediaRepository
     )
 
     @Test
-    fun `should return when loading a favorite tv show`() {
-        whenever(mediaRepository.getFavoriteTvShow(TV_SHOW_ID))
-                .thenReturn(Maybe.just(TV_SHOW_DB_MODEL))
+    fun `should return true if a tv show is favorite`() {
+        whenever(mediaRepository.isFavoriteTvShow(TV_SHOW_ID)).thenReturn(Single.just(true))
 
         useCase(TV_SHOW_ID)
                 .test()
                 .assertComplete()
-                .assertResult(TV_SHOW_DB_MODEL)
+                .assertResult(true)
+    }
+
+    @Test
+    fun `should return false if a tv show is not favorite`() {
+        whenever(mediaRepository.isFavoriteTvShow(TV_SHOW_ID)).thenReturn(Single.just(false))
+
+        useCase(TV_SHOW_ID)
+                .test()
+                .assertComplete()
+                .assertResult(false)
     }
 
     @Test
     fun `should return an error when some exception happens when checking if a tv show is favorite`() {
-        whenever(mediaRepository.getFavoriteTvShow(TV_SHOW_ID))
-                .thenReturn(Maybe.error(Throwable()))
+        whenever(mediaRepository.isFavoriteTvShow(TV_SHOW_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_ID)
                 .test()

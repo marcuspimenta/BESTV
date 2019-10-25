@@ -22,17 +22,13 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class IsFavoriteUseCase @Inject constructor(
-    private val getFavoriteMovieUseCase: GetFavoriteMovieUseCase,
-    private val getFavoriteTvShowUseCase: GetFavoriteTvShowUseCase
+        private val isFavoriteMovieUseCase: IsFavoriteMovieUseCase,
+        private val isFavoriteTvShowUseCase: IsFavoriteTvShowUseCase
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =
             when (workViewModel.type) {
-                WorkType.MOVIE -> getFavoriteMovieUseCase(workViewModel.id)
-                WorkType.TV_SHOW -> getFavoriteTvShowUseCase(workViewModel.id)
-            }.toSingle().map {
-                true
-            }.onErrorReturn {
-                false
+                WorkType.MOVIE -> isFavoriteMovieUseCase(workViewModel.id)
+                WorkType.TV_SHOW -> isFavoriteTvShowUseCase(workViewModel.id)
             }
 }

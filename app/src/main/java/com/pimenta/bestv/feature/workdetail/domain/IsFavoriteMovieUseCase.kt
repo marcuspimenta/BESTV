@@ -20,10 +20,10 @@ import javax.inject.Inject
 /**
  * Created by marcus on 18-04-2019.
  */
-class GetFavoriteTvShowUseCase @Inject constructor(
+class IsFavoriteMovieUseCase @Inject constructor(
     private val mediaRepository: MediaRepository
 ) {
 
-    operator fun invoke(tvShowId: Int) =
-            mediaRepository.getFavoriteTvShow(tvShowId)
+    operator fun invoke(movieId: Int) =
+            mediaRepository.isFavoriteMovie(movieId)
 }
