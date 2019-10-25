@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.local.entity.TvShowDbModel
 import io.reactivex.Maybe
 import org.junit.Test
@@ -31,15 +31,15 @@ private val TV_SHOW_DB_MODEL = TvShowDbModel(
 
 class GetFavoriteTvShowUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetFavoriteTvShowUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return when loading a favorite tv show`() {
-        whenever(mediaDataSource.getFavoriteTvShow(TV_SHOW_ID))
+        whenever(mediaRepository.getFavoriteTvShow(TV_SHOW_ID))
                 .thenReturn(Maybe.just(TV_SHOW_DB_MODEL))
 
         useCase(TV_SHOW_ID)
@@ -50,7 +50,7 @@ class GetFavoriteTvShowUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens when checking if a tv show is favorite`() {
-        whenever(mediaDataSource.getFavoriteTvShow(TV_SHOW_ID))
+        whenever(mediaRepository.getFavoriteTvShow(TV_SHOW_ID))
                 .thenReturn(Maybe.error(Throwable()))
 
         useCase(TV_SHOW_ID)

@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import org.junit.Assert
 import org.junit.Test
@@ -41,15 +41,15 @@ private val MOVIE_VIEW_MODEL = WorkViewModel(
 
 class GetMovieUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetMovieUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading a movie`() {
-        whenever(mediaDataSource.getMovie(MOVIE_ID)).thenReturn(MOVIE_RESPONSE)
+        whenever(mediaRepository.getMovie(MOVIE_ID)).thenReturn(MOVIE_RESPONSE)
 
         val tvShowResponse = useCase(MOVIE_ID)
 
@@ -58,7 +58,7 @@ class GetMovieUseCaseTest {
 
     @Test
     fun `should return null when no tv show is found`() {
-        whenever(mediaDataSource.getMovie(MOVIE_ID)).thenReturn(null)
+        whenever(mediaRepository.getMovie(MOVIE_ID)).thenReturn(null)
 
         val tvShowResponse = useCase(MOVIE_ID)
 

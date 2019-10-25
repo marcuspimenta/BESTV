@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.local.entity.MovieDbModel
 import io.reactivex.Single
 import org.junit.Test
@@ -30,15 +30,15 @@ private val MOVIE_DB = MovieDbModel(
 
 class GetFavoriteMovieIdsUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetFavoriteMovieIdsUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading the favorites movie ids`() {
-        whenever(mediaDataSource.getFavoriteMovieIds()).thenReturn(Single.just(listOf(MOVIE_DB)))
+        whenever(mediaRepository.getFavoriteMovieIds()).thenReturn(Single.just(listOf(MOVIE_DB)))
 
         useCase()
                 .test()
@@ -48,7 +48,7 @@ class GetFavoriteMovieIdsUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getFavoriteMovieIds()).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getFavoriteMovieIds()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

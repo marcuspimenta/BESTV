@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.recommendation.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -25,12 +25,12 @@ private const val RECOMMENDATION_NUMBER = 5
  * Created by marcus on 23-04-2019.
  */
 class LoadRecommendationUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(): Completable =
-            mediaDataSource.getPopularMovies(1)
+            mediaRepository.getPopularMovies(1)
                     .map { it.works?.map { work -> work.toViewModel() } }
                     .map { it.take(RECOMMENDATION_NUMBER) }
-                    .flatMapCompletable { mediaDataSource.loadRecommendations(it) }
+                    .flatMapCompletable { mediaRepository.loadRecommendations(it) }
 }

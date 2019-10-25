@@ -25,7 +25,7 @@ import io.reactivex.Single
 /**
  * Created by marcus on 05-03-2018.
  */
-interface MediaDataSource {
+interface MediaRepository {
 
     fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel>
 

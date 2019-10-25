@@ -22,7 +22,7 @@ import com.pimenta.bestv.common.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.common.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import io.reactivex.Completable
 import org.junit.Test
 
@@ -44,23 +44,23 @@ private val TV_SHOW_VIEW_MODEL = WorkViewModel(
 
 class SetFavoriteUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
     private val useCase = SetFavoriteUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should save a movie as favorite is it is not favorite`() {
         val dbModel = MOVIE_VIEW_MODEL.toMovieDbModel()
 
-        whenever(mediaDataSource.saveFavoriteMovie(dbModel))
+        whenever(mediaRepository.saveFavoriteMovie(dbModel))
                 .thenReturn(Completable.complete())
 
         useCase(MOVIE_VIEW_MODEL)
                 .test()
                 .assertComplete()
 
-        verify(mediaDataSource, only()).saveFavoriteMovie(dbModel)
+        verify(mediaRepository, only()).saveFavoriteMovie(dbModel)
     }
 
     @Test
@@ -68,28 +68,28 @@ class SetFavoriteUseCaseTest {
         val movieViewModel = MOVIE_VIEW_MODEL.copy(isFavorite = true)
         val dbModel = movieViewModel.toMovieDbModel()
 
-        whenever(mediaDataSource.deleteFavoriteMovie(dbModel))
+        whenever(mediaRepository.deleteFavoriteMovie(dbModel))
                 .thenReturn(Completable.complete())
 
         useCase(movieViewModel)
                 .test()
                 .assertComplete()
 
-        verify(mediaDataSource, only()).deleteFavoriteMovie(dbModel)
+        verify(mediaRepository, only()).deleteFavoriteMovie(dbModel)
     }
 
     @Test
     fun `should save a tv show as favorite is it is not favorite`() {
         val dbModel = TV_SHOW_VIEW_MODEL.toTvShowDbModel()
 
-        whenever(mediaDataSource.saveFavoriteTvShow(dbModel))
+        whenever(mediaRepository.saveFavoriteTvShow(dbModel))
                 .thenReturn(Completable.complete())
 
         useCase(TV_SHOW_VIEW_MODEL)
                 .test()
                 .assertComplete()
 
-        verify(mediaDataSource, only()).saveFavoriteTvShow(dbModel)
+        verify(mediaRepository, only()).saveFavoriteTvShow(dbModel)
     }
 
     @Test
@@ -97,13 +97,13 @@ class SetFavoriteUseCaseTest {
         val tvShowViewModel = TV_SHOW_VIEW_MODEL.copy(isFavorite = true)
         val dbModel = tvShowViewModel.toTvShowDbModel()
 
-        whenever(mediaDataSource.deleteFavoriteTvShow(dbModel))
+        whenever(mediaRepository.deleteFavoriteTvShow(dbModel))
                 .thenReturn(Completable.complete())
 
         useCase(tvShowViewModel)
                 .test()
                 .assertComplete()
 
-        verify(mediaDataSource, only()).deleteFavoriteTvShow(dbModel)
+        verify(mediaRepository, only()).deleteFavoriteTvShow(dbModel)
     }
 }

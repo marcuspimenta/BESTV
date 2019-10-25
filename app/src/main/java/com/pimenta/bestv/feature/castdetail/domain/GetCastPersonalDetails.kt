@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.castdetail.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -24,10 +24,10 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetCastPersonalDetails @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(castId: Int): Single<CastViewModel> =
-            mediaDataSource.getCastDetails(castId)
+            mediaRepository.getCastDetails(castId)
                     .map { it.toViewModel() }
 }

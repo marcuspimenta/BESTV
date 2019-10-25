@@ -19,7 +19,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
@@ -53,15 +53,15 @@ private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetRecommendationByMovieUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetRecommendationByMovieUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaDataSource.getRecommendationByMovie(MOVIE_ID, 1))
+        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
         useCase(MOVIE_ID, 1)
@@ -72,7 +72,7 @@ class GetRecommendationByMovieUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getRecommendationByMovie(MOVIE_ID, 1))
+        whenever(mediaRepository.getRecommendationByMovie(MOVIE_ID, 1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID, 1)

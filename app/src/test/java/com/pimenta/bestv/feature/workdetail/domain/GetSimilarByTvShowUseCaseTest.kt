@@ -19,7 +19,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
 import com.pimenta.bestv.data.remote.entity.TvShowResponse
 import io.reactivex.Single
@@ -53,15 +53,15 @@ private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
  */
 class GetSimilarByTvShowUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetSimilarByTvShowUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading the similar works`() {
-        whenever(mediaDataSource.getSimilarByTvShow(TV_SHOW_ID, 1))
+        whenever(mediaRepository.getSimilarByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
         useCase(TV_SHOW_ID, 1)
@@ -72,7 +72,7 @@ class GetSimilarByTvShowUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getSimilarByTvShow(TV_SHOW_ID, 1))
+        whenever(mediaRepository.getSimilarByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_ID, 1)

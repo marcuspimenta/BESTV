@@ -15,17 +15,17 @@
 package com.pimenta.bestv.feature.workdetail.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-10-2019.
  */
 class GetSimilarByMovieUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            mediaDataSource.getSimilarByMovie(workId, page)
+            mediaRepository.getSimilarByMovie(workId, page)
                     .map { it.toViewModel() }
 }

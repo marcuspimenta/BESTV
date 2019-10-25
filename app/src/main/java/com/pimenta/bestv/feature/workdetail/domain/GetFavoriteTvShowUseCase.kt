@@ -14,16 +14,16 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 18-04-2019.
  */
 class GetFavoriteTvShowUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(tvShowId: Int) =
-            mediaDataSource.getFavoriteTvShow(tvShowId)
+            mediaRepository.getFavoriteTvShow(tvShowId)
 }

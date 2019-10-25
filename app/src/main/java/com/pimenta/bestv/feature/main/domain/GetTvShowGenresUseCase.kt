@@ -15,17 +15,17 @@
 package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class GetTvShowGenresUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke() =
-            mediaDataSource.getTvShowGenres()
+            mediaRepository.getTvShowGenres()
                     .map { it.genres?.map { genre -> genre.toViewModel() } }
 }

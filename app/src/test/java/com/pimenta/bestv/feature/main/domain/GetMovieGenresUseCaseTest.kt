@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.MovieGenreListResponse
 import com.pimenta.bestv.data.remote.entity.MovieGenreResponse
 import io.reactivex.Single
@@ -45,14 +45,14 @@ private val MOVIE_GENRES_VIEW_MODEL = listOf(
 
 class GetMovieGenresUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
     private val useCase = GetMovieGenresUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading the movie genres`() {
-        whenever(mediaDataSource.getMovieGenres()).thenReturn(Single.just(MOVIE_GENRES))
+        whenever(mediaRepository.getMovieGenres()).thenReturn(Single.just(MOVIE_GENRES))
 
         useCase()
                 .test()
@@ -62,7 +62,7 @@ class GetMovieGenresUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getMovieGenres()).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getMovieGenres()).thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

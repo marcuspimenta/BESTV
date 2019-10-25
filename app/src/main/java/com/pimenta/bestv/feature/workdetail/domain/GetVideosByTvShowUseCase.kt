@@ -15,18 +15,18 @@
 package com.pimenta.bestv.feature.workdetail.domain
 
 import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 22-10-2019.
  */
 class GetVideosByTvShowUseCase @Inject constructor(
-    private val mediaDataSource: MediaDataSource
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke(workId: Int) =
-            mediaDataSource.getVideosByTvShow(workId)
+            mediaRepository.getVideosByTvShow(workId)
                     .map {
                         it.videos?.map { video ->
                             video.toViewModel()

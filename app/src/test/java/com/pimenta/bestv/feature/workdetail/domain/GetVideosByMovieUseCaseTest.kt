@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.VideoListResponse
 import com.pimenta.bestv.data.remote.entity.VideoResponse
 import io.reactivex.Single
@@ -45,15 +45,15 @@ private val VIDEO_VIEW_MODELS = listOf(
 
 class GetVideosByMovieUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
 
     private val useCase = GetVideosByMovieUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when loading the videos`() {
-        whenever(mediaDataSource.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
+        whenever(mediaRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(MOVIE_ID)
                 .test()
@@ -63,7 +63,7 @@ class GetVideosByMovieUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+        whenever(mediaRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID)
                 .test()

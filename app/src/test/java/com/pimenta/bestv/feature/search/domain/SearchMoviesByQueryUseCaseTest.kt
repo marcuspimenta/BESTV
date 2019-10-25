@@ -19,7 +19,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaDataSource
+import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.data.remote.entity.MoviePageResponse
 import com.pimenta.bestv.data.remote.entity.MovieResponse
 import io.reactivex.Single
@@ -54,14 +54,14 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class SearchMoviesByQueryUseCaseTest {
 
-    private val mediaDataSource: MediaDataSource = mock()
+    private val mediaRepository: MediaRepository = mock()
     private val useCase = SearchMoviesByQueryUseCase(
-            mediaDataSource
+            mediaRepository
     )
 
     @Test
     fun `should return the right data when searching movies by query`() {
-        whenever(mediaDataSource.searchMoviesByQuery("Batman", 1))
+        whenever(mediaRepository.searchMoviesByQuery("Batman", 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
         useCase("Batman", 1)
@@ -72,7 +72,7 @@ class SearchMoviesByQueryUseCaseTest {
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaDataSource.searchMoviesByQuery("Batman", 1))
+        whenever(mediaRepository.searchMoviesByQuery("Batman", 1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase("Batman", 1)

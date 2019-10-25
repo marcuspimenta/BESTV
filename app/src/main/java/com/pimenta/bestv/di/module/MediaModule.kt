@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.di.module
 
-import com.pimenta.bestv.data.MediaDataSource
-import com.pimenta.bestv.data.MediaDataSourceImpl
+import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.data.MediaRepositoryImpl
 import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.local.MediaLocalRepositoryImpl
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
@@ -46,5 +46,5 @@ interface MediaModule {
 
     @Binds
     @Singleton
-    fun provideMovieRepository(repository: MediaDataSourceImpl): MediaDataSource
+    fun provideMovieRepository(repository: MediaRepositoryImpl): MediaRepository
 }
