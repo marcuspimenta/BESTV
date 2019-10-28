@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 13-10-2019.
  */
 class GetFavoriteMoviesUseCase @Inject constructor(
-        private val mediaRepository: MediaRepository
+    private val mediaRepository: MediaRepository
 ) {
 
     operator fun invoke() =

@@ -17,11 +17,8 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
-import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
@@ -35,75 +32,51 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
 /**
  * Created by marcus on 09-02-2018.
  */
-class WorkGridPresenter @Inject constructor(
+class TopWorkGridPresenter @Inject constructor(
     private val view: View,
-    private val getFavoritesUseCase: GetFavoritesUseCase,
-    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0
-    private var loadBackdropImageDisposable: Disposable? = null
+    private var totalPages = 0
     private val works = mutableListOf<WorkViewModel>()
+
+    private var loadBackdropImageDisposable: Disposable? = null
 
     override fun dispose() {
         disposeLoadBackdropImage()
         super.dispose()
     }
 
-    fun loadWorksByType(topWorkTypeViewModel: TopWorkTypeViewModel) {
-        when (topWorkTypeViewModel) {
-            TopWorkTypeViewModel.FAVORITES_MOVIES ->
-                getFavoritesUseCase()
-                        .subscribeOn(rxScheduler.ioScheduler)
-                        .observeOn(rxScheduler.mainScheduler)
-                        .doOnSubscribe { view.onShowProgress() }
-                        .doFinally { view.onHideProgress() }
-                        .subscribe({ movies ->
-                            view.onWorksLoaded(movies)
-                        }, { throwable ->
-                            Timber.e(throwable, "Error while loading the favorite works")
-                            view.onErrorWorksLoaded()
-                        }).addTo(compositeDisposable)
-            else -> {
-                loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
-                        .subscribeOn(rxScheduler.ioScheduler)
-                        .observeOn(rxScheduler.mainScheduler)
-                        .doOnSubscribe { view.onShowProgress() }
-                        .doFinally { view.onHideProgress() }
-                        .subscribe({ workPage ->
-                            if (workPage != null && workPage.page <= workPage.totalPages) {
-                                currentPage = workPage.page
-                                workPage.works?.let {
-                                    works.addAll(it)
-                                    view.onWorksLoaded(works)
-                                }
-                            }
-                        }, { throwable ->
-                            Timber.e(throwable, "Error while loading the works by type")
-                            view.onErrorWorksLoaded()
-                        }).addTo(compositeDisposable)
-            }
+    fun refreshPage(topWorkTypeViewModel: TopWorkTypeViewModel) {
+        if (topWorkTypeViewModel == TopWorkTypeViewModel.FAVORITES_MOVIES) {
+            resetPage()
+            loadWorkPageByType(topWorkTypeViewModel)
         }
     }
 
-    fun loadWorkByGenre(genreViewModel: GenreViewModel) {
-        getWorkByGenreUseCase(genreViewModel, currentPage + 1)
+    fun loadWorkPageByType(topWorkTypeViewModel: TopWorkTypeViewModel) {
+        if (currentPage != 0 && currentPage + 1 > totalPages) {
+            return
+        }
+
+        loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
                 .subscribe({ workPage ->
-                    if (workPage != null && workPage.page <= workPage.totalPages) {
-                        currentPage = workPage.page
-                        workPage.works?.let {
-                            works.addAll(it)
+                    workPage?.let {
+                        currentPage = it.page
+                        totalPages = it.totalPages
+                        it.works?.let { pageWorks ->
+                            works.addAll(pageWorks)
                             view.onWorksLoaded(works)
                         }
                     }
                 }, { throwable ->
-                    Timber.e(throwable, "Error while loading the works by genre")
+                    Timber.e(throwable, "Error while loading the works by type")
                     view.onErrorWorksLoaded()
                 }).addTo(compositeDisposable)
     }
@@ -131,6 +104,12 @@ class WorkGridPresenter @Inject constructor(
                 dispose()
             }
         }
+    }
+
+    private fun resetPage() {
+        currentPage = 0
+        totalPages = 0
+        works.clear()
     }
 
     interface View {

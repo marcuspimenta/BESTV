@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
+import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -29,13 +30,15 @@ class GetFavoritesUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            Single.zip(
+            Single.zip<List<WorkViewModel>, List<WorkViewModel>, WorkPageViewModel>(
                     getFavoriteMoviesUseCase(),
                     getFavoriteTvShowsUseCase(),
-                    BiFunction<List<WorkViewModel>, List<WorkViewModel>, List<WorkViewModel>> { first, second ->
-                        first.toMutableList().apply {
-                            addAll(second)
-                        }
+                    BiFunction { favoriteMovies, favoriteTvShows ->
+                        WorkPageViewModel(
+                                page = 1,
+                                totalPages = 1,
+                                works = favoriteMovies + favoriteTvShows
+                        )
                     }
             )
 }

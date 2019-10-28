@@ -58,14 +58,14 @@ private val EMPTY_PAGE_VIEW_MODEL = WorkPageViewModel(
         totalPages = 1
 )
 
-class WorkGridPresenterTest {
+class TopWorkGridPresenterTest {
 
-    private val view: WorkGridPresenter.View = mock()
+    private val view: TopWorkGridPresenter.View = mock()
     private val getFavoritesUseCase: GetFavoritesUseCase = mock()
     private val getWorkByGenreUseCase: GetWorkByGenreUseCase = mock()
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
 
-    private val presenter = WorkGridPresenter(
+    private val presenter = TopWorkGridPresenter(
             view,
             getFavoritesUseCase,
             getWorkByGenreUseCase,
@@ -77,7 +77,7 @@ class WorkGridPresenterTest {
     fun `should show the favorite works when loading them`() {
         whenever(getFavoritesUseCase()).thenReturn(Single.just(listOf(MOVIE_VIEW_MODEL)))
 
-        presenter.loadWorksByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
+        presenter.loadWorkPageByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -91,7 +91,7 @@ class WorkGridPresenterTest {
     fun `should show an error message if an error happens while loading the favorite works`() {
         whenever(getFavoritesUseCase()).thenReturn(Single.error(Throwable()))
 
-        presenter.loadWorksByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
+        presenter.loadWorkPageByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -106,7 +106,7 @@ class WorkGridPresenterTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
 
-        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -121,7 +121,7 @@ class WorkGridPresenterTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.error(Throwable()))
 
-        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -136,7 +136,7 @@ class WorkGridPresenterTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
                 .thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
 
-        presenter.loadWorksByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
         inOrder(view) {
             verify(view).onShowProgress()

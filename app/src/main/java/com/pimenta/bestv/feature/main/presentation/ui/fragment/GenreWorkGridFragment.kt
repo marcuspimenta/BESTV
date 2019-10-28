@@ -14,32 +14,122 @@
 
 package com.pimenta.bestv.feature.main.presentation.ui.fragment
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.View
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
+import androidx.leanback.R
+import androidx.leanback.widget.ImageCardView
+import androidx.leanback.widget.Presenter
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.presentation.model.loadBackdrop
+import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
-
-private const val GENRE = "GENRE"
+import com.pimenta.bestv.feature.main.presentation.presenter.GenreGridPresenter
+import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
+import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import javax.inject.Inject
 
 /**
  * Created by marcus on 11-02-2018.
  */
-class GenreWorkGridFragment : AbstractWorkGridFragment() {
+private const val GENRE = "GENRE"
+private const val ERROR_FRAGMENT_REQUEST_CODE = 1
 
-    private val genreViewModel: GenreViewModel by lazy { arguments?.getSerializable(GENRE) as GenreViewModel }
+class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
+
+    private val genreViewModel by lazy { arguments?.getSerializable(GENRE) as GenreViewModel }
+
+    @Inject
+    lateinit var presenter: GenreGridPresenter
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         GenreWorkGridFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
+        super.onAttach(context)
     }
 
-    override fun loadData() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.bindTo(lifecycle)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.loadWorkByGenre(genreViewModel)
     }
 
-    override fun refreshDada() {
-        // DO ANYTHING
+    override fun lastRowLoaded() {
+        presenter.loadWorkByGenre(genreViewModel)
+    }
+
+    override fun workSelected(workSelected: WorkViewModel) {
+        presenter.countTimerLoadBackdropImage(workSelected)
+    }
+
+    override fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        presenter.workClicked(itemViewHolder, workViewModel)
+    }
+
+    override fun onShowProgress() {
+        progressBarManager.show()
+    }
+
+    override fun onHideProgress() {
+        progressBarManager.hide()
+    }
+
+    override fun onWorksLoaded(works: List<WorkViewModel>) {
+        rowsAdapter.setItems(works, workDiffCallback)
+        mainFragmentAdapter.fragmentHost.notifyDataReady(mainFragmentAdapter)
+    }
+
+    override fun loadBackdropImage(workViewModel: WorkViewModel) {
+        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                backgroundManager?.setBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
+            }
+        })
+    }
+
+    override fun onErrorWorksLoaded() {
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@GenreWorkGridFragment, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        fragmentManager?.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
+    }
+
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireNotNull(activity),
+                (itemViewHolder.view as ImageCardView).mainImageView,
+                WorkDetailsFragment.SHARED_ELEMENT_NAME
+        ).toBundle()
+        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                fragmentManager?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                if (resultCode == Activity.RESULT_OK) {
+                    presenter.loadWorkByGenre(genreViewModel)
+                }
+            }
+        }
     }
 
     companion object {

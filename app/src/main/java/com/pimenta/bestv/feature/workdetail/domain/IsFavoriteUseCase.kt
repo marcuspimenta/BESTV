@@ -22,8 +22,8 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class IsFavoriteUseCase @Inject constructor(
-        private val isFavoriteMovieUseCase: IsFavoriteMovieUseCase,
-        private val isFavoriteTvShowUseCase: IsFavoriteTvShowUseCase
+    private val isFavoriteMovieUseCase: IsFavoriteMovieUseCase,
+    private val isFavoriteTvShowUseCase: IsFavoriteTvShowUseCase
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =

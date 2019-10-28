@@ -18,7 +18,7 @@ import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.di.module.MediaModule
 import com.pimenta.bestv.di.module.SchedulerModule
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
+import com.pimenta.bestv.feature.main.presentation.presenter.GenreGridPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.GenreWorkGridFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -42,13 +42,13 @@ interface GenreWorkGridFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance view: WorkGridPresenter.View,
+            @BindsInstance view: GenreGridPresenter.View,
             @BindsInstance application: Application
         ): GenreWorkGridFragmentComponent
     }
 
     companion object {
-        fun create(view: WorkGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
+        fun create(view: GenreGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
                 DaggerGenreWorkGridFragmentComponent.factory()
                         .create(view, application)
     }

@@ -18,7 +18,7 @@ import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.di.module.MediaModule
 import com.pimenta.bestv.di.module.SchedulerModule
-import com.pimenta.bestv.feature.main.presentation.presenter.WorkGridPresenter
+import com.pimenta.bestv.feature.main.presentation.presenter.TopWorkGridPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.TopWorkGridFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -42,13 +42,13 @@ interface TopWorkGridFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance view: WorkGridPresenter.View,
+            @BindsInstance view: TopWorkGridPresenter.View,
             @BindsInstance application: Application
         ): TopWorkGridFragmentComponent
     }
 
     companion object {
-        fun create(view: WorkGridPresenter.View, application: Application): TopWorkGridFragmentComponent =
+        fun create(view: TopWorkGridPresenter.View, application: Application): TopWorkGridFragmentComponent =
                 DaggerTopWorkGridFragmentComponent.factory()
                         .create(view, application)
     }

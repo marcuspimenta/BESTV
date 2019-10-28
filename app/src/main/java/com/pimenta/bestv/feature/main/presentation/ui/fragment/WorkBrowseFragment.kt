@@ -37,14 +37,14 @@ import com.pimenta.bestv.feature.main.presentation.ui.headeritem.WorkTypeHeaderI
 import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
 import javax.inject.Inject
 
+/**
+ * Created by marcus on 07-02-2018.
+ */
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
 private const val TOP_WORK_LIST_ID = 1
 private const val WORK_GENRE_ID = 2
 private const val FAVORITE_INDEX = 0
 
-/**
- * Created by marcus on 07-02-2018.
- */
 class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
@@ -64,9 +64,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     private var hasFavorite = false
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         WorkBrowseFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,7 +181,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             presenter.searchClicked()
         }
 
-        searchAffordanceColor = resources.getColor(R.color.background_color, activity!!.theme)
+        searchAffordanceColor = resources.getColor(R.color.background_color, requireActivity().theme)
         mainFragmentRegistry.registerFragment(PageRow::class.java, PageRowFragmentFactory())
 
         prepareEntranceTransition()

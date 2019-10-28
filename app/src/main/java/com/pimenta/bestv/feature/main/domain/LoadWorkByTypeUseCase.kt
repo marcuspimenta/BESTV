@@ -15,13 +15,13 @@
 package com.pimenta.bestv.feature.main.domain
 
 import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class LoadWorkByTypeUseCase @Inject constructor(
+    private val getFavoritesUseCase: GetFavoritesUseCase,
     private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
@@ -34,6 +34,7 @@ class LoadWorkByTypeUseCase @Inject constructor(
 
     operator fun invoke(page: Int, topWorkTypeViewModel: TopWorkTypeViewModel) =
             when (topWorkTypeViewModel) {
+                TopWorkTypeViewModel.FAVORITES_MOVIES -> getFavoritesUseCase()
                 TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
                 TopWorkTypeViewModel.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
                 TopWorkTypeViewModel.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
@@ -42,6 +43,5 @@ class LoadWorkByTypeUseCase @Inject constructor(
                 TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
                 TopWorkTypeViewModel.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
                 TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
-                else -> Single.error(Throwable())
             }
 }
