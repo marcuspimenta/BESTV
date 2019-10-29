@@ -14,12 +14,20 @@
 
 package com.pimenta.bestv.common.presentation.mapper
 
+import com.pimenta.bestv.common.data.model.remote.GenreResponse
+import com.pimenta.bestv.common.domain.model.GenreDomainModel
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.common.data.model.remote.GenreResponse
 
+@Deprecated("Dont use")
 fun GenreResponse.toViewModel() = GenreViewModel(
         id = id,
         name = name,
         source = Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE } ?: Source.TV_SHOW
+)
+
+fun GenreDomainModel.toViewModel() = GenreViewModel(
+        id = id,
+        name = name,
+        source = Source.MOVIE.takeIf { source == GenreDomainModel.Source.MOVIE } ?: Source.TV_SHOW
 )

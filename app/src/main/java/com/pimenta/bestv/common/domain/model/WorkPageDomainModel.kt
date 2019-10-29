@@ -12,21 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.presentation.mapper
+package com.pimenta.bestv.common.domain.model
 
-import com.pimenta.bestv.common.data.model.remote.WorkPageResponse
-import com.pimenta.bestv.common.domain.model.WorkPageDomainModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-
-@Deprecated("Dont use")
-fun WorkPageResponse<*>.toViewModel() = WorkPageViewModel(
-        page,
-        totalPages,
-        works?.map { work -> work.toViewModel() }
-)
-
-fun WorkPageDomainModel.toViewModel() = WorkPageViewModel(
-        page,
-        totalPages,
-        works?.map { work -> work.toViewModel() }
+/**
+ * Created by marcus on 29-10-2019.
+ */
+data class WorkPageDomainModel(
+        var page: Int,
+        var totalPages: Int,
+        var works: List<WorkDomainModel>? = null
 )

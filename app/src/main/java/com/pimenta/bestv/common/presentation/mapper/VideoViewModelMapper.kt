@@ -17,8 +17,18 @@ package com.pimenta.bestv.common.presentation.mapper
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.data.model.remote.VideoResponse
+import com.pimenta.bestv.common.domain.model.VideoDomainModel
 
+@Deprecated("Dont use")
 fun VideoResponse.toViewModel() = VideoViewModel(
+        id = id,
+        name = name,
+        type = type,
+        thumbnailUrl = key?.let { String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, it) },
+        youtubeUrl = key?.let { String.format(BuildConfig.YOUTUBE_BASE_URL, it) }
+)
+
+fun VideoDomainModel.toViewModel() = VideoViewModel(
         id = id,
         name = name,
         type = type,

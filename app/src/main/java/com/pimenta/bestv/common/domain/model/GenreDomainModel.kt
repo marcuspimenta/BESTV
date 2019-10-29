@@ -12,21 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.presentation.mapper
+package com.pimenta.bestv.common.domain.model
 
-import com.pimenta.bestv.common.data.model.remote.WorkPageResponse
-import com.pimenta.bestv.common.domain.model.WorkPageDomainModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+/**
+ * Created by marcus on 29-10-2019.
+ */
+data class GenreDomainModel(
+        val id: Int = 0,
+        val name: String? = null,
+        val source: Source = Source.MOVIE
+) {
 
-@Deprecated("Dont use")
-fun WorkPageResponse<*>.toViewModel() = WorkPageViewModel(
-        page,
-        totalPages,
-        works?.map { work -> work.toViewModel() }
-)
-
-fun WorkPageDomainModel.toViewModel() = WorkPageViewModel(
-        page,
-        totalPages,
-        works?.map { work -> work.toViewModel() }
-)
+    enum class Source {
+        MOVIE,
+        TV_SHOW
+    }
+}
