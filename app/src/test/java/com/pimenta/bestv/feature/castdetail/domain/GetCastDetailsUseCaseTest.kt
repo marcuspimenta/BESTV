@@ -17,6 +17,10 @@ package com.pimenta.bestv.feature.castdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetCastDetailsUseCase
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetCastPersonalDetails
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetMovieCreditsByCastUseCase
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetTvShowCreditsByCastUseCase
 import io.reactivex.Single
 import org.junit.Test
 

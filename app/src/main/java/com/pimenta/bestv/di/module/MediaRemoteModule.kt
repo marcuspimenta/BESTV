@@ -17,7 +17,6 @@ package com.pimenta.bestv.di.module
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.data.remote.api.CastApi
 import com.pimenta.bestv.data.remote.api.GenreApi
 import com.pimenta.bestv.data.remote.api.MovieApi
 import com.pimenta.bestv.data.remote.api.TvShowApi
@@ -65,11 +64,6 @@ class MediaRemoteModule {
     @Singleton
     fun providePersonGenreApi(retrofit: Retrofit) =
             retrofit.create(GenreApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideCastApi(retrofit: Retrofit) =
-            retrofit.create(CastApi::class.java)
 
     @Provides
     @Singleton

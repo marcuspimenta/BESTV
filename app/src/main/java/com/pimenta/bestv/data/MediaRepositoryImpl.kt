@@ -16,11 +16,11 @@ package com.pimenta.bestv.data
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.local.MediaLocalRepository
-import com.pimenta.bestv.data.local.entity.MovieDbModel
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.common.data.model.remote.*
 import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
-import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -126,15 +126,6 @@ class MediaRepositoryImpl @Inject constructor(
 
     override fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse> =
             mediaRemoteRepository.searchTvShowsByQuery(query, page)
-
-    override fun getCastDetails(castId: Int): Single<CastResponse> =
-            mediaRemoteRepository.getCastDetails(castId)
-
-    override fun getMovieCreditsByCast(castId: Int): Single<CastMovieListResponse> =
-            mediaRemoteRepository.getMovieCreditsByCast(castId)
-
-    override fun getTvShowCreditsByCast(castId: Int): Single<CastTvShowListResponse> =
-            mediaRemoteRepository.getTvShowCreditsByCast(castId)
 
     override fun getTvShowGenres(): Single<TvShowGenreListResponse> =
             mediaRemoteRepository.getTvShowGenres()

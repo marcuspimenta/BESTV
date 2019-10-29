@@ -15,11 +15,10 @@
 package com.pimenta.bestv.data.remote
 
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.data.remote.api.CastApi
+import com.pimenta.bestv.common.data.model.remote.*
 import com.pimenta.bestv.data.remote.api.GenreApi
 import com.pimenta.bestv.data.remote.api.MovieApi
 import com.pimenta.bestv.data.remote.api.TvShowApi
-import com.pimenta.bestv.data.remote.entity.*
 import io.reactivex.Single
 import timber.log.Timber
 import java.io.IOException
@@ -31,7 +30,6 @@ import javax.inject.Inject
 class MediaRemoteRepositoryImpl @Inject constructor(
     private val genreApi: GenreApi,
     private val movieApi: MovieApi,
-    private val personApi: CastApi,
     private val tvShowApi: TvShowApi
 ) : MediaRemoteRepository {
 
@@ -75,15 +73,6 @@ class MediaRemoteRepositoryImpl @Inject constructor(
 
     override fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse> =
             movieApi.searchMoviesByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    override fun getCastDetails(castId: Int): Single<CastResponse> =
-            personApi.getCastDetails(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
-    override fun getMovieCreditsByCast(castId: Int): Single<CastMovieListResponse> =
-            personApi.getMovieCredits(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
-    override fun getTvShowCreditsByCast(castId: Int): Single<CastTvShowListResponse> =
-            personApi.getTvShowCredits(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 
     override fun getTvShowGenres(): Single<TvShowGenreListResponse> =
             genreApi.getTvShowGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)

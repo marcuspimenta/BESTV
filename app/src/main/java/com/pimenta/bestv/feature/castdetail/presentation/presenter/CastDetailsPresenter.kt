@@ -17,9 +17,10 @@ package com.pimenta.bestv.feature.castdetail.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,9 +29,9 @@ import javax.inject.Inject
  * Created by marcus on 05-04-2018.
  */
 class CastDetailsPresenter @Inject constructor(
-    private val view: View,
-    private val getCastDetailsUseCase: GetCastDetailsUseCase,
-    private val rxScheduler: RxScheduler
+        private val view: View,
+        private val getCastDetailsUseCase: GetCastDetailsUseCase,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
@@ -41,9 +42,9 @@ class CastDetailsPresenter @Inject constructor(
                 .doFinally { view.onHideProgress() }
                 .subscribe({ triple ->
                     view.onCastLoaded(
-                            triple.first,
-                            triple.second,
-                            triple.third
+                            triple.first.toViewModel(),
+                            triple.second?.map { it.toViewModel() },
+                            triple.third?.map { it.toViewModel() }
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")

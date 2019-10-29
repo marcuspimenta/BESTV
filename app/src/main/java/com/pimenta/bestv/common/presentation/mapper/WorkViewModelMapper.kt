@@ -15,15 +15,17 @@
 package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.common.data.model.remote.TvShowResponse
+import com.pimenta.bestv.common.data.model.remote.WorkResponse
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.local.entity.MovieDbModel
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
-import com.pimenta.bestv.data.remote.entity.TvShowResponse
-import com.pimenta.bestv.data.remote.entity.WorkResponse
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Deprecated("Dont use")
 fun WorkResponse.toViewModel() = WorkViewModel(
         id = id,
         title = title,
@@ -47,3 +49,21 @@ fun WorkViewModel.toMovieDbModel() =
 
 fun WorkViewModel.toTvShowDbModel() =
         TvShowDbModel(id = id)
+
+fun WorkDomainModel.toViewModel() = WorkViewModel(
+        id = id,
+        title = title,
+        originalLanguage = originalLanguage,
+        overview = overview,
+        backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
+        posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
+        originalTitle = originalTitle,
+        releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
+                ?.let {
+                    SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
+                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
+                    )
+                },
+        isFavorite = isFavorite,
+        type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
+)

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.data.remote
 
-import com.pimenta.bestv.data.remote.entity.*
+import com.pimenta.bestv.common.data.model.remote.*
 import io.reactivex.Single
 
 /**
@@ -47,12 +47,6 @@ interface MediaRemoteRepository {
     fun getUpComingMovies(page: Int): Single<MoviePageResponse>
 
     fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse>
-
-    fun getCastDetails(castId: Int): Single<CastResponse>
-
-    fun getMovieCreditsByCast(castId: Int): Single<CastMovieListResponse>
-
-    fun getTvShowCreditsByCast(castId: Int): Single<CastTvShowListResponse>
 
     fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse>
 

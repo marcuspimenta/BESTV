@@ -21,8 +21,8 @@ import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.remote.entity.MoviePageResponse
-import com.pimenta.bestv.data.remote.entity.MovieResponse
+import com.pimenta.bestv.common.data.model.remote.MoviePageResponse
+import com.pimenta.bestv.common.data.model.remote.MovieResponse
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test

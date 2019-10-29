@@ -15,7 +15,7 @@
 package com.pimenta.bestv.data.local.db.dao
 
 import androidx.room.*
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
+import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single

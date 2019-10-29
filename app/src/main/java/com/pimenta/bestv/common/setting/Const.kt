@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.common.setting
 
-import android.Manifest
-
 /**
  * Created by marcus on 22-05-2019.
  */
@@ -36,11 +34,5 @@ class Const {
         const val RELEASE_DATE = "RELEASE_DATE"
         const val FAVORITE = "FAVORITE"
         const val TYPE = "TYPE"
-
-        val PERMISSIONS = listOf(
-                Manifest.permission.INTERNET,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.RECEIVE_BOOT_COMPLETED
-        )
     }
 }

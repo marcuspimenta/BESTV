@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.data.remote.api
 
-import com.pimenta.bestv.data.remote.entity.MovieGenreListResponse
-import com.pimenta.bestv.data.remote.entity.TvShowGenreListResponse
+import com.pimenta.bestv.common.data.model.remote.MovieGenreListResponse
+import com.pimenta.bestv.common.data.model.remote.TvShowGenreListResponse
 
 import io.reactivex.Single
 import retrofit2.http.GET

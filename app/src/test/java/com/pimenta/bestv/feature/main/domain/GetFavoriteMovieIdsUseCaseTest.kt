@@ -17,7 +17,7 @@ package com.pimenta.bestv.feature.main.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.local.entity.MovieDbModel
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import io.reactivex.Single
 import org.junit.Test
 

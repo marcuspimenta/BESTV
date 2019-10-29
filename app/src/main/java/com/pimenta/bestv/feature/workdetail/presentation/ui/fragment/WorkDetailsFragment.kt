@@ -38,7 +38,7 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.extension.popBackStack
-import com.pimenta.bestv.common.presentation.diffcallback.WorkDiffCallback
+import com.pimenta.bestv.common.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer

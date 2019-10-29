@@ -18,7 +18,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.remote.entity.CastResponse
+import com.pimenta.bestv.common.data.model.remote.CastResponse
+import com.pimenta.bestv.feature.castdetail.domain.usecase.GetCastPersonalDetails
 import io.reactivex.Single
 import org.junit.Test
 

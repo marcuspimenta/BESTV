@@ -20,8 +20,8 @@ import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.MediaRepository
-import com.pimenta.bestv.data.remote.entity.TvShowPageResponse
-import com.pimenta.bestv.data.remote.entity.TvShowResponse
+import com.pimenta.bestv.common.data.model.remote.TvShowPageResponse
+import com.pimenta.bestv.common.data.model.remote.TvShowResponse
 import io.reactivex.Single
 import org.junit.Test
 

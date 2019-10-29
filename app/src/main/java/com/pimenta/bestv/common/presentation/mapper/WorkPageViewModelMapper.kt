@@ -15,7 +15,7 @@
 package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.data.remote.entity.WorkPageResponse
+import com.pimenta.bestv.common.data.model.remote.WorkPageResponse
 
 fun WorkPageResponse<*>.toViewModel() = WorkPageViewModel(
         page,

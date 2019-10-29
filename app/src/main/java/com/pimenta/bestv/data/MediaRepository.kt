@@ -15,9 +15,9 @@
 package com.pimenta.bestv.data
 
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.local.entity.MovieDbModel
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
-import com.pimenta.bestv.data.remote.entity.*
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.common.data.model.remote.*
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -69,12 +69,6 @@ interface MediaRepository {
     fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse>
 
     fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse>
-
-    fun getCastDetails(castId: Int): Single<CastResponse>
-
-    fun getMovieCreditsByCast(castId: Int): Single<CastMovieListResponse>
-
-    fun getTvShowCreditsByCast(castId: Int): Single<CastTvShowListResponse>
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
 

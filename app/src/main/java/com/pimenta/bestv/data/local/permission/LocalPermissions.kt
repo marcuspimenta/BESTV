@@ -14,24 +14,30 @@
 
 package com.pimenta.bestv.data.local.permission
 
+import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.pimenta.bestv.common.setting.Const
 import io.reactivex.Single
 import javax.inject.Inject
 
 /**
  * Created by marcus on 2019-08-28.
  */
+private val PERMISSIONS = listOf(
+        Manifest.permission.INTERNET,
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.RECEIVE_BOOT_COMPLETED
+)
+
 class LocalPermissions @Inject constructor(
-    private val application: Application
+        private val application: Application
 ) {
 
     fun loadPermissionsNotAccepted(): Single<List<String>> =
             Single.fromCallable {
                 val permissionsNotAccepted = mutableListOf<String>()
-                Const.PERMISSIONS.forEach {
+                PERMISSIONS.forEach {
                     val permissionDenied = (ContextCompat.checkSelfPermission(application, it) == PackageManager.PERMISSION_DENIED)
                     if (permissionDenied) {
                         permissionsNotAccepted.add(it)

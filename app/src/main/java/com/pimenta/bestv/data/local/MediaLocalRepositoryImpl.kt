@@ -16,8 +16,8 @@ package com.pimenta.bestv.data.local
 
 import com.pimenta.bestv.data.local.db.dao.MovieDao
 import com.pimenta.bestv.data.local.db.dao.TvShowDao
-import com.pimenta.bestv.data.local.entity.MovieDbModel
-import com.pimenta.bestv.data.local.entity.TvShowDbModel
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
