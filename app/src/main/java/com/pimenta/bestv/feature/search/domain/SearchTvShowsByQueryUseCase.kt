@@ -14,25 +14,16 @@
 
 package com.pimenta.bestv.feature.search.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.search.data.repository.TvShowRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
 class SearchTvShowsByQueryUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val tvShowRepository: TvShowRepository
 ) {
 
     operator fun invoke(query: String, page: Int) =
-            mediaRepository.searchTvShowsByQuery(query, page)
-                    .map { tvShowPage ->
-                        WorkPageViewModel(
-                                tvShowPage.page,
-                                tvShowPage.totalPages,
-                                tvShowPage.works?.map { work -> work.toViewModel() }
-                        )
-                    }
+            tvShowRepository.searchTvShowsByQuery(query, page)
 }

@@ -12,18 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.domain.usecase
+package com.pimenta.bestv.feature.search.data.repository
 
-import com.pimenta.bestv.feature.castdetail.data.repository.CastRepository
+import com.pimenta.bestv.common.data.mapper.toDomainModel
+import com.pimenta.bestv.feature.search.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 20-05-2019.
+ * Created by marcus on 29-10-2019.
  */
-class GetCastPersonalDetails @Inject constructor(
-        private val castRepository: CastRepository
+class MovieRepository @Inject constructor(
+    private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    operator fun invoke(castId: Int) =
-            castRepository.getCastDetails(castId)
+    fun searchMoviesByQuery(query: String, page: Int) =
+            movieRemoteDataSource.searchMoviesByQuery(query, page)
+                    .map { it.toDomainModel() }
 }

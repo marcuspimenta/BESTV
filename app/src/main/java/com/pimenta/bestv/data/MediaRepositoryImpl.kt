@@ -14,11 +14,11 @@
 
 package com.pimenta.bestv.data
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import com.pimenta.bestv.common.data.model.remote.*
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import io.reactivex.Completable
@@ -120,12 +120,6 @@ class MediaRepositoryImpl @Inject constructor(
 
     override fun getVideosByTvShow(workId: Int): Single<VideoListResponse> =
             mediaRemoteRepository.getVideosByTvShow(workId)
-
-    override fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.searchMoviesByQuery(query, page)
-
-    override fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.searchTvShowsByQuery(query, page)
 
     override fun getTvShowGenres(): Single<TvShowGenreListResponse> =
             mediaRemoteRepository.getTvShowGenres()

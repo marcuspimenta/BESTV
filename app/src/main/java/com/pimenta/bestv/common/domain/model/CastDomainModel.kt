@@ -18,17 +18,17 @@ package com.pimenta.bestv.common.domain.model
  * Created by marcus on 29-10-2019.
  */
 data class CastDomainModel(
-        val castId: Int = 0,
-        val creditId: String? = null,
-        val gender: Int = 0,
-        val id: Int = 0,
-        val order: Int = 0,
-        val name: String? = null,
-        val character: String? = null,
-        val profilePath: String? = null,
-        val birthday: String? = null,
-        val deathDay: String? = null,
-        val biography: String? = null,
-        val popularity: Double? = null,
-        val placeOfBirth: String? = null
+    val castId: Int = 0,
+    val creditId: String? = null,
+    val gender: Int = 0,
+    val id: Int = 0,
+    val order: Int = 0,
+    val name: String? = null,
+    val character: String? = null,
+    val profilePath: String? = null,
+    val birthday: String? = null,
+    val deathDay: String? = null,
+    val biography: String? = null,
+    val popularity: Double? = null,
+    val placeOfBirth: String? = null
 )

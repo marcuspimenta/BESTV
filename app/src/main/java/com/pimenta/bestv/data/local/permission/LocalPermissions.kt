@@ -31,7 +31,7 @@ private val PERMISSIONS = listOf(
 )
 
 class LocalPermissions @Inject constructor(
-        private val application: Application
+    private val application: Application
 ) {
 
     fun loadPermissionsNotAccepted(): Single<List<String>> =

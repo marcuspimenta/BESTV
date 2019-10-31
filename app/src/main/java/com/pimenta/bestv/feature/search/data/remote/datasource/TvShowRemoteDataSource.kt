@@ -12,21 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.domain.usecase
+package com.pimenta.bestv.feature.search.data.remote.datasource
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.castdetail.data.repository.CastRepository
-import io.reactivex.Single
+import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.feature.search.data.remote.api.SearchTvShowTmdbApi
 import javax.inject.Inject
 
 /**
- * Created by marcus on 18-04-2019.
+ * Created by marcus on 29-10-2019.
  */
-class GetMovieCreditsByCastUseCase @Inject constructor(
-        private val castRepository: CastRepository
+class TvShowRemoteDataSource @Inject constructor(
+    private val searchTvShowTmdbApi: SearchTvShowTmdbApi
 ) {
-
-    operator fun invoke(castId: Int) =
-            castRepository.getMovieCreditsByCast(castId)
+    fun searchTvShowsByQuery(query: String, page: Int) =
+            searchTvShowTmdbApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 }

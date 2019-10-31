@@ -12,18 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.feature.castdetail.domain
 
-import com.pimenta.bestv.feature.search.data.repository.MovieRepository
+import com.pimenta.bestv.feature.castdetail.data.repository.CastRepository
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 20-05-2019.
  */
-class SearchMoviesByQueryUseCase @Inject constructor(
-    private val movieRepository: MovieRepository
+class GetCastPersonalDetails @Inject constructor(
+    private val castRepository: CastRepository
 ) {
 
-    operator fun invoke(query: String, page: Int) =
-            movieRepository.searchMoviesByQuery(query, page)
+    operator fun invoke(castId: Int) =
+            castRepository.getCastDetails(castId)
 }

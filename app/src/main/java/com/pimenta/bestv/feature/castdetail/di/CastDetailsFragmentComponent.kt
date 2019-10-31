@@ -42,8 +42,8 @@ interface CastDetailsFragmentComponent {
     @Component.Factory
     interface Factory {
         fun create(
-                @BindsInstance view: CastDetailsPresenter.View,
-                @BindsInstance application: Application
+            @BindsInstance view: CastDetailsPresenter.View,
+            @BindsInstance application: Application
         ): CastDetailsFragmentComponent
     }
 

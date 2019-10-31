@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 29-10-2019.
  */
 class CastRemoteDataSource @Inject constructor(
-        private val castTmdbApi: CastTmdbApi
+    private val castTmdbApi: CastTmdbApi
 ) {
 
     fun getCastDetails(castId: Int) =

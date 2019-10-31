@@ -18,9 +18,9 @@ package com.pimenta.bestv.common.domain.model
  * Created by marcus on 29-10-2019.
  */
 data class VideoDomainModel(
-        val id: String? = null,
-        val key: String? = null,
-        val name: String? = null,
-        val site: String? = null,
-        val type: String? = null
+    val id: String? = null,
+    val key: String? = null,
+    val name: String? = null,
+    val site: String? = null,
+    val type: String? = null
 )

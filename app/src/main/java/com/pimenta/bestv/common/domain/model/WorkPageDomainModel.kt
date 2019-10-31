@@ -18,7 +18,7 @@ package com.pimenta.bestv.common.domain.model
  * Created by marcus on 29-10-2019.
  */
 data class WorkPageDomainModel(
-        var page: Int,
-        var totalPages: Int,
-        var works: List<WorkDomainModel>? = null
+    var page: Int,
+    var totalPages: Int,
+    var works: List<WorkDomainModel>? = null
 )

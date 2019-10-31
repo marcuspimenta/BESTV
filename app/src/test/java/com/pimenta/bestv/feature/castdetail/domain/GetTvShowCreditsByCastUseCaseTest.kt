@@ -21,7 +21,6 @@ import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.feature.castdetail.data.remote.model.CastTvShowListResponse
 import com.pimenta.bestv.common.data.model.remote.TvShowResponse
-import com.pimenta.bestv.feature.castdetail.domain.usecase.GetTvShowCreditsByCastUseCase
 import io.reactivex.Single
 import org.junit.Test
 

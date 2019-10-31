@@ -18,9 +18,9 @@ package com.pimenta.bestv.common.domain.model
  * Created by marcus on 29-10-2019.
  */
 data class GenreDomainModel(
-        val id: Int = 0,
-        val name: String? = null,
-        val source: Source = Source.MOVIE
+    val id: Int = 0,
+    val name: String? = null,
+    val source: Source = Source.MOVIE
 ) {
 
     enum class Source {

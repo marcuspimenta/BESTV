@@ -18,6 +18,7 @@ import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.extension.hasNoContent
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
@@ -81,14 +82,14 @@ class SearchPresenter @Inject constructor(
                     if (pair.first.page <= pair.first.totalPages) {
                         this.resultMoviePage = pair.first.page
                         pair.first.works?.let {
-                            movies.addAll(it)
+                            movies.addAll(it.map { work -> work.toViewModel() })
                         }
                     }
 
                     if (pair.second.page <= pair.second.totalPages) {
                         this.resultTvShowPage = pair.second.page
                         pair.second.works?.let {
-                            tvShows.addAll(it)
+                            movies.addAll(it.map { work -> work.toViewModel() })
                         }
                     }
 
@@ -111,7 +112,7 @@ class SearchPresenter @Inject constructor(
                     if (moviePage != null && moviePage.page <= moviePage.totalPages) {
                         this.resultMoviePage = moviePage.page
                         moviePage.works?.let {
-                            movies.addAll(it)
+                            movies.addAll(it.map { work -> work.toViewModel() })
                             view.onMoviesLoaded(movies)
                         }
                     }
@@ -128,7 +129,7 @@ class SearchPresenter @Inject constructor(
                     if (tvShowPage != null && tvShowPage.page <= tvShowPage.totalPages) {
                         this.resultTvShowPage = tvShowPage.page
                         tvShowPage.works?.let {
-                            tvShows.addAll(it)
+                            movies.addAll(it.map { work -> work.toViewModel() })
                             view.onTvShowsLoaded(tvShows)
                         }
                     }

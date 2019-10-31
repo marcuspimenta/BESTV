@@ -12,28 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.data.repository
+package com.pimenta.bestv.feature.search.data.repository
 
 import com.pimenta.bestv.common.data.mapper.toDomainModel
-import com.pimenta.bestv.feature.castdetail.data.remote.datasource.CastRemoteDataSource
+import com.pimenta.bestv.feature.search.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 29-10-2019.
  */
-class CastRepository @Inject constructor(
-    private val castRemoteDataSource: CastRemoteDataSource
+class TvShowRepository @Inject constructor(
+    private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
 
-    fun getCastDetails(castId: Int) =
-            castRemoteDataSource.getCastDetails(castId)
+    fun searchTvShowsByQuery(query: String, page: Int) =
+            tvShowRemoteDataSource.searchTvShowsByQuery(query, page)
                     .map { it.toDomainModel() }
-
-    fun getMovieCreditsByCast(castId: Int) =
-            castRemoteDataSource.getMovieCreditsByCast(castId)
-                    .map { it.works?.map { work -> work.toDomainModel() } }
-
-    fun getTvShowCreditsByCast(castId: Int) =
-            castRemoteDataSource.getTvShowCreditsByCast(castId)
-                    .map { it.works?.map { work -> work.toDomainModel() } }
 }

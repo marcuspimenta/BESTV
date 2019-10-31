@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.domain.usecase
+package com.pimenta.bestv.feature.castdetail.domain
 
 import com.pimenta.bestv.common.domain.model.CastDomainModel
 import com.pimenta.bestv.common.domain.model.WorkDomainModel
@@ -24,9 +24,9 @@ import javax.inject.Inject
  * Created by marcus on 15-04-2019.
  */
 class GetCastDetailsUseCase @Inject constructor(
-        private val getCastPersonalDetails: GetCastPersonalDetails,
-        private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
-        private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
+    private val getCastPersonalDetails: GetCastPersonalDetails,
+    private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
+    private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
 ) {
 
     operator fun invoke(castId: Int): Single<Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>> =

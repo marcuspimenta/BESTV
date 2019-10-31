@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.data
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import com.pimenta.bestv.common.data.model.remote.*
+import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -65,10 +65,6 @@ interface MediaRepository {
     fun getVideosByMovie(workId: Int): Single<VideoListResponse>
 
     fun getVideosByTvShow(workId: Int): Single<VideoListResponse>
-
-    fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse>
-
-    fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse>
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
 

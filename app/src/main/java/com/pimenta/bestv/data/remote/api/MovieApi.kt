@@ -15,10 +15,9 @@
 package com.pimenta.bestv.data.remote.api
 
 import com.pimenta.bestv.common.data.model.remote.CastListResponse
-import com.pimenta.bestv.common.data.model.remote.MovieResponse
 import com.pimenta.bestv.common.data.model.remote.MoviePageResponse
+import com.pimenta.bestv.common.data.model.remote.MovieResponse
 import com.pimenta.bestv.common.data.model.remote.VideoListResponse
-
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
@@ -100,14 +99,6 @@ interface MovieApi {
     @GET("movie/upcoming")
     fun getUpComingMovies(
         @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("search/movie")
-    fun searchMoviesByQuery(
-        @Query("api_key") apiKey: String,
-        @Query("query") query: String,
         @Query("language") language: String,
         @Query("page") page: Int
     ): Single<MoviePageResponse>

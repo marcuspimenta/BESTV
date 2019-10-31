@@ -18,20 +18,20 @@ package com.pimenta.bestv.common.domain.model
  * Created by marcus on 29-10-2019.
  */
 data class WorkDomainModel(
-        val id: Int = 0,
-        val title: String? = null,
-        val originalTitle: String? = null,
-        val releaseDate: String? = null,
-        val originalLanguage: String? = null,
-        val overview: String? = null,
-        val backdropPath: String? = null,
-        val posterPath: String? = null,
-        val popularity: Float = 0.toFloat(),
-        val voteAverage: Float = 0.toFloat(),
-        val voteCount: Float = 0.toFloat(),
-        val isAdult: Boolean = false,
-        val isFavorite: Boolean = false,
-        val type: Type = Type.MOVIE
+    val id: Int = 0,
+    val title: String? = null,
+    val originalTitle: String? = null,
+    val releaseDate: String? = null,
+    val originalLanguage: String? = null,
+    val overview: String? = null,
+    val backdropPath: String? = null,
+    val posterPath: String? = null,
+    val popularity: Float = 0.toFloat(),
+    val voteAverage: Float = 0.toFloat(),
+    val voteCount: Float = 0.toFloat(),
+    val isAdult: Boolean = false,
+    val isFavorite: Boolean = false,
+    val type: Type = Type.MOVIE
 ) {
 
     enum class Type {

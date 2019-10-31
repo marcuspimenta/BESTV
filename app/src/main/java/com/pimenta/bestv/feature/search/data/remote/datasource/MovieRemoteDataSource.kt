@@ -12,18 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.feature.search.data.remote.datasource
 
-import com.pimenta.bestv.feature.search.data.repository.MovieRepository
+import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.feature.search.data.remote.api.SearchMovieTmdbApi
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 29-10-2019.
  */
-class SearchMoviesByQueryUseCase @Inject constructor(
-    private val movieRepository: MovieRepository
+class MovieRemoteDataSource @Inject constructor(
+    private val searchMovieTmdbApi: SearchMovieTmdbApi
 ) {
 
-    operator fun invoke(query: String, page: Int) =
-            movieRepository.searchMoviesByQuery(query, page)
+    fun searchMoviesByQuery(query: String, page: Int) =
+            searchMovieTmdbApi.searchMoviesByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 }

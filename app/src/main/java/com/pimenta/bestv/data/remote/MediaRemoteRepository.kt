@@ -46,8 +46,6 @@ interface MediaRemoteRepository {
 
     fun getUpComingMovies(page: Int): Single<MoviePageResponse>
 
-    fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse>
-
     fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse>
 
     fun getAiringTodayTvShows(page: Int): Single<TvShowPageResponse>
@@ -67,6 +65,4 @@ interface MediaRemoteRepository {
     fun getSimilarByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse>
 
     fun getVideosByTvShow(tvShowId: Int): Single<VideoListResponse>
-
-    fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse>
 }

@@ -71,9 +71,6 @@ class MediaRemoteRepositoryImpl @Inject constructor(
     override fun getUpComingMovies(page: Int): Single<MoviePageResponse> =
             movieApi.getUpComingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
-    override fun searchMoviesByQuery(query: String, page: Int): Single<MoviePageResponse> =
-            movieApi.searchMoviesByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
     override fun getTvShowGenres(): Single<TvShowGenreListResponse> =
             genreApi.getTvShowGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 
@@ -111,7 +108,4 @@ class MediaRemoteRepositoryImpl @Inject constructor(
 
     override fun getVideosByTvShow(tvShowId: Int): Single<VideoListResponse> =
             tvShowApi.getVideosByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
-    override fun searchTvShowsByQuery(query: String, page: Int): Single<TvShowPageResponse> =
-            tvShowApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 }
