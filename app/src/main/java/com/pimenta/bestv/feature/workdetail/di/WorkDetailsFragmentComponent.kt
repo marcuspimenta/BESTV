@@ -18,6 +18,8 @@ import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
 import com.pimenta.bestv.di.module.MediaModule
 import com.pimenta.bestv.di.module.SchedulerModule
+import com.pimenta.bestv.feature.workdetail.di.module.MovieRemoteDataSourceModule
+import com.pimenta.bestv.feature.workdetail.di.module.TvShowRemoteDataSourceModule
 import com.pimenta.bestv.feature.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import dagger.BindsInstance
@@ -32,6 +34,8 @@ import javax.inject.Singleton
         modules = [
             ApplicationModule::class,
             MediaModule::class,
+            MovieRemoteDataSourceModule::class,
+            TvShowRemoteDataSourceModule::class,
             SchedulerModule::class
         ]
 )

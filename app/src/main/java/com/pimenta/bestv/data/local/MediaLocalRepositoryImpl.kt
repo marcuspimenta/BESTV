@@ -14,12 +14,11 @@
 
 package com.pimenta.bestv.data.local
 
-import com.pimenta.bestv.data.local.db.dao.MovieDao
-import com.pimenta.bestv.data.local.db.dao.TvShowDao
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.data.local.db.dao.MovieDao
+import com.pimenta.bestv.data.local.db.dao.TvShowDao
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -30,12 +29,6 @@ class MediaLocalRepositoryImpl @Inject constructor(
     private val movieDao: MovieDao,
     private val tvShowDao: TvShowDao
 ) : MediaLocalRepository {
-
-    override fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel> =
-            movieDao.getById(movieId)
-
-    override fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel> =
-            tvShowDao.getById(tvShowId)
 
     override fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable =
             movieDao.create(movieDbModel)

@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.workdetail.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
@@ -64,26 +65,26 @@ class WorkDetailsPresenter @Inject constructor(
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
                 .subscribe({ movieInfo ->
-                    val recommendedPage = movieInfo.fourth
+                    val recommendedPage = movieInfo.third
                     if (recommendedPage.page <= recommendedPage.totalPages) {
                         this.recommendedPage = recommendedPage.page
                         recommendedPage.works?.let {
-                            recommendedWorks.addAll(it)
+                            recommendedWorks.addAll(it.map { work -> work.toViewModel() })
                         }
                     }
 
-                    val similarPage = movieInfo.fifth
+                    val similarPage = movieInfo.fourth
                     if (similarPage.page <= similarPage.totalPages) {
                         this.similarPage = similarPage.page
                         similarPage.works?.let {
-                            similarWorks.addAll(it)
+                            similarWorks.addAll(it.map { work -> work.toViewModel() })
                         }
                     }
 
                     view.onDataLoaded(
-                            movieInfo.first,
-                            movieInfo.second,
-                            movieInfo.third,
+                            workViewModel.isFavorite,
+                            movieInfo.first?.map { it.toViewModel() },
+                            movieInfo.second?.map { it.toViewModel() },
                             recommendedWorks,
                             similarWorks
                     )
@@ -101,7 +102,7 @@ class WorkDetailsPresenter @Inject constructor(
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         recommendedPage = movieList.page
                         movieList.works?.let {
-                            recommendedWorks.addAll(it)
+                            recommendedWorks.addAll(it.map { work -> work.toViewModel() })
                             view.onRecommendationLoaded(recommendedWorks)
                         }
                     }
@@ -118,7 +119,7 @@ class WorkDetailsPresenter @Inject constructor(
                     if (movieList != null && movieList.page <= movieList.totalPages) {
                         similarPage = movieList.page
                         movieList.works?.let {
-                            similarWorks.addAll(it)
+                            similarWorks.addAll(it.map { work -> work.toViewModel() })
                             view.onSimilarLoaded(similarWorks)
                         }
                     }

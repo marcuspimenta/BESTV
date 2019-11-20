@@ -12,62 +12,48 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote.api
+package com.pimenta.bestv.feature.workdetail.data.remote.api
 
+import com.pimenta.bestv.common.data.model.remote.CastListResponse
 import com.pimenta.bestv.common.data.model.remote.MoviePageResponse
-import com.pimenta.bestv.common.data.model.remote.MovieResponse
+import com.pimenta.bestv.common.data.model.remote.VideoListResponse
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 20-10-2019.
  */
-interface MovieApi {
+interface MovieDetailTmdbApi {
 
-    @GET("discover/movie")
-    fun getMoviesByGenre(
-        @Query("with_genres") genreId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("include_adult") includeAdult: Boolean,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("movie/{movie_id}")
-    fun getMovie(
+    @GET("movie/{movie_id}/credits")
+    fun getCastByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<MovieResponse>
+    ): Single<CastListResponse>
 
-    @GET("movie/now_playing")
-    fun getNowPlayingMovies(
+    @GET("movie/{movie_id}/recommendations")
+    fun getRecommendationByMovie(
+        @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
     ): Single<MoviePageResponse>
 
-    @GET("movie/popular")
-    fun getPopularMovies(
+    @GET("movie/{movie_id}/similar")
+    fun getSimilarByMovie(
+        @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
     ): Single<MoviePageResponse>
 
-    @GET("movie/top_rated")
-    fun getTopRatedMovies(
+    @GET("movie/{movie_id}/videos")
+    fun getVideosByMovie(
+        @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("movie/upcoming")
-    fun getUpComingMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
+        @Query("language") language: String
+    ): Single<VideoListResponse>
 }

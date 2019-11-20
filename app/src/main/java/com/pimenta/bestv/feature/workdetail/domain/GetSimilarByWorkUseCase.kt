@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -27,7 +25,7 @@ class GetSimilarByWorkUseCase @Inject constructor(
     private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =
+    operator fun invoke(workType: WorkType, workId: Int, page: Int) =
             when (workType) {
                 WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
                 WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)

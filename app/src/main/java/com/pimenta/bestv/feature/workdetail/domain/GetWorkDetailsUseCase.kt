@@ -14,35 +14,33 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.kotlin.Quintuple
-import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.common.domain.model.CastDomainModel
+import com.pimenta.bestv.common.domain.model.VideoDomainModel
+import com.pimenta.bestv.common.domain.model.WorkPageDomainModel
+import com.pimenta.bestv.common.kotlin.Quadruple
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Single
-import io.reactivex.functions.Function5
+import io.reactivex.functions.Function4
 import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
 class GetWorkDetailsUseCase @Inject constructor(
-    private val isFavoriteUseCase: IsFavoriteUseCase,
     private val getVideosUseCase: GetVideosUseCase,
     private val getCastsUseCase: GetCastsUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel): Single<Quintuple<Boolean, List<VideoViewModel>?, List<CastViewModel>?, WorkPageViewModel, WorkPageViewModel>> =
+    operator fun invoke(workViewModel: WorkViewModel): Single<Quadruple<List<VideoDomainModel>?, List<CastDomainModel>?, WorkPageDomainModel, WorkPageDomainModel>> =
             Single.zip(
-                    isFavoriteUseCase(workViewModel),
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),
                     getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    Function5 { isFavorite, casts, recommendedMovies, similarMovies, videos ->
-                        Quintuple(isFavorite, casts, recommendedMovies, similarMovies, videos)
+                    Function4 { videos, casts, recommendedMovies, similarMovies ->
+                        Quadruple(videos, casts, recommendedMovies, similarMovies)
                     }
             )
 }

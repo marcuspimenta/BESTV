@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.common.presentation.model.WorkType
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -27,7 +25,7 @@ class GetRecommendationByWorkUseCase @Inject constructor(
     private val getRecommendationByTvShowUseCase: GetRecommendationByTvShowUseCase
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int, page: Int): Single<WorkPageViewModel> =
+    operator fun invoke(workType: WorkType, workId: Int, page: Int) =
             when (workType) {
                 WorkType.MOVIE -> getRecommendationByMovieUseCase(workId, page)
                 WorkType.TV_SHOW -> getRecommendationByTvShowUseCase(workId, page)

@@ -47,18 +47,6 @@ class MediaRemoteRepositoryImpl @Inject constructor(
                 null
             }
 
-    override fun getCastByMovie(movieId: Int): Single<CastListResponse> =
-            movieApi.getCastByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
-    override fun getRecommendationByMovie(movieId: Int, page: Int): Single<MoviePageResponse> =
-            movieApi.getRecommendationByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    override fun getSimilarByMovie(movieId: Int, page: Int): Single<MoviePageResponse> =
-            movieApi.getSimilarByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    override fun getVideosByMovie(movieId: Int): Single<VideoListResponse> =
-            movieApi.getVideosByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
     override fun getNowPlayingMovies(page: Int): Single<MoviePageResponse> =
             movieApi.getNowPlayingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
@@ -96,16 +84,4 @@ class MediaRemoteRepositoryImpl @Inject constructor(
                 Timber.e(e, "Error while getting a tv show")
                 null
             }
-
-    override fun getCastByTvShow(tvShowId: Int): Single<CastListResponse> =
-            tvShowApi.getCastByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
-
-    override fun getRecommendationByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse> =
-            tvShowApi.getRecommendationByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    override fun getSimilarByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse> =
-            tvShowApi.getSimilarByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
-
-    override fun getVideosByTvShow(tvShowId: Int): Single<VideoListResponse> =
-            tvShowApi.getVideosByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 }

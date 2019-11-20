@@ -17,17 +17,12 @@ package com.pimenta.bestv.data.local
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 /**
  * Created by marcus on 20-05-2018.
  */
 interface MediaLocalRepository {
-
-    fun getFavoriteMovie(movieId: Int): Maybe<MovieDbModel>
-
-    fun getFavoriteTvShow(tvShowId: Int): Maybe<TvShowDbModel>
 
     fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable
 

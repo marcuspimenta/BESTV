@@ -30,14 +30,6 @@ interface MediaRemoteRepository {
 
     fun getMovie(movieId: Int): MovieResponse?
 
-    fun getCastByMovie(movieId: Int): Single<CastListResponse>
-
-    fun getRecommendationByMovie(movieId: Int, page: Int): Single<MoviePageResponse>
-
-    fun getSimilarByMovie(movieId: Int, page: Int): Single<MoviePageResponse>
-
-    fun getVideosByMovie(movieId: Int): Single<VideoListResponse>
-
     fun getNowPlayingMovies(page: Int): Single<MoviePageResponse>
 
     fun getPopularMovies(page: Int): Single<MoviePageResponse>
@@ -57,12 +49,4 @@ interface MediaRemoteRepository {
     fun getTopRatedTvShows(page: Int): Single<TvShowPageResponse>
 
     fun getTvShow(tvId: Int): TvShowResponse?
-
-    fun getCastByTvShow(tvShowId: Int): Single<CastListResponse>
-
-    fun getRecommendationByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse>
-
-    fun getSimilarByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse>
-
-    fun getVideosByTvShow(tvShowId: Int): Single<VideoListResponse>
 }

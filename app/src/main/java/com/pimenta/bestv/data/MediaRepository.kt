@@ -26,10 +26,6 @@ import io.reactivex.Single
  */
 interface MediaRepository {
 
-    fun isFavoriteMovie(movieId: Int): Single<Boolean>
-
-    fun isFavoriteTvShow(tvShowId: Int): Single<Boolean>
-
     fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable
 
     fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
@@ -49,22 +45,6 @@ interface MediaRepository {
     fun getMovieByGenre(genreId: Int, page: Int): Single<MoviePageResponse>
 
     fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse>
-
-    fun getCastByMovie(workId: Int): Single<CastListResponse>
-
-    fun getCastByTvShow(workId: Int): Single<CastListResponse>
-
-    fun getRecommendationByMovie(workId: Int, page: Int): Single<MoviePageResponse>
-
-    fun getRecommendationByTvShow(workId: Int, page: Int): Single<TvShowPageResponse>
-
-    fun getSimilarByMovie(workId: Int, page: Int): Single<MoviePageResponse>
-
-    fun getSimilarByTvShow(workId: Int, page: Int): Single<TvShowPageResponse>
-
-    fun getVideosByMovie(workId: Int): Single<VideoListResponse>
-
-    fun getVideosByTvShow(workId: Int): Single<VideoListResponse>
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
 

@@ -14,22 +14,16 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.workdetail.data.repository.TvShowRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 2019-10-21.
  */
 class GetCastByTvShowUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val tvShowRepository: TvShowRepository
 ) {
 
     operator fun invoke(workId: Int) =
-            mediaRepository.getCastByTvShow(workId)
-                    .map {
-                        it.casts?.map { cast ->
-                            cast.toViewModel()
-                        }
-                    }
+            tvShowRepository.getCastByTvShow(workId)
 }
