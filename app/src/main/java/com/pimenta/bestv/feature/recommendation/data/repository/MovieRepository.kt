@@ -12,19 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.domain
+package com.pimenta.bestv.feature.recommendation.data.repository
 
-import com.pimenta.bestv.feature.recommendation.data.local.alarm.LocalAlarm
+import com.pimenta.bestv.common.data.mapper.toDomainModel
+import com.pimenta.bestv.feature.recommendation.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 20-10-2019.
  */
-class ScheduleRecommendationUseCase @Inject constructor(
-    private val localAlarm: LocalAlarm
+class MovieRepository @Inject constructor(
+    private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    operator fun invoke() {
-        localAlarm.scheduleRecommendationUpdate()
-    }
+    fun getPopularMovies(page: Int) =
+            movieRemoteDataSource.getPopularMovies(page)
+                    .map { it.toDomainModel() }
 }

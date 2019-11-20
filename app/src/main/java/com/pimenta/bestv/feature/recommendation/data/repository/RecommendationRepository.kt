@@ -12,15 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.provider
+package com.pimenta.bestv.feature.recommendation.data.repository
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
 import io.reactivex.Completable
+import javax.inject.Inject
 
 /**
- * Created by marcus on 06-03-2018.
+ * Created by marcus on 20-10-2019.
  */
-interface RecommendationProvider {
+class RecommendationRepository @Inject constructor(
+    private val recommendationProvider: RecommendationProvider
+) {
 
-    fun loadRecommendations(works: List<WorkViewModel>?): Completable
+    fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
+            recommendationProvider.loadRecommendations(works)
 }

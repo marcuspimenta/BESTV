@@ -17,7 +17,6 @@ package com.pimenta.bestv.data
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import com.pimenta.bestv.common.domain.model.WorkDomainModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -37,6 +36,4 @@ interface MediaRepository {
     fun getFavoriteMovies(): Single<List<WorkDomainModel>>
 
     fun getFavoriteTvShows(): Single<List<WorkDomainModel>>
-
-    fun loadRecommendations(works: List<WorkViewModel>?): Completable
 }

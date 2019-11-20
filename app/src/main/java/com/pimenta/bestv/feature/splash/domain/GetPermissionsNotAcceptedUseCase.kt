@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.splash.domain
 
-import com.pimenta.bestv.data.local.permission.LocalPermissions
+import com.pimenta.bestv.feature.splash.data.local.permission.LocalPermissions
 import javax.inject.Inject
 
 /**

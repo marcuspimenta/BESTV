@@ -12,19 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.domain
+package com.pimenta.bestv.feature.recommendation.data.remote.datasource
 
-import com.pimenta.bestv.feature.recommendation.data.local.alarm.LocalAlarm
+import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.feature.recommendation.data.remote.api.MovieTmdbApi
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 20-10-2019.
  */
-class ScheduleRecommendationUseCase @Inject constructor(
-    private val localAlarm: LocalAlarm
+class MovieRemoteDataSource @Inject constructor(
+    private val movieTmdbApi: MovieTmdbApi
 ) {
 
-    operator fun invoke() {
-        localAlarm.scheduleRecommendationUpdate()
-    }
+    fun getPopularMovies(page: Int) =
+            movieTmdbApi.getPopularMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 }

@@ -15,27 +15,23 @@
 package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.feature.recommendation.domain.LoadRecommendationUseCase
-import com.pimenta.bestv.common.extension.addTo
-import com.pimenta.bestv.scheduler.RxScheduler
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
  */
 class MainPresenter @Inject constructor(
-    private val loadRecommendationUseCase: LoadRecommendationUseCase,
-    private val rxScheduler: RxScheduler
+        // private val loadRecommendationUseCase: LoadRecommendationUseCase,
+        // private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadRecommendations() {
-        loadRecommendationUseCase()
+        /*loadRecommendationUseCase()
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ }, {
                     Timber.e(it, "Error while loading the recommendations")
                 })
-                .addTo(compositeDisposable)
+                .addTo(compositeDisposable)*/
     }
 }

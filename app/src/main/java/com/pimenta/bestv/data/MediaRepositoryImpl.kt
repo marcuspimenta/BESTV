@@ -18,9 +18,7 @@ import com.pimenta.bestv.common.data.mapper.toDomainModel
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
 import com.pimenta.bestv.common.domain.model.WorkDomainModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.local.MediaLocalRepository
-import com.pimenta.bestv.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.data.remote.MediaRemoteRepository
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -31,8 +29,7 @@ import javax.inject.Inject
  */
 class MediaRepositoryImpl @Inject constructor(
     private val mediaLocalRepository: MediaLocalRepository,
-    private val mediaRemoteRepository: MediaRemoteRepository,
-    private val recommendationProvider: RecommendationProvider
+    private val mediaRemoteRepository: MediaRemoteRepository
 ) : MediaRepository {
 
     override fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable =
@@ -72,7 +69,4 @@ class MediaRepositoryImpl @Inject constructor(
                         }
                         tvShows.toList()
                     }
-
-    override fun loadRecommendations(works: List<WorkViewModel>?): Completable =
-            recommendationProvider.loadRecommendations(works)
 }

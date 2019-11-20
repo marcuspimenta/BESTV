@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.alarm
+package com.pimenta.bestv.feature.recommendation.data.local.alarm
 
 import android.app.AlarmManager
 import android.app.Application

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.permission
+package com.pimenta.bestv.feature.splash.data.local.permission
 
 import android.Manifest
 import android.app.Application

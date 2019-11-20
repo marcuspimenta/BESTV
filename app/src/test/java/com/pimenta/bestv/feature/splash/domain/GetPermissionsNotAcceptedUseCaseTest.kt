@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.local.permission.LocalPermissions
+import com.pimenta.bestv.feature.splash.data.local.permission.LocalPermissions
 import io.reactivex.Single
 import org.junit.Test
 

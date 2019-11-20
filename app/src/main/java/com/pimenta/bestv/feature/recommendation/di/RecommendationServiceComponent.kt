@@ -16,8 +16,9 @@ package com.pimenta.bestv.feature.recommendation.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.di.module.MediaModule
 import com.pimenta.bestv.di.module.SchedulerModule
+import com.pimenta.bestv.feature.recommendation.di.module.MovieApiModule
+import com.pimenta.bestv.feature.recommendation.di.module.RecommendationModule
 import com.pimenta.bestv.feature.recommendation.presentation.presenter.RecommendationPresenter
 import com.pimenta.bestv.feature.recommendation.presentation.service.RecommendationService
 import dagger.BindsInstance
@@ -31,7 +32,8 @@ import javax.inject.Singleton
 @Component(
         modules = [
             ApplicationModule::class,
-            MediaModule::class,
+            MovieApiModule::class,
+            RecommendationModule::class,
             SchedulerModule::class
         ]
 )

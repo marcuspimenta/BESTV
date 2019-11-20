@@ -30,8 +30,7 @@ import javax.inject.Singleton
 @Module(
         includes = [
             MediaLocalModule::class,
-            MediaRemoteModule::class,
-            RecommendationModule::class
+            MediaRemoteModule::class
         ]
 )
 interface MediaModule {

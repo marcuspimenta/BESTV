@@ -12,19 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.domain
+package com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences
 
-import com.pimenta.bestv.feature.recommendation.data.local.alarm.LocalAlarm
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import javax.inject.Inject
 
 /**
- * Created by marcus on 23-08-2019.
+ * Created by marcus on 23/08/19.
  */
-class ScheduleRecommendationUseCase @Inject constructor(
-    private val localAlarm: LocalAlarm
+class LocalSettings @Inject constructor(
+    private val sharedPreferences: SharedPreferences
 ) {
 
-    operator fun invoke() {
-        localAlarm.scheduleRecommendationUpdate()
+    fun getLongFromPersistence(key: String, defValue: Long) =
+            sharedPreferences.getLong(key, defValue)
+
+    fun applyLongToPersistence(key: String, value: Long) {
+        sharedPreferences.edit {
+            putLong(key, value)
+        }
     }
 }

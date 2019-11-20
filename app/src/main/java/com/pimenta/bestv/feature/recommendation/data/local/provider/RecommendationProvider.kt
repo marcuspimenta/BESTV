@@ -12,25 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.sharedpreferences
+package com.pimenta.bestv.feature.recommendation.data.local.provider
 
-import android.content.SharedPreferences
-import androidx.core.content.edit
-import javax.inject.Inject
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import io.reactivex.Completable
 
 /**
- * Created by marcus on 23/08/19.
+ * Created by marcus on 06-03-2018.
  */
-class LocalSettings @Inject constructor(
-    private val sharedPreferences: SharedPreferences
-) {
+interface RecommendationProvider {
 
-    fun getLongFromPersistence(key: String, defValue: Long) =
-            sharedPreferences.getLong(key, defValue)
-
-    fun applyLongToPersistence(key: String, value: Long) {
-        sharedPreferences.edit {
-            putLong(key, value)
-        }
-    }
+    fun loadRecommendations(works: List<WorkDomainModel>?): Completable
 }

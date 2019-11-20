@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.di.module
+package com.pimenta.bestv.feature.recommendation.di.module
 
 import android.app.Application
 import android.app.NotificationManager
 import android.os.Build
-import com.pimenta.bestv.data.local.provider.channel.RecommendationChannelApi
-import com.pimenta.bestv.data.local.provider.row.RecommendationRowApi
-import com.pimenta.bestv.data.local.sharedpreferences.LocalSettings
+import com.pimenta.bestv.feature.recommendation.data.local.provider.channel.RecommendationChannelApi
+import com.pimenta.bestv.feature.recommendation.data.local.provider.row.RecommendationRowApi
+import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
