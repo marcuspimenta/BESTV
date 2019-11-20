@@ -14,9 +14,10 @@
 
 package com.pimenta.bestv.data
 
+import com.pimenta.bestv.common.data.mapper.toDomainModel
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
-import com.pimenta.bestv.common.data.model.remote.*
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.data.local.MediaLocalRepository
 import com.pimenta.bestv.data.local.provider.RecommendationProvider
@@ -46,68 +47,32 @@ class MediaRepositoryImpl @Inject constructor(
     override fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
             mediaLocalRepository.deleteFavoriteTvShow(tvShowDbModel)
 
-    override fun getFavoriteMovies(): Single<List<MovieResponse>> =
+    override fun getFavoriteMovies(): Single<List<WorkDomainModel>> =
             mediaLocalRepository.getMovies()
                     .map {
-                        val movies = mutableListOf<MovieResponse>()
+                        val movies = mutableListOf<WorkDomainModel>()
                         it.forEach { movieDbModel ->
-                            mediaRemoteRepository.getMovie(movieDbModel.id)?.let { movieViewModel ->
-                                movieViewModel.isFavorite = true
-                                movies.add(movieViewModel)
+                            mediaRemoteRepository.getMovie(movieDbModel.id)?.let { work ->
+                                work.isFavorite = true
+                                movies.add(work.toDomainModel())
                             }
                         }
                         movies.toList()
                     }
 
-    override fun getFavoriteTvShows(): Single<List<TvShowResponse>> =
+    override fun getFavoriteTvShows(): Single<List<WorkDomainModel>> =
             mediaLocalRepository.getTvShows()
                     .map {
-                        val tvShows = mutableListOf<TvShowResponse>()
+                        val tvShows = mutableListOf<WorkDomainModel>()
                         it.forEach { tvShowDbModel ->
-                            mediaRemoteRepository.getTvShow(tvShowDbModel.id)?.let { tvShowViewModel ->
-                                tvShowViewModel.isFavorite = true
-                                tvShows.add(tvShowViewModel)
+                            mediaRemoteRepository.getTvShow(tvShowDbModel.id)?.let { work ->
+                                work.isFavorite = true
+                                tvShows.add(work.toDomainModel())
                             }
                         }
                         tvShows.toList()
                     }
 
-    override fun getMovieGenres(): Single<MovieGenreListResponse> =
-            mediaRemoteRepository.getMovieGenres()
-
-    override fun getMovieByGenre(genreId: Int, page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.getMoviesByGenre(genreId, page)
-
-    override fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.getTvShowByGenre(genreId, page)
-
-    override fun getTvShowGenres(): Single<TvShowGenreListResponse> =
-            mediaRemoteRepository.getTvShowGenres()
-
     override fun loadRecommendations(works: List<WorkViewModel>?): Completable =
             recommendationProvider.loadRecommendations(works)
-
-    override fun getNowPlayingMovies(page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.getNowPlayingMovies(page)
-
-    override fun getPopularMovies(page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.getPopularMovies(page)
-
-    override fun getTopRatedMovies(page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.getTopRatedMovies(page)
-
-    override fun getUpComingMovies(page: Int): Single<MoviePageResponse> =
-            mediaRemoteRepository.getUpComingMovies(page)
-
-    override fun getAiringTodayTvShows(page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.getAiringTodayTvShows(page)
-
-    override fun getOnTheAirTvShows(page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.getOnTheAirTvShows(page)
-
-    override fun getPopularTvShows(page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.getPopularTvShows(page)
-
-    override fun getTopRatedTvShows(page: Int): Single<TvShowPageResponse> =
-            mediaRemoteRepository.getTopRatedTvShows(page)
 }

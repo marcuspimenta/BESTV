@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class HasFavoriteUseCase @Inject constructor(
             Single.zip(
                     getFavoriteMoviesUseCase(),
                     getFavoriteTvShowsUseCase(),
-                    BiFunction<List<WorkViewModel>, List<WorkViewModel>, Boolean> { first, second ->
+                    BiFunction<List<WorkDomainModel>, List<WorkDomainModel>, Boolean> { first, second ->
                         first.isNotEmpty() || second.isNotEmpty()
                     }
             )

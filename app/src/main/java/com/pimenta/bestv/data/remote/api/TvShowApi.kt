@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.data.remote.api
 
-import com.pimenta.bestv.common.data.model.remote.TvShowPageResponse
 import com.pimenta.bestv.common.data.model.remote.TvShowResponse
-import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -26,44 +24,6 @@ import retrofit2.http.Query
  * Created by marcus on 06/07/18.
  */
 interface TvShowApi {
-
-    @GET("discover/tv")
-    fun getTvShowByGenre(
-        @Query("with_genres") genreId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("include_adult") includeAdult:
-        Boolean,
-        @Query("page") page: Int
-    ): Single<TvShowPageResponse>
-
-    @GET("tv/airing_today")
-    fun getAiringTodayTvShows(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<TvShowPageResponse>
-
-    @GET("tv/on_the_air")
-    fun getOnTheAirTvShows(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<TvShowPageResponse>
-
-    @GET("tv/popular")
-    fun getPopularTvShows(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<TvShowPageResponse>
-
-    @GET("tv/top_rated")
-    fun getTopRatedTvShows(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<TvShowPageResponse>
 
     @GET("tv/{tv_id}")
     fun getTvShow(

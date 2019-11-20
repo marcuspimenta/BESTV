@@ -16,7 +16,7 @@ package com.pimenta.bestv.data
 
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
-import com.pimenta.bestv.common.data.model.remote.*
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -34,33 +34,9 @@ interface MediaRepository {
 
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
 
-    fun getFavoriteMovies(): Single<List<MovieResponse>>
+    fun getFavoriteMovies(): Single<List<WorkDomainModel>>
 
-    fun getFavoriteTvShows(): Single<List<TvShowResponse>>
-
-    fun getMovieGenres(): Single<MovieGenreListResponse>
-
-    fun getTvShowGenres(): Single<TvShowGenreListResponse>
-
-    fun getMovieByGenre(genreId: Int, page: Int): Single<MoviePageResponse>
-
-    fun getTvShowByGenre(genreId: Int, page: Int): Single<TvShowPageResponse>
+    fun getFavoriteTvShows(): Single<List<WorkDomainModel>>
 
     fun loadRecommendations(works: List<WorkViewModel>?): Completable
-
-    fun getNowPlayingMovies(page: Int): Single<MoviePageResponse>
-
-    fun getPopularMovies(page: Int): Single<MoviePageResponse>
-
-    fun getTopRatedMovies(page: Int): Single<MoviePageResponse>
-
-    fun getUpComingMovies(page: Int): Single<MoviePageResponse>
-
-    fun getAiringTodayTvShows(page: Int): Single<TvShowPageResponse>
-
-    fun getOnTheAirTvShows(page: Int): Single<TvShowPageResponse>
-
-    fun getPopularTvShows(page: Int): Single<TvShowPageResponse>
-
-    fun getTopRatedTvShows(page: Int): Single<TvShowPageResponse>
 }

@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.data.MediaRepository
 import javax.inject.Inject
 
@@ -27,5 +26,4 @@ class GetFavoriteMoviesUseCase @Inject constructor(
 
     operator fun invoke() =
             mediaRepository.getFavoriteMovies()
-                    .map { it.map { work -> work.toViewModel() } }
 }

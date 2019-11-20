@@ -14,18 +14,16 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.data.MediaRepository
+import com.pimenta.bestv.feature.main.data.repository.MovieRepository
 import javax.inject.Inject
 
 /**
  * Created by marcus on 24-10-2019.
  */
 class GetUpComingMoviesUseCase @Inject constructor(
-    private val mediaRepository: MediaRepository
+    private val movieRepository: MovieRepository
 ) {
 
     operator fun invoke(page: Int) =
-            mediaRepository.getUpComingMovies(page)
-                    .map { it.toViewModel() }
+            movieRepository.getUpComingMovies(page)
 }

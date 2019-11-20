@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
@@ -71,7 +72,7 @@ class TopWorkGridPresenter @Inject constructor(
                         currentPage = it.page
                         totalPages = it.totalPages
                         it.works?.let { pageWorks ->
-                            works.addAll(pageWorks)
+                            works.addAll(pageWorks.map { work -> work.toViewModel() })
                             view.onWorksLoaded(works)
                         }
                     }

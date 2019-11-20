@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.common.domain.model.GenreDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class GetWorkBrowseDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            Single.zip<Boolean, List<GenreViewModel>?, List<GenreViewModel>?, Triple<Boolean, List<GenreViewModel>?, List<GenreViewModel>?>>(
+            Single.zip<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?, Triple<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?>>(
                     hasFavoriteUseCase(),
                     getMovieGenresUseCase(),
                     getTvShowGenresUseCase(),

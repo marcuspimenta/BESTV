@@ -12,19 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote.api
+package com.pimenta.bestv.feature.main.data.remote.api
 
 import com.pimenta.bestv.common.data.model.remote.MovieGenreListResponse
 import com.pimenta.bestv.common.data.model.remote.TvShowGenreListResponse
-
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 20-10-2019.
  */
-interface GenreApi {
+interface GenreTmdbApi {
 
     @GET("genre/movie/list")
     fun getMovieGenres(

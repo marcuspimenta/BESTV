@@ -12,13 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.di.module
+package com.pimenta.bestv.feature.main.di.module
 
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.data.remote.api.MovieApi
-import com.pimenta.bestv.data.remote.api.TvShowApi
+import com.pimenta.bestv.feature.main.data.remote.api.MovieTmdbApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -26,16 +25,18 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 11-05-2018.
+ * Created by marcus on 20-10-2019.
  */
 @Module
-class MediaRemoteModule {
+class MovieApiModule {
 
     @Provides
     @Singleton
+    @Named("movieTmdbProvider")
     fun provideTmdbRetrofit(): Retrofit {
         val okHttpClient = OkHttpClient.Builder().apply {
             addInterceptor(HttpLoggingInterceptor().apply {
@@ -56,11 +57,6 @@ class MediaRemoteModule {
 
     @Provides
     @Singleton
-    fun provideMovieApi(retrofit: Retrofit) =
-            retrofit.create(MovieApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideTvShowApi(retrofit: Retrofit) =
-            retrofit.create(TvShowApi::class.java)
+    fun provideMovieApi(@Named("movieTmdbProvider") retrofit: Retrofit) =
+            retrofit.create(MovieTmdbApi::class.java)
 }

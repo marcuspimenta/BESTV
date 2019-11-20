@@ -17,6 +17,7 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
@@ -65,7 +66,7 @@ class GenreGridPresenter @Inject constructor(
                         totalPages = workPage.totalPages
 
                         workPage.works?.let {
-                            works.addAll(it)
+                            works.addAll(it.map { work -> work.toViewModel() })
                             view.onWorksLoaded(works)
                         }
                     }

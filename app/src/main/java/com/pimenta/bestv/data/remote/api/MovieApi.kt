@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.data.remote.api
 
-import com.pimenta.bestv.common.data.model.remote.MoviePageResponse
 import com.pimenta.bestv.common.data.model.remote.MovieResponse
-import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -27,47 +25,10 @@ import retrofit2.http.Query
  */
 interface MovieApi {
 
-    @GET("discover/movie")
-    fun getMoviesByGenre(
-        @Query("with_genres") genreId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("include_adult") includeAdult: Boolean,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
     @GET("movie/{movie_id}")
     fun getMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Call<MovieResponse>
-
-    @GET("movie/now_playing")
-    fun getNowPlayingMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("movie/popular")
-    fun getPopularMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("movie/top_rated")
-    fun getTopRatedMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
-
-    @GET("movie/upcoming")
-    fun getUpComingMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
-    ): Single<MoviePageResponse>
 }

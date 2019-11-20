@@ -16,6 +16,7 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.common.presentation.mapper.toViewModel
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
@@ -54,8 +55,8 @@ class WorkBrowsePresenter @Inject constructor(
                 .subscribe({
                     view.onDataLoaded(
                             it.first,
-                            it.second,
-                            it.third
+                            it.second?.map { genre -> genre.toViewModel() },
+                            it.third?.map { genre -> genre.toViewModel() }
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data")
