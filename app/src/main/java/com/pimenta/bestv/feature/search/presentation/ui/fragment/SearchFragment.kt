@@ -68,9 +68,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     private var workSelected: WorkViewModel? = null
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         SearchFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

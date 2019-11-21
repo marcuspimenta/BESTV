@@ -40,9 +40,9 @@ class SplashFragment : Fragment(), SplashPresenter.View {
     lateinit var presenter: SplashPresenter
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         SplashFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

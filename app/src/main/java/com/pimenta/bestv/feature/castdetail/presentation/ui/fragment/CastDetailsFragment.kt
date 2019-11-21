@@ -68,9 +68,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     lateinit var presenter: CastDetailsPresenter
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         CastDetailsFragmentComponent.create(this, requireActivity().application)
                 .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
