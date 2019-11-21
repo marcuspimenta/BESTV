@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.data.local.permission
+package com.pimenta.bestv.feature.splash.data.local.datasource
 
 import android.Manifest
 import android.app.Application
@@ -30,11 +30,11 @@ private val PERMISSIONS = listOf(
         Manifest.permission.RECEIVE_BOOT_COMPLETED
 )
 
-class LocalPermissions @Inject constructor(
+class PermissionLocalDataSource @Inject constructor(
     private val application: Application
 ) {
 
-    fun loadPermissionsNotAccepted(): Single<List<String>> =
+    fun loadPermissionsNotAccepted() =
             Single.fromCallable {
                 val permissionsNotAccepted = mutableListOf<String>()
                 PERMISSIONS.forEach {

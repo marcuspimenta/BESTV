@@ -12,18 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.domain
+package com.pimenta.bestv.feature.splash.data.repository
 
-import com.pimenta.bestv.feature.splash.data.repository.PermissionRepository
+import com.pimenta.bestv.feature.splash.data.local.datasource.PermissionLocalDataSource
 import javax.inject.Inject
 
 /**
- * Created by marcus on 22/08/19.
+ * Created by marcus on 21-11-2019.
  */
-class GetPermissionsNotAcceptedUseCase @Inject constructor(
-    private val permissionRepository: PermissionRepository
+class PermissionRepository @Inject constructor(
+    private val permissionLocalDataSource: PermissionLocalDataSource
 ) {
 
-    operator fun invoke() =
-            permissionRepository.loadPermissionsNotAccepted()
+    fun loadPermissionsNotAccepted() =
+            permissionLocalDataSource.loadPermissionsNotAccepted()
 }
