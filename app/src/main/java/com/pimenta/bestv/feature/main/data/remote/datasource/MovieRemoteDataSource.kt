@@ -15,7 +15,10 @@
 package com.pimenta.bestv.feature.main.data.remote.datasource
 
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.data.model.remote.MovieResponse
 import com.pimenta.bestv.feature.main.data.remote.api.MovieTmdbApi
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -24,6 +27,14 @@ import javax.inject.Inject
 class MovieRemoteDataSource @Inject constructor(
     private val movieTmdbApi: MovieTmdbApi
 ) {
+
+    fun getMovie(movieId: Int): MovieResponse? =
+            try {
+                movieTmdbApi.getMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
+            } catch (e: IOException) {
+                Timber.e(e, "Error while getting a movie")
+                null
+            }
 
     fun getMoviesByGenre(genreId: Int, page: Int) =
             movieTmdbApi.getMoviesByGenre(genreId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page)

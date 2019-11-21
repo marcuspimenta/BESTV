@@ -15,6 +15,8 @@
 package com.pimenta.bestv.feature.main.data.repository
 
 import com.pimenta.bestv.common.data.mapper.toDomainModel
+import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.feature.main.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.feature.main.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
 
@@ -22,8 +24,22 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class TvShowRepository @Inject constructor(
+    private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
+
+    fun getFavoriteTvShows() =
+            tvShowLocalDataSource.getTvShows()
+                    .map {
+                        val tvShows = mutableListOf<WorkDomainModel>()
+                        it.forEach { tvShowDbModel ->
+                            tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
+                                work.isFavorite = true
+                                tvShows.add(work.toDomainModel())
+                            }
+                        }
+                        tvShows.toList()
+                    }
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
             tvShowRemoteDataSource.getTvShowByGenre(genreId, page)

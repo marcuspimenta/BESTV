@@ -17,7 +17,6 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.VideoViewModel
-import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.common.data.model.remote.VideoListResponse
 import com.pimenta.bestv.common.data.model.remote.VideoResponse
 import io.reactivex.Single

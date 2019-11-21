@@ -22,7 +22,6 @@ import com.pimenta.bestv.common.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.common.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
 import io.reactivex.Completable
 import org.junit.Test
 

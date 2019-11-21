@@ -15,7 +15,10 @@
 package com.pimenta.bestv.feature.main.data.remote.datasource
 
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.common.data.model.remote.TvShowResponse
 import com.pimenta.bestv.feature.main.data.remote.api.TvShowTmdbApi
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -24,6 +27,14 @@ import javax.inject.Inject
 class TvShowRemoteDataSource @Inject constructor(
     private val tvShowTmdbApi: TvShowTmdbApi
 ) {
+
+    fun getTvShow(tvId: Int): TvShowResponse? =
+            try {
+                tvShowTmdbApi.getTvShow(tvId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
+            } catch (e: IOException) {
+                Timber.e(e, "Error while getting a tv show")
+                null
+            }
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
             tvShowTmdbApi.getTvShowByGenre(genreId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page)

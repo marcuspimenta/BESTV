@@ -18,7 +18,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.GenreViewModel
 import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.common.data.model.remote.TvShowGenreListResponse
 import com.pimenta.bestv.common.data.model.remote.TvShowGenreResponse
 import io.reactivex.Single

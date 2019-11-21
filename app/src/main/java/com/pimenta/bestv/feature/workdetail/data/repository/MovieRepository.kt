@@ -15,6 +15,8 @@
 package com.pimenta.bestv.feature.workdetail.data.repository
 
 import com.pimenta.bestv.common.data.mapper.toDomainModel
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.feature.workdetail.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.feature.workdetail.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
@@ -22,8 +24,15 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository @Inject constructor(
+    private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
+
+    fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
+            movieLocalDataSource.saveFavoriteMovie(movieDbModel)
+
+    fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
+            movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
 
     fun getCastByMovie(movieId: Int) =
             movieRemoteDataSource.getCastByMovie(movieId)

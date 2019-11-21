@@ -12,23 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote.api
+package com.pimenta.bestv.feature.main.data.local.datasource
 
-import com.pimenta.bestv.common.data.model.remote.MovieResponse
-import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import com.pimenta.bestv.data.local.db.dao.TvShowDao
+import javax.inject.Inject
 
 /**
- * Created by marcus on 11-02-2018.
+ * Created by marcus on 21-11-2019.
  */
-interface MovieApi {
+class TvShowLocalDataSource @Inject constructor(
+    private val tvShowDao: TvShowDao
+) {
 
-    @GET("movie/{movie_id}")
-    fun getMovie(
-        @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
-    ): Call<MovieResponse>
+    fun getTvShows() =
+            tvShowDao.getAll()
 }

@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.main.di
 
 import android.app.Application
 import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.di.module.MediaModule
+import com.pimenta.bestv.di.module.MediaLocalModule
 import com.pimenta.bestv.di.module.SchedulerModule
 import com.pimenta.bestv.feature.main.di.module.GenreApiModule
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @Component(
         modules = [
             ApplicationModule::class,
-            MediaModule::class,
+            MediaLocalModule::class,
             GenreApiModule::class,
             SchedulerModule::class
         ]

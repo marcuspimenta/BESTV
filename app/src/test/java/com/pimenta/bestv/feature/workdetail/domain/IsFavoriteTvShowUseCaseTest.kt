@@ -16,7 +16,6 @@ package com.pimenta.bestv.feature.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.data.MediaRepository
 import io.reactivex.Single
 import org.junit.Test
 

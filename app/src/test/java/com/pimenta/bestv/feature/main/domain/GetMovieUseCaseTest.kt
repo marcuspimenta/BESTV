@@ -18,7 +18,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.presentation.model.WorkType
 import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.MediaRepository
 import com.pimenta.bestv.common.data.model.remote.MovieResponse
 import org.junit.Assert
 import org.junit.Test

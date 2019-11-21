@@ -15,14 +15,24 @@
 package com.pimenta.bestv.feature.main.data.remote.api
 
 import com.pimenta.bestv.common.data.model.remote.TvShowPageResponse
+import com.pimenta.bestv.common.data.model.remote.TvShowResponse
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
  * Created by marcus on 20-10-2019.
  */
 interface TvShowTmdbApi {
+
+    @GET("tv/{tv_id}")
+    fun getTvShow(
+        @Path("tv_id") tv_id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<TvShowResponse>
 
     @GET("discover/tv")
     fun getTvShowByGenre(

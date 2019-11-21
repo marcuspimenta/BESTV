@@ -12,28 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.data
+package com.pimenta.bestv.feature.workdetail.data.local.datasource
 
-import com.pimenta.bestv.common.data.model.local.MovieDbModel
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.data.local.db.dao.TvShowDao
 import io.reactivex.Completable
-import io.reactivex.Single
+import javax.inject.Inject
 
 /**
- * Created by marcus on 05-03-2018.
+ * Created by marcus on 21-11-2019.
  */
-interface MediaRepository {
+class TvShowLocalDataSource @Inject constructor(
+    private val tvShowDao: TvShowDao
+) {
 
-    fun saveFavoriteMovie(movieDbModel: MovieDbModel): Completable
+    fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
+            tvShowDao.create(tvShowDbModel)
 
-    fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
-
-    fun deleteFavoriteMovie(movieDbModel: MovieDbModel): Completable
-
-    fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable
-
-    fun getFavoriteMovies(): Single<List<WorkDomainModel>>
-
-    fun getFavoriteTvShows(): Single<List<WorkDomainModel>>
+    fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
+            tvShowDao.delete(tvShowDbModel)
 }

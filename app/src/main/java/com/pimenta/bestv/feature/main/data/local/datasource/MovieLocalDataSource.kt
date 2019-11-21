@@ -12,17 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.remote
+package com.pimenta.bestv.feature.main.data.local.datasource
 
-import com.pimenta.bestv.common.data.model.remote.MovieResponse
-import com.pimenta.bestv.common.data.model.remote.TvShowResponse
+import com.pimenta.bestv.data.local.db.dao.MovieDao
+import javax.inject.Inject
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 21-11-2019.
  */
-interface MediaRemoteRepository {
+class MovieLocalDataSource @Inject constructor(
+    private val movieDao: MovieDao
+) {
 
-    fun getMovie(movieId: Int): MovieResponse?
-
-    fun getTvShow(tvId: Int): TvShowResponse?
+    fun getMovies() =
+            movieDao.getAll()
 }
