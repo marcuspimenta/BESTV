@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.db.dao
+package com.pimenta.bestv.data.local.dao
 
 import androidx.room.*
 import com.pimenta.bestv.common.data.model.local.TvShowDbModel

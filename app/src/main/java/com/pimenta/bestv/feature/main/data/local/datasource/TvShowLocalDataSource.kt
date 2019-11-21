@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.data.local.datasource
 
-import com.pimenta.bestv.data.local.db.dao.TvShowDao
+import com.pimenta.bestv.data.local.dao.TvShowDao
 import javax.inject.Inject
 
 /**

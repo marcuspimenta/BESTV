@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.workdetail.data.local.datasource
 
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
-import com.pimenta.bestv.data.local.db.dao.MovieDao
+import com.pimenta.bestv.data.local.dao.MovieDao
 import javax.inject.Inject
 
 /**
