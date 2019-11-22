@@ -60,7 +60,7 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.fragment:fragment-ktx:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0-rc02'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.24'
+    implementation 'com.google.dagger:dagger:2.25'
     kapt 'com.google.dagger:dagger-compiler:2.24'
 
     // Retrofit
@@ -85,11 +85,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     // Room components
-    implementation "androidx.room:room-runtime:2.2.0"
-    implementation "androidx.room:room-ktx:2.2.0"
-    implementation "androidx.room:room-rxjava2:2.2.0"
-    kapt "androidx.room:room-compiler:2.2.0"
-    androidTestImplementation "androidx.room:room-testing:2.2.0"
+    implementation "androidx.room:room-runtime:2.2.2"
+    implementation "androidx.room:room-ktx:2.2.2"
+    implementation "androidx.room:room-rxjava2:2.2.2"
+    kapt "androidx.room:room-compiler:2.2.2"
+    androidTestImplementation "androidx.room:room-testing:2.2.2"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
