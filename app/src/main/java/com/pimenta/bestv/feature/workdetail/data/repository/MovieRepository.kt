@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.workdetail.data.repository
 
 import com.pimenta.bestv.common.data.mapper.toDomainModel
 import com.pimenta.bestv.common.data.model.local.MovieDbModel
-import com.pimenta.bestv.feature.workdetail.data.local.datasource.MovieLocalDataSource
+import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.feature.workdetail.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 

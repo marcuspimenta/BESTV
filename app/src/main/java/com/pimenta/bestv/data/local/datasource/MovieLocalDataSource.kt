@@ -12,18 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.data.local.datasource
+package com.pimenta.bestv.data.local.datasource
 
-import com.pimenta.bestv.data.local.dao.TvShowDao
+import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.data.local.dao.MovieDao
 import javax.inject.Inject
 
 /**
  * Created by marcus on 21-11-2019.
  */
-class TvShowLocalDataSource @Inject constructor(
-    private val tvShowDao: TvShowDao
+class MovieLocalDataSource @Inject constructor(
+    private val movieDao: MovieDao
 ) {
 
-    fun getTvShows() =
-            tvShowDao.getAll()
+    fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
+            movieDao.create(movieDbModel)
+
+    fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
+            movieDao.delete(movieDbModel)
+
+    fun getMovies() =
+            movieDao.getAll()
 }
