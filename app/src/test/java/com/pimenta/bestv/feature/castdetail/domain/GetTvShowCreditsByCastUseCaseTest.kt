@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.castdetail.data.remote.model.CastTvShowListResponse
+import com.pimenta.bestv.model.data.remote.CastTvShowListResponse
 import com.pimenta.bestv.data.remote.model.remote.TvShowResponse
 import io.reactivex.Single
 import org.junit.Test

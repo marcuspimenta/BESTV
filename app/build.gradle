@@ -24,22 +24,19 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
-        buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
-        buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
-        buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
         buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY",  "YOUR API KEY HERE"
             debuggable true
             multiDexEnabled true
             minifyEnabled false
             shrinkResources false
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY",  "YOUR API KEY HERE"
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -51,6 +48,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':model_shared')
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // AndroidX
     implementation 'androidx.leanback:leanback:1.1.0-alpha02'
     implementation 'androidx.recommendation:recommendation:1.0.0'
@@ -90,9 +93,6 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
-
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Lottie
     implementation "com.airbnb.android:lottie:3.0.7"

@@ -1,0 +1,28 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
+        buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
+        buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
+    }
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Room components
+    implementation "androidx.room:room-runtime:2.2.2"
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+}

@@ -12,14 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.castdetail.data.remote.model
+package com.pimenta.bestv.model.data.remote
 
-import com.google.gson.annotations.SerializedName
-import com.pimenta.bestv.model.data.remote.WorkResponse
+import com.pimenta.bestv.model.data.remote.TvShowResponse
 
 /**
  * Created by marcus on 12/07/18.
  */
-abstract class CastWorkListResponse<T : WorkResponse>(
-    @SerializedName("cast") var works: List<T>? = null
-)
+class CastTvShowListResponse : CastWorkListResponse<TvShowResponse>()
