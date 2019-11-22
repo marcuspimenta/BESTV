@@ -23,13 +23,12 @@ import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.setting.Const
 import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import io.reactivex.Completable
 
 /**
@@ -109,18 +108,4 @@ class RecommendationChannelApi constructor(
                             channelId
                         } ?: 0
                     }
-
-    private fun WorkViewModel.toUri(): Uri =
-            Uri.parse(Const.SCHEMA_URI_PREFIX.plus(Const.WORK)).buildUpon()
-                    .appendQueryParameter(Const.ID, id.toString())
-                    .appendQueryParameter(Const.LANGUAGE, originalLanguage)
-                    .appendQueryParameter(Const.OVERVIEW, overview)
-                    .appendQueryParameter(Const.BACKGROUND_URL, backdropUrl)
-                    .appendQueryParameter(Const.POSTER_URL, posterUrl)
-                    .appendQueryParameter(Const.TITLE, title)
-                    .appendQueryParameter(Const.ORIGINAL_TITLE, originalTitle)
-                    .appendQueryParameter(Const.RELEASE_DATE, releaseDate)
-                    .appendQueryParameter(Const.FAVORITE, isFavorite.toString())
-                    .appendQueryParameter(Const.TYPE, type.toString())
-                    .build()
 }

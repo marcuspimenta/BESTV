@@ -14,12 +14,14 @@
 
 package com.pimenta.bestv.model.presentation.mapper
 
+import android.net.Uri
 import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.workdetail.Route
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,3 +48,17 @@ fun WorkDomainModel.toViewModel() = WorkViewModel(
         isFavorite = isFavorite,
         type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
 )
+
+fun WorkViewModel.toUri(): Uri =
+        Uri.parse(Route.SCHEMA_URI_PREFIX.plus(Route.WORK)).buildUpon()
+                .appendQueryParameter(Route.ID, id.toString())
+                .appendQueryParameter(Route.LANGUAGE, originalLanguage)
+                .appendQueryParameter(Route.OVERVIEW, overview)
+                .appendQueryParameter(Route.BACKGROUND_URL, backdropUrl)
+                .appendQueryParameter(Route.POSTER_URL, posterUrl)
+                .appendQueryParameter(Route.TITLE, title)
+                .appendQueryParameter(Route.ORIGINAL_TITLE, originalTitle)
+                .appendQueryParameter(Route.RELEASE_DATE, releaseDate)
+                .appendQueryParameter(Route.FAVORITE, isFavorite.toString())
+                .appendQueryParameter(Route.TYPE, type.toString())
+                .build()

@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.common.setting
+package com.pimenta.bestv.workdetail
 
 /**
  * Created by marcus on 22-05-2019.
  */
-class Const {
+class Route {
 
     companion object {
 

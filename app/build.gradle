@@ -29,14 +29,14 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY",  "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
             debuggable true
             multiDexEnabled true
             minifyEnabled false
             shrinkResources false
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY",  "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -51,6 +51,7 @@ dependencies {
 
     implementation project(':model_shared')
     implementation project(':data_shared')
+    implementation project(':route_shared')
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
