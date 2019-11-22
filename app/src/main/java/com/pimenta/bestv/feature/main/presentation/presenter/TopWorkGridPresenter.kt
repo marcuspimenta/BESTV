@@ -17,10 +17,10 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.scheduler.RxScheduler
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable

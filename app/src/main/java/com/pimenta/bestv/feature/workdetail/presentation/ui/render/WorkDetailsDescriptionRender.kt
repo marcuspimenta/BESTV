@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.workdetail.presentation.ui.render
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 /**
  * Created by marcus on 28-01-2018.

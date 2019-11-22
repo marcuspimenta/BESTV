@@ -23,13 +23,13 @@ import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.setting.Const
 import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import io.reactivex.Completable
 
 /**

@@ -18,10 +18,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.mapper.toMovieDbModel
-import com.pimenta.bestv.common.presentation.mapper.toTvShowDbModel
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import io.reactivex.Completable
 import org.junit.Test
 
@@ -50,7 +48,7 @@ class SetFavoriteUseCaseTest {
 
     @Test
     fun `should save a movie as favorite is it is not favorite`() {
-        val dbModel = MOVIE_VIEW_MODEL.toMovieDbModel()
+        val dbModel = com.pimenta.bestv.model.presentation.mapper.toMovieDbModel()
 
         whenever(mediaRepository.saveFavoriteMovie(dbModel))
                 .thenReturn(Completable.complete())
@@ -65,7 +63,7 @@ class SetFavoriteUseCaseTest {
     @Test
     fun `should delete a movie as favorite is it is favorite`() {
         val movieViewModel = MOVIE_VIEW_MODEL.copy(isFavorite = true)
-        val dbModel = movieViewModel.toMovieDbModel()
+        val dbModel = com.pimenta.bestv.model.presentation.mapper.toMovieDbModel()
 
         whenever(mediaRepository.deleteFavoriteMovie(dbModel))
                 .thenReturn(Completable.complete())
@@ -79,7 +77,7 @@ class SetFavoriteUseCaseTest {
 
     @Test
     fun `should save a tv show as favorite is it is not favorite`() {
-        val dbModel = TV_SHOW_VIEW_MODEL.toTvShowDbModel()
+        val dbModel = com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel()
 
         whenever(mediaRepository.saveFavoriteTvShow(dbModel))
                 .thenReturn(Completable.complete())
@@ -94,7 +92,7 @@ class SetFavoriteUseCaseTest {
     @Test
     fun `should delete a tv show as favorite is it is favorite`() {
         val tvShowViewModel = TV_SHOW_VIEW_MODEL.copy(isFavorite = true)
-        val dbModel = tvShowViewModel.toTvShowDbModel()
+        val dbModel = com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel()
 
         whenever(mediaRepository.deleteFavoriteTvShow(dbModel))
                 .thenReturn(Completable.complete())

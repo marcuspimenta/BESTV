@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.castdetail.data.remote.model
 
-import com.pimenta.bestv.common.data.model.remote.TvShowResponse
+import com.pimenta.bestv.model.data.remote.TvShowResponse
 
 /**
  * Created by marcus on 12/07/18.

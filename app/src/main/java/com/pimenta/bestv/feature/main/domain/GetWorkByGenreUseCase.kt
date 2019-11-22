@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.model.Source
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.Source
 import javax.inject.Inject
 
 /**

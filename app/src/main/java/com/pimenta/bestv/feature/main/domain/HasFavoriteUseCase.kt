@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject

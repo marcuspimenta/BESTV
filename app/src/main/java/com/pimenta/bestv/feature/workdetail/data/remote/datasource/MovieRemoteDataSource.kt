@@ -15,11 +15,7 @@
 package com.pimenta.bestv.feature.workdetail.data.remote.datasource
 
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.common.data.model.remote.CastListResponse
-import com.pimenta.bestv.common.data.model.remote.MoviePageResponse
-import com.pimenta.bestv.common.data.model.remote.VideoListResponse
 import com.pimenta.bestv.feature.workdetail.data.remote.api.MovieDetailTmdbApi
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -29,15 +25,15 @@ class MovieRemoteDataSource @Inject constructor(
     private val movieDetailTmdbApi: MovieDetailTmdbApi
 ) {
 
-    fun getCastByMovie(movieId: Int): Single<CastListResponse> =
+    fun getCastByMovie(movieId: Int) =
             movieDetailTmdbApi.getCastByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 
-    fun getRecommendationByMovie(movieId: Int, page: Int): Single<MoviePageResponse> =
+    fun getRecommendationByMovie(movieId: Int, page: Int) =
             movieDetailTmdbApi.getRecommendationByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
-    fun getSimilarByMovie(movieId: Int, page: Int): Single<MoviePageResponse> =
+    fun getSimilarByMovie(movieId: Int, page: Int) =
             movieDetailTmdbApi.getSimilarByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
-    fun getVideosByMovie(movieId: Int): Single<VideoListResponse> =
+    fun getVideosByMovie(movieId: Int) =
             movieDetailTmdbApi.getVideosByMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 }

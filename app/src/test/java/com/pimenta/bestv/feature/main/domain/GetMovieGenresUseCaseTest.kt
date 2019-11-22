@@ -16,10 +16,10 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.model.Source
-import com.pimenta.bestv.common.data.model.remote.MovieGenreListResponse
-import com.pimenta.bestv.common.data.model.remote.MovieGenreResponse
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.Source
+import com.pimenta.bestv.data.remote.model.remote.MovieGenreListResponse
+import com.pimenta.bestv.data.remote.model.remote.MovieGenreResponse
 import io.reactivex.Single
 import org.junit.Test
 

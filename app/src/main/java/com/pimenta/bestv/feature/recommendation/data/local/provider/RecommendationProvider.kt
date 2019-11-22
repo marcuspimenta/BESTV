@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.recommendation.data.local.provider
 
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import io.reactivex.Completable
 
 /**

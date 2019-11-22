@@ -16,9 +16,9 @@ package com.pimenta.bestv.feature.castdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Single

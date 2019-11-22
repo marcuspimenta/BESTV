@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.domain.model.GenreDomainModel
+import com.pimenta.bestv.model.domain.GenreDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject

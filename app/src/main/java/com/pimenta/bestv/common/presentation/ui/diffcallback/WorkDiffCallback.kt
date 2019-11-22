@@ -15,7 +15,7 @@
 package com.pimenta.bestv.common.presentation.ui.diffcallback
 
 import androidx.leanback.widget.DiffCallback
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 /**
  * Created by marcus on 01-06-2019.

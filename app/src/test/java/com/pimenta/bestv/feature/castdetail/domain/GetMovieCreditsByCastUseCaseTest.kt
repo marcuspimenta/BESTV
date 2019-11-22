@@ -16,10 +16,10 @@ package com.pimenta.bestv.feature.castdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.data.model.remote.CastMovieListResponse
-import com.pimenta.bestv.common.data.model.remote.MovieResponse
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.remote.model.remote.CastMovieListResponse
+import com.pimenta.bestv.data.remote.model.remote.MovieResponse
 import io.reactivex.Single
 import org.junit.Test
 

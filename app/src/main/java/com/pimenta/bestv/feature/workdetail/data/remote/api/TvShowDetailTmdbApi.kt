@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.feature.workdetail.data.remote.api
 
-import com.pimenta.bestv.common.data.model.remote.CastListResponse
-import com.pimenta.bestv.common.data.model.remote.TvShowPageResponse
-import com.pimenta.bestv.common.data.model.remote.VideoListResponse
+import com.pimenta.bestv.model.data.remote.CastListResponse
+import com.pimenta.bestv.model.data.remote.TvShowPageResponse
+import com.pimenta.bestv.model.data.remote.VideoListResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -17,14 +17,17 @@ package com.pimenta.bestv.feature.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.common.kotlin.Quintuple
-import com.pimenta.bestv.common.presentation.model.*
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.VideoViewModel
+import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 22-08-2019.
  */
-private val WORK_VIEW_MODEL = WorkViewModel(
+private val WORK_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
         id = 1,
         type = WorkType.MOVIE
 )

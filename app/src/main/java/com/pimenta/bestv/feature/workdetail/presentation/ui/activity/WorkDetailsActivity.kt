@@ -19,7 +19,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.common.extension.replaceFragment
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.workdetail.di.WorkDetailsActivityComponent
 import com.pimenta.bestv.feature.workdetail.presentation.processor.WorkProcessor
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment

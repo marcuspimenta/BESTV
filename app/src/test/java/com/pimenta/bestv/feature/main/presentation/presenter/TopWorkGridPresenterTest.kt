@@ -16,10 +16,13 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.model.presentation.model.Source
+import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
@@ -30,17 +33,17 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRE = GenreViewModel(
+private val MOVIE_GENRE = com.pimenta.bestv.model.presentation.model.GenreViewModel(
         id = 1,
         source = Source.MOVIE
 )
-private val MOVIE_VIEW_MODEL = WorkViewModel(
+private val MOVIE_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
         type = WorkType.MOVIE
 )
-private val TV_SHOW_VIEW_MODEL = WorkViewModel(
+private val TV_SHOW_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
         id = 1,
         title = "Arrow",
         originalTitle = "Arrow",

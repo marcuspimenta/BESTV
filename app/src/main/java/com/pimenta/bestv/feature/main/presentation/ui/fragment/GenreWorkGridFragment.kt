@@ -29,14 +29,14 @@ import androidx.leanback.widget.Presenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.model.loadBackdrop
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.GenreGridPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import javax.inject.Inject
 
 /**

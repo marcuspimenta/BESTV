@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.castdetail.presentation.ui.render
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 
 /**
  * Created by marcus on 07-04-2018.

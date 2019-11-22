@@ -16,9 +16,9 @@ package com.pimenta.bestv.feature.search.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase

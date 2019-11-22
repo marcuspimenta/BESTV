@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.data.local.datasource
 
-import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.data.local.dao.TvShowDao
 import io.reactivex.Completable
 import javax.inject.Inject

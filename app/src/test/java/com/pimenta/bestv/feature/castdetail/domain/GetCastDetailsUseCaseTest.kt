@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.castdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 import io.reactivex.Single
 import org.junit.Test
 

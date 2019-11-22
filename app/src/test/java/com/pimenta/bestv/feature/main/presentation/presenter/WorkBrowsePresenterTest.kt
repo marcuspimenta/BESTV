@@ -15,8 +15,8 @@
 package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
-import com.pimenta.bestv.common.presentation.model.Source
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.Source
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
 import com.pimenta.bestv.scheduler.RxScheduler

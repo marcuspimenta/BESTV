@@ -39,7 +39,6 @@ import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.ui.diffcallback.WorkDiffCallback
-import com.pimenta.bestv.common.presentation.model.*
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.castdetail.presentation.ui.activity.CastDetailsActivity
@@ -50,6 +49,7 @@ import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetails
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.feature.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
+import com.pimenta.bestv.model.presentation.model.*
 import javax.inject.Inject
 
 private const val WORK = "WORK"

@@ -17,10 +17,10 @@ package com.pimenta.bestv.feature.workdetail.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.common.kotlin.Quintuple
-import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.feature.workdetail.domain.GetWorkDetailsUseCase

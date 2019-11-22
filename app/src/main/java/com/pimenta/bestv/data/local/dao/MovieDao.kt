@@ -15,7 +15,7 @@
 package com.pimenta.bestv.data.local.dao
 
 import androidx.room.*
-import com.pimenta.bestv.common.data.model.local.MovieDbModel
+import com.pimenta.bestv.model.data.local.MovieDbModel
 import io.reactivex.Completable
 import io.reactivex.Single
 

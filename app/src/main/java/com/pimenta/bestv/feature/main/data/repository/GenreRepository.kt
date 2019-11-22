@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.feature.main.data.repository
 
-import com.pimenta.bestv.common.data.mapper.toDomainModel
 import com.pimenta.bestv.feature.main.data.remote.datasource.GenreRemoteDataSource
+import com.pimenta.bestv.model.data.mapper.toDomainModel
 import javax.inject.Inject
 
 /**

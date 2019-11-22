@@ -18,8 +18,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.pimenta.bestv.data.local.dao.MovieDao
 import com.pimenta.bestv.data.local.dao.TvShowDao
-import com.pimenta.bestv.common.data.model.local.MovieDbModel
-import com.pimenta.bestv.common.data.model.local.TvShowDbModel
+import com.pimenta.bestv.model.data.local.MovieDbModel
+import com.pimenta.bestv.model.data.local.TvShowDbModel
 
 /**
  * Created by marcus on 05-03-2018.

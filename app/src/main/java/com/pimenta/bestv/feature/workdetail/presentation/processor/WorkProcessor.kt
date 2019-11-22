@@ -15,8 +15,8 @@
 package com.pimenta.bestv.feature.workdetail.presentation.processor
 
 import android.content.Intent
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.setting.Const
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import javax.inject.Inject
@@ -36,26 +36,26 @@ class WorkProcessor @Inject constructor() {
         }
     }
 
-    private fun getWorkIntent(intent: Intent): WorkViewModel? =
+    private fun getWorkIntent(intent: Intent) =
             intent.getSerializableExtra(WorkDetailsActivity.WORK) as? WorkViewModel
 
-    private fun getWorkDeepLink(intent: Intent): WorkViewModel? =
-            intent.data?.run {
-                if (pathSegments.first() == Const.WORK) {
-                    return WorkViewModel(
-                            id = getQueryParameter(Const.ID)?.toInt() ?: 1,
-                            title = getQueryParameter(Const.TITLE),
-                            originalLanguage = getQueryParameter(Const.LANGUAGE),
-                            overview = getQueryParameter(Const.OVERVIEW),
-                            backdropUrl = getQueryParameter(Const.BACKGROUND_URL),
-                            posterUrl = getQueryParameter(Const.POSTER_URL),
-                            originalTitle = getQueryParameter(Const.ORIGINAL_TITLE),
-                            releaseDate = getQueryParameter(Const.RELEASE_DATE),
-                            isFavorite = getQueryParameter(Const.FAVORITE)?.toBoolean() ?: false,
-                            type = WorkType.valueOf(getQueryParameter(Const.TYPE) ?: "MOVIE")
+    private fun getWorkDeepLink(intent: Intent) =
+            intent.data?.let {
+                if (it.pathSegments.first() == Const.WORK) {
+                    WorkViewModel(
+                            id = it.getQueryParameter(Const.ID)?.toInt() ?: 1,
+                            title = it.getQueryParameter(Const.TITLE),
+                            originalLanguage = it.getQueryParameter(Const.LANGUAGE),
+                            overview = it.getQueryParameter(Const.OVERVIEW),
+                            backdropUrl = it.getQueryParameter(Const.BACKGROUND_URL),
+                            posterUrl = it.getQueryParameter(Const.POSTER_URL),
+                            originalTitle = it.getQueryParameter(Const.ORIGINAL_TITLE),
+                            releaseDate = it.getQueryParameter(Const.RELEASE_DATE),
+                            isFavorite = it.getQueryParameter(Const.FAVORITE)?.toBoolean() ?: false,
+                            type = WorkType.valueOf(it.getQueryParameter(Const.TYPE) ?: "MOVIE")
                     )
                 } else {
-                    return null
+                    null
                 }
             }
 }

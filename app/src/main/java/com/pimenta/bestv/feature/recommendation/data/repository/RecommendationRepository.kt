@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.recommendation.data.repository
 
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
 import io.reactivex.Completable
 import javax.inject.Inject

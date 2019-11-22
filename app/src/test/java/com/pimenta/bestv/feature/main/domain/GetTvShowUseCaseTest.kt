@@ -16,9 +16,9 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.presentation.model.WorkType
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.data.model.remote.TvShowResponse
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.data.remote.model.remote.TvShowResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

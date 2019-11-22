@@ -15,7 +15,7 @@
 package com.pimenta.bestv.feature.castdetail.data.remote.model
 
 import com.google.gson.annotations.SerializedName
-import com.pimenta.bestv.common.data.model.remote.WorkResponse
+import com.pimenta.bestv.model.data.remote.WorkResponse
 
 /**
  * Created by marcus on 12/07/18.

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.domain
 
-import com.pimenta.bestv.common.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
 import javax.inject.Inject
 
 /**

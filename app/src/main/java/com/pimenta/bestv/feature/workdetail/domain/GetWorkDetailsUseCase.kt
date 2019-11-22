@@ -14,11 +14,11 @@
 
 package com.pimenta.bestv.feature.workdetail.domain
 
-import com.pimenta.bestv.common.domain.model.CastDomainModel
-import com.pimenta.bestv.common.domain.model.VideoDomainModel
-import com.pimenta.bestv.common.domain.model.WorkPageDomainModel
+import com.pimenta.bestv.model.domain.CastDomainModel
+import com.pimenta.bestv.model.domain.VideoDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.common.kotlin.Quadruple
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import io.reactivex.Single
 import io.reactivex.functions.Function4
 import javax.inject.Inject

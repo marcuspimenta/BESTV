@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.search.domain
 
-import com.pimenta.bestv.common.domain.model.WorkPageDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject

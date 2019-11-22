@@ -15,11 +15,7 @@
 package com.pimenta.bestv.feature.workdetail.data.remote.datasource
 
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.common.data.model.remote.CastListResponse
-import com.pimenta.bestv.common.data.model.remote.TvShowPageResponse
-import com.pimenta.bestv.common.data.model.remote.VideoListResponse
 import com.pimenta.bestv.feature.workdetail.data.remote.api.TvShowDetailTmdbApi
-import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -29,15 +25,15 @@ class TvShowRemoteDataSource @Inject constructor(
     private val tvShowDetailTmdbApi: TvShowDetailTmdbApi
 ) {
 
-    fun getCastByTvShow(tvShowId: Int): Single<CastListResponse> =
+    fun getCastByTvShow(tvShowId: Int) =
             tvShowDetailTmdbApi.getCastByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 
-    fun getRecommendationByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse> =
+    fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
             tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
-    fun getSimilarByTvShow(tvShowId: Int, page: Int): Single<TvShowPageResponse> =
+    fun getSimilarByTvShow(tvShowId: Int, page: Int) =
             tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 
-    fun getVideosByTvShow(tvShowId: Int): Single<VideoListResponse> =
+    fun getVideosByTvShow(tvShowId: Int) =
             tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
 }

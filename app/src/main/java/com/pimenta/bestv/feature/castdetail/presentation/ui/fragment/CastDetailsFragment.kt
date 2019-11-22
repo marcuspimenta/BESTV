@@ -33,9 +33,8 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.isNotNullOrEmpty
 import com.pimenta.bestv.common.extension.popBackStack
-import com.pimenta.bestv.common.presentation.model.CastViewModel
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.model.loadThumbnail
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.castdetail.di.CastDetailsFragmentComponent
@@ -43,6 +42,7 @@ import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPr
 import com.pimenta.bestv.feature.castdetail.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.model.loadThumbnail
 import javax.inject.Inject
 
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1

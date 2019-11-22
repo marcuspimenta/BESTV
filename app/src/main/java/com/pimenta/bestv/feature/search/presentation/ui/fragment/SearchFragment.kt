@@ -34,14 +34,14 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.common.extension.addFragment
 import com.pimenta.bestv.common.extension.popBackStack
 import com.pimenta.bestv.common.presentation.ui.diffcallback.WorkDiffCallback
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.model.loadBackdrop
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.search.di.SearchFragmentComponent
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1

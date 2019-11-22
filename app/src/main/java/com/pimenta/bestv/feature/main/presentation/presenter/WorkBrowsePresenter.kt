@@ -16,10 +16,10 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.pimenta.bestv.common.extension.addTo
 import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
-import com.pimenta.bestv.common.presentation.mapper.toViewModel
-import com.pimenta.bestv.common.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject

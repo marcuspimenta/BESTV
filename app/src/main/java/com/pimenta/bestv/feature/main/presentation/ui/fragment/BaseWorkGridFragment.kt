@@ -26,7 +26,7 @@ import androidx.leanback.widget.FocusHighlight
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.VerticalGridPresenter
 import com.pimenta.bestv.common.presentation.ui.diffcallback.WorkDiffCallback
-import com.pimenta.bestv.common.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 
 /**

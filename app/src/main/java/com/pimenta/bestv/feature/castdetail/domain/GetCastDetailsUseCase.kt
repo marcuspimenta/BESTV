@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.feature.castdetail.domain
 
-import com.pimenta.bestv.common.domain.model.CastDomainModel
-import com.pimenta.bestv.common.domain.model.WorkDomainModel
+import com.pimenta.bestv.model.domain.CastDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject
