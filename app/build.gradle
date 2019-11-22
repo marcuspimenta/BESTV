@@ -50,6 +50,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':model_shared')
+    implementation project(':data_shared')
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -83,13 +84,6 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
-
-    // Room components
-    implementation "androidx.room:room-runtime:2.2.2"
-    implementation "androidx.room:room-ktx:2.2.2"
-    implementation "androidx.room:room-rxjava2:2.2.2"
-    kapt "androidx.room:room-compiler:2.2.2"
-    androidTestImplementation "androidx.room:room-testing:2.2.2"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

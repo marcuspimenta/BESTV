@@ -14,22 +14,21 @@
 
 package com.pimenta.bestv.data.local.datasource
 
-import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.data.local.dao.TvShowDao
-import io.reactivex.Completable
+import com.pimenta.bestv.model.data.local.TvShowDbModel
 import javax.inject.Inject
 
 /**
  * Created by marcus on 21-11-2019.
  */
 class TvShowLocalDataSource @Inject constructor(
-    private val tvShowDao: TvShowDao
+        private val tvShowDao: TvShowDao
 ) {
 
-    fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
+    fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
             tvShowDao.create(tvShowDbModel)
 
-    fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel): Completable =
+    fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
             tvShowDao.delete(tvShowDbModel)
 
     fun getTvShows() =

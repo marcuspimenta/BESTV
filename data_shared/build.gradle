@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 29
+}
+
+dependencies {
+    implementation project(':model_shared')
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.25'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
+
+    // Room components
+    api "androidx.room:room-runtime:2.2.2"
+    implementation "androidx.room:room-ktx:2.2.2"
+    implementation "androidx.room:room-rxjava2:2.2.2"
+    kapt "androidx.room:room-compiler:2.2.2"
+    androidTestImplementation "androidx.room:room-testing:2.2.2"
+}
