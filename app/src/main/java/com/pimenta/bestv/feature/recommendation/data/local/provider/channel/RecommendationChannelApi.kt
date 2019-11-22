@@ -23,13 +23,13 @@ import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.R
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.common.setting.Const
-import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
+import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import io.reactivex.Completable
 
 /**
@@ -89,24 +89,25 @@ class RecommendationChannelApi constructor(
                                 .setDisplayName(application.getString(R.string.popular))
                                 .setAppLinkIntent(MainActivity.newInstance(application))
 
-                        val channelUri = application.contentResolver.insert(
+                        application.contentResolver.insert(
                                 TvContractCompat.Channels.CONTENT_URI,
                                 channelBuilder.build().toContentValues()
-                        )
-                        val channelId = ContentUris.parseId(channelUri)
+                        )?.let {
+                            val channelId = ContentUris.parseId(it)
 
-                        TvContractCompat.requestChannelBrowsable(
-                                application,
-                                channelId
-                        )
-                        ChannelLogoUtils.storeChannelLogo(
-                                application,
-                                channelId,
-                                BitmapFactory.decodeResource(application.resources, R.drawable.app_icon)
-                        )
+                            TvContractCompat.requestChannelBrowsable(
+                                    application,
+                                    channelId
+                            )
+                            ChannelLogoUtils.storeChannelLogo(
+                                    application,
+                                    channelId,
+                                    BitmapFactory.decodeResource(application.resources, R.drawable.app_icon)
+                            )
 
-                        localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
-                        channelId
+                            localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
+                            channelId
+                        } ?: 0
                     }
 
     private fun WorkViewModel.toUri(): Uri =

@@ -38,9 +38,9 @@ fun WorkDomainModel.toViewModel() = WorkViewModel(
         posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         originalTitle = originalTitle,
         releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
-                ?.let {
+                ?.let { releaseDate ->
                     SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
-                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
+                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseDate) as Date
                     )
                 },
         isFavorite = isFavorite,

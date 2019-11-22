@@ -17,16 +17,16 @@ package com.pimenta.bestv.common.extension
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.transaction
+import androidx.fragment.app.commit
 
 fun FragmentManager.replaceFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment) {
-    transaction {
+    commit {
         replace(containerViewId, fragment)
     }
 }
 
 fun FragmentManager.addFragment(@IdRes containerViewId: Int = android.R.id.content, fragment: Fragment, tag: String) {
-    transaction {
+    commit {
         add(containerViewId, fragment)
         addToBackStack(tag)
     }
