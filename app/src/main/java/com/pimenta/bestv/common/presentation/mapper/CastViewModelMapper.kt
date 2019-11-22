@@ -15,20 +15,8 @@
 package com.pimenta.bestv.common.presentation.mapper
 
 import com.pimenta.bestv.BuildConfig
-import com.pimenta.bestv.common.data.model.remote.CastResponse
 import com.pimenta.bestv.common.domain.model.CastDomainModel
 import com.pimenta.bestv.common.presentation.model.CastViewModel
-
-@Deprecated("Dont use")
-fun CastResponse.toViewModel() = CastViewModel(
-        id = id,
-        name = name,
-        character = character,
-        birthday = birthday,
-        deathDay = deathDay,
-        biography = biography,
-        thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
-)
 
 fun CastDomainModel.toViewModel() = CastViewModel(
         id = id,
