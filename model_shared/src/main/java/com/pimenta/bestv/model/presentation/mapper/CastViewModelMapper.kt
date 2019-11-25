@@ -14,9 +14,11 @@
 
 package com.pimenta.bestv.model.presentation.mapper
 
+import android.net.Uri
 import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 
 fun CastDomainModel.toViewModel() = CastViewModel(
         id = id,
@@ -27,3 +29,14 @@ fun CastDomainModel.toViewModel() = CastViewModel(
         biography = biography,
         thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
 )
+
+fun CastViewModel.toUri(): Uri =
+        Uri.parse(CastDetailsRoute.SCHEMA_URI_PREFIX.plus(CastDetailsRoute.CAST)).buildUpon()
+                .appendQueryParameter(CastDetailsRoute.ID, id.toString())
+                .appendQueryParameter(CastDetailsRoute.NAME, name)
+                .appendQueryParameter(CastDetailsRoute.CHARACTER, character)
+                .appendQueryParameter(CastDetailsRoute.BIRTHDAY, birthday)
+                .appendQueryParameter(CastDetailsRoute.DEATH_DAY, deathDay)
+                .appendQueryParameter(CastDetailsRoute.BIOGRAPH, biography)
+                .appendQueryParameter(CastDetailsRoute.THUMBNAIL_URL, thumbnailUrl)
+                .build()

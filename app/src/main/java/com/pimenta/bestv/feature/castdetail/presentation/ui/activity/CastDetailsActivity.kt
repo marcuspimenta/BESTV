@@ -14,32 +14,29 @@
 
 package com.pimenta.bestv.feature.castdetail.presentation.ui.activity
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.presentation.extension.replaceFragment
-import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.feature.castdetail.di.CastDetailActivityComponent
+import com.pimenta.bestv.feature.castdetail.presentation.processor.CastProcessor
 import com.pimenta.bestv.feature.castdetail.presentation.ui.fragment.CastDetailsFragment
+import com.pimenta.bestv.presentation.extension.replaceFragment
+import javax.inject.Inject
 
 /**
  * Created by marcus on 04-04-2018.
  */
 class CastDetailsActivity : FragmentActivity() {
 
+    @Inject
+    lateinit var castProcessor: CastProcessor
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val castViewModel = intent.getSerializableExtra(CAST) as CastViewModel
-        replaceFragment(CastDetailsFragment.newInstance(castViewModel))
-    }
+        CastDetailActivityComponent.build().inject(this)
 
-    companion object {
-
-        const val CAST = "CAST"
-
-        fun newInstance(context: Context, castViewModel: CastViewModel) =
-                Intent(context, CastDetailsActivity::class.java).apply {
-                    putExtra(CAST, castViewModel)
-                }
+        when (val castViewModel = castProcessor(intent)) {
+            null -> finish()
+            else -> replaceFragment(CastDetailsFragment.newInstance(castViewModel))
+        }
     }
 }

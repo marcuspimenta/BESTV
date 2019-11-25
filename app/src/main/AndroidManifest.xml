@@ -39,7 +39,19 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".feature.castdetail.presentation.ui.activity.CastDetailsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="@string/host_castdetail"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".feature.recommendation.presentation.broadcast.BootBroadcastReceiver"
             android:enabled="true"

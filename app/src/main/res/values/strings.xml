@@ -11,4 +11,7 @@
     <string name="airing_today">Airing today</string>
     <string name="results">Results</string>
     <string name="no_results">No results</string>
+
+    <string name="schema">bestv</string>
+    <string name="host_castdetail">castdetail</string>
 </resources>

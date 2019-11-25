@@ -45,6 +45,7 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import javax.inject.Inject
 
+private const val CAST = "CAST"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
 private const val ACTION_MOVIES = 1
 private const val ACTION_TV_SHOWS = 2
@@ -198,7 +199,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
         // Hook up transition element.
         val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()
-        sharedElementHelper.setSharedElementEnterTransition(activity, SHARED_ELEMENT_NAME)
+        sharedElementHelper.setSharedElementEnterTransition(activity, SettingShared.SHARED_ELEMENT_NAME)
         detailsPresenter.setListener(sharedElementHelper)
         detailsPresenter.isParticipatingEntranceTransition = true
         detailsPresenter.setOnActionClickedListener { action ->
@@ -225,9 +226,6 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     }
 
     companion object {
-
-        const val CAST = "CAST"
-        const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
 
         fun newInstance(castViewModel: CastViewModel) =
                 CastDetailsFragment().apply {

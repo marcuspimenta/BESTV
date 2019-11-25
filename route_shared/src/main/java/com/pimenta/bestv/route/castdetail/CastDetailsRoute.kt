@@ -12,27 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.route.workdetail
+package com.pimenta.bestv.route.castdetail
 
 /**
- * Created by marcus on 22-11-2019.
+ * Created by marcus on 25-11-2019.
  */
-class WorkDetailRoute {
+class CastDetailsRoute {
 
     companion object {
 
-        const val SCHEMA_URI_PREFIX = "bestv://workdetail/"
-        const val WORK = "work"
+        const val SCHEMA_URI_PREFIX = "bestv://castdetail/"
+        const val CAST = "cast"
 
         const val ID = "ID"
-        const val LANGUAGE = "LANGUAGE"
-        const val OVERVIEW = "OVERVIEW"
-        const val BACKGROUND_URL = "BACKGROUND_URL"
-        const val POSTER_URL = "POSTER_URL"
-        const val TITLE = "TITLE"
-        const val ORIGINAL_TITLE = "ORIGINAL_TITLE"
-        const val RELEASE_DATE = "RELEASE_DATE"
-        const val FAVORITE = "FAVORITE"
-        const val TYPE = "TYPE"
+        const val NAME = "NAME"
+        const val CHARACTER = "CHARACTER"
+        const val BIRTHDAY = "BIRTHDAY"
+        const val DEATH_DAY = "DEATH_DAY"
+        const val BIOGRAPH = "BIOGRAPH"
+        const val THUMBNAIL_URL = "THUMBNAIL_URL"
     }
 }

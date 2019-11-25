@@ -195,12 +195,12 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     }
 
     override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
-        /*val castBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
-                CastDetailsFragment.SHARED_ELEMENT_NAME
+                SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(CastDetailsActivity.newInstance(requireContext(), castViewModel), castBundle)*/
+        startActivity(Intent(Intent.ACTION_VIEW, castViewModel.toUri()), bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
