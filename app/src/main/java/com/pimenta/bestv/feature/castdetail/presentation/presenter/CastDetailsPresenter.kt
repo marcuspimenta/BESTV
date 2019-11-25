@@ -15,13 +15,13 @@
 package com.pimenta.bestv.feature.castdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
-import com.pimenta.bestv.common.extension.addTo
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
 

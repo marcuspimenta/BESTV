@@ -18,7 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.common.extension.replaceFragment
+import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.feature.splash.presentation.ui.fragment.SplashFragment
 
 /**

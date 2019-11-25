@@ -25,7 +25,6 @@ android {
         versionName "1.0"
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
-        buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
     }
     buildTypes {
         debug {
@@ -47,11 +46,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':model_shared')
     implementation project(':data_shared')
+    implementation project(':presentation_shared')
     implementation project(':route_shared')
+    implementation project(':feature_workdetail')
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

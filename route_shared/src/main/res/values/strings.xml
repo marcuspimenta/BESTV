@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schema">bestv</string>
+
+    <string name="host_workdetail">workdetail</string>
+</resources>

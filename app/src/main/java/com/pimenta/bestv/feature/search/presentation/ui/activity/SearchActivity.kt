@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import com.pimenta.bestv.common.extension.replaceFragment
+import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.feature.search.di.SearchActivityComponent
 import com.pimenta.bestv.feature.search.presentation.ui.fragment.SearchFragment
 import javax.inject.Inject

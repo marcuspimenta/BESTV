@@ -15,7 +15,7 @@
 package com.pimenta.bestv.model.presentation.model
 
 import androidx.annotation.StringRes
-import com.pimenta.bestv.R
+import com.pimenta.bestv.model.R
 
 /**
  * Created by marcus on 24-10-2019.

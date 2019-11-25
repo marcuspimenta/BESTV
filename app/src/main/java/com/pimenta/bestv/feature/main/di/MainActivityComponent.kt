@@ -15,8 +15,8 @@
 package com.pimenta.bestv.feature.main.di
 
 import android.app.Application
-import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.di.module.DisplayMetricsModule
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.module.DisplayMetricsModule
 import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import dagger.BindsInstance
 import dagger.Component

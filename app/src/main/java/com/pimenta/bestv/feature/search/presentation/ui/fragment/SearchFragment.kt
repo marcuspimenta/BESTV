@@ -31,17 +31,17 @@ import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
-import com.pimenta.bestv.common.presentation.ui.diffcallback.WorkDiffCallback
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.search.di.SearchFragmentComponent
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
-import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
-import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.mapper.toUri
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.extension.popBackStack
+import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
@@ -159,9 +159,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
-                WorkDetailsFragment.SHARED_ELEMENT_NAME
+                SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+        startActivity(Intent(Intent.ACTION_VIEW, workViewModel.toUri()), bundle)
     }
 
     override fun getResultsAdapter() = rowsAdapter

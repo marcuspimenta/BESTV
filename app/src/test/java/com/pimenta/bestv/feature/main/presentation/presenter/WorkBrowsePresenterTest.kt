@@ -19,8 +19,8 @@ import com.pimenta.bestv.model.presentation.model.GenreViewModel
 import com.pimenta.bestv.model.presentation.model.Source
 import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
-import com.pimenta.bestv.scheduler.RxScheduler
-import com.pimenta.bestv.scheduler.RxSchedulerTest
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import org.junit.Test
 

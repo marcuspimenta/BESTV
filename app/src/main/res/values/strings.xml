@@ -9,20 +9,6 @@
     <string name="up_coming">Up coming</string>
     <string name="on_the_air">On the air</string>
     <string name="airing_today">Airing today</string>
-    <string name="cast">CAST</string>
-    <string name="videos">VIDEOS</string>
-    <string name="recommended">RECOMMENDED</string>
-    <string name="similar">SIMILAR</string>
-    <string name="save_favorites">Add to favorites</string>
-    <string name="remove_favorites">Remove from favorites</string>
     <string name="results">Results</string>
     <string name="no_results">No results</string>
-    <string name="failed_open_video">Failed to open the video. Check if you have YouTube installed and try again.</string>
-
-    <!-- Error messages -->
-    <string name="error_fragment_message">Failed to load the data. Please check if the internet connection is working right.</string>
-    <string name="error_fragment_button">Try again</string>
-
-    <string name="schema">tvrecommendation</string>
-    <string name="host">bestv</string>
 </resources>

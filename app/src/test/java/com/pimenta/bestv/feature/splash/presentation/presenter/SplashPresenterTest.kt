@@ -20,8 +20,8 @@ import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.feature.splash.domain.GetPermissionsNotAcceptedUseCase
-import com.pimenta.bestv.scheduler.RxScheduler
-import com.pimenta.bestv.scheduler.RxSchedulerTest
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler

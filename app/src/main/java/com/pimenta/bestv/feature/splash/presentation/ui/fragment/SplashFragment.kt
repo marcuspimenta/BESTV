@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.extension.finish
+import com.pimenta.bestv.presentation.extension.finish
 import com.pimenta.bestv.feature.splash.di.SplashFragmentComponent
 import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
 import kotlinx.android.synthetic.main.fragment_splash.*

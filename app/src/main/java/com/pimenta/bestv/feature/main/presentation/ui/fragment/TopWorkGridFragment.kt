@@ -28,15 +28,15 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.TopWorkGridFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.TopWorkGridPresenter
-import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
-import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.mapper.toUri
+import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import javax.inject.Inject
 
 /**
@@ -117,10 +117,10 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
-                WorkDetailsFragment.SHARED_ELEMENT_NAME
+                SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivityForResult(
-                WorkDetailsActivity.newInstance(requireContext(), workViewModel),
+                Intent(Intent.ACTION_VIEW, workViewModel.toUri()),
                 WORK_DETAILS_REQUEST_CODE,
                 bundle
         )

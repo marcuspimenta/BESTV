@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import com.pimenta.bestv.common.extension.replaceFragment
+import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.feature.main.di.MainActivityComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.MainPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment

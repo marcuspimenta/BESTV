@@ -38,20 +38,6 @@
             android:name=".feature.search.presentation.ui.activity.SearchActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".feature.workdetail.presentation.ui.activity.WorkDetailsActivity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="@string/host"
-                    android:scheme="@string/schema" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".feature.castdetail.presentation.ui.activity.CastDetailsActivity"
             android:screenOrientation="landscape" />
         <receiver

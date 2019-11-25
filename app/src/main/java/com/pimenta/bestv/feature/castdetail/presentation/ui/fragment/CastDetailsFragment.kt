@@ -30,19 +30,19 @@ import androidx.leanback.widget.*
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.isNotNullOrEmpty
-import com.pimenta.bestv.common.extension.popBackStack
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.common.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.feature.castdetail.di.CastDetailsFragmentComponent
 import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.castdetail.presentation.ui.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
-import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.mapper.toUri
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadThumbnail
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.extension.isNotNullOrEmpty
+import com.pimenta.bestv.presentation.extension.popBackStack
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
+import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import javax.inject.Inject
 
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
@@ -135,9 +135,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
-                WorkDetailsFragment.SHARED_ELEMENT_NAME
+                SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+        startActivity(Intent(Intent.ACTION_VIEW, workViewModel.toUri()), bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

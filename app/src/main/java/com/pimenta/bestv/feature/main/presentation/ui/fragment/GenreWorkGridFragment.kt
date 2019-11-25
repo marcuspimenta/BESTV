@@ -28,15 +28,15 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.model.presentation.model.GenreViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.GenreWorkGridFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.GenreGridPresenter
-import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
-import com.pimenta.bestv.feature.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.model.presentation.mapper.toUri
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import javax.inject.Inject
 
 /**
@@ -116,9 +116,9 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
-                WorkDetailsFragment.SHARED_ELEMENT_NAME
+                SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(WorkDetailsActivity.newInstance(requireContext(), workViewModel), bundle)
+        startActivity(Intent(Intent.ACTION_VIEW, workViewModel.toUri()), bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

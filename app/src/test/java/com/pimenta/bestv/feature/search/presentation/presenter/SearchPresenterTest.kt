@@ -22,8 +22,8 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase
-import com.pimenta.bestv.scheduler.RxScheduler
-import com.pimenta.bestv.scheduler.RxSchedulerTest
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler

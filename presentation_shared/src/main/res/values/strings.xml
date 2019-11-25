@@ -1,0 +1,5 @@
+<resources>
+    <!-- Error messages -->
+    <string name="error_fragment_message">Failed to load the data. Please check if the internet connection is working right.</string>
+    <string name="error_fragment_button">Try again</string>
+</resources>

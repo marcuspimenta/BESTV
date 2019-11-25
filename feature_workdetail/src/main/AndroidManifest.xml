@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pimenta.bestv.workdetail">
+
+    <application>
+        <activity
+            android:name=".presentation.ui.activity.WorkDetailsActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="@string/host_workdetail"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

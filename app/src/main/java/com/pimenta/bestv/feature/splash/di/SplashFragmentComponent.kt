@@ -15,8 +15,8 @@
 package com.pimenta.bestv.feature.splash.di
 
 import android.app.Application
-import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
 import com.pimenta.bestv.feature.splash.presentation.ui.fragment.SplashFragment
 import dagger.BindsInstance

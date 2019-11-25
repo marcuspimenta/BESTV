@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.main.presentation.presenter
 
-import com.pimenta.bestv.common.mvp.AutoDisposablePresenter
+import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import javax.inject.Inject
 
 /**

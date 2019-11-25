@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.feature.recommendation.presentation.presenter
 
-import com.pimenta.bestv.common.extension.addTo
-import com.pimenta.bestv.common.mvp.DisposablePresenter
+import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.presenter.DisposablePresenter
 import com.pimenta.bestv.feature.recommendation.domain.LoadRecommendationUseCase
-import com.pimenta.bestv.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import timber.log.Timber
 import javax.inject.Inject
 

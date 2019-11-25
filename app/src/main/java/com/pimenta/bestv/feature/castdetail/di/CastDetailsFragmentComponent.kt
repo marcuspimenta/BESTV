@@ -15,8 +15,8 @@
 package com.pimenta.bestv.feature.castdetail.di
 
 import android.app.Application
-import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.feature.castdetail.di.module.CastRemoteDataSourceModule
 import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.castdetail.presentation.ui.fragment.CastDetailsFragment

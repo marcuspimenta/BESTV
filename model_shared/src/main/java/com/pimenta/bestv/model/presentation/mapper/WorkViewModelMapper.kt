@@ -15,13 +15,13 @@
 package com.pimenta.bestv.model.presentation.mapper
 
 import android.net.Uri
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.workdetail.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailRoute
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,15 +50,15 @@ fun WorkDomainModel.toViewModel() = WorkViewModel(
 )
 
 fun WorkViewModel.toUri(): Uri =
-        Uri.parse(Route.SCHEMA_URI_PREFIX.plus(Route.WORK)).buildUpon()
-                .appendQueryParameter(Route.ID, id.toString())
-                .appendQueryParameter(Route.LANGUAGE, originalLanguage)
-                .appendQueryParameter(Route.OVERVIEW, overview)
-                .appendQueryParameter(Route.BACKGROUND_URL, backdropUrl)
-                .appendQueryParameter(Route.POSTER_URL, posterUrl)
-                .appendQueryParameter(Route.TITLE, title)
-                .appendQueryParameter(Route.ORIGINAL_TITLE, originalTitle)
-                .appendQueryParameter(Route.RELEASE_DATE, releaseDate)
-                .appendQueryParameter(Route.FAVORITE, isFavorite.toString())
-                .appendQueryParameter(Route.TYPE, type.toString())
+        Uri.parse(WorkDetailRoute.SCHEMA_URI_PREFIX.plus(WorkDetailRoute.WORK)).buildUpon()
+                .appendQueryParameter(WorkDetailRoute.ID, id.toString())
+                .appendQueryParameter(WorkDetailRoute.LANGUAGE, originalLanguage)
+                .appendQueryParameter(WorkDetailRoute.OVERVIEW, overview)
+                .appendQueryParameter(WorkDetailRoute.BACKGROUND_URL, backdropUrl)
+                .appendQueryParameter(WorkDetailRoute.POSTER_URL, posterUrl)
+                .appendQueryParameter(WorkDetailRoute.TITLE, title)
+                .appendQueryParameter(WorkDetailRoute.ORIGINAL_TITLE, originalTitle)
+                .appendQueryParameter(WorkDetailRoute.RELEASE_DATE, releaseDate)
+                .appendQueryParameter(WorkDetailRoute.FAVORITE, isFavorite.toString())
+                .appendQueryParameter(WorkDetailRoute.TYPE, type.toString())
                 .build()

@@ -16,12 +16,13 @@ package com.pimenta.bestv.feature.recommendation.data.local.provider.row
 
 import android.app.Application
 import android.app.NotificationManager
+import android.content.Intent
 import androidx.recommendation.app.ContentRecommendation
 import com.bumptech.glide.Glide
 import com.pimenta.bestv.R
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
-import com.pimenta.bestv.feature.workdetail.presentation.ui.activity.WorkDetailsActivity
+import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import io.reactivex.Completable
 
@@ -57,7 +58,7 @@ class RecommendationRowApi constructor(
                                     .setBackgroundImageUri(workViewModel.backdropUrl)
                                     .setText(application.getString(R.string.popular))
                                     .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY,
-                                            WorkDetailsActivity.newInstance(application, workViewModel).apply {
+                                            Intent(Intent.ACTION_VIEW, workViewModel.toUri()).apply {
                                                 // Ensure a unique PendingIntents, otherwise all
                                                 // recommendations end up with the same PendingIntent
                                                 action = workViewModel.id.toString()

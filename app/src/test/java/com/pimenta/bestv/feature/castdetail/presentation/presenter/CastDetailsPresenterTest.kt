@@ -20,7 +20,7 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.castdetail.domain.GetCastDetailsUseCase
-import com.pimenta.bestv.scheduler.RxSchedulerTest
+import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import org.junit.Test
 

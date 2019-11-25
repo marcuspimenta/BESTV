@@ -25,11 +25,11 @@ import androidx.fragment.app.Fragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.R
-import com.pimenta.bestv.common.extension.addFragment
-import com.pimenta.bestv.common.extension.popBackStack
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.model.presentation.model.GenreViewModel
 import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.common.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.WorkBrowseFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.GenreHeaderItem

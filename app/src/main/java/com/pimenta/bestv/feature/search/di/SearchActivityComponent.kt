@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.feature.search.di
 
-import com.pimenta.bestv.di.module.DisplayMetricsModule
+import com.pimenta.bestv.presentation.di.module.DisplayMetricsModule
 import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
 import dagger.Component
 import javax.inject.Singleton
