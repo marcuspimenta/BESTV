@@ -21,8 +21,8 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetSimilarByWorkUseCase @Inject constructor(
-        private val getSimilarByMovieUseCase: GetSimilarByMovieUseCase,
-        private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase
+    private val getSimilarByMovieUseCase: GetSimilarByMovieUseCase,
+    private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int) =

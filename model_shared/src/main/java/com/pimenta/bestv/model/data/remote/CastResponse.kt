@@ -16,8 +16,6 @@ package com.pimenta.bestv.model.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-import java.io.Serializable
-
 /**
  * Created by marcus on 15-02-2018.
  */
@@ -35,4 +33,4 @@ data class CastResponse(
     @SerializedName("biography") var biography: String? = null,
     @SerializedName("popularity") var popularity: Double? = null,
     @SerializedName("place_of_birth") var placeOfBirth: String? = null
-) : Serializable
+)

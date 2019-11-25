@@ -22,6 +22,5 @@ class SettingShared {
     companion object {
 
         const val SHARED_ELEMENT_NAME = "SHARED_ELEMENT_NAME"
-
     }
 }

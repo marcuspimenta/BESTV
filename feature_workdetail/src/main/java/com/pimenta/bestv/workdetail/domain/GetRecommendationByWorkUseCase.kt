@@ -21,8 +21,8 @@ import javax.inject.Inject
  * Created by marcus on 18-04-2019.
  */
 class GetRecommendationByWorkUseCase @Inject constructor(
-        private val getRecommendationByMovieUseCase: GetRecommendationByMovieUseCase,
-        private val getRecommendationByTvShowUseCase: GetRecommendationByTvShowUseCase
+    private val getRecommendationByMovieUseCase: GetRecommendationByMovieUseCase,
+    private val getRecommendationByTvShowUseCase: GetRecommendationByTvShowUseCase
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int) =

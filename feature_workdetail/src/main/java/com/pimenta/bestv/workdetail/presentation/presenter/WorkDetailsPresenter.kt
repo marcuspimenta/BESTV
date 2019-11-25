@@ -33,12 +33,12 @@ import javax.inject.Inject
  * Created by marcus on 07-02-2018.
  */
 class WorkDetailsPresenter @Inject constructor(
-        private val view: View,
-        private val setFavoriteUseCase: SetFavoriteUseCase,
-        private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
-        private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
-        private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val setFavoriteUseCase: SetFavoriteUseCase,
+    private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
+    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
+    private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var recommendedPage = 0

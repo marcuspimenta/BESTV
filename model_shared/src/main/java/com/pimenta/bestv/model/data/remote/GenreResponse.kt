@@ -16,15 +16,13 @@ package com.pimenta.bestv.model.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-import java.io.Serializable
-
 /**
  * Created by marcus on 08-02-2018.
  */
 abstract class GenreResponse(
     @SerializedName("id") open var id: Int = 0,
     @SerializedName("name") open var name: String? = null
-) : Serializable {
+) {
 
     abstract val source: Source
 

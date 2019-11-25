@@ -16,8 +16,6 @@ package com.pimenta.bestv.model.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-import java.io.Serializable
-
 /**
  * Created by marcus on 22-02-2018.
  */
@@ -27,4 +25,4 @@ data class VideoResponse(
     @SerializedName("name") var name: String? = null,
     @SerializedName("site") var site: String? = null,
     @SerializedName("type") var type: String? = null
-) : Serializable
+)

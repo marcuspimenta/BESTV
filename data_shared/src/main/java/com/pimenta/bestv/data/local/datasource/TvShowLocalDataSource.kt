@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by marcus on 21-11-2019.
  */
 class TvShowLocalDataSource @Inject constructor(
-        private val tvShowDao: TvShowDao
+    private val tvShowDao: TvShowDao
 ) {
 
     fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =

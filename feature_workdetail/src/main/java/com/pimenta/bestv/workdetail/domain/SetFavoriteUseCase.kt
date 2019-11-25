@@ -26,8 +26,8 @@ import javax.inject.Inject
  * Created by marcus on 23-08-2019.
  */
 class SetFavoriteUseCase @Inject constructor(
-        private val movieRepository: MovieRepository,
-        private val tvShowRepository: TvShowRepository
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TvShowRepository
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =

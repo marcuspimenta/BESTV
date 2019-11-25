@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.model.data.remote
 
-import com.pimenta.bestv.model.data.remote.TvShowResponse
-
 /**
  * Created by marcus on 12/07/18.
  */

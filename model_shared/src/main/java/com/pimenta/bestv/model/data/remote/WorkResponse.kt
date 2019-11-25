@@ -15,7 +15,6 @@
 package com.pimenta.bestv.model.data.remote
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 /**
  * Created by marcus on 06/07/18.
@@ -31,7 +30,7 @@ abstract class WorkResponse(
     @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
     @SerializedName("adult") var isAdult: Boolean = false,
     var isFavorite: Boolean = false
-) : Serializable {
+) {
 
     abstract var title: String?
 

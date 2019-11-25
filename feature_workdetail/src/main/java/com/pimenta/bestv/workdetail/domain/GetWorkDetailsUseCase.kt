@@ -27,10 +27,10 @@ import javax.inject.Inject
  * Created by marcus on 20-05-2019.
  */
 class GetWorkDetailsUseCase @Inject constructor(
-        private val getVideosUseCase: GetVideosUseCase,
-        private val getCastsUseCase: GetCastsUseCase,
-        private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
-        private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
+    private val getVideosUseCase: GetVideosUseCase,
+    private val getCastsUseCase: GetCastsUseCase,
+    private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
+    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel): Single<Quadruple<List<VideoDomainModel>?, List<CastDomainModel>?, WorkPageDomainModel, WorkPageDomainModel>> =
