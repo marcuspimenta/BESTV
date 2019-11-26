@@ -17,8 +17,8 @@ package com.pimenta.bestv.workdetail.presentation.ui.activity
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.presentation.extension.replaceFragment
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponent
-import com.pimenta.bestv.workdetail.presentation.processor.WorkProcessor
 import com.pimenta.bestv.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import javax.inject.Inject
 
@@ -28,13 +28,13 @@ import javax.inject.Inject
 class WorkDetailsActivity : FragmentActivity() {
 
     @Inject
-    lateinit var workProcessor: WorkProcessor
+    lateinit var workDetailsRoute: WorkDetailsRoute
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WorkDetailsActivityComponent.build().inject(this)
 
-        when (val workViewModel = workProcessor(intent)) {
+        when (val workViewModel = workDetailsRoute.getWorkDetail(intent)) {
             null -> finish()
             else -> replaceFragment(WorkDetailsFragment.newInstance(workViewModel))
         }

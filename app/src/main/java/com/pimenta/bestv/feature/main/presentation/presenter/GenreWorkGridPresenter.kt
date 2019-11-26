@@ -22,6 +22,8 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -36,6 +38,7 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
 class GenreGridPresenter @Inject constructor(
     private val view: View,
     private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -90,7 +93,8 @@ class GenreGridPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        view.openWorkDetails(itemViewHolder, workViewModel)
+        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
+        view.openWorkDetails(itemViewHolder, route)
     }
 
     private fun disposeLoadBackdropImage() {
@@ -113,6 +117,6 @@ class GenreGridPresenter @Inject constructor(
 
         fun onErrorWorksLoaded()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
     }
 }

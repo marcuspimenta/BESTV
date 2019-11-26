@@ -15,15 +15,17 @@
 package com.pimenta.bestv.feature.search.presentation.presenter
 
 import androidx.leanback.widget.Presenter
-import com.pimenta.bestv.presentation.extension.addTo
-import com.pimenta.bestv.presentation.extension.hasNoContent
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.extension.hasNoContent
+import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -40,6 +42,7 @@ class SearchPresenter @Inject constructor(
     private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -152,7 +155,8 @@ class SearchPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        view.openWorkDetails(itemViewHolder, workViewModel)
+        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
+        view.openWorkDetails(itemViewHolder, route)
     }
 
     private fun disposeLoadBackdropImage() {
@@ -189,6 +193,6 @@ class SearchPresenter @Inject constructor(
 
         fun onErrorSearch()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
     }
 }

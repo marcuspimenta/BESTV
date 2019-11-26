@@ -16,14 +16,13 @@ package com.pimenta.bestv.feature.recommendation.data.local.provider.row
 
 import android.app.Application
 import android.app.NotificationManager
-import android.content.Intent
 import androidx.recommendation.app.ContentRecommendation
 import com.bumptech.glide.Glide
 import com.pimenta.bestv.R
-import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
-import com.pimenta.bestv.model.presentation.mapper.toUri
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
 
 /**
@@ -31,7 +30,8 @@ import io.reactivex.Completable
  */
 class RecommendationRowApi constructor(
     private val application: Application,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val workDetailsRoute: WorkDetailsRoute
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
@@ -58,7 +58,7 @@ class RecommendationRowApi constructor(
                                     .setBackgroundImageUri(workViewModel.backdropUrl)
                                     .setText(application.getString(R.string.popular))
                                     .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY,
-                                            Intent(Intent.ACTION_VIEW, workViewModel.toUri()).apply {
+                                            workDetailsRoute.buildWorkDetailRoute(workViewModel).intent.apply {
                                                 // Ensure a unique PendingIntents, otherwise all
                                                 // recommendations end up with the same PendingIntent
                                                 action = workViewModel.id.toString()

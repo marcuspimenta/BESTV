@@ -15,13 +15,16 @@
 package com.pimenta.bestv.workdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.VideoViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
@@ -38,6 +41,8 @@ class WorkDetailsPresenter @Inject constructor(
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val castDetailsRoute: CastDetailsRoute,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -129,11 +134,13 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        view.openWorkDetails(itemViewHolder, workViewModel)
+        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
+        view.openWorkDetails(itemViewHolder, route)
     }
 
     fun castClicked(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
-        view.openCastDetails(itemViewHolder, castViewModel)
+        val route = castDetailsRoute.buildCastDetailRoute(castViewModel)
+        view.openCastDetails(itemViewHolder, route)
     }
 
     interface View {
@@ -152,8 +159,8 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onErrorWorkDetailsLoaded()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
 
-        fun openCastDetails(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel)
+        fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
     }
 }

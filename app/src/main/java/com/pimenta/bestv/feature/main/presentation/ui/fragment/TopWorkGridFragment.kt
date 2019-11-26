@@ -30,13 +30,13 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.feature.main.di.TopWorkGridFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.TopWorkGridPresenter
-import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
+import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**
@@ -113,14 +113,14 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
         fragmentManager?.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivityForResult(
-                Intent(Intent.ACTION_VIEW, workViewModel.toUri()),
+                route.intent,
                 WORK_DETAILS_REQUEST_CODE,
                 bundle
         )

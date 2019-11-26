@@ -33,7 +33,6 @@ import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.castdetail.di.CastDetailsFragmentComponent
 import com.pimenta.bestv.feature.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.feature.castdetail.presentation.ui.render.CastDetailsDescriptionRender
-import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadThumbnail
@@ -43,6 +42,7 @@ import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
+import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 private const val CAST = "CAST"
@@ -132,13 +132,13 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(Intent(Intent.ACTION_VIEW, workViewModel.toUri()), bundle)
+        startActivity(route.intent, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

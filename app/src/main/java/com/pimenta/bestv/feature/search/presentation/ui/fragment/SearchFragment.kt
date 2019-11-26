@@ -33,7 +33,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.R
 import com.pimenta.bestv.feature.search.di.SearchFragmentComponent
 import com.pimenta.bestv.feature.search.presentation.presenter.SearchPresenter
-import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
@@ -42,6 +41,7 @@ import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
+import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
@@ -155,13 +155,13 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 requireNotNull(activity),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(Intent(Intent.ACTION_VIEW, workViewModel.toUri()), bundle)
+        startActivity(route.intent, bundle)
     }
 
     override fun getResultsAdapter() = rowsAdapter

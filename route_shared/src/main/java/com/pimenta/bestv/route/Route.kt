@@ -12,18 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.mapper
+package com.pimenta.bestv.route
 
-import com.pimenta.bestv.model.BuildConfig
-import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.presentation.model.CastViewModel
+import android.content.Intent
 
-fun CastDomainModel.toViewModel() = CastViewModel(
-        id = id,
-        name = name,
-        character = character,
-        birthday = birthday,
-        deathDay = deathDay,
-        biography = biography,
-        thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
+/**
+ * Created by marcus on 26-11-2019.
+ */
+data class Route(
+    val intent: Intent
 )

@@ -22,6 +22,8 @@ import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,6 +33,7 @@ import javax.inject.Inject
 class CastDetailsPresenter @Inject constructor(
     private val view: View,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -53,7 +56,8 @@ class CastDetailsPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        view.openWorkDetails(itemViewHolder, workViewModel)
+        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
+        view.openWorkDetails(itemViewHolder, route)
     }
 
     interface View {
@@ -66,6 +70,6 @@ class CastDetailsPresenter @Inject constructor(
 
         fun onErrorCastDetailsLoaded()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
     }
 }

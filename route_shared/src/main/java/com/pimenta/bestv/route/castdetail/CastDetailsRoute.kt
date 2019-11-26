@@ -14,22 +14,59 @@
 
 package com.pimenta.bestv.route.castdetail
 
+import android.content.Intent
+import android.net.Uri
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.route.Route
+import javax.inject.Inject
+
 /**
  * Created by marcus on 25-11-2019.
  */
-class CastDetailsRoute {
+private const val SCHEMA_URI_PREFIX = "bestv://castdetail/"
+private const val CAST = "cast"
 
-    companion object {
+private const val ID = "ID"
+private const val NAME = "NAME"
+private const val CHARACTER = "CHARACTER"
+private const val BIRTHDAY = "BIRTHDAY"
+private const val DEATH_DAY = "DEATH_DAY"
+private const val BIOGRAPH = "BIOGRAPH"
+private const val THUMBNAIL_URL = "THUMBNAIL_URL"
 
-        const val SCHEMA_URI_PREFIX = "bestv://castdetail/"
-        const val CAST = "cast"
+class CastDetailsRoute @Inject constructor() {
 
-        const val ID = "ID"
-        const val NAME = "NAME"
-        const val CHARACTER = "CHARACTER"
-        const val BIRTHDAY = "BIRTHDAY"
-        const val DEATH_DAY = "DEATH_DAY"
-        const val BIOGRAPH = "BIOGRAPH"
-        const val THUMBNAIL_URL = "THUMBNAIL_URL"
-    }
+    fun buildCastDetailRoute(castViewModel: CastViewModel) =
+            Route(Intent(Intent.ACTION_VIEW, castViewModel.toUri()))
+
+    fun getCastDetailDeepLink(intent: Intent) =
+            intent.getCastDeepLink()
+
+    private fun CastViewModel.toUri(): Uri =
+            Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
+                    .appendQueryParameter(ID, id.toString())
+                    .appendQueryParameter(NAME, name)
+                    .appendQueryParameter(CHARACTER, character)
+                    .appendQueryParameter(BIRTHDAY, birthday)
+                    .appendQueryParameter(DEATH_DAY, deathDay)
+                    .appendQueryParameter(BIOGRAPH, biography)
+                    .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
+                    .build()
+
+    private fun Intent.getCastDeepLink() =
+            data?.let {
+                if (it.pathSegments.first() == CAST) {
+                    CastViewModel(
+                            id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                            name = it.getQueryParameter(NAME),
+                            character = it.getQueryParameter(CHARACTER),
+                            birthday = it.getQueryParameter(BIRTHDAY),
+                            deathDay = it.getQueryParameter(DEATH_DAY),
+                            biography = it.getQueryParameter(BIOGRAPH),
+                            thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
+                    )
+                } else {
+                    null
+                }
+            }
 }

@@ -27,8 +27,8 @@ import com.pimenta.bestv.feature.main.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.feature.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.feature.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.mapper.toUri
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
 
 /**
@@ -38,7 +38,8 @@ private const val CHANNEL_ID_KEY = "CHANNEL_ID_KEY"
 
 class RecommendationChannelApi constructor(
     private val application: Application,
-    private val localSettings: LocalSettings
+    private val localSettings: LocalSettings,
+    private val workDetailsRoute: WorkDetailsRoute
 ) : RecommendationProvider {
 
     override fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
@@ -53,7 +54,7 @@ class RecommendationChannelApi constructor(
                                     .setTitle(workViewModel.title)
                                     .setDescription(workViewModel.overview)
                                     .setPosterArtUri(Uri.parse(workViewModel.backdropUrl))
-                                    .setIntentUri(workViewModel.toUri())
+                                    .setIntent(workDetailsRoute.buildWorkDetailRoute(workViewModel).intent)
                                     .setInternalProviderId(workViewModel.id.toString())
 
                             localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)

@@ -10,6 +10,7 @@ buildscript {
 }
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
@@ -21,6 +22,12 @@ android {
 }
 
 dependencies {
+    implementation project(':model_shared')
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.25'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
 }
