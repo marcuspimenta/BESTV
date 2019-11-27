@@ -3,4 +3,5 @@
     <string name="schema">bestv</string>
 
     <string name="host_workdetail">workdetail</string>
+    <string name="host_castdetail">castdetail</string>
 </resources>
