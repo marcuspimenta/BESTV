@@ -21,6 +21,8 @@ import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.search.SearchRoute
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,6 +33,7 @@ class WorkBrowsePresenter @Inject constructor(
     private val view: View,
     private val hasFavoriteUseCase: HasFavoriteUseCase,
     private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
+    private val searchRoute: SearchRoute,
     private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
@@ -65,7 +68,8 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun searchClicked() {
-        view.openSearch()
+        val route = searchRoute.buildSearchRoute()
+        view.openSearch(route)
     }
 
     interface View {
@@ -80,6 +84,6 @@ class WorkBrowsePresenter @Inject constructor(
 
         fun onErrorDataLoaded()
 
-        fun openSearch()
+        fun openSearch(route: Route)
     }
 }

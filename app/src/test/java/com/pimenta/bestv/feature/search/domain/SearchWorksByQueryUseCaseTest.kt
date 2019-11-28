@@ -55,10 +55,10 @@ private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class SearchWorksByQueryUseCaseTest {
 
-    private val urlEncoderTextUseCase: UrlEncoderTextUseCase = mock()
-    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
-    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
-    private val useCase = SearchWorksByQueryUseCase(
+    private val urlEncoderTextUseCase: com.pimenta.bestv.search.domain.UrlEncoderTextUseCase = mock()
+    private val searchMoviesByQueryUseCase: com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase = mock()
+    private val useCase = com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase(
             urlEncoderTextUseCase,
             searchMoviesByQueryUseCase,
             searchTvShowsByQueryUseCase

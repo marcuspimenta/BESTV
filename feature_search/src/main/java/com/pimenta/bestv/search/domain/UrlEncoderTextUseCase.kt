@@ -12,25 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.domain
 
-import org.junit.Test
+import io.reactivex.Single
+import java.net.URLEncoder
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 20-05-2019.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+private const val enc = "UTF-8"
 
-class UrlEncoderTextUseCaseTest {
+class UrlEncoderTextUseCase @Inject constructor() {
 
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    operator fun invoke(text: String): Single<String> =
+            Single.fromCallable { URLEncoder.encode(text, enc) }
 }

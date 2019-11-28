@@ -12,25 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.route.search
 
-import org.junit.Test
+import android.content.Intent
+import android.net.Uri
+import com.pimenta.bestv.route.Route
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 27-11-2019.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+private const val SCHEMA_URI_PREFIX = "bestv://search/"
 
-class UrlEncoderTextUseCaseTest {
+class SearchRoute @Inject constructor() {
 
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    fun buildSearchRoute() =
+            Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
 }

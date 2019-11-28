@@ -25,16 +25,16 @@ import androidx.fragment.app.Fragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.pimenta.bestv.R
-import com.pimenta.bestv.presentation.extension.addFragment
-import com.pimenta.bestv.presentation.extension.popBackStack
-import com.pimenta.bestv.model.presentation.model.GenreViewModel
-import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.feature.main.di.WorkBrowseFragmentComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.feature.main.presentation.ui.headeritem.WorkTypeHeaderItem
-import com.pimenta.bestv.feature.search.presentation.ui.activity.SearchActivity
+import com.pimenta.bestv.model.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.presentation.extension.addFragment
+import com.pimenta.bestv.presentation.extension.popBackStack
+import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
+import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**
@@ -159,8 +159,8 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openSearch() {
-        startActivity(SearchActivity.newInstance(requireContext()))
+    override fun openSearch(route: Route) {
+        startActivity(route.intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

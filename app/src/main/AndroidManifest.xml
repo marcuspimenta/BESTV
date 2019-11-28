@@ -34,9 +34,6 @@
         <activity
             android:name=".feature.splash.presentation.ui.activity.SplashActivity"
             android:screenOrientation="landscape" />
-        <activity
-            android:name=".feature.search.presentation.ui.activity.SearchActivity"
-            android:screenOrientation="landscape" />
         <receiver
             android:name=".feature.recommendation.presentation.broadcast.BootBroadcastReceiver"
             android:enabled="true"

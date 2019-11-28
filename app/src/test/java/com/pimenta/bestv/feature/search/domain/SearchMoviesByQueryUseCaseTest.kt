@@ -54,7 +54,7 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 class SearchMoviesByQueryUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
-    private val useCase = SearchMoviesByQueryUseCase(
+    private val useCase = com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase(
             mediaRepository
     )
 

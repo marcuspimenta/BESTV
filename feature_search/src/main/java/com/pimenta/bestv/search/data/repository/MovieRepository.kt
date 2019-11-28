@@ -12,25 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.data.repository
 
-import org.junit.Test
+import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
+import com.pimenta.bestv.model.data.mapper.toDomainModel
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 29-10-2019.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+class MovieRepository @Inject constructor(
+    private val movieRemoteDataSource: MovieRemoteDataSource
+) {
 
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    fun searchMoviesByQuery(query: String, page: Int) =
+            movieRemoteDataSource.searchMoviesByQuery(query, page)
+                    .map { it.toDomainModel() }
 }

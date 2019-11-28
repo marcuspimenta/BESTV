@@ -12,25 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.data.remote.datasource
 
-import org.junit.Test
+import com.pimenta.bestv.search.BuildConfig
+import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 29-10-2019.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
-
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+class TvShowRemoteDataSource @Inject constructor(
+    private val searchTvShowTmdbApi: SearchTvShowTmdbApi
+) {
+    fun searchTvShowsByQuery(query: String, page: Int) =
+            searchTvShowTmdbApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
 }

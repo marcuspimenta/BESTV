@@ -12,25 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.domain
 
-import org.junit.Test
+import com.pimenta.bestv.search.data.repository.TvShowRepository
+import javax.inject.Inject
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 23-08-2019.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+class SearchTvShowsByQueryUseCase @Inject constructor(
+    private val tvShowRepository: TvShowRepository
+) {
 
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    operator fun invoke(query: String, page: Int) =
+            tvShowRepository.searchTvShowsByQuery(query, page)
 }

@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pimenta.bestv.castdetail" >
+    package="com.pimenta.bestv.search">
 
     <application>
         <activity
-            android:name=".presentation.ui.activity.CastDetailsActivity"
+            android:name=".presentation.ui.activity.SearchActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -12,7 +12,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="@string/host_castdetail"
+                    android:host="@string/host_search"
                     android:scheme="@string/schema" />
             </intent-filter>
         </activity>

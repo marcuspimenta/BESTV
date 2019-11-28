@@ -19,9 +19,9 @@ import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.feature.search.domain.SearchMoviesByQueryUseCase
-import com.pimenta.bestv.feature.search.domain.SearchTvShowsByQueryUseCase
-import com.pimenta.bestv.feature.search.domain.SearchWorksByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
@@ -75,13 +75,13 @@ private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class SearchPresenterTest {
 
-    private val view: SearchPresenter.View = mock()
-    private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase = mock()
-    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
-    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
+    private val view: com.pimenta.bestv.search.presentation.presenter.SearchPresenter.View = mock()
+    private val searchWorksByQueryUseCase: com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase = mock()
+    private val searchMoviesByQueryUseCase: com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase = mock()
     private val rxScheduler: RxScheduler = RxSchedulerTest()
 
-    private val presenter = SearchPresenter(
+    private val presenter = com.pimenta.bestv.search.presentation.presenter.SearchPresenter(
             view,
             searchWorksByQueryUseCase,
             searchMoviesByQueryUseCase,

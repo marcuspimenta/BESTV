@@ -12,25 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.data.remote.api
 
-import org.junit.Test
+import com.pimenta.bestv.model.data.remote.MoviePageResponse
+import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
- * Created by marcus on 24-05-2018.
+ * Created by marcus on 11-02-2018.
  */
-private const val TEXT = "Game of thrones"
-private const val TEXT_ENCODED = "Game+of+thrones"
+interface SearchMovieTmdbApi {
 
-class UrlEncoderTextUseCaseTest {
-
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
-
-    @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
-    }
+    @GET("search/movie")
+    fun searchMoviesByQuery(
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ): Single<MoviePageResponse>
 }
