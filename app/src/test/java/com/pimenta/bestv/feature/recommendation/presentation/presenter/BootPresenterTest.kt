@@ -16,7 +16,7 @@ package com.pimenta.bestv.feature.recommendation.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.pimenta.bestv.feature.recommendation.domain.ScheduleRecommendationUseCase
+import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
 import org.junit.Test
 
 /**
@@ -24,8 +24,8 @@ import org.junit.Test
  */
 class BootPresenterTest {
 
-    private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase = mock()
-    private val presenter = BootPresenter(
+    private val scheduleRecommendationUseCase: com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase = mock()
+    private val presenter = com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter(
             scheduleRecommendationUseCase
     )
 

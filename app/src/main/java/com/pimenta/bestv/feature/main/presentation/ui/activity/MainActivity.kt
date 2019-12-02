@@ -15,17 +15,16 @@
 package com.pimenta.bestv.feature.main.presentation.ui.activity
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.feature.main.di.MainActivityComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.MainPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
 import com.pimenta.bestv.feature.splash.presentation.ui.activity.SplashActivity
+import com.pimenta.bestv.presentation.extension.replaceFragment
 import javax.inject.Inject
 
 private const val SPLASH_ACTIVITY_REQUEST_CODE = 1
@@ -76,10 +75,5 @@ class MainActivity : FragmentActivity() {
     override fun onDestroy() {
         backgroundManager.release()
         super.onDestroy()
-    }
-
-    companion object {
-
-        fun newInstance(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

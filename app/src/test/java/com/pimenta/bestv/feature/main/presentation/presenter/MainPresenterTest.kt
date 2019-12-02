@@ -18,7 +18,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.feature.recommendation.domain.LoadRecommendationUseCase
+import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
 import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Completable
 import org.junit.Test
@@ -28,7 +28,7 @@ import org.junit.Test
  */
 class MainPresenterTest {
 
-    private val loadRecommendationUseCase: LoadRecommendationUseCase = mock()
+    private val loadRecommendationUseCase: com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase = mock()
     private val rxSchedulerTest: RxSchedulerTest = RxSchedulerTest()
 
     private val presenter = MainPresenter(

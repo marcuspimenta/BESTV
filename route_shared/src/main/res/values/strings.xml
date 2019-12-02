@@ -5,4 +5,5 @@
     <string name="host_workdetail">workdetail</string>
     <string name="host_castdetail">castdetail</string>
     <string name="host_search">search</string>
+    <string name="host_workbrowse">workbrowse</string>
 </resources>

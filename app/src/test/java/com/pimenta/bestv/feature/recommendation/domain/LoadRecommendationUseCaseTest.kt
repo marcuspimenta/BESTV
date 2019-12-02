@@ -57,7 +57,7 @@ class LoadRecommendationUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
 
-    private val useCase = LoadRecommendationUseCase(
+    private val useCase = com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase(
             mediaRepository
     )
 

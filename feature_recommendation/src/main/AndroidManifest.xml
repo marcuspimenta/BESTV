@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pimenta.bestv.recommendation">
+
+    <application>
+        <receiver
+            android:name=".presentation.broadcast.BootBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".presentation.service.RecommendationService"
+            android:enabled="true" />
+    </application>
+</manifest>

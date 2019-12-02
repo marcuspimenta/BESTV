@@ -25,7 +25,7 @@ import org.junit.Test
 class ScheduleRecommendationUseCaseTest {
 
     private val localAlarm: LocalAlarm = mock()
-    private val useCase = ScheduleRecommendationUseCase(
+    private val useCase = com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase(
             localAlarm
     )
 
