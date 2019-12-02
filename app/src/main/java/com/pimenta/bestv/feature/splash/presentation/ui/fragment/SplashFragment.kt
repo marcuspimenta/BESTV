@@ -15,7 +15,6 @@
 package com.pimenta.bestv.feature.splash.presentation.ui.fragment
 
 import android.app.Activity
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,31 +23,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pimenta.bestv.R
 import com.pimenta.bestv.presentation.extension.finish
-import com.pimenta.bestv.feature.splash.di.SplashFragmentComponent
-import com.pimenta.bestv.feature.splash.presentation.presenter.SplashPresenter
 import kotlinx.android.synthetic.main.fragment_splash.*
-import javax.inject.Inject
-
-private const val PERMISSION_REQUEST_CODE = 1
 
 /**
  * Created by marcus on 04-05-2018.
  */
-class SplashFragment : Fragment(), SplashPresenter.View {
+private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/raw/splash_animation"
 
-    @Inject
-    lateinit var presenter: SplashPresenter
-
-    override fun onAttach(context: Context) {
-        SplashFragmentComponent.create(this, requireActivity().application)
-                .inject(this)
-        super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.bindTo(lifecycle)
-    }
+class SplashFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_splash, container, false)
@@ -56,27 +38,14 @@ class SplashFragment : Fragment(), SplashPresenter.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        animationVideoView.setVideoURI(
-                Uri.parse("android.resource://com.pimenta.bestv/raw/splash_animation")
-        )
-        animationVideoView.start()
-
-        presenter.loadPermissions()
-    }
-
-    override fun onHasAllPermissions(hasAllPermissions: Boolean) {
-        val resultCode = Activity.RESULT_OK.takeIf { hasAllPermissions } ?: Activity.RESULT_CANCELED
-        requireActivity().finish(resultCode)
-    }
-
-    override fun onRequestPermissions(permissions: List<String>) {
-        requestPermissions(permissions.toTypedArray(), PERMISSION_REQUEST_CODE)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSION_REQUEST_CODE -> presenter.hasAllPermissions()
+        animationVideoView.run {
+            setOnCompletionListener {
+                requireActivity().finish(Activity.RESULT_OK)
+            }
+            setVideoURI(
+                    Uri.parse(SPLASH_ANIMATION_FILE)
+            )
+            start()
         }
     }
 
