@@ -54,6 +54,7 @@ dependencies {
     implementation project(':feature_castdetail')
     implementation project(':feature_search')
     implementation project(':feature_recommendation')
+    implementation project(':feature_splash')
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

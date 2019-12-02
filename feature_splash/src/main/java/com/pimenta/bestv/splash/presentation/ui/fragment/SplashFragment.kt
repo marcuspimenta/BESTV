@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.presentation.ui.fragment
+package com.pimenta.bestv.splash.presentation.ui.fragment
 
 import android.app.Activity
 import android.net.Uri
@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.pimenta.bestv.R
+import com.pimenta.bestv.splash.R
 import com.pimenta.bestv.presentation.extension.finish
 import kotlinx.android.synthetic.main.fragment_splash.*
 

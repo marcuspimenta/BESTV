@@ -23,7 +23,6 @@ import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.feature.main.di.MainActivityComponent
 import com.pimenta.bestv.feature.main.presentation.presenter.MainPresenter
 import com.pimenta.bestv.feature.main.presentation.ui.fragment.WorkBrowseFragment
-import com.pimenta.bestv.feature.splash.presentation.ui.activity.SplashActivity
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import javax.inject.Inject
 
@@ -54,7 +53,10 @@ class MainActivity : FragmentActivity() {
         presenter.loadRecommendations()
 
         when (savedInstanceState) {
-            null -> startActivityForResult(SplashActivity.newInstance(this), SPLASH_ACTIVITY_REQUEST_CODE)
+            null -> startActivityForResult(
+                    presenter.getSplashRoute().intent,
+                    SPLASH_ACTIVITY_REQUEST_CODE
+            )
             else -> replaceFragment(WorkBrowseFragment.newInstance())
         }
     }

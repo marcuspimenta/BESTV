@@ -41,8 +41,5 @@
                     android:scheme="@string/schema" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".feature.splash.presentation.ui.activity.SplashActivity"
-            android:screenOrientation="landscape" />
     </application>
 </manifest>

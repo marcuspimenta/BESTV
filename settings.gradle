@@ -1,1 +1,1 @@
-include ':app', ':model_shared', ':data_shared', ':route_shared', ':feature_workdetail', ':presentation_shared', ':feature_castdetail', ':feature_search', ':feature_recommendation'
+include ':app', ':model_shared', ':data_shared', ':route_shared', ':feature_workdetail', ':presentation_shared', ':feature_castdetail', ':feature_search', ':feature_recommendation', ':feature_splash'

@@ -15,15 +15,20 @@
 package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
+import com.pimenta.bestv.route.splash.SplashRoute
 import javax.inject.Inject
 
 /**
  * Created by marcus on 04-05-2018.
  */
 class MainPresenter @Inject constructor(
+    private val splashRoute: SplashRoute
         // private val loadRecommendationUseCase: LoadRecommendationUseCase,
         // private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
+
+    fun getSplashRoute() =
+            splashRoute.buildSplashRoute()
 
     fun loadRecommendations() {
         /*loadRecommendationUseCase()

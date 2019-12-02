@@ -12,14 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.presentation.ui.activity
+package com.pimenta.bestv.splash.presentation.ui.activity
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import com.pimenta.bestv.splash.presentation.ui.fragment.SplashFragment
 import com.pimenta.bestv.presentation.extension.replaceFragment
-import com.pimenta.bestv.feature.splash.presentation.ui.fragment.SplashFragment
 
 /**
  * Created by marcus on 04-05-2018.
@@ -29,10 +27,5 @@ class SplashActivity : FragmentActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         replaceFragment(SplashFragment.newInstance())
-    }
-
-    companion object {
-
-        fun newInstance(context: Context?) = Intent(context, SplashActivity::class.java)
     }
 }
