@@ -14,17 +14,23 @@
 
 package com.pimenta.bestv.recommendation.domain
 
+import android.content.Intent
 import com.pimenta.bestv.recommendation.data.local.alarm.LocalAlarm
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
+private const val INITIAL_DELAY = 5000L
+
 class ScheduleRecommendationUseCase @Inject constructor(
     private val localAlarm: LocalAlarm
 ) {
 
-    operator fun invoke() {
-        localAlarm.scheduleRecommendationUpdate()
+    operator fun invoke(intent: Intent) {
+        localAlarm.scheduleRecommendationUpdate(
+                intent,
+                INITIAL_DELAY
+        )
     }
 }

@@ -17,10 +17,8 @@ package com.pimenta.bestv.recommendation.data.local.alarm
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
-import com.pimenta.bestv.recommendation.presentation.service.RecommendationService
+import android.content.Intent
 import javax.inject.Inject
-
-private const val INITIAL_DELAY = 5000L
 
 /**
  * Created by marcus on 23-08-2019.
@@ -30,8 +28,13 @@ class LocalAlarm @Inject constructor(
     private val alarmManager: AlarmManager
 ) {
 
-    fun scheduleRecommendationUpdate() {
-        val alarmIntent = PendingIntent.getService(application, 0, RecommendationService.newInstance(application), 0)
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, INITIAL_DELAY, AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)
+    fun scheduleRecommendationUpdate(intent: Intent, initialDelay: Long) {
+        val alarmIntent = PendingIntent.getService(application, 0, intent, 0)
+        alarmManager.setInexactRepeating(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                initialDelay,
+                AlarmManager.INTERVAL_HALF_HOUR,
+                alarmIntent
+        )
     }
 }
