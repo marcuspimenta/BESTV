@@ -44,9 +44,5 @@
         <activity
             android:name=".feature.splash.presentation.ui.activity.SplashActivity"
             android:screenOrientation="landscape" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="1c63ae626c525fff47fa264f25ad0ea34396dac2" />
     </application>
 </manifest>
