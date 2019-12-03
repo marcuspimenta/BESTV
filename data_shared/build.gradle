@@ -19,6 +19,17 @@ android {
     defaultConfig {
         minSdkVersion 26
         targetSdkVersion 29
+        buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
+        buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
+    }
+    buildTypes {
+        debug {
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+        }
+        release {
+            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+
+        }
     }
 }
 
@@ -38,4 +49,18 @@ dependencies {
     implementation "androidx.room:room-rxjava2:2.2.2"
     kapt "androidx.room:room-compiler:2.2.2"
     androidTestImplementation "androidx.room:room-testing:2.2.2"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.1.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Rx
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 }

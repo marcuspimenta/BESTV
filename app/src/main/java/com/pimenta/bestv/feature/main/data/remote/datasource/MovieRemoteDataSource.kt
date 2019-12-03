@@ -14,39 +14,41 @@
 
 package com.pimenta.bestv.feature.main.data.remote.datasource
 
-import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.main.data.remote.api.MovieTmdbApi
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class MovieRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val movieTmdbApi: MovieTmdbApi
 ) {
 
     fun getMovie(movieId: Int) =
             try {
-                movieTmdbApi.getMovie(movieId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
+                movieTmdbApi.getMovie(movieId, tmdbApiKey, tmdbFilterLanguage).execute().body()
             } catch (e: IOException) {
                 Timber.e(e, "Error while getting a movie")
                 null
             }
 
     fun getMoviesByGenre(genreId: Int, page: Int) =
-            movieTmdbApi.getMoviesByGenre(genreId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page)
+            movieTmdbApi.getMoviesByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
     fun getNowPlayingMovies(page: Int) =
-            movieTmdbApi.getNowPlayingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            movieTmdbApi.getNowPlayingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getPopularMovies(page: Int) =
-            movieTmdbApi.getPopularMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getTopRatedMovies(page: Int) =
-            movieTmdbApi.getTopRatedMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            movieTmdbApi.getTopRatedMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getUpComingMovies(page: Int) =
-            movieTmdbApi.getUpComingMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            movieTmdbApi.getUpComingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

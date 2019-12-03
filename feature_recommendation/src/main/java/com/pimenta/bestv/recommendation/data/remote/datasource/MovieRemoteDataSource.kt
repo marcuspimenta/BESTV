@@ -14,17 +14,19 @@
 
 package com.pimenta.bestv.recommendation.data.remote.datasource
 
-import com.pimenta.bestv.recommendation.BuildConfig
 import com.pimenta.bestv.recommendation.data.remote.api.MovieTmdbApi
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class MovieRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val movieTmdbApi: MovieTmdbApi
 ) {
 
     fun getPopularMovies(page: Int) =
-            movieTmdbApi.getPopularMovies(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

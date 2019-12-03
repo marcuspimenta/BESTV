@@ -14,39 +14,41 @@
 
 package com.pimenta.bestv.feature.main.data.remote.datasource
 
-import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.main.data.remote.api.TvShowTmdbApi
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class TvShowRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val tvShowTmdbApi: TvShowTmdbApi
 ) {
 
     fun getTvShow(tvId: Int) =
             try {
-                tvShowTmdbApi.getTvShow(tvId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE).execute().body()
+                tvShowTmdbApi.getTvShow(tvId, tmdbApiKey, tmdbFilterLanguage).execute().body()
             } catch (e: IOException) {
                 Timber.e(e, "Error while getting a tv show")
                 null
             }
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
-            tvShowTmdbApi.getTvShowByGenre(genreId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, false, page)
+            tvShowTmdbApi.getTvShowByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
     fun getAiringTodayTvShows(page: Int) =
-            tvShowTmdbApi.getAiringTodayTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            tvShowTmdbApi.getAiringTodayTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getOnTheAirTvShows(page: Int) =
-            tvShowTmdbApi.getOnTheAirTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            tvShowTmdbApi.getOnTheAirTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getPopularTvShows(page: Int) =
-            tvShowTmdbApi.getPopularTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            tvShowTmdbApi.getPopularTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getTopRatedTvShows(page: Int) =
-            tvShowTmdbApi.getTopRatedTvShows(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            tvShowTmdbApi.getTopRatedTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 }

@@ -14,16 +14,18 @@
 
 package com.pimenta.bestv.search.data.remote.datasource
 
-import com.pimenta.bestv.search.BuildConfig
 import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class TvShowRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val searchTvShowTmdbApi: SearchTvShowTmdbApi
 ) {
     fun searchTvShowsByQuery(query: String, page: Int) =
-            searchTvShowTmdbApi.searchTvShowsByQuery(BuildConfig.TMDB_API_KEY, query, BuildConfig.TMDB_FILTER_LANGUAGE, page)
+            searchTvShowTmdbApi.searchTvShowsByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
 }

@@ -14,23 +14,25 @@
 
 package com.pimenta.bestv.castdetail.data.remote.datasource
 
-import com.pimenta.bestv.castdetail.BuildConfig
 import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class CastRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val castTmdbApi: CastTmdbApi
 ) {
 
     fun getCastDetails(castId: Int) =
-            castTmdbApi.getCastDetails(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
+            castTmdbApi.getCastDetails(castId, tmdbApiKey, tmdbFilterLanguage)
 
     fun getMovieCreditsByCast(castId: Int) =
-            castTmdbApi.getMovieCredits(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
+            castTmdbApi.getMovieCredits(castId, tmdbApiKey, tmdbFilterLanguage)
 
     fun getTvShowCreditsByCast(castId: Int) =
-            castTmdbApi.getTvShowCredits(castId, BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
+            castTmdbApi.getTvShowCredits(castId, tmdbApiKey, tmdbFilterLanguage)
 }

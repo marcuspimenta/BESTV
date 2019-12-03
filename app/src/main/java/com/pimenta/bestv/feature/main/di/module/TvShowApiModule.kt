@@ -14,49 +14,25 @@
 
 package com.pimenta.bestv.feature.main.di.module
 
-import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import com.pimenta.bestv.feature.main.data.remote.api.TvShowTmdbApi
 import dagger.Module
 import dagger.Provides
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
  * Created by marcus on 20-10-2019.
  */
-@Module
+@Module(
+        includes = [
+            MediaRemoteModule::class
+        ]
+)
 class TvShowApiModule {
 
     @Provides
     @Singleton
-    @Named("tvShowTmdbProvider")
-    fun provideTmdbRetrofit(): Retrofit {
-        val okHttpClient = OkHttpClient.Builder().apply {
-            addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BASIC
-            })
-            readTimeout(15, TimeUnit.SECONDS)
-            writeTimeout(15, TimeUnit.SECONDS)
-            connectTimeout(15, TimeUnit.SECONDS)
-        }.build()
-
-        return Retrofit.Builder()
-                .baseUrl(BuildConfig.TMDB_BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideTvShowApi(@Named("tvShowTmdbProvider") retrofit: Retrofit) =
+    fun provideTvShowApi(retrofit: Retrofit) =
             retrofit.create(TvShowTmdbApi::class.java)
 }

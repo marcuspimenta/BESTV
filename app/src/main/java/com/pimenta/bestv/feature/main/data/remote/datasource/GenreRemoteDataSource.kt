@@ -14,20 +14,22 @@
 
 package com.pimenta.bestv.feature.main.data.remote.datasource
 
-import com.pimenta.bestv.BuildConfig
 import com.pimenta.bestv.feature.main.data.remote.api.GenreTmdbApi
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class GenreRemoteDataSource @Inject constructor(
+    @Named("tmdbApiKey") private val tmdbApiKey: String,
+    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
     private val genreTmdbApi: GenreTmdbApi
 ) {
 
     fun getMovieGenres() =
-            genreTmdbApi.getMovieGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
+            genreTmdbApi.getMovieGenres(tmdbApiKey, tmdbFilterLanguage)
 
     fun getTvShowGenres() =
-            genreTmdbApi.getTvShowGenres(BuildConfig.TMDB_API_KEY, BuildConfig.TMDB_FILTER_LANGUAGE)
+            genreTmdbApi.getTvShowGenres(tmdbApiKey, tmdbFilterLanguage)
 }
