@@ -134,7 +134,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireNotNull(activity),
+                requireActivity(),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
@@ -157,7 +157,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     private fun setupDetailsOverviewRow() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
-        castViewModel.loadThumbnail(requireNotNull(context), object : CustomTarget<Drawable>() {
+        castViewModel.loadThumbnail(requireContext(), object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 detailsOverviewRow.imageDrawable = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
@@ -194,8 +194,8 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
                 return viewHolder
             }
         }
-        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireNotNull(activity).theme)
-        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, requireNotNull(activity).theme)
+        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
+        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
 
         // Hook up transition element.
         val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()

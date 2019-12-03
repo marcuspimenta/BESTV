@@ -187,7 +187,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireNotNull(activity),
+                requireActivity(),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
@@ -196,7 +196,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
 
     override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireNotNull(activity),
+                requireActivity(),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
@@ -219,7 +219,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     private fun setupDetailsOverviewRow() {
         detailsOverviewRow = DetailsOverviewRow(workViewModel)
 
-        workViewModel.loadPoster(requireNotNull(context), object : CustomTarget<Drawable>() {
+        workViewModel.loadPoster(requireContext(), object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 detailsOverviewRow.imageDrawable = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
@@ -230,7 +230,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
             }
         })
 
-        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireContext(), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 detailsBackground.coverBitmap = resource
                 mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())

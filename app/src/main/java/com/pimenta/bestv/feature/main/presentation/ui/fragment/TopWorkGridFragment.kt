@@ -95,7 +95,7 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireNotNull(context), object : CustomTarget<Bitmap>() {
+        workViewModel.loadBackdrop(requireContext(), object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 backgroundManager?.setBitmap(resource)
             }
@@ -115,7 +115,7 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireNotNull(activity),
+                requireActivity(),
                 (itemViewHolder.view as ImageCardView).mainImageView,
                 SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
