@@ -16,7 +16,7 @@ package com.pimenta.bestv.castdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.domain.CastDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -24,7 +24,7 @@ import org.junit.Test
  * Created by marcus on 23-05-2018.
  */
 private const val CAST_ID = 1
-private val CAST_DETAILED = CastViewModel(
+private val CAST_DETAILED = CastDomainModel(
         id = CAST_ID,
         name = "Carlos",
         character = "Batman",
@@ -33,11 +33,11 @@ private val CAST_DETAILED = CastViewModel(
 
 class GetCastDetailsUseCaseTest {
 
-    private val getCastPersonalDetails: com.pimenta.bestv.castdetail.domain.GetCastPersonalDetails = mock()
-    private val getMovieCreditsByCastUseCase: com.pimenta.bestv.castdetail.domain.GetMovieCreditsByCastUseCase = mock()
-    private val getTvShowCreditsByCastUseCase: com.pimenta.bestv.castdetail.domain.GetTvShowCreditsByCastUseCase = mock()
+    private val getCastPersonalDetails: GetCastPersonalDetails = mock()
+    private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase = mock()
+    private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase = mock()
 
-    private val useCase = com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase(
+    private val useCase = GetCastDetailsUseCase(
             getCastPersonalDetails,
             getMovieCreditsByCastUseCase,
             getTvShowCreditsByCastUseCase

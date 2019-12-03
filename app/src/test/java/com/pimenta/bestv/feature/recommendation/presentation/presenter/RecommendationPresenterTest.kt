@@ -17,8 +17,6 @@ package com.pimenta.bestv.feature.recommendation.presentation.presenter
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
-import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Completable
 import org.junit.Test
 

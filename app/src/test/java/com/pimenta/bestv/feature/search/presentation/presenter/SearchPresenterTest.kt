@@ -19,11 +19,7 @@ import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
-import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
-import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler

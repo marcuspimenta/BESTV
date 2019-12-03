@@ -12,42 +12,49 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.splash.domain
+package com.pimenta.bestv.castdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.only
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.feature.splash.data.local.datasource.LocalPermissions
+import com.pimenta.bestv.castdetail.data.repository.CastRepository
+import com.pimenta.bestv.model.domain.CastDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 2019-08-28.
+ * Created by marcus on 23-05-2018.
  */
-class GetPermissionsNotAcceptedUseCaseTest {
+private const val CAST_ID = 1
+private val CAST_DETAILED = CastDomainModel(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13"
+)
 
-    private val localPermissions: LocalPermissions = mock()
-    private val useCase = GetPermissionsNotAcceptedUseCase(
-            localPermissions
+class GetCastPersonalDetailsTest {
+
+    private val castRepository: CastRepository = mock()
+
+    private val useCase = GetCastPersonalDetails(
+            castRepository
     )
 
     @Test
-    fun `should return the right data when loading the permissions`() {
-        whenever(localPermissions.loadPermissionsNotAccepted()).thenReturn(Single.just(emptyList()))
+    fun `should return the right data when loading the cast personal details`() {
+        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
 
-        useCase()
+        useCase(CAST_ID)
                 .test()
                 .assertComplete()
-
-        verify(localPermissions, only()).loadPermissionsNotAccepted()
+                .assertResult(CAST_DETAILED)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(localPermissions.loadPermissionsNotAccepted()).thenReturn(Single.error(Throwable()))
+        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
 
-        useCase()
+        useCase(CAST_ID)
                 .test()
                 .assertError(Throwable::class.java)
     }

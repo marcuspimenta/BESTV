@@ -16,50 +16,46 @@ package com.pimenta.bestv.castdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.data.remote.model.remote.CastResponse
+import com.pimenta.bestv.castdetail.data.repository.CastRepository
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 23-05-2018.
+ * Created by marcus on 24-05-2018.
  */
 private const val CAST_ID = 1
-private val CAST_DETAILED = CastResponse(
+private val TV_SHOW = WorkDomainModel(
         id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+        title = "Arrow",
+        originalTitle = "Arrow"
 )
 
-private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
-        id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
-)
+class GetTvShowCreditsByCastUseCaseTest {
 
-class GetCastPersonalDetailsTest {
+    private val castRepository: CastRepository = mock()
 
-    private val mediaRepository: MediaRepository = mock()
-
-    private val useCase = com.pimenta.bestv.castdetail.domain.GetCastPersonalDetails(
-            mediaRepository
+    private val useCase = GetTvShowCreditsByCastUseCase(
+            castRepository
     )
 
     @Test
-    fun `should return the right data when loading the cast personal details`() {
-        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
+    fun `should return the right data when loading the tv shows by cast`() {
+        val castTvShowList = listOf(TV_SHOW)
+
+        whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
+                .thenReturn(Single.just(castTvShowList))
 
         useCase(CAST_ID)
                 .test()
                 .assertComplete()
-                .assertResult(CAST_DETAILED_VIEW_MODEL)
+                .assertResult(castTvShowList)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
+        whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
                 .test()

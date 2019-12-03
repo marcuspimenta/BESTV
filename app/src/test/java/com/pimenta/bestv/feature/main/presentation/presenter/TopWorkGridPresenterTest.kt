@@ -23,7 +23,6 @@ import com.pimenta.bestv.model.presentation.model.Source
 import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler

@@ -26,7 +26,6 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.presentation.scheduler.RxSchedulerTest
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
