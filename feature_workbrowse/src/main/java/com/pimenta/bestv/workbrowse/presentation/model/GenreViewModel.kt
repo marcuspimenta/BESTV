@@ -12,22 +12,20 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workbrowse.presentation.model
 
-import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
- * Created by marcus on 08-02-2018.
+ * Created by marcus on 28-05-2019.
  */
-abstract class GenreResponse(
-    @SerializedName("id") open var id: Int = 0,
-    @SerializedName("name") open var name: String? = null
-) {
+data class GenreViewModel(
+    var id: Int = 0,
+    var name: String? = null,
+    var source: Source = Source.MOVIE
+) : Serializable
 
-    abstract val source: Source
-
-    enum class Source {
-        MOVIE,
-        TV_SHOW
-    }
+enum class Source {
+    MOVIE,
+    TV_SHOW
 }

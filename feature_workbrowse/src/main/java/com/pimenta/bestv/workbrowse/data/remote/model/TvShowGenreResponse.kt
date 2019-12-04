@@ -12,9 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workbrowse.data.remote.model
 
 /**
  * Created by marcus on 06/07/18.
  */
-class MovieGenreListResponse : GenreListResponse<MovieGenreResponse>()
+class TvShowGenreResponse(
+    id: Int = 0,
+    name: String? = null,
+    override val source: Source = Source.TV_SHOW
+) : com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse(id = id, name = name)

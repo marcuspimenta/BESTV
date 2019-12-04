@@ -12,19 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.domain
+package com.pimenta.bestv.workbrowse.data.remote.mapper
 
-/**
- * Created by marcus on 29-10-2019.
- */
-data class GenreDomainModel(
-    val id: Int = 0,
-    val name: String? = null,
-    val source: Source = Source.MOVIE
-) {
+import com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 
-    enum class Source {
-        MOVIE,
-        TV_SHOW
-    }
-}
+fun GenreResponse.toDomainModel() = GenreDomainModel(
+        id = id,
+        name = name,
+        source = GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
+                ?: GenreDomainModel.Source.TV_SHOW
+)

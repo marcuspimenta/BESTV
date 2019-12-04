@@ -15,10 +15,8 @@
 package com.pimenta.bestv.feature.main.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.model.presentation.model.GenreViewModel
-import com.pimenta.bestv.model.presentation.model.Source
-import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
+import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import io.reactivex.Single
 import org.junit.Test

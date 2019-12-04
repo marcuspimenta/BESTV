@@ -12,10 +12,10 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
+package com.pimenta.bestv.workbrowse.presentation.model
 
 import androidx.annotation.StringRes
-import com.pimenta.bestv.model.R
+import com.pimenta.bestv.workbrowse.R
 
 /**
  * Created by marcus on 24-10-2019.

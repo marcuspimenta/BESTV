@@ -12,14 +12,9 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.workbrowse.data.remote.model
 
-import com.pimenta.bestv.model.data.remote.GenreResponse
-import com.pimenta.bestv.model.domain.GenreDomainModel
-
-fun GenreResponse.toDomainModel() = GenreDomainModel(
-        id = id,
-        name = name,
-        source = GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
-                ?: GenreDomainModel.Source.TV_SHOW
-)
+/**
+ * Created by marcus on 06/07/18.
+ */
+class MovieGenreListResponse : com.pimenta.bestv.workbrowse.data.remote.model.GenreListResponse<com.pimenta.bestv.workbrowse.data.remote.model.MovieGenreResponse>()

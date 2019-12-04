@@ -15,12 +15,12 @@
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
 import androidx.leanback.widget.Presenter
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute

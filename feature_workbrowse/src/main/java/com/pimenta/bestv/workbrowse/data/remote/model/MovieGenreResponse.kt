@@ -12,20 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
-
-import java.io.Serializable
+package com.pimenta.bestv.workbrowse.data.remote.model
 
 /**
- * Created by marcus on 28-05-2019.
+ * Created by marcus on 06/07/18.
  */
-data class GenreViewModel(
-    var id: Int = 0,
-    var name: String? = null,
-    var source: Source = Source.MOVIE
-) : Serializable
-
-enum class Source {
-    MOVIE,
-    TV_SHOW
-}
+class MovieGenreResponse(
+    id: Int = 0,
+    name: String? = null,
+    override val source: Source = Source.MOVIE
+) : com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse(id = id, name = name)

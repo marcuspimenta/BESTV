@@ -12,13 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workbrowse.presentation.mapper
 
-/**
- * Created by marcus on 06/07/18.
- */
-class MovieGenreResponse(
-    id: Int = 0,
-    name: String? = null,
-    override val source: Source = Source.MOVIE
-) : GenreResponse(id = id, name = name)
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
+import com.pimenta.bestv.workbrowse.presentation.model.Source
+
+fun GenreDomainModel.toViewModel() = GenreViewModel(
+        id = id,
+        name = name,
+        source = Source.MOVIE.takeIf { source == GenreDomainModel.Source.MOVIE } ?: Source.TV_SHOW
+)

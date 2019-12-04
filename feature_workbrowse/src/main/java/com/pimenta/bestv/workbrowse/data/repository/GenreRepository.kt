@@ -15,7 +15,7 @@
 package com.pimenta.bestv.workbrowse.data.repository
 
 import com.pimenta.bestv.workbrowse.data.remote.datasource.GenreRemoteDataSource
-import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.workbrowse.data.remote.mapper.toDomainModel
 import javax.inject.Inject
 
 /**

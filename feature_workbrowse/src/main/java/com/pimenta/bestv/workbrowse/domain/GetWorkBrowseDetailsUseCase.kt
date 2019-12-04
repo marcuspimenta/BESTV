@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.model.domain.GenreDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import javax.inject.Inject

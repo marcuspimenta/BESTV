@@ -12,9 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workbrowse.data.remote.model
+
+import com.google.gson.annotations.SerializedName
 
 /**
- * Created by marcus on 06/07/18.
+ * Created by marcus on 09-02-2018.
  */
-class TvShowGenreListResponse : GenreListResponse<TvShowGenreResponse>()
+abstract class GenreListResponse<T : com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse>(
+    @SerializedName("genres") var genres: List<T>? = null
+)

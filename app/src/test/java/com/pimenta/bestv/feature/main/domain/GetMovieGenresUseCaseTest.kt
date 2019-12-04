@@ -16,8 +16,8 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.GenreViewModel
-import com.pimenta.bestv.model.presentation.model.Source
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
+import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.data.remote.model.remote.MovieGenreListResponse
 import com.pimenta.bestv.data.remote.model.remote.MovieGenreResponse
 import io.reactivex.Single

@@ -15,10 +15,10 @@
 package com.pimenta.bestv.search.presentation.presenter
 
 import androidx.leanback.widget.Presenter
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.extension.hasNoContent

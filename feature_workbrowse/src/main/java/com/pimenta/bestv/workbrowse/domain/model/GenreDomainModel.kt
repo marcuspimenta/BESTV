@@ -12,13 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workbrowse.domain.model
 
 /**
- * Created by marcus on 06/07/18.
+ * Created by marcus on 29-10-2019.
  */
-class TvShowGenreResponse(
-    id: Int = 0,
-    name: String? = null,
-    override val source: Source = Source.TV_SHOW
-) : GenreResponse(id = id, name = name)
+data class GenreDomainModel(
+    val id: Int = 0,
+    val name: String? = null,
+    val source: Source = Source.MOVIE
+) {
+
+    enum class Source {
+        MOVIE,
+        TV_SHOW
+    }
+}

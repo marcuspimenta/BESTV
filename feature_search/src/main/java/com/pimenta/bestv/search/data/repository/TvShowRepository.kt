@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.search.data.repository
 
-import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
 
 /**

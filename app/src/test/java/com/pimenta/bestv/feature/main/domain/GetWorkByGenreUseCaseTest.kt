@@ -16,16 +16,17 @@ package com.pimenta.bestv.feature.main.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.Source
+import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRE = com.pimenta.bestv.model.presentation.model.GenreViewModel(
+private val MOVIE_GENRE = GenreViewModel(
         id = 1,
         source = Source.MOVIE
 )
@@ -41,7 +42,7 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
                 )
         )
 )
-private val TV_SHOW_GENRE = com.pimenta.bestv.model.presentation.model.GenreViewModel(
+private val TV_SHOW_GENRE = GenreViewModel(
         id = 1,
         source = Source.TV_SHOW
 )
