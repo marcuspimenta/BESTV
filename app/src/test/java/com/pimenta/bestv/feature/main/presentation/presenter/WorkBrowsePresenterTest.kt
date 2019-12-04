@@ -17,8 +17,8 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.model.presentation.model.GenreViewModel
 import com.pimenta.bestv.model.presentation.model.Source
-import com.pimenta.bestv.feature.main.domain.GetWorkBrowseDetailsUseCase
-import com.pimenta.bestv.feature.main.domain.HasFavoriteUseCase
+import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
+import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import io.reactivex.Single
 import org.junit.Test
@@ -44,8 +44,8 @@ private val TV_SHOW_GENRES = listOf(
 class WorkBrowsePresenterTest {
 
     private val view: WorkBrowsePresenter.View = mock()
-    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
-    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase = mock()
+    private val hasFavoriteUseCase: com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase = mock()
+    private val getWorkBrowseDetailsUseCase: com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase = mock()
     private val rxScheduler: RxScheduler = RxSchedulerTest()
 
     private val presenter = WorkBrowsePresenter(

@@ -41,16 +41,16 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class LoadWorkByTypeUseCaseTest {
 
-    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase = mock()
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase = mock()
-    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mock()
-    private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase = mock()
-    private val getAiringTodayTvShowsUseCase: GetAiringTodayTvShowsUseCase = mock()
-    private val getOnTheAirTvShowsUseCase: GetOnTheAirTvShowsUseCase = mock()
-    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mock()
-    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mock()
+    private val getNowPlayingMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetNowPlayingMoviesUseCase = mock()
+    private val getPopularMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetPopularMoviesUseCase = mock()
+    private val getTopRatedMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetTopRatedMoviesUseCase = mock()
+    private val getUpComingMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetUpComingMoviesUseCase = mock()
+    private val getAiringTodayTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetAiringTodayTvShowsUseCase = mock()
+    private val getOnTheAirTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetOnTheAirTvShowsUseCase = mock()
+    private val getPopularTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetPopularTvShowsUseCase = mock()
+    private val getTopRatedTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetTopRatedTvShowsUseCase = mock()
 
-    private val useCase = LoadWorkByTypeUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase(
             getNowPlayingMoviesUseCase,
             getPopularMoviesUseCase,
             getTopRatedMoviesUseCase,

@@ -16,9 +16,9 @@ package com.pimenta.bestv.feature.main.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.feature.main.domain.GetFavoritesUseCase
-import com.pimenta.bestv.feature.main.domain.GetWorkByGenreUseCase
-import com.pimenta.bestv.feature.main.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.workbrowse.domain.GetFavoritesUseCase
+import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.model.presentation.model.Source
 import com.pimenta.bestv.model.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
@@ -63,9 +63,9 @@ private val EMPTY_PAGE_VIEW_MODEL = WorkPageViewModel(
 class TopWorkGridPresenterTest {
 
     private val view: TopWorkGridPresenter.View = mock()
-    private val getFavoritesUseCase: GetFavoritesUseCase = mock()
-    private val getWorkByGenreUseCase: GetWorkByGenreUseCase = mock()
-    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
+    private val getFavoritesUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoritesUseCase = mock()
+    private val getWorkByGenreUseCase: com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase = mock()
+    private val loadWorkByTypeUseCase: com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase = mock()
 
     private val presenter = TopWorkGridPresenter(
             view,

@@ -42,11 +42,11 @@ private val TV_SHOW_GENRES = listOf(
 
 class GetWorkBrowseDetailsUseCaseTest {
 
-    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
-    private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()
-    private val getTvShowGenresUseCase: GetTvShowGenresUseCase = mock()
+    private val hasFavoriteUseCase: com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase = mock()
+    private val getMovieGenresUseCase: com.pimenta.bestv.workbrowse.domain.GetMovieGenresUseCase = mock()
+    private val getTvShowGenresUseCase: com.pimenta.bestv.workbrowse.domain.GetTvShowGenresUseCase = mock()
 
-    private val useCase = GetWorkBrowseDetailsUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase(
             hasFavoriteUseCase,
             getMovieGenresUseCase,
             getTvShowGenresUseCase

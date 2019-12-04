@@ -41,7 +41,7 @@ class GetFavoriteTvShowsUseCaseTest {
     private val getFavoriteTvShowIdsUseCase: GetFavoriteTvShowIdsUseCase = mock()
     private val getTvShowUseCase: GetTvShowUseCase = mock()
 
-    private val useCase = GetFavoriteTvShowsUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetFavoriteTvShowsUseCase(
             getFavoriteTvShowIdsUseCase,
             getTvShowUseCase
     )

@@ -41,7 +41,7 @@ class GetFavoriteMoviesUseCaseTest {
     private val getFavoriteMovieIdsUseCase: GetFavoriteMovieIdsUseCase = mock()
     private val getMovieUseCase: GetMovieUseCase = mock()
 
-    private val useCase = GetFavoriteMoviesUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetFavoriteMoviesUseCase(
             getFavoriteMovieIdsUseCase,
             getMovieUseCase
     )

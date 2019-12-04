@@ -57,7 +57,7 @@ class GetTvShowByGenreUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
 
-    private val useCase = GetTvShowByGenreUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetTvShowByGenreUseCase(
             mediaRepository
     )
 

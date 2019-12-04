@@ -33,10 +33,10 @@ private val WORK_VIEW_MODEL = WorkViewModel(
 
 class HasFavoriteUseCaseTest {
 
-    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
-    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
+    private val getFavoriteMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoriteMoviesUseCase = mock()
+    private val getFavoriteTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoriteTvShowsUseCase = mock()
 
-    private val useCase = HasFavoriteUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase(
             getFavoriteMoviesUseCase,
             getFavoriteTvShowsUseCase
     )

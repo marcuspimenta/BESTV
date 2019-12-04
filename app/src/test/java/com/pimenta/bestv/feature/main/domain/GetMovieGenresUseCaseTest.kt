@@ -45,7 +45,7 @@ private val MOVIE_GENRES_VIEW_MODEL = listOf(
 class GetMovieGenresUseCaseTest {
 
     private val mediaRepository: MediaRepository = mock()
-    private val useCase = GetMovieGenresUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetMovieGenresUseCase(
             mediaRepository
     )
 

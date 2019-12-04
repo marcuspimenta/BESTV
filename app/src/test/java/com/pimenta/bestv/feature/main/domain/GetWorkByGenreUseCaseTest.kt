@@ -60,10 +60,10 @@ private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetWorkByGenreUseCaseTest {
 
-    private val getMovieByGenreUseCase: GetMovieByGenreUseCase = mock()
-    private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase = mock()
+    private val getMovieByGenreUseCase: com.pimenta.bestv.workbrowse.domain.GetMovieByGenreUseCase = mock()
+    private val getTvShowByGenreUseCase: com.pimenta.bestv.workbrowse.domain.GetTvShowByGenreUseCase = mock()
 
-    private val useCase = GetWorkByGenreUseCase(
+    private val useCase = com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase(
             getMovieByGenreUseCase,
             getTvShowByGenreUseCase
     )
