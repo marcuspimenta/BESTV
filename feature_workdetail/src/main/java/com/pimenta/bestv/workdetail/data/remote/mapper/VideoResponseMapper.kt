@@ -12,10 +12,10 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.workdetail.data.remote.mapper
 
-import com.pimenta.bestv.model.data.remote.VideoResponse
-import com.pimenta.bestv.model.domain.VideoDomainModel
+import com.pimenta.bestv.workdetail.data.remote.model.VideoResponse
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 
 fun VideoResponse.toDomainModel() = VideoDomainModel(
         id = id,

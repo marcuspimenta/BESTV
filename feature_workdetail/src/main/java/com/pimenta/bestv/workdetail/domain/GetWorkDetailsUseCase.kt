@@ -15,7 +15,7 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.VideoDomainModel
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.model.presentation.model.WorkViewModel

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workdetail.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

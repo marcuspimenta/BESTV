@@ -12,17 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
-
-import com.google.gson.annotations.SerializedName
+package com.pimenta.bestv.workdetail.presentation.model
 
 /**
- * Created by marcus on 22-02-2018.
+ * Created by marcus on 12-04-2019.
  */
-data class VideoResponse(
-    @SerializedName("id") var id: String? = null,
-    @SerializedName("key") var key: String? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("site") var site: String? = null,
-    @SerializedName("type") var type: String? = null
+data class VideoViewModel(
+    var id: String? = null,
+    var name: String? = null,
+    var type: String? = null,
+    var thumbnailUrl: String? = null,
+    var youtubeUrl: String? = null
 )

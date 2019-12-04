@@ -12,15 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
+package com.pimenta.bestv.workdetail.domain.model
 
 /**
- * Created by marcus on 12-04-2019.
+ * Created by marcus on 29-10-2019.
  */
-data class VideoViewModel(
-    var id: String? = null,
-    var name: String? = null,
-    var type: String? = null,
-    var thumbnailUrl: String? = null,
-    var youtubeUrl: String? = null
+data class VideoDomainModel(
+    val id: String? = null,
+    val key: String? = null,
+    val name: String? = null,
+    val site: String? = null,
+    val type: String? = null
 )

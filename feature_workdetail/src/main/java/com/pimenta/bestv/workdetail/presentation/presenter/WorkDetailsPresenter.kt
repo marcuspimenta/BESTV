@@ -16,8 +16,9 @@ package com.pimenta.bestv.workdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.VideoViewModel
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter

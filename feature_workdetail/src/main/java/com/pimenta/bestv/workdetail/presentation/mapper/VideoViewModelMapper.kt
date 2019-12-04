@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.mapper
+package com.pimenta.bestv.workdetail.presentation.mapper
 
 import com.pimenta.bestv.model.BuildConfig
-import com.pimenta.bestv.model.domain.VideoDomainModel
-import com.pimenta.bestv.model.presentation.model.VideoViewModel
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
 fun VideoDomainModel.toViewModel() = VideoViewModel(
         id = id,

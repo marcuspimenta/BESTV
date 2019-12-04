@@ -17,6 +17,7 @@ package com.pimenta.bestv.workdetail.data.repository
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
 

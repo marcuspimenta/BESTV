@@ -45,6 +45,7 @@ import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.di.WorkDetailsFragmentComponent
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.workdetail.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.VideoCardRender
