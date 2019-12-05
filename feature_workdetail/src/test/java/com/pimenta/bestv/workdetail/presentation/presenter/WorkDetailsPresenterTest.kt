@@ -16,42 +16,48 @@ package com.pimenta.bestv.workdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.common.kotlin.Quintuple
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.kotlin.Quadruple
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 /**
  * Created by marcus on 24-06-2019.
  */
-private val RECOMMENDED_PAGE = WorkPageViewModel(
+private val RECOMMENDED_PAGE = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 2,
                         title = "Recommended movie",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
-private val SIMILAR_PAGE = WorkPageViewModel(
+private val SIMILAR_PAGE = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 3,
                         title = "Similar movie",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
@@ -77,26 +83,35 @@ private fun aWorkViewModel(favorite: Boolean = false) = WorkViewModel(
 
 class WorkDetailsPresenterTest {
 
-    private val view: com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter.View = mock()
+    private val view: WorkDetailsPresenter.View = mock()
     private val setFavoriteUseCase: SetFavoriteUseCase = mock()
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val getWorkDetailsUseCase: GetWorkDetailsUseCase = mock()
-    private val rxScheduler: RxScheduler = RxSchedulerTest()
-    private val presenter = com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter(
+    private val workDetailsRoute: WorkDetailsRoute = mock()
+    private val castDetailsRoute: CastDetailsRoute = mock()
+    private val rxSchedulerTest = RxScheduler(
+            Schedulers.trampoline(),
+            Schedulers.trampoline()
+    )
+
+    private val presenter = WorkDetailsPresenter(
             view,
             setFavoriteUseCase,
             getRecommendationByWorkUseCase,
             getSimilarByWorkUseCase,
             getWorkDetailsUseCase,
-            rxScheduler
+            workDetailsRoute,
+            castDetailsRoute,
+            rxSchedulerTest
     )
 
     @Test
     fun `should set a work as favorite`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(setFavoriteUseCase(workViewModel)).thenReturn(Completable.complete())
+        whenever(setFavoriteUseCase(workViewModel))
+                .thenReturn(Completable.complete())
 
         presenter.setFavorite(workViewModel)
 
@@ -107,7 +122,8 @@ class WorkDetailsPresenterTest {
     fun `should remove a work from favorite`() {
         val workViewModel = aWorkViewModel(favorite = true)
 
-        whenever(setFavoriteUseCase(workViewModel)).thenReturn(Completable.complete())
+        whenever(setFavoriteUseCase(workViewModel))
+                .thenReturn(Completable.complete())
 
         presenter.setFavorite(workViewModel)
 
@@ -118,7 +134,8 @@ class WorkDetailsPresenterTest {
     fun `should return false if a error happens while setting a work as favorite`() {
         val workViewModel = aWorkViewModel(favorite = true)
 
-        whenever(setFavoriteUseCase(workViewModel)).thenReturn(Completable.error(Throwable()))
+        whenever(setFavoriteUseCase(workViewModel))
+                .thenReturn(Completable.error(Throwable()))
 
         presenter.setFavorite(workViewModel)
 
@@ -128,26 +145,21 @@ class WorkDetailsPresenterTest {
     @Test
     fun `should return the right data when loading the work details`() {
         val workViewModel = aWorkViewModel()
+        val recommendedWorks = RECOMMENDED_PAGE.works
+                ?.map { it.toViewModel() }
+                ?: emptyList()
+        val similarWorks = SIMILAR_PAGE.works
+                ?.map { it.toViewModel() }
+                ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(Quintuple(true, null, null, RECOMMENDED_PAGE, SIMILAR_PAGE)))
+                .thenReturn(Single.just(Quadruple(null, null, RECOMMENDED_PAGE, SIMILAR_PAGE)))
 
         presenter.loadDataByWork(workViewModel)
 
-        val recommendedWorks = mutableListOf<WorkViewModel>().apply {
-            RECOMMENDED_PAGE.works?.let {
-                addAll(it)
-            }
-        }
-        val similarWorks = mutableListOf<WorkViewModel>().apply {
-            SIMILAR_PAGE.works?.let {
-                addAll(it)
-            }
-        }
-
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onDataLoaded(true, null, null, recommendedWorks, similarWorks)
+            verify(view).onDataLoaded(false, null, null, recommendedWorks, similarWorks)
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }
@@ -157,7 +169,8 @@ class WorkDetailsPresenterTest {
     fun `should show an error message if a error happens while loading the work details`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getWorkDetailsUseCase(workViewModel)).thenReturn(Single.error(Throwable()))
+        whenever(getWorkDetailsUseCase(workViewModel))
+                .thenReturn(Single.error(Throwable()))
 
         presenter.loadDataByWork(workViewModel)
 
@@ -173,15 +186,14 @@ class WorkDetailsPresenterTest {
     fun `should load the recommended works and show them`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1)).thenReturn(Single.just(RECOMMENDED_PAGE))
+        whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1))
+                .thenReturn(Single.just(RECOMMENDED_PAGE))
 
         presenter.loadRecommendationByWork(workViewModel)
 
-        val recommendedWorks = mutableListOf<WorkViewModel>().apply {
-            RECOMMENDED_PAGE.works?.let {
-                addAll(it)
-            }
-        }
+        val recommendedWorks = RECOMMENDED_PAGE.works
+                ?.map { it.toViewModel() }
+                ?: emptyList()
 
         verify(view, only()).onRecommendationLoaded(recommendedWorks)
     }
@@ -190,7 +202,8 @@ class WorkDetailsPresenterTest {
     fun `should not show any data when a error happens while loading the recommended works`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1))
+                .thenReturn(Single.error(Throwable()))
 
         presenter.loadRecommendationByWork(workViewModel)
 
@@ -201,15 +214,14 @@ class WorkDetailsPresenterTest {
     fun `should load the similar works and show them`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1)).thenReturn(Single.just(SIMILAR_PAGE))
+        whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1))
+                .thenReturn(Single.just(SIMILAR_PAGE))
 
         presenter.loadSimilarByWork(workViewModel)
 
-        val similarWorks = mutableListOf<WorkViewModel>().apply {
-            SIMILAR_PAGE.works?.let {
-                addAll(it)
-            }
-        }
+        val similarWorks = SIMILAR_PAGE.works
+                ?.map { it.toViewModel() }
+                ?: emptyList()
 
         verify(view, only()).onSimilarLoaded(similarWorks)
     }
@@ -218,7 +230,8 @@ class WorkDetailsPresenterTest {
     fun `should not show any data when a error happens while loading the similar works`() {
         val workViewModel = aWorkViewModel()
 
-        whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1)).thenReturn(Single.error(Throwable()))
+        whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1))
+                .thenReturn(Single.error(Throwable()))
 
         presenter.loadSimilarByWork(workViewModel)
 
@@ -227,19 +240,27 @@ class WorkDetailsPresenterTest {
 
     @Test
     fun `should open work details when a work is clicked`() {
-        val itemViewHolder = mock<Presenter.ViewHolder>()
+        val itemViewHolder: Presenter.ViewHolder = mock()
+        val route: Route = mock()
+
+        whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL))
+                .thenReturn(route)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, MOVIE_VIEW_MODEL)
+        verify(view, only()).openWorkDetails(itemViewHolder, route)
     }
 
     @Test
     fun `should open cast details when a cast is clicked`() {
-        val itemViewHolder = mock<Presenter.ViewHolder>()
+        val itemViewHolder: Presenter.ViewHolder = mock()
+        val route: Route = mock()
+
+        whenever(castDetailsRoute.buildCastDetailRoute(CAST_DETAILED_VIEW_MODEL))
+                .thenReturn(route)
 
         presenter.castClicked(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
 
-        verify(view, only()).openCastDetails(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
+        verify(view, only()).openCastDetails(itemViewHolder, route)
     }
 }

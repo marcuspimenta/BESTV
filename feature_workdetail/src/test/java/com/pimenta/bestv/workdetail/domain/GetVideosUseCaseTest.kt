@@ -16,8 +16,8 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -25,8 +25,8 @@ import org.junit.Test
  * Created by marcus on 23-06-2018.
  */
 private const val MOVIE_ID = 1
-private val VIDEO_VIEW_MODELS = listOf(
-        VideoViewModel(
+private val VIDEO_LIST = listOf(
+        VideoDomainModel(
                 id = "1",
                 name = "VideoResponse"
         )
@@ -44,12 +44,12 @@ class GetVideosUseCaseTest {
 
     @Test
     fun `should return the right data when loading the videos by movie`() {
-        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
+        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(WorkType.MOVIE, MOVIE_ID)
                 .test()
                 .assertComplete()
-                .assertResult(VIDEO_VIEW_MODELS)
+                .assertResult(VIDEO_LIST)
     }
 
     @Test
@@ -63,12 +63,12 @@ class GetVideosUseCaseTest {
 
     @Test
     fun `should return the right data when loading the videos by tv show`() {
-        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_VIEW_MODELS))
+        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(WorkType.TV_SHOW, MOVIE_ID)
                 .test()
                 .assertComplete()
-                .assertResult(VIDEO_VIEW_MODELS)
+                .assertResult(VIDEO_LIST)
     }
 
     @Test

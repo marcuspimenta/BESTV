@@ -16,29 +16,30 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.common.kotlin.Quintuple
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.domain.CastDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.kotlin.Quadruple
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 22-08-2019.
  */
-private val WORK_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
+private val WORK = WorkViewModel(
         id = 1,
         type = WorkType.MOVIE
 )
-private val VIDEO_VIEW_MODELS = listOf(
-        VideoViewModel(
+private val VIDEO_LIST = listOf(
+        VideoDomainModel(
                 id = "1",
                 name = "VideoResponse"
         )
 )
-private val CAST_VIEW_MODELS = listOf(
-        CastViewModel(
+private val CAST_LIST = listOf(
+        CastDomainModel(
                 id = 1,
                 name = "Name",
                 character = "Character",
@@ -47,7 +48,7 @@ private val CAST_VIEW_MODELS = listOf(
                 biography = null
         )
 )
-private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val WORK_PAGE = WorkPageDomainModel(
         page = 0,
         totalPages = 0,
         works = null
@@ -55,13 +56,11 @@ private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
 
 class GetWorkDetailsUseCaseTest {
 
-    private val isFavoriteUseCase: IsFavoriteUseCase = mock()
     private val getVideosUseCase: GetVideosUseCase = mock()
     private val getCastsUseCase: GetCastsUseCase = mock()
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
-            isFavoriteUseCase,
             getVideosUseCase,
             getCastsUseCase,
             getRecommendationByWorkUseCase,
@@ -70,37 +69,33 @@ class GetWorkDetailsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the work details`() {
-        whenever(isFavoriteUseCase(WORK_VIEW_MODEL))
-                .thenReturn(Single.just(true))
-        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
-                .thenReturn(Single.just(VIDEO_VIEW_MODELS))
-        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
-                .thenReturn(Single.just(CAST_VIEW_MODELS))
-        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
-                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
-        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
-                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+                .thenReturn(Single.just(VIDEO_LIST))
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+                .thenReturn(Single.just(CAST_LIST))
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+                .thenReturn(Single.just(WORK_PAGE))
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+                .thenReturn(Single.just(WORK_PAGE))
 
-        useCase(WORK_VIEW_MODEL)
+        useCase(WORK)
                 .test()
                 .assertComplete()
-                .assertResult(Quintuple(true, VIDEO_VIEW_MODELS, CAST_VIEW_MODELS, WORK_PAGE_VIEW_MODEL, WORK_PAGE_VIEW_MODEL))
+                .assertResult(Quadruple(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(isFavoriteUseCase(WORK_VIEW_MODEL))
-                .thenReturn(Single.just(true))
-        whenever(getVideosUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
-                .thenReturn(Single.just(VIDEO_VIEW_MODELS))
-        whenever(getCastsUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id))
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+                .thenReturn(Single.just(VIDEO_LIST))
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
                 .thenReturn(Single.error(Throwable()))
-        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
-                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
-        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK_VIEW_MODEL.id, 1))
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+                .thenReturn(Single.just(WORK_PAGE))
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(WORK_VIEW_MODEL)
+        useCase(WORK)
                 .test()
                 .assertError(Throwable::class.java)
     }

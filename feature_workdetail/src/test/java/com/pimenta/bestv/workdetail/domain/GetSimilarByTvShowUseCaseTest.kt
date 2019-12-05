@@ -16,65 +16,52 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.MoviePageResponse
-import com.pimenta.bestv.data.remote.model.remote.MovieResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import io.reactivex.Single
 import org.junit.Test
-
-private const val MOVIE_ID = 1
-private val WORK_PAGE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Title"
-            )
-    )
-}
-private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
-        page = 1,
-        totalPages = 1,
-        works = listOf(
-                WorkViewModel(
-                        id = 1,
-                        title = "Title",
-                        type = WorkType.MOVIE
-                )
-        )
-)
 
 /**
  * Created by marcus on 23-10-2019.
  */
-class GetSimilarByMovieUseCaseTest {
+private const val TV_SHOW_ID = 1
+private val WORK_PAGE = WorkPageDomainModel(
+        page = 1,
+        totalPages = 1,
+        works = listOf(
+                WorkDomainModel(
+                        id = 1,
+                        title = "Title"
+                )
+        )
+)
 
-    private val mediaRepository: MediaRepository = mock()
+class GetSimilarByTvShowUseCaseTest {
 
-    private val useCase = GetSimilarByMovieUseCase(
-            mediaRepository
+    private val tvShowRepository: TvShowRepository = mock()
+
+    private val useCase = GetSimilarByTvShowUseCase(
+            tvShowRepository
     )
 
     @Test
     fun `should return the right data when loading the similar works`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+        whenever(tvShowRepository.getSimilarByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
-        useCase(MOVIE_ID, 1)
+        useCase(TV_SHOW_ID, 1)
                 .test()
                 .assertComplete()
-                .assertResult(WORK_PAGE_VIEW_MODEL)
+                .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getSimilarByMovie(MOVIE_ID, 1))
+        whenever(tvShowRepository.getSimilarByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase(MOVIE_ID, 1)
+        useCase(TV_SHOW_ID, 1)
                 .test()
                 .assertError(Throwable::class.java)
     }

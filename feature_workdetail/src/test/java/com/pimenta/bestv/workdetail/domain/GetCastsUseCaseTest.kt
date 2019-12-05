@@ -16,7 +16,7 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import io.reactivex.Single
 import org.junit.Test
@@ -25,8 +25,8 @@ import org.junit.Test
  * Created by marcus on 23-06-2018.
  */
 private const val WORK_ID = 1
-private val CAST_VIEW_MODELS = listOf(
-        CastViewModel(
+private val CAST_LIST = listOf(
+        CastDomainModel(
                 id = 1,
                 name = "Name",
                 character = "Character",
@@ -48,12 +48,12 @@ class GetCastsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the casts by movie`() {
-        whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.just(CAST_VIEW_MODELS))
+        whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
         useCase(WorkType.MOVIE, WORK_ID)
                 .test()
                 .assertComplete()
-                .assertResult(CAST_VIEW_MODELS)
+                .assertResult(CAST_LIST)
     }
 
     @Test
@@ -67,12 +67,12 @@ class GetCastsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the casts by tv show`() {
-        whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.just(CAST_VIEW_MODELS))
+        whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
         useCase(WorkType.TV_SHOW, WORK_ID)
                 .test()
                 .assertComplete()
-                .assertResult(CAST_VIEW_MODELS)
+                .assertResult(CAST_LIST)
     }
 
     @Test

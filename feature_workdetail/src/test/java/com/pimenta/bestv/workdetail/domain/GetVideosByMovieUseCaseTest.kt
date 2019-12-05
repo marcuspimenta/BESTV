@@ -16,45 +16,43 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.workdetail.data.repository.MovieRepository
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
- * Created by marcus on 23-10-2018.
+ * Created by marcus on 22-10-2018.
  */
 private const val MOVIE_ID = 1
+private val VIDEO_LIST = listOf(
+        VideoDomainModel(
+                id = "1",
+                name = "VideoResponse"
+        )
+)
 
-class IsFavoriteMovieUseCaseTest {
+class GetVideosByMovieUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val movieRepository: MovieRepository = mock()
 
-    private val useCase = IsFavoriteMovieUseCase(
-            mediaRepository
+    private val useCase = GetVideosByMovieUseCase(
+            movieRepository
     )
 
     @Test
-    fun `should return true if a movie is favorite`() {
-        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.just(true))
+    fun `should return the right data when loading the videos`() {
+        whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(MOVIE_ID)
                 .test()
                 .assertComplete()
-                .assertResult(true)
+                .assertResult(VIDEO_LIST)
     }
 
     @Test
-    fun `should return false if a movie is not favorite`() {
-        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.just(false))
-
-        useCase(MOVIE_ID)
-                .test()
-                .assertComplete()
-                .assertResult(false)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when checking if a movie is favorite`() {
-        whenever(mediaRepository.isFavoriteMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() {
+        whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID)
                 .test()

@@ -16,11 +16,9 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.TvShowPageResponse
-import com.pimenta.bestv.data.remote.model.remote.TvShowResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import io.reactivex.Single
 import org.junit.Test
 
@@ -28,50 +26,39 @@ import org.junit.Test
  * Created by marcus on 22-10-2018.
  */
 private const val TV_SHOW_ID = 1
-private val WORK_PAGE = TvShowPageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            TvShowResponse(
-                    id = 1,
-                    title = "Title"
-            )
-    )
-}
-private val WORK_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val WORK_PAGE = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
-                        title = "Title",
-                        type = WorkType.TV_SHOW
+                        title = "Title"
                 )
         )
 )
 
 class GetRecommendationByTvShowUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val tvShowRepository: TvShowRepository = mock()
 
     private val useCase = GetRecommendationByTvShowUseCase(
-            mediaRepository
+            tvShowRepository
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaRepository.getRecommendationByTvShow(TV_SHOW_ID, 1))
+        whenever(tvShowRepository.getRecommendationByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
         useCase(TV_SHOW_ID, 1)
                 .test()
                 .assertComplete()
-                .assertResult(WORK_PAGE_VIEW_MODEL)
+                .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getRecommendationByTvShow(TV_SHOW_ID, 1))
+        whenever(tvShowRepository.getRecommendationByTvShow(TV_SHOW_ID, 1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_ID, 1)
