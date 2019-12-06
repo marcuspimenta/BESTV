@@ -12,13 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -27,38 +26,38 @@ import org.junit.Test
  */
 private const val QUERY = "Batman"
 private const val QUERY_ENCODED = "Batman"
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_PAGE_VIEW_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 10,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
 
-private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 10,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.TV_SHOW
+                        type = WorkDomainModel.Type.TV_SHOW
                 )
         )
 )
 
 class SearchWorksByQueryUseCaseTest {
 
-    private val urlEncoderTextUseCase: com.pimenta.bestv.search.domain.UrlEncoderTextUseCase = mock()
-    private val searchMoviesByQueryUseCase: com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase = mock()
-    private val searchTvShowsByQueryUseCase: com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase = mock()
-    private val useCase = com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase(
+    private val urlEncoderTextUseCase: UrlEncoderTextUseCase = mock()
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
+    private val useCase = SearchWorksByQueryUseCase(
             urlEncoderTextUseCase,
             searchMoviesByQueryUseCase,
             searchTvShowsByQueryUseCase

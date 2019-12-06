@@ -12,69 +12,56 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.TvShowPageResponse
-import com.pimenta.bestv.data.remote.model.remote.TvShowResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.search.data.repository.TvShowRepository
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-28.
  */
-private val WORK_PAGE = TvShowPageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            TvShowResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
-private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+private const val QUERY = "Batman"
+private val WORK_PAGE = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkType.TV_SHOW
+                        originalTitle = "Batman"
                 )
         )
 )
 
 class SearchTvShowsByQueryUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
-    private val useCase = com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase(
-            mediaRepository
+    private val tvShowRepository: TvShowRepository = mock()
+    private val useCase = SearchTvShowsByQueryUseCase(
+            tvShowRepository
     )
 
     @Test
     fun `should return the right data when searching tv show by query`() {
-        whenever(mediaRepository.searchTvShowsByQuery("Batman", 1))
+        whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1))
                 .thenReturn(Single.just(WORK_PAGE))
 
-        useCase("Batman", 1)
+        useCase(QUERY, 1)
                 .test()
                 .assertComplete()
-                .assertResult(TV_SHOW_PAGE_VIEW_MODEL)
+                .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.searchTvShowsByQuery("Batman", 1))
+        whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1))
                 .thenReturn(Single.error(Throwable()))
 
-        useCase("Batman", 1)
+        useCase(QUERY, 1)
                 .test()
                 .assertError(Throwable::class.java)
     }

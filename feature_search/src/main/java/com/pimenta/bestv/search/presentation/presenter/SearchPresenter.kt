@@ -16,9 +16,6 @@ package com.pimenta.bestv.search.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
-import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
-import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.extension.hasNoContent
@@ -26,6 +23,9 @@ import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -92,7 +92,7 @@ class SearchPresenter @Inject constructor(
                     if (pair.second.page <= pair.second.totalPages) {
                         this.resultTvShowPage = pair.second.page
                         pair.second.works?.let {
-                            movies.addAll(it.map { work -> work.toViewModel() })
+                            tvShows.addAll(it.map { work -> work.toViewModel() })
                         }
                     }
 
@@ -112,11 +112,13 @@ class SearchPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ moviePage ->
-                    if (moviePage != null && moviePage.page <= moviePage.totalPages) {
-                        this.resultMoviePage = moviePage.page
-                        moviePage.works?.let {
-                            movies.addAll(it.map { work -> work.toViewModel() })
-                            view.onMoviesLoaded(movies)
+                    moviePage?.let {
+                        if (it.page <= it.totalPages) {
+                            resultMoviePage = it.page
+                            it.works?.let { works ->
+                                movies.addAll(works.map { work -> work.toViewModel() })
+                                view.onMoviesLoaded(movies)
+                            }
                         }
                     }
                 }, { throwable ->
@@ -129,11 +131,13 @@ class SearchPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ tvShowPage ->
-                    if (tvShowPage != null && tvShowPage.page <= tvShowPage.totalPages) {
-                        this.resultTvShowPage = tvShowPage.page
-                        tvShowPage.works?.let {
-                            movies.addAll(it.map { work -> work.toViewModel() })
-                            view.onTvShowsLoaded(tvShows)
+                    tvShowPage?.let {
+                        if (it.page <= it.totalPages) {
+                            resultTvShowPage = it.page
+                            it.works?.let { works ->
+                                tvShows.addAll(works.map { work -> work.toViewModel() })
+                                view.onTvShowsLoaded(tvShows)
+                            }
                         }
                     }
                 }, { throwable ->

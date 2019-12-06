@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.domain
+package com.pimenta.bestv.search.domain
 
 import org.junit.Test
 
@@ -24,7 +24,7 @@ private const val TEXT_ENCODED = "Game+of+thrones"
 
 class UrlEncoderTextUseCaseTest {
 
-    private val useCase = com.pimenta.bestv.search.domain.UrlEncoderTextUseCase()
+    private val useCase = UrlEncoderTextUseCase()
 
     @Test
     fun `should return the right data when encoding a text`() {

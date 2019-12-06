@@ -12,16 +12,24 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.search.presentation.presenter
+package com.pimenta.bestv.search.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
+import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -42,7 +50,7 @@ private val OTHER_WORK_VIEW_MODEL = WorkViewModel(
         originalTitle = "Arrow",
         type = WorkType.TV_SHOW
 )
-private val MOVIE_LIST = listOf(
+private val MOVIE_VIEW_MODEL_LIST = listOf(
         WorkViewModel(
                 id = 1,
                 title = "Batman",
@@ -50,12 +58,20 @@ private val MOVIE_LIST = listOf(
                 type = WorkType.MOVIE
         )
 )
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_DOMAIN_MODEL_LIST = listOf(
+        WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.MOVIE
+        )
+)
+private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 10,
-        works = MOVIE_LIST
+        works = MOVIE_DOMAIN_MODEL_LIST
 )
-private val TV_SHOW_LIST = listOf(
+private val TV_SHOW_VIEW_MODEL_LIST = listOf(
         WorkViewModel(
                 id = 1,
                 title = "Batman",
@@ -63,31 +79,44 @@ private val TV_SHOW_LIST = listOf(
                 type = WorkType.TV_SHOW
         )
 )
-private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val TV_SHOW_DOMAIN_MODEL_LIST = listOf(
+        WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.TV_SHOW
+        )
+)
+private val TV_SHOW_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 10,
-        works = TV_SHOW_LIST
+        works = TV_SHOW_DOMAIN_MODEL_LIST
 )
 
 class SearchPresenterTest {
 
-    private val view: com.pimenta.bestv.search.presentation.presenter.SearchPresenter.View = mock()
-    private val searchWorksByQueryUseCase: com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase = mock()
-    private val searchMoviesByQueryUseCase: com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase = mock()
-    private val searchTvShowsByQueryUseCase: com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase = mock()
-    private val rxScheduler: RxScheduler = RxSchedulerTest()
+    private val view: SearchPresenter.View = mock()
+    private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase = mock()
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
+    private val workDetailsRoute: WorkDetailsRoute = mock()
+    private val rxSchedulerTest = RxScheduler(
+            Schedulers.trampoline(),
+            Schedulers.trampoline()
+    )
 
-    private val presenter = com.pimenta.bestv.search.presentation.presenter.SearchPresenter(
+    private val presenter = SearchPresenter(
             view,
             searchWorksByQueryUseCase,
             searchMoviesByQueryUseCase,
             searchTvShowsByQueryUseCase,
-            rxScheduler
+            workDetailsRoute,
+            rxSchedulerTest
     )
 
     @Test
     fun `should search the works by query`() {
-        val result = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
+        val result = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
 
         whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(Single.just(result))
 
@@ -95,7 +124,7 @@ class SearchPresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onResultLoaded(MOVIE_LIST, TV_SHOW_LIST)
+            verify(view).onResultLoaded(MOVIE_VIEW_MODEL_LIST, TV_SHOW_VIEW_MODEL_LIST)
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }
@@ -139,11 +168,12 @@ class SearchPresenterTest {
 
     @Test
     fun `should return the right data when loading the movies`() {
-        whenever(searchMoviesByQueryUseCase(any(), any())).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
+        whenever(searchMoviesByQueryUseCase(any(), any()))
+                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         presenter.loadMovies()
 
-        verify(view, only()).onMoviesLoaded(MOVIE_LIST)
+        verify(view, only()).onMoviesLoaded(MOVIE_VIEW_MODEL_LIST)
     }
 
     @Test
@@ -157,11 +187,12 @@ class SearchPresenterTest {
 
     @Test
     fun `should return the right data when loading the tv shows`() {
-        whenever(searchTvShowsByQueryUseCase(any(), any())).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
+        whenever(searchTvShowsByQueryUseCase(any(), any()))
+                .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
 
         presenter.loadTvShows()
 
-        verify(view, only()).onTvShowsLoaded(TV_SHOW_LIST)
+        verify(view, only()).onTvShowsLoaded(TV_SHOW_VIEW_MODEL_LIST)
     }
 
     @Test
@@ -203,10 +234,14 @@ class SearchPresenterTest {
 
     @Test
     fun `should open work details when a work is clicked`() {
-        val itemViewHolder = mock<Presenter.ViewHolder>()
+        val itemViewHolder: Presenter.ViewHolder = mock()
+        val route: Route = mock()
+
+        whenever(workDetailsRoute.buildWorkDetailRoute(WORK_VIEW_MODEL))
+                .thenReturn(route)
 
         presenter.workClicked(itemViewHolder, WORK_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, WORK_VIEW_MODEL)
+        verify(view, only()).openWorkDetails(itemViewHolder, route)
     }
 }
