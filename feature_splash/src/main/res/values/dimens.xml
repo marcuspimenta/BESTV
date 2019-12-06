@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ic_tmdb_width">114dp</dimen>
+    <dimen name="ic_tmdb_height">47dp</dimen>
+    <dimen name="ic_tmdb_padding">5dp</dimen>
+</resources>
