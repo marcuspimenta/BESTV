@@ -12,27 +12,32 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.domain
+package com.pimenta.bestv.recommendation.presenter
 
+import android.content.Intent
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
-import com.pimenta.bestv.data.local.alarm.LocalAlarm
+import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
+import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-27.
  */
-class ScheduleRecommendationUseCaseTest {
+class BootPresenterTest {
 
-    private val localAlarm: LocalAlarm = mock()
-    private val useCase = com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase(
-            localAlarm
+    private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase = mock()
+    private val presenter = BootPresenter(
+            scheduleRecommendationUseCase
     )
 
     @Test
     fun `should load the schedule to update the recommendations`() {
-        useCase()
+        val intent: Intent = mock()
 
-        verify(localAlarm).scheduleRecommendationUpdate()
+        presenter.scheduleRecommendationUpdate(intent)
+
+        verify(scheduleRecommendationUseCase, only()).invoke(intent)
     }
 }

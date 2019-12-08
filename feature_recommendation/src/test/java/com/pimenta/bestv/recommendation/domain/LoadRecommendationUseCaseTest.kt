@@ -12,16 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.domain
+package com.pimenta.bestv.recommendation.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.MoviePageResponse
-import com.pimenta.bestv.data.remote.model.remote.MovieResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.recommendation.data.repository.MovieRepository
+import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
@@ -29,55 +28,45 @@ import org.junit.Test
 /**
  * Created by marcus on 2019-08-27.
  */
-private val WORK_PAGE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
 
 class LoadRecommendationUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
-
-    private val useCase = com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase(
-            mediaRepository
+    private val movieRepository: MovieRepository = mock()
+    private val recommendationRepository: RecommendationRepository = mock()
+    private val useCase = LoadRecommendationUseCase(
+            movieRepository,
+            recommendationRepository
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
-        whenever(mediaRepository.getPopularMovies(1))
-                .thenReturn(Single.just(WORK_PAGE))
-        whenever(mediaRepository.loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works))
+        whenever(movieRepository.getPopularMovies(1))
+                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+        whenever(recommendationRepository.loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.works))
                 .thenReturn(Completable.complete())
 
         useCase()
                 .test()
                 .assertComplete()
 
-        verify(mediaRepository).loadRecommendations(MOVIE_PAGE_VIEW_MODEL.works)
+        verify(recommendationRepository).loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.works)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getPopularMovies(1))
+        whenever(movieRepository.getPopularMovies(1))
                 .thenReturn(Single.error(Throwable()))
 
         useCase()

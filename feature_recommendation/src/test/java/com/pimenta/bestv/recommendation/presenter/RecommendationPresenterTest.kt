@@ -12,12 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.recommendation.presentation.presenter
+package com.pimenta.bestv.recommendation.presenter
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
+import com.pimenta.bestv.recommendation.presentation.presenter.RecommendationPresenter
 import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 /**
@@ -25,11 +29,14 @@ import org.junit.Test
  */
 class RecommendationPresenterTest {
 
-    private val service: com.pimenta.bestv.recommendation.presentation.presenter.RecommendationPresenter.Service = mock()
-    private val loadRecommendationUseCase: com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase = mock()
-    private val rxSchedulerTest: RxSchedulerTest = RxSchedulerTest()
+    private val service: RecommendationPresenter.Service = mock()
+    private val loadRecommendationUseCase: LoadRecommendationUseCase = mock()
+    private val rxSchedulerTest = RxScheduler(
+            Schedulers.trampoline(),
+            Schedulers.trampoline()
+    )
 
-    private val presenter = com.pimenta.bestv.recommendation.presentation.presenter.RecommendationPresenter(
+    private val presenter = RecommendationPresenter(
             service,
             loadRecommendationUseCase,
             rxSchedulerTest
