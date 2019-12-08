@@ -12,12 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.Source
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -25,28 +24,27 @@ import org.junit.Test
  * Created by marcus on 28-05-2019.
  */
 private val MOVIE_GENRES = listOf(
-        GenreViewModel(
+        GenreDomainModel(
                 id = 1,
                 name = "Action",
-                source = Source.MOVIE
+                source = GenreDomainModel.Source.MOVIE
         )
 )
 
 private val TV_SHOW_GENRES = listOf(
-        GenreViewModel(
+        GenreDomainModel(
                 id = 2,
                 name = "Action",
-                source = Source.TV_SHOW
+                source = GenreDomainModel.Source.TV_SHOW
         )
 )
 
 class GetWorkBrowseDetailsUseCaseTest {
 
-    private val hasFavoriteUseCase: com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase = mock()
-    private val getMovieGenresUseCase: com.pimenta.bestv.workbrowse.domain.GetMovieGenresUseCase = mock()
-    private val getTvShowGenresUseCase: com.pimenta.bestv.workbrowse.domain.GetTvShowGenresUseCase = mock()
-
-    private val useCase = com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase(
+    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
+    private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()
+    private val getTvShowGenresUseCase: GetTvShowGenresUseCase = mock()
+    private val useCase = GetWorkBrowseDetailsUseCase(
             hasFavoriteUseCase,
             getMovieGenresUseCase,
             getTvShowGenresUseCase

@@ -12,17 +12,23 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.presentation.presenter
+package com.pimenta.bestv.workbrowse.presenter
 
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.*
-import com.pimenta.bestv.workbrowse.presentation.model.Source
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.presentation.presenter.TopWorkGridPresenter
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -30,30 +36,32 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRE = GenreViewModel(
-        id = 1,
-        source = Source.MOVIE
-)
-private val MOVIE_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
+private val MOVIE_VIEW_MODEL = WorkViewModel(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
         type = WorkType.MOVIE
 )
-private val TV_SHOW_VIEW_MODEL = com.pimenta.bestv.model.presentation.model.WorkViewModel(
+private val TV_SHOW_VIEW_MODEL = WorkViewModel(
         id = 1,
         title = "Arrow",
         originalTitle = "Arrow",
         type = WorkType.TV_SHOW
 )
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_DOMAIN_MODEL = WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkDomainModel.Type.MOVIE
+)
+private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                MOVIE_VIEW_MODEL
+                MOVIE_DOMAIN_MODEL
         )
 )
-private val EMPTY_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val EMPTY_PAGE_VIEW_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1
 )
@@ -61,50 +69,24 @@ private val EMPTY_PAGE_VIEW_MODEL = WorkPageViewModel(
 class TopWorkGridPresenterTest {
 
     private val view: TopWorkGridPresenter.View = mock()
-    private val getFavoritesUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoritesUseCase = mock()
-    private val getWorkByGenreUseCase: com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase = mock()
-    private val loadWorkByTypeUseCase: com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase = mock()
+    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
+    private val workDetailsRoute: WorkDetailsRoute = mock()
+    private val rxScheduler: RxScheduler = RxScheduler(
+            Schedulers.trampoline(),
+            Schedulers.trampoline()
+    )
 
     private val presenter = TopWorkGridPresenter(
             view,
-            getFavoritesUseCase,
-            getWorkByGenreUseCase,
             loadWorkByTypeUseCase,
-            RxSchedulerTest()
+            workDetailsRoute,
+            rxScheduler
     )
-
-    @Test
-    fun `should show the favorite works when loading them`() {
-        whenever(getFavoritesUseCase()).thenReturn(Single.just(listOf(MOVIE_VIEW_MODEL)))
-
-        presenter.loadWorkPageByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
-
-        inOrder(view) {
-            verify(view).onShowProgress()
-            verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
-            verify(view).onHideProgress()
-            verifyNoMoreInteractions()
-        }
-    }
-
-    @Test
-    fun `should show an error message if an error happens while loading the favorite works`() {
-        whenever(getFavoritesUseCase()).thenReturn(Single.error(Throwable()))
-
-        presenter.loadWorkPageByType(TopWorkTypeViewModel.FAVORITES_MOVIES)
-
-        inOrder(view) {
-            verify(view).onShowProgress()
-            verify(view).onErrorWorksLoaded()
-            verify(view).onHideProgress()
-            verifyNoMoreInteractions()
-        }
-    }
 
     @Test
     fun `should show the works when loading them by type`() {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
+                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
@@ -146,34 +128,6 @@ class TopWorkGridPresenterTest {
     }
 
     @Test
-    fun `should load the works by genre`() {
-        whenever(getWorkByGenreUseCase(MOVIE_GENRE, 1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
-
-        presenter.loadWorkByGenre(MOVIE_GENRE)
-
-        inOrder(view) {
-            verify(view).onShowProgress()
-            verify(view).onWorksLoaded(listOf(MOVIE_VIEW_MODEL))
-            verify(view).onHideProgress()
-            verifyNoMoreInteractions()
-        }
-    }
-
-    @Test
-    fun `should show an error message when an error happens while loading the works by genre`() {
-        whenever(getWorkByGenreUseCase(MOVIE_GENRE, 1)).thenReturn(Single.error(Throwable()))
-
-        presenter.loadWorkByGenre(MOVIE_GENRE)
-
-        inOrder(view) {
-            verify(view).onShowProgress()
-            verify(view).onErrorWorksLoaded()
-            verify(view).onHideProgress()
-            verifyNoMoreInteractions()
-        }
-    }
-
-    @Test
     fun `should wait some time and then return the view model to the view`() {
         val testScheduler = TestScheduler()
         RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
@@ -203,10 +157,13 @@ class TopWorkGridPresenterTest {
 
     @Test
     fun `should open work details when a work is clicked`() {
-        val itemViewHolder = mock<Presenter.ViewHolder>()
+        val route: Route = mock()
+        val itemViewHolder: Presenter.ViewHolder = mock()
+
+        whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL)).thenReturn(route)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, MOVIE_VIEW_MODEL)
+        verify(view, only()).openWorkDetails(itemViewHolder, route)
     }
 }

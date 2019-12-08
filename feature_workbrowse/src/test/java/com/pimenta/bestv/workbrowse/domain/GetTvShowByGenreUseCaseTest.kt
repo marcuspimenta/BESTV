@@ -12,15 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.TvShowPageResponse
-import com.pimenta.bestv.data.remote.model.remote.TvShowResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
 import io.reactivex.Single
 import org.junit.Test
 
@@ -29,51 +27,42 @@ import org.junit.Test
  */
 private const val GENRE_ID = 1
 private const val PAGE = 1
-private val TV_SHOW_PAGE_RESPONSE = TvShowPageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            TvShowResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
-private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val TV_SHOW_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.TV_SHOW
+                        type = WorkDomainModel.Type.TV_SHOW
                 )
         )
 )
 
 class GetTvShowByGenreUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val tvShowRepository: TvShowRepository = mock()
 
-    private val useCase = com.pimenta.bestv.workbrowse.domain.GetTvShowByGenreUseCase(
-            mediaRepository
+    private val useCase = GetTvShowByGenreUseCase(
+            tvShowRepository
     )
 
     @Test
     fun `should return the right data when loading the tv shows by genre`() {
-        whenever(mediaRepository.getTvShowByGenre(GENRE_ID, PAGE)).thenReturn(Single.just(TV_SHOW_PAGE_RESPONSE))
+        whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
+                .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
 
         useCase(GENRE_ID, PAGE)
                 .test()
                 .assertComplete()
-                .assertResult(TV_SHOW_PAGE_VIEW_MODEL)
+                .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getTvShowByGenre(GENRE_ID, PAGE)).thenReturn(Single.error(Throwable()))
+        whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(GENRE_ID, PAGE)
                 .test()

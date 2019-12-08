@@ -12,44 +12,70 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.presentation.presenter
+package com.pimenta.bestv.workbrowse.presenter
 
 import com.nhaarman.mockitokotlin2.*
+import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.route.search.SearchRoute
+import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
+import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.Source
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 /**
  * Created by marcus on 28-05-2019.
  */
-private val MOVIE_GENRES = listOf(
+private val MOVIE_GENRE_VIEW_MODELS = listOf(
         GenreViewModel(
                 id = 1,
                 name = "Action",
                 source = Source.MOVIE
         )
 )
-private val TV_SHOW_GENRES = listOf(
+private val TV_SHOW_GENRE_VIEW_MODELS = listOf(
         GenreViewModel(
                 id = 2,
                 name = "Action",
                 source = Source.TV_SHOW
         )
 )
+private val MOVIE_GENRE_DOMAIN_MODELS = listOf(
+        GenreDomainModel(
+                id = 1,
+                name = "Action",
+                source = GenreDomainModel.Source.MOVIE
+        )
+)
+private val TV_SHOW_GENRE_DOMAIN_MODELS = listOf(
+        GenreDomainModel(
+                id = 2,
+                name = "Action",
+                source = GenreDomainModel.Source.TV_SHOW
+        )
+)
 
 class WorkBrowsePresenterTest {
 
     private val view: WorkBrowsePresenter.View = mock()
-    private val hasFavoriteUseCase: com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase = mock()
-    private val getWorkBrowseDetailsUseCase: com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase = mock()
-    private val rxScheduler: RxScheduler = RxSchedulerTest()
+    private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
+    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase = mock()
+    private val searchRoute: SearchRoute = mock()
+    private val rxScheduler: RxScheduler = RxScheduler(
+            Schedulers.trampoline(),
+            Schedulers.trampoline()
+    )
 
     private val presenter = WorkBrowsePresenter(
             view,
             hasFavoriteUseCase,
             getWorkBrowseDetailsUseCase,
+            searchRoute,
             rxScheduler
     )
 
@@ -82,13 +108,14 @@ class WorkBrowsePresenterTest {
 
     @Test
     fun `should load the right data when loading the browse details`() {
-        whenever(getWorkBrowseDetailsUseCase()).thenReturn(Single.just(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES)))
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(true, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
 
         presenter.loadData()
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onDataLoaded(true, MOVIE_GENRES, TV_SHOW_GENRES)
+            verify(view).onDataLoaded(true, MOVIE_GENRE_VIEW_MODELS, TV_SHOW_GENRE_VIEW_MODELS)
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }
@@ -110,8 +137,12 @@ class WorkBrowsePresenterTest {
 
     @Test
     fun `should open the search view when click in the search icon`() {
+        val route: Route = mock()
+
+        whenever(searchRoute.buildSearchRoute()).thenReturn(route)
+
         presenter.searchClicked()
 
-        verify(view, only()).openSearch()
+        verify(view, only()).openSearch(route)
     }
 }

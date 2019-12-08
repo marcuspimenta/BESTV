@@ -12,15 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.data.remote.model.remote.MoviePageResponse
-import com.pimenta.bestv.data.remote.model.remote.MovieResponse
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
 import io.reactivex.Single
 import org.junit.Test
 
@@ -29,51 +27,42 @@ import org.junit.Test
  */
 private const val GENRE_ID = 1
 private const val PAGE = 1
-private val MOVIE_PAGE_RESPONSE = MoviePageResponse().apply {
-    page = 1
-    totalPages = 1
-    works = listOf(
-            MovieResponse(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman"
-            )
-    )
-}
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
 
 class GetMovieByGenreUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
+    private val movieRepository: MovieRepository = mock()
 
-    private val useCase = com.pimenta.bestv.workbrowse.domain.GetMovieByGenreUseCase(
-            mediaRepository
+    private val useCase = GetMovieByGenreUseCase(
+            movieRepository
     )
 
     @Test
     fun `should return the right data when loading the movies by genre`() {
-        whenever(mediaRepository.getMovieByGenre(GENRE_ID, PAGE)).thenReturn(Single.just(MOVIE_PAGE_RESPONSE))
+        whenever(movieRepository.getMoviesByGenre(GENRE_ID, PAGE))
+                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         useCase(GENRE_ID, PAGE)
                 .test()
                 .assertComplete()
-                .assertResult(MOVIE_PAGE_VIEW_MODEL)
+                .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getMovieByGenre(GENRE_ID, PAGE)).thenReturn(Single.error(Throwable()))
+        whenever(movieRepository.getMoviesByGenre(GENRE_ID, PAGE))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(GENRE_ID, PAGE)
                 .test()

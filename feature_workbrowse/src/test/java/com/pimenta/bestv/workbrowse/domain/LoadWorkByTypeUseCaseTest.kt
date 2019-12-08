@@ -12,45 +12,45 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageViewModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
-                WorkViewModel(
+                WorkDomainModel(
                         id = 1,
                         title = "Batman",
                         originalTitle = "Batman",
-                        type = WorkType.MOVIE
+                        type = WorkDomainModel.Type.MOVIE
                 )
         )
 )
 
 class LoadWorkByTypeUseCaseTest {
 
-    private val getNowPlayingMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetNowPlayingMoviesUseCase = mock()
-    private val getPopularMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetPopularMoviesUseCase = mock()
-    private val getTopRatedMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetTopRatedMoviesUseCase = mock()
-    private val getUpComingMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetUpComingMoviesUseCase = mock()
-    private val getAiringTodayTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetAiringTodayTvShowsUseCase = mock()
-    private val getOnTheAirTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetOnTheAirTvShowsUseCase = mock()
-    private val getPopularTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetPopularTvShowsUseCase = mock()
-    private val getTopRatedTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetTopRatedTvShowsUseCase = mock()
-
-    private val useCase = com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase(
+    private val getFavoritesUseCase: GetFavoritesUseCase = mock()
+    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase = mock()
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase = mock()
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mock()
+    private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase = mock()
+    private val getAiringTodayTvShowsUseCase: GetAiringTodayTvShowsUseCase = mock()
+    private val getOnTheAirTvShowsUseCase: GetOnTheAirTvShowsUseCase = mock()
+    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mock()
+    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mock()
+    private val useCase = LoadWorkByTypeUseCase(
+            getFavoritesUseCase,
             getNowPlayingMoviesUseCase,
             getPopularMoviesUseCase,
             getTopRatedMoviesUseCase,
@@ -63,17 +63,19 @@ class LoadWorkByTypeUseCaseTest {
 
     @Test
     fun `should return the right data when loading the works by type`() {
-        whenever(getNowPlayingMoviesUseCase(1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
+        whenever(getNowPlayingMoviesUseCase(1))
+                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
                 .test()
                 .assertComplete()
-                .assertResult(MOVIE_PAGE_VIEW_MODEL)
+                .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getNowPlayingMoviesUseCase(1)).thenReturn(Single.error(Throwable()))
+        whenever(getNowPlayingMoviesUseCase(1))
+                .thenReturn(Single.error(Throwable()))
 
         useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
                 .test()

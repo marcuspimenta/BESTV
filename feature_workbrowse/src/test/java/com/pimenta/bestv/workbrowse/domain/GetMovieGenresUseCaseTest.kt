@@ -12,56 +12,48 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.Source
-import com.pimenta.bestv.data.remote.model.remote.MovieGenreListResponse
-import com.pimenta.bestv.data.remote.model.remote.MovieGenreResponse
+import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRES = MovieGenreListResponse().apply {
-    genres = listOf(
-            MovieGenreResponse(
-                    id = 2,
-                    name = "Action"
-            )
-    )
-}
-private val MOVIE_GENRES_VIEW_MODEL = listOf(
-        GenreViewModel(
+private val MOVIE_GENRES_DOMAIN_MODEL = listOf(
+        GenreDomainModel(
                 id = 2,
                 name = "Action",
-                source = Source.MOVIE
+                source = GenreDomainModel.Source.MOVIE
         )
 )
 
 class GetMovieGenresUseCaseTest {
 
-    private val mediaRepository: MediaRepository = mock()
-    private val useCase = com.pimenta.bestv.workbrowse.domain.GetMovieGenresUseCase(
-            mediaRepository
+    private val genreRepository: GenreRepository = mock()
+    private val useCase = GetMovieGenresUseCase(
+            genreRepository
     )
 
     @Test
     fun `should return the right data when loading the movie genres`() {
-        whenever(mediaRepository.getMovieGenres()).thenReturn(Single.just(MOVIE_GENRES))
+        whenever(genreRepository.getMovieGenres())
+                .thenReturn(Single.just(MOVIE_GENRES_DOMAIN_MODEL))
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(MOVIE_GENRES_VIEW_MODEL)
+                .assertResult(MOVIE_GENRES_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(mediaRepository.getMovieGenres()).thenReturn(Single.error(Throwable()))
+        whenever(genreRepository.getMovieGenres())
+                .thenReturn(Single.error(Throwable()))
 
         useCase()
                 .test()

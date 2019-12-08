@@ -12,49 +12,54 @@
  * the License.
  */
 
-package com.pimenta.bestv.feature.main.domain
+package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-23.
  */
-private val WORK_VIEW_MODEL = WorkViewModel(
+private val WORK_DOMAIN_MODEL = WorkDomainModel(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
-        type = WorkType.MOVIE
+        type = WorkDomainModel.Type.MOVIE
+)
+private val WORK_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+        page = 1,
+        totalPages = 1,
+        works = listOf(WORK_DOMAIN_MODEL)
 )
 
 class GetFavoritesUseCaseTest {
 
-    private val getFavoriteMoviesUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoriteMoviesUseCase = mock()
-    private val getFavoriteTvShowsUseCase: com.pimenta.bestv.workbrowse.domain.GetFavoriteTvShowsUseCase = mock()
+    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
+    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
 
-    private val useCase = com.pimenta.bestv.workbrowse.domain.GetFavoritesUseCase(
+    private val useCase = GetFavoritesUseCase(
             getFavoriteMoviesUseCase,
             getFavoriteTvShowsUseCase
     )
 
     @Test
     fun `should return the right data when loading the favorites`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
+        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
 
         useCase()
                 .test()
                 .assertComplete()
-                .assertResult(listOf(WORK_VIEW_MODEL))
+                .assertResult(WORK_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_VIEW_MODEL)))
+        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
 
         useCase()
