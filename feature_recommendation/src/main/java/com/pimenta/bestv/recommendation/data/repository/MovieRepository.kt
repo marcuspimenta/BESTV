@@ -15,6 +15,8 @@
 package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.recommendation.R
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
@@ -22,10 +24,14 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository @Inject constructor(
+    private val resource: Resource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
     fun getPopularMovies(page: Int) =
             movieRemoteDataSource.getPopularMovies(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 }

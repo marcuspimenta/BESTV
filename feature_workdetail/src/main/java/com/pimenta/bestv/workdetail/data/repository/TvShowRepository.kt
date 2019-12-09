@@ -17,6 +17,8 @@ package com.pimenta.bestv.workdetail.data.repository
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
@@ -25,6 +27,7 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class TvShowRepository @Inject constructor(
+    private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
@@ -45,11 +48,17 @@ class TvShowRepository @Inject constructor(
 
     fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
             tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getSimilarByTvShow(tvShowId: Int, page: Int) =
             tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getVideosByTvShow(tvShowId: Int) =
             tvShowRemoteDataSource.getVideosByTvShow(tvShowId)

@@ -17,6 +17,8 @@ package com.pimenta.bestv.workdetail.data.repository
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
@@ -25,6 +27,7 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository @Inject constructor(
+    private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
@@ -45,11 +48,17 @@ class MovieRepository @Inject constructor(
 
     fun getRecommendationByMovie(movieId: Int, page: Int) =
             movieRemoteDataSource.getRecommendationByMovie(movieId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getSimilarByMovie(movieId: Int, page: Int) =
             movieRemoteDataSource.getSimilarByMovie(movieId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getVideosByMovie(movieId: Int) =
             movieRemoteDataSource.getVideosByMovie(movieId)

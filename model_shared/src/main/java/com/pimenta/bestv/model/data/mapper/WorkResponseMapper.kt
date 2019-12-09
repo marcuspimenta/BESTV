@@ -18,13 +18,15 @@ import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.model.data.remote.WorkResponse
 import com.pimenta.bestv.model.domain.WorkDomainModel
 
-fun WorkResponse.toDomainModel() = WorkDomainModel(
+fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
         id = id,
         title = title,
         originalTitle = originalTitle,
         releaseDate = releaseDate,
         originalLanguage = originalLanguage,
-        overview = overview,
+        overview = overview.takeUnless { it.isNullOrBlank() || it.isNullOrEmpty() }
+                ?.let { "$it\n\n$source" }
+                ?: source,
         backdropPath = backdropPath,
         posterPath = posterPath,
         popularity = popularity,

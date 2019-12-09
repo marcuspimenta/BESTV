@@ -14,14 +14,17 @@
 
 package com.pimenta.bestv.castdetail.data.repository
 
+import com.pimenta.bestv.castdetail.R
 import com.pimenta.bestv.castdetail.data.remote.datasource.CastRemoteDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
 import javax.inject.Inject
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class CastRepository @Inject constructor(
+    private val resource: Resource,
     private val castRemoteDataSource: CastRemoteDataSource
 ) {
 
@@ -31,9 +34,15 @@ class CastRepository @Inject constructor(
 
     fun getMovieCreditsByCast(castId: Int) =
             castRemoteDataSource.getMovieCreditsByCast(castId)
-                    .map { it.works?.map { work -> work.toDomainModel() } }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.works?.map { work -> work.toDomainModel(source) }
+                    }
 
     fun getTvShowCreditsByCast(castId: Int) =
             castRemoteDataSource.getTvShowCreditsByCast(castId)
-                    .map { it.works?.map { work -> work.toDomainModel() } }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.works?.map { work -> work.toDomainModel(source) }
+                    }
 }

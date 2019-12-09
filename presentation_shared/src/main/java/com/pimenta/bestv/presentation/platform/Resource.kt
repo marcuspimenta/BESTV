@@ -12,13 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.presentation.platform
 
-import com.pimenta.bestv.model.data.remote.WorkPageResponse
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import android.app.Application
+import androidx.annotation.StringRes
+import javax.inject.Inject
 
-fun WorkPageResponse<*>.toDomainModel(source: String) = WorkPageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        works = works?.map { it.toDomainModel(source) }
-)
+/**
+ * Created by marcus on 9-12-2019.
+ */
+class Resource @Inject constructor(
+    private val application: Application
+) {
+
+    fun getStringResource(@StringRes resourceId: Int) =
+            application.getString(resourceId)
+}

@@ -14,9 +14,11 @@
 
 package com.pimenta.bestv.workbrowse.data.repository
 
-import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
 import javax.inject.Inject
 
@@ -24,6 +26,7 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class TvShowRepository @Inject constructor(
+    private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
@@ -35,7 +38,9 @@ class TvShowRepository @Inject constructor(
                         it.forEach { tvShowDbModel ->
                             tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
                                 work.isFavorite = true
-                                tvShows.add(work.toDomainModel())
+
+                                val source = resource.getStringResource(R.string.source_tmdb)
+                                tvShows.add(work.toDomainModel(source))
                             }
                         }
                         tvShows.toList()
@@ -43,21 +48,36 @@ class TvShowRepository @Inject constructor(
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
             tvShowRemoteDataSource.getTvShowByGenre(genreId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getAiringTodayTvShows(page: Int) =
             tvShowRemoteDataSource.getAiringTodayTvShows(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getOnTheAirTvShows(page: Int) =
             tvShowRemoteDataSource.getOnTheAirTvShows(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getPopularTvShows(page: Int) =
             tvShowRemoteDataSource.getPopularTvShows(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getTopRatedTvShows(page: Int) =
             tvShowRemoteDataSource.getTopRatedTvShows(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 }

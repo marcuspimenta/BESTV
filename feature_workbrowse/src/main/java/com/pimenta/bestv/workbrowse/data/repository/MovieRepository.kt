@@ -17,6 +17,8 @@ package com.pimenta.bestv.workbrowse.data.repository
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
@@ -24,6 +26,7 @@ import javax.inject.Inject
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository @Inject constructor(
+    private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
@@ -35,7 +38,9 @@ class MovieRepository @Inject constructor(
                         it.forEach { movieDbModel ->
                             movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
                                 work.isFavorite = true
-                                movies.add(work.toDomainModel())
+
+                                val source = resource.getStringResource(R.string.source_tmdb)
+                                movies.add(work.toDomainModel(source))
                             }
                         }
                         movies.toList()
@@ -43,21 +48,36 @@ class MovieRepository @Inject constructor(
 
     fun getMoviesByGenre(genreId: Int, page: Int) =
             movieRemoteDataSource.getMoviesByGenre(genreId, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getNowPlayingMovies(page: Int) =
             movieRemoteDataSource.getNowPlayingMovies(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getPopularMovies(page: Int) =
             movieRemoteDataSource.getPopularMovies(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getTopRatedMovies(page: Int) =
             movieRemoteDataSource.getTopRatedMovies(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 
     fun getUpComingMovies(page: Int) =
             movieRemoteDataSource.getUpComingMovies(page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 }

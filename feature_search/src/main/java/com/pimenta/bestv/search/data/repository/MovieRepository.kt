@@ -15,6 +15,8 @@
 package com.pimenta.bestv.search.data.repository
 
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.search.R
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 
@@ -22,10 +24,14 @@ import javax.inject.Inject
  * Created by marcus on 29-10-2019.
  */
 class MovieRepository @Inject constructor(
+    private val resource: Resource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
     fun searchMoviesByQuery(query: String, page: Int) =
             movieRemoteDataSource.searchMoviesByQuery(query, page)
-                    .map { it.toDomainModel() }
+                    .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.toDomainModel(source)
+                    }
 }
