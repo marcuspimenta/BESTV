@@ -26,6 +26,8 @@ class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
         val castViewModel = item as CastViewModel
         viewHolder.title.text = castViewModel.name
         // viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-        viewHolder.body.text = castViewModel.biography
+        castViewModel.biography?.let {
+            viewHolder.body.text = it
+        }
     }
 }
