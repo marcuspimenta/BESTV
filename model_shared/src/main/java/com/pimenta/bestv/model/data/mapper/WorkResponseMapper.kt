@@ -24,9 +24,8 @@ fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
         originalTitle = originalTitle,
         releaseDate = releaseDate,
         originalLanguage = originalLanguage,
-        overview = overview.takeUnless { it.isNullOrBlank() || it.isNullOrEmpty() }
-                ?.let { "$it\n\n$source" }
-                ?: source,
+        overview = overview,
+        source = source,
         backdropPath = backdropPath,
         posterPath = posterPath,
         popularity = popularity,

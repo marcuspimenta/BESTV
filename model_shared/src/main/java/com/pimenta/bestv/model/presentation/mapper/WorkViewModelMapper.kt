@@ -34,6 +34,7 @@ fun WorkDomainModel.toViewModel() = WorkViewModel(
         title = title,
         originalLanguage = originalLanguage,
         overview = overview,
+        source = source,
         backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
         originalTitle = originalTitle,

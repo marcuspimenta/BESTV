@@ -25,7 +25,7 @@ class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel
         viewHolder.title.text = workViewModel.title
-        viewHolder.subtitle.text = workViewModel.releaseDate
+        viewHolder.subtitle.text = "${workViewModel.releaseDate} - ${workViewModel.source}"
         viewHolder.body.text = workViewModel.overview
     }
 }

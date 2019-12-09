@@ -15,3 +15,5 @@
 package com.pimenta.bestv.presentation.extension
 
 fun String.hasNoContent() = isEmpty() && isBlank()
+
+fun String.hasContent() = isNotBlank() && isNotBlank() && this != "null"

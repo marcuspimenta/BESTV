@@ -28,9 +28,8 @@ fun CastResponse.toDomainModel(source: String) = CastDomainModel(
         profilePath = profilePath,
         birthday = birthday,
         deathDay = deathDay,
-        biography = biography.takeUnless { it.isNullOrBlank() || it.isNullOrEmpty() }
-                ?.let { "$it\n\n$source" }
-                ?: source,
+        biography = biography,
+        source = source,
         popularity = popularity,
         placeOfBirth = placeOfBirth
 )

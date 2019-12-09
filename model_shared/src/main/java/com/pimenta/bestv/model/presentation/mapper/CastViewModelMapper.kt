@@ -23,6 +23,7 @@ fun CastDomainModel.toViewModel() = CastViewModel(
         name = name,
         character = character,
         birthday = birthday,
+        source = source,
         deathDay = deathDay,
         biography = biography,
         thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }

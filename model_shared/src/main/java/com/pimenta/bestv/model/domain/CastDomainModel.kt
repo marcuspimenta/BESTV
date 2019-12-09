@@ -27,6 +27,7 @@ data class CastDomainModel(
     val character: String? = null,
     val profilePath: String? = null,
     val birthday: String? = null,
+    val source: String? = null,
     val deathDay: String? = null,
     val biography: String? = null,
     val popularity: Double? = null,

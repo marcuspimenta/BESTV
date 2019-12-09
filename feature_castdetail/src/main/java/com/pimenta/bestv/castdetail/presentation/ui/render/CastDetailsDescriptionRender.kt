@@ -16,6 +16,7 @@ package com.pimenta.bestv.castdetail.presentation.ui.render
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.presentation.extension.hasContent
 
 /**
  * Created by marcus on 07-04-2018.
@@ -25,9 +26,10 @@ class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val castViewModel = item as CastViewModel
         viewHolder.title.text = castViewModel.name
-        // viewHolder.getSubtitle().setText(dateFormat.format(movie.getReleaseDate()));
-        castViewModel.biography?.let {
-            viewHolder.body.text = it
+        castViewModel.source?.let {
+            viewHolder.subtitle.text = it
         }
+        castViewModel.biography?.takeIf { it.hasContent() }
+                ?.let { viewHolder.body.text = it }
     }
 }

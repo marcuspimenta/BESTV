@@ -30,6 +30,7 @@ data class WorkViewModel(
     var id: Int,
     var originalLanguage: String? = null,
     var overview: String? = null,
+    val source: String? = null,
     var backdropUrl: String? = null,
     var posterUrl: String? = null,
     var title: String? = null,

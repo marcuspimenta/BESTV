@@ -30,6 +30,7 @@ private const val WORK = "work"
 private const val ID = "ID"
 private const val LANGUAGE = "LANGUAGE"
 private const val OVERVIEW = "OVERVIEW"
+private const val SOURCE = "SOURCE"
 private const val BACKGROUND_URL = "BACKGROUND_URL"
 private const val POSTER_URL = "POSTER_URL"
 private const val TITLE = "TITLE"
@@ -51,6 +52,7 @@ class WorkDetailsRoute @Inject constructor() {
                     .appendQueryParameter(ID, id.toString())
                     .appendQueryParameter(LANGUAGE, originalLanguage)
                     .appendQueryParameter(OVERVIEW, overview)
+                    .appendQueryParameter(SOURCE, source)
                     .appendQueryParameter(BACKGROUND_URL, backdropUrl)
                     .appendQueryParameter(POSTER_URL, posterUrl)
                     .appendQueryParameter(TITLE, title)
@@ -68,6 +70,7 @@ class WorkDetailsRoute @Inject constructor() {
                             title = it.getQueryParameter(TITLE),
                             originalLanguage = it.getQueryParameter(LANGUAGE),
                             overview = it.getQueryParameter(OVERVIEW),
+                            source = it.getQueryParameter(SOURCE),
                             backdropUrl = it.getQueryParameter(BACKGROUND_URL),
                             posterUrl = it.getQueryParameter(POSTER_URL),
                             originalTitle = it.getQueryParameter(ORIGINAL_TITLE),

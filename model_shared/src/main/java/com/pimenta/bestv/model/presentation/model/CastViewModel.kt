@@ -30,6 +30,7 @@ data class CastViewModel(
     var name: String? = null,
     var character: String? = null,
     var birthday: String? = null,
+    val source: String? = null,
     var deathDay: String? = null,
     var biography: String? = null,
     var thumbnailUrl: String? = null

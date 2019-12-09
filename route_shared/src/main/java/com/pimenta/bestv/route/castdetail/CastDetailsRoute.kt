@@ -30,6 +30,7 @@ private const val ID = "ID"
 private const val NAME = "NAME"
 private const val CHARACTER = "CHARACTER"
 private const val BIRTHDAY = "BIRTHDAY"
+private const val SOURCE = "SOURCE"
 private const val DEATH_DAY = "DEATH_DAY"
 private const val BIOGRAPH = "BIOGRAPH"
 private const val THUMBNAIL_URL = "THUMBNAIL_URL"
@@ -48,6 +49,7 @@ class CastDetailsRoute @Inject constructor() {
                     .appendQueryParameter(NAME, name)
                     .appendQueryParameter(CHARACTER, character)
                     .appendQueryParameter(BIRTHDAY, birthday)
+                    .appendQueryParameter(SOURCE, source)
                     .appendQueryParameter(DEATH_DAY, deathDay)
                     .appendQueryParameter(BIOGRAPH, biography)
                     .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
@@ -63,6 +65,7 @@ class CastDetailsRoute @Inject constructor() {
                             birthday = it.getQueryParameter(BIRTHDAY),
                             deathDay = it.getQueryParameter(DEATH_DAY),
                             biography = it.getQueryParameter(BIOGRAPH),
+                            source = it.getQueryParameter(SOURCE),
                             thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
                     )
                 } else {
