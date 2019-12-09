@@ -14,13 +14,13 @@
 
 package com.pimenta.bestv.workdetail.data.repository
 
-import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
+import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.R
-import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
+import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import javax.inject.Inject
 
 /**
@@ -41,8 +41,9 @@ class TvShowRepository @Inject constructor(
     fun getCastByTvShow(tvShowId: Int) =
             tvShowRemoteDataSource.getCastByTvShow(tvShowId)
                     .map {
-                        it.casts?.map { cast ->
-                            cast.toDomainModel()
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        it.casts?.map {
+                            cast -> cast.toDomainModel(source)
                         }
                     }
 

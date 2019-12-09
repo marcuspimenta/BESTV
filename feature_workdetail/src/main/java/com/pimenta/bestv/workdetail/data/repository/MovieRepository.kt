@@ -41,8 +41,9 @@ class MovieRepository @Inject constructor(
     fun getCastByMovie(movieId: Int) =
             movieRemoteDataSource.getCastByMovie(movieId)
                     .map {
+                        val source = resource.getStringResource(R.string.source_tmdb)
                         it.casts?.map { cast ->
-                            cast.toDomainModel()
+                            cast.toDomainModel(source)
                         }
                     }
 

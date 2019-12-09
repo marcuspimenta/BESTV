@@ -17,7 +17,7 @@ package com.pimenta.bestv.model.data.mapper
 import com.pimenta.bestv.model.data.remote.CastResponse
 import com.pimenta.bestv.model.domain.CastDomainModel
 
-fun CastResponse.toDomainModel() = CastDomainModel(
+fun CastResponse.toDomainModel(source: String) = CastDomainModel(
         castId = castId,
         creditId = creditId,
         gender = gender,
@@ -28,7 +28,9 @@ fun CastResponse.toDomainModel() = CastDomainModel(
         profilePath = profilePath,
         birthday = birthday,
         deathDay = deathDay,
-        biography = biography,
+        biography = biography.takeUnless { it.isNullOrBlank() || it.isNullOrEmpty() }
+                ?.let { "$it\n\n$source" }
+                ?: source,
         popularity = popularity,
         placeOfBirth = placeOfBirth
 )
