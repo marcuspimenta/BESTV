@@ -7,7 +7,7 @@ Android TV App powered by [TMDb](https://www.themoviedb.org/)
 
 It is a easy way to find the best TV content, the top movies, series... all of that in your TV.
 
-The goal of the project is to be a guide line about Android TV, that shows how to use the Leandback library from Google. The project also uses the popular libraries and tools from the Android ecosystem. 
+The goal of the project is to be a guide line about Android TV, that shows how to use the Leanback library from Google. The project also uses the popular libraries and tools from the Android ecosystem. 
 
 
 The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
@@ -24,7 +24,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
 - Tech-stack
     - [Kotlin](https://kotlinlang.org/)
     - Android TV
-        - [Leandback library](https://developer.android.com/tv)
+        - [Leanback library](https://developer.android.com/tv)
         - [Recommend TV content](https://developer.android.com/training/tv/discovery/recommendations)
     - Android Architecture Components
         - [ROOM](https://developer.android.com/topic/libraries/architecture/room) local data storage
@@ -45,7 +45,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
     - [Ktlint plugin](https://github.com/JLLeitschuh/ktlint-gradle)
 
 ## API Keys
-BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data.
+BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data, but is not endorsed or certified by TMDb.
 To be able to run this application you have to create an API KEY from The Movie DB and place it in your gradle file.
 <br>
 ```
@@ -62,6 +62,10 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 </ul>
 
 ![](gif/app.gif)
+
+## TODO
+- Improve the test coverage
+- Give support to more languages
 
 ## References
 - [Android TV Leanback](https://github.com/googlesamples/androidtv-Leanback)
