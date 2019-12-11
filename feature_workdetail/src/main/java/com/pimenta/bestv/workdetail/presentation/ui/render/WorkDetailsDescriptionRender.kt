@@ -20,12 +20,15 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 /**
  * Created by marcus on 28-01-2018.
  */
+private const val SUBTITLE_MAX_LINE = 15
+
 class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel
         viewHolder.title.text = workViewModel.title
-        viewHolder.subtitle.text = "${workViewModel.releaseDate} - ${workViewModel.source}"
-        viewHolder.body.text = workViewModel.overview
+        viewHolder.subtitle.maxLines = SUBTITLE_MAX_LINE
+        viewHolder.subtitle.text = "${workViewModel.releaseDate}\n\n${workViewModel.overview}"
+        viewHolder.body.text = workViewModel.source
     }
 }

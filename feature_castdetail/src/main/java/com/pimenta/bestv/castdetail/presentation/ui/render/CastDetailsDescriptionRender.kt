@@ -21,15 +21,20 @@ import com.pimenta.bestv.presentation.extension.hasContent
 /**
  * Created by marcus on 07-04-2018.
  */
+private const val SUBTITLE_MAX_LINE = 18
+
 class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val castViewModel = item as CastViewModel
         viewHolder.title.text = castViewModel.name
         castViewModel.source?.let {
-            viewHolder.subtitle.text = it
+            viewHolder.body.text = it
         }
         castViewModel.biography?.takeIf { it.hasContent() }
-                ?.let { viewHolder.body.text = it }
+                ?.let {
+                    viewHolder.subtitle.maxLines = SUBTITLE_MAX_LINE
+                    viewHolder.subtitle.text = it
+                }
     }
 }
