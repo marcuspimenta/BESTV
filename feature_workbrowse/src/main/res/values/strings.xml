@@ -6,4 +6,9 @@
     <string name="up_coming">Up coming</string>
     <string name="on_the_air">On the air</string>
     <string name="airing_today">Airing today</string>
+    <string name="about">About</string>
+    <string name="about_description">Copyright © 2018 Marcus Pimenta\n\nThis product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="tmdb_terms">TMDb terms</string>
+    <string name="tmdb_api_terms">TMDb API terms</string>
+    <string name="failed_open_link">Failed to open the link. Check if you have a browser installed and try again.</string>
 </resources>

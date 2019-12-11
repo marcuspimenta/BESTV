@@ -21,7 +21,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
  * Created by marcus on 11-02-2018.
  */
 class WorkTypeHeaderItem(
-    id: Int,
+    id: Long,
     name: String,
     val topWorkTypeViewModel: TopWorkTypeViewModel
-) : HeaderItem(id.toLong(), name)
+) : HeaderItem(id, name)

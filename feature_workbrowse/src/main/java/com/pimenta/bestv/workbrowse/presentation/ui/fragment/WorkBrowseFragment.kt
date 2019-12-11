@@ -24,14 +24,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.pimenta.bestv.workbrowse.di.WorkBrowseFragmentComponent
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.R
+import com.pimenta.bestv.workbrowse.di.WorkBrowseFragmentComponent
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
@@ -41,8 +41,9 @@ import javax.inject.Inject
  * Created by marcus on 07-02-2018.
  */
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-private const val TOP_WORK_LIST_ID = 1
-private const val WORK_GENRE_ID = 2
+private const val TOP_WORK_LIST_ID = 1L
+private const val WORK_GENRE_ID = 2L
+private const val ABOUT_ID = 3L
 private const val FAVORITE_INDEX = 0
 
 class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
@@ -134,6 +135,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
         }
 
+        rowsAdapter.add(DividerRow())
+        rowsAdapter.add(PageRow(HeaderItem(ABOUT_ID, getString(R.string.about))))
+
         startEntranceTransition()
     }
 
@@ -195,7 +199,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             }
 
             val row = rowObj as Row
-            when (row.headerItem.id.toInt()) {
+            when (row.headerItem.id) {
                 TOP_WORK_LIST_ID -> {
                     val movieListTypeHeaderItem = row.headerItem as WorkTypeHeaderItem
                     title = row.headerItem.name
@@ -205,6 +209,10 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
                     val genreHeaderItem = row.headerItem as GenreHeaderItem
                     title = genreHeaderItem.genreViewModel.name
                     return GenreWorkGridFragment.newInstance(genreHeaderItem.genreViewModel)
+                }
+                ABOUT_ID -> {
+                    title = ""
+                    return AboutFragment.newInstance()
                 }
             }
 
