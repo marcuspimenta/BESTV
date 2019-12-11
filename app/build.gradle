@@ -54,9 +54,6 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // AndroidX
-    implementation 'androidx.leanback:leanback:1.1.0-alpha02'
-
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
