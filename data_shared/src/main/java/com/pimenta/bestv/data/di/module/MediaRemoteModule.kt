@@ -30,6 +30,8 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 3-12-2019.
  */
+private const val TIME_OUT_SEC = 60L
+
 @Module
 class MediaRemoteModule {
 
@@ -42,9 +44,9 @@ class MediaRemoteModule {
                     level = HttpLoggingInterceptor.Level.BASIC
                 })
             }
-            readTimeout(15, TimeUnit.SECONDS)
-            writeTimeout(15, TimeUnit.SECONDS)
-            connectTimeout(15, TimeUnit.SECONDS)
+            readTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
+            writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
+            connectTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
         }.build()
 
         return Retrofit.Builder()
