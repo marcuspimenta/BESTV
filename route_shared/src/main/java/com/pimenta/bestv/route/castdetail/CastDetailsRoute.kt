@@ -25,14 +25,13 @@ import javax.inject.Inject
  */
 private const val SCHEMA_URI_PREFIX = "bestv://castdetail/"
 private const val CAST = "cast"
-
 private const val ID = "ID"
 private const val NAME = "NAME"
 private const val CHARACTER = "CHARACTER"
 private const val BIRTHDAY = "BIRTHDAY"
 private const val SOURCE = "SOURCE"
 private const val DEATH_DAY = "DEATH_DAY"
-private const val BIOGRAPH = "BIOGRAPH"
+private const val BIOGRAPHY = "BIOGRAPHY"
 private const val THUMBNAIL_URL = "THUMBNAIL_URL"
 
 class CastDetailsRoute @Inject constructor() {
@@ -51,25 +50,22 @@ class CastDetailsRoute @Inject constructor() {
                     .appendQueryParameter(BIRTHDAY, birthday)
                     .appendQueryParameter(SOURCE, source)
                     .appendQueryParameter(DEATH_DAY, deathDay)
-                    .appendQueryParameter(BIOGRAPH, biography)
+                    .appendQueryParameter(BIOGRAPHY, biography)
                     .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
                     .build()
 
     private fun Intent.getCastDeepLink() =
-            data?.let {
-                if (it.pathSegments.first() == CAST) {
-                    CastViewModel(
-                            id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                            name = it.getQueryParameter(NAME),
-                            character = it.getQueryParameter(CHARACTER),
-                            birthday = it.getQueryParameter(BIRTHDAY),
-                            deathDay = it.getQueryParameter(DEATH_DAY),
-                            biography = it.getQueryParameter(BIOGRAPH),
-                            source = it.getQueryParameter(SOURCE),
-                            thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
-                    )
-                } else {
-                    null
-                }
-            }
+            data?.takeIf { it.pathSegments.first() == CAST }
+                    ?.let {
+                        CastViewModel(
+                                id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                                name = it.getQueryParameter(NAME),
+                                character = it.getQueryParameter(CHARACTER),
+                                birthday = it.getQueryParameter(BIRTHDAY),
+                                deathDay = it.getQueryParameter(DEATH_DAY),
+                                biography = it.getQueryParameter(BIOGRAPHY),
+                                source = it.getQueryParameter(SOURCE),
+                                thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
+                        )
+                    }
 }

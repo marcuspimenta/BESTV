@@ -26,7 +26,6 @@ import javax.inject.Inject
  */
 private const val SCHEMA_URI_PREFIX = "bestv://workdetail/"
 private const val WORK = "work"
-
 private const val ID = "ID"
 private const val LANGUAGE = "LANGUAGE"
 private const val OVERVIEW = "OVERVIEW"
@@ -63,23 +62,20 @@ class WorkDetailsRoute @Inject constructor() {
                     .build()
 
     private fun Intent.getWorkDeepLink() =
-            data?.let {
-                if (it.pathSegments.first() == WORK) {
-                    WorkViewModel(
-                            id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                            title = it.getQueryParameter(TITLE),
-                            originalLanguage = it.getQueryParameter(LANGUAGE),
-                            overview = it.getQueryParameter(OVERVIEW),
-                            source = it.getQueryParameter(SOURCE),
-                            backdropUrl = it.getQueryParameter(BACKGROUND_URL),
-                            posterUrl = it.getQueryParameter(POSTER_URL),
-                            originalTitle = it.getQueryParameter(ORIGINAL_TITLE),
-                            releaseDate = it.getQueryParameter(RELEASE_DATE),
-                            isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
-                            type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
-                    )
-                } else {
-                    null
-                }
-            }
+            data?.takeIf { it.pathSegments.first() == WORK }
+                    ?.let {
+                        WorkViewModel(
+                                id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                                title = it.getQueryParameter(TITLE),
+                                originalLanguage = it.getQueryParameter(LANGUAGE),
+                                overview = it.getQueryParameter(OVERVIEW),
+                                source = it.getQueryParameter(SOURCE),
+                                backdropUrl = it.getQueryParameter(BACKGROUND_URL),
+                                posterUrl = it.getQueryParameter(POSTER_URL),
+                                originalTitle = it.getQueryParameter(ORIGINAL_TITLE),
+                                releaseDate = it.getQueryParameter(RELEASE_DATE),
+                                isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
+                                type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
+                        )
+                    }
 }
