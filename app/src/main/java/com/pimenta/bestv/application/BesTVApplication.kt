@@ -12,10 +12,11 @@
  * the License.
  */
 
-package com.pimenta.bestv
+package com.pimenta.bestv.application
 
 import android.app.Application
 import android.os.StrictMode
+import com.pimenta.bestv.BuildConfig
 import timber.log.Timber
 
 /**
