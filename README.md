@@ -1,7 +1,7 @@
 # BESTV
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.61-blue.svg)](https://kotlinlang.org)
 
-<img src="/app/src/main/res/drawable/app_icon.png"   height="150" width="150">
+<img src="/app/src/main/res/drawable/app_icon.png"  align="left" hspace="20" height="150" width="150">
 
 Android TV App powered by [TMDb](https://www.themoviedb.org/)
 
@@ -11,9 +11,7 @@ The goal of the project is to be a guide line about Android TV, that shows how t
 
 The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
 
-<img src="google_play_badge/en_get.svg" align="left" hspace="20" height="100" width="200">
-
-Get it on [Google Play](https://play.google.com/store/apps/details?id=com.pimenta.bestv)
+<a href="https://play.google.com/store/apps/details?id=com.pimenta.bestv"><img alt="Get it on Google Play" src="google_play_badge/en_get.svg" height="150" width="250" /></a>
 
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
