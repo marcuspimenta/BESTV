@@ -1,6 +1,8 @@
 # BESTV
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.61-blue.svg)](https://kotlinlang.org)
 
+<a href="https://play.google.com/store/apps/details?id=com.pimenta.bestv"><img alt="Get it on Google Play" src="google_play_badge/en_get.svg" height="100" width="200" /></a>
+
 <img src="/app/src/main/res/drawable/app_icon.png"  align="left" hspace="20" height="150" width="150">
 
 Android TV App powered by [TMDb](https://www.themoviedb.org/)
@@ -10,8 +12,6 @@ It is a easy way to find the best TV content, the top movies, series... all of t
 The goal of the project is to be a guide line about Android TV, that shows how to use the Leanback library from Google. The project also uses the popular libraries and tools from the Android ecosystem. 
 
 The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
-
-<a href="https://play.google.com/store/apps/details?id=com.pimenta.bestv"><img alt="Get it on Google Play" src="google_play_badge/en_get.svg" height="150" width="250" /></a>
 
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
@@ -45,6 +45,9 @@ This project uses the popular libraries and tools from the Android ecosystem.
 - Gradle
     - [Ktlint plugin](https://github.com/JLLeitschuh/ktlint-gradle)
 
+## API Documentation
+BesTV uses [the version 3 of The Movie Database (TMDb) API](https://developers.themoviedb.org/3/getting-started/introduction). You can find all the documentation about the requests, the responses...
+
 ## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data, but is not endorsed or certified by TMDb.
 To be able to run this application you have to create an API KEY from The Movie DB and place it in your gradle file.
@@ -66,9 +69,16 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
   <img src="gif/app.gif">
 </p>
 
+## Modularization
+I have modularized the app. We can see the dependency graph with all the modules.
+<p align="center">
+  <img src="dependency_graph/dependency_graph.png">
+</p>
+
 ## TODO
 - Improve the test coverage
 - Give support to more languages
+- Create a introduction guide to show the features when the users open the app the first time
 
 ## References
 - [Android TV Leanback](https://github.com/googlesamples/androidtv-Leanback)
@@ -78,6 +88,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 - [Lifecycle Architecture Component](https://medium.com/mindorks/autodisposable-for-rxjava-with-lifecycle-architecture-component-23dfcfa83a2)
 - [Dagger2: @Component.Factory and @SubComponent.Factory](https://android.jlelse.eu/dagger2-component-factory-and-subcomponent-factory-b181ec96b213)
 - [Why you need Use Cases/Interactors](https://proandroiddev.com/why-you-need-use-cases-interactors-142e8a6fe576)
+- [Modularization - Lessons learned](https://jeroenmols.com/blog/2019/06/12/modularizationtips/)
 
 ## Licence
 ```
