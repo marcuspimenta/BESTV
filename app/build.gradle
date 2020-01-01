@@ -37,10 +37,6 @@ android {
 }
 
 dependencies {
-    implementation project(':model_shared')
-    implementation project(':data_shared')
-    implementation project(':presentation_shared')
-    implementation project(':route_shared')
     implementation project(':feature_workdetail')
     implementation project(':feature_castdetail')
     implementation project(':feature_search')
