@@ -37,10 +37,12 @@ class TvShowRepository @Inject constructor(
                         val tvShows = mutableListOf<WorkDomainModel>()
                         it.forEach { tvShowDbModel ->
                             tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
-                                work.isFavorite = true
-
                                 val source = resource.getStringResource(R.string.source_tmdb)
-                                tvShows.add(work.toDomainModel(source))
+                                val workDomainModel = work.toDomainModel(source).apply {
+                                    isFavorite = true
+                                }
+
+                                tvShows.add(workDomainModel)
                             }
                         }
                         tvShows.toList()

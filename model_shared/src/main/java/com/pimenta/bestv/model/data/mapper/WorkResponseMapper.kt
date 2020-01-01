@@ -32,7 +32,6 @@ fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
         voteAverage = voteAverage,
         voteCount = voteCount,
         isAdult = isAdult,
-        isFavorite = isFavorite,
         type = WorkDomainModel.Type.TV_SHOW.takeIf { this is TvShowResponse }
                 ?: WorkDomainModel.Type.MOVIE
 )

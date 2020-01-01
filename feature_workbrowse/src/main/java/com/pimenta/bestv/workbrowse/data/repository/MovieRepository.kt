@@ -37,10 +37,12 @@ class MovieRepository @Inject constructor(
                         val movies = mutableListOf<WorkDomainModel>()
                         it.forEach { movieDbModel ->
                             movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
-                                work.isFavorite = true
-
                                 val source = resource.getStringResource(R.string.source_tmdb)
-                                movies.add(work.toDomainModel(source))
+                                val workDomainModel = work.toDomainModel(source).apply {
+                                    isFavorite = true
+                                }
+
+                                movies.add(workDomainModel)
                             }
                         }
                         movies.toList()

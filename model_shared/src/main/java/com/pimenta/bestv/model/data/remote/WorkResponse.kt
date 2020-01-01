@@ -28,8 +28,7 @@ abstract class WorkResponse(
     @SerializedName("popularity") var popularity: Float = 0.toFloat(),
     @SerializedName("vote_average") var voteAverage: Float = 0.toFloat(),
     @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
-    @SerializedName("adult") var isAdult: Boolean = false,
-    var isFavorite: Boolean = false
+    @SerializedName("adult") var isAdult: Boolean = false
 ) {
 
     abstract var title: String?
@@ -37,19 +36,4 @@ abstract class WorkResponse(
     abstract var originalTitle: String?
 
     abstract var releaseDate: String?
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || javaClass != other.javaClass) {
-            return false
-        }
-
-        val that = other as WorkResponse?
-
-        return id == that?.id
-    }
-
-    override fun hashCode() = id.hashCode()
 }

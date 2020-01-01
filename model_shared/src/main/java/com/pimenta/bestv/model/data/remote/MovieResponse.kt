@@ -19,13 +19,11 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by marcus on 09-02-2018.
  */
-class MovieResponse(
-    id: Int = 0,
-    isFavorite: Boolean = false,
+data class MovieResponse(
     @SerializedName("title") override var title: String? = null,
     @SerializedName("original_title") override var originalTitle: String? = null,
     @SerializedName("release_date") var releaseDateString: String? = null
-) : WorkResponse(id = id, isFavorite = isFavorite) {
+) : WorkResponse() {
 
     override var releaseDate: String?
         get() {

@@ -31,8 +31,8 @@ data class WorkDomainModel(
     val voteAverage: Float = 0.toFloat(),
     val voteCount: Float = 0.toFloat(),
     val isAdult: Boolean = false,
-    val isFavorite: Boolean = false,
-    val type: Type = Type.MOVIE
+    val type: Type = Type.MOVIE,
+    var isFavorite: Boolean = false
 ) {
 
     enum class Type {
