@@ -46,7 +46,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
     - [Ktlint plugin](https://github.com/JLLeitschuh/ktlint-gradle)
 
 ## API Documentation
-BesTV uses [the version 3 of The Movie Database (TMDb) API](https://developers.themoviedb.org/3/getting-started/introduction). You can find all the documentation about the requests, the responses...
+BesTV uses [the version 3 of The Movie Database (TMDb) API](https://developers.themoviedb.org/3/getting-started/introduction). You can find all the documentation about the requests, the responses.
 
 ## API Keys
 BesTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data, but is not endorsed or certified by TMDb.
@@ -70,7 +70,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 </p>
 
 ## Modularization
-I have modularized the app. We can see the dependency graph with all the modules.
+The app is modularized. We can see the dependency graph with all the modules.
 <p align="center">
   <img src="dependency_graph/dependency_graph.png">
 </p>
