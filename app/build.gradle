@@ -4,11 +4,8 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply from: 'https://raw.githubusercontent.com/JakeWharton/SdkSearch/master/gradle/projectDependencyGraph.gradle'
 
 android {
-    compileSdkVersion 29
     defaultConfig {
         applicationId "com.pimenta.bestv"
-        minSdkVersion 26
-        targetSdkVersion 29
         versionCode 1
         versionName "1.0.0"
     }
@@ -26,13 +23,6 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
 

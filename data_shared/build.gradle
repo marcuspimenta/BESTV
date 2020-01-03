@@ -4,10 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
-    compileSdkVersion 29
     defaultConfig {
-        minSdkVersion 26
-        targetSdkVersion 29
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
     }
