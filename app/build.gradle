@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply from: 'https://raw.githubusercontent.com/JakeWharton/SdkSearch/master/gradle/projectDependencyGraph.gradle'
 
 android {
@@ -35,13 +34,13 @@ dependencies {
     implementation project(':feature_workbrowse')
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Dependencies.kotlin
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation Dependencies.timber
 
     // Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+    implementation Dependencies.firebase
 }
 
 apply plugin: 'com.google.gms.google-services'

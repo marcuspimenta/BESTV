@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     defaultConfig {
@@ -23,30 +22,29 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Dependencies.kotlin
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.25.2'
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    implementation Dependencies.dagger
+    kapt Dependencies.dagger_compile
 
     // Room components
-    api "androidx.room:room-runtime:2.2.2"
-    implementation "androidx.room:room-ktx:2.2.2"
-    implementation "androidx.room:room-rxjava2:2.2.2"
-    kapt "androidx.room:room-compiler:2.2.2"
-    androidTestImplementation "androidx.room:room-testing:2.2.2"
+    api Dependencies.androidx_room
+    kapt Dependencies.androidx_room_compiler
+    implementation Dependencies.androidx_room_ktx
+    implementation Dependencies.androidx_room_rxjava
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation Dependencies.retrofit
+    implementation Dependencies.retrofit_converter_gson
 
     // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation Dependencies.okhttp
+    implementation Dependencies.logging_interceptor
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation Dependencies.gson
 
     // Rx
-    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    implementation Dependencies.retrofit2_rxjava2_adapter
 }
