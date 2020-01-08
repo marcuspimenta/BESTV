@@ -37,8 +37,8 @@ object Versions {
     val androidx_tvprovider = "1.0.0"
     val androidx_room = "2.2.3"
 
-    val dagger = "2.25.2"
-    val dagger_compile = "2.25.2"
+    val dagger = "2.25.4"
+    val dagger_compile = "2.25.4"
     val retrofit = "2.7.0"
     val retrofit_converter_gson = "2.7.0"
     val okhttp = "4.2.2"
