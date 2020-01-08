@@ -26,7 +26,7 @@ object Versions {
     val kotlin = "1.3.61"
     val build_gradle = "3.5.3"
     val google_service = "4.3.3"
-    val ktlint = "8.2.0"
+    val ktlint = "9.1.1"
     val ben_mane_gralde = "0.27.0"
 
     val androidx_leanback = "1.1.0-alpha03"
