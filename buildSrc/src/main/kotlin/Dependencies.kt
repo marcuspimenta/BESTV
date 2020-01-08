@@ -51,8 +51,8 @@ object Versions {
     val lottie = "3.3.1"
     val rxandroid = "2.1.1"
     val junit = "4.13"
-    val mockito_inline = "3.0.0"
-    val mockito_core = "3.0.0"
+    val mockito_inline = "3.2.4"
+    val mockito_core = "3.2.4"
     val mockito_kotlin = "2.1.0"
 
 }
