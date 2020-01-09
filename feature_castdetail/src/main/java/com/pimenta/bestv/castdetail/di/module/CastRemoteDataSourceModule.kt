@@ -18,8 +18,8 @@ import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
 import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
 import javax.inject.Singleton
+import retrofit2.Retrofit
 
 /**
  * Created by marcus on 29-10-2019.

@@ -15,10 +15,10 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.model.domain.WorkPageDomainModel
-import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.kotlin.Quadruple
+import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.Function4
 import javax.inject.Inject

@@ -18,10 +18,10 @@ import android.app.Application
 import android.app.NotificationManager
 import androidx.recommendation.app.ContentRecommendation
 import com.bumptech.glide.Glide
-import com.pimenta.bestv.recommendation.R
-import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.recommendation.R
+import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
 

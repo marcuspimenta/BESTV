@@ -20,8 +20,8 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
-import com.pimenta.bestv.workbrowse.di.MainActivityComponent
 import com.pimenta.bestv.presentation.extension.replaceFragment
+import com.pimenta.bestv.workbrowse.di.MainActivityComponent
 import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
 import javax.inject.Inject

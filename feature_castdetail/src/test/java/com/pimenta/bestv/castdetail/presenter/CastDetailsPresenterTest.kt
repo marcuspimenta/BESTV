@@ -15,7 +15,11 @@
 package com.pimenta.bestv.castdetail.presenter
 
 import androidx.leanback.widget.Presenter
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.only
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.model.domain.CastDomainModel

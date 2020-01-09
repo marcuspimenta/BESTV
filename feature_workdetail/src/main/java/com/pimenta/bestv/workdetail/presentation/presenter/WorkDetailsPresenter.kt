@@ -16,9 +16,7 @@ package com.pimenta.bestv.workdetail.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
@@ -30,8 +28,10 @@ import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
-import timber.log.Timber
+import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 07-02-2018.

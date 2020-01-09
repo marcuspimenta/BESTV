@@ -15,11 +15,11 @@
 package com.pimenta.bestv.castdetail.di
 
 import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.castdetail.di.module.CastRemoteDataSourceModule
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.castdetail.presentation.ui.fragment.CastDetailsFragment
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

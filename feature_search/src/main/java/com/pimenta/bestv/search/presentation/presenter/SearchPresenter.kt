@@ -28,9 +28,9 @@ import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 

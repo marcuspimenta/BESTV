@@ -27,12 +27,14 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.app.SearchSupportFragment
-import androidx.leanback.widget.*
+import androidx.leanback.widget.ArrayObjectAdapter
+import androidx.leanback.widget.HeaderItem
+import androidx.leanback.widget.ImageCardView
+import androidx.leanback.widget.ListRow
+import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.Presenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.pimenta.bestv.search.R
-import com.pimenta.bestv.search.di.SearchFragmentComponent
-import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
@@ -42,6 +44,9 @@ import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
+import com.pimenta.bestv.search.R
+import com.pimenta.bestv.search.di.SearchFragmentComponent
+import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1

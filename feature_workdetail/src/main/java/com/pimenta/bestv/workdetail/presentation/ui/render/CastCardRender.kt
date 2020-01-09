@@ -17,9 +17,9 @@ package com.pimenta.bestv.workdetail.presentation.ui.render
 import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.extension.loadImageInto
+import com.pimenta.bestv.workdetail.R
 
 /**
  * Created by marcus on 16-02-2018.

@@ -16,8 +16,8 @@ package com.pimenta.bestv.splash.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.splash.presentation.ui.fragment.SplashFragment
 import com.pimenta.bestv.presentation.extension.replaceFragment
+import com.pimenta.bestv.splash.presentation.ui.fragment.SplashFragment
 
 /**
  * Created by marcus on 04-05-2018.

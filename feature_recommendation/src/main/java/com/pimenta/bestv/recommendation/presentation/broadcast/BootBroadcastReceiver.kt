@@ -21,8 +21,8 @@ import android.content.Intent
 import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponent
 import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
 import com.pimenta.bestv.recommendation.presentation.service.RecommendationService
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 06-03-2018.

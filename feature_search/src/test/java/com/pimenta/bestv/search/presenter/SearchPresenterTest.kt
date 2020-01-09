@@ -15,7 +15,13 @@
 package com.pimenta.bestv.search.presenter
 
 import androidx.leanback.widget.Presenter
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.only
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -31,8 +37,8 @@ import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import org.junit.Test
 import java.util.concurrent.TimeUnit
+import org.junit.Test
 
 /**
  * Created by marcus on 24-05-2018.

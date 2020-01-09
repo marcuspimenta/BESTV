@@ -16,19 +16,19 @@ package com.pimenta.bestv.workbrowse.presentation.presenter
 
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.addTo
-import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 28-10-2018.

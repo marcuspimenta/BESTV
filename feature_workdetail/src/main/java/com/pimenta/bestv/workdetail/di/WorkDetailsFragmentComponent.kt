@@ -15,8 +15,8 @@
 package com.pimenta.bestv.workdetail.di
 
 import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
 import com.pimenta.bestv.data.di.module.MediaLocalModule
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
 import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule

@@ -15,8 +15,8 @@
 package com.pimenta.bestv.workbrowse.di
 
 import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
 import com.pimenta.bestv.data.di.module.MediaLocalModule
+import com.pimenta.bestv.presentation.di.module.ApplicationModule
 import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.workbrowse.di.module.MovieApiModule
 import com.pimenta.bestv.workbrowse.di.module.TvShowApiModule

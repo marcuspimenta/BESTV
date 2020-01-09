@@ -14,12 +14,12 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.workdetail.data.repository.MovieRepository
-import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.workdetail.data.repository.MovieRepository
+import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import javax.inject.Inject
 
 /**

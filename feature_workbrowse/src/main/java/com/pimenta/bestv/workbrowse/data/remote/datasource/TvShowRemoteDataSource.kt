@@ -15,10 +15,10 @@
 package com.pimenta.bestv.workbrowse.data.remote.datasource
 
 import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
-import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
+import timber.log.Timber
 
 /**
  * Created by marcus on 20-10-2019.
