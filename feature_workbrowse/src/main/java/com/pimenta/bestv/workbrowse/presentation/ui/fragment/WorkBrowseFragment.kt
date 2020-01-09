@@ -41,23 +41,10 @@ import javax.inject.Inject
  * Created by marcus on 07-02-2018.
  */
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-private const val TOP_WORK_LIST_ID = 1L
-private const val WORK_GENRE_ID = 2L
-private const val ABOUT_ID = 3L
-private const val FAVORITE_INDEX = 0
 
 class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
-    private val favoritePageRow: PageRow by lazy {
-        PageRow(
-                WorkTypeHeaderItem(
-                        TOP_WORK_LIST_ID,
-                        getString(TopWorkTypeViewModel.FAVORITES_MOVIES.resource),
-                        TopWorkTypeViewModel.FAVORITES_MOVIES
-                )
-        )
-    }
 
     @Inject
     lateinit var presenter: WorkBrowsePresenter
