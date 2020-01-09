@@ -14,37 +14,32 @@
 
 package com.pimenta.bestv.workbrowse.presenter
 
-import com.nhaarman.mockitokotlin2.*
+import androidx.leanback.widget.Row
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.only
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import org.junit.Assert
 import org.junit.Test
 
 /**
  * Created by marcus on 28-05-2019.
  */
-private val MOVIE_GENRE_VIEW_MODELS = listOf(
-        GenreViewModel(
-                id = 1,
-                name = "Action",
-                source = Source.MOVIE
-        )
-)
-private val TV_SHOW_GENRE_VIEW_MODELS = listOf(
-        GenreViewModel(
-                id = 2,
-                name = "Action",
-                source = Source.TV_SHOW
-        )
-)
+private const val EMPTY_STRING = ""
 private val MOVIE_GENRE_DOMAIN_MODELS = listOf(
         GenreDomainModel(
                 id = 1,
@@ -66,6 +61,7 @@ class WorkBrowsePresenterTest {
     private val hasFavoriteUseCase: HasFavoriteUseCase = mock()
     private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase = mock()
     private val searchRoute: SearchRoute = mock()
+    private val resource: Resource = mock()
     private val rxScheduler: RxScheduler = RxScheduler(
             Schedulers.trampoline(),
             Schedulers.trampoline()
@@ -76,38 +72,14 @@ class WorkBrowsePresenterTest {
             hasFavoriteUseCase,
             getWorkBrowseDetailsUseCase,
             searchRoute,
+            resource,
             rxScheduler
     )
 
     @Test
-    fun `should return true if there is some favorite works`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
-
-        presenter.hasFavorite()
-
-        verify(view, only()).onHasFavorite(true)
-    }
-
-    @Test
-    fun `should return false if there is not any favorite works`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
-
-        presenter.hasFavorite()
-
-        verify(view, only()).onHasFavorite(false)
-    }
-
-    @Test
-    fun `should return false if an exception happens while checking if there is some favorite works`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.error(Throwable()))
-
-        presenter.hasFavorite()
-
-        verify(view, only()).onHasFavorite(false)
-    }
-
-    @Test
-    fun `should load the right data when loading the browse details`() {
+    fun `should load the right data when loading the browse details and there is favorite works`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
         whenever(getWorkBrowseDetailsUseCase())
                 .thenReturn(Single.just(Triple(true, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
 
@@ -115,14 +87,39 @@ class WorkBrowsePresenterTest {
 
         inOrder(view) {
             verify(view).onShowProgress()
-            verify(view).onDataLoaded(true, MOVIE_GENRE_VIEW_MODELS, TV_SHOW_GENRE_VIEW_MODELS)
+            verify(view).onDataLoaded(
+                    check {
+                        Assert.assertEquals(it.size, 17)
+                    }
+            )
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }
     }
 
     @Test
-    fun `should return null when loading the browse details if an exception happens`() {
+    fun `should load the right data when loading the browse details and there is not any favorite work`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(false, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+
+        presenter.loadData()
+
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(
+                    check {
+                        Assert.assertEquals(it.size, 16)
+                    }
+            )
+            verify(view).onHideProgress()
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should return an error when loading the browse details if an exception happens`() {
         whenever(getWorkBrowseDetailsUseCase()).thenReturn(Single.error(Throwable()))
 
         presenter.loadData()
@@ -130,6 +127,167 @@ class WorkBrowsePresenterTest {
         inOrder(view) {
             verify(view).onShowProgress()
             verify(view).onErrorDataLoaded()
+            verify(view).onHideProgress()
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should not add the favorite row when it already was added`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(true, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(
+                    check {
+                        Assert.assertEquals(it.size, 17)
+                    }
+            )
+            verify(view).onHideProgress()
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should notify to update the selected position 3 when the favorite row does not exist anymore`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(true, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+
+        inOrder(view) {
+            val captor = argumentCaptor<List<Row>>()
+
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(captor.capture())
+            verify(view).onHideProgress()
+            verify(view).onUpdateSelectedPosition(3)
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should add the favorite row when it already was not added`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(false, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+
+        inOrder(view) {
+            val captor = argumentCaptor<List<Row>>()
+
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(captor.capture())
+            verify(view).onHideProgress()
+            verify(view).onDataLoaded(captor.capture())
+
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should not notify to update the selected position when the favorite row does not exist`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(false, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(
+                    check {
+                        Assert.assertEquals(it.size, 16)
+                    }
+            )
+            verify(view).onHideProgress()
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should not notify if an error happens while checking if has favorite works`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(false, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.error(Throwable()))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+
+        inOrder(view) {
+            val captor = argumentCaptor<List<Row>>()
+
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(captor.capture())
+            verify(view).onHideProgress()
+
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should refresh the rows when the selected position was updated`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(true, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+        presenter.refreshRows()
+
+        inOrder(view) {
+            val captor = argumentCaptor<List<Row>>()
+
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(captor.capture())
+            verify(view).onHideProgress()
+            verify(view).onUpdateSelectedPosition(3)
+            verify(view).onDataLoaded(captor.capture())
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun `should not refresh the rows when the selected position was not updated`() {
+        whenever(resource.getStringResource(any()))
+                .thenReturn(EMPTY_STRING)
+        whenever(getWorkBrowseDetailsUseCase())
+                .thenReturn(Single.just(Triple(false, MOVIE_GENRE_DOMAIN_MODELS, TV_SHOW_GENRE_DOMAIN_MODELS)))
+        whenever(hasFavoriteUseCase()).thenReturn(Single.just(false))
+
+        presenter.loadData()
+        presenter.addFavoriteRow(0)
+        presenter.refreshRows()
+
+        inOrder(view) {
+            verify(view).onShowProgress()
+            verify(view).onDataLoaded(
+                    check {
+                        Assert.assertEquals(it.size, 16)
+                    }
+            )
             verify(view).onHideProgress()
             verifyNoMoreInteractions()
         }

@@ -23,16 +23,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.widget.*
+import androidx.leanback.widget.ArrayObjectAdapter
+import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.PageRow
+import androidx.leanback.widget.Row
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.di.WorkBrowseFragmentComponent
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.presentation.presenter.ABOUT_ID
+import com.pimenta.bestv.workbrowse.presentation.presenter.TOP_WORK_LIST_ID
+import com.pimenta.bestv.workbrowse.presentation.presenter.WORK_GENRE_ID
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
+import com.pimenta.bestv.workbrowse.presentation.ui.diffcallback.RowDiffCallback
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject
@@ -44,12 +49,11 @@ private const val ERROR_FRAGMENT_REQUEST_CODE = 1
 
 class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
-    private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
+    private val rowsAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
+    private val rowDiffCallback by lazy { RowDiffCallback() }
 
     @Inject
     lateinit var presenter: WorkBrowsePresenter
-
-    private var hasFavorite = false
 
     override fun onAttach(context: Context) {
         WorkBrowseFragmentComponent.create(this, requireActivity().application)
@@ -81,9 +85,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     override fun onResume() {
         super.onResume()
-        if (rowsAdapter.size() > 0) {
-            presenter.hasFavorite()
-        }
+        presenter.addFavoriteRow(selectedPosition)
     }
 
     override fun onShowProgress() {
@@ -94,53 +96,14 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         progressBarManager.hide()
     }
 
-    override fun onDataLoaded(hasFavoriteMovie: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?) {
-        hasFavorite = hasFavoriteMovie
-        if (hasFavorite) {
-            rowsAdapter.add(favoritePageRow)
-        }
-
-        rowsAdapter.add(DividerRow())
-        rowsAdapter.add(SectionRow(getString(R.string.movies)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.NOW_PLAYING_MOVIES.resource), TopWorkTypeViewModel.NOW_PLAYING_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.POPULAR_MOVIES.resource), TopWorkTypeViewModel.POPULAR_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.TOP_RATED_MOVIES.resource), TopWorkTypeViewModel.TOP_RATED_MOVIES)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.UP_COMING_MOVIES.resource), TopWorkTypeViewModel.UP_COMING_MOVIES)))
-
-        movieGenres?.forEach {
-            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
-        }
-
-        rowsAdapter.add(DividerRow())
-        rowsAdapter.add(SectionRow(getString(R.string.tv_shows)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS.resource), TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS.resource), TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.TOP_RATED_TV_SHOWS.resource), TopWorkTypeViewModel.TOP_RATED_TV_SHOWS)))
-        rowsAdapter.add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, getString(TopWorkTypeViewModel.POPULAR_TV_SHOWS.resource), TopWorkTypeViewModel.POPULAR_TV_SHOWS)))
-
-        tvShowGenres?.forEach {
-            rowsAdapter.add(PageRow(GenreHeaderItem(WORK_GENRE_ID, it)))
-        }
-
-        rowsAdapter.add(DividerRow())
-        rowsAdapter.add(PageRow(HeaderItem(ABOUT_ID, getString(R.string.about))))
+    override fun onDataLoaded(rows: List<Row>) {
+        rowsAdapter.setItems(rows, rowDiffCallback)
 
         startEntranceTransition()
     }
 
-    override fun onHasFavorite(hasFavoriteMovie: Boolean) {
-        hasFavorite = hasFavoriteMovie
-        if (hasFavorite) {
-            if (rowsAdapter.indexOf(favoritePageRow) == -1) {
-                rowsAdapter.add(FAVORITE_INDEX, favoritePageRow)
-            }
-        } else {
-            if (rowsAdapter.indexOf(favoritePageRow) == FAVORITE_INDEX) {
-                if (selectedPosition == FAVORITE_INDEX) {
-                    selectedPosition = FAVORITE_INDEX + 3
-                }
-            }
-        }
+    override fun onUpdateSelectedPosition(selectedPosition: Int) {
+        this.selectedPosition = selectedPosition
     }
 
     override fun onErrorDataLoaded() {
@@ -181,9 +144,7 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     private inner class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fragment>() {
 
         override fun createFragment(rowObj: Any): Fragment {
-            if (!hasFavorite && rowsAdapter.indexOf(favoritePageRow) == FAVORITE_INDEX) {
-                rowsAdapter.remove(favoritePageRow)
-            }
+            presenter.refreshRows()
 
             val row = rowObj as Row
             when (row.headerItem.id) {

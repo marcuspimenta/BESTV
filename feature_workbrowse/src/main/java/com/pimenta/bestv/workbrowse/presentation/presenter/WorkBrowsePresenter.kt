@@ -14,7 +14,11 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
-import androidx.leanback.widget.*
+import androidx.leanback.widget.DividerRow
+import androidx.leanback.widget.HeaderItem
+import androidx.leanback.widget.PageRow
+import androidx.leanback.widget.Row
+import androidx.leanback.widget.SectionRow
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
@@ -27,31 +31,30 @@ import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import com.pimenta.bestv.workbrowse.presentation.ui.fragment.ABOUT_ID
-import com.pimenta.bestv.workbrowse.presentation.ui.fragment.TOP_WORK_LIST_ID
-import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WORK_GENRE_ID
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 06-02-2018.
  */
-public const val TOP_WORK_LIST_ID = 1L
-public const val WORK_GENRE_ID = 2L
-public const val ABOUT_ID = 3L
+const val TOP_WORK_LIST_ID = 1L
+const val WORK_GENRE_ID = 2L
+const val ABOUT_ID = 3L
 private const val FAVORITE_INDEX = 0
+private const val INVALID_INDEX = -1
 
 class WorkBrowsePresenter @Inject constructor(
-        private val view: View,
-        private val hasFavoriteUseCase: HasFavoriteUseCase,
-        private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
-        private val searchRoute: SearchRoute,
-        private val resource: Resource,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val hasFavoriteUseCase: HasFavoriteUseCase,
+    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
+    private val searchRoute: SearchRoute,
+    private val resource: Resource,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
+    private var refreshRows = false
     private val rows = mutableListOf<Row>()
     private val favoritePageRow by lazy {
         PageRow(
@@ -61,17 +64,6 @@ class WorkBrowsePresenter @Inject constructor(
                         TopWorkTypeViewModel.FAVORITES_MOVIES
                 )
         )
-    }
-
-    fun hasFavorite() {
-        hasFavoriteUseCase()
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ result ->
-                    view.onHasFavorite(result)
-                }, { throwable ->
-                    Timber.e(throwable, "Error while checking if has any work as favorite")
-                }).addTo(compositeDisposable)
     }
 
     fun loadData() {
@@ -85,7 +77,7 @@ class WorkBrowsePresenter @Inject constructor(
                     val movieGenres = it.second?.map { genre -> genre.toViewModel() }
                     val tvShowGenres = it.third?.map { genre -> genre.toViewModel() }
 
-                    buildRowList()
+                    buildRowList(hasFavoriteMovie, movieGenres, tvShowGenres)
 
                     view.onDataLoaded(rows)
                 }, { throwable ->
@@ -94,25 +86,44 @@ class WorkBrowsePresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
+    fun addFavoriteRow(selectedPosition: Int) {
+        if (rows.isEmpty()) {
+            return
+        }
+
+        hasFavoriteUseCase()
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.mainScheduler)
+                .subscribe({ hasFavorite ->
+                    if (hasFavorite) {
+                        if (rows.indexOf(favoritePageRow) == INVALID_INDEX) {
+                            rows.add(FAVORITE_INDEX, favoritePageRow)
+                            view.onDataLoaded(rows)
+                        }
+                    } else {
+                        if (rows.indexOf(favoritePageRow) == FAVORITE_INDEX) {
+                            rows.remove(favoritePageRow)
+                            if (selectedPosition == FAVORITE_INDEX) {
+                                refreshRows = true
+                                view.onUpdateSelectedPosition(FAVORITE_INDEX + 3)
+                            }
+                        }
+                    }
+                }, { throwable ->
+                    Timber.e(throwable, "Error while checking if has any work as favorite")
+                }).addTo(compositeDisposable)
+    }
+
+    fun refreshRows() {
+        if (refreshRows) {
+            refreshRows = false
+            view.onDataLoaded(rows)
+        }
+    }
+
     fun searchClicked() {
         val route = searchRoute.buildSearchRoute()
         view.openSearch(route)
-    }
-
-    private fun setFavoriteRow(hasFavorite: Boolean) {
-        rows.run {
-            if (hasFavorite) {
-                if (indexOf(favoritePageRow) == -1) {
-                    add(FAVORITE_INDEX, favoritePageRow)
-                }
-            } else {
-                if (indexOf(favoritePageRow) == FAVORITE_INDEX) {
-                    if (selectedPosition == FAVORITE_INDEX) {
-                        selectedPosition = FAVORITE_INDEX + 3
-                    }
-                }
-            }
-        }
     }
 
     private fun buildRowList(hasFavorite: Boolean, movieGenres: List<GenreViewModel>?, tvShowGenres: List<GenreViewModel>?) {
@@ -155,6 +166,8 @@ class WorkBrowsePresenter @Inject constructor(
         fun onHideProgress()
 
         fun onDataLoaded(rows: List<Row>)
+
+        fun onUpdateSelectedPosition(selectedPosition: Int)
 
         fun onErrorDataLoaded()
 
