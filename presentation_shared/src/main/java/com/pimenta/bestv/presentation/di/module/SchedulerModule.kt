@@ -31,6 +31,7 @@ class SchedulerModule {
     @Singleton
     fun provideRxScheduler() = RxScheduler(
             Schedulers.io(),
+            Schedulers.computation(),
             AndroidSchedulers.mainThread()
     )
 }

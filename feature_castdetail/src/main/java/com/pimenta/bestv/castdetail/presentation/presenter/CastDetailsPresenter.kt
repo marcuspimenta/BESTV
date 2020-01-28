@@ -24,31 +24,39 @@ import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 05-04-2018.
  */
 class CastDetailsPresenter @Inject constructor(
-    private val view: View,
-    private val getCastDetailsUseCase: GetCastDetailsUseCase,
-    private val workDetailsRoute: WorkDetailsRoute,
-    private val rxScheduler: RxScheduler
+        private val view: View,
+        private val getCastDetailsUseCase: GetCastDetailsUseCase,
+        private val workDetailsRoute: WorkDetailsRoute,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
         getCastDetailsUseCase(castViewModel.id)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { result ->
+                    val cast = result.first.toViewModel()
+                    val movies = result.second?.map { it.toViewModel() }
+                    val tvShow = result.third?.map { it.toViewModel() }
+
+                    Triple(cast, movies, tvShow)
+                }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
-                .subscribe({ triple ->
-                    view.onCastLoaded(
-                            triple.first.toViewModel(),
-                            triple.second?.map { it.toViewModel() },
-                            triple.third?.map { it.toViewModel() }
-                    )
+                .subscribe({ result ->
+                    val cast = result.first
+                    val movies = result.second
+                    val tvShow = result.third
+
+                    view.onCastLoaded(cast, movies, tvShow)
                 }, { throwable ->
                     Timber.e(throwable, "Error while getting the cast details")
                     view.onErrorCastDetailsLoaded()
@@ -66,7 +74,11 @@ class CastDetailsPresenter @Inject constructor(
 
         fun onHideProgress()
 
-        fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?)
+        fun onCastLoaded(
+                castViewModel: CastViewModel?,
+                movies: List<WorkViewModel>?,
+                tvShow: List<WorkViewModel>?
+        )
 
         fun onErrorCastDetailsLoaded()
 

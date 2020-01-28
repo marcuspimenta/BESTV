@@ -23,5 +23,6 @@ import io.reactivex.schedulers.Schedulers
  */
 open class RxScheduler(
     val ioScheduler: Scheduler = Schedulers.io(),
+    val computationScheduler: Scheduler = Schedulers.computation(),
     val mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 )
