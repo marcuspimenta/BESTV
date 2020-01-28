@@ -14,31 +14,34 @@
 
 package com.pimenta.bestv.recommendation.domain
 
-import android.content.Intent
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.only
-import com.nhaarman.mockitokotlin2.verify
-import com.pimenta.bestv.recommendation.data.local.alarm.LocalAlarm
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 
 /**
  * Created by marcus on 2019-08-27.
  */
-private const val INITIAL_DELAY = 5000L
+private const val WORK_TAG = "RECOMMENDATION"
 
 class ScheduleRecommendationUseCaseTest {
 
-    private val localAlarm: LocalAlarm = mock()
+    private val workerManager: WorkManager = mock()
     private val useCase = ScheduleRecommendationUseCase(
-            localAlarm
+            workerManager
     )
 
     @Test
     fun `should load the schedule to update the recommendations`() {
-        val intent: Intent = mock()
+        useCase.invoke()
 
-        useCase(intent)
-
-        verify(localAlarm, only()).scheduleRecommendationUpdate(intent, INITIAL_DELAY)
+        inOrder(workerManager) {
+            verify(workerManager).cancelAllWorkByTag(WORK_TAG)
+            verify(workerManager).enqueue(any<WorkRequest>())
+            verifyNoMoreInteractions(workerManager)
+        }
     }
 }

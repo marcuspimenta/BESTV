@@ -14,23 +14,30 @@
 
 package com.pimenta.bestv.recommendation.domain
 
-import android.content.Intent
-import com.pimenta.bestv.recommendation.data.local.alarm.LocalAlarm
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import com.pimenta.bestv.recommendation.presentation.worker.RecommendationWorker
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-private const val INITIAL_DELAY = 5000L
+private const val REPEAT_INTERVAL_MINUTES = 1L
+private const val WORK_TAG = "RECOMMENDATION"
 
 class ScheduleRecommendationUseCase @Inject constructor(
-    private val localAlarm: LocalAlarm
+    private val workerManager: WorkManager
 ) {
 
-    operator fun invoke(intent: Intent) {
-        localAlarm.scheduleRecommendationUpdate(
-                intent,
-                INITIAL_DELAY
-        )
+    operator fun invoke() {
+        with(workerManager) {
+            val workerInstance = PeriodicWorkRequest.Builder(RecommendationWorker::class.java, REPEAT_INTERVAL_MINUTES, TimeUnit.HOURS)
+                    .addTag(WORK_TAG)
+                    .build()
+
+            cancelAllWorkByTag(WORK_TAG)
+            enqueue(workerInstance)
+        }
     }
 }

@@ -17,6 +17,8 @@ dependencies {
     implementation Dependencies.androidx_core
     implementation Dependencies.androidx_recommendation
     implementation Dependencies.androidx_tvprovider
+    implementation Dependencies.androidx_work
+    implementation Dependencies.androidx_work_rxjava2
 
     // Rx
     implementation Dependencies.rxandroid

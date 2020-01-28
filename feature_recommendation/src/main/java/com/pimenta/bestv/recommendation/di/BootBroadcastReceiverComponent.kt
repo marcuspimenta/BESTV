@@ -16,6 +16,7 @@ package com.pimenta.bestv.recommendation.di
 
 import android.app.Application
 import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.recommendation.di.module.WorkerModule
 import com.pimenta.bestv.recommendation.presentation.broadcast.BootBroadcastReceiver
 import dagger.BindsInstance
 import dagger.Component
@@ -27,7 +28,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(
         modules = [
-            ApplicationModule::class
+            ApplicationModule::class,
+            WorkerModule::class
         ]
 )
 interface BootBroadcastReceiverComponent {

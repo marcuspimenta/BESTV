@@ -16,6 +16,7 @@ package com.pimenta.bestv.recommendation.di.module
 
 import android.app.Application
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import com.pimenta.bestv.recommendation.data.local.provider.channel.RecommendationChannelApi
 import com.pimenta.bestv.recommendation.data.local.provider.row.RecommendationRowApi
@@ -31,6 +32,11 @@ import javax.inject.Singleton
  */
 @Module
 class RecommendationModule {
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(application: Application) =
+            application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
     @Singleton

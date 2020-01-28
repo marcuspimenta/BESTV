@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.recommendation.presentation.presenter
 
-import android.content.Intent
 import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class BootPresenter @Inject constructor(
     private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase
 ) {
 
-    fun scheduleRecommendationUpdate(intent: Intent) {
-        scheduleRecommendationUseCase(intent)
+    fun scheduleRecommendationUpdate() {
+        scheduleRecommendationUseCase()
     }
 }

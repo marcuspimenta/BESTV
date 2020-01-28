@@ -11,24 +11,22 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.pimenta.bestv.presentation.di.module
+package com.pimenta.bestv.recommendation.di.module
 
 import android.app.Application
-import android.content.Context
-import com.pimenta.bestv.presentation.BuildConfig
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 28-01-2020.
  */
 @Module
-class ApplicationModule {
+class WorkerModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(application: Application) =
-            application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
+    fun provideWorkerManager(application: Application) =
+            WorkManager.getInstance(application)
 }

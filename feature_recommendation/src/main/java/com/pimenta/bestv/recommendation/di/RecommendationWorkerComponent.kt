@@ -16,42 +16,38 @@ package com.pimenta.bestv.recommendation.di
 
 import android.app.Application
 import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
 import com.pimenta.bestv.recommendation.di.module.MovieApiModule
 import com.pimenta.bestv.recommendation.di.module.RecommendationModule
-import com.pimenta.bestv.recommendation.presentation.presenter.RecommendationPresenter
-import com.pimenta.bestv.recommendation.presentation.service.RecommendationService
+import com.pimenta.bestv.recommendation.presentation.worker.RecommendationWorker
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 /**
- * Created by marcus on 2019-08-28.
+ * Created by marcus on 28-01-2020.
  */
 @Singleton
 @Component(
         modules = [
             ApplicationModule::class,
             MovieApiModule::class,
-            RecommendationModule::class,
-            SchedulerModule::class
+            RecommendationModule::class
         ]
 )
-interface RecommendationServiceComponent {
+interface RecommendationWorkerComponent {
 
-    fun inject(recommendationService: RecommendationService)
+    fun inject(recommendationWorker: RecommendationWorker)
 
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance service: RecommendationPresenter.Service,
             @BindsInstance application: Application
-        ): RecommendationServiceComponent
+        ): RecommendationWorkerComponent
     }
 
     companion object {
-        fun create(service: RecommendationPresenter.Service, application: Application): RecommendationServiceComponent =
-                DaggerRecommendationServiceComponent.factory()
-                        .create(service, application)
+        fun create(application: Application): RecommendationWorkerComponent =
+                DaggerRecommendationWorkerComponent.factory()
+                        .create(application)
     }
 }

@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.recommendation.presenter
 
-import android.content.Intent
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
@@ -34,10 +33,8 @@ class BootPresenterTest {
 
     @Test
     fun `should load the schedule to update the recommendations`() {
-        val intent: Intent = mock()
+        presenter.scheduleRecommendationUpdate()
 
-        presenter.scheduleRecommendationUpdate(intent)
-
-        verify(scheduleRecommendationUseCase, only()).invoke(intent)
+        verify(scheduleRecommendationUseCase, only()).invoke()
     }
 }
