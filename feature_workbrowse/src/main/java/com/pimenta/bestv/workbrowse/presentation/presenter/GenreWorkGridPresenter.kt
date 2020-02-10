@@ -26,9 +26,9 @@ import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 28-10-2018.
@@ -36,10 +36,10 @@ import javax.inject.Inject
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
 class GenreGridPresenter @Inject constructor(
-        private val view: View,
-        private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
-        private val workDetailsRoute: WorkDetailsRoute,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0

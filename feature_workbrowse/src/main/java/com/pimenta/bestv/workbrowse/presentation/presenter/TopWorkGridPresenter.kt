@@ -26,9 +26,9 @@ import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
@@ -36,10 +36,10 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  * Created by marcus on 09-02-2018.
  */
 class TopWorkGridPresenter @Inject constructor(
-        private val view: View,
-        private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
-        private val workDetailsRoute: WorkDetailsRoute,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0

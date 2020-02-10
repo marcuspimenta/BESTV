@@ -14,7 +14,11 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
-import androidx.leanback.widget.*
+import androidx.leanback.widget.DividerRow
+import androidx.leanback.widget.HeaderItem
+import androidx.leanback.widget.PageRow
+import androidx.leanback.widget.Row
+import androidx.leanback.widget.SectionRow
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
@@ -29,8 +33,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 06-02-2018.
@@ -42,12 +46,12 @@ private const val FAVORITE_INDEX = 0
 private const val INVALID_INDEX = -1
 
 class WorkBrowsePresenter @Inject constructor(
-        private val view: View,
-        private val hasFavoriteUseCase: HasFavoriteUseCase,
-        private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
-        private val searchRoute: SearchRoute,
-        private val resource: Resource,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val hasFavoriteUseCase: HasFavoriteUseCase,
+    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
+    private val searchRoute: SearchRoute,
+    private val resource: Resource,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var refreshRows = false

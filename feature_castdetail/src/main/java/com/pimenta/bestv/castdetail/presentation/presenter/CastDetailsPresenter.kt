@@ -24,17 +24,17 @@ import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Created by marcus on 05-04-2018.
  */
 class CastDetailsPresenter @Inject constructor(
-        private val view: View,
-        private val getCastDetailsUseCase: GetCastDetailsUseCase,
-        private val workDetailsRoute: WorkDetailsRoute,
-        private val rxScheduler: RxScheduler
+    private val view: View,
+    private val getCastDetailsUseCase: GetCastDetailsUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
@@ -75,9 +75,9 @@ class CastDetailsPresenter @Inject constructor(
         fun onHideProgress()
 
         fun onCastLoaded(
-                castViewModel: CastViewModel?,
-                movies: List<WorkViewModel>?,
-                tvShow: List<WorkViewModel>?
+            castViewModel: CastViewModel?,
+            movies: List<WorkViewModel>?,
+            tvShow: List<WorkViewModel>?
         )
 
         fun onErrorCastDetailsLoaded()
