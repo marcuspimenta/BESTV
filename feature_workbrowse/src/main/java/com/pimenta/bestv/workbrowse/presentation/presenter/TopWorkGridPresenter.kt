@@ -26,9 +26,9 @@ import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import timber.log.Timber
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
@@ -36,15 +36,15 @@ private const val BACKGROUND_UPDATE_DELAY = 300L
  * Created by marcus on 09-02-2018.
  */
 class TopWorkGridPresenter @Inject constructor(
-    private val view: View,
-    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
-    private val workDetailsRoute: WorkDetailsRoute,
-    private val rxScheduler: RxScheduler
+        private val view: View,
+        private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
+        private val workDetailsRoute: WorkDetailsRoute,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0
     private var totalPages = 0
-    private val works = mutableListOf<WorkViewModel>()
+    private val works by lazy { mutableListOf<WorkViewModel>() }
 
     private var loadBackdropImageDisposable: Disposable? = null
 
@@ -67,6 +67,8 @@ class TopWorkGridPresenter @Inject constructor(
 
         loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
@@ -74,8 +76,9 @@ class TopWorkGridPresenter @Inject constructor(
                     workPage?.let {
                         currentPage = it.page
                         totalPages = it.totalPages
-                        it.works?.let { pageWorks ->
-                            works.addAll(pageWorks.map { work -> work.toViewModel() })
+
+                        it.works?.let { worksViewModel ->
+                            works.addAll(worksViewModel)
                             view.onWorksLoaded(works)
                         }
                     }

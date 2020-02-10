@@ -64,6 +64,7 @@ class WorkBrowsePresenterTest {
     private val resource: Resource = mock()
     private val rxScheduler: RxScheduler = RxScheduler(
             Schedulers.trampoline(),
+            Schedulers.trampoline(),
             Schedulers.trampoline()
     )
 

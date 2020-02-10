@@ -15,12 +15,7 @@
 package com.pimenta.bestv.workbrowse.presenter
 
 import androidx.leanback.widget.Presenter
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.only
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -35,8 +30,8 @@ import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import java.util.concurrent.TimeUnit
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by marcus on 2019-08-26.
@@ -77,6 +72,7 @@ class TopWorkGridPresenterTest {
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val rxScheduler: RxScheduler = RxScheduler(
+            Schedulers.trampoline(),
             Schedulers.trampoline(),
             Schedulers.trampoline()
     )

@@ -26,9 +26,9 @@ import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import timber.log.Timber
 
 /**
  * Created by marcus on 28-10-2018.
@@ -36,15 +36,15 @@ import timber.log.Timber
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
 class GenreGridPresenter @Inject constructor(
-    private val view: View,
-    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
-    private val workDetailsRoute: WorkDetailsRoute,
-    private val rxScheduler: RxScheduler
+        private val view: View,
+        private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+        private val workDetailsRoute: WorkDetailsRoute,
+        private val rxScheduler: RxScheduler
 ) : AutoDisposablePresenter() {
 
     private var currentPage = 0
     private var totalPages = 0
-    private val works = mutableListOf<WorkViewModel>()
+    private val works by lazy { mutableListOf<WorkViewModel>() }
 
     private var loadBackdropImageDisposable: Disposable? = null
 
@@ -60,16 +60,18 @@ class GenreGridPresenter @Inject constructor(
 
         getWorkByGenreUseCase(genreViewModel, currentPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
                 .subscribe({ workPage ->
-                    if (workPage != null && workPage.page <= workPage.totalPages) {
-                        currentPage = workPage.page
-                        totalPages = workPage.totalPages
+                    workPage?.let {
+                        currentPage = it.page
+                        totalPages = it.totalPages
 
-                        workPage.works?.let {
-                            works.addAll(it.map { work -> work.toViewModel() })
+                        it.works?.let { worksViewModel ->
+                            works.addAll(worksViewModel)
                             view.onWorksLoaded(works)
                         }
                     }
