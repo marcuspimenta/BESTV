@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.search.di.SearchActivityComponent
+import com.pimenta.bestv.search.di.SearchActivityComponentProvider
 import com.pimenta.bestv.search.presentation.ui.fragment.SearchFragment
 import javax.inject.Inject
 
@@ -30,12 +31,18 @@ class SearchActivity : FragmentActivity() {
 
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
 
+    lateinit var searchActivityComponent: SearchActivityComponent
+
     @Inject
     lateinit var displayMetrics: DisplayMetrics
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        searchActivityComponent = (application as SearchActivityComponentProvider)
+                .searchActivityComponent()
+                .also {
+                    it.inject(this)
+                }
         super.onCreate(savedInstanceState)
-        SearchActivityComponent.build().inject(this)
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)

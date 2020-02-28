@@ -12,31 +12,25 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.di
+package com.pimenta.bestv.castdetail.di
 
+import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import dagger.Subcomponent
 
 /**
- * Created by marcus on 2019-08-29.
+ * Created by marcus on 25-11-2018.
  */
 @ActivityScope
 @Subcomponent
-interface MainActivityComponent {
+interface CastDetailsActivityComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): MainActivityComponent
+        fun create(): CastDetailsActivityComponent
     }
 
-    fun inject(activity: MainActivity)
+    fun inject(activity: CastDetailsActivity)
 
-    fun aboutFragmentComponent(): AboutFragmentComponent.Factory
-
-    fun genreWorkGridFragmentComponent(): GenreWorkGridFragmentComponent.Factory
-
-    fun topWorkGridFragmentComponent(): TopWorkGridFragmentComponent.Factory
-
-    fun workBrowseFragmentComponent(): WorkBrowseFragmentComponent.Factory
+    fun castDetailsFragmentComponent(): CastDetailsFragmentComponent.Factory
 }

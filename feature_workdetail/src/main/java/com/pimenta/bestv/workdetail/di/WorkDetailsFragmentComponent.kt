@@ -14,46 +14,30 @@
 
 package com.pimenta.bestv.workdetail.di
 
-import android.app.Application
-import com.pimenta.bestv.data.di.module.MediaLocalModule
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Singleton
-@Component(
+@FragmentScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
-            MediaLocalModule::class,
             MovieRemoteDataSourceModule::class,
-            TvShowRemoteDataSourceModule::class,
-            SchedulerModule::class
+            TvShowRemoteDataSourceModule::class
         ]
 )
 interface WorkDetailsFragmentComponent {
 
-    fun inject(workDetailsFragment: WorkDetailsFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: WorkDetailsPresenter.View,
-            @BindsInstance application: Application
-        ): WorkDetailsFragmentComponent
+        fun create(@BindsInstance view: WorkDetailsPresenter.View): WorkDetailsFragmentComponent
     }
 
-    companion object {
-        fun create(view: WorkDetailsPresenter.View, application: Application): WorkDetailsFragmentComponent =
-                DaggerWorkDetailsFragmentComponent.factory()
-                        .create(view, application)
-    }
+    fun inject(workDetailsFragment: WorkDetailsFragment)
 }

@@ -18,6 +18,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.pimenta.bestv.presentation.di.annotation.WorkerScope
 import com.pimenta.bestv.recommendation.data.local.provider.channel.RecommendationChannelApi
 import com.pimenta.bestv.recommendation.data.local.provider.row.RecommendationRowApi
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
@@ -25,7 +26,6 @@ import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 /**
  * Created by marcus on 23-04-2019.
@@ -34,12 +34,12 @@ import javax.inject.Singleton
 class RecommendationModule {
 
     @Provides
-    @Singleton
+    @WorkerScope
     fun provideNotificationManager(application: Application) =
             application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
-    @Singleton
+    @WorkerScope
     fun provideRecommendationManager(
         application: Application,
         localSettings: LocalSettings,

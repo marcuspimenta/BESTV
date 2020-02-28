@@ -45,8 +45,8 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.search.R
-import com.pimenta.bestv.search.di.SearchFragmentComponent
 import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
+import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
@@ -73,7 +73,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     private var workSelected: WorkViewModel? = null
 
     override fun onAttach(context: Context) {
-        SearchFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as SearchActivity).searchActivityComponent
+                .searchFragmentComponent()
+                .create(this)
                 .inject(this)
         super.onAttach(context)
     }

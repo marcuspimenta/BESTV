@@ -12,23 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.presentation.di.module
-
-import android.app.Application
-import android.content.Context
-import com.pimenta.bestv.presentation.BuildConfig
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+package com.pimenta.bestv.workbrowse.di
 
 /**
- * Created by marcus on 07-02-2018.
+ * Created by marcus on 26-02-2020.
  */
-@Module
-class ApplicationModule {
+interface MainActivityComponentProvider {
 
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(application: Application) =
-            application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
+    fun mainActivityComponent(): MainActivityComponent
 }

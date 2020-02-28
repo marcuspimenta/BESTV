@@ -14,46 +14,30 @@
 
 package com.pimenta.bestv.workbrowse.di
 
-import android.app.Application
-import com.pimenta.bestv.data.di.module.MediaLocalModule
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workbrowse.di.module.MovieApiModule
 import com.pimenta.bestv.workbrowse.di.module.TvShowApiModule
 import com.pimenta.bestv.workbrowse.presentation.presenter.GenreGridPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.GenreWorkGridFragment
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Singleton
-@Component(
+@FragmentScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
-            MediaLocalModule::class,
             MovieApiModule::class,
-            TvShowApiModule::class,
-            SchedulerModule::class
+            TvShowApiModule::class
         ]
 )
 interface GenreWorkGridFragmentComponent {
 
-    fun inject(genreWorkGridFragment: GenreWorkGridFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: GenreGridPresenter.View,
-            @BindsInstance application: Application
-        ): GenreWorkGridFragmentComponent
+        fun create(@BindsInstance view: GenreGridPresenter.View): GenreWorkGridFragmentComponent
     }
 
-    companion object {
-        fun create(view: GenreGridPresenter.View, application: Application): GenreWorkGridFragmentComponent =
-                DaggerGenreWorkGridFragmentComponent.factory()
-                        .create(view, application)
-    }
+    fun inject(genreWorkGridFragment: GenreWorkGridFragment)
 }

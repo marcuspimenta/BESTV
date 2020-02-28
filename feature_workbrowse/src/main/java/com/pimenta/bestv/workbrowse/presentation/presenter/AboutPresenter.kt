@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workbrowse.R
 import javax.inject.Inject
 
@@ -29,6 +30,7 @@ private val GUIDED_ACTIONS = listOf(
         API_TERMS_ID to R.string.tmdb_api_terms
 )
 
+@FragmentScope
 class AboutPresenter @Inject constructor(
     private val view: View
 ) {

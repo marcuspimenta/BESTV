@@ -15,9 +15,9 @@ package com.pimenta.bestv.recommendation.di.module
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.pimenta.bestv.presentation.di.annotation.BroadcastScope
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 /**
  * Created by marcus on 28-01-2020.
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 class WorkerModule {
 
     @Provides
-    @Singleton
+    @BroadcastScope
     fun provideWorkerManager(application: Application) =
             WorkManager.getInstance(application)
 }

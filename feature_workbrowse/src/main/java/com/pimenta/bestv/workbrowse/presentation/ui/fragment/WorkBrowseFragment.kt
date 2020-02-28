@@ -32,11 +32,11 @@ import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.R
-import com.pimenta.bestv.workbrowse.di.WorkBrowseFragmentComponent
 import com.pimenta.bestv.workbrowse.presentation.presenter.ABOUT_ID
 import com.pimenta.bestv.workbrowse.presentation.presenter.TOP_WORK_LIST_ID
 import com.pimenta.bestv.workbrowse.presentation.presenter.WORK_GENRE_ID
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
+import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.workbrowse.presentation.ui.diffcallback.RowDiffCallback
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
@@ -56,7 +56,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     lateinit var presenter: WorkBrowsePresenter
 
     override fun onAttach(context: Context) {
-        WorkBrowseFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as MainActivity).mainActivityComponent
+                .workBrowseFragmentComponent()
+                .create(this)
                 .inject(this)
         super.onAttach(context)
     }

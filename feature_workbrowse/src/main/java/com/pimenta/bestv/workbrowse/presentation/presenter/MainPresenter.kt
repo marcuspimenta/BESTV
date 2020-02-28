@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.route.splash.SplashRoute
 import javax.inject.Inject
@@ -21,6 +22,7 @@ import javax.inject.Inject
 /**
  * Created by marcus on 04-05-2018.
  */
+@ActivityScope
 class MainPresenter @Inject constructor(
     private val splashRoute: SplashRoute
         // private val loadRecommendationUseCase: LoadRecommendationUseCase,

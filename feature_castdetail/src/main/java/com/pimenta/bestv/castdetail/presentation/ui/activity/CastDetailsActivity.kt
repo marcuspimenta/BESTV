@@ -16,7 +16,8 @@ package com.pimenta.bestv.castdetail.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.castdetail.di.CastDetailActivityComponent
+import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponent
+import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
 import com.pimenta.bestv.castdetail.presentation.ui.fragment.CastDetailsFragment
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
@@ -27,12 +28,18 @@ import javax.inject.Inject
  */
 class CastDetailsActivity : FragmentActivity() {
 
+    lateinit var castDetailsActivityComponent: CastDetailsActivityComponent
+
     @Inject
     lateinit var castDetailsRoute: CastDetailsRoute
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        castDetailsActivityComponent = (application as CastDetailsActivityComponentProvider)
+                .castDetailsActivityComponent()
+                .also {
+                    it.inject(this)
+                }
         super.onCreate(savedInstanceState)
-        CastDetailActivityComponent.build().inject(this)
 
         when (val castViewModel = castDetailsRoute.getCastDetailDeepLink(intent)) {
             null -> finish()

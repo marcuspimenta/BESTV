@@ -12,25 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.castdetail.di
-
-import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
-import dagger.Component
-import javax.inject.Singleton
+package com.pimenta.bestv.search.di
 
 /**
- * Created by marcus on 25-11-2018.
+ * Created by marcus on 24-02-2020.
  */
-@Singleton
-@Component
-interface CastDetailActivityComponent {
+interface SearchActivityComponentProvider {
 
-    fun inject(activity: CastDetailsActivity)
-
-    companion object {
-        fun build(): CastDetailActivityComponent =
-                DaggerCastDetailActivityComponent
-                        .builder()
-                        .build()
-    }
+    fun searchActivityComponent(): SearchActivityComponent
 }

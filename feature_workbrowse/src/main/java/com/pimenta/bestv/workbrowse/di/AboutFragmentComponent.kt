@@ -14,31 +14,23 @@
 
 package com.pimenta.bestv.workbrowse.di
 
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workbrowse.presentation.presenter.AboutPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.AboutFragment
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 10-12-2019.
  */
-@Singleton
-@Component
+@FragmentScope
+@Subcomponent
 interface AboutFragmentComponent {
 
-    fun inject(aboutFragment: AboutFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: AboutPresenter.View
-        ): AboutFragmentComponent
+        fun create(@BindsInstance view: AboutPresenter.View): AboutFragmentComponent
     }
 
-    companion object {
-        fun create(view: AboutPresenter.View): AboutFragmentComponent =
-                DaggerAboutFragmentComponent.factory()
-                        .create(view)
-    }
+    fun inject(aboutFragment: AboutFragment)
 }

@@ -34,9 +34,9 @@ import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
-import com.pimenta.bestv.workbrowse.di.TopWorkGridFragmentComponent
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.presenter.TopWorkGridPresenter
+import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import javax.inject.Inject
 
 /**
@@ -54,7 +54,9 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     lateinit var presenter: TopWorkGridPresenter
 
     override fun onAttach(context: Context) {
-        TopWorkGridFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as MainActivity).mainActivityComponent
+                .topWorkGridFragmentComponent()
+                .create(this)
                 .inject(this)
         super.onAttach(context)
     }

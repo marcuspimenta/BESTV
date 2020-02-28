@@ -34,9 +34,9 @@ import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
-import com.pimenta.bestv.workbrowse.di.GenreWorkGridFragmentComponent
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.presenter.GenreGridPresenter
+import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import javax.inject.Inject
 
 /**
@@ -53,7 +53,9 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
     lateinit var presenter: GenreGridPresenter
 
     override fun onAttach(context: Context) {
-        GenreWorkGridFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as MainActivity).mainActivityComponent
+                .genreWorkGridFragmentComponent()
+                .create(this)
                 .inject(this)
         super.onAttach(context)
     }

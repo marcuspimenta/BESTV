@@ -14,48 +14,32 @@
 
 package com.pimenta.bestv.workbrowse.di
 
-import android.app.Application
-import com.pimenta.bestv.data.di.module.MediaLocalModule
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workbrowse.di.module.GenreApiModule
 import com.pimenta.bestv.workbrowse.di.module.MovieApiModule
 import com.pimenta.bestv.workbrowse.di.module.TvShowApiModule
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Singleton
-@Component(
+@FragmentScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
-            MediaLocalModule::class,
             GenreApiModule::class,
             MovieApiModule::class,
-            TvShowApiModule::class,
-            SchedulerModule::class
+            TvShowApiModule::class
         ]
 )
 interface WorkBrowseFragmentComponent {
 
-    fun inject(workBrowseFragment: WorkBrowseFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: WorkBrowsePresenter.View,
-            @BindsInstance application: Application
-        ): WorkBrowseFragmentComponent
+        fun create(@BindsInstance view: WorkBrowsePresenter.View): WorkBrowseFragmentComponent
     }
 
-    companion object {
-        fun create(view: WorkBrowsePresenter.View, application: Application): WorkBrowseFragmentComponent =
-                DaggerWorkBrowseFragmentComponent.factory()
-                        .create(view, application)
-    }
+    fun inject(workBrowseFragment: WorkBrowseFragment)
 }

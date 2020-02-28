@@ -14,44 +14,30 @@
 
 package com.pimenta.bestv.search.di
 
-import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.search.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.search.di.module.TvShowRemoteDataSourceModule
 import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.search.presentation.ui.fragment.SearchFragment
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Singleton
-@Component(
+@FragmentScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
             MovieRemoteDataSourceModule::class,
-            TvShowRemoteDataSourceModule::class,
-            SchedulerModule::class
+            TvShowRemoteDataSourceModule::class
         ]
 )
 interface SearchFragmentComponent {
 
-    fun inject(searchFragment: SearchFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: SearchPresenter.View,
-            @BindsInstance application: Application
-        ): SearchFragmentComponent
+        fun create(@BindsInstance view: SearchPresenter.View): SearchFragmentComponent
     }
 
-    companion object {
-        fun create(view: SearchPresenter.View, application: Application): SearchFragmentComponent =
-                DaggerSearchFragmentComponent.factory()
-                        .create(view, application)
-    }
+    fun inject(searchFragment: SearchFragment)
 }

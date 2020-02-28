@@ -19,6 +19,7 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.PageRow
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.SectionRow
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
@@ -45,6 +46,7 @@ const val ABOUT_ID = 3L
 private const val FAVORITE_INDEX = 0
 private const val INVALID_INDEX = -1
 
+@FragmentScope
 class WorkBrowsePresenter @Inject constructor(
     private val view: View,
     private val hasFavoriteUseCase: HasFavoriteUseCase,

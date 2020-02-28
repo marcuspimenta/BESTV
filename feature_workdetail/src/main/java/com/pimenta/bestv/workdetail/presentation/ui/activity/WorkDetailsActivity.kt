@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponent
+import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponentProvider
 import com.pimenta.bestv.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import javax.inject.Inject
 
@@ -27,12 +28,18 @@ import javax.inject.Inject
  */
 class WorkDetailsActivity : FragmentActivity() {
 
+    lateinit var workDetailsActivityComponent: WorkDetailsActivityComponent
+
     @Inject
     lateinit var workDetailsRoute: WorkDetailsRoute
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        workDetailsActivityComponent = (application as WorkDetailsActivityComponentProvider)
+                .workDetailsActivityComponent()
+                .also {
+                    it.inject(this)
+                }
         super.onCreate(savedInstanceState)
-        WorkDetailsActivityComponent.build().inject(this)
 
         when (val workViewModel = workDetailsRoute.getWorkDetail(intent)) {
             null -> finish()

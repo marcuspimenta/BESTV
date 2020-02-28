@@ -14,23 +14,23 @@
 
 package com.pimenta.bestv.workdetail.di
 
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-29.
  */
-@Singleton
-@Component
+@ActivityScope
+@Subcomponent
 interface WorkDetailsActivityComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): WorkDetailsActivityComponent
+    }
 
     fun inject(activity: WorkDetailsActivity)
 
-    companion object {
-        fun build(): WorkDetailsActivityComponent =
-                DaggerWorkDetailsActivityComponent
-                        .builder()
-                        .build()
-    }
+    fun workDetailsFragmentComponent(): WorkDetailsFragmentComponent.Factory
 }

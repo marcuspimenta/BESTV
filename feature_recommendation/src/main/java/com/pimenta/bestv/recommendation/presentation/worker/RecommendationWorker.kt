@@ -14,11 +14,10 @@
 
 package com.pimenta.bestv.recommendation.presentation.worker
 
-import android.app.Application
 import android.content.Context
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
-import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponent
+import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponentProvider
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
 import io.reactivex.Single
 import javax.inject.Inject
@@ -35,7 +34,8 @@ class RecommendationWorker(
     lateinit var loadRecommendationUseCase: LoadRecommendationUseCase
 
     init {
-        RecommendationWorkerComponent.create(context.applicationContext as Application)
+        (context.applicationContext as RecommendationWorkerComponentProvider)
+                .recommendationWorkerComponent()
                 .inject(this)
     }
 

@@ -15,24 +15,19 @@
 package com.pimenta.bestv.castdetail.di.module
 
 import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
-import com.pimenta.bestv.data.di.module.MediaRemoteModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 import retrofit2.Retrofit
 
 /**
  * Created by marcus on 29-10-2019.
  */
-@Module(
-        includes = [
-            MediaRemoteModule::class
-        ]
-)
+@Module
 class CastRemoteDataSourceModule {
 
     @Provides
-    @Singleton
+    @FragmentScope
     fun provideCastApi(retrofit: Retrofit) =
             retrofit.create(CastTmdbApi::class.java)
 }

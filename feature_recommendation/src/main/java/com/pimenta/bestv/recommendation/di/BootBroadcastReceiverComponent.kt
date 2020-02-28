@@ -14,36 +14,26 @@
 
 package com.pimenta.bestv.recommendation.di
 
-import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.annotation.BroadcastScope
 import com.pimenta.bestv.recommendation.di.module.WorkerModule
 import com.pimenta.bestv.recommendation.presentation.broadcast.BootBroadcastReceiver
-import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-29.
  */
-@Singleton
-@Component(
+@BroadcastScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
             WorkerModule::class
         ]
 )
 interface BootBroadcastReceiverComponent {
 
-    fun inject(broadcastReceiver: BootBroadcastReceiver)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance application: Application): BootBroadcastReceiverComponent
+        fun create(): BootBroadcastReceiverComponent
     }
 
-    companion object {
-        fun create(application: Application): BootBroadcastReceiverComponent =
-                DaggerBootBroadcastReceiverComponent.factory()
-                        .create(application)
-    }
+    fun inject(broadcastReceiver: BootBroadcastReceiver)
 }

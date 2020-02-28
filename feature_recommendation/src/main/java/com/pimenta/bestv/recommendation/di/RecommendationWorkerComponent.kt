@@ -14,40 +14,28 @@
 
 package com.pimenta.bestv.recommendation.di
 
-import android.app.Application
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
+import com.pimenta.bestv.presentation.di.annotation.WorkerScope
 import com.pimenta.bestv.recommendation.di.module.MovieApiModule
 import com.pimenta.bestv.recommendation.di.module.RecommendationModule
 import com.pimenta.bestv.recommendation.presentation.worker.RecommendationWorker
-import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 28-01-2020.
  */
-@Singleton
-@Component(
+@WorkerScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
             MovieApiModule::class,
             RecommendationModule::class
         ]
 )
 interface RecommendationWorkerComponent {
 
-    fun inject(recommendationWorker: RecommendationWorker)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance application: Application
-        ): RecommendationWorkerComponent
+        fun create(): RecommendationWorkerComponent
     }
 
-    companion object {
-        fun create(application: Application): RecommendationWorkerComponent =
-                DaggerRecommendationWorkerComponent.factory()
-                        .create(application)
-    }
+    fun inject(recommendationWorker: RecommendationWorker)
 }

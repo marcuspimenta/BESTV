@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.workbrowse.di.MainActivityComponent
+import com.pimenta.bestv.workbrowse.di.MainActivityComponentProvider
 import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
 import javax.inject.Inject
@@ -35,6 +36,8 @@ class MainActivity : FragmentActivity() {
 
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
 
+    lateinit var mainActivityComponent: MainActivityComponent
+
     @Inject
     lateinit var displayMetrics: DisplayMetrics
 
@@ -42,8 +45,12 @@ class MainActivity : FragmentActivity() {
     lateinit var presenter: MainPresenter
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        mainActivityComponent = (application as MainActivityComponentProvider)
+                .mainActivityComponent()
+                .also {
+                    it.inject(this)
+                }
         super.onCreate(savedInstanceState)
-        MainActivityComponent.create(application).inject(this)
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)

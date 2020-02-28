@@ -41,8 +41,8 @@ import androidx.leanback.widget.RowPresenter
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.castdetail.R
-import com.pimenta.bestv.castdetail.di.CastDetailsFragmentComponent
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
+import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.castdetail.presentation.ui.render.CastDetailsDescriptionRender
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -80,7 +80,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     lateinit var presenter: CastDetailsPresenter
 
     override fun onAttach(context: Context) {
-        CastDetailsFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as CastDetailsActivity).castDetailsActivityComponent
+                .castDetailsFragmentComponent()
+                .create(this)
                 .inject(this)
         super.onAttach(context)
     }

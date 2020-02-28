@@ -14,42 +14,28 @@
 
 package com.pimenta.bestv.castdetail.di
 
-import android.app.Application
 import com.pimenta.bestv.castdetail.di.module.CastRemoteDataSourceModule
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.castdetail.presentation.ui.fragment.CastDetailsFragment
-import com.pimenta.bestv.presentation.di.module.ApplicationModule
-import com.pimenta.bestv.presentation.di.module.SchedulerModule
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-28.
  */
-@Singleton
-@Component(
+@FragmentScope
+@Subcomponent(
         modules = [
-            ApplicationModule::class,
-            CastRemoteDataSourceModule::class,
-            SchedulerModule::class
+            CastRemoteDataSourceModule::class
         ]
 )
 interface CastDetailsFragmentComponent {
 
-    fun inject(castDetailsFragment: CastDetailsFragment)
-
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance view: CastDetailsPresenter.View,
-            @BindsInstance application: Application
-        ): CastDetailsFragmentComponent
+        fun create(@BindsInstance view: CastDetailsPresenter.View): CastDetailsFragmentComponent
     }
 
-    companion object {
-        fun create(view: CastDetailsPresenter.View, application: Application): CastDetailsFragmentComponent =
-                DaggerCastDetailsFragmentComponent.factory()
-                        .create(view, application)
-    }
+    fun inject(castDetailsFragment: CastDetailsFragment)
 }

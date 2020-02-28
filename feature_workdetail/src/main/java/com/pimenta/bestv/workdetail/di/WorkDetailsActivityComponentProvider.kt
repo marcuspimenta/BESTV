@@ -12,20 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.presentation.di.module
-
-import android.util.DisplayMetrics
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+package com.pimenta.bestv.workdetail.di
 
 /**
- * Created by marcus on 2019-08-29.
+ * Created by marcus on 26-02-2020.
  */
-@Module
-class DisplayMetricsModule {
+interface WorkDetailsActivityComponentProvider {
 
-    @Provides
-    @Singleton
-    fun provideDisplayMetrics() = DisplayMetrics()
+    fun workDetailsActivityComponent(): WorkDetailsActivityComponent
 }

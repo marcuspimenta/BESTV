@@ -19,6 +19,7 @@ import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
@@ -30,6 +31,7 @@ import timber.log.Timber
 /**
  * Created by marcus on 05-04-2018.
  */
+@FragmentScope
 class CastDetailsPresenter @Inject constructor(
     private val view: View,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,

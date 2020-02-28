@@ -27,8 +27,8 @@ import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import com.pimenta.bestv.workbrowse.R
-import com.pimenta.bestv.workbrowse.di.AboutFragmentComponent
 import com.pimenta.bestv.workbrowse.presentation.presenter.AboutPresenter
+import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import javax.inject.Inject
 
 /**
@@ -43,7 +43,10 @@ class AboutFragment : GuidedStepSupportFragment(), AboutPresenter.View,
     lateinit var presenter: AboutPresenter
 
     override fun onAttach(context: Context) {
-        AboutFragmentComponent.create(this).inject(this)
+        (requireActivity() as MainActivity).mainActivityComponent
+                .aboutFragmentComponent()
+                .create(this)
+                .inject(this)
         super.onAttach(context)
     }
 

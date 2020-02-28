@@ -61,9 +61,9 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workdetail.R
-import com.pimenta.bestv.workdetail.di.WorkDetailsFragmentComponent
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
+import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.workdetail.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
@@ -112,9 +112,11 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     private lateinit var detailsOverviewRow: DetailsOverviewRow
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-        WorkDetailsFragmentComponent.create(this, requireActivity().application)
+        (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
+                .workDetailsFragmentComponent()
+                .create(this)
                 .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

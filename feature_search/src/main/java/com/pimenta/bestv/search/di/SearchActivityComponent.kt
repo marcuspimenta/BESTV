@@ -14,28 +14,23 @@
 
 package com.pimenta.bestv.search.di
 
-import com.pimenta.bestv.presentation.di.module.DisplayMetricsModule
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-29.
  */
-@Singleton
-@Component(
-        modules = [
-            DisplayMetricsModule::class
-        ]
-)
+@ActivityScope
+@Subcomponent
 interface SearchActivityComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): SearchActivityComponent
+    }
 
     fun inject(activity: SearchActivity)
 
-    companion object {
-        fun build(): SearchActivityComponent =
-                DaggerSearchActivityComponent
-                        .builder()
-                        .build()
-    }
+    fun searchFragmentComponent(): SearchFragmentComponent.Factory
 }

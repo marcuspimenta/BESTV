@@ -24,13 +24,15 @@ import javax.inject.Singleton
 /**
  * Created by marcus on 24-06-2019.
  */
+private const val DB_NAME = "bestv.db"
+
 @Module
 class MediaLocalModule {
 
     @Provides
     @Singleton
     fun provideLocalDatabase(application: Application) =
-            Room.databaseBuilder(application, MediaDb::class.java, "bestv.db")
+            Room.databaseBuilder(application, MediaDb::class.java, DB_NAME)
                     .build()
 
     @Provides

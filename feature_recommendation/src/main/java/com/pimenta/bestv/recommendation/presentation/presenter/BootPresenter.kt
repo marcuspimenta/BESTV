@@ -14,12 +14,14 @@
 
 package com.pimenta.bestv.recommendation.presentation.presenter
 
+import com.pimenta.bestv.presentation.di.annotation.BroadcastScope
 import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
 import javax.inject.Inject
 
 /**
  * Created by marcus on 06-03-2018.
  */
+@BroadcastScope
 class BootPresenter @Inject constructor(
     private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase
 ) {

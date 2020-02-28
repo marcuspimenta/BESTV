@@ -17,6 +17,7 @@ package com.pimenta.bestv.workbrowse.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
@@ -35,6 +36,7 @@ import timber.log.Timber
  */
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
+@FragmentScope
 class GenreGridPresenter @Inject constructor(
     private val view: View,
     private val getWorkByGenreUseCase: GetWorkByGenreUseCase,

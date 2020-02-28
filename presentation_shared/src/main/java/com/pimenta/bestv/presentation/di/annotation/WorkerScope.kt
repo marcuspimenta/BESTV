@@ -12,22 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.di.module
+package com.pimenta.bestv.presentation.di.annotation
 
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
-import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
-import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
+import javax.inject.Scope
 
 /**
- * Created by marcus on 20-10-2019.
+ * Created by marcus on 27-02-2020.
  */
-@Module
-class TvShowApiModule {
-
-    @Provides
-    @FragmentScope
-    fun provideTvShowApi(retrofit: Retrofit) =
-            retrofit.create(TvShowTmdbApi::class.java)
-}
+@Scope
+@Retention(value = AnnotationRetention.RUNTIME)
+annotation class WorkerScope

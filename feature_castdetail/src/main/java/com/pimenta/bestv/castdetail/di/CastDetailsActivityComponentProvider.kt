@@ -12,22 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.di.module
-
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
-import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
-import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
+package com.pimenta.bestv.castdetail.di
 
 /**
- * Created by marcus on 20-10-2019.
+ * Created by marcus on 24-02-2020.
  */
-@Module
-class TvShowApiModule {
+interface CastDetailsActivityComponentProvider {
 
-    @Provides
-    @FragmentScope
-    fun provideTvShowApi(retrofit: Retrofit) =
-            retrofit.create(TvShowTmdbApi::class.java)
+    fun castDetailsActivityComponent(): CastDetailsActivityComponent
 }

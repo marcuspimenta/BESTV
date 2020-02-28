@@ -12,26 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.presentation.di.module
+package com.pimenta.bestv.presentation.di.annotation
 
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import dagger.Module
-import dagger.Provides
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Singleton
+import javax.inject.Scope
 
 /**
- * Created by marcus on 23-05-2018.
+ * Created by marcus on 24-02-2020.
  */
-@Module
-class SchedulerModule {
-
-    @Provides
-    @Singleton
-    fun provideRxScheduler() = RxScheduler(
-            Schedulers.io(),
-            Schedulers.computation(),
-            AndroidSchedulers.mainThread()
-    )
-}
+@Scope
+@Retention(value = AnnotationRetention.RUNTIME)
+annotation class ActivityScope
