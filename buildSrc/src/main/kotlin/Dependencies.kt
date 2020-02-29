@@ -38,8 +38,8 @@ object Versions {
     val androidx_room = "2.2.4"
     val androidx_work = "2.3.0-rc01"
 
-    val dagger = "2.25.4"
-    val dagger_compile = "2.25.4"
+    val dagger = "2.26"
+    val dagger_compile = "2.26"
     val retrofit = "2.7.1"
     val retrofit_converter_gson = "2.7.1"
     val okhttp = "4.3.0"
