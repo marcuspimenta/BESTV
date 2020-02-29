@@ -24,7 +24,7 @@ object Config {
 
 object Versions {
     val kotlin = "1.3.61"
-    val build_gradle = "4.1.0"
+    val build_gradle = "3.5.3"
     val google_service = "4.3.3"
     val ktlint = "9.2.1"
     val ben_mane_gralde = "0.28.0"
@@ -47,7 +47,7 @@ object Versions {
     val gson = "2.8.6"
     val retrofit2_rxjava2_adapter = "1.0.0"
     val timber = "4.7.1"
-    val firebase = "17.2.1"
+    val firebase = "17.2.3"
     val glide = "4.11.0"
     val lottie = "3.3.1"
     val rxandroid = "2.1.1"
