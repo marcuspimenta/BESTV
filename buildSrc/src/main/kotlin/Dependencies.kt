@@ -32,7 +32,7 @@ object Versions {
     val androidx_leanback = "1.1.0-alpha03"
     val androidx_core = "1.3.0-alpha01"
     val androidx_fragment = "1.2.2"
-    val androidx_lifecycle = "2.2.2"
+    val androidx_lifecycle = "2.2.0"
     val androidx_recommendation = "1.0.0"
     val androidx_tvprovider = "1.0.0"
     val androidx_room = "2.2.4"
