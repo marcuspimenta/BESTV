@@ -15,7 +15,6 @@
 package com.pimenta.bestv.search.di
 
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
 import dagger.Subcomponent
 
 /**
@@ -29,8 +28,6 @@ interface SearchActivityComponent {
     interface Factory {
         fun create(): SearchActivityComponent
     }
-
-    fun inject(activity: SearchActivity)
 
     fun searchFragmentComponent(): SearchFragmentComponent.Factory
 }

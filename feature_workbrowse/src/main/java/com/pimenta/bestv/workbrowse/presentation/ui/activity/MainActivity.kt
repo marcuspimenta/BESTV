@@ -17,7 +17,6 @@ package com.pimenta.bestv.workbrowse.presentation.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
@@ -39,9 +38,6 @@ class MainActivity : FragmentActivity() {
     lateinit var mainActivityComponent: MainActivityComponent
 
     @Inject
-    lateinit var displayMetrics: DisplayMetrics
-
-    @Inject
     lateinit var presenter: MainPresenter
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +50,6 @@ class MainActivity : FragmentActivity() {
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         presenter.bindTo(lifecycle)
         presenter.loadRecommendations()

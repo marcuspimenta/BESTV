@@ -16,7 +16,6 @@ package com.pimenta.bestv.di.module
 
 import android.app.Application
 import android.content.Context
-import android.util.DisplayMetrics
 import com.pimenta.bestv.data.di.module.MediaLocalModule
 import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import com.pimenta.bestv.presentation.BuildConfig
@@ -43,10 +42,6 @@ class ApplicationModule(
     @Provides
     @Singleton
     fun provideApplication() = application
-
-    @Provides
-    @Singleton
-    fun provideDisplayMetrics() = DisplayMetrics()
 
     @Provides
     @Singleton

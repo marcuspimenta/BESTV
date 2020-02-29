@@ -15,14 +15,12 @@
 package com.pimenta.bestv.search.presentation.ui.activity
 
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.search.di.SearchActivityComponent
 import com.pimenta.bestv.search.di.SearchActivityComponentProvider
 import com.pimenta.bestv.search.presentation.ui.fragment.SearchFragment
-import javax.inject.Inject
 
 /**
  * Created by marcus on 12/07/18.
@@ -33,20 +31,13 @@ class SearchActivity : FragmentActivity() {
 
     lateinit var searchActivityComponent: SearchActivityComponent
 
-    @Inject
-    lateinit var displayMetrics: DisplayMetrics
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         searchActivityComponent = (application as SearchActivityComponentProvider)
                 .searchActivityComponent()
-                .also {
-                    it.inject(this)
-                }
         super.onCreate(savedInstanceState)
 
         backgroundManager.attach(window)
         backgroundManager.setBitmap(null)
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         replaceFragment(SearchFragment.newInstance())
     }
