@@ -19,6 +19,7 @@ import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.extension.disposeIfRunning
 import com.pimenta.bestv.presentation.extension.hasNoContent
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
@@ -50,21 +51,23 @@ class SearchPresenter @Inject constructor(
 
     private var query: String = ""
     private var resultMoviePage = 0
+    private var totalMoviePage = 0
     private var resultTvShowPage = 0
+    private var totalTvShowPage = 0
     private var searchWorkDisposable: Disposable? = null
     private var loadBackdropImageDisposable: Disposable? = null
 
-    private val movies = mutableListOf<WorkViewModel>()
-    private val tvShows = mutableListOf<WorkViewModel>()
+    private val movies by lazy { mutableListOf<WorkViewModel>() }
+    private val tvShows by lazy { mutableListOf<WorkViewModel>() }
 
     override fun dispose() {
-        disposeSearchWork()
-        disposeLoadBackdropImage()
+        searchWorkDisposable?.disposeIfRunning()
+        loadBackdropImageDisposable?.disposeIfRunning()
         super.dispose()
     }
 
     fun searchWorksByQuery(text: String?) {
-        disposeSearchWork()
+        searchWorkDisposable?.disposeIfRunning()
 
         if (text == null || text.hasNoContent()) {
             view.onHideProgress()
@@ -74,27 +77,37 @@ class SearchPresenter @Inject constructor(
 
         query = text
         resultMoviePage = 0
+        totalMoviePage = 0
         resultTvShowPage = 0
+        totalTvShowPage = 0
         movies.clear()
         tvShows.clear()
 
         searchWorkDisposable = searchWorksByQueryUseCase(query)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { result ->
+                    val moviePage = result.first.toViewModel()
+                    val tvShowPage = result.second.toViewModel()
+                    moviePage to tvShowPage
+                }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
                 .subscribe({ pair ->
-                    if (pair.first.page <= pair.first.totalPages) {
-                        this.resultMoviePage = pair.first.page
-                        pair.first.works?.let {
-                            movies.addAll(it.map { work -> work.toViewModel() })
+                    with(pair.first) {
+                        resultMoviePage = page
+                        totalMoviePage = totalPages
+                        works?.let {
+                            movies.addAll(it)
                         }
                     }
 
-                    if (pair.second.page <= pair.second.totalPages) {
-                        this.resultTvShowPage = pair.second.page
-                        pair.second.works?.let {
-                            tvShows.addAll(it.map { work -> work.toViewModel() })
+                    with(pair.second) {
+                        resultTvShowPage = page
+                        totalTvShowPage = totalPages
+                        works?.let {
+                            tvShows.addAll(it)
                         }
                     }
 
@@ -110,17 +123,22 @@ class SearchPresenter @Inject constructor(
     }
 
     fun loadMovies() {
+        if (resultMoviePage != 0 && resultMoviePage + 1 > totalMoviePage) {
+            return
+        }
+
         searchMoviesByQueryUseCase(query, resultMoviePage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ moviePage ->
-                    moviePage?.let {
-                        if (it.page <= it.totalPages) {
-                            resultMoviePage = it.page
-                            it.works?.let { works ->
-                                movies.addAll(works.map { work -> work.toViewModel() })
-                                view.onMoviesLoaded(movies)
-                            }
+                    with(moviePage) {
+                        resultMoviePage = page
+                        totalMoviePage = totalPages
+                        works?.let { works ->
+                            movies.addAll(works)
+                            view.onMoviesLoaded(movies)
                         }
                     }
                 }, { throwable ->
@@ -129,17 +147,22 @@ class SearchPresenter @Inject constructor(
     }
 
     fun loadTvShows() {
+        if (resultTvShowPage != 0 && resultTvShowPage + 1 > totalTvShowPage) {
+            return
+        }
+
         searchTvShowsByQueryUseCase(query, resultTvShowPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({ tvShowPage ->
-                    tvShowPage?.let {
-                        if (it.page <= it.totalPages) {
-                            resultTvShowPage = it.page
-                            it.works?.let { works ->
-                                tvShows.addAll(works.map { work -> work.toViewModel() })
-                                view.onTvShowsLoaded(tvShows)
-                            }
+                    with(tvShowPage) {
+                        resultTvShowPage = page
+                        totalTvShowPage = totalPages
+                        works?.let { works ->
+                            tvShows.addAll(works)
+                            view.onTvShowsLoaded(tvShows)
                         }
                     }
                 }, { throwable ->
@@ -148,7 +171,7 @@ class SearchPresenter @Inject constructor(
     }
 
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
-        disposeLoadBackdropImage()
+        loadBackdropImageDisposable?.disposeIfRunning()
         loadBackdropImageDisposable = Completable
                 .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .subscribeOn(rxScheduler.ioScheduler)
@@ -163,22 +186,6 @@ class SearchPresenter @Inject constructor(
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
         val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
         view.openWorkDetails(itemViewHolder, route)
-    }
-
-    private fun disposeLoadBackdropImage() {
-        loadBackdropImageDisposable?.run {
-            if (!isDisposed) {
-                dispose()
-            }
-        }
-    }
-
-    private fun disposeSearchWork() {
-        searchWorkDisposable?.run {
-            if (!isDisposed) {
-                dispose()
-            }
-        }
     }
 
     interface View {

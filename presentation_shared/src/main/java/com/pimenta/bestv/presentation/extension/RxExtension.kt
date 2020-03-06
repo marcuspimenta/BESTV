@@ -20,3 +20,11 @@ import io.reactivex.disposables.Disposable
 fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
     compositeDisposable.add(this)
 }
+
+fun Disposable?.disposeIfRunning() {
+    this?.run {
+        if (!isDisposed) {
+            dispose()
+        }
+    }
+}

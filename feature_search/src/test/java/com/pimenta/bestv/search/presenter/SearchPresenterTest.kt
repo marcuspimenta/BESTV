@@ -108,6 +108,7 @@ class SearchPresenterTest {
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val rxSchedulerTest = RxScheduler(
             Schedulers.trampoline(),
+            Schedulers.trampoline(),
             Schedulers.trampoline()
     )
 
