@@ -111,7 +111,7 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@GenreWorkGridFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
-        fragmentManager?.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
+        parentFragmentManager.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
@@ -126,7 +126,7 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
-                fragmentManager?.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                parentFragmentManager.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 if (resultCode == Activity.RESULT_OK) {
                     presenter.loadWorkByGenre(genreViewModel)
                 }
