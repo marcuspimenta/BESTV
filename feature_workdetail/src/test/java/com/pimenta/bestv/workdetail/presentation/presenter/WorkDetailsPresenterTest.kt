@@ -97,6 +97,7 @@ class WorkDetailsPresenterTest {
     private val castDetailsRoute: CastDetailsRoute = mock()
     private val rxSchedulerTest = RxScheduler(
             Schedulers.trampoline(),
+            Schedulers.trampoline(),
             Schedulers.trampoline()
     )
 

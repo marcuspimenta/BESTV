@@ -20,6 +20,7 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
@@ -50,9 +51,11 @@ class WorkDetailsPresenter @Inject constructor(
 ) : AutoDisposablePresenter() {
 
     private var recommendedPage = 0
+    private var totalRecommendedPage = 0
     private var similarPage = 0
-    private val recommendedWorks = mutableListOf<WorkViewModel>()
-    private val similarWorks = mutableListOf<WorkViewModel>()
+    private var totalSimilarPage = 0
+    private val recommendedWorks by lazy { mutableListOf<WorkViewModel>() }
+    private val similarWorks by lazy { mutableListOf<WorkViewModel>() }
 
     fun setFavorite(workViewModel: WorkViewModel) {
         setFavoriteUseCase(workViewModel)
@@ -69,30 +72,38 @@ class WorkDetailsPresenter @Inject constructor(
     fun loadDataByWork(workViewModel: WorkViewModel) {
         getWorkDetailsUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { movieInfo ->
+                    val videoViewModes = movieInfo.first?.map { it.toViewModel() }
+                    val castViewModels = movieInfo.second?.map { it.toViewModel() }
+                    val recommendationPageViewModel = movieInfo.third.toViewModel()
+                    val similarPageViewModel = movieInfo.fourth.toViewModel()
+                    Quadruple(videoViewModes, castViewModels, recommendationPageViewModel, similarPageViewModel)
+                }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
                 .subscribe({ movieInfo ->
-                    val recommendedPage = movieInfo.third
-                    if (recommendedPage.page <= recommendedPage.totalPages) {
-                        this.recommendedPage = recommendedPage.page
-                        recommendedPage.works?.let {
-                            recommendedWorks.addAll(it.map { work -> work.toViewModel() })
+                    with(movieInfo.third) {
+                        recommendedPage = page
+                        totalRecommendedPage = totalPages
+                        works?.let {
+                            recommendedWorks.addAll(it)
                         }
                     }
 
-                    val similarPage = movieInfo.fourth
-                    if (similarPage.page <= similarPage.totalPages) {
-                        this.similarPage = similarPage.page
-                        similarPage.works?.let {
-                            similarWorks.addAll(it.map { work -> work.toViewModel() })
+                    with(movieInfo.fourth) {
+                        similarPage = page
+                        totalSimilarPage = totalPages
+                        works?.let {
+                            similarWorks.addAll(it)
                         }
                     }
 
                     view.onDataLoaded(
                             workViewModel.isFavorite,
-                            movieInfo.first?.map { it.toViewModel() },
-                            movieInfo.second?.map { it.toViewModel() },
+                            movieInfo.first,
+                            movieInfo.second,
                             recommendedWorks,
                             similarWorks
                     )
@@ -103,14 +114,21 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadRecommendationByWork(workViewModel: WorkViewModel) {
+        if (recommendedPage != 0 && recommendedPage + 1 > totalRecommendedPage) {
+            return
+        }
+
         getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, recommendedPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ movieList ->
-                    if (movieList != null && movieList.page <= movieList.totalPages) {
-                        recommendedPage = movieList.page
-                        movieList.works?.let {
-                            recommendedWorks.addAll(it.map { work -> work.toViewModel() })
+                .subscribe({ moviePage ->
+                    with(moviePage) {
+                        recommendedPage = page
+                        totalRecommendedPage = totalPages
+                        works?.let {
+                            recommendedWorks.addAll(it)
                             view.onRecommendationLoaded(recommendedWorks)
                         }
                     }
@@ -120,14 +138,21 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun loadSimilarByWork(workViewModel: WorkViewModel) {
+        if (similarPage != 0 && similarPage + 1 > totalSimilarPage) {
+            return
+        }
+
         getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, similarPage + 1)
                 .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ movieList ->
-                    if (movieList != null && movieList.page <= movieList.totalPages) {
-                        similarPage = movieList.page
-                        movieList.works?.let {
-                            similarWorks.addAll(it.map { work -> work.toViewModel() })
+                .subscribe({ moviePage ->
+                    with(moviePage) {
+                        similarPage = page
+                        totalSimilarPage = totalPages
+                        works?.let {
+                            similarWorks.addAll(it)
                             view.onSimilarLoaded(similarWorks)
                         }
                     }
