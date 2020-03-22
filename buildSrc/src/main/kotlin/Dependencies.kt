@@ -40,8 +40,8 @@ object Versions {
 
     val dagger = "2.26"
     val dagger_compile = "2.26"
-    val retrofit = "2.7.1"
-    val retrofit_converter_gson = "2.7.1"
+    val retrofit = "2.7.2"
+    val retrofit_converter_gson = "2.7.2"
     val okhttp = "4.4.0"
     val logging_interceptor = "4.4.0"
     val gson = "2.8.6"
