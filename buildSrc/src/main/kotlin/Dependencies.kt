@@ -49,7 +49,7 @@ object Versions {
     val timber = "4.7.1"
     val firebase = "17.2.3"
     val glide = "4.11.0"
-    val lottie = "3.3.1"
+    val lottie = "3.4.0"
     val rxandroid = "2.1.1"
     val junit = "4.13"
     val mockito_inline = "3.3.1"
