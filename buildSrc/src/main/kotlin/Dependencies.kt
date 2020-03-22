@@ -35,7 +35,7 @@ object Versions {
     val androidx_lifecycle = "2.2.0"
     val androidx_recommendation = "1.0.0"
     val androidx_tvprovider = "1.0.0"
-    val androidx_room = "2.2.4"
+    val androidx_room = "2.2.5"
     val androidx_work = "2.3.2"
 
     val dagger = "2.27"
