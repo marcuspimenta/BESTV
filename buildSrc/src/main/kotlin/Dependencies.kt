@@ -23,7 +23,7 @@ object Config {
 }
 
 object Versions {
-    val kotlin = "1.3.61"
+    val kotlin = "1.3.70"
     val build_gradle = "3.5.3"
     val google_service = "4.3.3"
     val ktlint = "9.2.1"
