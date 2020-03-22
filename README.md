@@ -89,6 +89,7 @@ The app is modularized. We can see the dependency graph with all the modules.
 - [Dagger2: @Component.Factory and @SubComponent.Factory](https://android.jlelse.eu/dagger2-component-factory-and-subcomponent-factory-b181ec96b213)
 - [Why you need Use Cases/Interactors](https://proandroiddev.com/why-you-need-use-cases-interactors-142e8a6fe576)
 - [Modularization - Lessons learned](https://jeroenmols.com/blog/2019/06/12/modularizationtips/)
+- [Using Dagger in Android apps](https://developer.android.com/training/dependency-injection/dagger-android)
 
 ## Licence
 ```
