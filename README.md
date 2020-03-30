@@ -13,6 +13,10 @@ The goal of the project is to be a guide line about Android TV, that shows how t
 
 The main widgets from Android TV are used: `BrowseSupportFragment`, `SearchSupportFragment`, `DetailsSupportFragment`, `VerticalSupportFragment`.
 
+<p align="center">
+  <img src="gif/app.gif">
+</p>
+
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
 - Android TV
@@ -64,10 +68,6 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 <li>Details about a cast including the credits</li>
 <li>Search the movies and the tv shows by title</li>
 </ul>
-
-<p align="center">
-  <img src="gif/app.gif">
-</p>
 
 ## Modularization
 The app is modularized. We can see the dependency graph with all the modules.
