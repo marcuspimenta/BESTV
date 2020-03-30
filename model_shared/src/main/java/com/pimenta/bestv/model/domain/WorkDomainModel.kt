@@ -27,9 +27,9 @@ data class WorkDomainModel(
     val source: String? = null,
     val backdropPath: String? = null,
     val posterPath: String? = null,
-    val popularity: Float = 0.toFloat(),
-    val voteAverage: Float = 0.toFloat(),
-    val voteCount: Float = 0.toFloat(),
+    val popularity: Float = 0f,
+    val voteAverage: Float = 0f,
+    val voteCount: Float = 0f,
     val isAdult: Boolean = false,
     val type: Type = Type.MOVIE,
     var isFavorite: Boolean = false

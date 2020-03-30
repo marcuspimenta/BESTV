@@ -25,9 +25,9 @@ abstract class WorkResponse(
     @SerializedName("overview") var overview: String? = null,
     @SerializedName("backdrop_path") var backdropPath: String? = null,
     @SerializedName("poster_path") var posterPath: String? = null,
-    @SerializedName("popularity") var popularity: Float = 0.toFloat(),
-    @SerializedName("vote_average") var voteAverage: Float = 0.toFloat(),
-    @SerializedName("vote_count") var voteCount: Float = 0.toFloat(),
+    @SerializedName("popularity") var popularity: Float = 0f,
+    @SerializedName("vote_average") var voteAverage: Float = 0f,
+    @SerializedName("vote_count") var voteCount: Float = 0f,
     @SerializedName("adult") var isAdult: Boolean = false
 ) {
 
