@@ -1,5 +1,5 @@
 # BESTV
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.61-blue.svg)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.72-blue.svg)](https://kotlinlang.org)
 
 <a href="https://play.google.com/store/apps/details?id=com.pimenta.bestv"><img alt="Get it on Google Play" src="google_play_badge/en_get.svg" height="100" width="200" /></a>
 
