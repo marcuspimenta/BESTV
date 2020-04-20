@@ -14,9 +14,10 @@
 
 package com.pimenta.bestv.castdetail.data.remote.api
 
-import com.pimenta.bestv.model.data.remote.CastMovieListResponse
 import com.pimenta.bestv.model.data.remote.CastResponse
-import com.pimenta.bestv.model.data.remote.CastTvShowListResponse
+import com.pimenta.bestv.model.data.remote.CastWorkListResponse
+import com.pimenta.bestv.model.data.remote.MovieResponse
+import com.pimenta.bestv.model.data.remote.TvShowResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -37,15 +38,14 @@ interface CastTmdbApi {
     @GET("person/{person_id}/movie_credits")
     fun getMovieCredits(
         @Path("person_id") personId: Int,
-        @Query("api_key") apiKey:
-        String,
+        @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<CastMovieListResponse>
+    ): Single<CastWorkListResponse<MovieResponse>>
 
     @GET("person/{person_id}/tv_credits")
     fun getTvShowCredits(
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<CastTvShowListResponse>
+    ): Single<CastWorkListResponse<TvShowResponse>>
 }

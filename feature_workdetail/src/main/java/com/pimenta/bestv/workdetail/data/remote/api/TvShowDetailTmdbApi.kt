@@ -15,7 +15,8 @@
 package com.pimenta.bestv.workdetail.data.remote.api
 
 import com.pimenta.bestv.model.data.remote.CastListResponse
-import com.pimenta.bestv.model.data.remote.TvShowPageResponse
+import com.pimenta.bestv.model.data.remote.TvShowResponse
+import com.pimenta.bestv.model.data.remote.WorkPageResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -47,7 +48,7 @@ interface TvShowDetailTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<TvShowPageResponse>
+    ): Single<WorkPageResponse<TvShowResponse>>
 
     @GET("tv/{tv_id}/similar")
     fun getSimilarByTvShow(
@@ -55,5 +56,5 @@ interface TvShowDetailTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<TvShowPageResponse>
+    ): Single<WorkPageResponse<TvShowResponse>>
 }

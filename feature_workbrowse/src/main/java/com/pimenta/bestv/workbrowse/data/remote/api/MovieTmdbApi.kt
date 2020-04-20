@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workbrowse.data.remote.api
 
-import com.pimenta.bestv.model.data.remote.MoviePageResponse
 import com.pimenta.bestv.model.data.remote.MovieResponse
+import com.pimenta.bestv.model.data.remote.WorkPageResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
@@ -41,33 +41,33 @@ interface MovieTmdbApi {
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
         @Query("page") page: Int
-    ): Single<MoviePageResponse>
+    ): Single<WorkPageResponse<MovieResponse>>
 
     @GET("movie/now_playing")
     fun getNowPlayingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<MoviePageResponse>
+    ): Single<WorkPageResponse<MovieResponse>>
 
     @GET("movie/popular")
     fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<MoviePageResponse>
+    ): Single<WorkPageResponse<MovieResponse>>
 
     @GET("movie/top_rated")
     fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<MoviePageResponse>
+    ): Single<WorkPageResponse<MovieResponse>>
 
     @GET("movie/upcoming")
     fun getUpComingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<MoviePageResponse>
+    ): Single<WorkPageResponse<MovieResponse>>
 }
