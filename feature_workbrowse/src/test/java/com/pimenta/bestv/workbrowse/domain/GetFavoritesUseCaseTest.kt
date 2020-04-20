@@ -16,8 +16,8 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -30,7 +30,7 @@ private val WORK_DOMAIN_MODEL = WorkDomainModel(
         originalTitle = "Batman",
         type = WorkDomainModel.Type.MOVIE
 )
-private val WORK_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val WORK_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(WORK_DOMAIN_MODEL)

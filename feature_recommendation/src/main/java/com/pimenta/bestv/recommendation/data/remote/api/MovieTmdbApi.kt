@@ -15,7 +15,7 @@
 package com.pimenta.bestv.recommendation.data.remote.api
 
 import com.pimenta.bestv.model.data.remote.MovieResponse
-import com.pimenta.bestv.model.data.remote.WorkPageResponse
+import com.pimenta.bestv.model.data.remote.PageResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -30,5 +30,5 @@ interface MovieTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<MovieResponse>>
+    ): Single<PageResponse<MovieResponse>>
 }

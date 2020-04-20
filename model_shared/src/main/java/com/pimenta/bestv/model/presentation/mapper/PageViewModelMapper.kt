@@ -12,13 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.model.presentation.mapper
 
-import com.pimenta.bestv.model.data.remote.WorkPageResponse
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.model.PageViewModel
 
-fun WorkPageResponse<*>.toDomainModel(source: String) = WorkPageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        works = works?.map { it.toDomainModel(source) }
+fun PageDomainModel<WorkDomainModel>.toViewModel() = PageViewModel(
+        page,
+        totalPages,
+        works?.map { work -> work.toViewModel() }
 )

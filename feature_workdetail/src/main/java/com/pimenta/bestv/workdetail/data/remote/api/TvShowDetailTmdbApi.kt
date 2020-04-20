@@ -15,8 +15,9 @@
 package com.pimenta.bestv.workdetail.data.remote.api
 
 import com.pimenta.bestv.model.data.remote.CastListResponse
+import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.TvShowResponse
-import com.pimenta.bestv.model.data.remote.WorkPageResponse
+import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -35,20 +36,13 @@ interface TvShowDetailTmdbApi {
         @Query("language") language: String
     ): Single<CastListResponse>
 
-    @GET("tv/{tv_id}/videos")
-    fun getVideosByTvShow(
-        @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
-    ): Single<VideoListResponse>
-
     @GET("tv/{tv_id}/recommendations")
     fun getRecommendationByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 
     @GET("tv/{tv_id}/similar")
     fun getSimilarByTvShow(
@@ -56,5 +50,20 @@ interface TvShowDetailTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
+
+    @GET("movie/{tv_id}/reviews")
+    fun getReviewByTvShow(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ): Single<PageResponse<ReviewResponse>>
+
+    @GET("tv/{tv_id}/videos")
+    fun getVideosByTvShow(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Single<VideoListResponse>
 }

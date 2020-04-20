@@ -21,8 +21,8 @@ import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
@@ -59,14 +59,14 @@ private val MOVIE_DOMAIN_MODEL = WorkDomainModel(
         originalTitle = "Batman",
         type = WorkDomainModel.Type.MOVIE
 )
-private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
                 MOVIE_DOMAIN_MODEL
         )
 )
-private val EMPTY_PAGE_VIEW_MODEL = WorkPageDomainModel(
+private val EMPTY_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1
 )

@@ -17,7 +17,7 @@ package com.pimenta.bestv.workdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.kotlin.Quadruple
@@ -48,7 +48,7 @@ private val CAST_LIST = listOf(
                 biography = null
         )
 )
-private val WORK_PAGE = WorkPageDomainModel(
+private val WORK_PAGE = PageDomainModel(
         page = 0,
         totalPages = 0,
         works = null

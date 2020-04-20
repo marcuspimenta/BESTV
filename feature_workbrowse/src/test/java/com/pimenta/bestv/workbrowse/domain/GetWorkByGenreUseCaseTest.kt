@@ -16,8 +16,8 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.Source
 import io.reactivex.Single
@@ -30,7 +30,7 @@ private val MOVIE_GENRE = GenreViewModel(
         id = 1,
         source = Source.MOVIE
 )
-private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
@@ -46,7 +46,7 @@ private val TV_SHOW_GENRE = GenreViewModel(
         id = 1,
         source = Source.TV_SHOW
 )
-private val TV_SHOW_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(

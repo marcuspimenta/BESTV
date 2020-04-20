@@ -61,6 +61,10 @@ class TvShowRepository @Inject constructor(
                         it.toDomainModel(source)
                     }
 
+    fun getReviewByTvShow(tvShowId: Int, page: Int) =
+            tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page)
+                    .map { it.toDomainModel() }
+
     fun getVideosByTvShow(tvShowId: Int) =
             tvShowRemoteDataSource.getVideosByTvShow(tvShowId)
                     .map {

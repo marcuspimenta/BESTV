@@ -36,6 +36,9 @@ class MovieRemoteDataSource @Inject constructor(
     fun getSimilarByMovie(movieId: Int, page: Int) =
             movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
+    fun getReviewByMovie(movieId: Int, page: Int) =
+            movieDetailTmdbApi.getReviewByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+
     fun getVideosByMovie(movieId: Int) =
             movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 }

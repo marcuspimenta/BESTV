@@ -17,8 +17,8 @@ package com.pimenta.bestv.recommendation.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository
 import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
 import io.reactivex.Completable
@@ -28,7 +28,7 @@ import org.junit.Test
 /**
  * Created by marcus on 2019-08-27.
  */
-private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(

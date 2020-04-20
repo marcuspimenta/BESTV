@@ -61,6 +61,10 @@ class MovieRepository @Inject constructor(
                         it.toDomainModel(source)
                     }
 
+    fun getReviewByMovie(tvShowId: Int, page: Int) =
+            movieRemoteDataSource.getReviewByMovie(tvShowId, page)
+                    .map { it.toDomainModel() }
+
     fun getVideosByMovie(movieId: Int) =
             movieRemoteDataSource.getVideosByMovie(movieId)
                     .map {

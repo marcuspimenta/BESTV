@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -28,12 +28,12 @@ class GetFavoritesUseCase @Inject constructor(
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
 ) {
 
-    operator fun invoke() =
-            Single.zip<List<WorkDomainModel>, List<WorkDomainModel>, WorkPageDomainModel>(
+    operator fun invoke(): Single<PageDomainModel<WorkDomainModel>> =
+            Single.zip(
                     getFavoriteMoviesUseCase(),
                     getFavoriteTvShowsUseCase(),
                     BiFunction { favoriteMovies, favoriteTvShows ->
-                        WorkPageDomainModel(
+                        PageDomainModel(
                                 page = 1,
                                 totalPages = 1,
                                 works = favoriteMovies + favoriteTvShows

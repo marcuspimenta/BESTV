@@ -12,9 +12,16 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.remote
+package com.pimenta.bestv.workdetail.data.remote.model
+
+import com.google.gson.annotations.SerializedName
 
 /**
- * Created by marcus on 06/07/18.
+ * Created by marcus on 20-04-2020.
  */
-class WorkPageResponse<T : WorkResponse> : PageResponse<T>()
+data class ReviewResponse(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("author") val author: String? = null,
+    @SerializedName("content") val content: String? = null,
+    @SerializedName("url") val url: String? = null
+)

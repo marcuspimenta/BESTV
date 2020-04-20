@@ -15,7 +15,8 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
@@ -33,7 +34,7 @@ class GetWorkDetailsUseCase @Inject constructor(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel): Single<Quadruple<List<VideoDomainModel>?, List<CastDomainModel>?, WorkPageDomainModel, WorkPageDomainModel>> =
+    operator fun invoke(workViewModel: WorkViewModel): Single<Quadruple<List<VideoDomainModel>?, List<CastDomainModel>?, PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>> =
             Single.zip(
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),

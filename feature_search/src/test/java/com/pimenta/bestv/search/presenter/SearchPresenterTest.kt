@@ -22,8 +22,8 @@ import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
@@ -72,7 +72,7 @@ private val MOVIE_DOMAIN_MODEL_LIST = listOf(
                 type = WorkDomainModel.Type.MOVIE
         )
 )
-private val MOVIE_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
         works = MOVIE_DOMAIN_MODEL_LIST
@@ -93,7 +93,7 @@ private val TV_SHOW_DOMAIN_MODEL_LIST = listOf(
                 type = WorkDomainModel.Type.TV_SHOW
         )
 )
-private val TV_SHOW_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
         works = TV_SHOW_DOMAIN_MODEL_LIST

@@ -12,13 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
+package com.pimenta.bestv.model.data.mapper
 
-/**
- * Created by marcus on 18-04-2019.
- */
-data class WorkPageViewModel(
-    var page: Int,
-    var totalPages: Int,
-    var works: List<WorkViewModel>? = null
+import com.pimenta.bestv.model.data.remote.PageResponse
+import com.pimenta.bestv.model.data.remote.WorkResponse
+import com.pimenta.bestv.model.domain.PageDomainModel
+
+fun <T : WorkResponse> PageResponse<T>.toDomainModel(source: String) = PageDomainModel(
+        page = page,
+        totalPages = totalPages,
+        works = works?.map { it.toDomainModel(source) }
 )

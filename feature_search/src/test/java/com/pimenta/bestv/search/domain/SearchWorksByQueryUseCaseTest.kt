@@ -16,8 +16,8 @@ package com.pimenta.bestv.search.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import io.reactivex.Single
 import org.junit.Test
 
@@ -26,7 +26,7 @@ import org.junit.Test
  */
 private const val QUERY = "Batman"
 private const val QUERY_ENCODED = "Batman"
-private val MOVIE_PAGE_VIEW_MODEL = WorkPageDomainModel(
+private val MOVIE_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
         works = listOf(
@@ -39,7 +39,7 @@ private val MOVIE_PAGE_VIEW_MODEL = WorkPageDomainModel(
         )
 )
 
-private val TV_SHOW_PAGE_VIEW_MODEL = WorkPageDomainModel(
+private val TV_SHOW_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
         works = listOf(

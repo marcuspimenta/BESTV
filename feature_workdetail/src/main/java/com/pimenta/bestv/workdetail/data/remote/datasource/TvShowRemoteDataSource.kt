@@ -36,6 +36,9 @@ class TvShowRemoteDataSource @Inject constructor(
     fun getSimilarByTvShow(tvShowId: Int, page: Int) =
             tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
+    fun getReviewByTvShow(tvShowId: Int, page: Int) =
+            tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+
     fun getVideosByTvShow(tvShowId: Int) =
             tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 }

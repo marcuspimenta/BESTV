@@ -12,13 +12,13 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.mapper
+package com.pimenta.bestv.model.presentation.model
 
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkPageViewModel
-
-fun WorkPageDomainModel.toViewModel() = WorkPageViewModel(
-        page,
-        totalPages,
-        works?.map { work -> work.toViewModel() }
+/**
+ * Created by marcus on 18-04-2019.
+ */
+data class PageViewModel<T>(
+    var page: Int,
+    var totalPages: Int,
+    var works: List<T>? = null
 )

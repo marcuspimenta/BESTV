@@ -16,8 +16,8 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
 import io.reactivex.Single
 import org.junit.Test
@@ -27,7 +27,7 @@ import org.junit.Test
  */
 private const val GENRE_ID = 1
 private const val PAGE = 1
-private val TV_SHOW_PAGE_DOMAIN_MODEL = WorkPageDomainModel(
+private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(

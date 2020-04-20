@@ -16,9 +16,9 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel.Type
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import io.reactivex.Single
 import org.junit.Test
@@ -27,7 +27,7 @@ import org.junit.Test
  * Created by marcus on 23-06-2018.
  */
 private const val WORK_ID = 1
-private val WORK_PAGE_VIEW_MODEL = WorkPageDomainModel(
+private val WORK_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(

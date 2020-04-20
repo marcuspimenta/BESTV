@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workbrowse.data.remote.api
 
+import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.TvShowResponse
-import com.pimenta.bestv.model.data.remote.WorkPageResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
@@ -42,33 +42,33 @@ interface TvShowTmdbApi {
         @Query("include_adult") includeAdult:
         Boolean,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 
     @GET("tv/airing_today")
     fun getAiringTodayTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 
     @GET("tv/on_the_air")
     fun getOnTheAirTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 
     @GET("tv/popular")
     fun getPopularTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 
     @GET("tv/top_rated")
     fun getTopRatedTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<WorkPageResponse<TvShowResponse>>
+    ): Single<PageResponse<TvShowResponse>>
 }

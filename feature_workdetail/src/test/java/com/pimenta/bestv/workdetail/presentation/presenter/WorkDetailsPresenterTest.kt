@@ -21,8 +21,8 @@ import com.nhaarman.mockitokotlin2.only
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.WorkPageDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -44,7 +44,7 @@ import org.junit.Test
 /**
  * Created by marcus on 24-06-2019.
  */
-private val RECOMMENDED_PAGE = WorkPageDomainModel(
+private val RECOMMENDED_PAGE = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
@@ -55,7 +55,7 @@ private val RECOMMENDED_PAGE = WorkPageDomainModel(
                 )
         )
 )
-private val SIMILAR_PAGE = WorkPageDomainModel(
+private val SIMILAR_PAGE = PageDomainModel(
         page = 1,
         totalPages = 1,
         works = listOf(
