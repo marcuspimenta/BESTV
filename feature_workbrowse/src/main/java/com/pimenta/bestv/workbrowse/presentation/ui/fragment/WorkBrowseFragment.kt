@@ -123,8 +123,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                if (resultCode == Activity.RESULT_OK) {
-                    presenter.loadData()
+                when (resultCode) {
+                    Activity.RESULT_OK -> presenter.loadData()
+                    else -> requireActivity().finish()
                 }
             }
         }

@@ -159,9 +159,8 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        presenter.loadCastDetails(castViewModel)
-                    }
+                    Activity.RESULT_OK -> presenter.loadCastDetails(castViewModel)
+                    else -> requireActivity().finish()
                 }
             }
         }

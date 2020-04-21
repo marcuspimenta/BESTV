@@ -127,8 +127,9 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 parentFragmentManager.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                if (resultCode == Activity.RESULT_OK) {
-                    presenter.loadWorkByGenre(genreViewModel)
+                when (resultCode) {
+                    Activity.RESULT_OK -> presenter.loadWorkByGenre(genreViewModel)
+                    else -> requireActivity().finish()
                 }
             }
         }

@@ -228,9 +228,8 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        presenter.loadDataByWork(workViewModel)
-                    }
+                    Activity.RESULT_OK -> presenter.loadDataByWork(workViewModel)
+                    else -> requireActivity().finish()
                 }
             }
         }

@@ -192,8 +192,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             }
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                if (resultCode == Activity.RESULT_OK) {
-                    presenter.searchWorksByQuery(query)
+                when (resultCode) {
+                    Activity.RESULT_OK -> presenter.searchWorksByQuery(query)
+                    else -> requireActivity().finish()
                 }
             }
         }

@@ -38,7 +38,7 @@ class ErrorFragment : ErrorSupportFragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this,
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
-                        // DON'T ALLOW TO CLOSE THE FRAGMENT WHEN PRESS BACK BUTTON
+                        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
                     }
                 }
         )

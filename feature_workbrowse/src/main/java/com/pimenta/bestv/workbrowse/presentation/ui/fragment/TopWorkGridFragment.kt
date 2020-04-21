@@ -132,8 +132,9 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 parentFragmentManager.popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                if (resultCode == Activity.RESULT_OK) {
-                    presenter.loadWorkPageByType(topWorkTypeViewModel)
+                when (resultCode) {
+                    Activity.RESULT_OK -> presenter.loadWorkPageByType(topWorkTypeViewModel)
+                    else -> requireActivity().finish()
                 }
             }
             WORK_DETAILS_REQUEST_CODE -> presenter.refreshPage(topWorkTypeViewModel)
