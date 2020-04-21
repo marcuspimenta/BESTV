@@ -20,5 +20,5 @@ package com.pimenta.bestv.model.domain
 data class PageDomainModel<T>(
     var page: Int,
     var totalPages: Int,
-    var works: List<T>? = null
+    var results: List<T>? = null
 )

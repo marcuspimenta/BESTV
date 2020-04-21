@@ -31,7 +31,7 @@ import org.junit.Test
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",
@@ -54,14 +54,14 @@ class LoadRecommendationUseCaseTest {
     fun `should return the right data when loading the recommendations`() {
         whenever(movieRepository.getPopularMovies(1))
                 .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
-        whenever(recommendationRepository.loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.works))
+        whenever(recommendationRepository.loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results))
                 .thenReturn(Completable.complete())
 
         useCase()
                 .test()
                 .assertComplete()
 
-        verify(recommendationRepository).loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.works)
+        verify(recommendationRepository).loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results)
     }
 
     @Test

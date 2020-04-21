@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.workdetail.presentation.model
 
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.data.remote.WorkResponse
-import com.pimenta.bestv.model.domain.PageDomainModel
-
-fun <T : WorkResponse> PageResponse<T>.toDomainModel(source: String) = PageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        results = results?.map { it.toDomainModel(source) }
+/**
+ * Created by marcus on 20-04-2020.
+ */
+class ReviewViewModel(
+    val id: String? = null,
+    val author: String? = null,
+    val content: String? = null,
+    val url: String? = null
 )

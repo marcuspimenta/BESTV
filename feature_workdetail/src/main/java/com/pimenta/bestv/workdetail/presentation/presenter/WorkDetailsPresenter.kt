@@ -17,10 +17,10 @@ package com.pimenta.bestv.workdetail.presentation.presenter
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
-import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
@@ -31,6 +31,7 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
+import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import javax.inject.Inject
 import timber.log.Timber
@@ -73,37 +74,40 @@ class WorkDetailsPresenter @Inject constructor(
         getWorkDetailsUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.computationScheduler)
-                .map { movieInfo ->
-                    val videoViewModes = movieInfo.first?.map { it.toViewModel() }
-                    val castViewModels = movieInfo.second?.map { it.toViewModel() }
-                    val recommendationPageViewModel = movieInfo.third.toViewModel()
-                    val similarPageViewModel = movieInfo.fourth.toViewModel()
-                    Quadruple(videoViewModes, castViewModels, recommendationPageViewModel, similarPageViewModel)
+                .map { result ->
+                    with(result) {
+                        val videoViewModes = videos?.map { it.toViewModel() }
+                        val castViewModels = casts?.map { it.toViewModel() }
+                        val recommendationPageViewModel = recommended.toViewModel()
+                        val similarPageViewModel = similar.toViewModel()
+                        val reviewPageViewModel = reviews.toViewModel()
+                        WorkDetailsWrapper(videoViewModes, castViewModels, recommendationPageViewModel, similarPageViewModel, reviewPageViewModel)
+                    }
                 }
                 .observeOn(rxScheduler.mainScheduler)
                 .doOnSubscribe { view.onShowProgress() }
                 .doFinally { view.onHideProgress() }
-                .subscribe({ movieInfo ->
-                    with(movieInfo.third) {
+                .subscribe({ result ->
+                    with(result.recommended) {
                         recommendedPage = page
                         totalRecommendedPage = totalPages
-                        works?.let {
+                        results?.let {
                             recommendedWorks.addAll(it)
                         }
                     }
 
-                    with(movieInfo.fourth) {
+                    with(result.similar) {
                         similarPage = page
                         totalSimilarPage = totalPages
-                        works?.let {
+                        results?.let {
                             similarWorks.addAll(it)
                         }
                     }
 
                     view.onDataLoaded(
                             workViewModel.isFavorite,
-                            movieInfo.first,
-                            movieInfo.second,
+                            result.videos,
+                            result.casts,
                             recommendedWorks,
                             similarWorks
                     )
@@ -127,7 +131,7 @@ class WorkDetailsPresenter @Inject constructor(
                     with(moviePage) {
                         recommendedPage = page
                         totalRecommendedPage = totalPages
-                        works?.let {
+                        results?.let {
                             recommendedWorks.addAll(it)
                             view.onRecommendationLoaded(recommendedWorks)
                         }
@@ -151,7 +155,7 @@ class WorkDetailsPresenter @Inject constructor(
                     with(moviePage) {
                         similarPage = page
                         totalSimilarPage = totalPages
-                        works?.let {
+                        results?.let {
                             similarWorks.addAll(it)
                             view.onSimilarLoaded(similarWorks)
                         }
@@ -171,6 +175,14 @@ class WorkDetailsPresenter @Inject constructor(
         view.openCastDetails(itemViewHolder, route)
     }
 
+    data class WorkDetailsWrapper(
+        val videos: List<VideoViewModel>?,
+        val casts: List<CastViewModel>?,
+        val recommended: PageViewModel<WorkViewModel>,
+        val similar: PageViewModel<WorkViewModel>,
+        val reviews: PageViewModel<ReviewViewModel>
+    )
+
     interface View {
 
         fun onShowProgress()
@@ -179,7 +191,13 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun onResultSetFavoriteMovie(isFavorite: Boolean)
 
-        fun onDataLoaded(isFavorite: Boolean, videos: List<VideoViewModel>?, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>, similarWorks: List<WorkViewModel>)
+        fun onDataLoaded(
+            isFavorite: Boolean,
+            videos: List<VideoViewModel>?,
+            casts: List<CastViewModel>?,
+            recommendedWorks: List<WorkViewModel>,
+            similarWorks: List<WorkViewModel>
+        )
 
         fun onRecommendationLoaded(works: List<WorkViewModel>)
 

@@ -12,14 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.data.mapper
+package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.data.remote.WorkResponse
-import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.workdetail.data.repository.MovieRepository
+import javax.inject.Inject
 
-fun <T : WorkResponse> PageResponse<T>.toDomainModel(source: String) = PageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        results = results?.map { it.toDomainModel(source) }
-)
+/**
+ * Created by marcus on 20-04-2020.
+ */
+class GetReviewByMovieUseCase @Inject constructor(
+    private val movieRepository: MovieRepository
+) {
+
+    operator fun invoke(workId: Int, page: Int) =
+            movieRepository.getReviewByMovie(workId, page)
+}

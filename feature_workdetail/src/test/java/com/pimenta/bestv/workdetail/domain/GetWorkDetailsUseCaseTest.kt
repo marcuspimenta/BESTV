@@ -18,9 +18,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.kotlin.Quadruple
+import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
 import org.junit.Test
@@ -48,10 +49,15 @@ private val CAST_LIST = listOf(
                 biography = null
         )
 )
-private val WORK_PAGE = PageDomainModel(
+private val WORK_PAGE = PageDomainModel<WorkDomainModel>(
         page = 0,
         totalPages = 0,
-        works = null
+        results = null
+)
+private val REVIEW_PAGE = PageDomainModel<ReviewDomainModel>(
+        page = 0,
+        totalPages = 0,
+        results = null
 )
 
 class GetWorkDetailsUseCaseTest {
@@ -60,11 +66,13 @@ class GetWorkDetailsUseCaseTest {
     private val getCastsUseCase: GetCastsUseCase = mock()
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
+    private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
             getVideosUseCase,
             getCastsUseCase,
             getRecommendationByWorkUseCase,
-            getSimilarByWorkUseCase
+            getSimilarByWorkUseCase,
+            getReviewByWorkUseCase
     )
 
     @Test
@@ -77,11 +85,13 @@ class GetWorkDetailsUseCaseTest {
                 .thenReturn(Single.just(WORK_PAGE))
         whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
                 .thenReturn(Single.just(WORK_PAGE))
+        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+                .thenReturn(Single.just(REVIEW_PAGE))
 
         useCase(WORK)
                 .test()
                 .assertComplete()
-                .assertResult(Quadruple(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE))
+                .assertResult(GetWorkDetailsUseCase.WorkDetailsWrapper(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
     }
 
     @Test
@@ -94,6 +104,8 @@ class GetWorkDetailsUseCaseTest {
                 .thenReturn(Single.just(WORK_PAGE))
         whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
                 .thenReturn(Single.error(Throwable()))
+        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+                .thenReturn(Single.just(REVIEW_PAGE))
 
         useCase(WORK)
                 .test()

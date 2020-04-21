@@ -29,7 +29,7 @@ private const val QUERY_ENCODED = "Batman"
 private val MOVIE_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",
@@ -42,7 +42,7 @@ private val MOVIE_PAGE_VIEW_MODEL = PageDomainModel(
 private val TV_SHOW_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",

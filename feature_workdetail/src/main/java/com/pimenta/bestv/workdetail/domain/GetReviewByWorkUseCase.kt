@@ -12,26 +12,22 @@
  * the License.
  */
 
-package com.pimenta.bestv.workdetail.data.remote.mapper
+package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
-import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
+import com.pimenta.bestv.model.presentation.model.WorkType
+import javax.inject.Inject
 
 /**
  * Created by marcus on 20-04-2020.
  */
+class GetReviewByWorkUseCase @Inject constructor(
+    private val getReviewByMovieUseCase: GetReviewByMovieUseCase,
+    private val getReviewByTvShowUseCase: GetReviewByTvShowUseCase
+) {
 
-fun PageResponse<ReviewResponse>.toDomainModel() = PageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        results = results?.map { it.toDomainModel() }
-)
-
-private fun ReviewResponse.toDomainModel() = ReviewDomainModel(
-        id = id,
-        author = author,
-        content = content,
-        url = url
-)
+    operator fun invoke(workType: WorkType, workId: Int, page: Int) =
+            when (workType) {
+                WorkType.MOVIE -> getReviewByMovieUseCase(workId, page)
+                WorkType.TV_SHOW -> getReviewByTvShowUseCase(workId, page)
+            }
+}

@@ -33,7 +33,7 @@ private val MOVIE_GENRE = GenreViewModel(
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",
@@ -49,7 +49,7 @@ private val TV_SHOW_GENRE = GenreViewModel(
 private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",

@@ -29,7 +29,7 @@ private const val MOVIE_ID = 1
 private val WORK_PAGE = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Title"

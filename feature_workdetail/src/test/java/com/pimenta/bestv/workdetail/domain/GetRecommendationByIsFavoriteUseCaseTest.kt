@@ -30,7 +30,7 @@ private const val WORK_ID = 1
 private val WORK_PAGE_VIEW_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Title",

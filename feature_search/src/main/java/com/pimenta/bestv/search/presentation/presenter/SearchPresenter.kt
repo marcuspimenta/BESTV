@@ -98,7 +98,7 @@ class SearchPresenter @Inject constructor(
                     with(pair.first) {
                         resultMoviePage = page
                         totalMoviePage = totalPages
-                        works?.let {
+                        results?.let {
                             movies.addAll(it)
                         }
                     }
@@ -106,7 +106,7 @@ class SearchPresenter @Inject constructor(
                     with(pair.second) {
                         resultTvShowPage = page
                         totalTvShowPage = totalPages
-                        works?.let {
+                        results?.let {
                             tvShows.addAll(it)
                         }
                     }
@@ -136,7 +136,7 @@ class SearchPresenter @Inject constructor(
                     with(moviePage) {
                         resultMoviePage = page
                         totalMoviePage = totalPages
-                        works?.let { works ->
+                        results?.let { works ->
                             movies.addAll(works)
                             view.onMoviesLoaded(movies)
                         }
@@ -160,7 +160,7 @@ class SearchPresenter @Inject constructor(
                     with(tvShowPage) {
                         resultTvShowPage = page
                         totalTvShowPage = totalPages
-                        works?.let { works ->
+                        results?.let { works ->
                             tvShows.addAll(works)
                             view.onTvShowsLoaded(tvShows)
                         }

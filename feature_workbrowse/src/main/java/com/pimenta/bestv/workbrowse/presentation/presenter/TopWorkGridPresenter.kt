@@ -79,7 +79,7 @@ class TopWorkGridPresenter @Inject constructor(
                         currentPage = it.page
                         totalPages = it.totalPages
 
-                        it.works?.let { worksViewModel ->
+                        it.results?.let { worksViewModel ->
                             works.addAll(worksViewModel)
                             view.onWorksLoaded(works)
                         }

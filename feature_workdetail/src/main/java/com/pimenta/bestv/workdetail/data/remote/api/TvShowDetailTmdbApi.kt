@@ -52,7 +52,7 @@ interface TvShowDetailTmdbApi {
         @Query("page") page: Int
     ): Single<PageResponse<TvShowResponse>>
 
-    @GET("movie/{tv_id}/reviews")
+    @GET("tv/{tv_id}/reviews")
     fun getReviewByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,

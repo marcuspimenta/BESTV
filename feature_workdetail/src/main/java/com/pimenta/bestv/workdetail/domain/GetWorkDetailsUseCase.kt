@@ -18,10 +18,10 @@ import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.kotlin.Quadruple
+import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
-import io.reactivex.functions.Function4
+import io.reactivex.functions.Function5
 import javax.inject.Inject
 
 /**
@@ -31,17 +31,27 @@ class GetWorkDetailsUseCase @Inject constructor(
     private val getVideosUseCase: GetVideosUseCase,
     private val getCastsUseCase: GetCastsUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
-    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
+    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
+    private val getReviewByWorkUseCase: GetReviewByWorkUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel): Single<Quadruple<List<VideoDomainModel>?, List<CastDomainModel>?, PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>> =
+    operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsWrapper> =
             Single.zip(
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),
                     getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    Function4 { videos, casts, recommendedMovies, similarMovies ->
-                        Quadruple(videos, casts, recommendedMovies, similarMovies)
+                    getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
+                    Function5 { videos, casts, recommended, similar, reviews ->
+                        WorkDetailsWrapper(videos, casts, recommended, similar, reviews)
                     }
             )
+
+    data class WorkDetailsWrapper(
+        val videos: List<VideoDomainModel>?,
+        val casts: List<CastDomainModel>?,
+        val recommended: PageDomainModel<WorkDomainModel>,
+        val similar: PageDomainModel<WorkDomainModel>,
+        val reviews: PageDomainModel<ReviewDomainModel>
+    )
 }

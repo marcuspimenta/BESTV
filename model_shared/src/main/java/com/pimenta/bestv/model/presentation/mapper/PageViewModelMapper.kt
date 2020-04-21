@@ -21,5 +21,5 @@ import com.pimenta.bestv.model.presentation.model.PageViewModel
 fun PageDomainModel<WorkDomainModel>.toViewModel() = PageViewModel(
         page,
         totalPages,
-        works?.map { work -> work.toViewModel() }
+        results?.map { it.toViewModel() }
 )

@@ -36,7 +36,7 @@ class GetFavoritesUseCase @Inject constructor(
                         PageDomainModel(
                                 page = 1,
                                 totalPages = 1,
-                                works = favoriteMovies + favoriteTvShows
+                                results = favoriteMovies + favoriteTvShows
                         )
                     }
             )

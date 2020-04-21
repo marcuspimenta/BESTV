@@ -75,7 +75,7 @@ private val MOVIE_DOMAIN_MODEL_LIST = listOf(
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
-        works = MOVIE_DOMAIN_MODEL_LIST
+        results = MOVIE_DOMAIN_MODEL_LIST
 )
 private val TV_SHOW_VIEW_MODEL_LIST = listOf(
         WorkViewModel(
@@ -96,7 +96,7 @@ private val TV_SHOW_DOMAIN_MODEL_LIST = listOf(
 private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 10,
-        works = TV_SHOW_DOMAIN_MODEL_LIST
+        results = TV_SHOW_DOMAIN_MODEL_LIST
 )
 
 class SearchPresenterTest {

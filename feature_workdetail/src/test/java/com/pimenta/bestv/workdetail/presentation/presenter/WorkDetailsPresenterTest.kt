@@ -27,7 +27,6 @@ import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.kotlin.Quadruple
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
@@ -36,6 +35,8 @@ import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
+import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
+import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -47,7 +48,7 @@ import org.junit.Test
 private val RECOMMENDED_PAGE = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 2,
                         title = "Recommended movie",
@@ -58,11 +59,20 @@ private val RECOMMENDED_PAGE = PageDomainModel(
 private val SIMILAR_PAGE = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 3,
                         title = "Similar movie",
                         type = WorkDomainModel.Type.MOVIE
+                )
+        )
+)
+private val REVIEW_PAGE = PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results = listOf(
+                ReviewDomainModel(
+                        id = "3"
                 )
         )
 )
@@ -151,15 +161,18 @@ class WorkDetailsPresenterTest {
     @Test
     fun `should return the right data when loading the work details`() {
         val workViewModel = aWorkViewModel()
-        val recommendedWorks = RECOMMENDED_PAGE.works
+        val recommendedWorks = RECOMMENDED_PAGE.results
                 ?.map { it.toViewModel() }
                 ?: emptyList()
-        val similarWorks = SIMILAR_PAGE.works
+        val similarWorks = SIMILAR_PAGE.results
+                ?.map { it.toViewModel() }
+                ?: emptyList()
+        val review = REVIEW_PAGE.results
                 ?.map { it.toViewModel() }
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(Quadruple(null, null, RECOMMENDED_PAGE, SIMILAR_PAGE)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsWrapper(null, null, RECOMMENDED_PAGE, SIMILAR_PAGE, REVIEW_PAGE)))
 
         presenter.loadDataByWork(workViewModel)
 
@@ -197,7 +210,7 @@ class WorkDetailsPresenterTest {
 
         presenter.loadRecommendationByWork(workViewModel)
 
-        val recommendedWorks = RECOMMENDED_PAGE.works
+        val recommendedWorks = RECOMMENDED_PAGE.results
                 ?.map { it.toViewModel() }
                 ?: emptyList()
 
@@ -225,7 +238,7 @@ class WorkDetailsPresenterTest {
 
         presenter.loadSimilarByWork(workViewModel)
 
-        val similarWorks = SIMILAR_PAGE.works
+        val similarWorks = SIMILAR_PAGE.results
                 ?.map { it.toViewModel() }
                 ?: emptyList()
 

@@ -33,7 +33,7 @@ private val WORK_DOMAIN_MODEL = WorkDomainModel(
 private val WORK_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(WORK_DOMAIN_MODEL)
+        results = listOf(WORK_DOMAIN_MODEL)
 )
 
 class GetFavoritesUseCaseTest {

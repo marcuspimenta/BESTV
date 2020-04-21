@@ -31,6 +31,6 @@ class LoadRecommendationUseCase @Inject constructor(
 
     operator fun invoke(): Completable =
             movieRepository.getPopularMovies(1)
-                    .map { it.works?.take(RECOMMENDATION_NUMBER) }
+                    .map { it.results?.take(RECOMMENDATION_NUMBER) }
                     .flatMapCompletable { recommendationRepository.loadRecommendations(it) }
 }

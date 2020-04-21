@@ -28,7 +28,7 @@ import org.junit.Test
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
         page = 1,
         totalPages = 1,
-        works = listOf(
+        results = listOf(
                 WorkDomainModel(
                         id = 1,
                         title = "Batman",
