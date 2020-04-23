@@ -331,25 +331,29 @@ class WorkDetailsFragment : DetailsSupportFragment(),
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
                 mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image)
-                val lp = mDetailsImageView?.layoutParams
-                lp?.width = resources.getDimensionPixelSize(R.dimen.movie_width)
-                lp?.height = resources.getDimensionPixelSize(R.dimen.movie_height)
+                val lp = mDetailsImageView?.layoutParams?.apply {
+                    width = resources.getDimensionPixelSize(R.dimen.movie_width)
+                    height = resources.getDimensionPixelSize(R.dimen.movie_height)
+                }
                 mDetailsImageView?.layoutParams = lp
                 return viewHolder
             }
-        }
-        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
-        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
+        }.apply {
+            // Hook up transition element.
+            val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper().apply {
+                setSharedElementEnterTransition(activity, SettingShared.SHARED_ELEMENT_NAME)
+            }
 
-        // Hook up transition element.
-        val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()
-        sharedElementHelper.setSharedElementEnterTransition(activity, SettingShared.SHARED_ELEMENT_NAME)
-        detailsPresenter.setListener(sharedElementHelper)
-        detailsPresenter.isParticipatingEntranceTransition = true
-        detailsPresenter.setOnActionClickedListener { action ->
-            when (val position = actionAdapter.indexOf(action)) {
-                0 -> presenter.setFavorite()
-                else -> setSelectedPosition(position)
+            actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
+            backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
+
+            setListener(sharedElementHelper)
+            isParticipatingEntranceTransition = true
+            setOnActionClickedListener { action ->
+                when (val position = actionAdapter.indexOf(action)) {
+                    0 -> presenter.setFavorite()
+                    else -> setSelectedPosition(position)
+                }
             }
         }
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
