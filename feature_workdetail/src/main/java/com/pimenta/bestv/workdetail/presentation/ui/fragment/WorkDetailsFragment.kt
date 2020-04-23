@@ -326,16 +326,14 @@ class WorkDetailsFragment : DetailsSupportFragment(),
         // Set detail background.
         val detailsPresenter = object : FullWidthDetailsOverviewRowPresenter(WorkDetailsDescriptionRender()) {
 
-            private var mDetailsImageView: ImageView? = null
-
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
-                mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image)
-                val lp = mDetailsImageView?.layoutParams?.apply {
+                val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
+                val layoutParams = detailsImageView?.layoutParams?.apply {
                     width = resources.getDimensionPixelSize(R.dimen.movie_width)
                     height = resources.getDimensionPixelSize(R.dimen.movie_height)
                 }
-                mDetailsImageView?.layoutParams = lp
+                detailsImageView?.layoutParams = layoutParams
                 return viewHolder
             }
         }.apply {
