@@ -66,7 +66,7 @@ private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
                 MOVIE_DOMAIN_MODEL
         )
 )
-private val EMPTY_PAGE_VIEW_MODEL = PageDomainModel(
+private val EMPTY_PAGE_VIEW_MODEL = PageDomainModel<WorkDomainModel>(
         page = 1,
         totalPages = 1
 )

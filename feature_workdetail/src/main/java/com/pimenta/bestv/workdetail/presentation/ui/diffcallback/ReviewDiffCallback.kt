@@ -12,14 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.workdetail.presentation.model
+package com.pimenta.bestv.workdetail.presentation.ui.diffcallback
+
+import androidx.leanback.widget.DiffCallback
+import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 
 /**
- * Created by marcus on 20-04-2020.
+ * Created by marcus on 22-04-2020.
  */
-data class ReviewViewModel(
-    val id: String? = null,
-    val author: String? = null,
-    val content: String? = null,
-    val url: String? = null
-)
+class ReviewDiffCallback : DiffCallback<ReviewViewModel>() {
+
+    override fun areItemsTheSame(oldItem: ReviewViewModel, newItem: ReviewViewModel) =
+            oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: ReviewViewModel, newItem: ReviewViewModel) =
+            oldItem == newItem
+}

@@ -91,7 +91,7 @@ class GetWorkDetailsUseCaseTest {
         useCase(WORK)
                 .test()
                 .assertComplete()
-                .assertResult(GetWorkDetailsUseCase.WorkDetailsWrapper(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
+                .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
     }
 
     @Test

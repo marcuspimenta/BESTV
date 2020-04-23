@@ -3,6 +3,7 @@
     <string name="videos">VIDEOS</string>
     <string name="recommended">RECOMMENDED</string>
     <string name="similar">SIMILAR</string>
+    <string name="reviews">REVIEWS</string>
     <string name="save_favorites">Add to favorites</string>
     <string name="remove_favorites">Remove from favorites</string>
     <string name="failed_open_video">Failed to open the video. Check if you have YouTube installed and try again.</string>

@@ -61,10 +61,13 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
+import com.pimenta.bestv.workdetail.presentation.ui.diffcallback.ReviewDiffCallback
 import com.pimenta.bestv.workdetail.presentation.ui.render.CastCardRender
+import com.pimenta.bestv.workdetail.presentation.ui.render.ReviewCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
 import javax.inject.Inject
@@ -72,38 +75,45 @@ import javax.inject.Inject
 private const val WORK = "WORK"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
 private const val ACTION_FAVORITE = 1
-private const val ACTION_VIDEOS = 2
-private const val ACTION_CAST = 3
-private const val ACTION_RECOMMENDED = 4
-private const val ACTION_SIMILAR = 5
-private const val VIDEO_HEADER_ID = 1
-private const val RECOMMENDED_HEADER_ID = 2
-private const val SIMILAR_HEADER_ID = 3
-private const val CAST_HEAD_ID = 4
+private const val ACTION_REVIEWS = 2
+private const val ACTION_VIDEOS = 3
+private const val ACTION_CAST = 4
+private const val ACTION_RECOMMENDED = 5
+private const val ACTION_SIMILAR = 6
+private const val REVIEW_HEADER_ID = 1
+private const val VIDEO_HEADER_ID = 2
+private const val RECOMMENDED_HEADER_ID = 4
+private const val SIMILAR_HEADER_ID = 5
+private const val CAST_HEAD_ID = 6
 
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View {
+class WorkDetailsFragment : DetailsSupportFragment(),
+        WorkDetailsPresenter.View,
+        OnItemViewSelectedListener,
+        OnItemViewClickedListener {
 
-    private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
-    private val videoRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
-    private val castRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(CastCardRender()) }
-    private val recommendedRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val similarRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
-    private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
-    private val presenterSelector: ClassPresenterSelector by lazy {
+    private val actionAdapter by lazy { ArrayObjectAdapter() }
+    private val reviewRowAdapter by lazy { ArrayObjectAdapter(ReviewCardRender()) }
+    private val videoRowAdapter by lazy { ArrayObjectAdapter(VideoCardRender()) }
+    private val castRowAdapter by lazy { ArrayObjectAdapter(CastCardRender()) }
+    private val recommendedRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val similarRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val mainAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
+    private val workDiffCallback by lazy { WorkDiffCallback() }
+    private val reviewDiffCallback by lazy { ReviewDiffCallback() }
+    private val presenterSelector by lazy {
         ClassPresenterSelector().apply {
             addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
     }
-    private val detailsBackground: DetailsSupportFragmentBackgroundController by lazy {
+    private val detailsBackground by lazy {
         DetailsSupportFragmentBackgroundController(this).apply {
             enableParallax()
         }
     }
-    private val workViewModel: WorkViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
+    private val workViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
 
     @Inject
     lateinit var presenter: WorkDetailsPresenter
@@ -114,7 +124,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
     override fun onAttach(context: Context) {
         (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
                 .workDetailsFragmentComponent()
-                .create(this)
+                .create(this, workViewModel)
                 .inject(this)
         super.onAttach(context)
     }
@@ -138,25 +148,32 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
                     })
             initialDelay = 0
         }
-        presenter.loadDataByWork(workViewModel)
+        presenter.loadData()
     }
 
-    override fun onShowProgress() {
+    override fun showProgress() {
         progressBarManager.show()
     }
 
-    override fun onHideProgress() {
+    override fun hideProgress() {
         progressBarManager.hide()
     }
 
-    override fun onResultSetFavoriteMovie(isFavorite: Boolean) {
+    override fun resultSetFavoriteMovie(isFavorite: Boolean) {
         workViewModel.isFavorite = isFavorite
         favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { workViewModel.isFavorite }
                 ?: run { resources.getString(R.string.save_favorites) }
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
-    override fun onDataLoaded(isFavorite: Boolean, videos: List<VideoViewModel>?, casts: List<CastViewModel>?, recommendedWorks: List<WorkViewModel>, similarWorks: List<WorkViewModel>) {
+    override fun dataLoaded(
+        isFavorite: Boolean,
+        reviews: List<ReviewViewModel>?,
+        videos: List<VideoViewModel>?,
+        casts: List<CastViewModel>?,
+        recommendedWorks: List<WorkViewModel>,
+        similarWorks: List<WorkViewModel>
+    ) {
         workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
@@ -165,40 +182,50 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         )
         actionAdapter.add(favoriteAction)
 
+        if (reviews.isNotNullOrEmpty()) {
+            actionAdapter.add(Action(ACTION_REVIEWS.toLong(), getString(R.string.reviews)))
+            reviewRowAdapter.setItems(reviews, reviewDiffCallback)
+            mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(R.string.reviews)), reviewRowAdapter))
+        }
+
         if (videos.isNotNullOrEmpty()) {
-            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), resources.getString(R.string.videos)))
+            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), getString(R.string.videos)))
             videoRowAdapter.addAll(0, videos)
             mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(R.string.videos)), videoRowAdapter))
         }
 
         if (casts.isNotNullOrEmpty()) {
-            actionAdapter.add(Action(ACTION_CAST.toLong(), resources.getString(R.string.cast)))
+            actionAdapter.add(Action(ACTION_CAST.toLong(), getString(R.string.cast)))
             castRowAdapter.addAll(0, casts)
             mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(R.string.cast)), castRowAdapter))
         }
 
         if (recommendedWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), resources.getString(R.string.recommended)))
+            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), getString(R.string.recommended)))
             recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
             mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(R.string.recommended)), recommendedRowAdapter))
         }
 
         if (similarWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), resources.getString(R.string.similar)))
+            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), getString(R.string.similar)))
             similarRowAdapter.setItems(similarWorks, workDiffCallback)
             mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
         }
     }
 
-    override fun onRecommendationLoaded(works: List<WorkViewModel>) {
+    override fun reviewLoaded(reviews: List<ReviewViewModel>) {
+        reviewRowAdapter.setItems(reviews, reviewDiffCallback)
+    }
+
+    override fun recommendationLoaded(works: List<WorkViewModel>) {
         recommendedRowAdapter.setItems(works, workDiffCallback)
     }
 
-    override fun onSimilarLoaded(works: List<WorkViewModel>) {
+    override fun similarLoaded(works: List<WorkViewModel>) {
         similarRowAdapter.setItems(works, workDiffCallback)
     }
 
-    override fun onErrorWorkDetailsLoaded() {
+    override fun errorWorkDetailsLoaded() {
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@WorkDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
@@ -223,15 +250,43 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         startActivity(route.intent, bundle)
     }
 
+    override fun openVideo(videoViewModel: VideoViewModel) {
+        val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(videoViewModel.youtubeUrl)
+        )
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), R.string.failed_open_video, Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> presenter.loadDataByWork(workViewModel)
+                    Activity.RESULT_OK -> presenter.loadData()
                     else -> requireActivity().finish()
                 }
             }
+        }
+    }
+
+    override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
+        when (row?.run { id.toInt() }) {
+            REVIEW_HEADER_ID -> item?.let { presenter.reviewItemSelected(it as ReviewViewModel) }
+            RECOMMENDED_HEADER_ID -> item?.let { presenter.recommendationItemSelected(it as WorkViewModel) }
+            SIMILAR_HEADER_ID -> item?.let { presenter.similarItemSelected(it as WorkViewModel) }
+        }
+    }
+
+    override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
+        when (row?.run { id.toInt() }) {
+            CAST_HEAD_ID -> presenter.castClicked(itemViewHolder, item as CastViewModel)
+            VIDEO_HEADER_ID -> presenter.videoClicked(item as VideoViewModel)
+            RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> presenter.workClicked(itemViewHolder, item as WorkViewModel)
         }
     }
 
@@ -263,8 +318,8 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
 
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
-        onItemViewClickedListener = ItemViewClickedListener()
+        setOnItemViewSelectedListener(this)
+        onItemViewClickedListener = this
     }
 
     private fun setupDetailsOverviewRowPresenter() {
@@ -292,106 +347,12 @@ class WorkDetailsFragment : DetailsSupportFragment(), WorkDetailsPresenter.View 
         detailsPresenter.setListener(sharedElementHelper)
         detailsPresenter.isParticipatingEntranceTransition = true
         detailsPresenter.setOnActionClickedListener { action ->
-            var position = 0
-            when (action.id.toInt()) {
-                ACTION_FAVORITE -> presenter.setFavorite(workViewModel)
-                ACTION_SIMILAR -> {
-                    if (similarRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (recommendedRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (castRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (videoRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
-                ACTION_RECOMMENDED -> {
-                    if (recommendedRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (castRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (videoRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
-                ACTION_CAST -> {
-                    if (castRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (videoRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
-                ACTION_VIDEOS -> {
-                    if (videoRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
+            when (val position = actionAdapter.indexOf(action)) {
+                0 -> presenter.setFavorite()
+                else -> setSelectedPosition(position)
             }
         }
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
-    }
-
-    private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
-
-        override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            when (row?.run { id.toInt() }) {
-                RECOMMENDED_HEADER_ID -> {
-                    item?.let {
-                        if (recommendedRowAdapter.indexOf(it) >= recommendedRowAdapter.size() - 1) {
-                            presenter.loadRecommendationByWork(workViewModel)
-                        }
-                    }
-                }
-                SIMILAR_HEADER_ID -> {
-                    item?.let {
-                        if (similarRowAdapter.indexOf(it) >= similarRowAdapter.size() - 1) {
-                            presenter.loadSimilarByWork(workViewModel)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private inner class ItemViewClickedListener : OnItemViewClickedListener {
-
-        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-            when (row?.run { id.toInt() }) {
-                CAST_HEAD_ID -> {
-                    if (item is CastViewModel) {
-                        presenter.castClicked(itemViewHolder, item)
-                    }
-                }
-                VIDEO_HEADER_ID -> {
-                    val videoViewModel = item as VideoViewModel
-                    val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(videoViewModel.youtubeUrl)
-                    )
-                    try {
-                        startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        Toast.makeText(requireContext(), R.string.failed_open_video, Toast.LENGTH_LONG).show()
-                    }
-                }
-                RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> {
-                    if (item is WorkViewModel) {
-                        presenter.workClicked(itemViewHolder, item)
-                    }
-                }
-            }
-        }
     }
 
     companion object {

@@ -26,12 +26,11 @@ import com.pimenta.bestv.presentation.extension.loadImageInto
  */
 class WorkCardRenderer : Presenter() {
 
-    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = ImageCardView(parent.context)
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
-        return ViewHolder(cardView)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+            ViewHolder(ImageCardView(parent.context).apply {
+                isFocusable = true
+                isFocusableInTouchMode = true
+            })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel

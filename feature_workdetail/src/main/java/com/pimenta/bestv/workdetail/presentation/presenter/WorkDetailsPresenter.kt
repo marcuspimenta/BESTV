@@ -27,6 +27,7 @@ import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
+import com.pimenta.bestv.workdetail.domain.GetReviewByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
@@ -42,9 +43,11 @@ import timber.log.Timber
 @FragmentScope
 class WorkDetailsPresenter @Inject constructor(
     private val view: View,
+    private val workViewModel: WorkViewModel,
     private val setFavoriteUseCase: SetFavoriteUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
+    private val getReviewByWorkUseCase: GetReviewByWorkUseCase,
     private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val castDetailsRoute: CastDetailsRoute,
@@ -55,38 +58,32 @@ class WorkDetailsPresenter @Inject constructor(
     private var totalRecommendedPage = 0
     private var similarPage = 0
     private var totalSimilarPage = 0
+    private var reviewPage = 0
+    private var totalReviewPage = 0
     private val recommendedWorks by lazy { mutableListOf<WorkViewModel>() }
     private val similarWorks by lazy { mutableListOf<WorkViewModel>() }
+    private val reviews by lazy { mutableListOf<ReviewViewModel>() }
 
-    fun setFavorite(workViewModel: WorkViewModel) {
+    fun setFavorite() {
         setFavoriteUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
-                    view.onResultSetFavoriteMovie(!workViewModel.isFavorite)
+                    view.resultSetFavoriteMovie(!workViewModel.isFavorite)
                 }, { throwable ->
                     Timber.e(throwable, "Error while settings the work as favorite")
-                    view.onResultSetFavoriteMovie(false)
+                    view.resultSetFavoriteMovie(false)
                 }).addTo(compositeDisposable)
     }
 
-    fun loadDataByWork(workViewModel: WorkViewModel) {
+    fun loadData() {
         getWorkDetailsUseCase(workViewModel)
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.computationScheduler)
-                .map { result ->
-                    with(result) {
-                        val videoViewModes = videos?.map { it.toViewModel() }
-                        val castViewModels = casts?.map { it.toViewModel() }
-                        val recommendationPageViewModel = recommended.toViewModel()
-                        val similarPageViewModel = similar.toViewModel()
-                        val reviewPageViewModel = reviews.toViewModel()
-                        WorkDetailsWrapper(videoViewModes, castViewModels, recommendationPageViewModel, similarPageViewModel, reviewPageViewModel)
-                    }
-                }
+                .map { it.toViewModel() }
                 .observeOn(rxScheduler.mainScheduler)
-                .doOnSubscribe { view.onShowProgress() }
-                .doFinally { view.onHideProgress() }
+                .doOnSubscribe { view.showProgress() }
+                .doFinally { view.hideProgress() }
                 .subscribe({ result ->
                     with(result.recommended) {
                         recommendedPage = page
@@ -104,8 +101,17 @@ class WorkDetailsPresenter @Inject constructor(
                         }
                     }
 
-                    view.onDataLoaded(
+                    with(result.reviews) {
+                        reviewPage = page
+                        totalReviewPage = totalPages
+                        results?.let {
+                            reviews.addAll(it)
+                        }
+                    }
+
+                    view.dataLoaded(
                             workViewModel.isFavorite,
+                            reviews,
                             result.videos,
                             result.casts,
                             recommendedWorks,
@@ -113,12 +119,38 @@ class WorkDetailsPresenter @Inject constructor(
                     )
                 }, { throwable ->
                     Timber.e(throwable, "Error while loading data by work")
-                    view.onErrorWorkDetailsLoaded()
+                    view.errorWorkDetailsLoaded()
                 }).addTo(compositeDisposable)
     }
 
-    fun loadRecommendationByWork(workViewModel: WorkViewModel) {
-        if (recommendedPage != 0 && recommendedPage + 1 > totalRecommendedPage) {
+    fun reviewItemSelected(reviewViewModel: ReviewViewModel) {
+        if ((reviews.indexOf(reviewViewModel) < reviews.size - 1) ||
+                (reviewPage != 0 && reviewPage + 1 > totalReviewPage)) {
+            return
+        }
+
+        getReviewByWorkUseCase(workViewModel.type, workViewModel.id, recommendedPage + 1)
+                .subscribeOn(rxScheduler.ioScheduler)
+                .observeOn(rxScheduler.computationScheduler)
+                .map { it.toViewModel() }
+                .observeOn(rxScheduler.mainScheduler)
+                .subscribe({ result ->
+                    with(result) {
+                        reviewPage = page
+                        totalReviewPage = totalPages
+                        results?.let {
+                            reviews.addAll(it)
+                            view.reviewLoaded(reviews)
+                        }
+                    }
+                }, { throwable ->
+                    Timber.e(throwable, "Error while loading reviews by work")
+                }).addTo(compositeDisposable)
+    }
+
+    fun recommendationItemSelected(recommendedWorkViewModel: WorkViewModel) {
+        if ((recommendedWorks.indexOf(recommendedWorkViewModel) < recommendedWorks.size - 1) ||
+                (recommendedPage != 0 && recommendedPage + 1 > totalRecommendedPage)) {
             return
         }
 
@@ -133,7 +165,7 @@ class WorkDetailsPresenter @Inject constructor(
                         totalRecommendedPage = totalPages
                         results?.let {
                             recommendedWorks.addAll(it)
-                            view.onRecommendationLoaded(recommendedWorks)
+                            view.recommendationLoaded(recommendedWorks)
                         }
                     }
                 }, { throwable ->
@@ -141,8 +173,9 @@ class WorkDetailsPresenter @Inject constructor(
                 }).addTo(compositeDisposable)
     }
 
-    fun loadSimilarByWork(workViewModel: WorkViewModel) {
-        if (similarPage != 0 && similarPage + 1 > totalSimilarPage) {
+    fun similarItemSelected(similarWorkViewModel: WorkViewModel) {
+        if ((similarWorks.indexOf(similarWorkViewModel) < similarWorks.size - 1) ||
+                (similarPage != 0 && similarPage + 1 > totalSimilarPage)) {
             return
         }
 
@@ -157,7 +190,7 @@ class WorkDetailsPresenter @Inject constructor(
                         totalSimilarPage = totalPages
                         results?.let {
                             similarWorks.addAll(it)
-                            view.onSimilarLoaded(similarWorks)
+                            view.similarLoaded(similarWorks)
                         }
                     }
                 }, { throwable ->
@@ -175,7 +208,19 @@ class WorkDetailsPresenter @Inject constructor(
         view.openCastDetails(itemViewHolder, route)
     }
 
-    data class WorkDetailsWrapper(
+    fun videoClicked(videoViewModel: VideoViewModel) {
+        view.openVideo(videoViewModel)
+    }
+
+    private fun GetWorkDetailsUseCase.WorkDetailsDomainWrapper.toViewModel() = WorkDetailsViewModelWrapper(
+            videos?.map { it.toViewModel() },
+            casts?.map { it.toViewModel() },
+            recommended.toViewModel(),
+            similar.toViewModel(),
+            reviews.toViewModel()
+    )
+
+    data class WorkDetailsViewModelWrapper(
         val videos: List<VideoViewModel>?,
         val casts: List<CastViewModel>?,
         val recommended: PageViewModel<WorkViewModel>,
@@ -185,28 +230,33 @@ class WorkDetailsPresenter @Inject constructor(
 
     interface View {
 
-        fun onShowProgress()
+        fun showProgress()
 
-        fun onHideProgress()
+        fun hideProgress()
 
-        fun onResultSetFavoriteMovie(isFavorite: Boolean)
+        fun resultSetFavoriteMovie(isFavorite: Boolean)
 
-        fun onDataLoaded(
+        fun dataLoaded(
             isFavorite: Boolean,
+            reviews: List<ReviewViewModel>?,
             videos: List<VideoViewModel>?,
             casts: List<CastViewModel>?,
             recommendedWorks: List<WorkViewModel>,
             similarWorks: List<WorkViewModel>
         )
 
-        fun onRecommendationLoaded(works: List<WorkViewModel>)
+        fun reviewLoaded(reviews: List<ReviewViewModel>)
 
-        fun onSimilarLoaded(works: List<WorkViewModel>)
+        fun recommendationLoaded(works: List<WorkViewModel>)
 
-        fun onErrorWorkDetailsLoaded()
+        fun similarLoaded(works: List<WorkViewModel>)
+
+        fun errorWorkDetailsLoaded()
 
         fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
 
         fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
+
+        fun openVideo(videoViewModel: VideoViewModel)
     }
 }

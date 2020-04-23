@@ -14,40 +14,46 @@
 
 package com.pimenta.bestv.workdetail.presentation.ui.render
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.leanback.widget.ImageCardView
+import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.Presenter
-import com.pimenta.bestv.presentation.extension.loadImageInto
 import com.pimenta.bestv.workdetail.R
-import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
+import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
+import kotlinx.android.synthetic.main.text_icon_card.view.*
 
 /**
- * Created by marcus on 23-02-2018.
+ * Created by marcus on 22-04-2020.
  */
-class VideoCardRender : Presenter() {
+class ReviewCardRender : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
-            ViewHolder(ImageCardView(parent.context).apply {
+            ViewHolder(TextCardView(parent.context).apply {
                 isFocusable = true
                 isFocusableInTouchMode = true
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val videoViewModel = item as VideoViewModel
-        val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = videoViewModel.name
-        cardView.contentText = videoViewModel.type
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.video_card_height))
-
-        videoViewModel.thumbnailUrl?.let {
-            cardView.mainImageView.loadImageInto(it)
+        val reviewViewModel = item as ReviewViewModel
+        val cardView = viewHolder.view as TextCardView
+        with(cardView) {
+            contentTextView.text = reviewViewModel.content
+            authorTextView.text = reviewViewModel.author
         }
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-        val cardView = viewHolder.view as ImageCardView
-        cardView.badgeImage = null
-        cardView.mainImage = null
+        val cardView = viewHolder.view as TextCardView
+        with(cardView) {
+            contentTextView.text = null
+            authorTextView.text = null
+        }
+    }
+
+    private class TextCardView(context: Context?) : BaseCardView(context) {
+        init {
+            LayoutInflater.from(getContext()).inflate(R.layout.text_icon_card, this)
+        }
     }
 }

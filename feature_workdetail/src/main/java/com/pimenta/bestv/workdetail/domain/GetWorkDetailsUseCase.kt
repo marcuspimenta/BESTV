@@ -35,7 +35,7 @@ class GetWorkDetailsUseCase @Inject constructor(
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsWrapper> =
+    operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsDomainWrapper> =
             Single.zip(
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),
@@ -43,11 +43,11 @@ class GetWorkDetailsUseCase @Inject constructor(
                     getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     Function5 { videos, casts, recommended, similar, reviews ->
-                        WorkDetailsWrapper(videos, casts, recommended, similar, reviews)
+                        WorkDetailsDomainWrapper(videos, casts, recommended, similar, reviews)
                     }
             )
 
-    data class WorkDetailsWrapper(
+    data class WorkDetailsDomainWrapper(
         val videos: List<VideoDomainModel>?,
         val casts: List<CastDomainModel>?,
         val recommended: PageDomainModel<WorkDomainModel>,

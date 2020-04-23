@@ -26,9 +26,11 @@ class WorkDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel
-        viewHolder.title.text = workViewModel.title
-        viewHolder.subtitle.maxLines = SUBTITLE_MAX_LINE
-        viewHolder.subtitle.text = "${workViewModel.releaseDate}\n\n${workViewModel.overview}"
-        viewHolder.body.text = workViewModel.source
+        with(viewHolder) {
+            title.text = workViewModel.title
+            subtitle.maxLines = SUBTITLE_MAX_LINE
+            subtitle.text = "${workViewModel.releaseDate}\n\n${workViewModel.overview}"
+            body.text = workViewModel.source
+        }
     }
 }

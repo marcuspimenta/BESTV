@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workdetail.di
 
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule
@@ -36,7 +37,10 @@ interface WorkDetailsFragmentComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance view: WorkDetailsPresenter.View): WorkDetailsFragmentComponent
+        fun create(
+            @BindsInstance view: WorkDetailsPresenter.View,
+            @BindsInstance workViewModel: WorkViewModel
+        ): WorkDetailsFragmentComponent
     }
 
     fun inject(workDetailsFragment: WorkDetailsFragment)
