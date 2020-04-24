@@ -47,7 +47,7 @@ object Versions {
     val gson = "2.8.6"
     val retrofit2_rxjava2_adapter = "1.0.0"
     val timber = "4.7.1"
-    val firebase = "17.2.3"
+    val firebase = "17.4.0"
     val glide = "4.11.0"
     val lottie = "3.4.0"
     val rxandroid = "2.1.1"
