@@ -43,7 +43,7 @@ object Versions {
     val retrofit = "2.8.1"
     val retrofit_converter_gson = "2.8.1"
     val okhttp = "4.4.1"
-    val logging_interceptor = "4.4.1"
+    val logging_interceptor = "4.5.0"
     val gson = "2.8.6"
     val retrofit2_rxjava2_adapter = "1.0.0"
     val timber = "4.7.1"
