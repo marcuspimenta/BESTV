@@ -12,28 +12,19 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.local.datasource
+package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.data.local.dao.TvShowDao
 import com.pimenta.bestv.model.data.local.TvShowDbModel
+import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import javax.inject.Inject
 
 /**
- * Created by marcus on 21-11-2019.
+ * Created by marcus on 23-04-2020.
  */
-class TvShowLocalDataSource @Inject constructor(
-    private val tvShowDao: TvShowDao
+class CheckFavoriteTvShowUseCase @Inject constructor(
+    private val tvShowRepository: TvShowRepository
 ) {
 
-    fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.create(tvShowDbModel)
-
-    fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.delete(tvShowDbModel)
-
-    fun getTvShows() =
-            tvShowDao.getAll()
-
-    fun getById(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.getById(tvShowDbModel.id)
+    operator fun invoke(tvShowDbModel: TvShowDbModel) =
+            tvShowRepository.isFavoriteTvShow(tvShowDbModel)
 }

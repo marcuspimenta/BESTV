@@ -21,13 +21,14 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import io.reactivex.Single
-import io.reactivex.functions.Function5
+import io.reactivex.functions.Function6
 import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
 class GetWorkDetailsUseCase @Inject constructor(
+    private val checkFavoriteWorkUseCase: CheckFavoriteWorkUseCase,
     private val getVideosUseCase: GetVideosUseCase,
     private val getCastsUseCase: GetCastsUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
@@ -37,17 +38,19 @@ class GetWorkDetailsUseCase @Inject constructor(
 
     operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsDomainWrapper> =
             Single.zip(
+                    checkFavoriteWorkUseCase(workViewModel),
                     getVideosUseCase(workViewModel.type, workViewModel.id),
                     getCastsUseCase(workViewModel.type, workViewModel.id),
                     getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
                     getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    Function5 { videos, casts, recommended, similar, reviews ->
-                        WorkDetailsDomainWrapper(videos, casts, recommended, similar, reviews)
+                    Function6 { isFavorite, videos, casts, recommended, similar, reviews ->
+                        WorkDetailsDomainWrapper(isFavorite, videos, casts, recommended, similar, reviews)
                     }
             )
 
     data class WorkDetailsDomainWrapper(
+        val isFavorite: Boolean,
         val videos: List<VideoDomainModel>?,
         val casts: List<CastDomainModel>?,
         val recommended: PageDomainModel<WorkDomainModel>,

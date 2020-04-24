@@ -38,6 +38,11 @@ class TvShowRepository @Inject constructor(
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
             tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
 
+    fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
+            tvShowLocalDataSource.getById(tvShowDbModel)
+                    .isEmpty
+                    .map { !it }
+
     fun getCastByTvShow(tvShowId: Int) =
             tvShowRemoteDataSource.getCastByTvShow(tvShowId)
                     .map {

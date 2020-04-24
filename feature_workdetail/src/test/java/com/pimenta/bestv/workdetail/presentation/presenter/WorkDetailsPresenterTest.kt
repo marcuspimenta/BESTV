@@ -210,7 +210,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -259,7 +259,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.just(RECOMMENDED_PAGE_2))
 
@@ -293,7 +293,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -324,7 +324,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_2, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_2, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -355,7 +355,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.error(Throwable()))
 
@@ -391,7 +391,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.just(SIMILAR_PAGE_2))
 
@@ -425,7 +425,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -456,7 +456,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_2, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_2, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -487,7 +487,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.error(Throwable()))
 
@@ -523,7 +523,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.just(REVIEW_PAGE_2))
 
@@ -557,7 +557,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -588,7 +588,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_2)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_2)))
 
         presenter.loadData()
 
@@ -619,7 +619,7 @@ class WorkDetailsPresenterTest {
                 ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 2))
                 .thenReturn(Single.error(Throwable()))
 

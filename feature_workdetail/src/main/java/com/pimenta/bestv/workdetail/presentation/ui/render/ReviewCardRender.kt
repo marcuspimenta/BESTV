@@ -31,7 +31,6 @@ class ReviewCardRender : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
             ViewHolder(TextCardView(parent.context).apply {
                 isFocusable = true
-                isFocusableInTouchMode = true
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {

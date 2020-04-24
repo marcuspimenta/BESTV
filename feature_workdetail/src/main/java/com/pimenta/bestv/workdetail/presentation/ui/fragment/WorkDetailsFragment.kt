@@ -160,8 +160,7 @@ class WorkDetailsFragment : DetailsSupportFragment(),
     }
 
     override fun resultSetFavoriteMovie(isFavorite: Boolean) {
-        workViewModel.isFavorite = isFavorite
-        favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { workViewModel.isFavorite }
+        favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { isFavorite }
                 ?: run { resources.getString(R.string.save_favorites) }
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
@@ -174,7 +173,6 @@ class WorkDetailsFragment : DetailsSupportFragment(),
         recommendedWorks: List<WorkViewModel>,
         similarWorks: List<WorkViewModel>
     ) {
-        workViewModel.isFavorite = isFavorite
         favoriteAction = Action(
                 ACTION_FAVORITE.toLong(),
                 resources.getString(R.string.remove_favorites).takeIf { isFavorite }

@@ -69,7 +69,8 @@ class WorkDetailsPresenter @Inject constructor(
                 .subscribeOn(rxScheduler.ioScheduler)
                 .observeOn(rxScheduler.mainScheduler)
                 .subscribe({
-                    view.resultSetFavoriteMovie(!workViewModel.isFavorite)
+                    workViewModel.isFavorite = !workViewModel.isFavorite
+                    view.resultSetFavoriteMovie(workViewModel.isFavorite)
                 }, { throwable ->
                     Timber.e(throwable, "Error while settings the work as favorite")
                     view.resultSetFavoriteMovie(false)
@@ -85,6 +86,8 @@ class WorkDetailsPresenter @Inject constructor(
                 .doOnSubscribe { view.showProgress() }
                 .doFinally { view.hideProgress() }
                 .subscribe({ result ->
+                    workViewModel.isFavorite = result.isFavorite
+
                     with(result.recommended) {
                         recommendedPage = page
                         totalRecommendedPage = totalPages
@@ -213,6 +216,7 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     private fun GetWorkDetailsUseCase.WorkDetailsDomainWrapper.toViewModel() = WorkDetailsViewModelWrapper(
+            isFavorite,
             videos?.map { it.toViewModel() },
             casts?.map { it.toViewModel() },
             recommended.toViewModel(),
@@ -221,6 +225,7 @@ class WorkDetailsPresenter @Inject constructor(
     )
 
     data class WorkDetailsViewModelWrapper(
+        val isFavorite: Boolean,
         val videos: List<VideoViewModel>?,
         val casts: List<CastViewModel>?,
         val recommended: PageViewModel<WorkViewModel>,

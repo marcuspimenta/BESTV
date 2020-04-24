@@ -62,12 +62,14 @@ private val REVIEW_PAGE = PageDomainModel<ReviewDomainModel>(
 
 class GetWorkDetailsUseCaseTest {
 
+    private val checkFavoriteWorkUseCase: CheckFavoriteWorkUseCase = mock()
     private val getVideosUseCase: GetVideosUseCase = mock()
     private val getCastsUseCase: GetCastsUseCase = mock()
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
+            checkFavoriteWorkUseCase,
             getVideosUseCase,
             getCastsUseCase,
             getRecommendationByWorkUseCase,
@@ -77,6 +79,8 @@ class GetWorkDetailsUseCaseTest {
 
     @Test
     fun `should return the right data when loading the work details`() {
+        whenever(checkFavoriteWorkUseCase(WORK))
+                .thenReturn(Single.just(true))
         whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
                 .thenReturn(Single.just(VIDEO_LIST))
         whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
@@ -91,11 +95,13 @@ class GetWorkDetailsUseCaseTest {
         useCase(WORK)
                 .test()
                 .assertComplete()
-                .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
+                .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(true, VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
+        whenever(checkFavoriteWorkUseCase(WORK))
+                .thenReturn(Single.just(true))
         whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
                 .thenReturn(Single.just(VIDEO_LIST))
         whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))

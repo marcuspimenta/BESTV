@@ -21,6 +21,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 /**
@@ -31,6 +32,9 @@ interface MovieDao {
 
     @Query("SELECT * FROM movie")
     fun getAll(): Single<List<MovieDbModel>>
+
+    @Query("SELECT * FROM movie WHERE id = :id")
+    fun getById(id: Int): Maybe<MovieDbModel>
 
     @Insert
     fun create(model: MovieDbModel): Completable

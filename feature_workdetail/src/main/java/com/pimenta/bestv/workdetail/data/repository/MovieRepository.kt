@@ -38,6 +38,11 @@ class MovieRepository @Inject constructor(
     fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
             movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
 
+    fun isFavoriteMove(movieDbModel: MovieDbModel) =
+            movieLocalDataSource.getById(movieDbModel)
+                    .isEmpty
+                    .map { !it }
+
     fun getCastByMovie(movieId: Int) =
             movieRemoteDataSource.getCastByMovie(movieId)
                     .map {

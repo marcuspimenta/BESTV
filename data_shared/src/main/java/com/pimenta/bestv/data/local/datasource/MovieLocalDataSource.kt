@@ -33,4 +33,7 @@ class MovieLocalDataSource @Inject constructor(
 
     fun getMovies() =
             movieDao.getAll()
+
+    fun getById(movieDbModel: MovieDbModel) =
+            movieDao.getById(movieDbModel.id)
 }
