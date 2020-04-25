@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import java.io.Serializable
 
 /**
@@ -40,19 +41,35 @@ data class WorkViewModel(
     var type: WorkType
 ) : Serializable
 
-fun WorkViewModel.loadPoster(context: Context, target: CustomTarget<Drawable>) {
+fun WorkViewModel.loadPoster(context: Context, result: (resource: Drawable) -> Unit) {
     Glide.with(context)
             .load(posterUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(target)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    result.invoke(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // DO ANYTHING
+                }
+            })
 }
 
-fun WorkViewModel.loadBackdrop(context: Context, target: CustomTarget<Bitmap>) {
+fun WorkViewModel.loadBackdrop(context: Context, result: (resource: Bitmap) -> Unit) {
     Glide.with(context)
             .asBitmap()
             .load(backdropUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(target)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    result(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // DO ANYTHING
+                }
+            })
 }
 
 enum class WorkType {

@@ -17,8 +17,6 @@ package com.pimenta.bestv.search.presentation.ui.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +31,6 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.Presenter
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
@@ -59,12 +55,12 @@ private const val TV_SHOW_HEADER_ID = 2
  */
 class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupportFragment.SearchResultProvider {
 
-    private val rowsAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
-    private val movieRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val tvShowRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(activity) }
-    private val progressBarManager: ProgressBarManager by lazy { ProgressBarManager() }
-    private val workDiffCallback: WorkDiffCallback by lazy { WorkDiffCallback() }
+    private val rowsAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
+    private val movieRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val tvShowRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val backgroundManager by lazy { BackgroundManager.getInstance(activity) }
+    private val progressBarManager by lazy { ProgressBarManager() }
+    private val workDiffCallback by lazy { WorkDiffCallback() }
 
     @Inject
     lateinit var presenter: SearchPresenter
@@ -144,15 +140,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireContext(), object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                backgroundManager.setBitmap(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
+        workViewModel.loadBackdrop(requireContext()) {
+            backgroundManager.setBitmap(it)
+        }
     }
 
     override fun onErrorSearch() {

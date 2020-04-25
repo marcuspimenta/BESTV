@@ -17,8 +17,6 @@ package com.pimenta.bestv.workbrowse.presentation.ui.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
@@ -26,8 +24,6 @@ import androidx.core.os.bundleOf
 import androidx.leanback.R
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
@@ -97,15 +93,9 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     }
 
     override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireContext(), object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                backgroundManager?.setBitmap(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
+        workViewModel.loadBackdrop(requireContext()) {
+            backgroundManager?.setBitmap(it)
+        }
     }
 
     override fun onErrorWorksLoaded() {

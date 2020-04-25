@@ -18,8 +18,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -46,8 +44,6 @@ import androidx.leanback.widget.OnItemViewSelectedListener
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.RowPresenter
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
@@ -291,27 +287,15 @@ class WorkDetailsFragment : DetailsSupportFragment(),
     private fun setupDetailsOverviewRow() {
         detailsOverviewRow = DetailsOverviewRow(workViewModel)
 
-        workViewModel.loadPoster(requireContext(), object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                detailsOverviewRow.imageDrawable = resource
-                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-            }
+        workViewModel.loadPoster(requireContext()) {
+            detailsOverviewRow.imageDrawable = it
+            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+        }
 
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
-
-        workViewModel.loadBackdrop(requireContext(), object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                detailsBackground.coverBitmap = resource
-                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
+        workViewModel.loadBackdrop(requireContext()) {
+            detailsBackground.coverBitmap = it
+            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+        }
 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)

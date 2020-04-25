@@ -17,7 +17,6 @@ package com.pimenta.bestv.castdetail.presentation.ui.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,8 +37,6 @@ import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowPresenter
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pimenta.bestv.castdetail.R
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
@@ -68,13 +65,13 @@ private const val TV_SHOWS_HEADER_ID = 2
  */
 class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View {
 
-    private val mainAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
-    private val actionAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter() }
-    private val moviesRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val tvShowsRowAdapter: ArrayObjectAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val presenterSelector: ClassPresenterSelector by lazy { ClassPresenterSelector() }
-    private val detailsOverviewRow: DetailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
-    private val castViewModel: CastViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
+    private val mainAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
+    private val actionAdapter by lazy { ArrayObjectAdapter() }
+    private val moviesRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val tvShowsRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
+    private val presenterSelector by lazy { ClassPresenterSelector() }
+    private val detailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
+    private val castViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
 
     @Inject
     lateinit var presenter: CastDetailsPresenter
@@ -169,16 +166,10 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     private fun setupDetailsOverviewRow() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
 
-        castViewModel.loadThumbnail(requireContext(), object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                detailsOverviewRow.imageDrawable = resource
-                mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
+        castViewModel.loadThumbnail(requireContext()) {
+            detailsOverviewRow.imageDrawable = it
+            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
+        }
 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
@@ -194,44 +185,29 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         // Set detail background.
         val detailsPresenter = object : FullWidthDetailsOverviewRowPresenter(CastDetailsDescriptionRender()) {
 
-            private lateinit var mDetailsImageView: ImageView
-
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
-                mDetailsImageView = viewHolder.view.findViewById(R.id.details_overview_image)
-                val lp = mDetailsImageView.layoutParams
-                lp.width = resources.getDimensionPixelSize(R.dimen.movie_card_width)
-                lp.height = resources.getDimensionPixelSize(R.dimen.movie_card_height)
-                mDetailsImageView.layoutParams = lp
+                val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
+                val layoutParams = detailsImageView.layoutParams.apply {
+                    width = resources.getDimensionPixelSize(R.dimen.movie_card_width)
+                    height = resources.getDimensionPixelSize(R.dimen.movie_card_height)
+                }
+                detailsImageView.layoutParams = layoutParams
                 return viewHolder
             }
-        }
-        detailsPresenter.actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
-        detailsPresenter.backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
+        }.apply {
+            actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
+            backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
 
-        // Hook up transition element.
-        val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()
-        sharedElementHelper.setSharedElementEnterTransition(activity, SettingShared.SHARED_ELEMENT_NAME)
-        detailsPresenter.setListener(sharedElementHelper)
-        detailsPresenter.isParticipatingEntranceTransition = true
-        detailsPresenter.setOnActionClickedListener { action ->
-            var position = 0
-            when (action.id.toInt()) {
-                ACTION_TV_SHOWS -> {
-                    if (tvShowsRowAdapter.size() > 0) {
-                        position++
-                    }
-                    if (moviesRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
-                ACTION_MOVIES -> {
-                    if (moviesRowAdapter.size() > 0) {
-                        position++
-                    }
-                    setSelectedPosition(position)
-                }
+            // Hook up transition element.
+            val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper().apply {
+                setSharedElementEnterTransition(requireActivity(), SettingShared.SHARED_ELEMENT_NAME)
+            }
+            setListener(sharedElementHelper)
+            isParticipatingEntranceTransition = true
+            setOnActionClickedListener {
+                val position = actionAdapter.indexOf(it) + 1
+                setSelectedPosition(position)
             }
         }
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)

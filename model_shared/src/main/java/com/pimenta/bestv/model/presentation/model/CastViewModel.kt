@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import java.io.Serializable
 
 /**
@@ -36,9 +37,17 @@ data class CastViewModel(
     var thumbnailUrl: String? = null
 ) : Serializable
 
-fun CastViewModel.loadThumbnail(context: Context, target: CustomTarget<Drawable>) {
+fun CastViewModel.loadThumbnail(context: Context, result: (resource: Drawable) -> Unit) {
     Glide.with(context)
             .load(thumbnailUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(target)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    result(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // DO ANYTHING
+                }
+            })
 }
