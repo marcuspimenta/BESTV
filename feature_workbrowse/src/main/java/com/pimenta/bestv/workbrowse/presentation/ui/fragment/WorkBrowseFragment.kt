@@ -32,12 +32,10 @@ import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.R
-import com.pimenta.bestv.workbrowse.presentation.presenter.ABOUT_ID
-import com.pimenta.bestv.workbrowse.presentation.presenter.TOP_WORK_LIST_ID
-import com.pimenta.bestv.workbrowse.presentation.presenter.WORK_GENRE_ID
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.workbrowse.presentation.ui.diffcallback.RowDiffCallback
+import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.AboutHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject
@@ -150,18 +148,16 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
             presenter.refreshRows()
 
             val row = rowObj as Row
-            when (row.headerItem.id) {
-                TOP_WORK_LIST_ID -> {
-                    val movieListTypeHeaderItem = row.headerItem as WorkTypeHeaderItem
-                    title = row.headerItem.name
-                    return TopWorkGridFragment.newInstance(movieListTypeHeaderItem.topWorkTypeViewModel)
+            when (val headerItem = row.headerItem) {
+                is WorkTypeHeaderItem -> {
+                    title = headerItem.name
+                    return TopWorkGridFragment.newInstance(headerItem.topWorkTypeViewModel)
                 }
-                WORK_GENRE_ID -> {
-                    val genreHeaderItem = row.headerItem as GenreHeaderItem
-                    title = genreHeaderItem.genreViewModel.name
-                    return GenreWorkGridFragment.newInstance(genreHeaderItem.genreViewModel)
+                is GenreHeaderItem -> {
+                    title = headerItem.name
+                    return GenreWorkGridFragment.newInstance(headerItem.genreViewModel)
                 }
-                ABOUT_ID -> {
+                is AboutHeaderItem -> {
                     title = ""
                     return AboutFragment.newInstance()
                 }

@@ -15,7 +15,6 @@
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
 import androidx.leanback.widget.DividerRow
-import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.PageRow
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.SectionRow
@@ -32,6 +31,7 @@ import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.AboutHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
 import javax.inject.Inject
@@ -40,9 +40,9 @@ import timber.log.Timber
 /**
  * Created by marcus on 06-02-2018.
  */
-const val TOP_WORK_LIST_ID = 1L
-const val WORK_GENRE_ID = 2L
-const val ABOUT_ID = 3L
+private const val TOP_WORK_LIST_ID = 1L
+private const val WORK_GENRE_ID = 2L
+private const val ABOUT_ID = 3L
 private const val FAVORITE_INDEX = 0
 private const val INVALID_INDEX = -1
 
@@ -165,7 +165,7 @@ class WorkBrowsePresenter @Inject constructor(
             }
 
             add(DividerRow())
-            add(PageRow(HeaderItem(ABOUT_ID, resource.getStringResource(R.string.about))))
+            add(PageRow(AboutHeaderItem(ABOUT_ID, resource.getStringResource(R.string.about))))
         }
     }
 
