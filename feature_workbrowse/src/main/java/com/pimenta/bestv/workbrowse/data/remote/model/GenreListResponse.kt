@@ -19,6 +19,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by marcus on 09-02-2018.
  */
-abstract class GenreListResponse<T : com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse>(
+abstract class GenreListResponse<T : GenreResponse>(
     @SerializedName("genres") var genres: List<T>? = null
 )

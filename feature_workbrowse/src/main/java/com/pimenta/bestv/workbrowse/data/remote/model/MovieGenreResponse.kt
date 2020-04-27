@@ -21,4 +21,4 @@ class MovieGenreResponse(
     id: Int = 0,
     name: String? = null,
     override val source: Source = Source.MOVIE
-) : com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse(id = id, name = name)
+) : GenreResponse(id = id, name = name)

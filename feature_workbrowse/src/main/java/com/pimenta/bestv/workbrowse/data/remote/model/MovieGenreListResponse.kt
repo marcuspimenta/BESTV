@@ -17,4 +17,4 @@ package com.pimenta.bestv.workbrowse.data.remote.model
 /**
  * Created by marcus on 06/07/18.
  */
-class MovieGenreListResponse : com.pimenta.bestv.workbrowse.data.remote.model.GenreListResponse<com.pimenta.bestv.workbrowse.data.remote.model.MovieGenreResponse>()
+class MovieGenreListResponse : GenreListResponse<MovieGenreResponse>()
