@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.search.domain
 
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -30,7 +32,7 @@ class SearchWorksByQueryUseCase @Inject constructor(
     operator fun invoke(query: String) =
             urlEncoderTextUseCase(query)
                     .flatMap {
-                        Single.zip(
+                        Single.zip<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>, Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>>(
                                 searchMoviesByQueryUseCase(it, 1),
                                 searchTvShowsByQueryUseCase(it, 1),
                                 BiFunction { first, second -> first to second }
