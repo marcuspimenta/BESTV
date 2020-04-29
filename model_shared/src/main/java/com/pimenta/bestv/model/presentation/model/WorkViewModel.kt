@@ -41,13 +41,13 @@ data class WorkViewModel(
     var type: WorkType
 ) : Serializable
 
-fun WorkViewModel.loadPoster(context: Context, result: (resource: Drawable) -> Unit) {
+inline fun WorkViewModel.loadPoster(context: Context, crossinline result: (resource: Drawable) -> Unit) {
     Glide.with(context)
             .load(posterUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
             .into(object : CustomTarget<Drawable>() {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    result.invoke(resource)
+                    result(resource)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -56,7 +56,7 @@ fun WorkViewModel.loadPoster(context: Context, result: (resource: Drawable) -> U
             })
 }
 
-fun WorkViewModel.loadBackdrop(context: Context, result: (resource: Bitmap) -> Unit) {
+inline fun WorkViewModel.loadBackdrop(context: Context, crossinline result: (resource: Bitmap) -> Unit) {
     Glide.with(context)
             .asBitmap()
             .load(backdropUrl)

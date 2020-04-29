@@ -37,7 +37,7 @@ data class CastViewModel(
     var thumbnailUrl: String? = null
 ) : Serializable
 
-fun CastViewModel.loadThumbnail(context: Context, result: (resource: Drawable) -> Unit) {
+inline fun CastViewModel.loadThumbnail(context: Context, crossinline result: (resource: Drawable) -> Unit) {
     Glide.with(context)
             .load(thumbnailUrl)
             .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
