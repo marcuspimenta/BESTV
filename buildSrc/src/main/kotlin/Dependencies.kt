@@ -16,43 +16,43 @@ import org.gradle.api.JavaVersion
 
 object Config {
     val minSdk = 26
-    val compileSdk = 29
-    val targetSdk = 29
+    val compileSdk = 31
+    val targetSdk = 31
     val javaVersion = JavaVersion.VERSION_1_8
     val jvmTarget = "1.8"
 }
 
 object Versions {
-    val kotlin = "1.3.72"
-    val build_gradle = "3.5.3"
-    val google_service = "4.3.3"
-    val ktlint = "9.2.1"
-    val ben_mane_gralde = "0.28.0"
+    val kotlin = "1.6.20-RC"
+    val build_gradle = "7.3.0-alpha05"
+    val google_service = "4.3.10"
+    val ktlint = "10.2.1"
+    val ben_mane_gralde = "0.42.0"
 
-    val androidx_leanback = "1.1.0-alpha03"
-    val androidx_core = "1.3.0-alpha01"
-    val androidx_fragment = "1.2.2"
-    val androidx_lifecycle = "2.2.0"
+    val androidx_leanback = "1.2.0-alpha02"
+    val androidx_core = "1.9.0-alpha01"
+    val androidx_fragment = "1.5.0-alpha03"
+    val androidx_lifecycle = "2.5.0-alpha04"
     val androidx_recommendation = "1.0.0"
-    val androidx_tvprovider = "1.0.0"
-    val androidx_room = "2.2.5"
-    val androidx_work = "2.3.2"
+    val androidx_tvprovider = "1.1.0-alpha01"
+    val androidx_room = "2.5.0-alpha01"
+    val androidx_work = "2.8.0-alpha01"
 
-    val dagger = "2.27"
-    val dagger_compile = "2.27"
-    val retrofit = "2.8.1"
-    val retrofit_converter_gson = "2.8.1"
-    val okhttp = "4.5.0"
-    val logging_interceptor = "4.5.0"
-    val gson = "2.8.6"
+    val dagger = "2.41"
+    val dagger_compile = "2.41"
+    val retrofit = "2.9.0"
+    val retrofit_converter_gson = "2.9.0"
+    val okhttp = "5.0.0-alpha.5"
+    val logging_interceptor = "5.0.0-alpha.5"
+    val gson = "2.9.0"
     val retrofit2_rxjava2_adapter = "1.0.0"
-    val timber = "4.7.1"
-    val glide = "4.11.0"
-    val lottie = "3.4.0"
+    val timber = "5.0.1"
+    val glide = "4.13.1"
+    val lottie = "5.0.3"
     val rxandroid = "2.1.1"
-    val junit = "4.13"
-    val mockito_inline = "3.3.3"
-    val mockito_core = "3.3.3"
+    val junit = "4.13.2"
+    val mockito_inline = "4.4.0"
+    val mockito_core = "4.4.0"
     val mockito_kotlin = "2.1.0"
 }
 

@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.pimenta.bestv.workbrowse">
 
     <application>
         <activity
             android:name=".presentation.ui.activity.MainActivity"
-            android:screenOrientation="landscape">
+            android:exported="true"
+            android:screenOrientation="landscape"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
