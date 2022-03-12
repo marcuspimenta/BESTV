@@ -60,8 +60,4 @@ dependencies {
     // Timber
     implementation Dependencies.timber
 
-    // Google Analytics
-    implementation Dependencies.firebase
 }
-
-apply plugin: 'com.google.gms.google-services'
