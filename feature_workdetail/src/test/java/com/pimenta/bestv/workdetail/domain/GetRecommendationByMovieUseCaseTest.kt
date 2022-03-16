@@ -27,14 +27,14 @@ import org.junit.Test
  */
 private const val MOVIE_ID = 1
 private val WORK_PAGE = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Title"
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Title"
         )
+    )
 )
 
 class GetRecommendationByMovieUseCaseTest {
@@ -42,27 +42,27 @@ class GetRecommendationByMovieUseCaseTest {
     private val movieRepository: MovieRepository = mock()
 
     private val useCase = GetRecommendationByMovieUseCase(
-            movieRepository
+        movieRepository
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
         whenever(movieRepository.getRecommendationByMovie(MOVIE_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
 
         useCase(MOVIE_ID, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(movieRepository.getRecommendationByMovie(MOVIE_ID, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

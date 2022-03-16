@@ -25,5 +25,5 @@ class GetTvShowByGenreUseCase @Inject constructor(
 ) {
 
     operator fun invoke(genreId: Int, page: Int) =
-            tvShowRepository.getTvShowByGenre(genreId, page)
+        tvShowRepository.getTvShowByGenre(genreId, page)
 }

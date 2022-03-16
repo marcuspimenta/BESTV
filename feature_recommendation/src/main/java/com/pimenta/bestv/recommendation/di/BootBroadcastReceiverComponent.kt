@@ -24,9 +24,9 @@ import dagger.Subcomponent
  */
 @BroadcastScope
 @Subcomponent(
-        modules = [
-            WorkerModule::class
-        ]
+    modules = [
+        WorkerModule::class
+    ]
 )
 interface BootBroadcastReceiverComponent {
 

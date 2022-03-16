@@ -85,10 +85,11 @@ private const val CAST_HEAD_ID = 6
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkDetailsFragment : DetailsSupportFragment(),
-        WorkDetailsPresenter.View,
-        OnItemViewSelectedListener,
-        OnItemViewClickedListener {
+class WorkDetailsFragment :
+    DetailsSupportFragment(),
+    WorkDetailsPresenter.View,
+    OnItemViewSelectedListener,
+    OnItemViewClickedListener {
 
     private val actionAdapter by lazy { ArrayObjectAdapter() }
     private val reviewRowAdapter by lazy { ArrayObjectAdapter(ReviewCardRender()) }
@@ -119,9 +120,9 @@ class WorkDetailsFragment : DetailsSupportFragment(),
 
     override fun onAttach(context: Context) {
         (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
-                .workDetailsFragmentComponent()
-                .create(this, workViewModel)
-                .inject(this)
+            .workDetailsFragmentComponent()
+            .create(this, workViewModel)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -139,9 +140,10 @@ class WorkDetailsFragment : DetailsSupportFragment(),
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                        (view.parent as ViewGroup).addView(it)
-                    })
+                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                    (view.parent as ViewGroup).addView(it)
+                }
+            )
             initialDelay = 0
         }
         presenter.loadData()
@@ -157,7 +159,7 @@ class WorkDetailsFragment : DetailsSupportFragment(),
 
     override fun resultSetFavoriteMovie(isFavorite: Boolean) {
         favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { isFavorite }
-                ?: run { resources.getString(R.string.save_favorites) }
+            ?: run { resources.getString(R.string.save_favorites) }
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
@@ -170,9 +172,9 @@ class WorkDetailsFragment : DetailsSupportFragment(),
         similarWorks: List<WorkViewModel>
     ) {
         favoriteAction = Action(
-                ACTION_FAVORITE.toLong(),
-                resources.getString(R.string.remove_favorites).takeIf { isFavorite }
-                        ?: resources.getString(R.string.save_favorites)
+            ACTION_FAVORITE.toLong(),
+            resources.getString(R.string.remove_favorites).takeIf { isFavorite }
+                ?: resources.getString(R.string.save_favorites)
         )
         actionAdapter.add(favoriteAction)
 
@@ -228,26 +230,26 @@ class WorkDetailsFragment : DetailsSupportFragment(),
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivity(route.intent, bundle)
     }
 
     override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivity(route.intent, bundle)
     }
 
     override fun openVideo(videoViewModel: VideoViewModel) {
         val intent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(videoViewModel.youtubeUrl)
+            Intent.ACTION_VIEW,
+            Uri.parse(videoViewModel.youtubeUrl)
         )
         try {
             startActivity(intent)
@@ -342,10 +344,10 @@ class WorkDetailsFragment : DetailsSupportFragment(),
     companion object {
 
         fun newInstance(workViewModel: WorkViewModel) =
-                WorkDetailsFragment().apply {
-                    arguments = bundleOf(
-                            WORK to workViewModel
-                    )
-                }
+            WorkDetailsFragment().apply {
+                arguments = bundleOf(
+                    WORK to workViewModel
+                )
+            }
     }
 }

@@ -28,5 +28,5 @@ class MovieRemoteDataSource @Inject constructor(
 ) {
 
     fun getPopularMovies(page: Int) =
-            movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
+        movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

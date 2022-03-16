@@ -25,5 +25,5 @@ class GetTopRatedTvShowsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(page: Int) =
-            tvShowRepository.getTopRatedTvShows(page)
+        tvShowRepository.getTopRatedTvShows(page)
 }

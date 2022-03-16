@@ -50,9 +50,9 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
 
     override fun onAttach(context: Context) {
         (requireActivity() as MainActivity).mainActivityComponent
-                .genreWorkGridFragmentComponent()
-                .create(this)
-                .inject(this)
+            .genreWorkGridFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -106,9 +106,9 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivity(route.intent, bundle)
     }
@@ -128,10 +128,10 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
     companion object {
 
         fun newInstance(genreViewModel: GenreViewModel) =
-                GenreWorkGridFragment().apply {
-                    arguments = bundleOf(
-                            GENRE to genreViewModel
-                    )
-                }
+            GenreWorkGridFragment().apply {
+                arguments = bundleOf(
+                    GENRE to genreViewModel
+                )
+            }
     }
 }

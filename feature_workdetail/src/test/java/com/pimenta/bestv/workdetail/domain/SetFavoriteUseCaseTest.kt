@@ -31,16 +31,16 @@ import org.junit.Test
  * Created by marcus on 2019-08-28.
  */
 private val MOVIE_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkType.MOVIE
 )
 private val TV_SHOW_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.TV_SHOW
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkType.TV_SHOW
 )
 
 class SetFavoriteUseCaseTest {
@@ -49,8 +49,8 @@ class SetFavoriteUseCaseTest {
     private val tvShowRepository: TvShowRepository = mock()
 
     private val useCase = SetFavoriteUseCase(
-            movieRepository,
-            tvShowRepository
+        movieRepository,
+        tvShowRepository
     )
 
     @Test
@@ -58,11 +58,11 @@ class SetFavoriteUseCaseTest {
         val dbModel = MOVIE_VIEW_MODEL.toMovieDbModel()
 
         whenever(movieRepository.saveFavoriteMovie(dbModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         useCase(MOVIE_VIEW_MODEL)
-                .test()
-                .assertComplete()
+            .test()
+            .assertComplete()
 
         verify(movieRepository, only()).saveFavoriteMovie(dbModel)
     }
@@ -73,11 +73,11 @@ class SetFavoriteUseCaseTest {
         val dbModel = movieViewModel.toMovieDbModel()
 
         whenever(movieRepository.deleteFavoriteMovie(dbModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         useCase(movieViewModel)
-                .test()
-                .assertComplete()
+            .test()
+            .assertComplete()
 
         verify(movieRepository, only()).deleteFavoriteMovie(dbModel)
     }
@@ -87,11 +87,11 @@ class SetFavoriteUseCaseTest {
         val dbModel = TV_SHOW_VIEW_MODEL.toTvShowDbModel()
 
         whenever(tvShowRepository.saveFavoriteTvShow(dbModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         useCase(TV_SHOW_VIEW_MODEL)
-                .test()
-                .assertComplete()
+            .test()
+            .assertComplete()
 
         verify(tvShowRepository, only()).saveFavoriteTvShow(dbModel)
     }
@@ -102,11 +102,11 @@ class SetFavoriteUseCaseTest {
         val dbModel = tvShowViewModel.toTvShowDbModel()
 
         whenever(tvShowRepository.deleteFavoriteTvShow(dbModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         useCase(tvShowViewModel)
-                .test()
-                .assertComplete()
+            .test()
+            .assertComplete()
 
         verify(tvShowRepository, only()).deleteFavoriteTvShow(dbModel)
     }

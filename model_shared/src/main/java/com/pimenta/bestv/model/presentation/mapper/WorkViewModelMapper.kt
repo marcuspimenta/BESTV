@@ -25,26 +25,26 @@ import java.util.Date
 import java.util.Locale
 
 fun WorkViewModel.toMovieDbModel() =
-        MovieDbModel(id = id)
+    MovieDbModel(id = id)
 
 fun WorkViewModel.toTvShowDbModel() =
-        TvShowDbModel(id = id)
+    TvShowDbModel(id = id)
 
 fun WorkDomainModel.toViewModel() = WorkViewModel(
-        id = id,
-        title = title,
-        originalLanguage = originalLanguage,
-        overview = overview,
-        source = source,
-        backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
-        posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
-        originalTitle = originalTitle,
-        releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
-                ?.let { releaseDate ->
-                    SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
-                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseDate) as Date
-                    )
-                },
-        isFavorite = isFavorite,
-        type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
+    id = id,
+    title = title,
+    originalLanguage = originalLanguage,
+    overview = overview,
+    source = source,
+    backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
+    posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
+    originalTitle = originalTitle,
+    releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
+        ?.let { releaseDate ->
+            SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseDate) as Date
+            )
+        },
+    isFavorite = isFavorite,
+    type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
 )

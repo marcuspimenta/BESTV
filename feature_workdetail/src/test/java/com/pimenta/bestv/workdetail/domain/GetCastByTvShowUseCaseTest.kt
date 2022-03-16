@@ -26,14 +26,14 @@ import org.junit.Test
  */
 private const val WORK_ID = 1
 private val CAST_LIST = listOf(
-        CastDomainModel(
-                id = 1,
-                name = "Name",
-                character = "Character",
-                birthday = "Birthday",
-                deathDay = null,
-                biography = null
-        )
+    CastDomainModel(
+        id = 1,
+        name = "Name",
+        character = "Character",
+        birthday = "Birthday",
+        deathDay = null,
+        biography = null
+    )
 )
 
 class GetCastByTvShowUseCaseTest {
@@ -41,7 +41,7 @@ class GetCastByTvShowUseCaseTest {
     private val tvShowRepository: TvShowRepository = mock()
 
     private val useCase = GetCastByTvShowUseCase(
-            tvShowRepository
+        tvShowRepository
     )
 
     @Test
@@ -49,9 +49,9 @@ class GetCastByTvShowUseCaseTest {
         whenever(tvShowRepository.getCastByTvShow(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
         useCase(WORK_ID)
-                .test()
-                .assertComplete()
-                .assertResult(CAST_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(CAST_LIST)
     }
 
     @Test
@@ -59,7 +59,7 @@ class GetCastByTvShowUseCaseTest {
         whenever(tvShowRepository.getCastByTvShow(WORK_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WORK_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

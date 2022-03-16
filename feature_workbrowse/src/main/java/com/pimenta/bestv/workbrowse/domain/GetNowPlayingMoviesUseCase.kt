@@ -25,5 +25,5 @@ class GetNowPlayingMoviesUseCase @Inject constructor(
 ) {
 
     operator fun invoke(page: Int) =
-            movieRepository.getNowPlayingMovies(page)
+        movieRepository.getNowPlayingMovies(page)
 }

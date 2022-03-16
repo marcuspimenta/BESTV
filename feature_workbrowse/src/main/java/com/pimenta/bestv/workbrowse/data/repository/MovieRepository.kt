@@ -32,54 +32,54 @@ class MovieRepository @Inject constructor(
 ) {
 
     fun getFavoriteMovies() =
-            movieLocalDataSource.getMovies()
-                    .map {
-                        val movies = mutableListOf<WorkDomainModel>()
-                        it.forEach { movieDbModel ->
-                            movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
-                                val source = resource.getStringResource(R.string.source_tmdb)
-                                val workDomainModel = work.toDomainModel(source).apply {
-                                    isFavorite = true
-                                }
-
-                                movies.add(workDomainModel)
-                            }
+        movieLocalDataSource.getMovies()
+            .map {
+                val movies = mutableListOf<WorkDomainModel>()
+                it.forEach { movieDbModel ->
+                    movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        val workDomainModel = work.toDomainModel(source).apply {
+                            isFavorite = true
                         }
-                        movies.toList()
+
+                        movies.add(workDomainModel)
                     }
+                }
+                movies.toList()
+            }
 
     fun getMoviesByGenre(genreId: Int, page: Int) =
-            movieRemoteDataSource.getMoviesByGenre(genreId, page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getMoviesByGenre(genreId, page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getNowPlayingMovies(page: Int) =
-            movieRemoteDataSource.getNowPlayingMovies(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getNowPlayingMovies(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getPopularMovies(page: Int) =
-            movieRemoteDataSource.getPopularMovies(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getPopularMovies(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getTopRatedMovies(page: Int) =
-            movieRemoteDataSource.getTopRatedMovies(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getTopRatedMovies(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getUpComingMovies(page: Int) =
-            movieRemoteDataSource.getUpComingMovies(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getUpComingMovies(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 }

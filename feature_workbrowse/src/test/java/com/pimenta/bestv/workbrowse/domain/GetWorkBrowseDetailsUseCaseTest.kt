@@ -24,19 +24,19 @@ import org.junit.Test
  * Created by marcus on 28-05-2019.
  */
 private val MOVIE_GENRES = listOf(
-        GenreDomainModel(
-                id = 1,
-                name = "Action",
-                source = GenreDomainModel.Source.MOVIE
-        )
+    GenreDomainModel(
+        id = 1,
+        name = "Action",
+        source = GenreDomainModel.Source.MOVIE
+    )
 )
 
 private val TV_SHOW_GENRES = listOf(
-        GenreDomainModel(
-                id = 2,
-                name = "Action",
-                source = GenreDomainModel.Source.TV_SHOW
-        )
+    GenreDomainModel(
+        id = 2,
+        name = "Action",
+        source = GenreDomainModel.Source.TV_SHOW
+    )
 )
 
 class GetWorkBrowseDetailsUseCaseTest {
@@ -45,9 +45,9 @@ class GetWorkBrowseDetailsUseCaseTest {
     private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()
     private val getTvShowGenresUseCase: GetTvShowGenresUseCase = mock()
     private val useCase = GetWorkBrowseDetailsUseCase(
-            hasFavoriteUseCase,
-            getMovieGenresUseCase,
-            getTvShowGenresUseCase
+        hasFavoriteUseCase,
+        getMovieGenresUseCase,
+        getTvShowGenresUseCase
     )
 
     @Test
@@ -57,9 +57,9 @@ class GetWorkBrowseDetailsUseCaseTest {
         whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
 
         useCase()
-                .test()
-                .assertComplete()
-                .assertResult(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES))
+            .test()
+            .assertComplete()
+            .assertResult(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES))
     }
 
     @Test
@@ -69,7 +69,7 @@ class GetWorkBrowseDetailsUseCaseTest {
         whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
 
         useCase()
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

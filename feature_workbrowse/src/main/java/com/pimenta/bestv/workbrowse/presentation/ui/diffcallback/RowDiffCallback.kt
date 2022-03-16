@@ -24,9 +24,9 @@ import androidx.leanback.widget.Row
 class RowDiffCallback : DiffCallback<Row>() {
 
     override fun areItemsTheSame(oldItem: Row, newItem: Row) =
-            oldItem.hashCode() == newItem.hashCode()
+        oldItem.hashCode() == newItem.hashCode()
 
     @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: Row, newItem: Row) =
-            oldItem == newItem
+        oldItem == newItem
 }

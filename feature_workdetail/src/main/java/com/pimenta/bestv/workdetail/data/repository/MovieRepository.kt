@@ -33,48 +33,48 @@ class MovieRepository @Inject constructor(
 ) {
 
     fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
-            movieLocalDataSource.saveFavoriteMovie(movieDbModel)
+        movieLocalDataSource.saveFavoriteMovie(movieDbModel)
 
     fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
-            movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
+        movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
 
     fun isFavoriteMove(movieDbModel: MovieDbModel) =
-            movieLocalDataSource.getById(movieDbModel)
-                    .isEmpty
-                    .map { !it }
+        movieLocalDataSource.getById(movieDbModel)
+            .isEmpty
+            .map { !it }
 
     fun getCastByMovie(movieId: Int) =
-            movieRemoteDataSource.getCastByMovie(movieId)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.casts?.map { cast ->
-                            cast.toDomainModel(source)
-                        }
-                    }
+        movieRemoteDataSource.getCastByMovie(movieId)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.casts?.map { cast ->
+                    cast.toDomainModel(source)
+                }
+            }
 
     fun getRecommendationByMovie(movieId: Int, page: Int) =
-            movieRemoteDataSource.getRecommendationByMovie(movieId, page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getRecommendationByMovie(movieId, page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getSimilarByMovie(movieId: Int, page: Int) =
-            movieRemoteDataSource.getSimilarByMovie(movieId, page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getSimilarByMovie(movieId, page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getReviewByMovie(tvShowId: Int, page: Int) =
-            movieRemoteDataSource.getReviewByMovie(tvShowId, page)
-                    .map { it.toDomainModel() }
+        movieRemoteDataSource.getReviewByMovie(tvShowId, page)
+            .map { it.toDomainModel() }
 
     fun getVideosByMovie(movieId: Int) =
-            movieRemoteDataSource.getVideosByMovie(movieId)
-                    .map {
-                        it.videos?.map { video ->
-                            video.toDomainModel()
-                        }
-                    }
+        movieRemoteDataSource.getVideosByMovie(movieId)
+            .map {
+                it.videos?.map { video ->
+                    video.toDomainModel()
+                }
+            }
 }

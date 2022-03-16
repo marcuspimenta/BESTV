@@ -29,5 +29,5 @@ class MovieApiModule {
     @Provides
     @FragmentScope
     fun provideMovieApi(retrofit: Retrofit) =
-            retrofit.create(MovieTmdbApi::class.java)
+        retrofit.create(MovieTmdbApi::class.java)
 }

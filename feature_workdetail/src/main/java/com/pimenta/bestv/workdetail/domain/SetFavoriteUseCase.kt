@@ -31,20 +31,20 @@ class SetFavoriteUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel) =
-            when (workViewModel.type) {
-                WorkType.MOVIE -> {
-                    if (workViewModel.isFavorite) {
-                        movieRepository.deleteFavoriteMovie(workViewModel.toMovieDbModel())
-                    } else {
-                        movieRepository.saveFavoriteMovie(workViewModel.toMovieDbModel())
-                    }
-                }
-                WorkType.TV_SHOW -> {
-                    if (workViewModel.isFavorite) {
-                        tvShowRepository.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
-                    } else {
-                        tvShowRepository.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
-                    }
+        when (workViewModel.type) {
+            WorkType.MOVIE -> {
+                if (workViewModel.isFavorite) {
+                    movieRepository.deleteFavoriteMovie(workViewModel.toMovieDbModel())
+                } else {
+                    movieRepository.saveFavoriteMovie(workViewModel.toMovieDbModel())
                 }
             }
+            WorkType.TV_SHOW -> {
+                if (workViewModel.isFavorite) {
+                    tvShowRepository.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
+                } else {
+                    tvShowRepository.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
+                }
+            }
+        }
 }

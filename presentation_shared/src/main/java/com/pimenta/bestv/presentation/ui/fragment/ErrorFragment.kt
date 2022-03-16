@@ -35,12 +35,13 @@ class ErrorFragment : ErrorSupportFragment() {
             targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
-                    }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
                 }
+            }
         )
     }
 

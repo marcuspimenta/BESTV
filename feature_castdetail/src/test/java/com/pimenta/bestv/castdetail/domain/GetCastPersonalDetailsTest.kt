@@ -26,10 +26,10 @@ import org.junit.Test
  */
 private const val CAST_ID = 1
 private val CAST_DETAILED = CastDomainModel(
-        id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+    id = 1,
+    name = "Carlos",
+    character = "Batman",
+    birthday = "1990-07-13"
 )
 
 class GetCastPersonalDetailsTest {
@@ -37,7 +37,7 @@ class GetCastPersonalDetailsTest {
     private val castRepository: CastRepository = mock()
 
     private val useCase = GetCastPersonalDetails(
-            castRepository
+        castRepository
     )
 
     @Test
@@ -45,9 +45,9 @@ class GetCastPersonalDetailsTest {
         whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
 
         useCase(CAST_ID)
-                .test()
-                .assertComplete()
-                .assertResult(CAST_DETAILED)
+            .test()
+            .assertComplete()
+            .assertResult(CAST_DETAILED)
     }
 
     @Test
@@ -55,7 +55,7 @@ class GetCastPersonalDetailsTest {
         whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

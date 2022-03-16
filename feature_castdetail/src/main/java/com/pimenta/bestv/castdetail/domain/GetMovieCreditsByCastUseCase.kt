@@ -25,5 +25,5 @@ class GetMovieCreditsByCastUseCase @Inject constructor(
 ) {
 
     operator fun invoke(castId: Int) =
-            castRepository.getMovieCreditsByCast(castId)
+        castRepository.getMovieCreditsByCast(castId)
 }

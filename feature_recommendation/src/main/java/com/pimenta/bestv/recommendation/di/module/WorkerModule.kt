@@ -28,5 +28,5 @@ class WorkerModule {
     @Provides
     @BroadcastScope
     fun provideWorkerManager(application: Application) =
-            WorkManager.getInstance(application)
+        WorkManager.getInstance(application)
 }

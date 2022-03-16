@@ -25,5 +25,5 @@ class GetCastByTvShowUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int) =
-            tvShowRepository.getCastByTvShow(workId)
+        tvShowRepository.getCastByTvShow(workId)
 }

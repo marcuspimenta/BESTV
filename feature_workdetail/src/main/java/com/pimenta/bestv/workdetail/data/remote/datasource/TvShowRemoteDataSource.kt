@@ -28,17 +28,17 @@ class TvShowRemoteDataSource @Inject constructor(
 ) {
 
     fun getCastByTvShow(tvShowId: Int) =
-            tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+        tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
     fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
-            tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+        tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getSimilarByTvShow(tvShowId: Int, page: Int) =
-            tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+        tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getReviewByTvShow(tvShowId: Int, page: Int) =
-            tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+        tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
     fun getVideosByTvShow(tvShowId: Int) =
-            tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+        tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 }

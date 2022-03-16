@@ -27,5 +27,5 @@ private const val SCHEMA_URI_PREFIX = "bestv://search/"
 class SearchRoute @Inject constructor() {
 
     fun buildSearchRoute() =
-            Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
+        Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
 }

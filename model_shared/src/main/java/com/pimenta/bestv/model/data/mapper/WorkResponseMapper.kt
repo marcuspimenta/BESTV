@@ -19,19 +19,19 @@ import com.pimenta.bestv.model.data.remote.WorkResponse
 import com.pimenta.bestv.model.domain.WorkDomainModel
 
 fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
-        id = id,
-        title = title,
-        originalTitle = originalTitle,
-        releaseDate = releaseDate,
-        originalLanguage = originalLanguage,
-        overview = overview,
-        source = source,
-        backdropPath = backdropPath,
-        posterPath = posterPath,
-        popularity = popularity,
-        voteAverage = voteAverage,
-        voteCount = voteCount,
-        isAdult = isAdult,
-        type = WorkDomainModel.Type.TV_SHOW.takeIf { this is TvShowResponse }
-                ?: WorkDomainModel.Type.MOVIE
+    id = id,
+    title = title,
+    originalTitle = originalTitle,
+    releaseDate = releaseDate,
+    originalLanguage = originalLanguage,
+    overview = overview,
+    source = source,
+    backdropPath = backdropPath,
+    posterPath = posterPath,
+    popularity = popularity,
+    voteAverage = voteAverage,
+    voteCount = voteCount,
+    isAdult = isAdult,
+    type = WorkDomainModel.Type.TV_SHOW.takeIf { this is TvShowResponse }
+        ?: WorkDomainModel.Type.MOVIE
 )

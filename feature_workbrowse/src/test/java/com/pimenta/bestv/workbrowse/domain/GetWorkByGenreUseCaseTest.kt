@@ -27,36 +27,36 @@ import org.junit.Test
  * Created by marcus on 2019-08-26.
  */
 private val MOVIE_GENRE = GenreViewModel(
-        id = 1,
-        source = Source.MOVIE
+    id = 1,
+    source = Source.MOVIE
 )
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 private val TV_SHOW_GENRE = GenreViewModel(
-        id = 1,
-        source = Source.TV_SHOW
+    id = 1,
+    source = Source.TV_SHOW
 )
 private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.TV_SHOW
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.TV_SHOW
         )
+    )
 )
 
 class GetWorkByGenreUseCaseTest {
@@ -64,49 +64,49 @@ class GetWorkByGenreUseCaseTest {
     private val getMovieByGenreUseCase: GetMovieByGenreUseCase = mock()
     private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase = mock()
     private val useCase = GetWorkByGenreUseCase(
-            getMovieByGenreUseCase,
-            getTvShowByGenreUseCase
+        getMovieByGenreUseCase,
+        getTvShowByGenreUseCase
     )
 
     @Test
     fun `should return the right data when loading a movie page`() {
         whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         useCase(MOVIE_GENRE, 1)
-                .test()
-                .assertComplete()
-                .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens when loading a movie page`() {
         whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_GENRE, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 
     @Test
     fun `should return the right data when loading a tv show page`() {
         whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-                .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
 
         useCase(TV_SHOW_GENRE, 1)
-                .test()
-                .assertComplete()
-                .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens when loading a tv show page`() {
         whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_GENRE, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

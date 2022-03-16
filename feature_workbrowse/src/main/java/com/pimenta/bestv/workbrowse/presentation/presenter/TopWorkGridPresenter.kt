@@ -27,9 +27,9 @@ import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import timber.log.Timber
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
@@ -68,39 +68,39 @@ class TopWorkGridPresenter @Inject constructor(
         }
 
         loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .doOnSubscribe { view.onShowProgress() }
-                .doFinally { view.onHideProgress() }
-                .subscribe({ workPage ->
-                    workPage?.let {
-                        currentPage = it.page
-                        totalPages = it.totalPages
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .doOnSubscribe { view.onShowProgress() }
+            .doFinally { view.onHideProgress() }
+            .subscribe({ workPage ->
+                workPage?.let {
+                    currentPage = it.page
+                    totalPages = it.totalPages
 
-                        it.results?.let { worksViewModel ->
-                            works.addAll(worksViewModel)
-                            view.onWorksLoaded(works)
-                        }
+                    it.results?.let { worksViewModel ->
+                        works.addAll(worksViewModel)
+                        view.onWorksLoaded(works)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading the works by type")
-                    view.onErrorWorksLoaded()
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading the works by type")
+                view.onErrorWorksLoaded()
+            }).addTo(compositeDisposable)
     }
 
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         disposeLoadBackdropImage()
         loadBackdropImageDisposable = Completable
-                .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({
-                    view.loadBackdropImage(workViewModel)
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading backdrop image")
-                })
+            .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({
+                view.loadBackdropImage(workViewModel)
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading backdrop image")
+            })
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {

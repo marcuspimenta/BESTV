@@ -25,5 +25,5 @@ class GetSimilarByTvShowUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            tvShowRepository.getSimilarByTvShow(workId, page)
+        tvShowRepository.getSimilarByTvShow(workId, page)
 }

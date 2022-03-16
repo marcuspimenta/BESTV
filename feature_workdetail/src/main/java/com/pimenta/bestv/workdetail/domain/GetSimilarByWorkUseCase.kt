@@ -26,8 +26,8 @@ class GetSimilarByWorkUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int) =
-            when (workType) {
-                WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
-                WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
-            }
+        when (workType) {
+            WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
+            WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
+        }
 }

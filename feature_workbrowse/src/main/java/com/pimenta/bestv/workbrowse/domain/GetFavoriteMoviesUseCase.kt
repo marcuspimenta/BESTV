@@ -25,5 +25,5 @@ class GetFavoriteMoviesUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            movieRepository.getFavoriteMovies()
+        movieRepository.getFavoriteMovies()
 }

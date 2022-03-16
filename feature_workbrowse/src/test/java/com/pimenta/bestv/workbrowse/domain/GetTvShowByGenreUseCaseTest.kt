@@ -28,16 +28,16 @@ import org.junit.Test
 private const val GENRE_ID = 1
 private const val PAGE = 1
 private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.TV_SHOW
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.TV_SHOW
         )
+    )
 )
 
 class GetTvShowByGenreUseCaseTest {
@@ -45,27 +45,27 @@ class GetTvShowByGenreUseCaseTest {
     private val tvShowRepository: TvShowRepository = mock()
 
     private val useCase = GetTvShowByGenreUseCase(
-            tvShowRepository
+        tvShowRepository
     )
 
     @Test
     fun `should return the right data when loading the tv shows by genre`() {
         whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-                .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
 
         useCase(GENRE_ID, PAGE)
-                .test()
-                .assertComplete()
-                .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(GENRE_ID, PAGE)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

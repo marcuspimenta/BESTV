@@ -25,5 +25,5 @@ class GetRecommendationByMovieUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            movieRepository.getRecommendationByMovie(workId, page)
+        movieRepository.getRecommendationByMovie(workId, page)
 }

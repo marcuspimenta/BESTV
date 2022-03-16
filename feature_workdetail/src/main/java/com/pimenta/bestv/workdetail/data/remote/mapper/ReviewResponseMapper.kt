@@ -24,14 +24,14 @@ import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
  */
 
 fun PageResponse<ReviewResponse>.toDomainModel() = PageDomainModel(
-        page = page,
-        totalPages = totalPages,
-        results = results?.map { it.toDomainModel() }
+    page = page,
+    totalPages = totalPages,
+    results = results?.map { it.toDomainModel() }
 )
 
 private fun ReviewResponse.toDomainModel() = ReviewDomainModel(
-        id = id,
-        author = author,
-        content = content,
-        url = url
+    id = id,
+    author = author,
+    content = content,
+    url = url
 )

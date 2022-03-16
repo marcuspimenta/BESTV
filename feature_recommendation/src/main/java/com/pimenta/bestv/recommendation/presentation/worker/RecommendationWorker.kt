@@ -35,12 +35,12 @@ class RecommendationWorker(
 
     init {
         (context.applicationContext as RecommendationWorkerComponentProvider)
-                .recommendationWorkerComponent()
-                .inject(this)
+            .recommendationWorkerComponent()
+            .inject(this)
     }
 
     override fun createWork(): Single<Result> =
-            loadRecommendationUseCase()
-                    .toSingle { Result.success() }
-                    .onErrorReturn { Result.failure() }
+        loadRecommendationUseCase()
+            .toSingle { Result.success() }
+            .onErrorReturn { Result.failure() }
 }

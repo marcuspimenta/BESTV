@@ -25,5 +25,5 @@ class SearchMoviesByQueryUseCase @Inject constructor(
 ) {
 
     operator fun invoke(query: String, page: Int) =
-            movieRepository.searchMoviesByQuery(query, page)
+        movieRepository.searchMoviesByQuery(query, page)
 }

@@ -30,10 +30,10 @@ import javax.inject.Singleton
  * Created by marcus on 24-02-2020.
  */
 @Module(
-        includes = [
-            MediaLocalModule::class,
-            MediaRemoteModule::class
-        ]
+    includes = [
+        MediaLocalModule::class,
+        MediaRemoteModule::class
+    ]
 )
 class ApplicationModule(
     private val application: Application
@@ -46,13 +46,13 @@ class ApplicationModule(
     @Provides
     @Singleton
     fun provideRxScheduler() = RxScheduler(
-            Schedulers.io(),
-            Schedulers.computation(),
-            AndroidSchedulers.mainThread()
+        Schedulers.io(),
+        Schedulers.computation(),
+        AndroidSchedulers.mainThread()
     )
 
     @Provides
     @Singleton
     fun provideSharedPreferences(application: Application) =
-            application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        application.getSharedPreferences(BuildConfig.PREFERENCE_NAME, Context.MODE_PRIVATE)
 }

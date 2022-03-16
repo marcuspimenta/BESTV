@@ -26,8 +26,8 @@ class GetRecommendationByWorkUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int, page: Int) =
-            when (workType) {
-                WorkType.MOVIE -> getRecommendationByMovieUseCase(workId, page)
-                WorkType.TV_SHOW -> getRecommendationByTvShowUseCase(workId, page)
-            }
+        when (workType) {
+            WorkType.MOVIE -> getRecommendationByMovieUseCase(workId, page)
+            WorkType.TV_SHOW -> getRecommendationByTvShowUseCase(workId, page)
+        }
 }

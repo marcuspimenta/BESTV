@@ -26,14 +26,14 @@ import org.junit.Test
  */
 private const val WORK_ID = 1
 private val CAST_LIST = listOf(
-        CastDomainModel(
-                id = 1,
-                name = "Name",
-                character = "Character",
-                birthday = "Birthday",
-                deathDay = null,
-                biography = null
-        )
+    CastDomainModel(
+        id = 1,
+        name = "Name",
+        character = "Character",
+        birthday = "Birthday",
+        deathDay = null,
+        biography = null
+    )
 )
 
 class GetCastsUseCaseTest {
@@ -42,8 +42,8 @@ class GetCastsUseCaseTest {
     private val getCastByTvShowUseCase: GetCastByTvShowUseCase = mock()
 
     private val useCase = GetCastsUseCase(
-            getCastByMovieUseCase,
-            getCastByTvShowUseCase
+        getCastByMovieUseCase,
+        getCastByTvShowUseCase
     )
 
     @Test
@@ -51,9 +51,9 @@ class GetCastsUseCaseTest {
         whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
         useCase(WorkType.MOVIE, WORK_ID)
-                .test()
-                .assertComplete()
-                .assertResult(CAST_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(CAST_LIST)
     }
 
     @Test
@@ -61,8 +61,8 @@ class GetCastsUseCaseTest {
         whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, WORK_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 
     @Test
@@ -70,9 +70,9 @@ class GetCastsUseCaseTest {
         whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.just(CAST_LIST))
 
         useCase(WorkType.TV_SHOW, WORK_ID)
-                .test()
-                .assertComplete()
-                .assertResult(CAST_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(CAST_LIST)
     }
 
     @Test
@@ -80,7 +80,7 @@ class GetCastsUseCaseTest {
         whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.TV_SHOW, WORK_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

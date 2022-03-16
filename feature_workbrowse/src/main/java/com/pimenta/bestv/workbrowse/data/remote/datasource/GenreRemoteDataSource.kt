@@ -28,8 +28,8 @@ class GenreRemoteDataSource @Inject constructor(
 ) {
 
     fun getMovieGenres() =
-            genreTmdbApi.getMovieGenres(tmdbApiKey, tmdbFilterLanguage)
+        genreTmdbApi.getMovieGenres(tmdbApiKey, tmdbFilterLanguage)
 
     fun getTvShowGenres() =
-            genreTmdbApi.getTvShowGenres(tmdbApiKey, tmdbFilterLanguage)
+        genreTmdbApi.getTvShowGenres(tmdbApiKey, tmdbFilterLanguage)
 }

@@ -29,5 +29,5 @@ class TvShowApiModule {
     @Provides
     @FragmentScope
     fun provideTvShowApi(retrofit: Retrofit) =
-            retrofit.create(TvShowTmdbApi::class.java)
+        retrofit.create(TvShowTmdbApi::class.java)
 }

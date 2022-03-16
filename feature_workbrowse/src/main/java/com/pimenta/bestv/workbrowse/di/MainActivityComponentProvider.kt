@@ -14,10 +14,12 @@
 
 package com.pimenta.bestv.workbrowse.di
 
+import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
+
 /**
  * Created by marcus on 26-02-2020.
  */
 interface MainActivityComponentProvider {
 
-    fun mainActivityComponent(): MainActivityComponent
+    fun mainActivityComponent(view: MainPresenter.View): MainActivityComponent
 }

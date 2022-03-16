@@ -18,9 +18,9 @@ import com.pimenta.bestv.workdetail.data.remote.model.VideoResponse
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 
 fun VideoResponse.toDomainModel() = VideoDomainModel(
-        id = id,
-        key = key,
-        name = name,
-        site = site,
-        type = type
+    id = id,
+    key = key,
+    name = name,
+    site = site,
+    type = type
 )

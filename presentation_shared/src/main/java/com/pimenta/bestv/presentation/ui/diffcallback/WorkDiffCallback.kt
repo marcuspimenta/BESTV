@@ -23,8 +23,8 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 class WorkDiffCallback : DiffCallback<WorkViewModel>() {
 
     override fun areItemsTheSame(oldItem: WorkViewModel, newItem: WorkViewModel) =
-            oldItem.id == newItem.id
+        oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: WorkViewModel, newItem: WorkViewModel) =
-            oldItem == newItem
+        oldItem == newItem
 }

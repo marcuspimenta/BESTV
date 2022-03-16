@@ -23,8 +23,8 @@ import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 class ReviewDiffCallback : DiffCallback<ReviewViewModel>() {
 
     override fun areItemsTheSame(oldItem: ReviewViewModel, newItem: ReviewViewModel) =
-            oldItem.id == newItem.id
+        oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: ReviewViewModel, newItem: ReviewViewModel) =
-            oldItem == newItem
+        oldItem == newItem
 }

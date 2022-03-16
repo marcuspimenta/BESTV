@@ -25,5 +25,5 @@ class GetTopRatedMoviesUseCase @Inject constructor(
 ) {
 
     operator fun invoke(page: Int) =
-            movieRepository.getTopRatedMovies(page)
+        movieRepository.getTopRatedMovies(page)
 }

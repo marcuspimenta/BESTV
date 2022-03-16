@@ -21,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions
 
 fun ImageView.loadImageInto(imageUrl: String) {
     Glide.with(this.context.applicationContext)
-            .load(imageUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(this)
+        .load(imageUrl)
+        .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+        .into(this)
 }

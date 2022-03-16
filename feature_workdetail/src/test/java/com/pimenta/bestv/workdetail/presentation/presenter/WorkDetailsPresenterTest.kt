@@ -48,95 +48,98 @@ import org.junit.Test
  * Created by marcus on 24-06-2019.
  */
 private val RECOMMENDED_PAGE_1 = PageDomainModel(
-        page = 1,
-        totalPages = 2,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Recommended movie",
-                        type = WorkDomainModel.Type.MOVIE
-                ), WorkDomainModel(
-                id = 2,
-                title = "Recommended movie",
-                type = WorkDomainModel.Type.MOVIE
+    page = 1,
+    totalPages = 2,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Recommended movie",
+            type = WorkDomainModel.Type.MOVIE
+        ),
+        WorkDomainModel(
+            id = 2,
+            title = "Recommended movie",
+            type = WorkDomainModel.Type.MOVIE
         )
-        )
+    )
 )
 private val RECOMMENDED_PAGE_2 = PageDomainModel(
-        page = 2,
-        totalPages = 2,
-        results = listOf(
-                WorkDomainModel(
-                        id = 3,
-                        title = "Recommended movie",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 2,
+    totalPages = 2,
+    results = listOf(
+        WorkDomainModel(
+            id = 3,
+            title = "Recommended movie",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 private val SIMILAR_PAGE_1 = PageDomainModel(
-        page = 1,
-        totalPages = 2,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Similar movie",
-                        type = WorkDomainModel.Type.MOVIE
-                ), WorkDomainModel(
-                id = 2,
-                title = "Similar movie",
-                type = WorkDomainModel.Type.MOVIE
+    page = 1,
+    totalPages = 2,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Similar movie",
+            type = WorkDomainModel.Type.MOVIE
+        ),
+        WorkDomainModel(
+            id = 2,
+            title = "Similar movie",
+            type = WorkDomainModel.Type.MOVIE
         )
-        )
+    )
 )
 private val SIMILAR_PAGE_2 = PageDomainModel(
-        page = 2,
-        totalPages = 2,
-        results = listOf(
-                WorkDomainModel(
-                        id = 3,
-                        title = "Similar movie",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 2,
+    totalPages = 2,
+    results = listOf(
+        WorkDomainModel(
+            id = 3,
+            title = "Similar movie",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 private val REVIEW_PAGE_1 = PageDomainModel(
-        page = 1,
-        totalPages = 2,
-        results = listOf(
-                ReviewDomainModel(
-                        id = "1"
-                ), ReviewDomainModel(
-                id = "2"
+    page = 1,
+    totalPages = 2,
+    results = listOf(
+        ReviewDomainModel(
+            id = "1"
+        ),
+        ReviewDomainModel(
+            id = "2"
         )
-        )
+    )
 )
 private val REVIEW_PAGE_2 = PageDomainModel(
-        page = 2,
-        totalPages = 2,
-        results = listOf(
-                ReviewDomainModel(
-                        id = "3"
-                )
+    page = 2,
+    totalPages = 2,
+    results = listOf(
+        ReviewDomainModel(
+            id = "3"
         )
+    )
 )
 private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
-        id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+    id = 1,
+    name = "Carlos",
+    character = "Batman",
+    birthday = "1990-07-13"
 )
 private val MOVIE_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkType.MOVIE
 )
 
 private fun aWorkViewModel(favorite: Boolean = false) = WorkViewModel(
-        id = 1,
-        title = "Title",
-        type = WorkType.MOVIE,
-        isFavorite = favorite
+    id = 1,
+    title = "Title",
+    type = WorkType.MOVIE,
+    isFavorite = favorite
 )
 
 class WorkDetailsPresenterTest {
@@ -150,9 +153,9 @@ class WorkDetailsPresenterTest {
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val castDetailsRoute: CastDetailsRoute = mock()
     private val rxSchedulerTest = RxScheduler(
-            Schedulers.trampoline(),
-            Schedulers.trampoline(),
-            Schedulers.trampoline()
+        Schedulers.trampoline(),
+        Schedulers.trampoline(),
+        Schedulers.trampoline()
     )
 
     @Test
@@ -161,7 +164,7 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         whenever(setFavoriteUseCase(workViewModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         presenter.setFavorite()
 
@@ -174,7 +177,7 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         whenever(setFavoriteUseCase(workViewModel))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         presenter.setFavorite()
 
@@ -187,7 +190,7 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         whenever(setFavoriteUseCase(workViewModel))
-                .thenReturn(Completable.error(Throwable()))
+            .thenReturn(Completable.error(Throwable()))
 
         presenter.setFavorite()
 
@@ -200,17 +203,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorks = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorks = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -228,7 +231,7 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         presenter.loadData()
 
@@ -246,22 +249,22 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val recommendedWorksPage2 = RECOMMENDED_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorks = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.just(RECOMMENDED_PAGE_2))
+            .thenReturn(Single.just(RECOMMENDED_PAGE_2))
 
         presenter.loadData()
 
@@ -283,17 +286,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorks = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -314,17 +317,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage2 = RECOMMENDED_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorks = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_2, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_2, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -345,19 +348,19 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorks = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         presenter.loadData()
 
@@ -378,22 +381,22 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage2 = SIMILAR_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.just(SIMILAR_PAGE_2))
+            .thenReturn(Single.just(SIMILAR_PAGE_2))
 
         presenter.loadData()
 
@@ -415,17 +418,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -446,17 +449,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage2 = SIMILAR_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_2, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_2, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -477,19 +480,19 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviews = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         presenter.loadData()
 
@@ -510,22 +513,22 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviewsPage1 = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviewsPage2 = REVIEW_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.just(REVIEW_PAGE_2))
+            .thenReturn(Single.just(REVIEW_PAGE_2))
 
         presenter.loadData()
 
@@ -547,17 +550,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviewsPage1 = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
 
         presenter.loadData()
 
@@ -578,17 +581,17 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviewsPage2 = REVIEW_PAGE_2.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_2)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_2)))
 
         presenter.loadData()
 
@@ -609,19 +612,19 @@ class WorkDetailsPresenterTest {
         val presenter = aPresenter(workViewModel)
 
         val recommendedWorksPage1 = RECOMMENDED_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val similarWorksPage1 = SIMILAR_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
         val reviewsPage1 = REVIEW_PAGE_1.results
-                ?.map { it.toViewModel() }
-                ?: emptyList()
+            ?.map { it.toViewModel() }
+            ?: emptyList()
 
         whenever(getWorkDetailsUseCase(workViewModel))
-                .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
+            .thenReturn(Single.just(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(false, null, null, RECOMMENDED_PAGE_1, SIMILAR_PAGE_1, REVIEW_PAGE_1)))
         whenever(getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 2))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         presenter.loadData()
 
@@ -644,7 +647,7 @@ class WorkDetailsPresenterTest {
         val route: Route = mock()
 
         whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL))
-                .thenReturn(route)
+            .thenReturn(route)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
@@ -659,7 +662,7 @@ class WorkDetailsPresenterTest {
         val route: Route = mock()
 
         whenever(castDetailsRoute.buildCastDetailRoute(CAST_DETAILED_VIEW_MODEL))
-                .thenReturn(route)
+            .thenReturn(route)
 
         presenter.castClicked(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
 
@@ -678,15 +681,15 @@ class WorkDetailsPresenterTest {
     }
 
     private fun aPresenter(workViewModel: WorkViewModel) = WorkDetailsPresenter(
-            view,
-            workViewModel,
-            setFavoriteUseCase,
-            getRecommendationByWorkUseCase,
-            getSimilarByWorkUseCase,
-            getReviewByWorkUseCase,
-            getWorkDetailsUseCase,
-            workDetailsRoute,
-            castDetailsRoute,
-            rxSchedulerTest
+        view,
+        workViewModel,
+        setFavoriteUseCase,
+        getRecommendationByWorkUseCase,
+        getSimilarByWorkUseCase,
+        getReviewByWorkUseCase,
+        getWorkDetailsUseCase,
+        workDetailsRoute,
+        castDetailsRoute,
+        rxSchedulerTest
     )
 }

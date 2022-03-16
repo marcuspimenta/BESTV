@@ -33,15 +33,15 @@ class LoadWorkByTypeUseCase @Inject constructor(
 ) {
 
     operator fun invoke(page: Int, topWorkTypeViewModel: TopWorkTypeViewModel) =
-            when (topWorkTypeViewModel) {
-                TopWorkTypeViewModel.FAVORITES_MOVIES -> getFavoritesUseCase()
-                TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
-                TopWorkTypeViewModel.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
-                TopWorkTypeViewModel.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
-                TopWorkTypeViewModel.UP_COMING_MOVIES -> getUpComingMoviesUseCase(page)
-                TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> getAiringTodayTvShowsUseCase(page)
-                TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
-                TopWorkTypeViewModel.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
-                TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
-            }
+        when (topWorkTypeViewModel) {
+            TopWorkTypeViewModel.FAVORITES_MOVIES -> getFavoritesUseCase()
+            TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
+            TopWorkTypeViewModel.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
+            TopWorkTypeViewModel.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
+            TopWorkTypeViewModel.UP_COMING_MOVIES -> getUpComingMoviesUseCase(page)
+            TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> getAiringTodayTvShowsUseCase(page)
+            TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
+            TopWorkTypeViewModel.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
+            TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
+        }
 }

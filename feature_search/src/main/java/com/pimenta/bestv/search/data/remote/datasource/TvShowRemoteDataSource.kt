@@ -27,5 +27,5 @@ class TvShowRemoteDataSource @Inject constructor(
     private val searchTvShowTmdbApi: SearchTvShowTmdbApi
 ) {
     fun searchTvShowsByQuery(query: String, page: Int) =
-            searchTvShowTmdbApi.searchTvShowsByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
+        searchTvShowTmdbApi.searchTvShowsByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
 }

@@ -26,13 +26,13 @@ import dagger.Module
  * Created by marcus on 24-02-2020.
  */
 @Module(
-        subcomponents = [
-            CastDetailsActivityComponent::class,
-            SearchActivityComponent::class,
-            WorkDetailsActivityComponent::class,
-            MainActivityComponent::class,
-            BootBroadcastReceiverComponent::class,
-            RecommendationWorkerComponent::class
-        ]
+    subcomponents = [
+        CastDetailsActivityComponent::class,
+        SearchActivityComponent::class,
+        WorkDetailsActivityComponent::class,
+        MainActivityComponent::class,
+        BootBroadcastReceiverComponent::class,
+        RecommendationWorkerComponent::class
+    ]
 )
 class SubcomponentsModule

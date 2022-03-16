@@ -27,18 +27,22 @@ import com.pimenta.bestv.presentation.extension.loadImageInto
 class WorkCardRenderer : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
-            ViewHolder(ImageCardView(parent.context).apply {
+        ViewHolder(
+            ImageCardView(parent.context).apply {
                 isFocusable = true
                 isFocusableInTouchMode = true
-            })
+            }
+        )
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val workViewModel = item as WorkViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = workViewModel.title
         cardView.contentText = workViewModel.releaseDate
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height))
+        cardView.setMainImageDimensions(
+            viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_width),
+            viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.movie_card_height)
+        )
 
         workViewModel.posterUrl?.let {
             cardView.mainImageView.loadImageInto(it)

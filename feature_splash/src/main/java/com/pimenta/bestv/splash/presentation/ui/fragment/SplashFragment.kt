@@ -33,7 +33,7 @@ private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/
 class SplashFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_splash, container, false)
+        inflater.inflate(R.layout.fragment_splash, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +43,7 @@ class SplashFragment : Fragment() {
                 requireActivity().finish(Activity.RESULT_OK)
             }
             setVideoURI(
-                    Uri.parse(SPLASH_ANIMATION_FILE)
+                Uri.parse(SPLASH_ANIMATION_FILE)
             )
             start()
         }

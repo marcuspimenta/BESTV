@@ -25,10 +25,10 @@ import org.junit.Test
  */
 private const val CAST_ID = 1
 private val CAST_DETAILED = CastDomainModel(
-        id = CAST_ID,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+    id = CAST_ID,
+    name = "Carlos",
+    character = "Batman",
+    birthday = "1990-07-13"
 )
 
 class GetCastDetailsUseCaseTest {
@@ -38,9 +38,9 @@ class GetCastDetailsUseCaseTest {
     private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase = mock()
 
     private val useCase = GetCastDetailsUseCase(
-            getCastPersonalDetails,
-            getMovieCreditsByCastUseCase,
-            getTvShowCreditsByCastUseCase
+        getCastPersonalDetails,
+        getMovieCreditsByCastUseCase,
+        getTvShowCreditsByCastUseCase
     )
 
     @Test
@@ -50,12 +50,12 @@ class GetCastDetailsUseCaseTest {
         whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
 
         useCase(CAST_ID)
-                .test()
-                .assertNoErrors()
-                .assertComplete()
-                .assertResult(
-                        Triple(CAST_DETAILED, emptyList(), emptyList())
-                )
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertResult(
+                Triple(CAST_DETAILED, emptyList(), emptyList())
+            )
     }
 
     @Test
@@ -65,7 +65,7 @@ class GetCastDetailsUseCaseTest {
         whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
 
         useCase(CAST_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

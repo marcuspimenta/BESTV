@@ -18,18 +18,18 @@ import com.pimenta.bestv.model.data.remote.CastResponse
 import com.pimenta.bestv.model.domain.CastDomainModel
 
 fun CastResponse.toDomainModel(source: String) = CastDomainModel(
-        castId = castId,
-        creditId = creditId,
-        gender = gender,
-        id = id,
-        order = order,
-        name = name,
-        character = character,
-        profilePath = profilePath,
-        birthday = birthday,
-        deathDay = deathDay,
-        biography = biography,
-        source = source,
-        popularity = popularity,
-        placeOfBirth = placeOfBirth
+    castId = castId,
+    creditId = creditId,
+    gender = gender,
+    id = id,
+    order = order,
+    name = name,
+    character = character,
+    profilePath = profilePath,
+    birthday = birthday,
+    deathDay = deathDay,
+    biography = biography,
+    source = source,
+    popularity = popularity,
+    placeOfBirth = placeOfBirth
 )

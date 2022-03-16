@@ -26,8 +26,8 @@ private const val API_TERMS_ID = 2L
 private const val TERMS_LINK = "https://www.themoviedb.org/terms-of-use"
 private const val TERMS_API_LINK = "https://www.themoviedb.org/documentation/api/terms-of-use"
 private val GUIDED_ACTIONS = listOf(
-        TERMS_ID to R.string.tmdb_terms,
-        API_TERMS_ID to R.string.tmdb_api_terms
+    TERMS_ID to R.string.tmdb_terms,
+    API_TERMS_ID to R.string.tmdb_api_terms
 )
 
 @FragmentScope
@@ -36,7 +36,7 @@ class AboutPresenter @Inject constructor(
 ) {
 
     fun getGuidedActions() =
-            GUIDED_ACTIONS
+        GUIDED_ACTIONS
 
     fun guidedActionClicked(id: Long) {
         when (id) {

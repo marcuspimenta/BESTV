@@ -31,7 +31,7 @@ class ScheduleRecommendationUseCaseTest {
 
     private val workerManager: WorkManager = mock()
     private val useCase = ScheduleRecommendationUseCase(
-            workerManager
+        workerManager
     )
 
     @Test

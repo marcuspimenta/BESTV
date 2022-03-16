@@ -19,8 +19,8 @@ import android.content.Context
 import android.content.Intent
 import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponentProvider
 import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 06-03-2018.
@@ -33,8 +33,8 @@ class BootBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("Boot initiated")
         (context.applicationContext as BootBroadcastReceiverComponentProvider)
-                .bootBroadcastReceiverComponent()
-                .inject(this)
+            .bootBroadcastReceiverComponent()
+            .inject(this)
 
         presenter.scheduleRecommendationUpdate()
     }

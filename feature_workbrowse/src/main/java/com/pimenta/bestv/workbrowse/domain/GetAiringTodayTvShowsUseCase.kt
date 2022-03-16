@@ -25,5 +25,5 @@ class GetAiringTodayTvShowsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(page: Int) =
-            tvShowRepository.getAiringTodayTvShows(page)
+        tvShowRepository.getAiringTodayTvShows(page)
 }

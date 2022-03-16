@@ -29,5 +29,5 @@ class MovieRemoteDataSourceModule {
     @Provides
     @FragmentScope
     fun provideCastApi(retrofit: Retrofit) =
-            retrofit.create(SearchMovieTmdbApi::class.java)
+        retrofit.create(SearchMovieTmdbApi::class.java)
 }

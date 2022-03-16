@@ -25,5 +25,5 @@ class GetFavoriteTvShowsUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            tvShowRepository.getFavoriteTvShows()
+        tvShowRepository.getFavoriteTvShows()
 }

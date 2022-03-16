@@ -25,38 +25,38 @@ import org.junit.Test
  * Created by marcus on 2019-08-26.
  */
 private val MOVIE_GENRES_DOMAIN_MODEL = listOf(
-        GenreDomainModel(
-                id = 2,
-                name = "Action",
-                source = GenreDomainModel.Source.MOVIE
-        )
+    GenreDomainModel(
+        id = 2,
+        name = "Action",
+        source = GenreDomainModel.Source.MOVIE
+    )
 )
 
 class GetMovieGenresUseCaseTest {
 
     private val genreRepository: GenreRepository = mock()
     private val useCase = GetMovieGenresUseCase(
-            genreRepository
+        genreRepository
     )
 
     @Test
     fun `should return the right data when loading the movie genres`() {
         whenever(genreRepository.getMovieGenres())
-                .thenReturn(Single.just(MOVIE_GENRES_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_GENRES_DOMAIN_MODEL))
 
         useCase()
-                .test()
-                .assertComplete()
-                .assertResult(MOVIE_GENRES_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(MOVIE_GENRES_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(genreRepository.getMovieGenres())
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase()
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

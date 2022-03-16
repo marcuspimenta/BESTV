@@ -29,9 +29,11 @@ import kotlinx.android.synthetic.main.text_icon_card.view.*
 class ReviewCardRender : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
-            ViewHolder(TextCardView(parent.context).apply {
+        ViewHolder(
+            TextCardView(parent.context).apply {
                 isFocusable = true
-            })
+            }
+        )
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val reviewViewModel = item as ReviewViewModel

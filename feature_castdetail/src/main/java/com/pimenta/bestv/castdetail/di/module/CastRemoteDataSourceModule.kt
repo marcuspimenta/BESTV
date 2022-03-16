@@ -29,5 +29,5 @@ class CastRemoteDataSourceModule {
     @Provides
     @FragmentScope
     fun provideCastApi(retrofit: Retrofit) =
-            retrofit.create(CastTmdbApi::class.java)
+        retrofit.create(CastTmdbApi::class.java)
 }

@@ -35,10 +35,10 @@ class CastDetailsActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         castDetailsActivityComponent = (application as CastDetailsActivityComponentProvider)
-                .castDetailsActivityComponent()
-                .also {
-                    it.inject(this)
-                }
+            .castDetailsActivityComponent()
+            .also {
+                it.inject(this)
+            }
         super.onCreate(savedInstanceState)
 
         when (val castViewModel = castDetailsRoute.getCastDetailDeepLink(intent)) {

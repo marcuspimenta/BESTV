@@ -26,7 +26,7 @@ class LocalSettings @Inject constructor(
 ) {
 
     fun getLongFromPersistence(key: String, defValue: Long) =
-            sharedPreferences.getLong(key, defValue)
+        sharedPreferences.getLong(key, defValue)
 
     fun applyLongToPersistence(key: String, value: Long) {
         sharedPreferences.edit {

@@ -25,5 +25,5 @@ class GetCastByMovieUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int) =
-            movieRepository.getCastByMovie(workId)
+        movieRepository.getCastByMovie(workId)
 }

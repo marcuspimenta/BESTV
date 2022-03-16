@@ -19,13 +19,13 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.data.BuildConfig
 import dagger.Module
 import dagger.Provides
-import java.util.concurrent.TimeUnit
-import javax.inject.Named
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Named
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 3-12-2019.
@@ -40,9 +40,11 @@ class MediaRemoteModule {
     fun provideTmdbRetrofit(): Retrofit {
         val okHttpClient = OkHttpClient.Builder().apply {
             if (BuildConfig.BUILD_TYPE == "debug") {
-                addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                })
+                addInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BASIC
+                    }
+                )
             }
             readTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
             writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
@@ -50,22 +52,22 @@ class MediaRemoteModule {
         }.build()
 
         return Retrofit.Builder()
-                .baseUrl(BuildConfig.TMDB_BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
+            .baseUrl(BuildConfig.TMDB_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
     }
 
     @Provides
     @Singleton
     @Named("tmdbApiKey")
     fun provideTmdbApiKey() =
-            BuildConfig.TMDB_API_KEY
+        BuildConfig.TMDB_API_KEY
 
     @Provides
     @Singleton
     @Named("tmdbFilterLanguage")
     fun provideTmdbFilterLanguage() =
-            BuildConfig.TMDB_FILTER_LANGUAGE
+        BuildConfig.TMDB_FILTER_LANGUAGE
 }

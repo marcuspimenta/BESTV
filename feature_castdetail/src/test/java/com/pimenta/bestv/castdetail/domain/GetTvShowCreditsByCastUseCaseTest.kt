@@ -26,9 +26,9 @@ import org.junit.Test
  */
 private const val CAST_ID = 1
 private val TV_SHOW = WorkDomainModel(
-        id = 1,
-        title = "Arrow",
-        originalTitle = "Arrow"
+    id = 1,
+    title = "Arrow",
+    originalTitle = "Arrow"
 )
 
 class GetTvShowCreditsByCastUseCaseTest {
@@ -36,7 +36,7 @@ class GetTvShowCreditsByCastUseCaseTest {
     private val castRepository: CastRepository = mock()
 
     private val useCase = GetTvShowCreditsByCastUseCase(
-            castRepository
+        castRepository
     )
 
     @Test
@@ -44,21 +44,21 @@ class GetTvShowCreditsByCastUseCaseTest {
         val castTvShowList = listOf(TV_SHOW)
 
         whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
-                .thenReturn(Single.just(castTvShowList))
+            .thenReturn(Single.just(castTvShowList))
 
         useCase(CAST_ID)
-                .test()
-                .assertComplete()
-                .assertResult(castTvShowList)
+            .test()
+            .assertComplete()
+            .assertResult(castTvShowList)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

@@ -32,9 +32,9 @@ class CastDetailsDescriptionRender : AbstractDetailsDescriptionPresenter() {
             viewHolder.body.text = it
         }
         castViewModel.biography?.takeIf { it.hasContent() }
-                ?.let {
-                    viewHolder.subtitle.maxLines = SUBTITLE_MAX_LINE
-                    viewHolder.subtitle.text = it
-                }
+            ?.let {
+                viewHolder.subtitle.maxLines = SUBTITLE_MAX_LINE
+                viewHolder.subtitle.text = it
+            }
     }
 }

@@ -29,5 +29,5 @@ class GenreApiModule {
     @Provides
     @FragmentScope
     fun provideGenreApi(retrofit: Retrofit) =
-            retrofit.create(GenreTmdbApi::class.java)
+        retrofit.create(GenreTmdbApi::class.java)
 }

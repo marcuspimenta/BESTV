@@ -25,5 +25,5 @@ class GetReviewByMovieUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            movieRepository.getReviewByMovie(workId, page)
+        movieRepository.getReviewByMovie(workId, page)
 }

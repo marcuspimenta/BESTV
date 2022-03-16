@@ -25,10 +25,10 @@ import dagger.Subcomponent
  */
 @WorkerScope
 @Subcomponent(
-        modules = [
-            MovieApiModule::class,
-            RecommendationModule::class
-        ]
+    modules = [
+        MovieApiModule::class,
+        RecommendationModule::class
+    ]
 )
 interface RecommendationWorkerComponent {
 

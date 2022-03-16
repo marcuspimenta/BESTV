@@ -26,14 +26,14 @@ class MovieLocalDataSource @Inject constructor(
 ) {
 
     fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
-            movieDao.create(movieDbModel)
+        movieDao.create(movieDbModel)
 
     fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
-            movieDao.delete(movieDbModel)
+        movieDao.delete(movieDbModel)
 
     fun getMovies() =
-            movieDao.getAll()
+        movieDao.getAll()
 
     fun getById(movieDbModel: MovieDbModel) =
-            movieDao.getById(movieDbModel.id)
+        movieDao.getById(movieDbModel.id)
 }

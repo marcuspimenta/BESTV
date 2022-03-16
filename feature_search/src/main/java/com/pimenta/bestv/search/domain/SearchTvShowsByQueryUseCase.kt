@@ -25,5 +25,5 @@ class SearchTvShowsByQueryUseCase @Inject constructor(
 ) {
 
     operator fun invoke(query: String, page: Int) =
-            tvShowRepository.searchTvShowsByQuery(query, page)
+        tvShowRepository.searchTvShowsByQuery(query, page)
 }

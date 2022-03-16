@@ -26,14 +26,14 @@ class TvShowLocalDataSource @Inject constructor(
 ) {
 
     fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.create(tvShowDbModel)
+        tvShowDao.create(tvShowDbModel)
 
     fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.delete(tvShowDbModel)
+        tvShowDao.delete(tvShowDbModel)
 
     fun getTvShows() =
-            tvShowDao.getAll()
+        tvShowDao.getAll()
 
     fun getById(tvShowDbModel: TvShowDbModel) =
-            tvShowDao.getById(tvShowDbModel.id)
+        tvShowDao.getById(tvShowDbModel.id)
 }

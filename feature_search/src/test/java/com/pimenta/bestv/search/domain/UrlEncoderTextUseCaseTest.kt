@@ -29,8 +29,8 @@ class UrlEncoderTextUseCaseTest {
     @Test
     fun `should return the right data when encoding a text`() {
         useCase(TEXT)
-                .test()
-                .assertComplete()
-                .assertResult(TEXT_ENCODED)
+            .test()
+            .assertComplete()
+            .assertResult(TEXT_ENCODED)
     }
 }

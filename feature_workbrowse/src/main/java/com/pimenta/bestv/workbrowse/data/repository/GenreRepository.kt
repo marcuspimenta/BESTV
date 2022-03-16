@@ -26,10 +26,10 @@ class GenreRepository @Inject constructor(
 ) {
 
     fun getMovieGenres() =
-            genreRemoteDataSource.getMovieGenres()
-                    .map { it.genres?.map { genre -> genre.toDomainModel() } }
+        genreRemoteDataSource.getMovieGenres()
+            .map { it.genres?.map { genre -> genre.toDomainModel() } }
 
     fun getTvShowGenres() =
-            genreRemoteDataSource.getTvShowGenres()
-                    .map { it.genres?.map { genre -> genre.toDomainModel() } }
+        genreRemoteDataSource.getTvShowGenres()
+            .map { it.genres?.map { genre -> genre.toDomainModel() } }
 }

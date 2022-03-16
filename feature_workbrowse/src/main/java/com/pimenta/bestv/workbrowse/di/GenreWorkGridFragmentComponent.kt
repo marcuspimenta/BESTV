@@ -27,10 +27,10 @@ import dagger.Subcomponent
  */
 @FragmentScope
 @Subcomponent(
-        modules = [
-            MovieApiModule::class,
-            TvShowApiModule::class
-        ]
+    modules = [
+        MovieApiModule::class,
+        TvShowApiModule::class
+    ]
 )
 interface GenreWorkGridFragmentComponent {
 

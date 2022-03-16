@@ -29,5 +29,5 @@ class MovieRemoteDataSourceModule {
     @Provides
     @FragmentScope
     fun provideMovieDetailApi(retrofit: Retrofit) =
-            retrofit.create(MovieDetailTmdbApi::class.java)
+        retrofit.create(MovieDetailTmdbApi::class.java)
 }

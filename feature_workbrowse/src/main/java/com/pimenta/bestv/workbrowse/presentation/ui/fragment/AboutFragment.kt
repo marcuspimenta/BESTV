@@ -34,8 +34,10 @@ import javax.inject.Inject
 /**
  * Created by marcus on 10-12-2019.
  */
-class AboutFragment : GuidedStepSupportFragment(), AboutPresenter.View,
-        BrowseSupportFragment.MainFragmentAdapterProvider {
+class AboutFragment :
+    GuidedStepSupportFragment(),
+    AboutPresenter.View,
+    BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private val fragmentAdapter by lazy { BrowseSupportFragment.MainFragmentAdapter(this) }
 
@@ -44,9 +46,9 @@ class AboutFragment : GuidedStepSupportFragment(), AboutPresenter.View,
 
     override fun onAttach(context: Context) {
         (requireActivity() as MainActivity).mainActivityComponent
-                .aboutFragmentComponent()
-                .create(this)
-                .inject(this)
+            .aboutFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -90,10 +92,10 @@ class AboutFragment : GuidedStepSupportFragment(), AboutPresenter.View,
 
     private fun addAction(actions: MutableList<GuidedAction>, id: Long, @StringRes title: Int) {
         actions.add(
-                GuidedAction.Builder(requireContext())
-                        .id(id)
-                        .title(title)
-                        .build()
+            GuidedAction.Builder(requireContext())
+                .id(id)
+                .title(title)
+                .build()
         )
     }
 

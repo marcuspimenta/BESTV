@@ -26,9 +26,9 @@ import org.junit.Test
  */
 private const val CAST_ID = 1
 private val MOVIE = WorkDomainModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman"
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman"
 )
 
 class GetMovieCreditsByCastUseCaseTest {
@@ -36,7 +36,7 @@ class GetMovieCreditsByCastUseCaseTest {
     private val castRepository: CastRepository = mock()
 
     private val useCase = GetMovieCreditsByCastUseCase(
-            castRepository
+        castRepository
     )
 
     @Test
@@ -46,9 +46,9 @@ class GetMovieCreditsByCastUseCaseTest {
         whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.just(castMovieList))
 
         useCase(CAST_ID)
-                .test()
-                .assertComplete()
-                .assertResult(castMovieList)
+            .test()
+            .assertComplete()
+            .assertResult(castMovieList)
     }
 
     @Test
@@ -56,7 +56,7 @@ class GetMovieCreditsByCastUseCaseTest {
         whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(CAST_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

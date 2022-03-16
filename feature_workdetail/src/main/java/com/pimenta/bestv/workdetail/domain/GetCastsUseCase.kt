@@ -26,8 +26,8 @@ class GetCastsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workType: WorkType, workId: Int) =
-            when (workType) {
-                WorkType.MOVIE -> getCastByMovieUseCase(workId)
-                WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)
-            }
+        when (workType) {
+            WorkType.MOVIE -> getCastByMovieUseCase(workId)
+            WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)
+        }
 }

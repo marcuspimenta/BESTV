@@ -19,12 +19,12 @@ import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 
 fun CastDomainModel.toViewModel() = CastViewModel(
-        id = id,
-        name = name,
-        character = character,
-        birthday = birthday,
-        source = source,
-        deathDay = deathDay,
-        biography = biography,
-        thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
+    id = id,
+    name = name,
+    character = character,
+    birthday = birthday,
+    source = source,
+    deathDay = deathDay,
+    biography = biography,
+    thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
 )

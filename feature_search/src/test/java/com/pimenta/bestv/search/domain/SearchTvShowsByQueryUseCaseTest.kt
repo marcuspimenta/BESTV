@@ -27,42 +27,42 @@ import org.junit.Test
  */
 private const val QUERY = "Batman"
 private val WORK_PAGE = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman"
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman"
         )
+    )
 )
 
 class SearchTvShowsByQueryUseCaseTest {
 
     private val tvShowRepository: TvShowRepository = mock()
     private val useCase = SearchTvShowsByQueryUseCase(
-            tvShowRepository
+        tvShowRepository
     )
 
     @Test
     fun `should return the right data when searching tv show by query`() {
         whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
 
         useCase(QUERY, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(QUERY, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

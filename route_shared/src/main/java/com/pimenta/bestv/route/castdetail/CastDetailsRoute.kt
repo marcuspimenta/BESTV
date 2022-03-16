@@ -37,35 +37,35 @@ private const val THUMBNAIL_URL = "THUMBNAIL_URL"
 class CastDetailsRoute @Inject constructor() {
 
     fun buildCastDetailRoute(castViewModel: CastViewModel) =
-            Route(Intent(Intent.ACTION_VIEW, castViewModel.toUri()))
+        Route(Intent(Intent.ACTION_VIEW, castViewModel.toUri()))
 
     fun getCastDetailDeepLink(intent: Intent) =
-            intent.getCastDeepLink()
+        intent.getCastDeepLink()
 
     private fun CastViewModel.toUri(): Uri =
-            Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
-                    .appendQueryParameter(ID, id.toString())
-                    .appendQueryParameter(NAME, name)
-                    .appendQueryParameter(CHARACTER, character)
-                    .appendQueryParameter(BIRTHDAY, birthday)
-                    .appendQueryParameter(SOURCE, source)
-                    .appendQueryParameter(DEATH_DAY, deathDay)
-                    .appendQueryParameter(BIOGRAPHY, biography)
-                    .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
-                    .build()
+        Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
+            .appendQueryParameter(ID, id.toString())
+            .appendQueryParameter(NAME, name)
+            .appendQueryParameter(CHARACTER, character)
+            .appendQueryParameter(BIRTHDAY, birthday)
+            .appendQueryParameter(SOURCE, source)
+            .appendQueryParameter(DEATH_DAY, deathDay)
+            .appendQueryParameter(BIOGRAPHY, biography)
+            .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
+            .build()
 
     private fun Intent.getCastDeepLink() =
-            data?.takeIf { it.pathSegments.first() == CAST }
-                    ?.let {
-                        CastViewModel(
-                                id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                                name = it.getQueryParameter(NAME),
-                                character = it.getQueryParameter(CHARACTER),
-                                birthday = it.getQueryParameter(BIRTHDAY),
-                                deathDay = it.getQueryParameter(DEATH_DAY),
-                                biography = it.getQueryParameter(BIOGRAPHY),
-                                source = it.getQueryParameter(SOURCE),
-                                thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
-                        )
-                    }
+        data?.takeIf { it.pathSegments.first() == CAST }
+            ?.let {
+                CastViewModel(
+                    id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                    name = it.getQueryParameter(NAME),
+                    character = it.getQueryParameter(CHARACTER),
+                    birthday = it.getQueryParameter(BIRTHDAY),
+                    deathDay = it.getQueryParameter(DEATH_DAY),
+                    biography = it.getQueryParameter(BIOGRAPHY),
+                    source = it.getQueryParameter(SOURCE),
+                    thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
+                )
+            }
 }

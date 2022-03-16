@@ -40,7 +40,7 @@ interface TvShowTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult:
-        Boolean,
+            Boolean,
         @Query("page") page: Int
     ): Single<PageResponse<TvShowResponse>>
 

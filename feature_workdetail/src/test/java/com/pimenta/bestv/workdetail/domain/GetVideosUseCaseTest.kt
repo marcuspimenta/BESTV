@@ -26,10 +26,10 @@ import org.junit.Test
  */
 private const val MOVIE_ID = 1
 private val VIDEO_LIST = listOf(
-        VideoDomainModel(
-                id = "1",
-                name = "VideoResponse"
-        )
+    VideoDomainModel(
+        id = "1",
+        name = "VideoResponse"
+    )
 )
 
 class GetVideosUseCaseTest {
@@ -38,8 +38,8 @@ class GetVideosUseCaseTest {
     private val getVideosByTvShowUseCase: GetVideosByTvShowUseCase = mock()
 
     private val useCase = GetVideosUseCase(
-            getVideosByMovieUseCase,
-            getVideosByTvShowUseCase
+        getVideosByMovieUseCase,
+        getVideosByTvShowUseCase
     )
 
     @Test
@@ -47,9 +47,9 @@ class GetVideosUseCaseTest {
         whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(WorkType.MOVIE, MOVIE_ID)
-                .test()
-                .assertComplete()
-                .assertResult(VIDEO_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(VIDEO_LIST)
     }
 
     @Test
@@ -57,8 +57,8 @@ class GetVideosUseCaseTest {
         whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, MOVIE_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 
     @Test
@@ -66,9 +66,9 @@ class GetVideosUseCaseTest {
         whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(WorkType.TV_SHOW, MOVIE_ID)
-                .test()
-                .assertComplete()
-                .assertResult(VIDEO_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(VIDEO_LIST)
     }
 
     @Test
@@ -76,7 +76,7 @@ class GetVideosUseCaseTest {
         whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.TV_SHOW, MOVIE_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

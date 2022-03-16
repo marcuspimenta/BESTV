@@ -29,9 +29,9 @@ class MovieRepository @Inject constructor(
 ) {
 
     fun getPopularMovies(page: Int) =
-            movieRemoteDataSource.getPopularMovies(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        movieRemoteDataSource.getPopularMovies(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 }

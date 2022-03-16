@@ -43,33 +43,33 @@ data class WorkViewModel(
 
 inline fun WorkViewModel.loadPoster(context: Context, crossinline result: (resource: Drawable) -> Unit) {
     Glide.with(context)
-            .load(posterUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    result(resource)
-                }
+        .load(posterUrl)
+        .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+        .into(object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                result(resource)
+            }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    // DO ANYTHING
-                }
-            })
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
+            }
+        })
 }
 
 inline fun WorkViewModel.loadBackdrop(context: Context, crossinline result: (resource: Bitmap) -> Unit) {
     Glide.with(context)
-            .asBitmap()
-            .load(backdropUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    result(resource)
-                }
+        .asBitmap()
+        .load(backdropUrl)
+        .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+        .into(object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                result(resource)
+            }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    // DO ANYTHING
-                }
-            })
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
+            }
+        })
 }
 
 enum class WorkType {

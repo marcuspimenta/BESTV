@@ -16,7 +16,6 @@ package com.pimenta.bestv.route.splash
 
 import android.content.Intent
 import android.net.Uri
-import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**
@@ -26,6 +25,5 @@ private const val SCHEMA_URI_PREFIX = "bestv://splash/"
 
 class SplashRoute @Inject constructor() {
 
-    fun buildSplashRoute() =
-            Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
+    fun buildSplashIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build())
 }

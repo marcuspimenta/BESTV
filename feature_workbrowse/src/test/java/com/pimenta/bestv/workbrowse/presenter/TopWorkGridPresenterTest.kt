@@ -35,40 +35,40 @@ import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import java.util.concurrent.TimeUnit
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by marcus on 2019-08-26.
  */
 private val MOVIE_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkType.MOVIE
 )
 private val TV_SHOW_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Arrow",
-        originalTitle = "Arrow",
-        type = WorkType.TV_SHOW
+    id = 1,
+    title = "Arrow",
+    originalTitle = "Arrow",
+    type = WorkType.TV_SHOW
 )
 private val MOVIE_DOMAIN_MODEL = WorkDomainModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkDomainModel.Type.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkDomainModel.Type.MOVIE
 )
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                MOVIE_DOMAIN_MODEL
-        )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        MOVIE_DOMAIN_MODEL
+    )
 )
 private val EMPTY_PAGE_VIEW_MODEL = PageDomainModel<WorkDomainModel>(
-        page = 1,
-        totalPages = 1
+    page = 1,
+    totalPages = 1
 )
 
 class TopWorkGridPresenterTest {
@@ -77,22 +77,22 @@ class TopWorkGridPresenterTest {
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val rxScheduler: RxScheduler = RxScheduler(
-            Schedulers.trampoline(),
-            Schedulers.trampoline(),
-            Schedulers.trampoline()
+        Schedulers.trampoline(),
+        Schedulers.trampoline(),
+        Schedulers.trampoline()
     )
 
     private val presenter = TopWorkGridPresenter(
-            view,
-            loadWorkByTypeUseCase,
-            workDetailsRoute,
-            rxScheduler
+        view,
+        loadWorkByTypeUseCase,
+        workDetailsRoute,
+        rxScheduler
     )
 
     @Test
     fun `should show the works when loading them by type`() {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
@@ -107,7 +107,7 @@ class TopWorkGridPresenterTest {
     @Test
     fun `should show an error message if an error happens while loading the works by type`() {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 
@@ -122,7 +122,7 @@ class TopWorkGridPresenterTest {
     @Test
     fun `should not show any work if any work is found when loading the works by type`() {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-                .thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
+            .thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
 

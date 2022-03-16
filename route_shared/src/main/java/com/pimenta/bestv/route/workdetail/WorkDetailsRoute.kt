@@ -41,41 +41,41 @@ private const val TYPE = "TYPE"
 class WorkDetailsRoute @Inject constructor() {
 
     fun buildWorkDetailRoute(workViewModel: WorkViewModel) =
-            Route(Intent(Intent.ACTION_VIEW, workViewModel.toUri()))
+        Route(Intent(Intent.ACTION_VIEW, workViewModel.toUri()))
 
     fun getWorkDetail(intent: Intent) =
-            intent.getWorkDeepLink()
+        intent.getWorkDeepLink()
 
     private fun WorkViewModel.toUri(): Uri =
-            Uri.parse(SCHEMA_URI_PREFIX.plus(WORK)).buildUpon()
-                    .appendQueryParameter(ID, id.toString())
-                    .appendQueryParameter(LANGUAGE, originalLanguage)
-                    .appendQueryParameter(OVERVIEW, overview)
-                    .appendQueryParameter(SOURCE, source)
-                    .appendQueryParameter(BACKGROUND_URL, backdropUrl)
-                    .appendQueryParameter(POSTER_URL, posterUrl)
-                    .appendQueryParameter(TITLE, title)
-                    .appendQueryParameter(ORIGINAL_TITLE, originalTitle)
-                    .appendQueryParameter(RELEASE_DATE, releaseDate)
-                    .appendQueryParameter(FAVORITE, isFavorite.toString())
-                    .appendQueryParameter(TYPE, type.toString())
-                    .build()
+        Uri.parse(SCHEMA_URI_PREFIX.plus(WORK)).buildUpon()
+            .appendQueryParameter(ID, id.toString())
+            .appendQueryParameter(LANGUAGE, originalLanguage)
+            .appendQueryParameter(OVERVIEW, overview)
+            .appendQueryParameter(SOURCE, source)
+            .appendQueryParameter(BACKGROUND_URL, backdropUrl)
+            .appendQueryParameter(POSTER_URL, posterUrl)
+            .appendQueryParameter(TITLE, title)
+            .appendQueryParameter(ORIGINAL_TITLE, originalTitle)
+            .appendQueryParameter(RELEASE_DATE, releaseDate)
+            .appendQueryParameter(FAVORITE, isFavorite.toString())
+            .appendQueryParameter(TYPE, type.toString())
+            .build()
 
     private fun Intent.getWorkDeepLink() =
-            data?.takeIf { it.pathSegments.first() == WORK }
-                    ?.let {
-                        WorkViewModel(
-                                id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                                title = it.getQueryParameter(TITLE),
-                                originalLanguage = it.getQueryParameter(LANGUAGE),
-                                overview = it.getQueryParameter(OVERVIEW),
-                                source = it.getQueryParameter(SOURCE),
-                                backdropUrl = it.getQueryParameter(BACKGROUND_URL),
-                                posterUrl = it.getQueryParameter(POSTER_URL),
-                                originalTitle = it.getQueryParameter(ORIGINAL_TITLE),
-                                releaseDate = it.getQueryParameter(RELEASE_DATE),
-                                isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
-                                type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
-                        )
-                    }
+        data?.takeIf { it.pathSegments.first() == WORK }
+            ?.let {
+                WorkViewModel(
+                    id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                    title = it.getQueryParameter(TITLE),
+                    originalLanguage = it.getQueryParameter(LANGUAGE),
+                    overview = it.getQueryParameter(OVERVIEW),
+                    source = it.getQueryParameter(SOURCE),
+                    backdropUrl = it.getQueryParameter(BACKGROUND_URL),
+                    posterUrl = it.getQueryParameter(POSTER_URL),
+                    originalTitle = it.getQueryParameter(ORIGINAL_TITLE),
+                    releaseDate = it.getQueryParameter(RELEASE_DATE),
+                    isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
+                    type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
+                )
+            }
 }

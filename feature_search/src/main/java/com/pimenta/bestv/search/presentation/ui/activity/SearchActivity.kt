@@ -33,7 +33,7 @@ class SearchActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         searchActivityComponent = (application as SearchActivityComponentProvider)
-                .searchActivityComponent()
+            .searchActivityComponent()
         super.onCreate(savedInstanceState)
 
         backgroundManager.attach(window)

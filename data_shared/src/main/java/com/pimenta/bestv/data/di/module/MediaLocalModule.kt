@@ -32,16 +32,16 @@ class MediaLocalModule {
     @Provides
     @Singleton
     fun provideLocalDatabase(application: Application) =
-            Room.databaseBuilder(application, MediaDb::class.java, DB_NAME)
-                    .build()
+        Room.databaseBuilder(application, MediaDb::class.java, DB_NAME)
+            .build()
 
     @Provides
     @Singleton
     fun provideMovieDao(mediaDb: MediaDb) =
-            mediaDb.movieDao()
+        mediaDb.movieDao()
 
     @Provides
     @Singleton
     fun provideTvShowDao(mediaDb: MediaDb) =
-            mediaDb.tvShowDao()
+        mediaDb.tvShowDao()
 }

@@ -35,8 +35,9 @@ import com.pimenta.bestv.workbrowse.R
  */
 private const val NUMBER_COLUMNS = 6
 
-abstract class BaseWorkGridFragment : VerticalGridSupportFragment(),
-        BrowseSupportFragment.MainFragmentAdapterProvider {
+abstract class BaseWorkGridFragment :
+    VerticalGridSupportFragment(),
+    BrowseSupportFragment.MainFragmentAdapterProvider {
 
     private val fragmentAdapter by lazy { BrowseSupportFragment.MainFragmentAdapter(this) }
     protected val backgroundManager by lazy { activity?.let { BackgroundManager.getInstance(it) } }
@@ -55,9 +56,10 @@ abstract class BaseWorkGridFragment : VerticalGridSupportFragment(),
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                        (view.parent as ViewGroup).addView(it)
-                    })
+                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                    (view.parent as ViewGroup).addView(it)
+                }
+            )
             initialDelay = 0
         }
 
@@ -72,7 +74,7 @@ abstract class BaseWorkGridFragment : VerticalGridSupportFragment(),
     }
 
     override fun onDestroy() {
-        progressBarManager.hide()
+        // progressBarManager.hide()
         super.onDestroy()
     }
 

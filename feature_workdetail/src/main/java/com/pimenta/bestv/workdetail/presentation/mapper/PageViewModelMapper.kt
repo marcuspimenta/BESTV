@@ -24,14 +24,14 @@ import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
  */
 
 fun PageDomainModel<ReviewDomainModel>.toViewModel() = PageViewModel(
-        page = page,
-        totalPages = totalPages,
-        results = results?.map { it.toViewModel() }
+    page = page,
+    totalPages = totalPages,
+    results = results?.map { it.toViewModel() }
 )
 
 fun ReviewDomainModel.toViewModel() = ReviewViewModel(
-        id = id,
-        author = author,
-        content = content,
-        url = url
+    id = id,
+    author = author,
+    content = content,
+    url = url
 )

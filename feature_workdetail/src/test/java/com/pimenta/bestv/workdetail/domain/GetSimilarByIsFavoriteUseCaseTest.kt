@@ -27,14 +27,14 @@ import org.junit.Test
  */
 private const val WORK_ID = 1
 private val WORK_PAGE = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Title"
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Title"
         )
+    )
 )
 
 class GetSimilarByWorkUseCaseTest {
@@ -43,49 +43,49 @@ class GetSimilarByWorkUseCaseTest {
     private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase = mock()
 
     private val useCase = GetSimilarByWorkUseCase(
-            getSimilarByMovieUseCase,
-            getSimilarByTvShowUseCase
+        getSimilarByMovieUseCase,
+        getSimilarByTvShowUseCase
     )
 
     @Test
     fun `should return the right data when loading the similar works by movie`() {
         whenever(getSimilarByMovieUseCase(WORK_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
 
         useCase(WorkType.MOVIE, WORK_ID, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when loading the similar works by movie and some exception happens`() {
         whenever(getSimilarByMovieUseCase(WORK_ID, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, WORK_ID, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 
     @Test
     fun `should return the right data when loading the similar works by tv show`() {
         whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
 
         useCase(WorkType.TV_SHOW, WORK_ID, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE)
     }
 
     @Test
     fun `should return an error when loading the similar works by tv show and some exception happens`() {
         whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.TV_SHOW, WORK_ID, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

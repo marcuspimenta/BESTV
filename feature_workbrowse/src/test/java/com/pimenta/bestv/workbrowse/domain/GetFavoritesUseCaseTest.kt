@@ -25,15 +25,15 @@ import org.junit.Test
  * Created by marcus on 2019-08-23.
  */
 private val WORK_DOMAIN_MODEL = WorkDomainModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkDomainModel.Type.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkDomainModel.Type.MOVIE
 )
 private val WORK_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(WORK_DOMAIN_MODEL)
+    page = 1,
+    totalPages = 1,
+    results = listOf(WORK_DOMAIN_MODEL)
 )
 
 class GetFavoritesUseCaseTest {
@@ -42,8 +42,8 @@ class GetFavoritesUseCaseTest {
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
 
     private val useCase = GetFavoritesUseCase(
-            getFavoriteMoviesUseCase,
-            getFavoriteTvShowsUseCase
+        getFavoriteMoviesUseCase,
+        getFavoriteTvShowsUseCase
     )
 
     @Test
@@ -52,9 +52,9 @@ class GetFavoritesUseCaseTest {
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
 
         useCase()
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE_DOMAIN_MODEL)
     }
 
     @Test
@@ -63,7 +63,7 @@ class GetFavoritesUseCaseTest {
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
 
         useCase()
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

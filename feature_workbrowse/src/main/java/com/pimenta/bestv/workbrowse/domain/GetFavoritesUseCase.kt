@@ -29,15 +29,15 @@ class GetFavoritesUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Single<PageDomainModel<WorkDomainModel>> =
-            Single.zip(
-                    getFavoriteMoviesUseCase(),
-                    getFavoriteTvShowsUseCase(),
-                    BiFunction { favoriteMovies, favoriteTvShows ->
-                        PageDomainModel(
-                                page = 1,
-                                totalPages = 1,
-                                results = favoriteMovies + favoriteTvShows
-                        )
-                    }
-            )
+        Single.zip(
+            getFavoriteMoviesUseCase(),
+            getFavoriteTvShowsUseCase(),
+            BiFunction { favoriteMovies, favoriteTvShows ->
+                PageDomainModel(
+                    page = 1,
+                    totalPages = 1,
+                    results = favoriteMovies + favoriteTvShows
+                )
+            }
+        )
 }

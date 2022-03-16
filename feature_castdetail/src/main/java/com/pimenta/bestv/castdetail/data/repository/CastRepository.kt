@@ -29,23 +29,23 @@ class CastRepository @Inject constructor(
 ) {
 
     fun getCastDetails(castId: Int) =
-            castRemoteDataSource.getCastDetails(castId)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        castRemoteDataSource.getCastDetails(castId)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getMovieCreditsByCast(castId: Int) =
-            castRemoteDataSource.getMovieCreditsByCast(castId)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.works?.map { work -> work.toDomainModel(source) }
-                    }
+        castRemoteDataSource.getMovieCreditsByCast(castId)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.works?.map { work -> work.toDomainModel(source) }
+            }
 
     fun getTvShowCreditsByCast(castId: Int) =
-            castRemoteDataSource.getTvShowCreditsByCast(castId)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.works?.map { work -> work.toDomainModel(source) }
-                    }
+        castRemoteDataSource.getTvShowCreditsByCast(castId)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.works?.map { work -> work.toDomainModel(source) }
+            }
 }

@@ -37,17 +37,17 @@ class GetWorkDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsDomainWrapper> =
-            Single.zip(
-                    checkFavoriteWorkUseCase(workViewModel),
-                    getVideosUseCase(workViewModel.type, workViewModel.id),
-                    getCastsUseCase(workViewModel.type, workViewModel.id),
-                    getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-                    Function6 { isFavorite, videos, casts, recommended, similar, reviews ->
-                        WorkDetailsDomainWrapper(isFavorite, videos, casts, recommended, similar, reviews)
-                    }
-            )
+        Single.zip(
+            checkFavoriteWorkUseCase(workViewModel),
+            getVideosUseCase(workViewModel.type, workViewModel.id),
+            getCastsUseCase(workViewModel.type, workViewModel.id),
+            getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
+            getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
+            getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
+            Function6 { isFavorite, videos, casts, recommended, similar, reviews ->
+                WorkDetailsDomainWrapper(isFavorite, videos, casts, recommended, similar, reviews)
+            }
+        )
 
     data class WorkDetailsDomainWrapper(
         val isFavorite: Boolean,

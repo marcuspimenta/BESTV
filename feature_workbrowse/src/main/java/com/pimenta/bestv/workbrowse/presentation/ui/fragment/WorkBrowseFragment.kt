@@ -55,9 +55,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
 
     override fun onAttach(context: Context) {
         (requireActivity() as MainActivity).mainActivityComponent
-                .workBrowseFragmentComponent()
-                .create(this)
-                .inject(this)
+            .workBrowseFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -73,9 +73,10 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                        (view.parent as ViewGroup).addView(it)
-                    })
+                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                    (view.parent as ViewGroup).addView(it)
+                }
+            )
             initialDelay = 0
         }
 

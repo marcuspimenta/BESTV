@@ -28,11 +28,11 @@ class CastRemoteDataSource @Inject constructor(
 ) {
 
     fun getCastDetails(castId: Int) =
-            castTmdbApi.getCastDetails(castId, tmdbApiKey, tmdbFilterLanguage)
+        castTmdbApi.getCastDetails(castId, tmdbApiKey, tmdbFilterLanguage)
 
     fun getMovieCreditsByCast(castId: Int) =
-            castTmdbApi.getMovieCredits(castId, tmdbApiKey, tmdbFilterLanguage)
+        castTmdbApi.getMovieCredits(castId, tmdbApiKey, tmdbFilterLanguage)
 
     fun getTvShowCreditsByCast(castId: Int) =
-            castTmdbApi.getTvShowCredits(castId, tmdbApiKey, tmdbFilterLanguage)
+        castTmdbApi.getTvShowCredits(castId, tmdbApiKey, tmdbFilterLanguage)
 }

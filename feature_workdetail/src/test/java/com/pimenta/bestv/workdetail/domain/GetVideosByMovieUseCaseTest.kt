@@ -26,10 +26,10 @@ import org.junit.Test
  */
 private const val MOVIE_ID = 1
 private val VIDEO_LIST = listOf(
-        VideoDomainModel(
-                id = "1",
-                name = "VideoResponse"
-        )
+    VideoDomainModel(
+        id = "1",
+        name = "VideoResponse"
+    )
 )
 
 class GetVideosByMovieUseCaseTest {
@@ -37,7 +37,7 @@ class GetVideosByMovieUseCaseTest {
     private val movieRepository: MovieRepository = mock()
 
     private val useCase = GetVideosByMovieUseCase(
-            movieRepository
+        movieRepository
     )
 
     @Test
@@ -45,9 +45,9 @@ class GetVideosByMovieUseCaseTest {
         whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
 
         useCase(MOVIE_ID)
-                .test()
-                .assertComplete()
-                .assertResult(VIDEO_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(VIDEO_LIST)
     }
 
     @Test
@@ -55,7 +55,7 @@ class GetVideosByMovieUseCaseTest {
         whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(Single.error(Throwable()))
 
         useCase(MOVIE_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

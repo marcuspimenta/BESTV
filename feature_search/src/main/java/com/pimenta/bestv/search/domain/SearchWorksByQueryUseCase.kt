@@ -30,12 +30,12 @@ class SearchWorksByQueryUseCase @Inject constructor(
 ) {
 
     operator fun invoke(query: String) =
-            urlEncoderTextUseCase(query)
-                    .flatMap {
-                        Single.zip<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>, Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>>(
-                                searchMoviesByQueryUseCase(it, 1),
-                                searchTvShowsByQueryUseCase(it, 1),
-                                BiFunction { first, second -> first to second }
-                        )
-                    }
+        urlEncoderTextUseCase(query)
+            .flatMap {
+                Single.zip<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>, Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>>(
+                    searchMoviesByQueryUseCase(it, 1),
+                    searchTvShowsByQueryUseCase(it, 1),
+                    BiFunction { first, second -> first to second }
+                )
+            }
 }

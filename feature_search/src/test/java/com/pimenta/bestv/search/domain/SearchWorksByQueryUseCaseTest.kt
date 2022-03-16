@@ -27,29 +27,29 @@ import org.junit.Test
 private const val QUERY = "Batman"
 private const val QUERY_ENCODED = "Batman"
 private val MOVIE_PAGE_VIEW_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 10,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 1,
+    totalPages = 10,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 
 private val TV_SHOW_PAGE_VIEW_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 10,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.TV_SHOW
-                )
+    page = 1,
+    totalPages = 10,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.TV_SHOW
         )
+    )
 )
 
 class SearchWorksByQueryUseCaseTest {
@@ -58,9 +58,9 @@ class SearchWorksByQueryUseCaseTest {
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
     private val useCase = SearchWorksByQueryUseCase(
-            urlEncoderTextUseCase,
-            searchMoviesByQueryUseCase,
-            searchTvShowsByQueryUseCase
+        urlEncoderTextUseCase,
+        searchMoviesByQueryUseCase,
+        searchTvShowsByQueryUseCase
     )
 
     @Test
@@ -72,9 +72,9 @@ class SearchWorksByQueryUseCaseTest {
         whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
 
         useCase(QUERY)
-                .test()
-                .assertComplete()
-                .assertResult(result)
+            .test()
+            .assertComplete()
+            .assertResult(result)
     }
 
     @Test
@@ -84,7 +84,7 @@ class SearchWorksByQueryUseCaseTest {
         whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.error(Throwable()))
 
         useCase(QUERY)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

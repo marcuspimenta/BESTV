@@ -26,5 +26,5 @@ class CheckFavoriteTvShowUseCase @Inject constructor(
 ) {
 
     operator fun invoke(tvShowDbModel: TvShowDbModel) =
-            tvShowRepository.isFavoriteTvShow(tvShowDbModel)
+        tvShowRepository.isFavoriteTvShow(tvShowDbModel)
 }

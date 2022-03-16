@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
@@ -26,12 +25,10 @@ import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
 import javax.inject.Inject
 
-private const val SPLASH_ACTIVITY_REQUEST_CODE = 1
-
 /**
  * Created by marcus on 11-02-2018.
  */
-class MainActivity : FragmentActivity() {
+class MainActivity : FragmentActivity(), MainPresenter.View {
 
     private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
 
@@ -42,42 +39,44 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         mainActivityComponent = (application as MainActivityComponentProvider)
-                .mainActivityComponent()
-                .also {
-                    it.inject(this)
-                }
+            .mainActivityComponent(this)
+            .also {
+                it.inject(this)
+            }
         super.onCreate(savedInstanceState)
 
-        backgroundManager.attach(window)
-        backgroundManager.setBitmap(null)
+        backgroundManager.apply {
+            attach(window)
+            setBitmap(null)
+        }
 
-        presenter.bindTo(lifecycle)
-        presenter.loadRecommendations()
-
-        when (savedInstanceState) {
-            null -> startActivityForResult(
-                    presenter.getSplashRoute().intent,
-                    SPLASH_ACTIVITY_REQUEST_CODE
-            )
-            else -> replaceFragment(WorkBrowseFragment.newInstance())
+        presenter.apply {
+            bindTo(lifecycle)
+        }.also {
+            it.loadRecommendations()
+            it.viewCreated(savedInstanceState == null)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            SPLASH_ACTIVITY_REQUEST_CODE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    replaceFragment(WorkBrowseFragment.newInstance())
-                } else {
-                    finish()
-                }
-            }
-        }
+        presenter.checkActivityResult(requestCode, resultCode)
     }
 
     override fun onDestroy() {
         backgroundManager.release()
         super.onDestroy()
+    }
+
+    override fun openSplashScreen(intent: Intent, requestCode: Int) {
+        startActivityForResult(intent, requestCode)
+    }
+
+    override fun showWorkBrowseScreen() {
+        replaceFragment(WorkBrowseFragment.newInstance())
+    }
+
+    override fun close() {
+        finish()
     }
 }

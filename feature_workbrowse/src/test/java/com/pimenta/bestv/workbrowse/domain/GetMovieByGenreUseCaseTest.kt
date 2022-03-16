@@ -28,16 +28,16 @@ import org.junit.Test
 private const val GENRE_ID = 1
 private const val PAGE = 1
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 
 class GetMovieByGenreUseCaseTest {
@@ -45,27 +45,27 @@ class GetMovieByGenreUseCaseTest {
     private val movieRepository: MovieRepository = mock()
 
     private val useCase = GetMovieByGenreUseCase(
-            movieRepository
+        movieRepository
     )
 
     @Test
     fun `should return the right data when loading the movies by genre`() {
         whenever(movieRepository.getMoviesByGenre(GENRE_ID, PAGE))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         useCase(GENRE_ID, PAGE)
-                .test()
-                .assertComplete()
-                .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(movieRepository.getMoviesByGenre(GENRE_ID, PAGE))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(GENRE_ID, PAGE)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

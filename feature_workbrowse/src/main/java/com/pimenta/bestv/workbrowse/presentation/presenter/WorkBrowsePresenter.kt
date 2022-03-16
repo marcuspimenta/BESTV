@@ -34,8 +34,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.AboutHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 06-02-2018.
@@ -60,40 +60,40 @@ class WorkBrowsePresenter @Inject constructor(
     private val rows by lazy { mutableListOf<Row>() }
     private val favoritePageRow by lazy {
         PageRow(
-                WorkTypeHeaderItem(
-                        TOP_WORK_LIST_ID,
-                        resource.getStringResource(TopWorkTypeViewModel.FAVORITES_MOVIES.resource),
-                        TopWorkTypeViewModel.FAVORITES_MOVIES
-                )
+            WorkTypeHeaderItem(
+                TOP_WORK_LIST_ID,
+                resource.getStringResource(TopWorkTypeViewModel.FAVORITES_MOVIES.resource),
+                TopWorkTypeViewModel.FAVORITES_MOVIES
+            )
         )
     }
 
     fun loadData() {
         getWorkBrowseDetailsUseCase()
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { result ->
-                    val hasFavoriteMovie = result.first
-                    val movieGenres = result.second?.map { genre -> genre.toViewModel() }
-                    val tvShowGenres = result.third?.map { genre -> genre.toViewModel() }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { result ->
+                val hasFavoriteMovie = result.first
+                val movieGenres = result.second?.map { genre -> genre.toViewModel() }
+                val tvShowGenres = result.third?.map { genre -> genre.toViewModel() }
 
-                    Triple(hasFavoriteMovie, movieGenres, tvShowGenres)
-                }
-                .observeOn(rxScheduler.mainScheduler)
-                .doOnSubscribe { view.onShowProgress() }
-                .doFinally { view.onHideProgress() }
-                .subscribe({ result ->
-                    val hasFavoriteMovie = result.first
-                    val movieGenres = result.second
-                    val tvShowGenres = result.third
+                Triple(hasFavoriteMovie, movieGenres, tvShowGenres)
+            }
+            .observeOn(rxScheduler.mainScheduler)
+            .doOnSubscribe { view.onShowProgress() }
+            .doFinally { view.onHideProgress() }
+            .subscribe({ result ->
+                val hasFavoriteMovie = result.first
+                val movieGenres = result.second
+                val tvShowGenres = result.third
 
-                    buildRowList(hasFavoriteMovie, movieGenres, tvShowGenres)
+                buildRowList(hasFavoriteMovie, movieGenres, tvShowGenres)
 
-                    view.onDataLoaded(rows)
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading data")
-                    view.onErrorDataLoaded()
-                }).addTo(compositeDisposable)
+                view.onDataLoaded(rows)
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading data")
+                view.onErrorDataLoaded()
+            }).addTo(compositeDisposable)
     }
 
     fun addFavoriteRow(selectedPosition: Int) {
@@ -102,26 +102,26 @@ class WorkBrowsePresenter @Inject constructor(
         }
 
         hasFavoriteUseCase()
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ hasFavorite ->
-                    if (hasFavorite) {
-                        if (rows.indexOf(favoritePageRow) == INVALID_INDEX) {
-                            rows.add(FAVORITE_INDEX, favoritePageRow)
-                            view.onDataLoaded(rows)
-                        }
-                    } else {
-                        if (rows.indexOf(favoritePageRow) == FAVORITE_INDEX) {
-                            rows.remove(favoritePageRow)
-                            if (selectedPosition == FAVORITE_INDEX) {
-                                refreshRows = true
-                                view.onUpdateSelectedPosition(FAVORITE_INDEX + 3)
-                            }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ hasFavorite ->
+                if (hasFavorite) {
+                    if (rows.indexOf(favoritePageRow) == INVALID_INDEX) {
+                        rows.add(FAVORITE_INDEX, favoritePageRow)
+                        view.onDataLoaded(rows)
+                    }
+                } else {
+                    if (rows.indexOf(favoritePageRow) == FAVORITE_INDEX) {
+                        rows.remove(favoritePageRow)
+                        if (selectedPosition == FAVORITE_INDEX) {
+                            refreshRows = true
+                            view.onUpdateSelectedPosition(FAVORITE_INDEX + 3)
                         }
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while checking if has any work as favorite")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while checking if has any work as favorite")
+            }).addTo(compositeDisposable)
     }
 
     fun refreshRows() {

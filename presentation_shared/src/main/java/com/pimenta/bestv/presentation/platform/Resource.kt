@@ -26,5 +26,5 @@ class Resource @Inject constructor(
 ) {
 
     fun getStringResource(@StringRes resourceId: Int) =
-            application.getString(resourceId)
+        application.getString(resourceId)
 }

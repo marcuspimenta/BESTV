@@ -37,66 +37,66 @@ import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import java.util.concurrent.TimeUnit
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by marcus on 24-05-2018.
  */
 private const val QUERY = "Batman"
 private val WORK_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Game of thrones",
-        originalTitle = "Game of thrones",
-        type = WorkType.TV_SHOW
+    id = 1,
+    title = "Game of thrones",
+    originalTitle = "Game of thrones",
+    type = WorkType.TV_SHOW
 )
 private val OTHER_WORK_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Arrow",
-        originalTitle = "Arrow",
-        type = WorkType.TV_SHOW
+    id = 1,
+    title = "Arrow",
+    originalTitle = "Arrow",
+    type = WorkType.TV_SHOW
 )
 private val MOVIE_VIEW_MODEL_LIST = listOf(
-        WorkViewModel(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman",
-                type = WorkType.MOVIE
-        )
+    WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.MOVIE
+    )
 )
 private val MOVIE_DOMAIN_MODEL_LIST = listOf(
-        WorkDomainModel(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman",
-                type = WorkDomainModel.Type.MOVIE
-        )
+    WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkDomainModel.Type.MOVIE
+    )
 )
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 10,
-        results = MOVIE_DOMAIN_MODEL_LIST
+    page = 1,
+    totalPages = 10,
+    results = MOVIE_DOMAIN_MODEL_LIST
 )
 private val TV_SHOW_VIEW_MODEL_LIST = listOf(
-        WorkViewModel(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman",
-                type = WorkType.TV_SHOW
-        )
+    WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkType.TV_SHOW
+    )
 )
 private val TV_SHOW_DOMAIN_MODEL_LIST = listOf(
-        WorkDomainModel(
-                id = 1,
-                title = "Batman",
-                originalTitle = "Batman",
-                type = WorkDomainModel.Type.TV_SHOW
-        )
+    WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkDomainModel.Type.TV_SHOW
+    )
 )
 private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 10,
-        results = TV_SHOW_DOMAIN_MODEL_LIST
+    page = 1,
+    totalPages = 10,
+    results = TV_SHOW_DOMAIN_MODEL_LIST
 )
 
 class SearchPresenterTest {
@@ -107,18 +107,18 @@ class SearchPresenterTest {
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val rxSchedulerTest = RxScheduler(
-            Schedulers.trampoline(),
-            Schedulers.trampoline(),
-            Schedulers.trampoline()
+        Schedulers.trampoline(),
+        Schedulers.trampoline(),
+        Schedulers.trampoline()
     )
 
     private val presenter = SearchPresenter(
-            view,
-            searchWorksByQueryUseCase,
-            searchMoviesByQueryUseCase,
-            searchTvShowsByQueryUseCase,
-            workDetailsRoute,
-            rxSchedulerTest
+        view,
+        searchWorksByQueryUseCase,
+        searchMoviesByQueryUseCase,
+        searchTvShowsByQueryUseCase,
+        workDetailsRoute,
+        rxSchedulerTest
     )
 
     @Test
@@ -176,7 +176,7 @@ class SearchPresenterTest {
     @Test
     fun `should return the right data when loading the movies`() {
         whenever(searchMoviesByQueryUseCase(any(), any()))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         presenter.loadMovies()
 
@@ -195,7 +195,7 @@ class SearchPresenterTest {
     @Test
     fun `should return the right data when loading the tv shows`() {
         whenever(searchTvShowsByQueryUseCase(any(), any()))
-                .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
 
         presenter.loadTvShows()
 
@@ -245,7 +245,7 @@ class SearchPresenterTest {
         val route: Route = mock()
 
         whenever(workDetailsRoute.buildWorkDetailRoute(WORK_VIEW_MODEL))
-                .thenReturn(route)
+            .thenReturn(route)
 
         presenter.workClicked(itemViewHolder, WORK_VIEW_MODEL)
 

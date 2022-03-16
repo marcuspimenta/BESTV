@@ -30,9 +30,9 @@ import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import timber.log.Timber
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
@@ -84,42 +84,42 @@ class SearchPresenter @Inject constructor(
         tvShows.clear()
 
         searchWorkDisposable = searchWorksByQueryUseCase(query)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { result ->
-                    val moviePage = result.first.toViewModel()
-                    val tvShowPage = result.second.toViewModel()
-                    moviePage to tvShowPage
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { result ->
+                val moviePage = result.first.toViewModel()
+                val tvShowPage = result.second.toViewModel()
+                moviePage to tvShowPage
+            }
+            .observeOn(rxScheduler.mainScheduler)
+            .doOnSubscribe { view.onShowProgress() }
+            .doFinally { view.onHideProgress() }
+            .subscribe({ pair ->
+                with(pair.first) {
+                    resultMoviePage = page
+                    totalMoviePage = totalPages
+                    results?.let {
+                        movies.addAll(it)
+                    }
                 }
-                .observeOn(rxScheduler.mainScheduler)
-                .doOnSubscribe { view.onShowProgress() }
-                .doFinally { view.onHideProgress() }
-                .subscribe({ pair ->
-                    with(pair.first) {
-                        resultMoviePage = page
-                        totalMoviePage = totalPages
-                        results?.let {
-                            movies.addAll(it)
-                        }
-                    }
 
-                    with(pair.second) {
-                        resultTvShowPage = page
-                        totalTvShowPage = totalPages
-                        results?.let {
-                            tvShows.addAll(it)
-                        }
+                with(pair.second) {
+                    resultTvShowPage = page
+                    totalTvShowPage = totalPages
+                    results?.let {
+                        tvShows.addAll(it)
                     }
+                }
 
-                    if (movies.isNotEmpty() || tvShows.isNotEmpty()) {
-                        view.onResultLoaded(movies, tvShows)
-                    } else {
-                        view.onClear()
-                    }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while searching by query")
-                    view.onErrorSearch()
-                })
+                if (movies.isNotEmpty() || tvShows.isNotEmpty()) {
+                    view.onResultLoaded(movies, tvShows)
+                } else {
+                    view.onClear()
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while searching by query")
+                view.onErrorSearch()
+            })
     }
 
     fun loadMovies() {
@@ -128,22 +128,22 @@ class SearchPresenter @Inject constructor(
         }
 
         searchMoviesByQueryUseCase(query, resultMoviePage + 1)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ moviePage ->
-                    with(moviePage) {
-                        resultMoviePage = page
-                        totalMoviePage = totalPages
-                        results?.let { works ->
-                            movies.addAll(works)
-                            view.onMoviesLoaded(movies)
-                        }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ moviePage ->
+                with(moviePage) {
+                    resultMoviePage = page
+                    totalMoviePage = totalPages
+                    results?.let { works ->
+                        movies.addAll(works)
+                        view.onMoviesLoaded(movies)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading movies by query")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading movies by query")
+            }).addTo(compositeDisposable)
     }
 
     fun loadTvShows() {
@@ -152,35 +152,35 @@ class SearchPresenter @Inject constructor(
         }
 
         searchTvShowsByQueryUseCase(query, resultTvShowPage + 1)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ tvShowPage ->
-                    with(tvShowPage) {
-                        resultTvShowPage = page
-                        totalTvShowPage = totalPages
-                        results?.let { works ->
-                            tvShows.addAll(works)
-                            view.onTvShowsLoaded(tvShows)
-                        }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ tvShowPage ->
+                with(tvShowPage) {
+                    resultTvShowPage = page
+                    totalTvShowPage = totalPages
+                    results?.let { works ->
+                        tvShows.addAll(works)
+                        view.onTvShowsLoaded(tvShows)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading tv shows by query")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading tv shows by query")
+            }).addTo(compositeDisposable)
     }
 
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
         loadBackdropImageDisposable?.disposeIfRunning()
         loadBackdropImageDisposable = Completable
-                .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({
-                    view.loadBackdropImage(workViewModel)
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading backdrop image")
-                })
+            .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({
+                view.loadBackdropImage(workViewModel)
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading backdrop image")
+            })
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {

@@ -15,7 +15,9 @@
 package com.pimenta.bestv.workbrowse.di
 
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
+import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
@@ -27,7 +29,7 @@ interface MainActivityComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): MainActivityComponent
+        fun create(@BindsInstance view: MainPresenter.View): MainActivityComponent
     }
 
     fun inject(activity: MainActivity)

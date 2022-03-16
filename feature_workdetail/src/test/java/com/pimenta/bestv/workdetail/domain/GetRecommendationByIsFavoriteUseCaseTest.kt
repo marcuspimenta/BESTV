@@ -28,15 +28,15 @@ import org.junit.Test
  */
 private const val WORK_ID = 1
 private val WORK_PAGE_VIEW_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Title",
-                        type = Type.MOVIE
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Title",
+            type = Type.MOVIE
         )
+    )
 )
 
 class GetRecommendationByWorkUseCaseTest {
@@ -45,49 +45,49 @@ class GetRecommendationByWorkUseCaseTest {
     private val getRecommendationByTvShowUseCase: GetRecommendationByTvShowUseCase = mock()
 
     private val useCase = GetRecommendationByWorkUseCase(
-            getRecommendationByMovieUseCase,
-            getRecommendationByTvShowUseCase
+        getRecommendationByMovieUseCase,
+        getRecommendationByTvShowUseCase
     )
 
     @Test
     fun `should return the right data when loading the recommendations by movie`() {
         whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+            .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
 
         useCase(WorkType.MOVIE, WORK_ID, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE_VIEW_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when loading the recommendations by movie and some exception happens`() {
         whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.MOVIE, WORK_ID, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 
     @Test
     fun `should return the right data when loading the recommendations by tv show`() {
         whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
-                .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+            .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
 
         useCase(WorkType.TV_SHOW, WORK_ID, 1)
-                .test()
-                .assertComplete()
-                .assertResult(WORK_PAGE_VIEW_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(WORK_PAGE_VIEW_MODEL)
     }
 
     @Test
     fun `should return an error when loading the recommendations by tv show and some exception happens`() {
         whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(WorkType.TV_SHOW, WORK_ID, 1)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

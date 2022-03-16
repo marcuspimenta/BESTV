@@ -19,7 +19,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.Source
 
 fun GenreDomainModel.toViewModel() = GenreViewModel(
-        id = id,
-        name = name,
-        source = Source.MOVIE.takeIf { source == GenreDomainModel.Source.MOVIE } ?: Source.TV_SHOW
+    id = id,
+    name = name,
+    source = Source.MOVIE.takeIf { source == GenreDomainModel.Source.MOVIE } ?: Source.TV_SHOW
 )

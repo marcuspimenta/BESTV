@@ -27,5 +27,5 @@ class RecommendationRepository @Inject constructor(
 ) {
 
     fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
-            recommendationProvider.loadRecommendations(works)
+        recommendationProvider.loadRecommendations(works)
 }

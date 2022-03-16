@@ -36,7 +36,7 @@ class RecommendationModule {
     @Provides
     @WorkerScope
     fun provideNotificationManager(application: Application) =
-            application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
     @WorkerScope
@@ -47,8 +47,8 @@ class RecommendationModule {
         workDetailsRoute: WorkDetailsRoute,
         workBrowseRoute: WorkBrowseRoute
     ) =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                RecommendationChannelApi(application, localSettings, workDetailsRoute, workBrowseRoute)
-            else
-                RecommendationRowApi(application, notificationManager, workDetailsRoute)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            RecommendationChannelApi(application, localSettings, workDetailsRoute, workBrowseRoute)
+        else
+            RecommendationRowApi(application, notificationManager, workDetailsRoute)
 }

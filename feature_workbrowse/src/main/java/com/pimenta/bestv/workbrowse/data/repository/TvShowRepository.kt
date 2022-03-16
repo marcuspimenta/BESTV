@@ -32,54 +32,54 @@ class TvShowRepository @Inject constructor(
 ) {
 
     fun getFavoriteTvShows() =
-            tvShowLocalDataSource.getTvShows()
-                    .map {
-                        val tvShows = mutableListOf<WorkDomainModel>()
-                        it.forEach { tvShowDbModel ->
-                            tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
-                                val source = resource.getStringResource(R.string.source_tmdb)
-                                val workDomainModel = work.toDomainModel(source).apply {
-                                    isFavorite = true
-                                }
-
-                                tvShows.add(workDomainModel)
-                            }
+        tvShowLocalDataSource.getTvShows()
+            .map {
+                val tvShows = mutableListOf<WorkDomainModel>()
+                it.forEach { tvShowDbModel ->
+                    tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
+                        val source = resource.getStringResource(R.string.source_tmdb)
+                        val workDomainModel = work.toDomainModel(source).apply {
+                            isFavorite = true
                         }
-                        tvShows.toList()
+
+                        tvShows.add(workDomainModel)
                     }
+                }
+                tvShows.toList()
+            }
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
-            tvShowRemoteDataSource.getTvShowByGenre(genreId, page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        tvShowRemoteDataSource.getTvShowByGenre(genreId, page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getAiringTodayTvShows(page: Int) =
-            tvShowRemoteDataSource.getAiringTodayTvShows(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        tvShowRemoteDataSource.getAiringTodayTvShows(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getOnTheAirTvShows(page: Int) =
-            tvShowRemoteDataSource.getOnTheAirTvShows(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        tvShowRemoteDataSource.getOnTheAirTvShows(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getPopularTvShows(page: Int) =
-            tvShowRemoteDataSource.getPopularTvShows(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        tvShowRemoteDataSource.getPopularTvShows(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 
     fun getTopRatedTvShows(page: Int) =
-            tvShowRemoteDataSource.getTopRatedTvShows(page)
-                    .map {
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        it.toDomainModel(source)
-                    }
+        tvShowRemoteDataSource.getTopRatedTvShows(page)
+            .map {
+                val source = resource.getStringResource(R.string.source_tmdb)
+                it.toDomainModel(source)
+            }
 }

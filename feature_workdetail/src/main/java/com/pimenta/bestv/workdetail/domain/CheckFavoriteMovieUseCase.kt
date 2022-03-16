@@ -26,5 +26,5 @@ class CheckFavoriteMovieUseCase @Inject constructor(
 ) {
 
     operator fun invoke(movieDbModel: MovieDbModel) =
-            movieRepository.isFavoriteMove(movieDbModel)
+        movieRepository.isFavoriteMove(movieDbModel)
 }

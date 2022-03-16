@@ -25,5 +25,5 @@ class GetRecommendationByTvShowUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            tvShowRepository.getRecommendationByTvShow(workId, page)
+        tvShowRepository.getRecommendationByTvShow(workId, page)
 }

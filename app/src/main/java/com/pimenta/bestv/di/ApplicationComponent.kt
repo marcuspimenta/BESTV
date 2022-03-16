@@ -30,10 +30,10 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(
-        modules = [
-            ApplicationModule::class,
-            SubcomponentsModule::class
-        ]
+    modules = [
+        ApplicationModule::class,
+        SubcomponentsModule::class
+    ]
 )
 interface ApplicationComponent {
 

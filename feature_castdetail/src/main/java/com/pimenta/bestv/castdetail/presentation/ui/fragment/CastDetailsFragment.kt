@@ -78,9 +78,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun onAttach(context: Context) {
         (requireActivity() as CastDetailsActivity).castDetailsActivityComponent
-                .castDetailsFragmentComponent()
-                .create(this)
-                .inject(this)
+            .castDetailsFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -98,9 +98,10 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                        (view.parent as ViewGroup).addView(it)
-                    })
+                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                    (view.parent as ViewGroup).addView(it)
+                }
+            )
             initialDelay = 0
         }
         presenter.loadCastDetails(castViewModel)
@@ -144,9 +145,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivity(route.intent, bundle)
     }
@@ -216,10 +217,10 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     companion object {
 
         fun newInstance(castViewModel: CastViewModel) =
-                CastDetailsFragment().apply {
-                    arguments = bundleOf(
-                            CAST to castViewModel
-                    )
-                }
+            CastDetailsFragment().apply {
+                arguments = bundleOf(
+                    CAST to castViewModel
+                )
+            }
     }
 }

@@ -19,7 +19,7 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.PageViewModel
 
 fun PageDomainModel<WorkDomainModel>.toViewModel() = PageViewModel(
-        page,
-        totalPages,
-        results?.map { it.toViewModel() }
+    page,
+    totalPages,
+    results?.map { it.toViewModel() }
 )

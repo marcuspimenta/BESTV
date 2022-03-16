@@ -33,8 +33,8 @@ class ScheduleRecommendationUseCase @Inject constructor(
     operator fun invoke() {
         with(workerManager) {
             val workerInstance = PeriodicWorkRequest.Builder(RecommendationWorker::class.java, REPEAT_INTERVAL_MINUTES, TimeUnit.HOURS)
-                    .addTag(WORK_TAG)
-                    .build()
+                .addTag(WORK_TAG)
+                .build()
 
             cancelAllWorkByTag(WORK_TAG)
             enqueue(workerInstance)

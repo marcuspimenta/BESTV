@@ -37,25 +37,25 @@ import org.junit.Test
  * Created by marcus on 23-05-2018.
  */
 private val CAST_VIEW_MODEL = CastViewModel(
-        id = 1
+    id = 1
 )
 private val CAST_DETAILED_DOMAIN_MODEL = CastDomainModel(
-        id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+    id = 1,
+    name = "Carlos",
+    character = "Batman",
+    birthday = "1990-07-13"
 )
 private val CAST_DETAILED_VIEW_MODEL = CastViewModel(
-        id = 1,
-        name = "Carlos",
-        character = "Batman",
-        birthday = "1990-07-13"
+    id = 1,
+    name = "Carlos",
+    character = "Batman",
+    birthday = "1990-07-13"
 )
 private val MOVIE_VIEW_MODEL = WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkType.MOVIE
 )
 
 class CastDetailsPresenterTest {
@@ -64,16 +64,16 @@ class CastDetailsPresenterTest {
     private val getCastDetailsUseCase: GetCastDetailsUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val rxSchedulerTest = RxScheduler(
-            Schedulers.trampoline(),
-            Schedulers.trampoline(),
-            Schedulers.trampoline()
+        Schedulers.trampoline(),
+        Schedulers.trampoline(),
+        Schedulers.trampoline()
     )
 
     private val presenter = CastDetailsPresenter(
-            view,
-            getCastDetailsUseCase,
-            workDetailsRoute,
-            rxSchedulerTest
+        view,
+        getCastDetailsUseCase,
+        workDetailsRoute,
+        rxSchedulerTest
     )
 
     @Test

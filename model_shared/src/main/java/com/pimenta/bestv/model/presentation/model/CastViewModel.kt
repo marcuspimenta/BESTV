@@ -39,15 +39,15 @@ data class CastViewModel(
 
 inline fun CastViewModel.loadThumbnail(context: Context, crossinline result: (resource: Drawable) -> Unit) {
     Glide.with(context)
-            .load(thumbnailUrl)
-            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    result(resource)
-                }
+        .load(thumbnailUrl)
+        .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+        .into(object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                result(resource)
+            }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    // DO ANYTHING
-                }
-            })
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // DO ANYTHING
+            }
+        })
 }

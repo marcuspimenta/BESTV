@@ -70,9 +70,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
 
     override fun onAttach(context: Context) {
         (requireActivity() as SearchActivity).searchActivityComponent
-                .searchFragmentComponent()
-                .create(this)
-                .inject(this)
+            .searchFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -89,9 +89,10 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                    LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                        (view.parent as ViewGroup).addView(it)
-                    })
+                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                    (view.parent as ViewGroup).addView(it)
+                }
+            )
             initialDelay = 0
         }
     }
@@ -112,8 +113,12 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     override fun onClear() {
         backgroundManager.setBitmap(null)
         rowsAdapter.clear()
-        rowsAdapter.add(ListRow(HeaderItem(0, getString(R.string.no_results)),
-                ArrayObjectAdapter(WorkCardRenderer())))
+        rowsAdapter.add(
+            ListRow(
+                HeaderItem(0, getString(R.string.no_results)),
+                ArrayObjectAdapter(WorkCardRenderer())
+            )
+        )
     }
 
     override fun onResultLoaded(movies: List<WorkViewModel>, tvShows: List<WorkViewModel>) {
@@ -154,9 +159,9 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivity(route.intent, bundle)
     }

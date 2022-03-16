@@ -51,9 +51,9 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
 
     override fun onAttach(context: Context) {
         (requireActivity() as MainActivity).mainActivityComponent
-                .topWorkGridFragmentComponent()
-                .create(this)
-                .inject(this)
+            .topWorkGridFragmentComponent()
+            .create(this)
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -107,14 +107,14 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView,
-                SettingShared.SHARED_ELEMENT_NAME
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView,
+            SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
         startActivityForResult(
-                route.intent,
-                WORK_DETAILS_REQUEST_CODE,
-                bundle
+            route.intent,
+            WORK_DETAILS_REQUEST_CODE,
+            bundle
         )
     }
 
@@ -134,10 +134,10 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     companion object {
 
         fun newInstance(topWorkTypeViewModel: TopWorkTypeViewModel) =
-                TopWorkGridFragment().apply {
-                    arguments = bundleOf(
-                            TYPE to topWorkTypeViewModel
-                    )
-                }
+            TopWorkGridFragment().apply {
+                arguments = bundleOf(
+                    TYPE to topWorkTypeViewModel
+                )
+            }
     }
 }

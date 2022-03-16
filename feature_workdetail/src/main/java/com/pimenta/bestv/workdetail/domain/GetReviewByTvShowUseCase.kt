@@ -25,5 +25,5 @@ class GetReviewByTvShowUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            tvShowRepository.getReviewByTvShow(workId, page)
+        tvShowRepository.getReviewByTvShow(workId, page)
 }

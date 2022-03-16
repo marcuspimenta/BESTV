@@ -26,10 +26,10 @@ import org.junit.Test
  */
 private const val TV_SHOW_ID = 1
 private val VIDEO_LIST = listOf(
-        VideoDomainModel(
-                id = "1",
-                name = "VideoResponse"
-        )
+    VideoDomainModel(
+        id = "1",
+        name = "VideoResponse"
+    )
 )
 
 class GetVideosByTvShowUseCaseTest {
@@ -37,27 +37,27 @@ class GetVideosByTvShowUseCaseTest {
     private val tvShowRepository: TvShowRepository = mock()
 
     private val useCase = GetVideosByTvShowUseCase(
-            tvShowRepository
+        tvShowRepository
     )
 
     @Test
     fun `should return the right data when loading the videos`() {
         whenever(tvShowRepository.getVideosByTvShow(TV_SHOW_ID))
-                .thenReturn(Single.just(VIDEO_LIST))
+            .thenReturn(Single.just(VIDEO_LIST))
 
         useCase(TV_SHOW_ID)
-                .test()
-                .assertComplete()
-                .assertResult(VIDEO_LIST)
+            .test()
+            .assertComplete()
+            .assertResult(VIDEO_LIST)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(tvShowRepository.getVideosByTvShow(TV_SHOW_ID))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(TV_SHOW_ID)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

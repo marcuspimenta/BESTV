@@ -28,5 +28,5 @@ class MovieRemoteDataSource @Inject constructor(
 ) {
 
     fun searchMoviesByQuery(query: String, page: Int) =
-            searchMovieTmdbApi.searchMoviesByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
+        searchMovieTmdbApi.searchMoviesByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
 }

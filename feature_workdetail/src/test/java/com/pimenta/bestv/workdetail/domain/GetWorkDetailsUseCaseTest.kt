@@ -30,34 +30,34 @@ import org.junit.Test
  * Created by marcus on 22-08-2019.
  */
 private val WORK = WorkViewModel(
-        id = 1,
-        type = WorkType.MOVIE
+    id = 1,
+    type = WorkType.MOVIE
 )
 private val VIDEO_LIST = listOf(
-        VideoDomainModel(
-                id = "1",
-                name = "VideoResponse"
-        )
+    VideoDomainModel(
+        id = "1",
+        name = "VideoResponse"
+    )
 )
 private val CAST_LIST = listOf(
-        CastDomainModel(
-                id = 1,
-                name = "Name",
-                character = "Character",
-                birthday = "Birthday",
-                deathDay = null,
-                biography = null
-        )
+    CastDomainModel(
+        id = 1,
+        name = "Name",
+        character = "Character",
+        birthday = "Birthday",
+        deathDay = null,
+        biography = null
+    )
 )
 private val WORK_PAGE = PageDomainModel<WorkDomainModel>(
-        page = 0,
-        totalPages = 0,
-        results = null
+    page = 0,
+    totalPages = 0,
+    results = null
 )
 private val REVIEW_PAGE = PageDomainModel<ReviewDomainModel>(
-        page = 0,
-        totalPages = 0,
-        results = null
+    page = 0,
+    totalPages = 0,
+    results = null
 )
 
 class GetWorkDetailsUseCaseTest {
@@ -69,52 +69,52 @@ class GetWorkDetailsUseCaseTest {
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
-            checkFavoriteWorkUseCase,
-            getVideosUseCase,
-            getCastsUseCase,
-            getRecommendationByWorkUseCase,
-            getSimilarByWorkUseCase,
-            getReviewByWorkUseCase
+        checkFavoriteWorkUseCase,
+        getVideosUseCase,
+        getCastsUseCase,
+        getRecommendationByWorkUseCase,
+        getSimilarByWorkUseCase,
+        getReviewByWorkUseCase
     )
 
     @Test
     fun `should return the right data when loading the work details`() {
         whenever(checkFavoriteWorkUseCase(WORK))
-                .thenReturn(Single.just(true))
+            .thenReturn(Single.just(true))
         whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(Single.just(VIDEO_LIST))
+            .thenReturn(Single.just(VIDEO_LIST))
         whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(Single.just(CAST_LIST))
+            .thenReturn(Single.just(CAST_LIST))
         whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
         whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.just(REVIEW_PAGE))
+            .thenReturn(Single.just(REVIEW_PAGE))
 
         useCase(WORK)
-                .test()
-                .assertComplete()
-                .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(true, VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
+            .test()
+            .assertComplete()
+            .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(true, VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(checkFavoriteWorkUseCase(WORK))
-                .thenReturn(Single.just(true))
+            .thenReturn(Single.just(true))
         whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(Single.just(VIDEO_LIST))
+            .thenReturn(Single.just(VIDEO_LIST))
         whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
         whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(Single.just(WORK_PAGE))
         whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-                .thenReturn(Single.just(REVIEW_PAGE))
+            .thenReturn(Single.just(REVIEW_PAGE))
 
         useCase(WORK)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

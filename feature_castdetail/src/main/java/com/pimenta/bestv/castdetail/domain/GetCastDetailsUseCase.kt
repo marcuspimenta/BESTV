@@ -30,12 +30,12 @@ class GetCastDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(castId: Int): Single<Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>> =
-            Single.zip(
-                    getCastPersonalDetails(castId),
-                    getMovieCreditsByCastUseCase(castId),
-                    getTvShowCreditsByCastUseCase(castId),
-                    Function3 { castViewModel, castMovieList, castTvShowList ->
-                        Triple(castViewModel, castMovieList, castTvShowList)
-                    }
-            )
+        Single.zip(
+            getCastPersonalDetails(castId),
+            getMovieCreditsByCastUseCase(castId),
+            getTvShowCreditsByCastUseCase(castId),
+            Function3 { castViewModel, castMovieList, castTvShowList ->
+                Triple(castViewModel, castMovieList, castTvShowList)
+            }
+        )
 }

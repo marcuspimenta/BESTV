@@ -25,5 +25,5 @@ class GetSimilarByMovieUseCase @Inject constructor(
 ) {
 
     operator fun invoke(workId: Int, page: Int) =
-            movieRepository.getSimilarByMovie(workId, page)
+        movieRepository.getSimilarByMovie(workId, page)
 }

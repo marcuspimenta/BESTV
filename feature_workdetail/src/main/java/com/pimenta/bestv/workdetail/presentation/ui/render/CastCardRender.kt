@@ -27,18 +27,22 @@ import com.pimenta.bestv.workdetail.R
 class CastCardRender : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
-            ViewHolder(ImageCardView(parent.context).apply {
+        ViewHolder(
+            ImageCardView(parent.context).apply {
                 isFocusable = true
                 isFocusableInTouchMode = true
-            })
+            }
+        )
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val castViewModel = item as CastViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = castViewModel.name
         cardView.contentText = castViewModel.character
-        cardView.setMainImageDimensions(viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_width),
-                viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_height))
+        cardView.setMainImageDimensions(
+            viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_width),
+            viewHolder.view.context.resources.getDimensionPixelSize(R.dimen.character_image_card_height)
+        )
 
         castViewModel.thumbnailUrl?.let {
             cardView.mainImageView.loadImageInto(it)

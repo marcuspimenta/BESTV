@@ -25,5 +25,5 @@ class GetMovieGenresUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            genreRepository.getMovieGenres()
+        genreRepository.getMovieGenres()
 }

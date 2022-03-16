@@ -25,5 +25,5 @@ class GetMovieByGenreUseCase @Inject constructor(
 ) {
 
     operator fun invoke(genreId: Int, page: Int) =
-            movieRepository.getMoviesByGenre(genreId, page)
+        movieRepository.getMoviesByGenre(genreId, page)
 }

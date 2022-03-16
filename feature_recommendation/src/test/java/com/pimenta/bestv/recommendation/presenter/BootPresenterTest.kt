@@ -28,7 +28,7 @@ class BootPresenterTest {
 
     private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase = mock()
     private val presenter = BootPresenter(
-            scheduleRecommendationUseCase
+        scheduleRecommendationUseCase
     )
 
     @Test

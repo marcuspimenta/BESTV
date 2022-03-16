@@ -29,5 +29,5 @@ class TvShowRemoteDataSourceModule {
     @Provides
     @FragmentScope
     fun provideCastApi(retrofit: Retrofit) =
-            retrofit.create(SearchTvShowTmdbApi::class.java)
+        retrofit.create(SearchTvShowTmdbApi::class.java)
 }

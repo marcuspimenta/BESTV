@@ -24,10 +24,10 @@ import org.junit.Test
  * Created by marcus on 2019-08-26.
  */
 private val WORK_DOMAIN_MODEL = WorkDomainModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkDomainModel.Type.MOVIE
+    id = 1,
+    title = "Batman",
+    originalTitle = "Batman",
+    type = WorkDomainModel.Type.MOVIE
 )
 
 class HasFavoriteUseCaseTest {
@@ -35,8 +35,8 @@ class HasFavoriteUseCaseTest {
     private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
     private val useCase = HasFavoriteUseCase(
-            getFavoriteMoviesUseCase,
-            getFavoriteTvShowsUseCase
+        getFavoriteMoviesUseCase,
+        getFavoriteTvShowsUseCase
     )
 
     @Test
@@ -45,9 +45,9 @@ class HasFavoriteUseCaseTest {
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
 
         useCase()
-                .test()
-                .assertComplete()
-                .assertResult(true)
+            .test()
+            .assertComplete()
+            .assertResult(true)
     }
 
     @Test
@@ -56,9 +56,9 @@ class HasFavoriteUseCaseTest {
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
 
         useCase()
-                .test()
-                .assertComplete()
-                .assertResult(false)
+            .test()
+            .assertComplete()
+            .assertResult(false)
     }
 
     @Test
@@ -67,7 +67,7 @@ class HasFavoriteUseCaseTest {
         whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
 
         useCase()
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

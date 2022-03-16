@@ -25,5 +25,5 @@ class GetCastPersonalDetails @Inject constructor(
 ) {
 
     operator fun invoke(castId: Int) =
-            castRepository.getCastDetails(castId)
+        castRepository.getCastDetails(castId)
 }

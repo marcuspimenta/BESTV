@@ -28,10 +28,10 @@ import dagger.Subcomponent
  */
 @FragmentScope
 @Subcomponent(
-        modules = [
-            MovieRemoteDataSourceModule::class,
-            TvShowRemoteDataSourceModule::class
-        ]
+    modules = [
+        MovieRemoteDataSourceModule::class,
+        TvShowRemoteDataSourceModule::class
+    ]
 )
 interface WorkDetailsFragmentComponent {
 

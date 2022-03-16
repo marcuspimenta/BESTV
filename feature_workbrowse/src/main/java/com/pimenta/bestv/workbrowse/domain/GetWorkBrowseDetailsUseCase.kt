@@ -29,12 +29,12 @@ class GetWorkBrowseDetailsUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            Single.zip<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?, Triple<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?>>(
-                    hasFavoriteUseCase(),
-                    getMovieGenresUseCase(),
-                    getTvShowGenresUseCase(),
-                    Function3 { hasFavoriteMovie, movieGenreList, tvShowGenreList ->
-                        Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
-                    }
-            )
+        Single.zip<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?, Triple<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?>>(
+            hasFavoriteUseCase(),
+            getMovieGenresUseCase(),
+            getTvShowGenresUseCase(),
+            Function3 { hasFavoriteMovie, movieGenreList, tvShowGenreList ->
+                Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
+            }
+        )
 }

@@ -35,10 +35,10 @@ class WorkDetailsActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         workDetailsActivityComponent = (application as WorkDetailsActivityComponentProvider)
-                .workDetailsActivityComponent()
-                .also {
-                    it.inject(this)
-                }
+            .workDetailsActivityComponent()
+            .also {
+                it.inject(this)
+            }
         super.onCreate(savedInstanceState)
 
         when (val workViewModel = workDetailsRoute.getWorkDetail(intent)) {

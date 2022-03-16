@@ -25,5 +25,5 @@ class GetTvShowCreditsByCastUseCase @Inject constructor(
 ) {
 
     operator fun invoke(castId: Int) =
-            castRepository.getTvShowCreditsByCast(castId)
+        castRepository.getTvShowCreditsByCast(castId)
 }

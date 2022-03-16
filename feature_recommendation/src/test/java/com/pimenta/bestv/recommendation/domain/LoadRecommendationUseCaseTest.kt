@@ -29,16 +29,16 @@ import org.junit.Test
  * Created by marcus on 2019-08-27.
  */
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 
 class LoadRecommendationUseCaseTest {
@@ -46,20 +46,20 @@ class LoadRecommendationUseCaseTest {
     private val movieRepository: MovieRepository = mock()
     private val recommendationRepository: RecommendationRepository = mock()
     private val useCase = LoadRecommendationUseCase(
-            movieRepository,
-            recommendationRepository
+        movieRepository,
+        recommendationRepository
     )
 
     @Test
     fun `should return the right data when loading the recommendations`() {
         whenever(movieRepository.getPopularMovies(1))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
         whenever(recommendationRepository.loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results))
-                .thenReturn(Completable.complete())
+            .thenReturn(Completable.complete())
 
         useCase()
-                .test()
-                .assertComplete()
+            .test()
+            .assertComplete()
 
         verify(recommendationRepository).loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results)
     }
@@ -67,10 +67,10 @@ class LoadRecommendationUseCaseTest {
     @Test
     fun `should return an error when some exception happens`() {
         whenever(movieRepository.getPopularMovies(1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase()
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

@@ -26,9 +26,9 @@ import dagger.Subcomponent
  */
 @FragmentScope
 @Subcomponent(
-        modules = [
-            CastRemoteDataSourceModule::class
-        ]
+    modules = [
+        CastRemoteDataSourceModule::class
+    ]
 )
 interface CastDetailsFragmentComponent {
 

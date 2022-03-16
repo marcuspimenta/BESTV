@@ -26,16 +26,16 @@ import org.junit.Test
  * Created by marcus on 2019-08-26.
  */
 private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-        page = 1,
-        totalPages = 1,
-        results = listOf(
-                WorkDomainModel(
-                        id = 1,
-                        title = "Batman",
-                        originalTitle = "Batman",
-                        type = WorkDomainModel.Type.MOVIE
-                )
+    page = 1,
+    totalPages = 1,
+    results = listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            type = WorkDomainModel.Type.MOVIE
         )
+    )
 )
 
 class LoadWorkByTypeUseCaseTest {
@@ -50,35 +50,35 @@ class LoadWorkByTypeUseCaseTest {
     private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mock()
     private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mock()
     private val useCase = LoadWorkByTypeUseCase(
-            getFavoritesUseCase,
-            getNowPlayingMoviesUseCase,
-            getPopularMoviesUseCase,
-            getTopRatedMoviesUseCase,
-            getUpComingMoviesUseCase,
-            getAiringTodayTvShowsUseCase,
-            getOnTheAirTvShowsUseCase,
-            getPopularTvShowsUseCase,
-            getTopRatedTvShowsUseCase
+        getFavoritesUseCase,
+        getNowPlayingMoviesUseCase,
+        getPopularMoviesUseCase,
+        getTopRatedMoviesUseCase,
+        getUpComingMoviesUseCase,
+        getAiringTodayTvShowsUseCase,
+        getOnTheAirTvShowsUseCase,
+        getPopularTvShowsUseCase,
+        getTopRatedTvShowsUseCase
     )
 
     @Test
     fun `should return the right data when loading the works by type`() {
         whenever(getNowPlayingMoviesUseCase(1))
-                .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
 
         useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
-                .test()
-                .assertComplete()
-                .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
+            .test()
+            .assertComplete()
+            .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
     }
 
     @Test
     fun `should return an error when some exception happens`() {
         whenever(getNowPlayingMoviesUseCase(1))
-                .thenReturn(Single.error(Throwable()))
+            .thenReturn(Single.error(Throwable()))
 
         useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
-                .test()
-                .assertError(Throwable::class.java)
+            .test()
+            .assertError(Throwable::class.java)
     }
 }

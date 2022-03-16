@@ -25,19 +25,21 @@ import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponentProvide
 import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponentProvider
 import com.pimenta.bestv.search.di.SearchActivityComponentProvider
 import com.pimenta.bestv.workbrowse.di.MainActivityComponentProvider
+import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponentProvider
 import timber.log.Timber
 
 /**
  * Created by marcus on 07-02-2018.
  */
-class BesTVApplication : Application(),
-        CastDetailsActivityComponentProvider,
-        SearchActivityComponentProvider,
-        WorkDetailsActivityComponentProvider,
-        MainActivityComponentProvider,
-        BootBroadcastReceiverComponentProvider,
-        RecommendationWorkerComponentProvider {
+class BesTVApplication :
+    Application(),
+    CastDetailsActivityComponentProvider,
+    SearchActivityComponentProvider,
+    WorkDetailsActivityComponentProvider,
+    MainActivityComponentProvider,
+    BootBroadcastReceiverComponentProvider,
+    RecommendationWorkerComponentProvider {
 
     private lateinit var applicationComponent: ApplicationComponent
 
@@ -46,39 +48,43 @@ class BesTVApplication : Application(),
         when (BuildConfig.BUILD_TYPE) {
             "debug" -> {
                 Timber.plant(Timber.DebugTree())
-                StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                StrictMode.setThreadPolicy(
+                    StrictMode.ThreadPolicy.Builder()
                         .detectAll()
                         .penaltyLog()
-                        .build())
-                StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                        .build()
+                )
+                StrictMode.setVmPolicy(
+                    StrictMode.VmPolicy.Builder()
                         .detectLeakedSqlLiteObjects()
                         .detectLeakedClosableObjects()
                         .penaltyLog()
-                        .build())
+                        .build()
+                )
             }
         }
 
         applicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(ApplicationModule(this))
-                .build()
+            .builder()
+            .applicationModule(ApplicationModule(this))
+            .build()
     }
 
     override fun castDetailsActivityComponent() =
-            applicationComponent.castDetailsActivityComponent().create()
+        applicationComponent.castDetailsActivityComponent().create()
 
     override fun searchActivityComponent() =
-            applicationComponent.searchActivityComponent().create()
+        applicationComponent.searchActivityComponent().create()
 
     override fun workDetailsActivityComponent() =
-            applicationComponent.workDetailsActivityComponent().create()
+        applicationComponent.workDetailsActivityComponent().create()
 
-    override fun mainActivityComponent() =
-            applicationComponent.mainActivityComponent().create()
+    override fun mainActivityComponent(view: MainPresenter.View) =
+        applicationComponent.mainActivityComponent().create(view)
 
     override fun bootBroadcastReceiverComponent() =
-            applicationComponent.bootBroadcastReceiverComponent().create()
+        applicationComponent.bootBroadcastReceiverComponent().create()
 
     override fun recommendationWorkerComponent() =
-            applicationComponent.recommendationWorkerComponent().create()
+        applicationComponent.recommendationWorkerComponent().create()
 }

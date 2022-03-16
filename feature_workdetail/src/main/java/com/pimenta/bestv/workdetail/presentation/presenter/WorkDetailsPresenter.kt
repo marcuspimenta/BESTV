@@ -34,8 +34,8 @@ import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by marcus on 07-02-2018.
@@ -66,139 +66,142 @@ class WorkDetailsPresenter @Inject constructor(
 
     fun setFavorite() {
         setFavoriteUseCase(workViewModel)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({
-                    workViewModel.isFavorite = !workViewModel.isFavorite
-                    view.resultSetFavoriteMovie(workViewModel.isFavorite)
-                }, { throwable ->
-                    Timber.e(throwable, "Error while settings the work as favorite")
-                    view.resultSetFavoriteMovie(false)
-                }).addTo(compositeDisposable)
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({
+                workViewModel.isFavorite = !workViewModel.isFavorite
+                view.resultSetFavoriteMovie(workViewModel.isFavorite)
+            }, { throwable ->
+                Timber.e(throwable, "Error while settings the work as favorite")
+                view.resultSetFavoriteMovie(false)
+            }).addTo(compositeDisposable)
     }
 
     fun loadData() {
         getWorkDetailsUseCase(workViewModel)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .doOnSubscribe { view.showProgress() }
-                .doFinally { view.hideProgress() }
-                .subscribe({ result ->
-                    workViewModel.isFavorite = result.isFavorite
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .doOnSubscribe { view.showProgress() }
+            .doFinally { view.hideProgress() }
+            .subscribe({ result ->
+                workViewModel.isFavorite = result.isFavorite
 
-                    with(result.recommended) {
-                        recommendedPage = page
-                        totalRecommendedPage = totalPages
-                        results?.let {
-                            recommendedWorks.addAll(it)
-                        }
+                with(result.recommended) {
+                    recommendedPage = page
+                    totalRecommendedPage = totalPages
+                    results?.let {
+                        recommendedWorks.addAll(it)
                     }
+                }
 
-                    with(result.similar) {
-                        similarPage = page
-                        totalSimilarPage = totalPages
-                        results?.let {
-                            similarWorks.addAll(it)
-                        }
+                with(result.similar) {
+                    similarPage = page
+                    totalSimilarPage = totalPages
+                    results?.let {
+                        similarWorks.addAll(it)
                     }
+                }
 
-                    with(result.reviews) {
-                        reviewPage = page
-                        totalReviewPage = totalPages
-                        results?.let {
-                            reviews.addAll(it)
-                        }
+                with(result.reviews) {
+                    reviewPage = page
+                    totalReviewPage = totalPages
+                    results?.let {
+                        reviews.addAll(it)
                     }
+                }
 
-                    view.dataLoaded(
-                            workViewModel.isFavorite,
-                            reviews,
-                            result.videos,
-                            result.casts,
-                            recommendedWorks,
-                            similarWorks
-                    )
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading data by work")
-                    view.errorWorkDetailsLoaded()
-                }).addTo(compositeDisposable)
+                view.dataLoaded(
+                    workViewModel.isFavorite,
+                    reviews,
+                    result.videos,
+                    result.casts,
+                    recommendedWorks,
+                    similarWorks
+                )
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading data by work")
+                view.errorWorkDetailsLoaded()
+            }).addTo(compositeDisposable)
     }
 
     fun reviewItemSelected(reviewViewModel: ReviewViewModel) {
         if ((reviews.indexOf(reviewViewModel) < reviews.size - 1) ||
-                (reviewPage != 0 && reviewPage + 1 > totalReviewPage)) {
+            (reviewPage != 0 && reviewPage + 1 > totalReviewPage)
+        ) {
             return
         }
 
         getReviewByWorkUseCase(workViewModel.type, workViewModel.id, recommendedPage + 1)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ result ->
-                    with(result) {
-                        reviewPage = page
-                        totalReviewPage = totalPages
-                        results?.let {
-                            reviews.addAll(it)
-                            view.reviewLoaded(reviews)
-                        }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ result ->
+                with(result) {
+                    reviewPage = page
+                    totalReviewPage = totalPages
+                    results?.let {
+                        reviews.addAll(it)
+                        view.reviewLoaded(reviews)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading reviews by work")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading reviews by work")
+            }).addTo(compositeDisposable)
     }
 
     fun recommendationItemSelected(recommendedWorkViewModel: WorkViewModel) {
         if ((recommendedWorks.indexOf(recommendedWorkViewModel) < recommendedWorks.size - 1) ||
-                (recommendedPage != 0 && recommendedPage + 1 > totalRecommendedPage)) {
+            (recommendedPage != 0 && recommendedPage + 1 > totalRecommendedPage)
+        ) {
             return
         }
 
         getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, recommendedPage + 1)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ moviePage ->
-                    with(moviePage) {
-                        recommendedPage = page
-                        totalRecommendedPage = totalPages
-                        results?.let {
-                            recommendedWorks.addAll(it)
-                            view.recommendationLoaded(recommendedWorks)
-                        }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ moviePage ->
+                with(moviePage) {
+                    recommendedPage = page
+                    totalRecommendedPage = totalPages
+                    results?.let {
+                        recommendedWorks.addAll(it)
+                        view.recommendationLoaded(recommendedWorks)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading recommendations by work")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading recommendations by work")
+            }).addTo(compositeDisposable)
     }
 
     fun similarItemSelected(similarWorkViewModel: WorkViewModel) {
         if ((similarWorks.indexOf(similarWorkViewModel) < similarWorks.size - 1) ||
-                (similarPage != 0 && similarPage + 1 > totalSimilarPage)) {
+            (similarPage != 0 && similarPage + 1 > totalSimilarPage)
+        ) {
             return
         }
 
         getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, similarPage + 1)
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.computationScheduler)
-                .map { it.toViewModel() }
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ moviePage ->
-                    with(moviePage) {
-                        similarPage = page
-                        totalSimilarPage = totalPages
-                        results?.let {
-                            similarWorks.addAll(it)
-                            view.similarLoaded(similarWorks)
-                        }
+            .subscribeOn(rxScheduler.ioScheduler)
+            .observeOn(rxScheduler.computationScheduler)
+            .map { it.toViewModel() }
+            .observeOn(rxScheduler.mainScheduler)
+            .subscribe({ moviePage ->
+                with(moviePage) {
+                    similarPage = page
+                    totalSimilarPage = totalPages
+                    results?.let {
+                        similarWorks.addAll(it)
+                        view.similarLoaded(similarWorks)
                     }
-                }, { throwable ->
-                    Timber.e(throwable, "Error while loading similar by work")
-                }).addTo(compositeDisposable)
+                }
+            }, { throwable ->
+                Timber.e(throwable, "Error while loading similar by work")
+            }).addTo(compositeDisposable)
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
@@ -216,12 +219,12 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     private fun GetWorkDetailsUseCase.WorkDetailsDomainWrapper.toViewModel() = WorkDetailsViewModelWrapper(
-            isFavorite,
-            videos?.map { it.toViewModel() },
-            casts?.map { it.toViewModel() },
-            recommended.toViewModel(),
-            similar.toViewModel(),
-            reviews.toViewModel()
+        isFavorite,
+        videos?.map { it.toViewModel() },
+        casts?.map { it.toViewModel() },
+        recommended.toViewModel(),
+        similar.toViewModel(),
+        reviews.toViewModel()
     )
 
     data class WorkDetailsViewModelWrapper(

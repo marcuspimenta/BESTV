@@ -28,11 +28,11 @@ class HasFavoriteUseCase @Inject constructor(
 ) {
 
     operator fun invoke() =
-            Single.zip(
-                    getFavoriteMoviesUseCase(),
-                    getFavoriteTvShowsUseCase(),
-                    BiFunction<List<WorkDomainModel>, List<WorkDomainModel>, Boolean> { first, second ->
-                        first.isNotEmpty() || second.isNotEmpty()
-                    }
-            )
+        Single.zip(
+            getFavoriteMoviesUseCase(),
+            getFavoriteTvShowsUseCase(),
+            BiFunction<List<WorkDomainModel>, List<WorkDomainModel>, Boolean> { first, second ->
+                first.isNotEmpty() || second.isNotEmpty()
+            }
+        )
 }
