@@ -237,13 +237,13 @@ class WorkDetailsFragment :
         startActivity(route.intent, bundle)
     }
 
-    override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
+    override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
             requireActivity(),
             (itemViewHolder.view as ImageCardView).mainImageView,
             SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(route.intent, bundle)
+        startActivity(intent, bundle)
     }
 
     override fun openVideo(videoViewModel: VideoViewModel) {

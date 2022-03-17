@@ -16,7 +16,6 @@ package com.pimenta.bestv.route.workbrowse
 
 import android.content.Intent
 import android.net.Uri
-import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**

@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
@@ -210,8 +211,8 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun castClicked(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
-        val route = castDetailsRoute.buildCastDetailRoute(castViewModel)
-        view.openCastDetails(itemViewHolder, route)
+        val intent = castDetailsRoute.buildCastDetailIntent(castViewModel)
+        view.openCastDetails(itemViewHolder, intent)
     }
 
     fun videoClicked(videoViewModel: VideoViewModel) {
@@ -263,7 +264,7 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
 
-        fun openCastDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
+        fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
 
         fun openVideo(videoViewModel: VideoViewModel)
     }

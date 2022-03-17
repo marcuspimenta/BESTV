@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
@@ -659,14 +660,14 @@ class WorkDetailsPresenterTest {
         val workViewModel = aWorkViewModel()
         val presenter = aPresenter(workViewModel)
         val itemViewHolder: Presenter.ViewHolder = mock()
-        val route: Route = mock()
+        val intent: Intent = mock()
 
-        whenever(castDetailsRoute.buildCastDetailRoute(CAST_DETAILED_VIEW_MODEL))
-            .thenReturn(route)
+        whenever(castDetailsRoute.buildCastDetailIntent(CAST_DETAILED_VIEW_MODEL))
+            .thenReturn(intent)
 
         presenter.castClicked(itemViewHolder, CAST_DETAILED_VIEW_MODEL)
 
-        verify(view, only()).openCastDetails(itemViewHolder, route)
+        verify(view, only()).openCastDetails(itemViewHolder, intent)
     }
 
     @Test
