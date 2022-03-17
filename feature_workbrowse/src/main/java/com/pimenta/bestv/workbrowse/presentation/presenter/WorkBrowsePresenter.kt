@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.DividerRow
 import androidx.leanback.widget.PageRow
 import androidx.leanback.widget.Row
@@ -23,7 +24,6 @@ import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
@@ -132,7 +132,7 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun searchClicked() {
-        val route = searchRoute.buildSearchRoute()
+        val route = searchRoute.buildSearchIntent()
         view.openSearch(route)
     }
 
@@ -181,6 +181,6 @@ class WorkBrowsePresenter @Inject constructor(
 
         fun onErrorDataLoaded()
 
-        fun openSearch(route: Route)
+        fun openSearch(intent: Intent)
     }
 }

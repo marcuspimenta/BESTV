@@ -16,7 +16,6 @@ package com.pimenta.bestv.route.search
 
 import android.content.Intent
 import android.net.Uri
-import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**
@@ -26,6 +25,5 @@ private const val SCHEMA_URI_PREFIX = "bestv://search/"
 
 class SearchRoute @Inject constructor() {
 
-    fun buildSearchRoute() =
-        Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
+    fun buildSearchIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build())
 }

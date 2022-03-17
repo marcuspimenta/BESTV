@@ -30,7 +30,6 @@ import androidx.leanback.widget.Row
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
@@ -114,8 +113,8 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openSearch(route: Route) {
-        startActivity(route.intent)
+    override fun openSearch(intent: Intent) {
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

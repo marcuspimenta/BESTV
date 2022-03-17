@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Row
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -25,7 +26,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
@@ -296,12 +296,12 @@ class WorkBrowsePresenterTest {
 
     @Test
     fun `should open the search view when click in the search icon`() {
-        val route: Route = mock()
+        val intent: Intent = mock()
 
-        whenever(searchRoute.buildSearchRoute()).thenReturn(route)
+        whenever(searchRoute.buildSearchIntent()).thenReturn(intent)
 
         presenter.searchClicked()
 
-        verify(view, only()).openSearch(route)
+        verify(view, only()).openSearch(intent)
     }
 }
