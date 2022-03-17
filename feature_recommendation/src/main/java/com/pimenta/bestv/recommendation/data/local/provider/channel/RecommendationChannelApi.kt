@@ -88,7 +88,7 @@ class RecommendationChannelApi constructor(
                 val channelBuilder = Channel.Builder()
                     .setType(TvContractCompat.Channels.TYPE_PREVIEW)
                     .setDisplayName(application.getString(R.string.popular))
-                    .setAppLinkIntent(workBrowseRoute.buildWorkBrowseRoute().intent)
+                    .setAppLinkIntent(workBrowseRoute.buildWorkBrowseIntent())
 
                 application.contentResolver.insert(
                     TvContractCompat.Channels.CONTENT_URI,

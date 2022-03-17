@@ -26,6 +26,5 @@ private const val SCHEMA_URI_PREFIX = "bestv://workbrowse/"
 
 class WorkBrowseRoute @Inject constructor() {
 
-    fun buildWorkBrowseRoute() =
-        Route(Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()))
+    fun buildWorkBrowseIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build())
 }
