@@ -24,7 +24,6 @@ import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
@@ -206,8 +205,8 @@ class WorkDetailsPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
-        view.openWorkDetails(itemViewHolder, route)
+        val intent = workDetailsRoute.buildWorkDetailIntent(workViewModel)
+        view.openWorkDetails(itemViewHolder, intent)
     }
 
     fun castClicked(itemViewHolder: Presenter.ViewHolder, castViewModel: CastViewModel) {
@@ -262,7 +261,7 @@ class WorkDetailsPresenter @Inject constructor(
 
         fun errorWorkDetailsLoaded()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
 
         fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
 

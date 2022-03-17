@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
@@ -26,7 +27,6 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
@@ -163,13 +163,13 @@ class TopWorkGridPresenterTest {
 
     @Test
     fun `should open work details when a work is clicked`() {
-        val route: Route = mock()
+        val intent: Intent = mock()
         val itemViewHolder: Presenter.ViewHolder = mock()
 
-        whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL)).thenReturn(route)
+        whenever(workDetailsRoute.buildWorkDetailIntent(MOVIE_VIEW_MODEL)).thenReturn(intent)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, route)
+        verify(view, only()).openWorkDetails(itemViewHolder, intent)
     }
 }

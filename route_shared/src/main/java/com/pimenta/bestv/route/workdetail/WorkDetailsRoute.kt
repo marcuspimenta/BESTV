@@ -18,7 +18,6 @@ import android.content.Intent
 import android.net.Uri
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 /**
@@ -40,11 +39,9 @@ private const val TYPE = "TYPE"
 
 class WorkDetailsRoute @Inject constructor() {
 
-    fun buildWorkDetailRoute(workViewModel: WorkViewModel) =
-        Route(Intent(Intent.ACTION_VIEW, workViewModel.toUri()))
+    fun buildWorkDetailIntent(workViewModel: WorkViewModel) = Intent(Intent.ACTION_VIEW, workViewModel.toUri())
 
-    fun getWorkDetail(intent: Intent) =
-        intent.getWorkDeepLink()
+    fun getWorkDetail(intent: Intent) = intent.getWorkDeepLink()
 
     private fun WorkViewModel.toUri(): Uri =
         Uri.parse(SCHEMA_URI_PREFIX.plus(WORK)).buildUpon()

@@ -50,7 +50,6 @@ import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.route.Route
 import javax.inject.Inject
 
 private const val CAST = "CAST"
@@ -143,13 +142,13 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
             requireActivity(),
             (itemViewHolder.view as ImageCardView).mainImageView,
             SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(route.intent, bundle)
+        startActivity(intent, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

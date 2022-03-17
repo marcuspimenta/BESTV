@@ -55,7 +55,6 @@ import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
@@ -228,13 +227,13 @@ class WorkDetailsFragment :
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
             requireActivity(),
             (itemViewHolder.view as ImageCardView).mainImageView,
             SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(route.intent, bundle)
+        startActivity(intent, bundle)
     }
 
     override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {

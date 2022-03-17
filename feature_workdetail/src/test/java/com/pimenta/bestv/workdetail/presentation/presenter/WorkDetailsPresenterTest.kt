@@ -647,7 +647,7 @@ class WorkDetailsPresenterTest {
         val itemViewHolder: Presenter.ViewHolder = mock()
         val route: Route = mock()
 
-        whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL))
+        whenever(workDetailsRoute.buildWorkDetailIntent(MOVIE_VIEW_MODEL))
             .thenReturn(route)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)

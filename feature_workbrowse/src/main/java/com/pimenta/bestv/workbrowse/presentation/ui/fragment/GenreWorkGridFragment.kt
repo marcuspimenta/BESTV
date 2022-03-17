@@ -29,7 +29,6 @@ import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.presenter.GenreGridPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
@@ -104,13 +103,13 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
         parentFragmentManager.addFragment(R.id.scale_frame, fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
             requireActivity(),
             (itemViewHolder.view as ImageCardView).mainImageView,
             SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(route.intent, bundle)
+        startActivity(intent, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

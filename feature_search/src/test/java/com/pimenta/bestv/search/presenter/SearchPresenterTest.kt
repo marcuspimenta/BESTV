@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.search.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
@@ -27,7 +28,6 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -242,13 +242,13 @@ class SearchPresenterTest {
     @Test
     fun `should open work details when a work is clicked`() {
         val itemViewHolder: Presenter.ViewHolder = mock()
-        val route: Route = mock()
+        val intent: Intent = mock()
 
-        whenever(workDetailsRoute.buildWorkDetailRoute(WORK_VIEW_MODEL))
-            .thenReturn(route)
+        whenever(workDetailsRoute.buildWorkDetailIntent(WORK_VIEW_MODEL))
+            .thenReturn(intent)
 
         presenter.workClicked(itemViewHolder, WORK_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, route)
+        verify(view, only()).openWorkDetails(itemViewHolder, intent)
     }
 }

@@ -55,7 +55,7 @@ class RecommendationChannelApi constructor(
                         .setTitle(workViewModel.title)
                         .setDescription(workViewModel.overview)
                         .setPosterArtUri(Uri.parse(workViewModel.backdropUrl))
-                        .setIntent(workDetailsRoute.buildWorkDetailRoute(workViewModel).intent)
+                        .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
                         .setInternalProviderId(workViewModel.id.toString())
 
                     localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)

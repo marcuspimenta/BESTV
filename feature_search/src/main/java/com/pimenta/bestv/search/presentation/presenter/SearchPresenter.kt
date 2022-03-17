@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.search.presentation.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -23,7 +24,6 @@ import com.pimenta.bestv.presentation.extension.disposeIfRunning
 import com.pimenta.bestv.presentation.extension.hasNoContent
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -184,8 +184,8 @@ class SearchPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
-        view.openWorkDetails(itemViewHolder, route)
+        val intent = workDetailsRoute.buildWorkDetailIntent(workViewModel)
+        view.openWorkDetails(itemViewHolder, intent)
     }
 
     interface View {
@@ -206,6 +206,6 @@ class SearchPresenter @Inject constructor(
 
         fun onErrorSearch()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
     }
 }

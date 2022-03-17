@@ -39,7 +39,6 @@ import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.search.R
 import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
@@ -157,13 +156,13 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route) {
+    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
             requireActivity(),
             (itemViewHolder.view as ImageCardView).mainImageView,
             SettingShared.SHARED_ELEMENT_NAME
         ).toBundle()
-        startActivity(route.intent, bundle)
+        startActivity(intent, bundle)
     }
 
     override fun getResultsAdapter() = rowsAdapter

@@ -61,7 +61,7 @@ class RecommendationRowApi constructor(
                         .setText(application.getString(R.string.popular))
                         .setContentIntentData(
                             ContentRecommendation.INTENT_TYPE_ACTIVITY,
-                            workDetailsRoute.buildWorkDetailRoute(workViewModel).intent.apply {
+                            workDetailsRoute.buildWorkDetailIntent(workViewModel).apply {
                                 // Ensure a unique PendingIntents, otherwise all
                                 // recommendations end up with the same PendingIntent
                                 action = workViewModel.id.toString()

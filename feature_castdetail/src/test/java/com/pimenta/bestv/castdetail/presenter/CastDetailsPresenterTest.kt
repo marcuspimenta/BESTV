@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.castdetail.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
@@ -27,7 +28,6 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -108,13 +108,13 @@ class CastDetailsPresenterTest {
 
     @Test
     fun `should open work details when a work is clicked`() {
-        val route = mock<Route>()
+        val intent = mock<Intent>()
         val itemViewHolder = mock<Presenter.ViewHolder>()
 
-        whenever(workDetailsRoute.buildWorkDetailRoute(MOVIE_VIEW_MODEL)).thenReturn(route)
+        whenever(workDetailsRoute.buildWorkDetailIntent(MOVIE_VIEW_MODEL)).thenReturn(intent)
 
         presenter.workClicked(itemViewHolder, MOVIE_VIEW_MODEL)
 
-        verify(view, only()).openWorkDetails(itemViewHolder, route)
+        verify(view, only()).openWorkDetails(itemViewHolder, intent)
     }
 }

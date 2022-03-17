@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.presenter
 
+import android.content.Intent
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -21,7 +22,6 @@ import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.presentation.extension.addTo
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
-import com.pimenta.bestv.route.Route
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
@@ -104,8 +104,8 @@ class TopWorkGridPresenter @Inject constructor(
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
-        val route = workDetailsRoute.buildWorkDetailRoute(workViewModel)
-        view.openWorkDetails(itemViewHolder, route)
+        val intent = workDetailsRoute.buildWorkDetailIntent(workViewModel)
+        view.openWorkDetails(itemViewHolder, intent)
     }
 
     private fun disposeLoadBackdropImage() {
@@ -134,6 +134,6 @@ class TopWorkGridPresenter @Inject constructor(
 
         fun onErrorWorksLoaded()
 
-        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, route: Route)
+        fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
     }
 }
