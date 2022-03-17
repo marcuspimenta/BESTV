@@ -1,5 +1,5 @@
 # BESTV
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.72-blue.svg)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.6.20-blue.svg)](https://kotlinlang.org)
 
 <img src="/app/src/main/res/drawable/app_icon.png"  align="left" hspace="20" height="150" width="150">
 
