@@ -93,7 +93,9 @@ class WorkBrowseFragment : BrowseSupportFragment(), WorkBrowsePresenter.View {
     }
 
     override fun onHideProgress() {
-        progressBarManager.hide()
+        if (!isRemoving) {
+            progressBarManager.hide()
+        }
     }
 
     override fun onDataLoaded(rows: List<Row>) {

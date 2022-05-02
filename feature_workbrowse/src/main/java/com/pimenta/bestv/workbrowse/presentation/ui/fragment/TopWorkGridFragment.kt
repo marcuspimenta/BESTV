@@ -83,7 +83,9 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     }
 
     override fun onHideProgress() {
-        progressBarManager.hide()
+        if (!isRemoving) {
+            progressBarManager.hide()
+        }
     }
 
     override fun onWorksLoaded(works: List<WorkViewModel>) {
