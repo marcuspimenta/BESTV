@@ -22,8 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pimenta.bestv.presentation.extension.finish
-import com.pimenta.bestv.splash.R
-import kotlinx.android.synthetic.main.fragment_splash.*
+import com.pimenta.bestv.splash.databinding.FragmentSplashBinding
 
 /**
  * Created by marcus on 04-05-2018.
@@ -32,13 +31,17 @@ private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/
 
 class SplashFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_splash, container, false)
+    private lateinit var binding: FragmentSplashBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentSplashBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        animationVideoView.run {
+        binding.animationVideoView.run {
             setOnCompletionListener {
                 requireActivity().finish(Activity.RESULT_OK)
             }

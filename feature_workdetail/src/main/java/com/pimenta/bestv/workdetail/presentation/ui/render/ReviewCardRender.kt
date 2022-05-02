@@ -20,8 +20,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.BaseCardView
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.workdetail.databinding.TextIconCardBinding
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
-import kotlinx.android.synthetic.main.text_icon_card.view.*
 
 /**
  * Created by marcus on 22-04-2020.
@@ -38,7 +38,7 @@ class ReviewCardRender : Presenter() {
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val reviewViewModel = item as ReviewViewModel
         val cardView = viewHolder.view as TextCardView
-        with(cardView) {
+        with(cardView.binding) {
             contentTextView.text = reviewViewModel.content
             authorTextView.text = reviewViewModel.author
         }
@@ -46,13 +46,14 @@ class ReviewCardRender : Presenter() {
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
         val cardView = viewHolder.view as TextCardView
-        with(cardView) {
+        with(cardView.binding) {
             contentTextView.text = null
             authorTextView.text = null
         }
     }
 
     private class TextCardView(context: Context?) : BaseCardView(context) {
+        val binding by lazy { TextIconCardBinding.bind(this) }
         init {
             LayoutInflater.from(getContext()).inflate(R.layout.text_icon_card, this)
         }
