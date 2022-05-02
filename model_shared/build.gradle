@@ -4,6 +4,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
+    namespace 'com.pimenta.bestv.model'
+}
+
+android {
     defaultConfig {
         buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
         buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""

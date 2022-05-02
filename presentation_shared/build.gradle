@@ -5,6 +5,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
+    namespace 'com.pimenta.bestv.presentation'
+
     defaultConfig {
         buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
     }

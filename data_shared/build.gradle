@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
+    namespace 'com.pimenta.bestv.data'
     defaultConfig {
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
