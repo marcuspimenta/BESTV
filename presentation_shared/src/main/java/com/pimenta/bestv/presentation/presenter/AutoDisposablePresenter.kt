@@ -14,21 +14,21 @@
 
 package com.pimenta.bestv.presentation.presenter
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 
 /**
  * Created by marcus on 06-02-2018.
  */
-abstract class AutoDisposablePresenter : LifecycleObserver, DisposablePresenter() {
+abstract class AutoDisposablePresenter : DefaultLifecycleObserver, DisposablePresenter() {
 
     fun bindTo(lifecycle: Lifecycle) {
         lifecycle.addObserver(this)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    override fun dispose() {
-        super.dispose()
+    override fun onDestroy(owner: LifecycleOwner) {
+        dispose()
+        super.onDestroy(owner)
     }
 }
