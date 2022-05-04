@@ -17,6 +17,7 @@ package com.pimenta.bestv.presentation.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
@@ -24,17 +25,23 @@ import kotlin.coroutines.CoroutineContext
 /**
  * Created by marcus on 03-05-2022.
  */
-abstract class AutoCancelableCoroutineScopePresenter : DefaultLifecycleObserver, CoroutineScope {
+abstract class AutoCancelableCoroutineScopePresenter(
+    coroutineDispatchers: CoroutineDispatchers
+) : DefaultLifecycleObserver, CoroutineScope {
 
     private val mainJob = SupervisorJob()
 
-    override val coroutineContext: CoroutineContext = mainJob
+    override val coroutineContext: CoroutineContext = mainJob + coroutineDispatchers.mainDispatcher
 
     fun bindTo(lifecycle: Lifecycle) {
         lifecycle.addObserver(this)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
+        // By default, every coroutine initiated in this context
+        // will use the job and dispatcher specified by the
+        // coroutineContext.
+        // The coroutines are scoped to their execution environment.
         mainJob.cancel()
         super.onDestroy(owner)
     }

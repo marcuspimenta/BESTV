@@ -38,10 +38,10 @@ class CastDetailsPresenter @Inject constructor(
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val coroutineDispatchers: CoroutineDispatchers
-) : AutoCancelableCoroutineScopePresenter() {
+) : AutoCancelableCoroutineScopePresenter(coroutineDispatchers) {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
-        launch(coroutineDispatchers.mainDispatcher) {
+        launch {
             view.onShowProgress()
             try {
                 withContext(coroutineDispatchers.ioDispatcher) {
