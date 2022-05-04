@@ -16,8 +16,9 @@ package com.pimenta.bestv.castdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
-import io.reactivex.functions.Function3
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
@@ -29,13 +30,12 @@ class GetCastDetailsUseCase @Inject constructor(
     private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
 ) {
 
-    operator fun invoke(castId: Int): Single<Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>> =
-        Single.zip(
-            getCastPersonalDetails(castId),
-            getMovieCreditsByCastUseCase(castId),
-            getTvShowCreditsByCastUseCase(castId),
-            Function3 { castViewModel, castMovieList, castTvShowList ->
-                Triple(castViewModel, castMovieList, castTvShowList)
-            }
-        )
+    suspend operator fun invoke(castId: Int): Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?> =
+        coroutineScope {
+            val castViewModel = async { getCastPersonalDetails(castId) }
+            val castMovieList = async { getMovieCreditsByCastUseCase(castId) }
+            val castTvShowList = async { getTvShowCreditsByCastUseCase(castId) }
+            awaitAll(castViewModel, castMovieList, castTvShowList)
+            Triple(castViewModel.await(), castMovieList.await(), castTvShowList.await())
+        }
 }

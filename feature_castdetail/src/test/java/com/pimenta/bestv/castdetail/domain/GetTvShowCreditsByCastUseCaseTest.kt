@@ -18,8 +18,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 24-05-2018.
@@ -40,25 +42,21 @@ class GetTvShowCreditsByCastUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the tv shows by cast`() {
+    fun `should return the right data when loading the tv shows by cast`() = runTest {
         val castTvShowList = listOf(TV_SHOW)
 
-        whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
-            .thenReturn(Single.just(castTvShowList))
+        whenever(castRepository.getTvShowCreditsByCast(CAST_ID)).thenReturn(castTvShowList)
 
-        useCase(CAST_ID)
-            .test()
-            .assertComplete()
-            .assertResult(castTvShowList)
+        val result = useCase(CAST_ID)
+        assertEquals(result, castTvShowList)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(castRepository.getTvShowCreditsByCast(CAST_ID))
-            .thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(castRepository.getTvShowCreditsByCast(CAST_ID)).thenThrow(RuntimeException())
 
-        useCase(CAST_ID)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(CAST_ID)
+        }
     }
 }

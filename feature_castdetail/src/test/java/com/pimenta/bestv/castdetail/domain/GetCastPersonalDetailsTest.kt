@@ -18,8 +18,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
 import com.pimenta.bestv.model.domain.CastDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-05-2018.
@@ -41,21 +43,19 @@ class GetCastPersonalDetailsTest {
     )
 
     @Test
-    fun `should return the right data when loading the cast personal details`() {
-        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
+    fun `should return the right data when loading the cast personal details`() = runTest {
+        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(CAST_DETAILED)
 
-        useCase(CAST_ID)
-            .test()
-            .assertComplete()
-            .assertResult(CAST_DETAILED)
+        val result = useCase(CAST_ID)
+        assertEquals(result, CAST_DETAILED)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(castRepository.getCastDetails(CAST_ID)).thenThrow(RuntimeException())
 
-        useCase(CAST_ID)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(CAST_ID)
+        }
     }
 }

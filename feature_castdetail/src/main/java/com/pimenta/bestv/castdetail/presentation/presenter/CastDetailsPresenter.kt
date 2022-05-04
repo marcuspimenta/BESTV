@@ -21,10 +21,11 @@ import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
-import com.pimenta.bestv.presentation.extension.addTo
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
+import com.pimenta.bestv.presentation.presenter.AutoCancelableCoroutineScopePresenter
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,33 +37,30 @@ class CastDetailsPresenter @Inject constructor(
     private val view: View,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
-    private val rxScheduler: RxScheduler
-) : AutoDisposablePresenter() {
+    private val coroutineDispatchers: CoroutineDispatchers
+) : AutoCancelableCoroutineScopePresenter() {
 
     fun loadCastDetails(castViewModel: CastViewModel) {
-        getCastDetailsUseCase(castViewModel.id)
-            .subscribeOn(rxScheduler.ioScheduler)
-            .observeOn(rxScheduler.computationScheduler)
-            .map { result ->
-                val cast = result.first.toViewModel()
-                val movies = result.second?.map { it.toViewModel() }
-                val tvShow = result.third?.map { it.toViewModel() }
-
-                Triple(cast, movies, tvShow)
-            }
-            .observeOn(rxScheduler.mainScheduler)
-            .doOnSubscribe { view.onShowProgress() }
-            .doFinally { view.onHideProgress() }
-            .subscribe({ result ->
-                val cast = result.first
-                val movies = result.second
-                val tvShow = result.third
-
-                view.onCastLoaded(cast, movies, tvShow)
-            }, { throwable ->
-                Timber.e(throwable, "Error while getting the cast details")
+        launch(coroutineDispatchers.mainDispatcher) {
+            view.onShowProgress()
+            try {
+                withContext(coroutineDispatchers.ioDispatcher) {
+                    getCastDetailsUseCase(castViewModel.id).run {
+                        val cast = first.toViewModel()
+                        val movies = second?.map { it.toViewModel() }
+                        val tvShow = third?.map { it.toViewModel() }
+                        Triple(cast, movies, tvShow)
+                    }
+                }.also {
+                    view.onCastLoaded(it.first, it.second, it.third)
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Error while getting the cast details")
                 view.onErrorCastDetailsLoaded()
-            }).addTo(compositeDisposable)
+            } finally {
+                view.onHideProgress()
+            }
+        }
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {

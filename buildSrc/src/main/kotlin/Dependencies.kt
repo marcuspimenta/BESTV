@@ -24,6 +24,7 @@ object Config {
 
 object Versions {
     val kotlin = "1.6.21"
+    val kotlinx_coroutines_test = "1.6.0"
     val build_gradle = "7.3.0-alpha09"
     val google_service = "4.3.10"
     val ktlint = "10.2.1"
@@ -58,6 +59,8 @@ object Versions {
 
 object Dependencies {
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
+    val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx_coroutines_test}"
+    val kotlin_test_junit = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
 
     val build_gradle = "com.android.tools.build:gradle:${Versions.build_gradle}"
     val kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"

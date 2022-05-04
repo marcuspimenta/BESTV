@@ -27,10 +27,10 @@ import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 /**
@@ -63,24 +63,23 @@ class CastDetailsPresenterTest {
     private val view: CastDetailsPresenter.View = mock()
     private val getCastDetailsUseCase: GetCastDetailsUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
-    private val rxSchedulerTest = RxScheduler(
-        Schedulers.trampoline(),
-        Schedulers.trampoline(),
-        Schedulers.trampoline()
+    private val coroutineDispatchers = CoroutineDispatchers(
+        UnconfinedTestDispatcher(),
+        UnconfinedTestDispatcher()
     )
 
     private val presenter = CastDetailsPresenter(
         view,
         getCastDetailsUseCase,
         workDetailsRoute,
-        rxSchedulerTest
+        coroutineDispatchers
     )
 
     @Test
-    fun `should load the cast details`() {
+    fun `should load the cast details`() = runTest {
         val result = Triple(CAST_DETAILED_DOMAIN_MODEL, null, null)
 
-        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenReturn(Single.just(result))
+        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenReturn(result)
 
         presenter.loadCastDetails(CAST_VIEW_MODEL)
 
@@ -93,8 +92,8 @@ class CastDetailsPresenterTest {
     }
 
     @Test
-    fun `should load nothing if an error happens`() {
-        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenReturn(Single.error(Throwable()))
+    fun `should load nothing if an error happens`() = runTest {
+        whenever(getCastDetailsUseCase(CAST_VIEW_MODEL.id)).thenThrow(RuntimeException())
 
         presenter.loadCastDetails(CAST_VIEW_MODEL)
 
@@ -107,7 +106,7 @@ class CastDetailsPresenterTest {
     }
 
     @Test
-    fun `should open work details when a work is clicked`() {
+    fun `should open work details when a work is clicked`() = runTest {
         val intent = mock<Intent>()
         val itemViewHolder = mock<Presenter.ViewHolder>()
 

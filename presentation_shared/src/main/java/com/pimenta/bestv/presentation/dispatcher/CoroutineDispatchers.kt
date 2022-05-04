@@ -12,18 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.castdetail.domain
+package com.pimenta.bestv.presentation.dispatcher
 
-import com.pimenta.bestv.castdetail.data.repository.CastRepository
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 /**
- * Created by marcus on 20-05-2019.
+ * Created by marcus on 04-05-2022.
  */
-class GetCastPersonalDetails @Inject constructor(
-    private val castRepository: CastRepository
-) {
-
-    suspend operator fun invoke(castId: Int) =
-        castRepository.getCastDetails(castId)
-}
+class CoroutineDispatchers constructor(
+    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
+)

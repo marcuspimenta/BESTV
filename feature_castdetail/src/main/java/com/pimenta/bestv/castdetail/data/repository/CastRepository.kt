@@ -28,24 +28,21 @@ class CastRepository @Inject constructor(
     private val castRemoteDataSource: CastRemoteDataSource
 ) {
 
-    fun getCastDetails(castId: Int) =
-        castRemoteDataSource.getCastDetails(castId)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getCastDetails(castId: Int) =
+        castRemoteDataSource.getCastDetails(castId).run {
+            val source = resource.getStringResource(R.string.source_tmdb)
+            toDomainModel(source)
+        }
 
-    fun getMovieCreditsByCast(castId: Int) =
-        castRemoteDataSource.getMovieCreditsByCast(castId)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.works?.map { work -> work.toDomainModel(source) }
-            }
+    suspend fun getMovieCreditsByCast(castId: Int) =
+        castRemoteDataSource.getMovieCreditsByCast(castId).run {
+            val source = resource.getStringResource(R.string.source_tmdb)
+            works?.map { work -> work.toDomainModel(source) }
+        }
 
-    fun getTvShowCreditsByCast(castId: Int) =
-        castRemoteDataSource.getTvShowCreditsByCast(castId)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.works?.map { work -> work.toDomainModel(source) }
-            }
+    suspend fun getTvShowCreditsByCast(castId: Int) =
+        castRemoteDataSource.getTvShowCreditsByCast(castId).run {
+            val source = resource.getStringResource(R.string.source_tmdb)
+            works?.map { work -> work.toDomainModel(source) }
+        }
 }

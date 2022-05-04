@@ -19,6 +19,7 @@ import android.content.Context
 import com.pimenta.bestv.data.di.module.MediaLocalModule
 import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import com.pimenta.bestv.presentation.BuildConfig
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import dagger.Module
 import dagger.Provides
@@ -50,6 +51,10 @@ class ApplicationModule(
         Schedulers.computation(),
         AndroidSchedulers.mainThread()
     )
+
+    @Provides
+    @Singleton
+    fun provideCoroutineDispatchers() = CoroutineDispatchers()
 
     @Provides
     @Singleton

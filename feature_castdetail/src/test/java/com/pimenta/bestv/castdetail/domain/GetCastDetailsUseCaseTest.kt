@@ -17,8 +17,11 @@ package com.pimenta.bestv.castdetail.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
-import io.reactivex.Single
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-05-2018.
@@ -29,6 +32,11 @@ private val CAST_DETAILED = CastDomainModel(
     name = "Carlos",
     character = "Batman",
     birthday = "1990-07-13"
+)
+private val EXPECTED_RESULT = Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>(
+    CAST_DETAILED,
+    emptyList(),
+    emptyList()
 )
 
 class GetCastDetailsUseCaseTest {
@@ -44,28 +52,23 @@ class GetCastDetailsUseCaseTest {
     )
 
     @Test
-    fun `should return the correct data when load the cast details`() {
-        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
-        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
-        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
+    fun `should return the correct data when load the cast details`() = runTest {
+        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
 
-        useCase(CAST_ID)
-            .test()
-            .assertNoErrors()
-            .assertComplete()
-            .assertResult(
-                Triple(CAST_DETAILED, emptyList(), emptyList())
-            )
+        val result = useCase(CAST_ID)
+        assertEquals(result, EXPECTED_RESULT)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(Single.just(CAST_DETAILED))
-        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(Single.error(Throwable()))
-        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(Single.just(emptyList()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
 
-        useCase(CAST_ID)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(CAST_ID)
+        }
     }
 }
