@@ -25,7 +25,6 @@ import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import com.pimenta.bestv.presentation.presenter.AutoCancelableCoroutineScopePresenter
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,13 +43,11 @@ class CastDetailsPresenter @Inject constructor(
         launch {
             view.onShowProgress()
             try {
-                withContext(coroutineDispatchers.ioDispatcher) {
-                    getCastDetailsUseCase(castViewModel.id).run {
-                        val cast = first.toViewModel()
-                        val movies = second?.map { it.toViewModel() }
-                        val tvShow = third?.map { it.toViewModel() }
-                        Triple(cast, movies, tvShow)
-                    }
+                getCastDetailsUseCase(castViewModel.id).run {
+                    val cast = first.toViewModel()
+                    val movies = second?.map { it.toViewModel() }
+                    val tvShow = third?.map { it.toViewModel() }
+                    Triple(cast, movies, tvShow)
                 }.also {
                     view.onCastLoaded(it.first, it.second, it.third)
                 }
