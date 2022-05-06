@@ -27,6 +27,6 @@ class MovieRemoteDataSource @Inject constructor(
     private val searchMovieTmdbApi: SearchMovieTmdbApi
 ) {
 
-    fun searchMoviesByQuery(query: String, page: Int) =
+    suspend fun searchMoviesByQuery(query: String, page: Int) =
         searchMovieTmdbApi.searchMoviesByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
 }

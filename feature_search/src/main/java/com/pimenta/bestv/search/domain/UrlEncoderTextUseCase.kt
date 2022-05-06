@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.domain
 
-import io.reactivex.Single
+import kotlinx.coroutines.coroutineScope
 import java.net.URLEncoder
 import javax.inject.Inject
 
@@ -25,6 +25,6 @@ private const val enc = "UTF-8"
 
 class UrlEncoderTextUseCase @Inject constructor() {
 
-    operator fun invoke(text: String): Single<String> =
-        Single.fromCallable { URLEncoder.encode(text, enc) }
+    suspend operator fun invoke(text: String): String =
+        coroutineScope { URLEncoder.encode(text, enc) }
 }

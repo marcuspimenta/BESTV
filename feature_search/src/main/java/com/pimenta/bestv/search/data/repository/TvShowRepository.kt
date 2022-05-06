@@ -28,10 +28,10 @@ class TvShowRepository @Inject constructor(
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
 
-    fun searchTvShowsByQuery(query: String, page: Int) =
+    suspend fun searchTvShowsByQuery(query: String, page: Int) =
         tvShowRemoteDataSource.searchTvShowsByQuery(query, page)
-            .map {
+            .run {
                 val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
+                toDomainModel(source)
             }
 }

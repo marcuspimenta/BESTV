@@ -24,6 +24,6 @@ class SearchMoviesByQueryUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    operator fun invoke(query: String, page: Int) =
+    suspend operator fun invoke(query: String, page: Int) =
         movieRepository.searchMoviesByQuery(query, page)
 }

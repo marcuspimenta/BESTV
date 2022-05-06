@@ -36,7 +36,7 @@ class CastDetailsPresenter @Inject constructor(
     private val view: View,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
-    private val coroutineDispatchers: CoroutineDispatchers
+    coroutineDispatchers: CoroutineDispatchers
 ) : AutoCancelableCoroutineScopePresenter(coroutineDispatchers) {
 
     fun loadCastDetails(castViewModel: CastViewModel) {

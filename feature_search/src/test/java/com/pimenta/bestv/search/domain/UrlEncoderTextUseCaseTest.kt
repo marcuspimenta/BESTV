@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.search.domain
 
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
@@ -27,10 +29,8 @@ class UrlEncoderTextUseCaseTest {
     private val useCase = UrlEncoderTextUseCase()
 
     @Test
-    fun `should return the right data when encoding a text`() {
-        useCase(TEXT)
-            .test()
-            .assertComplete()
-            .assertResult(TEXT_ENCODED)
+    fun `should return the right data when encoding a text`() = runTest {
+        val result = useCase(TEXT)
+        assertEquals(result, TEXT_ENCODED)
     }
 }

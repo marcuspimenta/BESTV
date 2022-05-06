@@ -24,6 +24,6 @@ class SearchTvShowsByQueryUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(query: String, page: Int) =
+    suspend operator fun invoke(query: String, page: Int) =
         tvShowRepository.searchTvShowsByQuery(query, page)
 }

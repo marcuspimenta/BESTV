@@ -21,9 +21,6 @@ dependencies {
     implementation Dependencies.androidx_fragment
     implementation Dependencies.androidx_lifecycle
 
-    // Rx
-    implementation Dependencies.rxandroid
-
     // Glide
     implementation Dependencies.glide
 
@@ -47,4 +44,8 @@ dependencies {
     testImplementation Dependencies.mockito_inline
     testImplementation Dependencies.mockito_core
     testImplementation Dependencies.mockito_kotlin
+
+    // Coroutines test
+    testImplementation Dependencies.kotlinx_coroutines_test
+    testImplementation Dependencies.kotlin_test_junit
 }

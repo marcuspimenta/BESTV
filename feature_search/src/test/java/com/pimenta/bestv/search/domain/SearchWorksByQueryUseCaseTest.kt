@@ -18,8 +18,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 24-05-2018.
@@ -64,27 +66,25 @@ class SearchWorksByQueryUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when searching works by query`() {
-        val result = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
+    fun `should return the right data when searching works by query`() = runTest {
+        val expected = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
 
-        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(Single.just(QUERY_ENCODED))
-        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(Single.just(MOVIE_PAGE_VIEW_MODEL))
-        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.just(TV_SHOW_PAGE_VIEW_MODEL))
+        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(MOVIE_PAGE_VIEW_MODEL)
+        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(TV_SHOW_PAGE_VIEW_MODEL)
 
-        useCase(QUERY)
-            .test()
-            .assertComplete()
-            .assertResult(result)
+        val result = useCase(QUERY)
+        assertEquals(result, expected)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(Single.just(QUERY_ENCODED))
-        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(Single.error(Throwable()))
-        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
+        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
 
-        useCase(QUERY)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(QUERY)
+        }
     }
 }

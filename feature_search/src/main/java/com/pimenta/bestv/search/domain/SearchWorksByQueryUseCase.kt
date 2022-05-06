@@ -16,8 +16,9 @@ package com.pimenta.bestv.search.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
@@ -29,13 +30,12 @@ class SearchWorksByQueryUseCase @Inject constructor(
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
 ) {
 
-    operator fun invoke(query: String) =
-        urlEncoderTextUseCase(query)
-            .flatMap {
-                Single.zip<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>, Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>>>(
-                    searchMoviesByQueryUseCase(it, 1),
-                    searchTvShowsByQueryUseCase(it, 1),
-                    BiFunction { first, second -> first to second }
-                )
-            }
+    suspend operator fun invoke(query: String): Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>> =
+        coroutineScope {
+            val urlEncoder = async { urlEncoderTextUseCase(query) }.await()
+            val movies = async { searchMoviesByQueryUseCase(urlEncoder, 1) }
+            val tvShows = async { searchTvShowsByQueryUseCase(urlEncoder, 1) }
+            val results = awaitAll(movies, tvShows)
+            results[0] to results[1]
+        }
 }

@@ -28,10 +28,9 @@ class MovieRepository @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    fun searchMoviesByQuery(query: String, page: Int) =
-        movieRemoteDataSource.searchMoviesByQuery(query, page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun searchMoviesByQuery(query: String, page: Int) =
+        movieRemoteDataSource.searchMoviesByQuery(query, page).run {
+            val source = resource.getStringResource(R.string.source_tmdb)
+            toDomainModel(source)
+        }
 }
