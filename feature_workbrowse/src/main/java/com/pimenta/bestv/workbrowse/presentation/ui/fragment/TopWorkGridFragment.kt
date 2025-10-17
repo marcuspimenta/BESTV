@@ -107,16 +107,18 @@ class TopWorkGridFragment : BaseWorkGridFragment(), TopWorkGridPresenter.View {
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            (itemViewHolder.view as ImageCardView).mainImageView,
-            SettingShared.SHARED_ELEMENT_NAME
-        ).toBundle()
-        startActivityForResult(
-            intent,
-            WORK_DETAILS_REQUEST_CODE,
-            bundle
-        )
+        (itemViewHolder.view as ImageCardView).mainImageView?.let {
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                it,
+                SettingShared.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivityForResult(
+                intent,
+                WORK_DETAILS_REQUEST_CODE,
+                bundle
+            )
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

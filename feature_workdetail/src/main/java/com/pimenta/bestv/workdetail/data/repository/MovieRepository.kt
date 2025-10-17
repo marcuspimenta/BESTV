@@ -18,7 +18,7 @@ import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import javax.inject.Inject

@@ -4,7 +4,7 @@
     <application>
         <activity
             android:name=".presentation.ui.activity.SplashActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="landscape"
             tools:ignore="AppLinkUrlError">
             <intent-filter>

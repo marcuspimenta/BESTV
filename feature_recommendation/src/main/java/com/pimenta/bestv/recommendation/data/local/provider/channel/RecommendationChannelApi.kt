@@ -24,7 +24,8 @@ import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.recommendation.R
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.recommendation.R as recommendationR
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
@@ -87,7 +88,7 @@ class RecommendationChannelApi constructor(
             ?: run {
                 val channelBuilder = Channel.Builder()
                     .setType(TvContractCompat.Channels.TYPE_PREVIEW)
-                    .setDisplayName(application.getString(R.string.popular))
+                    .setDisplayName(application.getString(recommendationR.string.popular))
                     .setAppLinkIntent(workBrowseRoute.buildWorkBrowseIntent())
 
                 application.contentResolver.insert(
@@ -103,7 +104,7 @@ class RecommendationChannelApi constructor(
                     ChannelLogoUtils.storeChannelLogo(
                         application,
                         channelId,
-                        BitmapFactory.decodeResource(application.resources, R.drawable.app_icon)
+                        BitmapFactory.decodeResource(application.resources, presentationR.drawable.app_icon)
                     )
 
                     localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)

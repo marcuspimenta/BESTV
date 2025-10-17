@@ -18,7 +18,7 @@ import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import javax.inject.Inject

@@ -16,7 +16,7 @@ package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.recommendation.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import javax.inject.Inject
 

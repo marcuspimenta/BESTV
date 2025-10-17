@@ -5,9 +5,9 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.model'
-}
-
-android {
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
         buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
@@ -17,14 +17,14 @@ android {
 
 dependencies {
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // Room components
-    implementation Dependencies.androidx_room
+    implementation Libs.androidx_room
 
     // Gson
-    implementation Dependencies.gson
+    implementation Libs.gson
 
     // Glide
-    implementation Dependencies.glide
+    implementation Libs.glide
 }

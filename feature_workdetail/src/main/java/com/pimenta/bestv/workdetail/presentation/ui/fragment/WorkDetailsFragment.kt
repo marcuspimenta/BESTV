@@ -55,7 +55,8 @@ import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.workdetail.R as workdetailR
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
@@ -139,7 +140,7 @@ class WorkDetailsFragment :
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                LayoutInflater.from(context).inflate(presentationR.layout.view_load, null).also {
                     (view.parent as ViewGroup).addView(it)
                 }
             )
@@ -157,8 +158,8 @@ class WorkDetailsFragment :
     }
 
     override fun resultSetFavoriteMovie(isFavorite: Boolean) {
-        favoriteAction.label1 = resources.getString(R.string.remove_favorites).takeIf { isFavorite }
-            ?: run { resources.getString(R.string.save_favorites) }
+        favoriteAction.label1 = resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
+            ?: run { resources.getString(workdetailR.string.save_favorites) }
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
@@ -172,39 +173,39 @@ class WorkDetailsFragment :
     ) {
         favoriteAction = Action(
             ACTION_FAVORITE.toLong(),
-            resources.getString(R.string.remove_favorites).takeIf { isFavorite }
-                ?: resources.getString(R.string.save_favorites)
+            resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
+                ?: resources.getString(workdetailR.string.save_favorites)
         )
         actionAdapter.add(favoriteAction)
 
         if (reviews.isNotNullOrEmpty()) {
-            actionAdapter.add(Action(ACTION_REVIEWS.toLong(), getString(R.string.reviews)))
-            reviewRowAdapter.setItems(reviews, reviewDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(R.string.reviews)), reviewRowAdapter))
+            actionAdapter.add(Action(ACTION_REVIEWS.toLong(), getString(workdetailR.string.reviews)))
+            reviewRowAdapter.setItems(reviews!!, reviewDiffCallback)
+            mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(workdetailR.string.reviews)), reviewRowAdapter))
         }
 
         if (videos.isNotNullOrEmpty()) {
-            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), getString(R.string.videos)))
-            videoRowAdapter.addAll(0, videos)
-            mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(R.string.videos)), videoRowAdapter))
+            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), getString(workdetailR.string.videos)))
+            videoRowAdapter.addAll(0, videos!!)
+            mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(workdetailR.string.videos)), videoRowAdapter))
         }
 
         if (casts.isNotNullOrEmpty()) {
-            actionAdapter.add(Action(ACTION_CAST.toLong(), getString(R.string.cast)))
-            castRowAdapter.addAll(0, casts)
-            mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(R.string.cast)), castRowAdapter))
+            actionAdapter.add(Action(ACTION_CAST.toLong(), getString(workdetailR.string.cast)))
+            castRowAdapter.addAll(0, casts!!)
+            mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(workdetailR.string.cast)), castRowAdapter))
         }
 
         if (recommendedWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), getString(R.string.recommended)))
+            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), getString(workdetailR.string.recommended)))
             recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(R.string.recommended)), recommendedRowAdapter))
+            mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(workdetailR.string.recommended)), recommendedRowAdapter))
         }
 
         if (similarWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), getString(R.string.similar)))
+            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), getString(workdetailR.string.similar)))
             similarRowAdapter.setItems(similarWorks, workDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(R.string.similar)), similarRowAdapter))
+            mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(workdetailR.string.similar)), similarRowAdapter))
         }
     }
 
@@ -228,21 +229,25 @@ class WorkDetailsFragment :
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            (itemViewHolder.view as ImageCardView).mainImageView,
-            SettingShared.SHARED_ELEMENT_NAME
-        ).toBundle()
-        startActivity(intent, bundle)
+        (itemViewHolder.view as ImageCardView).mainImageView?.let {
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                it,
+                SettingShared.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivity(intent, bundle)
+        }
     }
 
     override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            (itemViewHolder.view as ImageCardView).mainImageView,
-            SettingShared.SHARED_ELEMENT_NAME
-        ).toBundle()
-        startActivity(intent, bundle)
+        (itemViewHolder.view as ImageCardView).mainImageView?.let {
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                it,
+                SettingShared.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivity(intent, bundle)
+        }
     }
 
     override fun openVideo(videoViewModel: VideoViewModel) {
@@ -253,7 +258,7 @@ class WorkDetailsFragment :
         try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), R.string.failed_open_video, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), workdetailR.string.failed_open_video, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -311,12 +316,13 @@ class WorkDetailsFragment :
 
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
-                val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
+                // TODO bring it back
+                /*val detailsImageView = viewHolder.view.findViewById<ImageView>(workdetailR.id.details_overview_image)
                 val layoutParams = detailsImageView?.layoutParams?.apply {
-                    width = resources.getDimensionPixelSize(R.dimen.movie_width)
-                    height = resources.getDimensionPixelSize(R.dimen.movie_height)
+                    width = resources.getDimensionPixelSize(presentationR.dimen.movie_width)
+                    height = resources.getDimensionPixelSize(presentationR.dimen.movie_height)
                 }
-                detailsImageView?.layoutParams = layoutParams
+                detailsImageView?.layoutParams = layoutParams*/
                 return viewHolder
             }
         }.apply {
@@ -325,8 +331,8 @@ class WorkDetailsFragment :
                 setSharedElementEnterTransition(activity, SettingShared.SHARED_ELEMENT_NAME)
             }
 
-            actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
-            backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
+            actionsBackgroundColor = resources.getColor(presentationR.color.detail_view_actionbar_background, requireActivity().theme)
+            backgroundColor = resources.getColor(presentationR.color.detail_view_background, requireActivity().theme)
 
             setListener(sharedElementHelper)
             isParticipatingEntranceTransition = true

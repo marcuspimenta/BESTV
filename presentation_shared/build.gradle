@@ -5,7 +5,9 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.presentation'
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
     }
@@ -15,24 +17,24 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // AndroidX
-    implementation Dependencies.androidx_leanback
-    implementation Dependencies.androidx_core
-    implementation Dependencies.androidx_fragment
-    implementation Dependencies.androidx_lifecycle
-    implementation Dependencies.androidx_recommendation
-    implementation Dependencies.androidx_tvprovider
+    implementation Libs.androidx_leanback
+    implementation Libs.androidx_core
+    implementation Libs.androidx_fragment
+    implementation Libs.androidx_lifecycle
+    implementation Libs.androidx_recommendation
+    implementation Libs.androidx_tvprovider
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 
     // Rx
-    implementation Dependencies.rxandroid
-    implementation Dependencies.retrofit2_rxjava2_adapter
+    implementation Libs.rxandroid
+    implementation Libs.retrofit2_rxjava2_adapter
 
     // Glide
-    implementation Dependencies.glide
+    implementation Libs.glide
 }

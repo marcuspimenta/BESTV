@@ -27,6 +27,7 @@ import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import com.pimenta.bestv.workbrowse.R
+import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workbrowse.presentation.presenter.AboutPresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import javax.inject.Inject
@@ -53,10 +54,10 @@ class AboutFragment :
     }
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        val title = getString(R.string.app_name)
+        val title = getString(presentationR.string.app_name)
         val breadcrumb = getString(R.string.about)
         val description = getString(R.string.about_description)
-        val icon = requireActivity().getDrawable(R.drawable.app_icon)
+        val icon = requireActivity().getDrawable(presentationR.drawable.app_icon)
 
         return GuidanceStylist.Guidance(title, description, breadcrumb, icon)
     }
@@ -68,10 +69,8 @@ class AboutFragment :
         super.onCreateActions(actions, savedInstanceState)
     }
 
-    override fun onGuidedActionClicked(action: GuidedAction?) {
-        action?.let {
-            presenter.guidedActionClicked(action.id)
-        }
+    override fun onGuidedActionClicked(action: GuidedAction) {
+        presenter.guidedActionClicked(action.id)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

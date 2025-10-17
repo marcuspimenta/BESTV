@@ -16,48 +16,48 @@ import org.gradle.api.JavaVersion
 
 object Config {
     val minSdk = 26
-    val compileSdk = 31
-    val targetSdk = 31
+    val compileSdk = 36
+    val targetSdk = 36
     val javaVersion = JavaVersion.VERSION_1_8
     val jvmTarget = "1.8"
 }
 
 object Versions {
-    val kotlin = "1.6.21"
-    val kotlinx_coroutines_test = "1.6.0"
-    val build_gradle = "7.3.0-alpha09"
-    val google_service = "4.3.10"
+    val kotlin = "2.2.20"
+    val kotlinx_coroutines_test = "1.10.2"
+    val build_gradle = "8.13.0"
+    val google_service = "4.4.4"
     val ktlint = "10.2.1"
-    val ben_mane_gralde = "0.42.0"
+    val ben_mane_gralde = "0.53.0"
 
-    val androidx_leanback = "1.2.0-alpha02"
-    val androidx_core = "1.9.0-alpha01"
-    val androidx_fragment = "1.5.0-beta01"
-    val androidx_lifecycle = "2.5.0-beta01"
+    val androidx_leanback = "1.2.0"
+    val androidx_core = "1.17.0"
+    val androidx_fragment = "1.8.9"
+    val androidx_lifecycle = "2.10.0-alpha05"
     val androidx_recommendation = "1.0.0"
-    val androidx_tvprovider = "1.1.0-alpha01"
-    val androidx_room = "2.5.0-alpha01"
+    val androidx_tvprovider = "1.1.0"
+    val androidx_room = "2.8.2"
     val androidx_work = "2.8.0-alpha02"
 
-    val dagger = "2.41"
-    val dagger_compile = "2.41"
-    val retrofit = "2.9.0"
-    val retrofit_converter_gson = "2.9.0"
-    val okhttp = "5.0.0-alpha.6"
-    val logging_interceptor = "5.0.0-alpha.7"
-    val gson = "2.9.0"
+    val dagger = "2.57.2"
+    val dagger_compile = "2.57.2"
+    val retrofit = "3.0.0"
+    val retrofit_converter_gson = "3.0.0"
+    val okhttp = "5.2.1"
+    val logging_interceptor = "5.2.1"
+    val gson = "2.13.2"
     val retrofit2_rxjava2_adapter = "1.0.0"
     val timber = "5.0.1"
-    val glide = "4.13.1"
-    val lottie = "5.1.1"
+    val glide = "5.0.5"
+    val lottie = "6.6.1"
     val rxandroid = "2.1.1"
     val junit = "4.13.2"
-    val mockito_inline = "4.5.1"
+    val mockito_inline = "5.2.1"
     val mockito_core = "4.5.0"
-    val mockito_kotlin = "2.1.0"
+    val mockito_kotlin = "2.2.0"
 }
 
-object Dependencies {
+object Libs {
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx_coroutines_test}"
     val kotlin_test_junit = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"

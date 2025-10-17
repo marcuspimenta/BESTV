@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.castdetail.data.repository
 
-import com.pimenta.bestv.castdetail.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.castdetail.data.remote.datasource.CastRemoteDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.platform.Resource

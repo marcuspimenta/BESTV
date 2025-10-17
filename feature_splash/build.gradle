@@ -15,8 +15,8 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // AndroidX
-    implementation Dependencies.androidx_fragment
+    implementation Libs.androidx_fragment
 }

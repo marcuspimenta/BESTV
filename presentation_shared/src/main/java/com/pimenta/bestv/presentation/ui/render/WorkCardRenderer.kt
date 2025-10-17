@@ -34,7 +34,7 @@ class WorkCardRenderer : Presenter() {
             }
         )
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         val workViewModel = item as WorkViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = workViewModel.title
@@ -45,7 +45,7 @@ class WorkCardRenderer : Presenter() {
         )
 
         workViewModel.posterUrl?.let {
-            cardView.mainImageView.loadImageInto(it)
+            cardView.mainImageView?.loadImageInto(it)
         }
     }
 

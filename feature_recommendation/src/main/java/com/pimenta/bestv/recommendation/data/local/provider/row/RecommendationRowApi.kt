@@ -20,7 +20,8 @@ import androidx.recommendation.app.ContentRecommendation
 import com.bumptech.glide.Glide
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.recommendation.R
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.recommendation.R as recommendationR
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import io.reactivex.Completable
@@ -44,21 +45,21 @@ class RecommendationRowApi constructor(
                         .asBitmap()
                         .load(workViewModel.posterUrl)
                         .submit(
-                            application.resources.getDimensionPixelSize(R.dimen.movie_card_width),
-                            application.resources.getDimensionPixelSize(R.dimen.movie_card_height)
+                            application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_width),
+                            application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_height)
                         )
                         .get()
 
                     val contentRecommendation = ContentRecommendation.Builder()
                         .setAutoDismiss(true)
                         .setIdTag(workViewModel.id.toString())
-                        .setGroup(application.getString(R.string.app_name))
-                        .setBadgeIcon(R.drawable.movie)
+                        .setGroup(application.getString(presentationR.string.app_name))
+                        .setBadgeIcon(recommendationR.drawable.movie)
                         .setTitle(workViewModel.title)
                         .setContentImage(cardBitmap)
                         .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))
                         .setBackgroundImageUri(workViewModel.backdropUrl)
-                        .setText(application.getString(R.string.popular))
+                        .setText(application.getString(recommendationR.string.popular))
                         .setContentIntentData(
                             ContentRecommendation.INTENT_TYPE_ACTIVITY,
                             workDetailsRoute.buildWorkDetailIntent(workViewModel).apply {

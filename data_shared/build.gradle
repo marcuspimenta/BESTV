@@ -5,6 +5,9 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.data'
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
@@ -15,7 +18,6 @@ android {
         }
         release {
             buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
-
         }
     }
 }
@@ -24,29 +26,29 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 
     // Room components
-    api Dependencies.androidx_room
-    kapt Dependencies.androidx_room_compiler
-    implementation Dependencies.androidx_room_ktx
-    implementation Dependencies.androidx_room_rxjava
+    api Libs.androidx_room
+    kapt Libs.androidx_room_compiler
+    implementation Libs.androidx_room_ktx
+    implementation Libs.androidx_room_rxjava
 
     // Retrofit
-    implementation Dependencies.retrofit
-    implementation Dependencies.retrofit_converter_gson
+    implementation Libs.retrofit
+    implementation Libs.retrofit_converter_gson
 
     // OkHttp
-    implementation Dependencies.okhttp
-    implementation Dependencies.logging_interceptor
+    implementation Libs.okhttp
+    implementation Libs.logging_interceptor
 
     // Gson
-    implementation Dependencies.gson
+    implementation Libs.gson
 
     // Rx
-    implementation Dependencies.retrofit2_rxjava2_adapter
+    implementation Libs.retrofit2_rxjava2_adapter
 }

@@ -37,7 +37,7 @@ import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowPresenter
-import com.pimenta.bestv.castdetail.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.castdetail.presentation.ui.render.CastDetailsDescriptionRender
@@ -122,14 +122,14 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
         if (movies.isNotNullOrEmpty()) {
             actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            moviesRowAdapter.addAll(0, movies)
+            moviesRowAdapter.addAll(0, movies!!)
             val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
             mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
         }
 
         if (tvShow.isNotNullOrEmpty()) {
             actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            tvShowsRowAdapter.addAll(0, tvShow)
+            tvShowsRowAdapter.addAll(0, tvShow!!)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
             mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
         }
@@ -143,12 +143,14 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            (itemViewHolder.view as ImageCardView).mainImageView,
-            SettingShared.SHARED_ELEMENT_NAME
-        ).toBundle()
-        startActivity(intent, bundle)
+        (itemViewHolder.view as ImageCardView).mainImageView?.let {
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                it,
+                SettingShared.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivity(intent, bundle)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -187,12 +189,13 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
 
             override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
                 val viewHolder = super.createRowViewHolder(parent)
-                val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
+                // TODO bring it back
+                /*val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
                 val layoutParams = detailsImageView.layoutParams.apply {
                     width = resources.getDimensionPixelSize(R.dimen.movie_card_width)
                     height = resources.getDimensionPixelSize(R.dimen.movie_card_height)
                 }
-                detailsImageView.layoutParams = layoutParams
+                detailsImageView.layoutParams = layoutParams*/
                 return viewHolder
             }
         }.apply {

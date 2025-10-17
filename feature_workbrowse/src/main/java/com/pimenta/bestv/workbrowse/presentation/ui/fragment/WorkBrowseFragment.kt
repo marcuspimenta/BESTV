@@ -30,7 +30,7 @@ import androidx.leanback.widget.Row
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.workbrowse.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
 import com.pimenta.bestv.workbrowse.presentation.ui.diffcallback.RowDiffCallback

@@ -25,7 +25,8 @@ import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
 import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import com.pimenta.bestv.route.search.SearchRoute
-import com.pimenta.bestv.workbrowse.R
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.workbrowse.R as workbrowseR
 import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
 import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModel
@@ -143,7 +144,7 @@ class WorkBrowsePresenter @Inject constructor(
             }
 
             add(DividerRow())
-            add(SectionRow(resource.getStringResource(R.string.movies)))
+            add(SectionRow(resource.getStringResource(presentationR.string.movies)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.NOW_PLAYING_MOVIES.resource), TopWorkTypeViewModel.NOW_PLAYING_MOVIES)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.POPULAR_MOVIES.resource), TopWorkTypeViewModel.POPULAR_MOVIES)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.TOP_RATED_MOVIES.resource), TopWorkTypeViewModel.TOP_RATED_MOVIES)))
@@ -154,7 +155,7 @@ class WorkBrowsePresenter @Inject constructor(
             }
 
             add(DividerRow())
-            add(SectionRow(resource.getStringResource(R.string.tv_shows)))
+            add(SectionRow(resource.getStringResource(presentationR.string.tv_shows)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS.resource), TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS.resource), TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS)))
             add(PageRow(WorkTypeHeaderItem(TOP_WORK_LIST_ID, resource.getStringResource(TopWorkTypeViewModel.TOP_RATED_TV_SHOWS.resource), TopWorkTypeViewModel.TOP_RATED_TV_SHOWS)))
@@ -165,7 +166,7 @@ class WorkBrowsePresenter @Inject constructor(
             }
 
             add(DividerRow())
-            add(PageRow(AboutHeaderItem(ABOUT_ID, resource.getStringResource(R.string.about))))
+            add(PageRow(AboutHeaderItem(ABOUT_ID, resource.getStringResource(workbrowseR.string.about))))
         }
     }
 

@@ -35,7 +35,7 @@ class ReviewCardRender : Presenter() {
             }
         )
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         val reviewViewModel = item as ReviewViewModel
         val cardView = viewHolder.view as TextCardView
         with(cardView.binding) {

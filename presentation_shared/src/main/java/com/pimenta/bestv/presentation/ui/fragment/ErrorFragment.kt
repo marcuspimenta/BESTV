@@ -26,7 +26,7 @@ class ErrorFragment : ErrorSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageDrawable = resources.getDrawable(R.drawable.lb_ic_sad_cloud, requireActivity().theme)
+        imageDrawable = resources.getDrawable(R.drawable.movie, requireActivity().theme)
         message = resources.getString(R.string.error_fragment_message)
         setDefaultBackground(true)
 

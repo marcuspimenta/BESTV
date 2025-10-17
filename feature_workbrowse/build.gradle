@@ -14,41 +14,41 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // AndroidX
-    implementation Dependencies.androidx_leanback
-    implementation Dependencies.androidx_core
-    implementation Dependencies.androidx_fragment
-    implementation Dependencies.androidx_lifecycle
+    implementation Libs.androidx_leanback
+    implementation Libs.androidx_core
+    implementation Libs.androidx_fragment
+    implementation Libs.androidx_lifecycle
 
     // Rx
-    implementation Dependencies.rxandroid
+    implementation Libs.rxandroid
 
     // Glide
-    implementation Dependencies.glide
+    implementation Libs.glide
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 
     // Retrofit
-    implementation Dependencies.retrofit
+    implementation Libs.retrofit
 
     // Gson
-    implementation Dependencies.gson
+    implementation Libs.gson
 
     // Timber
-    implementation Dependencies.timber
+    implementation Libs.timber
 
     // Lottie
-    implementation Dependencies.lottie
+    implementation Libs.lottie
 
     // JUnit
-    testImplementation Dependencies.junit
+    testImplementation Libs.junit
 
     // Mockito
-    testImplementation Dependencies.mockito_inline
-    testImplementation Dependencies.mockito_core
-    testImplementation Dependencies.mockito_kotlin
+    testImplementation Libs.mockito_inline
+    testImplementation Libs.mockito_core
+    testImplementation Libs.mockito_kotlin
 }

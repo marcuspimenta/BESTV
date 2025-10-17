@@ -13,36 +13,36 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // AndroidX
-    implementation Dependencies.androidx_core
-    implementation Dependencies.androidx_recommendation
-    implementation Dependencies.androidx_tvprovider
-    implementation Dependencies.androidx_work
-    implementation Dependencies.androidx_work_rxjava2
+    implementation Libs.androidx_core
+    implementation Libs.androidx_recommendation
+    implementation Libs.androidx_tvprovider
+    implementation Libs.androidx_work
+    implementation Libs.androidx_work_rxjava2
 
     // Rx
-    implementation Dependencies.rxandroid
+    implementation Libs.rxandroid
 
     // Glide
-    implementation Dependencies.glide
+    implementation Libs.glide
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 
     // Retrofit
-    implementation Dependencies.retrofit
+    implementation Libs.retrofit
 
     // Timber
-    implementation Dependencies.timber
+    implementation Libs.timber
 
     // JUnit
-    testImplementation Dependencies.junit
+    testImplementation Libs.junit
 
     // Mockito
-    testImplementation Dependencies.mockito_inline
-    testImplementation Dependencies.mockito_core
-    testImplementation Dependencies.mockito_kotlin
+    testImplementation Libs.mockito_inline
+    testImplementation Libs.mockito_core
+    testImplementation Libs.mockito_kotlin
 }

@@ -19,7 +19,7 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.extension.loadImageInto
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.presentation.R
 
 /**
  * Created by marcus on 16-02-2018.
@@ -34,7 +34,7 @@ class CastCardRender : Presenter() {
             }
         )
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         val castViewModel = item as CastViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = castViewModel.name
@@ -45,7 +45,7 @@ class CastCardRender : Presenter() {
         )
 
         castViewModel.thumbnailUrl?.let {
-            cardView.mainImageView.loadImageInto(it)
+            cardView.mainImageView?.loadImageInto(it)
         }
     }
 

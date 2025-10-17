@@ -39,7 +39,8 @@ import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import com.pimenta.bestv.search.R
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.search.R as searchR
 import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
 import javax.inject.Inject
@@ -88,7 +89,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         progressBarManager.apply {
             enableProgressBar()
             setProgressBarView(
-                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
+                LayoutInflater.from(context).inflate(presentationR.layout.view_load, null).also {
                     (view.parent as ViewGroup).addView(it)
                 }
             )
@@ -114,7 +115,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         rowsAdapter.clear()
         rowsAdapter.add(
             ListRow(
-                HeaderItem(0, getString(R.string.no_results)),
+                HeaderItem(0, getString(searchR.string.no_results)),
                 ArrayObjectAdapter(WorkCardRenderer())
             )
         )
@@ -124,12 +125,12 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
         rowsAdapter.clear()
 
         if (movies.isNotEmpty()) {
-            val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(R.string.movies))
+            val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(presentationR.string.movies))
             movieRowAdapter.setItems(movies, workDiffCallback)
             rowsAdapter.add(ListRow(header, movieRowAdapter))
         }
         if (tvShows.isNotEmpty()) {
-            val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(R.string.tv_shows))
+            val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(presentationR.string.tv_shows))
             tvShowRowAdapter.setItems(tvShows, workDiffCallback)
             rowsAdapter.add(ListRow(header, tvShowRowAdapter))
         }
@@ -157,12 +158,14 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            (itemViewHolder.view as ImageCardView).mainImageView,
-            SettingShared.SHARED_ELEMENT_NAME
-        ).toBundle()
-        startActivity(intent, bundle)
+        (itemViewHolder.view as ImageCardView).mainImageView?.let {
+            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                it,
+                SettingShared.SHARED_ELEMENT_NAME
+            ).toBundle()
+            startActivity(intent, bundle)
+        }
     }
 
     override fun getResultsAdapter() = rowsAdapter
@@ -200,12 +203,14 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             workSelected = item as WorkViewModel?
             loadBackdropImage()
 
-            when (row?.run { id.toInt() }) {
-                MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(workSelected) >= movieRowAdapter.size() - 1) {
-                    presenter.loadMovies()
-                }
-                TV_SHOW_HEADER_ID -> if (tvShowRowAdapter.indexOf(workSelected) >= tvShowRowAdapter.size() - 1) {
-                    presenter.loadTvShows()
+            workSelected?.let {
+                when (row?.run { id.toInt() }) {
+                    MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(it) >= movieRowAdapter.size() - 1) {
+                        presenter.loadMovies()
+                    }
+                    TV_SHOW_HEADER_ID -> if (tvShowRowAdapter.indexOf(it) >= tvShowRowAdapter.size() - 1) {
+                        presenter.loadTvShows()
+                    }
                 }
             }
         }

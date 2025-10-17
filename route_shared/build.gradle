@@ -11,9 +11,9 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 }

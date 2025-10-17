@@ -28,7 +28,7 @@ import androidx.leanback.widget.VerticalGridPresenter
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.workbrowse.R
+import com.pimenta.bestv.presentation.R
 
 /**
  * Created by marcus on 09-02-2018.
@@ -83,7 +83,7 @@ abstract class BaseWorkGridFragment :
     private fun setupUI() {
         val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM)
         verticalGridPresenter.numberOfColumns = NUMBER_COLUMNS
-        gridPresenter = verticalGridPresenter
+        setGridPresenter(verticalGridPresenter)
 
         adapter = rowsAdapter
 

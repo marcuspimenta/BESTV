@@ -18,7 +18,7 @@ import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.presentation.extension.loadImageInto
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
 /**
@@ -34,7 +34,7 @@ class VideoCardRender : Presenter() {
             }
         )
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         val videoViewModel = item as VideoViewModel
         val cardView = viewHolder.view as ImageCardView
         cardView.titleText = videoViewModel.name
@@ -45,7 +45,7 @@ class VideoCardRender : Presenter() {
         )
 
         videoViewModel.thumbnailUrl?.let {
-            cardView.mainImageView.loadImageInto(it)
+            cardView.mainImageView?.loadImageInto(it)
         }
     }
 

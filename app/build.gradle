@@ -41,24 +41,24 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Dependencies.kotlin
+    implementation Libs.kotlin
 
     // AndroidX
-    implementation Dependencies.androidx_leanback
-    implementation Dependencies.androidx_work
-    implementation Dependencies.androidx_work_rxjava2
+    implementation Libs.androidx_leanback
+    implementation Libs.androidx_work
+    implementation Libs.androidx_work_rxjava2
 
     // Retrofit
-    implementation Dependencies.retrofit
+    implementation Libs.retrofit
 
     // Rx
-    implementation Dependencies.rxandroid
+    implementation Libs.rxandroid
 
     // Dagger
-    implementation Dependencies.dagger
-    kapt Dependencies.dagger_compile
+    implementation Libs.dagger
+    kapt Libs.dagger_compile
 
     // Timber
-    implementation Dependencies.timber
+    implementation Libs.timber
 
 }
