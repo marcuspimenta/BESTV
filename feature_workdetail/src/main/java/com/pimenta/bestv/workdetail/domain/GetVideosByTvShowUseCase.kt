@@ -24,6 +24,6 @@ class GetVideosByTvShowUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(workId: Int) =
+    suspend operator fun invoke(workId: Int) =
         tvShowRepository.getVideosByTvShow(workId)
 }

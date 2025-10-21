@@ -16,10 +16,12 @@ package com.pimenta.bestv.workbrowse.data.repository
 
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
+import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -31,8 +33,9 @@ class TvShowRepository @Inject constructor(
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
 
-    fun getFavoriteTvShows() =
-        tvShowLocalDataSource.getTvShows()
+    // TODO bring it back when migrating this module to coroutines
+    fun getFavoriteTvShows() = Single.just(emptyList<WorkDomainModel>())
+        /*tvShowLocalDataSource.getTvShows()
             .map {
                 val tvShows = mutableListOf<WorkDomainModel>()
                 it.forEach { tvShowDbModel ->
@@ -46,7 +49,7 @@ class TvShowRepository @Inject constructor(
                     }
                 }
                 tvShows.toList()
-            }
+            }*/
 
     fun getTvShowByGenre(genreId: Int, page: Int) =
         tvShowRemoteDataSource.getTvShowByGenre(genreId, page)

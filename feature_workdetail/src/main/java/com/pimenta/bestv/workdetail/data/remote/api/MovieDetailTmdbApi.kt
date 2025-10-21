@@ -19,7 +19,6 @@ import com.pimenta.bestv.model.data.remote.MovieResponse
 import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -30,40 +29,40 @@ import retrofit2.http.Query
 interface MovieDetailTmdbApi {
 
     @GET("movie/{movie_id}/credits")
-    fun getCastByMovie(
+    suspend fun getCastByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<CastListResponse>
+    ): CastListResponse
 
     @GET("movie/{movie_id}/recommendations")
-    fun getRecommendationByMovie(
+    suspend fun getRecommendationByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/{movie_id}/similar")
-    fun getSimilarByMovie(
+    suspend fun getSimilarByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/{movie_id}/reviews")
-    fun getReviewByMovie(
+    suspend fun getReviewByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<ReviewResponse>>
+    ): PageResponse<ReviewResponse>
 
     @GET("movie/{movie_id}/videos")
-    fun getVideosByMovie(
+    suspend fun getVideosByMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<VideoListResponse>
+    ): VideoListResponse
 }

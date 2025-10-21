@@ -24,6 +24,6 @@ class GetSimilarByTvShowUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(workId: Int, page: Int) =
+    suspend operator fun invoke(workId: Int, page: Int) =
         tvShowRepository.getSimilarByTvShow(workId, page)
 }

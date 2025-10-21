@@ -23,8 +23,10 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 22-08-2019.
@@ -78,43 +80,52 @@ class GetWorkDetailsUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the work details`() {
+    fun `should return the right data when loading the work details`() = runTest {
         whenever(checkFavoriteWorkUseCase(WORK))
-            .thenReturn(Single.just(true))
+            .thenReturn(true)
         whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
-            .thenReturn(Single.just(VIDEO_LIST))
+            .thenReturn(VIDEO_LIST)
         whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-            .thenReturn(Single.just(CAST_LIST))
+            .thenReturn(CAST_LIST)
         whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(WORK_PAGE)
         whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(WORK_PAGE)
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.just(REVIEW_PAGE))
+            .thenReturn(REVIEW_PAGE)
 
-        useCase(WORK)
-            .test()
-            .assertComplete()
-            .assertResult(GetWorkDetailsUseCase.WorkDetailsDomainWrapper(true, VIDEO_LIST, CAST_LIST, WORK_PAGE, WORK_PAGE, REVIEW_PAGE))
+        val result = useCase(WORK)
+
+        val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+            isFavorite = true,
+            videos = VIDEO_LIST,
+            casts = CAST_LIST,
+            recommended = WORK_PAGE,
+            similar = WORK_PAGE,
+            reviews = REVIEW_PAGE
+        )
+        assertEquals(expected, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(checkFavoriteWorkUseCase(WORK))
-            .thenReturn(Single.just(true))
-        whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
-            .thenReturn(Single.just(VIDEO_LIST))
-        whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-            .thenReturn(Single.error(Throwable()))
-        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.just(WORK_PAGE))
-        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.error(Throwable()))
-        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
-            .thenReturn(Single.just(REVIEW_PAGE))
+    fun `should return an error when some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
 
-        useCase(WORK)
-            .test()
-            .assertError(Throwable::class.java)
+        whenever(checkFavoriteWorkUseCase(WORK))
+            .thenReturn(true)
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+            .thenReturn(VIDEO_LIST)
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+            .thenThrow(exception)
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenReturn(WORK_PAGE)
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenThrow(exception)
+        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenReturn(REVIEW_PAGE)
+
+        assertFailsWith<RuntimeException> {
+            useCase(WORK)
+        }
     }
 }

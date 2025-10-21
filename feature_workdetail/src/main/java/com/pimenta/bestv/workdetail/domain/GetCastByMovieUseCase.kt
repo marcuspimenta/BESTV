@@ -24,6 +24,6 @@ class GetCastByMovieUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    operator fun invoke(workId: Int) =
+    suspend operator fun invoke(workId: Int) =
         movieRepository.getCastByMovie(workId)
 }

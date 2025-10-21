@@ -28,7 +28,7 @@ class CheckFavoriteWorkUseCase @Inject constructor(
     private val checkFavoriteTvShowUseCase: CheckFavoriteTvShowUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel) =
+    suspend operator fun invoke(workViewModel: WorkViewModel) =
         when (workViewModel.type) {
             WorkType.MOVIE -> checkFavoriteMovieUseCase(workViewModel.toMovieDbModel())
             WorkType.TV_SHOW -> checkFavoriteTvShowUseCase(workViewModel.toTvShowDbModel())

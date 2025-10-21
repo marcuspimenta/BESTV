@@ -25,6 +25,6 @@ class CheckFavoriteTvShowUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(tvShowDbModel: TvShowDbModel) =
+    suspend operator fun invoke(tvShowDbModel: TvShowDbModel) =
         tvShowRepository.isFavoriteTvShow(tvShowDbModel)
 }

@@ -30,7 +30,7 @@ class SetFavoriteUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel) =
+    suspend operator fun invoke(workViewModel: WorkViewModel) {
         when (workViewModel.type) {
             WorkType.MOVIE -> {
                 if (workViewModel.isFavorite) {
@@ -47,4 +47,5 @@ class SetFavoriteUseCase @Inject constructor(
                 }
             }
         }
+    }
 }

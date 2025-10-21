@@ -27,18 +27,18 @@ class MovieRemoteDataSource @Inject constructor(
     private val movieDetailTmdbApi: MovieDetailTmdbApi
 ) {
 
-    fun getCastByMovie(movieId: Int) =
+    suspend fun getCastByMovie(movieId: Int) =
         movieDetailTmdbApi.getCastByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 
-    fun getRecommendationByMovie(movieId: Int, page: Int) =
+    suspend fun getRecommendationByMovie(movieId: Int, page: Int) =
         movieDetailTmdbApi.getRecommendationByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getSimilarByMovie(movieId: Int, page: Int) =
+    suspend fun getSimilarByMovie(movieId: Int, page: Int) =
         movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getReviewByMovie(movieId: Int, page: Int) =
+    suspend fun getReviewByMovie(movieId: Int, page: Int) =
         movieDetailTmdbApi.getReviewByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getVideosByMovie(movieId: Int) =
+    suspend fun getVideosByMovie(movieId: Int) =
         movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 }

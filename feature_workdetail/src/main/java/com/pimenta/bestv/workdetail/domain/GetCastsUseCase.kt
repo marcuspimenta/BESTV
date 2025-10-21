@@ -25,7 +25,7 @@ class GetCastsUseCase @Inject constructor(
     private val getCastByTvShowUseCase: GetCastByTvShowUseCase
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int) =
+    suspend operator fun invoke(workType: WorkType, workId: Int) =
         when (workType) {
             WorkType.MOVIE -> getCastByMovieUseCase(workId)
             WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)

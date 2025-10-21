@@ -19,11 +19,17 @@ dependencies {
     // Kotlin
     implementation Libs.kotlin
 
+    // Coroutines
+    implementation Libs.kotlinx_coroutines_core
+    implementation Libs.kotlinx_coroutines_android
+
     // AndroidX
     implementation Libs.androidx_leanback
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
     implementation Libs.androidx_lifecycle
+    implementation Libs.androidx_lifecycle_viewmodel_ktx
+    implementation Libs.androidx_lifecycle_runtime_ktx
 
     // Rx
     implementation Libs.rxandroid
@@ -49,6 +55,15 @@ dependencies {
 
     // JUnit
     testImplementation Libs.junit
+
+    // Coroutines Test
+    testImplementation Libs.kotlinx_coroutines_test
+
+    // Turbine (for testing flows)
+    testImplementation Libs.turbine
+
+    // Kotlin Test
+    testImplementation Libs.kotlin_test_junit
 
     // Mockito
     testImplementation Libs.mockito_inline

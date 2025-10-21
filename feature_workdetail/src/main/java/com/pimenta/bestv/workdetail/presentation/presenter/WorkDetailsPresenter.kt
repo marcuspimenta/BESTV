@@ -42,7 +42,7 @@ import javax.inject.Inject
  */
 @FragmentScope
 class WorkDetailsPresenter @Inject constructor(
-    private val view: View,
+    //private val view: View,
     private val workViewModel: WorkViewModel,
     private val setFavoriteUseCase: SetFavoriteUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
@@ -64,7 +64,7 @@ class WorkDetailsPresenter @Inject constructor(
     private val similarWorks by lazy { mutableListOf<WorkViewModel>() }
     private val reviews by lazy { mutableListOf<ReviewViewModel>() }
 
-    fun setFavorite() {
+    /*fun setFavorite() {
         setFavoriteUseCase(workViewModel)
             .subscribeOn(rxScheduler.ioScheduler)
             .observeOn(rxScheduler.mainScheduler)
@@ -266,5 +266,5 @@ class WorkDetailsPresenter @Inject constructor(
         fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent)
 
         fun openVideo(videoViewModel: VideoViewModel)
-    }
+    }*/
 }

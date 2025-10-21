@@ -27,18 +27,18 @@ class TvShowRemoteDataSource @Inject constructor(
     private val tvShowDetailTmdbApi: TvShowDetailTmdbApi
 ) {
 
-    fun getCastByTvShow(tvShowId: Int) =
+    suspend fun getCastByTvShow(tvShowId: Int) =
         tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
-    fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
+    suspend fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
         tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getSimilarByTvShow(tvShowId: Int, page: Int) =
+    suspend fun getSimilarByTvShow(tvShowId: Int, page: Int) =
         tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getReviewByTvShow(tvShowId: Int, page: Int) =
+    suspend fun getReviewByTvShow(tvShowId: Int, page: Int) =
         tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getVideosByTvShow(tvShowId: Int) =
+    suspend fun getVideosByTvShow(tvShowId: Int) =
         tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 }

@@ -19,7 +19,6 @@ import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -30,40 +29,40 @@ import retrofit2.http.Query
 interface TvShowDetailTmdbApi {
 
     @GET("tv/{tv_id}/credits")
-    fun getCastByTvShow(
+    suspend fun getCastByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<CastListResponse>
+    ): CastListResponse
 
     @GET("tv/{tv_id}/recommendations")
-    fun getRecommendationByTvShow(
+    suspend fun getRecommendationByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/{tv_id}/similar")
-    fun getSimilarByTvShow(
+    suspend fun getSimilarByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/{tv_id}/reviews")
-    fun getReviewByTvShow(
+    suspend fun getReviewByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<ReviewResponse>>
+    ): PageResponse<ReviewResponse>
 
     @GET("tv/{tv_id}/videos")
-    fun getVideosByTvShow(
+    suspend fun getVideosByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<VideoListResponse>
+    ): VideoListResponse
 }

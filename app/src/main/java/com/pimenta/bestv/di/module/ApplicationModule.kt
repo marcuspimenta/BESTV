@@ -33,7 +33,8 @@ import javax.inject.Singleton
 @Module(
     includes = [
         MediaLocalModule::class,
-        MediaRemoteModule::class
+        MediaRemoteModule::class,
+        DaggerViewModelInjectionModule::class
     ]
 )
 class ApplicationModule(

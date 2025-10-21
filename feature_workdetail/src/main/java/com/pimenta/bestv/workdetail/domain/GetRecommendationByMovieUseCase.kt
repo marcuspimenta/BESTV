@@ -24,6 +24,6 @@ class GetRecommendationByMovieUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    operator fun invoke(workId: Int, page: Int) =
+    suspend operator fun invoke(workId: Int, page: Int) =
         movieRepository.getRecommendationByMovie(workId, page)
 }

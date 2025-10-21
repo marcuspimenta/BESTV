@@ -24,7 +24,7 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
-import io.reactivex.Completable
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 /**
@@ -54,59 +54,51 @@ class SetFavoriteUseCaseTest {
     )
 
     @Test
-    fun `should save a movie as favorite is it is not favorite`() {
+    fun `should save a movie as favorite is it is not favorite`() = runTest {
         val dbModel = MOVIE_VIEW_MODEL.toMovieDbModel()
 
         whenever(movieRepository.saveFavoriteMovie(dbModel))
-            .thenReturn(Completable.complete())
+            .thenReturn(Unit)
 
         useCase(MOVIE_VIEW_MODEL)
-            .test()
-            .assertComplete()
 
         verify(movieRepository, only()).saveFavoriteMovie(dbModel)
     }
 
     @Test
-    fun `should delete a movie as favorite is it is favorite`() {
+    fun `should delete a movie as favorite is it is favorite`() = runTest {
         val movieViewModel = MOVIE_VIEW_MODEL.copy(isFavorite = true)
         val dbModel = movieViewModel.toMovieDbModel()
 
         whenever(movieRepository.deleteFavoriteMovie(dbModel))
-            .thenReturn(Completable.complete())
+            .thenReturn(Unit)
 
         useCase(movieViewModel)
-            .test()
-            .assertComplete()
 
         verify(movieRepository, only()).deleteFavoriteMovie(dbModel)
     }
 
     @Test
-    fun `should save a tv show as favorite is it is not favorite`() {
+    fun `should save a tv show as favorite is it is not favorite`() = runTest {
         val dbModel = TV_SHOW_VIEW_MODEL.toTvShowDbModel()
 
         whenever(tvShowRepository.saveFavoriteTvShow(dbModel))
-            .thenReturn(Completable.complete())
+            .thenReturn(Unit)
 
         useCase(TV_SHOW_VIEW_MODEL)
-            .test()
-            .assertComplete()
 
         verify(tvShowRepository, only()).saveFavoriteTvShow(dbModel)
     }
 
     @Test
-    fun `should delete a tv show as favorite is it is favorite`() {
+    fun `should delete a tv show as favorite is it is favorite`() = runTest {
         val tvShowViewModel = TV_SHOW_VIEW_MODEL.copy(isFavorite = true)
         val dbModel = tvShowViewModel.toTvShowDbModel()
 
         whenever(tvShowRepository.deleteFavoriteTvShow(dbModel))
-            .thenReturn(Completable.complete())
+            .thenReturn(Unit)
 
         useCase(tvShowViewModel)
-            .test()
-            .assertComplete()
 
         verify(tvShowRepository, only()).deleteFavoriteTvShow(dbModel)
     }

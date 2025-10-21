@@ -25,6 +25,6 @@ class CheckFavoriteMovieUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    operator fun invoke(movieDbModel: MovieDbModel) =
+    suspend operator fun invoke(movieDbModel: MovieDbModel) =
         movieRepository.isFavoriteMove(movieDbModel)
 }

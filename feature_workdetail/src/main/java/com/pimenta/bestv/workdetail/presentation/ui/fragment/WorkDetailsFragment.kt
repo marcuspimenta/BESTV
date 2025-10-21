@@ -18,7 +18,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +48,6 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.model.presentation.model.loadPoster
 import com.pimenta.bestv.presentation.extension.addFragment
-import com.pimenta.bestv.presentation.extension.isNotNullOrEmpty
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.diffcallback.WorkDiffCallback
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
@@ -57,16 +55,23 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workdetail.R as workdetailR
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
-import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.workdetail.presentation.ui.diffcallback.ReviewDiffCallback
 import com.pimenta.bestv.workdetail.presentation.ui.render.CastCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.ReviewCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.VideoCardRender
 import com.pimenta.bestv.workdetail.presentation.ui.render.WorkDetailsDescriptionRender
+import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 private const val WORK = "WORK"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
@@ -87,7 +92,6 @@ private const val CAST_HEAD_ID = 6
  */
 class WorkDetailsFragment :
     DetailsSupportFragment(),
-    WorkDetailsPresenter.View,
     OnItemViewSelectedListener,
     OnItemViewClickedListener {
 
@@ -113,7 +117,7 @@ class WorkDetailsFragment :
     private val workViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
 
     @Inject
-    lateinit var presenter: WorkDetailsPresenter
+    lateinit var viewModel: WorkDetailsViewModel
 
     private lateinit var favoriteAction: Action
     private lateinit var detailsOverviewRow: DetailsOverviewRow
@@ -121,14 +125,13 @@ class WorkDetailsFragment :
     override fun onAttach(context: Context) {
         (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
             .workDetailsFragmentComponent()
-            .create(this, workViewModel)
+            .create(workViewModel)
             .inject(this)
         super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.bindTo(this.lifecycle)
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -146,28 +149,101 @@ class WorkDetailsFragment :
             )
             initialDelay = 0
         }
-        presenter.loadData()
+
+        observeState()
+        observeEffects()
+        viewModel.handleEvent(WorkDetailsEvent.LoadData)
     }
 
-    override fun showProgress() {
-        progressBarManager.show()
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    renderState(state)
+                }
+            }
+        }
     }
 
-    override fun hideProgress() {
-        progressBarManager.hide()
+    private fun observeEffects() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.effects.collect { effect ->
+                    handleEffect(effect)
+                }
+            }
+        }
     }
 
-    override fun resultSetFavoriteMovie(isFavorite: Boolean) {
+    private fun renderState(state: com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState) {
+        // Handle loading state
+        if (state.isLoading) {
+            progressBarManager.show()
+        } else {
+            progressBarManager.hide()
+        }
+
+        // Initialize UI with initial data load
+        if (!state.isLoading && !::favoriteAction.isInitialized && state.error == null) {
+            setupInitialData(
+                isFavorite = state.isFavorite,
+                reviews = state.reviews,
+                videos = state.videos,
+                casts = state.casts,
+                recommendedWorks = state.recommendedWorks,
+                similarWorks = state.similarWorks
+            )
+        }
+
+        // Update favorite action if it's initialized
+        if (::favoriteAction.isInitialized) {
+            updateFavoriteAction(state.isFavorite)
+        }
+
+        // Update reviews for pagination
+        if (state.reviews.isNotEmpty() && ::favoriteAction.isInitialized) {
+            reviewRowAdapter.setItems(state.reviews, reviewDiffCallback)
+        }
+
+        // Update recommendations for pagination
+        if (state.recommendedWorks.isNotEmpty() && ::favoriteAction.isInitialized) {
+            recommendedRowAdapter.setItems(state.recommendedWorks, workDiffCallback)
+        }
+
+        // Update similar works for pagination
+        if (state.similarWorks.isNotEmpty() && ::favoriteAction.isInitialized) {
+            similarRowAdapter.setItems(state.similarWorks, workDiffCallback)
+        }
+    }
+
+    private fun handleEffect(effect: WorkDetailsEffect) {
+        when (effect) {
+            is WorkDetailsEffect.NavigateToWorkDetails -> openWorkDetailsActivity(effect.work)
+            is WorkDetailsEffect.NavigateToCastDetails -> openCastDetailsActivity(effect.cast)
+            is WorkDetailsEffect.OpenVideo -> openVideoUrl(effect.video)
+            is WorkDetailsEffect.ShowFavoriteSuccess -> updateFavoriteAction(effect.isFavorite)
+            is WorkDetailsEffect.ShowError -> showErrorFragment()
+        }
+    }
+
+    private fun updateFavoriteAction(isFavorite: Boolean) {
         favoriteAction.label1 = resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
-            ?: run { resources.getString(workdetailR.string.save_favorites) }
+            ?: resources.getString(workdetailR.string.save_favorites)
         actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
     }
 
-    override fun dataLoaded(
+    private fun showErrorFragment() {
+        val fragment = ErrorFragment.newInstance().apply {
+            setTargetFragment(this@WorkDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
+        }
+        requireActivity().addFragment(fragment, ErrorFragment.TAG)
+    }
+
+    private fun setupInitialData(
         isFavorite: Boolean,
-        reviews: List<ReviewViewModel>?,
-        videos: List<VideoViewModel>?,
-        casts: List<CastViewModel>?,
+        reviews: List<ReviewViewModel>,
+        videos: List<VideoViewModel>,
+        casts: List<CastViewModel>,
         recommendedWorks: List<WorkViewModel>,
         similarWorks: List<WorkViewModel>
     ) {
@@ -178,21 +254,21 @@ class WorkDetailsFragment :
         )
         actionAdapter.add(favoriteAction)
 
-        if (reviews.isNotNullOrEmpty()) {
+        if (reviews.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_REVIEWS.toLong(), getString(workdetailR.string.reviews)))
-            reviewRowAdapter.setItems(reviews!!, reviewDiffCallback)
+            reviewRowAdapter.setItems(reviews, reviewDiffCallback)
             mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(workdetailR.string.reviews)), reviewRowAdapter))
         }
 
-        if (videos.isNotNullOrEmpty()) {
+        if (videos.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_VIDEOS.toLong(), getString(workdetailR.string.videos)))
-            videoRowAdapter.addAll(0, videos!!)
+            videoRowAdapter.addAll(0, videos)
             mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(workdetailR.string.videos)), videoRowAdapter))
         }
 
-        if (casts.isNotNullOrEmpty()) {
+        if (casts.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_CAST.toLong(), getString(workdetailR.string.cast)))
-            castRowAdapter.addAll(0, casts!!)
+            castRowAdapter.addAll(0, casts)
             mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(workdetailR.string.cast)), castRowAdapter))
         }
 
@@ -209,56 +285,25 @@ class WorkDetailsFragment :
         }
     }
 
-    override fun reviewLoaded(reviews: List<ReviewViewModel>) {
-        reviewRowAdapter.setItems(reviews, reviewDiffCallback)
+    private fun openWorkDetailsActivity(work: WorkViewModel) {
+        // TODO: Navigate to work details with proper shared element transition
     }
 
-    override fun recommendationLoaded(works: List<WorkViewModel>) {
-        recommendedRowAdapter.setItems(works, workDiffCallback)
+    private fun openCastDetailsActivity(cast: CastViewModel) {
+        // TODO: Navigate to cast details with proper shared element transition
     }
 
-    override fun similarLoaded(works: List<WorkViewModel>) {
-        similarRowAdapter.setItems(works, workDiffCallback)
-    }
-
-    override fun errorWorkDetailsLoaded() {
-        val fragment = ErrorFragment.newInstance().apply {
-            setTargetFragment(this@WorkDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
-        }
-        requireActivity().addFragment(fragment, ErrorFragment.TAG)
-    }
-
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        (itemViewHolder.view as ImageCardView).mainImageView?.let {
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                it,
-                SettingShared.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(intent, bundle)
-        }
-    }
-
-    override fun openCastDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        (itemViewHolder.view as ImageCardView).mainImageView?.let {
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                it,
-                SettingShared.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(intent, bundle)
-        }
-    }
-
-    override fun openVideo(videoViewModel: VideoViewModel) {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse(videoViewModel.youtubeUrl)
-        )
-        try {
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), workdetailR.string.failed_open_video, Toast.LENGTH_LONG).show()
+    private fun openVideoUrl(video: VideoViewModel) {
+        video.youtubeUrl?.let {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                it.toUri()
+            )
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(requireContext(), workdetailR.string.failed_open_video, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -267,7 +312,7 @@ class WorkDetailsFragment :
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> presenter.loadData()
+                    Activity.RESULT_OK -> viewModel.handleEvent(WorkDetailsEvent.LoadData)
                     else -> requireActivity().finish()
                 }
             }
@@ -275,18 +320,18 @@ class WorkDetailsFragment :
     }
 
     override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-        when (row?.run { id.toInt() }) {
-            REVIEW_HEADER_ID -> item?.let { presenter.reviewItemSelected(it as ReviewViewModel) }
-            RECOMMENDED_HEADER_ID -> item?.let { presenter.recommendationItemSelected(it as WorkViewModel) }
-            SIMILAR_HEADER_ID -> item?.let { presenter.similarItemSelected(it as WorkViewModel) }
+        when (row?.id?.toInt()) {
+            REVIEW_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.ReviewItemSelected(it as ReviewViewModel)) }
+            RECOMMENDED_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.RecommendationItemSelected(it as WorkViewModel)) }
+            SIMILAR_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.SimilarItemSelected(it as WorkViewModel)) }
         }
     }
 
     override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-        when (row?.run { id.toInt() }) {
-            CAST_HEAD_ID -> presenter.castClicked(itemViewHolder, item as CastViewModel)
-            VIDEO_HEADER_ID -> presenter.videoClicked(item as VideoViewModel)
-            RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> presenter.workClicked(itemViewHolder, item as WorkViewModel)
+        when (row?.id?.toInt()) {
+            CAST_HEAD_ID -> viewModel.handleEvent(WorkDetailsEvent.CastClicked(item as CastViewModel))
+            VIDEO_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.VideoClicked(item as VideoViewModel))
+            RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.WorkClicked(item as WorkViewModel))
         }
     }
 
@@ -338,7 +383,7 @@ class WorkDetailsFragment :
             isParticipatingEntranceTransition = true
             setOnActionClickedListener { action ->
                 when (val position = actionAdapter.indexOf(action)) {
-                    0 -> presenter.setFavorite()
+                    0 -> viewModel.handleEvent(WorkDetailsEvent.ToggleFavorite)
                     else -> setSelectedPosition(position)
                 }
             }

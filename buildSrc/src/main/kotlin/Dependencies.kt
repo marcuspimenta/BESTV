@@ -24,6 +24,7 @@ object Config {
 
 object Versions {
     val kotlin = "2.2.20"
+    val kotlinx_coroutines = "1.10.2"
     val kotlinx_coroutines_test = "1.10.2"
     val build_gradle = "8.13.0"
     val google_service = "4.4.4"
@@ -52,13 +53,16 @@ object Versions {
     val lottie = "6.6.1"
     val rxandroid = "2.1.1"
     val junit = "4.13.2"
-    val mockito_inline = "5.2.1"
+    val mockito_inline = "5.2.0"
     val mockito_core = "4.5.0"
     val mockito_kotlin = "2.2.0"
+    val turbine = "1.2.0"
 }
 
 object Libs {
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
+    val kotlinx_coroutines_core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinx_coroutines}"
+    val kotlinx_coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx_coroutines}"
     val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx_coroutines_test}"
     val kotlin_test_junit = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
 
@@ -72,6 +76,8 @@ object Libs {
     val androidx_core = "androidx.core:core-ktx:${Versions.androidx_core}"
     val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
     val androidx_lifecycle = "androidx.lifecycle:lifecycle-viewmodel:${Versions.androidx_lifecycle}"
+    val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidx_lifecycle}"
+    val androidx_lifecycle_runtime_ktx = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
     val androidx_recommendation = "androidx.recommendation:recommendation:${Versions.androidx_recommendation}"
     val androidx_tvprovider = "androidx.tvprovider:tvprovider:${Versions.androidx_tvprovider}"
     val androidx_room = "androidx.room:room-runtime:${Versions.androidx_room}"
@@ -97,4 +103,5 @@ object Libs {
     val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito_inline}"
     val mockito_core = "org.mockito:mockito-core:${Versions.mockito_core}"
     val mockito_kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito_kotlin}"
+    val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
 }

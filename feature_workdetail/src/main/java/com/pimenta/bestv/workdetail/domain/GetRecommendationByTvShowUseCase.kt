@@ -24,6 +24,6 @@ class GetRecommendationByTvShowUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(workId: Int, page: Int) =
+    suspend operator fun invoke(workId: Int, page: Int) =
         tvShowRepository.getRecommendationByTvShow(workId, page)
 }

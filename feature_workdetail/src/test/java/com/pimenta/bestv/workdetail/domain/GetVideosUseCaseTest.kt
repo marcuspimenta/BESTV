@@ -18,8 +18,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-06-2018.
@@ -43,40 +45,40 @@ class GetVideosUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the videos by movie`() {
-        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
+    fun `should return the right data when loading the videos by movie`() = runTest {
+        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(VIDEO_LIST)
 
-        useCase(WorkType.MOVIE, MOVIE_ID)
-            .test()
-            .assertComplete()
-            .assertResult(VIDEO_LIST)
+        val result = useCase(WorkType.MOVIE, MOVIE_ID)
+
+        assertEquals(VIDEO_LIST, result)
     }
 
     @Test
-    fun `should return an error when loading the videos by movie abd some exception happens`() {
-        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when loading the videos by movie abd some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
+        whenever(getVideosByMovieUseCase(MOVIE_ID)).thenThrow(exception)
 
-        useCase(WorkType.MOVIE, MOVIE_ID)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(WorkType.MOVIE, MOVIE_ID)
+        }
     }
 
     @Test
-    fun `should return the right data when loading the videos by tv show`() {
-        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.just(VIDEO_LIST))
+    fun `should return the right data when loading the videos by tv show`() = runTest {
+        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(VIDEO_LIST)
 
-        useCase(WorkType.TV_SHOW, MOVIE_ID)
-            .test()
-            .assertComplete()
-            .assertResult(VIDEO_LIST)
+        val result = useCase(WorkType.TV_SHOW, MOVIE_ID)
+
+        assertEquals(VIDEO_LIST, result)
     }
 
     @Test
-    fun `should return an error when loading the videos by tv show abd some exception happens`() {
-        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenReturn(Single.error(Throwable()))
+    fun `should return an error when loading the videos by tv show abd some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
+        whenever(getVideosByTvShowUseCase(MOVIE_ID)).thenThrow(exception)
 
-        useCase(WorkType.TV_SHOW, MOVIE_ID)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(WorkType.TV_SHOW, MOVIE_ID)
+        }
     }
 }

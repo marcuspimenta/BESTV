@@ -20,9 +20,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.pimenta.bestv.model.data.local.TvShowDbModel
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
 
 /**
  * Created by marcus on 10/07/18.
@@ -31,17 +28,17 @@ import io.reactivex.Single
 interface TvShowDao {
 
     @Query("SELECT * FROM tv_show")
-    fun getAll(): Single<List<TvShowDbModel>>
+    suspend fun getAll(): List<TvShowDbModel>
 
     @Query("SELECT * FROM tv_show WHERE id = :id")
-    fun getById(id: Int): Maybe<TvShowDbModel>
+    suspend fun getById(id: Int): TvShowDbModel?
 
     @Insert
-    fun create(model: TvShowDbModel): Completable
+    suspend fun create(model: TvShowDbModel)
 
     @Update
-    fun update(model: TvShowDbModel): Completable
+    suspend fun update(model: TvShowDbModel)
 
     @Delete
-    fun delete(model: TvShowDbModel): Completable
+    suspend fun delete(model: TvShowDbModel)
 }

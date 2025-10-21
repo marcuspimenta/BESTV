@@ -20,7 +20,9 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel.Type
 import com.pimenta.bestv.model.presentation.model.WorkType
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import kotlin.test.assertFailsWith
 import org.junit.Test
 
 /**
@@ -50,44 +52,44 @@ class GetRecommendationByWorkUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the recommendations by movie`() {
+    fun `should return the right data when loading the recommendations by movie`() = runTest {
         whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
-            .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+            .thenReturn(WORK_PAGE_VIEW_MODEL)
 
-        useCase(WorkType.MOVIE, WORK_ID, 1)
-            .test()
-            .assertComplete()
-            .assertResult(WORK_PAGE_VIEW_MODEL)
+        val result = useCase(WorkType.MOVIE, WORK_ID, 1)
+
+        assertEquals(WORK_PAGE_VIEW_MODEL, result)
     }
 
     @Test
-    fun `should return an error when loading the recommendations by movie and some exception happens`() {
+    fun `should return an error when loading the recommendations by movie and some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
         whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(exception)
 
-        useCase(WorkType.MOVIE, WORK_ID, 1)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(WorkType.MOVIE, WORK_ID, 1)
+        }
     }
 
     @Test
-    fun `should return the right data when loading the recommendations by tv show`() {
+    fun `should return the right data when loading the recommendations by tv show`() = runTest {
         whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
-            .thenReturn(Single.just(WORK_PAGE_VIEW_MODEL))
+            .thenReturn(WORK_PAGE_VIEW_MODEL)
 
-        useCase(WorkType.TV_SHOW, WORK_ID, 1)
-            .test()
-            .assertComplete()
-            .assertResult(WORK_PAGE_VIEW_MODEL)
+        val result = useCase(WorkType.TV_SHOW, WORK_ID, 1)
+
+        assertEquals(WORK_PAGE_VIEW_MODEL, result)
     }
 
     @Test
-    fun `should return an error when loading the recommendations by tv show and some exception happens`() {
+    fun `should return an error when loading the recommendations by tv show and some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
         whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(exception)
 
-        useCase(WorkType.TV_SHOW, WORK_ID, 1)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(WorkType.TV_SHOW, WORK_ID, 1)
+        }
     }
 }

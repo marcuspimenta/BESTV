@@ -25,7 +25,7 @@ class GetReviewByWorkUseCase @Inject constructor(
     private val getReviewByTvShowUseCase: GetReviewByTvShowUseCase
 ) {
 
-    operator fun invoke(workType: WorkType, workId: Int, page: Int) =
+    suspend operator fun invoke(workType: WorkType, workId: Int, page: Int) =
         when (workType) {
             WorkType.MOVIE -> getReviewByMovieUseCase(workId, page)
             WorkType.TV_SHOW -> getReviewByTvShowUseCase(workId, page)

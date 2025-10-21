@@ -19,7 +19,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import kotlin.test.assertFailsWith
 import org.junit.Test
 
 /**
@@ -46,23 +48,23 @@ class GetRecommendationByMovieUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the recommendations`() {
+    fun `should return the right data when loading the recommendations`() = runTest {
         whenever(movieRepository.getRecommendationByMovie(MOVIE_ID, 1))
-            .thenReturn(Single.just(WORK_PAGE))
+            .thenReturn(WORK_PAGE)
 
-        useCase(MOVIE_ID, 1)
-            .test()
-            .assertComplete()
-            .assertResult(WORK_PAGE)
+        val result = useCase(MOVIE_ID, 1)
+
+        assertEquals(WORK_PAGE, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
+    fun `should return an error when some exception happens`() = runTest {
+        val exception = RuntimeException("Test exception")
         whenever(movieRepository.getRecommendationByMovie(MOVIE_ID, 1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(exception)
 
-        useCase(MOVIE_ID, 1)
-            .test()
-            .assertError(Throwable::class.java)
+        assertFailsWith<RuntimeException> {
+            useCase(MOVIE_ID, 1)
+        }
     }
 }

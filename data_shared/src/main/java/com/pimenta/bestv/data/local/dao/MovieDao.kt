@@ -20,9 +20,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.pimenta.bestv.model.data.local.MovieDbModel
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
 
 /**
  * Created by marcus on 15-04-2018.
@@ -31,17 +28,17 @@ import io.reactivex.Single
 interface MovieDao {
 
     @Query("SELECT * FROM movie")
-    fun getAll(): Single<List<MovieDbModel>>
+    suspend fun getAll(): List<MovieDbModel>
 
     @Query("SELECT * FROM movie WHERE id = :id")
-    fun getById(id: Int): Maybe<MovieDbModel>
+    suspend fun getById(id: Int): MovieDbModel?
 
     @Insert
-    fun create(model: MovieDbModel): Completable
+    suspend fun create(model: MovieDbModel)
 
     @Update
-    fun update(model: MovieDbModel): Completable
+    suspend fun update(model: MovieDbModel)
 
     @Delete
-    fun delete(model: MovieDbModel): Completable
+    suspend fun delete(model: MovieDbModel)
 }

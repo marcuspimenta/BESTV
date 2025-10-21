@@ -16,10 +16,12 @@ package com.pimenta.bestv.workbrowse.data.repository
 
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
+import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -31,8 +33,9 @@ class MovieRepository @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    fun getFavoriteMovies() =
-        movieLocalDataSource.getMovies()
+    // TODO bring it back when migrating this module to coroutines
+    fun getFavoriteMovies() = Single.just(emptyList<WorkDomainModel>())
+        /*movieLocalDataSource.getMovies()
             .map {
                 val movies = mutableListOf<WorkDomainModel>()
                 it.forEach { movieDbModel ->
@@ -46,7 +49,7 @@ class MovieRepository @Inject constructor(
                     }
                 }
                 movies.toList()
-            }
+            }*/
 
     fun getMoviesByGenre(genreId: Int, page: Int) =
         movieRemoteDataSource.getMoviesByGenre(genreId, page)

@@ -20,8 +20,8 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
-import io.reactivex.Single
-import io.reactivex.functions.Function6
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
@@ -36,18 +36,23 @@ class GetWorkDetailsUseCase @Inject constructor(
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase
 ) {
 
-    operator fun invoke(workViewModel: WorkViewModel): Single<WorkDetailsDomainWrapper> =
-        Single.zip(
-            checkFavoriteWorkUseCase(workViewModel),
-            getVideosUseCase(workViewModel.type, workViewModel.id),
-            getCastsUseCase(workViewModel.type, workViewModel.id),
-            getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-            getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-            getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1),
-            Function6 { isFavorite, videos, casts, recommended, similar, reviews ->
-                WorkDetailsDomainWrapper(isFavorite, videos, casts, recommended, similar, reviews)
-            }
+    suspend operator fun invoke(workViewModel: WorkViewModel): WorkDetailsDomainWrapper = coroutineScope {
+        val isFavoriteDeferred = async { checkFavoriteWorkUseCase(workViewModel) }
+        val videosDeferred = async { getVideosUseCase(workViewModel.type, workViewModel.id) }
+        val castsDeferred = async { getCastsUseCase(workViewModel.type, workViewModel.id) }
+        val recommendedDeferred = async { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val similarDeferred = async { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val reviewsDeferred = async { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+
+        WorkDetailsDomainWrapper(
+            isFavorite = isFavoriteDeferred.await(),
+            videos = videosDeferred.await(),
+            casts = castsDeferred.await(),
+            recommended = recommendedDeferred.await(),
+            similar = similarDeferred.await(),
+            reviews = reviewsDeferred.await()
         )
+    }
 
     data class WorkDetailsDomainWrapper(
         val isFavorite: Boolean,

@@ -18,7 +18,6 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule
-import com.pimenta.bestv.workdetail.presentation.presenter.WorkDetailsPresenter
 import com.pimenta.bestv.workdetail.presentation.ui.fragment.WorkDetailsFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -30,7 +29,7 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         MovieRemoteDataSourceModule::class,
-        TvShowRemoteDataSourceModule::class
+        TvShowRemoteDataSourceModule::class,
     ]
 )
 interface WorkDetailsFragmentComponent {
@@ -38,7 +37,6 @@ interface WorkDetailsFragmentComponent {
     @Subcomponent.Factory
     interface Factory {
         fun create(
-            @BindsInstance view: WorkDetailsPresenter.View,
             @BindsInstance workViewModel: WorkViewModel
         ): WorkDetailsFragmentComponent
     }

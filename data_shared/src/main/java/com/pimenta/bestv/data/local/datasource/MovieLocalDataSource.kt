@@ -25,15 +25,15 @@ class MovieLocalDataSource @Inject constructor(
     private val movieDao: MovieDao
 ) {
 
-    fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
+    suspend fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
         movieDao.create(movieDbModel)
 
-    fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
+    suspend fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
         movieDao.delete(movieDbModel)
 
-    fun getMovies() =
+    suspend fun getMovies() =
         movieDao.getAll()
 
-    fun getById(movieDbModel: MovieDbModel) =
+    suspend fun getById(movieDbModel: MovieDbModel) =
         movieDao.getById(movieDbModel.id)
 }
