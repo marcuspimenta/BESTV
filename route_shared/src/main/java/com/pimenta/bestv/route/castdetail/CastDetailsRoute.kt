@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.route.castdetail
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
@@ -33,9 +35,13 @@ private const val DEATH_DAY = "DEATH_DAY"
 private const val BIOGRAPHY = "BIOGRAPHY"
 private const val THUMBNAIL_URL = "THUMBNAIL_URL"
 
-class CastDetailsRoute @Inject constructor() {
+class CastDetailsRoute @Inject constructor(
+    private val application: Application
+) {
 
-    fun buildCastDetailIntent(castViewModel: CastViewModel) = Intent(Intent.ACTION_VIEW, castViewModel.toUri())
+    fun buildCastDetailIntent(castViewModel: CastViewModel) = Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
+        setPackage(application.packageName)
+    }
 
     fun getCastDetailDeepLink(intent: Intent) = intent.getCastDeepLink()
 

@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.model
 
+import android.content.Intent
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
@@ -24,27 +25,12 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 sealed interface WorkDetailsEffect {
 
     /**
-     * Navigate to work details screen for another work
+     * Open an Intent
      */
-    data class NavigateToWorkDetails(val work: WorkViewModel) : WorkDetailsEffect
-
-    /**
-     * Navigate to cast details screen
-     */
-    data class NavigateToCastDetails(val cast: CastViewModel) : WorkDetailsEffect
-
-    /**
-     * Open video player with the given video
-     */
-    data class OpenVideo(val video: VideoViewModel) : WorkDetailsEffect
+    data class OpenIntent(val intent: Intent, val shareTransition: Boolean) : WorkDetailsEffect
 
     /**
      * Show an error message to the user
      */
     data class ShowError(val message: String) : WorkDetailsEffect
-
-    /**
-     * Show a success message for favorite action
-     */
-    data class ShowFavoriteSuccess(val isFavorite: Boolean) : WorkDetailsEffect
 }

@@ -5,7 +5,6 @@
         <activity
             android:name=".presentation.ui.activity.MainActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

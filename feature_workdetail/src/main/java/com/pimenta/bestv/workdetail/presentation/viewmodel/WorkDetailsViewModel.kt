@@ -14,10 +14,15 @@
 
 package com.pimenta.bestv.workdetail.presentation.viewmodel
 
+import android.content.Intent
+import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetReviewByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
@@ -26,6 +31,7 @@ import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorState
 import com.pimenta.bestv.workdetail.presentation.model.PaginationState
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
@@ -45,7 +51,9 @@ class WorkDetailsViewModel @Inject constructor(
     private val getWorkDetailsUseCase: GetWorkDetailsUseCase,
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
-    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase
+    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val castDetailsRoute: CastDetailsRoute,
 ) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(WorkDetailsState(work = work)) {
 
     /**
@@ -118,7 +126,6 @@ class WorkDetailsViewModel @Inject constructor(
 
                 val newFavoriteState = !currentFavoriteState
                 updateState { it.copy(isFavorite = newFavoriteState) }
-                emitEvent(WorkDetailsEffect.ShowFavoriteSuccess(newFavoriteState))
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while toggling favorite")
                 updateState {
@@ -255,15 +262,20 @@ class WorkDetailsViewModel @Inject constructor(
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
-        emitEvent(WorkDetailsEffect.NavigateToWorkDetails(work))
+        val intent = workDetailsRoute.buildWorkDetailIntent(work)
+        emitEvent(WorkDetailsEffect.OpenIntent(intent, true))
     }
 
-    private fun handleCastClicked(cast: com.pimenta.bestv.model.presentation.model.CastViewModel) {
-        emitEvent(WorkDetailsEffect.NavigateToCastDetails(cast))
+    private fun handleCastClicked(cast: CastViewModel) {
+        val intent = castDetailsRoute.buildCastDetailIntent(cast)
+        emitEvent(WorkDetailsEffect.OpenIntent(intent, true))
     }
 
-    private fun handleVideoClicked(video: com.pimenta.bestv.workdetail.presentation.model.VideoViewModel) {
-        emitEvent(WorkDetailsEffect.OpenVideo(video))
+    private fun handleVideoClicked(video: VideoViewModel) {
+        video.youtubeUrl?.let {
+            val intent = Intent(Intent.ACTION_VIEW, it.toUri())
+            emitEvent(WorkDetailsEffect.OpenIntent(intent, false))
+        }
     }
 
     private fun dismissError() {

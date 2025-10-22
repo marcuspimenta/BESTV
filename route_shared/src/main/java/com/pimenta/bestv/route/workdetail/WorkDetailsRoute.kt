@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.route.workdetail
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -37,9 +38,13 @@ private const val RELEASE_DATE = "RELEASE_DATE"
 private const val FAVORITE = "FAVORITE"
 private const val TYPE = "TYPE"
 
-class WorkDetailsRoute @Inject constructor() {
+class WorkDetailsRoute @Inject constructor(
+    private val application: Application
+) {
 
-    fun buildWorkDetailIntent(workViewModel: WorkViewModel) = Intent(Intent.ACTION_VIEW, workViewModel.toUri())
+    fun buildWorkDetailIntent(workViewModel: WorkViewModel) = Intent(Intent.ACTION_VIEW, workViewModel.toUri()).apply {
+        setPackage(application.packageName)
+    }
 
     fun getWorkDetail(intent: Intent) = intent.getWorkDeepLink()
 

@@ -57,6 +57,7 @@ object Versions {
     val mockito_core = "4.5.0"
     val mockito_kotlin = "2.2.0"
     val turbine = "1.2.0"
+    val robolectric = "4.15"
 }
 
 object Libs {
@@ -104,4 +105,5 @@ object Libs {
     val mockito_core = "org.mockito:mockito-core:${Versions.mockito_core}"
     val mockito_kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito_kotlin}"
     val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
+    val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
 }

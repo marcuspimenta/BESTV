@@ -14,10 +14,10 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
         }
     }
 }

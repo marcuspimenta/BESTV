@@ -69,4 +69,7 @@ dependencies {
     testImplementation Libs.mockito_inline
     testImplementation Libs.mockito_core
     testImplementation Libs.mockito_kotlin
+
+    // Robolectric
+    testImplementation Libs.robolectric
 }

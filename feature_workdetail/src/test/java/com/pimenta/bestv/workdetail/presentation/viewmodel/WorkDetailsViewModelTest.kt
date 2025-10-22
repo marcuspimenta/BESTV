@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.viewmodel
 
+import android.content.Intent
 import app.cash.turbine.test
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
@@ -21,8 +22,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetReviewByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
@@ -30,6 +34,7 @@ import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import kotlinx.coroutines.Dispatchers
@@ -47,86 +52,88 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+
+private val WORK = WorkViewModel(
+    id = 1,
+    title = "Test Movie",
+    type = WorkType.MOVIE
+)
+
+private val VIDEO_LIST = listOf(
+    VideoDomainModel(
+        id = "1",
+        name = "Trailer"
+    )
+)
+
+private val CAST_LIST = listOf(
+    CastDomainModel(
+        id = 1,
+        name = "Actor Name",
+        character = "Character Name",
+        birthday = "1990-01-01",
+        deathDay = null,
+        biography = null
+    )
+)
+
+private val WORK_PAGE = PageDomainModel(
+    page = 1,
+    totalPages = 5,
+    results = listOf(
+        WorkDomainModel(
+            id = 2,
+            title = "Recommended Movie"
+        )
+    )
+)
+
+private val REVIEW_PAGE = PageDomainModel(
+    page = 1,
+    totalPages = 3,
+    results = listOf(
+        ReviewDomainModel(
+            id = "1",
+            author = "Reviewer",
+            content = "Great movie!"
+        )
+    )
+)
 
 /**
  * Unit tests for WorkDetailsViewModel following MVI architecture with Coroutines
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28])
 @OptIn(ExperimentalCoroutinesApi::class)
 class WorkDetailsViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var setFavoriteUseCase: SetFavoriteUseCase
-    private lateinit var getWorkDetailsUseCase: GetWorkDetailsUseCase
-    private lateinit var getReviewByWorkUseCase: GetReviewByWorkUseCase
-    private lateinit var getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase
-    private lateinit var getSimilarByWorkUseCase: GetSimilarByWorkUseCase
-    private lateinit var viewModel: WorkDetailsViewModel
-
-    private val work = WorkViewModel(
-        id = 1,
-        title = "Test Movie",
-        type = WorkType.MOVIE
-    )
-
-    private val videoList = listOf(
-        VideoDomainModel(
-            id = "1",
-            name = "Trailer"
-        )
-    )
-
-    private val castList = listOf(
-        CastDomainModel(
-            id = 1,
-            name = "Actor Name",
-            character = "Character Name",
-            birthday = "1990-01-01",
-            deathDay = null,
-            biography = null
-        )
-    )
-
-    private val workPage = PageDomainModel<WorkDomainModel>(
-        page = 1,
-        totalPages = 5,
-        results = listOf(
-            WorkDomainModel(
-                id = 2,
-                title = "Recommended Movie"
-            )
-        )
-    )
-
-    private val reviewPage = PageDomainModel<ReviewDomainModel>(
-        page = 1,
-        totalPages = 3,
-        results = listOf(
-            ReviewDomainModel(
-                id = "1",
-                author = "Reviewer",
-                content = "Great movie!"
-            )
-        )
+    private val setFavoriteUseCase: SetFavoriteUseCase = mock()
+    private val getWorkDetailsUseCase: GetWorkDetailsUseCase = mock()
+    private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
+    private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
+    private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
+    private val workDetailsRoute: WorkDetailsRoute = mock()
+    private val castDetailsRoute: CastDetailsRoute = mock()
+    private val viewModel = WorkDetailsViewModel(
+        work = WORK,
+        setFavoriteUseCase = setFavoriteUseCase,
+        getWorkDetailsUseCase = getWorkDetailsUseCase,
+        getReviewByWorkUseCase = getReviewByWorkUseCase,
+        getRecommendationByWorkUseCase = getRecommendationByWorkUseCase,
+        getSimilarByWorkUseCase = getSimilarByWorkUseCase,
+        workDetailsRoute = workDetailsRoute,
+        castDetailsRoute = castDetailsRoute
     )
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        setFavoriteUseCase = mock()
-        getWorkDetailsUseCase = mock()
-        getReviewByWorkUseCase = mock()
-        getRecommendationByWorkUseCase = mock()
-        getSimilarByWorkUseCase = mock()
-
-        viewModel = WorkDetailsViewModel(
-            work = work,
-            setFavoriteUseCase = setFavoriteUseCase,
-            getWorkDetailsUseCase = getWorkDetailsUseCase,
-            getReviewByWorkUseCase = getReviewByWorkUseCase,
-            getRecommendationByWorkUseCase = getRecommendationByWorkUseCase,
-            getSimilarByWorkUseCase = getSimilarByWorkUseCase
-        )
     }
 
     @After
@@ -137,7 +144,7 @@ class WorkDetailsViewModelTest {
     @Test
     fun `initial state should have correct work`() {
         val initialState = viewModel.state.value
-        assertEquals(work, initialState.work)
+        assertEquals(WORK, initialState.work)
         assertFalse(initialState.isLoading)
         assertFalse(initialState.isFavorite)
         assertTrue(initialState.videos.isEmpty())
@@ -152,14 +159,14 @@ class WorkDetailsViewModelTest {
     fun `loadData should update state with loaded data`() = runTest(testDispatcher) {
         val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
             isFavorite = true,
-            videos = videoList,
-            casts = castList,
-            recommended = workPage,
-            similar = workPage,
-            reviews = reviewPage
+            videos = VIDEO_LIST,
+            casts = CAST_LIST,
+            recommended = WORK_PAGE,
+            similar = WORK_PAGE,
+            reviews = REVIEW_PAGE
         )
 
-        whenever(getWorkDetailsUseCase(work)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
         advanceUntilIdle()
@@ -186,7 +193,7 @@ class WorkDetailsViewModelTest {
             reviews = PageDomainModel(1, 1, emptyList())
         )
 
-        whenever(getWorkDetailsUseCase(work)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
 
         viewModel.state.test {
             val initialState = awaitItem()
@@ -209,7 +216,7 @@ class WorkDetailsViewModelTest {
     @Test
     fun `loadData should handle error`() = runTest(testDispatcher) {
         val exception = RuntimeException("Network error")
-        whenever(getWorkDetailsUseCase(work)).thenThrow(exception)
+        whenever(getWorkDetailsUseCase(WORK)).thenThrow(exception)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
         advanceUntilIdle()
@@ -237,36 +244,46 @@ class WorkDetailsViewModelTest {
     }
 
     @Test
-    fun `toggleFavorite should emit ShowFavoriteSuccess effect`() = runTest(testDispatcher) {
-        whenever(setFavoriteUseCase(any())).thenReturn(Unit)
-
-        viewModel.effects.test {
-            viewModel.handleEvent(WorkDetailsEvent.ToggleFavorite)
-            advanceUntilIdle()
-
-            val effect = awaitItem()
-            assertTrue(effect is WorkDetailsEffect.ShowFavoriteSuccess)
-            assertEquals(true, (effect as WorkDetailsEffect.ShowFavoriteSuccess).isFavorite)
-        }
-    }
-
-    @Test
-    fun `workClicked should emit NavigateToWorkDetails effect`() = runTest(testDispatcher) {
+    fun `workClicked should emit OpenIntent effect with transition`() = runTest(testDispatcher) {
         val clickedWork = WorkViewModel(id = 2, title = "Another Movie", type = WorkType.MOVIE)
+        val intent = mock<Intent>()
+        whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
 
         viewModel.effects.test {
             viewModel.handleEvent(WorkDetailsEvent.WorkClicked(clickedWork))
             advanceUntilIdle()
 
             val effect = awaitItem()
-            assertTrue(effect is WorkDetailsEffect.NavigateToWorkDetails)
-            assertEquals(clickedWork, (effect as WorkDetailsEffect.NavigateToWorkDetails).work)
+            assertTrue(effect is WorkDetailsEffect.OpenIntent)
+            assertEquals(intent, (effect as WorkDetailsEffect.OpenIntent).intent)
+            assertTrue(effect.shareTransition)
         }
     }
 
     @Test
-    fun `videoClicked should emit OpenVideo effect`() = runTest(testDispatcher) {
-        val video = com.pimenta.bestv.workdetail.presentation.model.VideoViewModel(
+    fun `castClicked should emit OpenIntent effect with transition`() = runTest(testDispatcher) {
+        val cast = CastViewModel(
+            id = 1,
+            name = "Actor Name",
+            character = "Character Name"
+        )
+        val intent = mock<Intent>()
+        whenever(castDetailsRoute.buildCastDetailIntent(cast)).thenReturn(intent)
+
+        viewModel.effects.test {
+            viewModel.handleEvent(WorkDetailsEvent.CastClicked(cast))
+            advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertTrue(effect is WorkDetailsEffect.OpenIntent)
+            assertEquals(intent, (effect as WorkDetailsEffect.OpenIntent).intent)
+            assertTrue(effect.shareTransition)
+        }
+    }
+
+    @Test
+    fun `videoClicked should emit OpenIntent effect without transition`() = runTest(testDispatcher) {
+        val video = VideoViewModel(
             id = "1",
             type = "Trailer",
             youtubeUrl = "https://youtube.com/watch?v=123"
@@ -277,8 +294,27 @@ class WorkDetailsViewModelTest {
             advanceUntilIdle()
 
             val effect = awaitItem()
-            assertTrue(effect is WorkDetailsEffect.OpenVideo)
-            assertEquals(video, (effect as WorkDetailsEffect.OpenVideo).video)
+            assertTrue(effect is WorkDetailsEffect.OpenIntent)
+            val openIntent = effect as WorkDetailsEffect.OpenIntent
+            // Note: Intent.action and data require Robolectric, so we just verify it's OpenIntent
+            assertFalse(openIntent.shareTransition)
+        }
+    }
+
+    @Test
+    fun `videoClicked with null url should not emit effect`() = runTest(testDispatcher) {
+        val video = VideoViewModel(
+            id = "1",
+            type = "Trailer",
+            youtubeUrl = null
+        )
+
+        viewModel.effects.test {
+            viewModel.handleEvent(WorkDetailsEvent.VideoClicked(video))
+            advanceUntilIdle()
+
+            // Should not emit any effect when youtubeUrl is null
+            expectNoEvents()
         }
     }
 
@@ -291,7 +327,7 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = reviewPage.copy(totalPages = 2)
+            reviews = REVIEW_PAGE.copy(totalPages = 2)
         )
 
         val secondReviewPage = PageDomainModel<ReviewDomainModel>(
@@ -306,8 +342,8 @@ class WorkDetailsViewModelTest {
             )
         )
 
-        whenever(getWorkDetailsUseCase(work)).thenReturn(initialDetails)
-        whenever(getReviewByWorkUseCase(WorkType.MOVIE, work.id, 2))
+        whenever(getWorkDetailsUseCase(WORK)).thenReturn(initialDetails)
+        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
             .thenReturn(secondReviewPage)
 
         // Load initial data

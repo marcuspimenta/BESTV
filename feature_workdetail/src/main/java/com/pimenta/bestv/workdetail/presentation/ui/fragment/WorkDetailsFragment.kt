@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
@@ -71,7 +70,6 @@ import com.pimenta.bestv.workdetail.presentation.ui.render.WorkDetailsDescriptio
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 private const val WORK = "WORK"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
@@ -90,9 +88,7 @@ private const val CAST_HEAD_ID = 6
 /**
  * Created by marcus on 07-02-2018.
  */
-class WorkDetailsFragment :
-    DetailsSupportFragment(),
-    OnItemViewSelectedListener,
+class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener,
     OnItemViewClickedListener {
 
     private val actionAdapter by lazy { ArrayObjectAdapter() }
@@ -116,11 +112,11 @@ class WorkDetailsFragment :
     }
     private val workViewModel by lazy { arguments?.getSerializable(WORK) as WorkViewModel }
 
-    @Inject
-    lateinit var viewModel: WorkDetailsViewModel
+    @Inject lateinit var viewModel: WorkDetailsViewModel
 
     private lateinit var favoriteAction: Action
     private lateinit var detailsOverviewRow: DetailsOverviewRow
+    private var itemViewHolderClicked: Presenter.ViewHolder? = null
 
     override fun onAttach(context: Context) {
         (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
@@ -153,6 +149,35 @@ class WorkDetailsFragment :
         observeState()
         observeEffects()
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ERROR_FRAGMENT_REQUEST_CODE -> {
+                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                when (resultCode) {
+                    Activity.RESULT_OK -> viewModel.handleEvent(WorkDetailsEvent.LoadData)
+                    else -> requireActivity().finish()
+                }
+            }
+        }
+    }
+
+    override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
+        when (row?.id?.toInt()) {
+            REVIEW_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.ReviewItemSelected(it as ReviewViewModel)) }
+            RECOMMENDED_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.RecommendationItemSelected(it as WorkViewModel)) }
+            SIMILAR_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.SimilarItemSelected(it as WorkViewModel)) }
+        }
+    }
+
+    override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
+        itemViewHolderClicked = itemViewHolder
+        when (row?.id?.toInt()) {
+            CAST_HEAD_ID -> viewModel.handleEvent(WorkDetailsEvent.CastClicked(item as CastViewModel))
+            VIDEO_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.VideoClicked(item as VideoViewModel))
+            RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.WorkClicked(item as WorkViewModel))
+        }
     }
 
     private fun observeState() {
@@ -218,10 +243,7 @@ class WorkDetailsFragment :
 
     private fun handleEffect(effect: WorkDetailsEffect) {
         when (effect) {
-            is WorkDetailsEffect.NavigateToWorkDetails -> openWorkDetailsActivity(effect.work)
-            is WorkDetailsEffect.NavigateToCastDetails -> openCastDetailsActivity(effect.cast)
-            is WorkDetailsEffect.OpenVideo -> openVideoUrl(effect.video)
-            is WorkDetailsEffect.ShowFavoriteSuccess -> updateFavoriteAction(effect.isFavorite)
+            is WorkDetailsEffect.OpenIntent -> openIntent(effect.intent, effect.shareTransition)
             is WorkDetailsEffect.ShowError -> showErrorFragment()
         }
     }
@@ -285,53 +307,22 @@ class WorkDetailsFragment :
         }
     }
 
-    private fun openWorkDetailsActivity(work: WorkViewModel) {
-        // TODO: Navigate to work details with proper shared element transition
-    }
-
-    private fun openCastDetailsActivity(cast: CastViewModel) {
-        // TODO: Navigate to cast details with proper shared element transition
-    }
-
-    private fun openVideoUrl(video: VideoViewModel) {
-        video.youtubeUrl?.let {
-            val intent = Intent(
-                Intent.ACTION_VIEW,
-                it.toUri()
-            )
-            try {
-                startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                Toast.makeText(requireContext(), workdetailR.string.failed_open_video, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            ERROR_FRAGMENT_REQUEST_CODE -> {
-                requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                when (resultCode) {
-                    Activity.RESULT_OK -> viewModel.handleEvent(WorkDetailsEvent.LoadData)
-                    else -> requireActivity().finish()
+    private fun openIntent(intent: Intent, shareTransition: Boolean) {
+        try {
+            if (shareTransition) {
+                (itemViewHolderClicked?.view as? ImageCardView)?.mainImageView?.let {
+                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        requireActivity(),
+                        it,
+                        SettingShared.SHARED_ELEMENT_NAME
+                    ).toBundle()
+                    startActivity(intent, bundle)
                 }
+            } else {
+                startActivity(intent)
             }
-        }
-    }
-
-    override fun onItemSelected(viewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-        when (row?.id?.toInt()) {
-            REVIEW_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.ReviewItemSelected(it as ReviewViewModel)) }
-            RECOMMENDED_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.RecommendationItemSelected(it as WorkViewModel)) }
-            SIMILAR_HEADER_ID -> item?.let { viewModel.handleEvent(WorkDetailsEvent.SimilarItemSelected(it as WorkViewModel)) }
-        }
-    }
-
-    override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-        when (row?.id?.toInt()) {
-            CAST_HEAD_ID -> viewModel.handleEvent(WorkDetailsEvent.CastClicked(item as CastViewModel))
-            VIDEO_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.VideoClicked(item as VideoViewModel))
-            RECOMMENDED_HEADER_ID, SIMILAR_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.WorkClicked(item as WorkViewModel))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), workdetailR.string.failed_open_video, Toast.LENGTH_LONG).show()
         }
     }
 
