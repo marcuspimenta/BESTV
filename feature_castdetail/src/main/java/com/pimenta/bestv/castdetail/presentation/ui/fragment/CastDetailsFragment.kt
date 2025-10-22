@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.leanback.app.DetailsSupportFragment
@@ -35,21 +34,26 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowPresenter
-import com.pimenta.bestv.presentation.R
-import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
+import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
+import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.castdetail.presentation.ui.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadThumbnail
+import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.extension.addFragment
-import com.pimenta.bestv.presentation.extension.isNotNullOrEmpty
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
 import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val CAST = "CAST"
@@ -62,7 +66,7 @@ private const val TV_SHOWS_HEADER_ID = 2
 /**
  * Created by marcus on 04-04-2018.
  */
-class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View {
+class CastDetailsFragment : DetailsSupportFragment() {
 
     private val mainAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
     private val actionAdapter by lazy { ArrayObjectAdapter() }
@@ -73,19 +77,18 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
     private val castViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
 
     @Inject
-    lateinit var presenter: CastDetailsPresenter
+    lateinit var viewModel: CastDetailsViewModel
 
     override fun onAttach(context: Context) {
         (requireActivity() as CastDetailsActivity).castDetailsActivityComponent
             .castDetailsFragmentComponent()
-            .create(this)
+            .create(castViewModel)
             .inject(this)
         super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.bindTo(this.lifecycle)
 
         setupDetailsOverviewRow()
         setupDetailsOverviewRowPresenter()
@@ -103,54 +106,93 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
             )
             initialDelay = 0
         }
-        presenter.loadCastDetails(castViewModel)
+
+        observeState()
+        observeEffects()
+        viewModel.handleEvent(CastDetailsEvent.LoadData)
     }
 
-    override fun onShowProgress() {
-        progressBarManager.show()
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    renderState(state)
+                }
+            }
+        }
     }
 
-    override fun onHideProgress() {
-        progressBarManager.hide()
+    private fun observeEffects() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.effects.collect { effect ->
+                    handleEffect(effect)
+                }
+            }
+        }
     }
 
-    override fun onCastLoaded(castViewModel: CastViewModel?, movies: List<WorkViewModel>?, tvShow: List<WorkViewModel>?) {
-        castViewModel?.let {
-            detailsOverviewRow.item = it
+    private fun renderState(state: CastDetailsState) {
+        // Handle loading state
+        if (state.isLoading) {
+            progressBarManager.show()
+        } else {
+            progressBarManager.hide()
+        }
+
+        // Update cast details
+        state.castDetails?.let { cast ->
+            detailsOverviewRow.item = cast
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
-        if (movies.isNotNullOrEmpty()) {
+        // Add movies section if available and not already added
+        if (state.movies.isNotEmpty() && moviesRowAdapter.size() == 0) {
             actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            moviesRowAdapter.addAll(0, movies!!)
+            moviesRowAdapter.addAll(0, state.movies)
             val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
             mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
         }
 
-        if (tvShow.isNotNullOrEmpty()) {
+        // Add TV shows section if available and not already added
+        if (state.tvShows.isNotEmpty() && tvShowsRowAdapter.size() == 0) {
             actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            tvShowsRowAdapter.addAll(0, tvShow!!)
+            tvShowsRowAdapter.addAll(0, state.tvShows)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
             mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
         }
     }
 
-    override fun onErrorCastDetailsLoaded() {
+    private fun handleEffect(effect: CastDetailsEffect) {
+        when (effect) {
+            is CastDetailsEffect.OpenIntent -> openIntent(effect.intent, effect.shareTransition)
+            is CastDetailsEffect.ShowError -> showErrorFragment()
+        }
+    }
+
+    private fun openIntent(intent: Intent, shareTransition: Boolean) {
+        if (shareTransition) {
+            view?.let { fragmentView ->
+                val selectedView = fragmentView.findFocus() as? ImageCardView
+                selectedView?.mainImageView?.let { imageView ->
+                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        requireActivity(),
+                        imageView,
+                        SettingShared.SHARED_ELEMENT_NAME
+                    ).toBundle()
+                    startActivity(intent, bundle)
+                }
+            }
+        } else {
+            startActivity(intent)
+        }
+    }
+
+    private fun showErrorFragment() {
         val fragment = ErrorFragment.newInstance().apply {
             setTargetFragment(this@CastDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
         }
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
-    }
-
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        (itemViewHolder.view as ImageCardView).mainImageView?.let {
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                it,
-                SettingShared.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(intent, bundle)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -158,7 +200,7 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> presenter.loadCastDetails(castViewModel)
+                    Activity.RESULT_OK -> viewModel.handleEvent(CastDetailsEvent.LoadData)
                     else -> requireActivity().finish()
                 }
             }
@@ -176,9 +218,9 @@ class CastDetailsFragment : DetailsSupportFragment(), CastDetailsPresenter.View 
         detailsOverviewRow.actionsAdapter = actionAdapter
         mainAdapter.add(detailsOverviewRow)
 
-        setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
+        setOnItemViewClickedListener { _, item, _, _ ->
             if (item is WorkViewModel) {
-                presenter.workClicked(itemViewHolder, item)
+                viewModel.handleEvent(CastDetailsEvent.WorkClicked(item))
             }
         }
     }

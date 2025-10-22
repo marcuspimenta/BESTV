@@ -15,8 +15,8 @@
 package com.pimenta.bestv.castdetail.di
 
 import com.pimenta.bestv.castdetail.di.module.CastRemoteDataSourceModule
-import com.pimenta.bestv.castdetail.presentation.presenter.CastDetailsPresenter
 import com.pimenta.bestv.castdetail.presentation.ui.fragment.CastDetailsFragment
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -34,7 +34,7 @@ interface CastDetailsFragmentComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance view: CastDetailsPresenter.View): CastDetailsFragmentComponent
+        fun create(@BindsInstance cast: CastViewModel): CastDetailsFragmentComponent
     }
 
     fun inject(castDetailsFragment: CastDetailsFragment)

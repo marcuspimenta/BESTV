@@ -36,9 +36,7 @@ interface WorkDetailsFragmentComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(
-            @BindsInstance workViewModel: WorkViewModel
-        ): WorkDetailsFragmentComponent
+        fun create(@BindsInstance workViewModel: WorkViewModel): WorkDetailsFragmentComponent
     }
 
     fun inject(workDetailsFragment: WorkDetailsFragment)

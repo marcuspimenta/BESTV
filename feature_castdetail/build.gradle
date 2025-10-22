@@ -40,12 +40,20 @@ dependencies {
     // JUnit
     testImplementation Libs.junit
 
+    // Coroutines Test
+    testImplementation Libs.kotlinx_coroutines_test
+
+    // Turbine (for testing flows)
+    testImplementation Libs.turbine
+
+    // Kotlin Test
+    testImplementation Libs.kotlin_test_junit
+
     // Mockito
     testImplementation Libs.mockito_inline
     testImplementation Libs.mockito_core
     testImplementation Libs.mockito_kotlin
 
-    // Coroutines test
-    testImplementation Libs.kotlinx_coroutines_test
-    testImplementation Libs.kotlin_test_junit
+    // Robolectric
+    testImplementation Libs.robolectric
 }
