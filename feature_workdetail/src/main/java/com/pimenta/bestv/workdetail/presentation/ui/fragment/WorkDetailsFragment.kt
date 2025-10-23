@@ -61,6 +61,7 @@ import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.workdetail.presentation.ui.diffcallback.ReviewDiffCallback
 import com.pimenta.bestv.workdetail.presentation.ui.render.CastCardRender
@@ -73,12 +74,12 @@ import javax.inject.Inject
 
 private const val WORK = "WORK"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-private const val ACTION_FAVORITE = 1
-private const val ACTION_REVIEWS = 2
-private const val ACTION_VIDEOS = 3
-private const val ACTION_CAST = 4
-private const val ACTION_RECOMMENDED = 5
-private const val ACTION_SIMILAR = 6
+private const val ACTION_FAVORITE = 1L
+private const val ACTION_REVIEWS = 2L
+private const val ACTION_VIDEOS = 3L
+private const val ACTION_CAST = 4L
+private const val ACTION_RECOMMENDED = 5L
+private const val ACTION_SIMILAR = 6L
 private const val REVIEW_HEADER_ID = 1
 private const val VIDEO_HEADER_ID = 2
 private const val RECOMMENDED_HEADER_ID = 4
@@ -114,9 +115,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
 
     @Inject lateinit var viewModel: WorkDetailsViewModel
 
-    private lateinit var favoriteAction: Action
     private lateinit var detailsOverviewRow: DetailsOverviewRow
-    private var itemViewHolderClicked: Presenter.ViewHolder? = null
 
     override fun onAttach(context: Context) {
         (requireActivity() as WorkDetailsActivity).workDetailsActivityComponent
@@ -172,7 +171,6 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
     }
 
     override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row?) {
-        itemViewHolderClicked = itemViewHolder
         when (row?.id?.toInt()) {
             CAST_HEAD_ID -> viewModel.handleEvent(WorkDetailsEvent.CastClicked(item as CastViewModel))
             VIDEO_HEADER_ID -> viewModel.handleEvent(WorkDetailsEvent.VideoClicked(item as VideoViewModel))
@@ -200,44 +198,63 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
         }
     }
 
-    private fun renderState(state: com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState) {
-        // Handle loading state
-        if (state.isLoading) {
-            progressBarManager.show()
-        } else {
-            progressBarManager.hide()
-        }
+    private fun renderState(state: WorkDetailsState) {
+        with(state) {
+            // Handle loading state
+            if (isLoading) {
+                progressBarManager.show()
+            } else {
+                progressBarManager.hide()
+            }
 
-        // Initialize UI with initial data load
-        if (!state.isLoading && !::favoriteAction.isInitialized && state.error == null) {
-            setupInitialData(
-                isFavorite = state.isFavorite,
-                reviews = state.reviews,
-                videos = state.videos,
-                casts = state.casts,
-                recommendedWorks = state.recommendedWorks,
-                similarWorks = state.similarWorks
-            )
-        }
-
-        // Update favorite action if it's initialized
-        if (::favoriteAction.isInitialized) {
+            if (!isActionPresent(ACTION_FAVORITE)) {
+                actionAdapter.add(Action(
+                    ACTION_FAVORITE,
+                    resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
+                        ?: resources.getString(workdetailR.string.save_favorites))
+                )
+            }
             updateFavoriteAction(state.isFavorite)
-        }
 
-        // Update reviews for pagination
-        if (state.reviews.isNotEmpty() && ::favoriteAction.isInitialized) {
-            reviewRowAdapter.setItems(state.reviews, reviewDiffCallback)
-        }
+            if (reviews.isNotEmpty()) {
+                reviewRowAdapter.setItems(reviews, reviewDiffCallback)
+                if (!isActionPresent(ACTION_REVIEWS)) {
+                    actionAdapter.add(Action(ACTION_REVIEWS, getString(workdetailR.string.reviews)))
+                    mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(workdetailR.string.reviews)), reviewRowAdapter))
+                }
+            }
 
-        // Update recommendations for pagination
-        if (state.recommendedWorks.isNotEmpty() && ::favoriteAction.isInitialized) {
-            recommendedRowAdapter.setItems(state.recommendedWorks, workDiffCallback)
-        }
+            if (videos.isNotEmpty()) {
+                videoRowAdapter.addAll(0, videos)
+                if (!isActionPresent(ACTION_VIDEOS)) {
+                    actionAdapter.add(Action(ACTION_VIDEOS, getString(workdetailR.string.videos)))
+                    mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(workdetailR.string.videos)), videoRowAdapter))
+                }
+            }
 
-        // Update similar works for pagination
-        if (state.similarWorks.isNotEmpty() && ::favoriteAction.isInitialized) {
-            similarRowAdapter.setItems(state.similarWorks, workDiffCallback)
+            if (casts.isNotEmpty() && !isActionPresent(ACTION_CAST)) {
+                castRowAdapter.addAll(0, casts)
+                if (!isActionPresent(ACTION_CAST)) {
+                    actionAdapter.add(Action(ACTION_CAST, getString(workdetailR.string.cast)))
+                    mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(workdetailR.string.cast)), castRowAdapter))
+                }
+            }
+
+            if (recommendedWorks.isNotEmpty() && !isActionPresent(ACTION_RECOMMENDED)) {
+                recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
+                if (!isActionPresent(ACTION_RECOMMENDED)) {
+                    actionAdapter.add(Action(ACTION_RECOMMENDED, getString(workdetailR.string.recommended)))
+                    mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(workdetailR.string.recommended)), recommendedRowAdapter))
+                }
+            }
+
+            if (similarWorks.isNotEmpty()) {
+                similarRowAdapter.setItems(similarWorks, workDiffCallback)
+                if (!isActionPresent(ACTION_SIMILAR)) {
+                    actionAdapter.add(Action(ACTION_SIMILAR, getString(workdetailR.string.similar)))
+                    mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(workdetailR.string.similar)), similarRowAdapter))
+                }
+            }
         }
     }
 
@@ -249,9 +266,9 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
     }
 
     private fun updateFavoriteAction(isFavorite: Boolean) {
-        favoriteAction.label1 = resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
+        (actionAdapter.get(0) as Action).label1 = resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
             ?: resources.getString(workdetailR.string.save_favorites)
-        actionAdapter.notifyItemRangeChanged(actionAdapter.indexOf(favoriteAction), 1)
+        actionAdapter.notifyItemRangeChanged(0, 1)
     }
 
     private fun showErrorFragment() {
@@ -261,62 +278,19 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
-    private fun setupInitialData(
-        isFavorite: Boolean,
-        reviews: List<ReviewViewModel>,
-        videos: List<VideoViewModel>,
-        casts: List<CastViewModel>,
-        recommendedWorks: List<WorkViewModel>,
-        similarWorks: List<WorkViewModel>
-    ) {
-        favoriteAction = Action(
-            ACTION_FAVORITE.toLong(),
-            resources.getString(workdetailR.string.remove_favorites).takeIf { isFavorite }
-                ?: resources.getString(workdetailR.string.save_favorites)
-        )
-        actionAdapter.add(favoriteAction)
-
-        if (reviews.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_REVIEWS.toLong(), getString(workdetailR.string.reviews)))
-            reviewRowAdapter.setItems(reviews, reviewDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(REVIEW_HEADER_ID.toLong(), getString(workdetailR.string.reviews)), reviewRowAdapter))
-        }
-
-        if (videos.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_VIDEOS.toLong(), getString(workdetailR.string.videos)))
-            videoRowAdapter.addAll(0, videos)
-            mainAdapter.add(ListRow(HeaderItem(VIDEO_HEADER_ID.toLong(), getString(workdetailR.string.videos)), videoRowAdapter))
-        }
-
-        if (casts.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_CAST.toLong(), getString(workdetailR.string.cast)))
-            castRowAdapter.addAll(0, casts)
-            mainAdapter.add(ListRow(HeaderItem(CAST_HEAD_ID.toLong(), getString(workdetailR.string.cast)), castRowAdapter))
-        }
-
-        if (recommendedWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_RECOMMENDED.toLong(), getString(workdetailR.string.recommended)))
-            recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(RECOMMENDED_HEADER_ID.toLong(), getString(workdetailR.string.recommended)), recommendedRowAdapter))
-        }
-
-        if (similarWorks.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_SIMILAR.toLong(), getString(workdetailR.string.similar)))
-            similarRowAdapter.setItems(similarWorks, workDiffCallback)
-            mainAdapter.add(ListRow(HeaderItem(SIMILAR_HEADER_ID.toLong(), getString(workdetailR.string.similar)), similarRowAdapter))
-        }
-    }
-
     private fun openIntent(intent: Intent, shareTransition: Boolean) {
         try {
             if (shareTransition) {
-                (itemViewHolderClicked?.view as? ImageCardView)?.mainImageView?.let {
-                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        requireActivity(),
-                        it,
-                        SettingShared.SHARED_ELEMENT_NAME
-                    ).toBundle()
-                    startActivity(intent, bundle)
+                view?.let { fragmentView ->
+                    val selectedView = fragmentView.findFocus() as? ImageCardView
+                    selectedView?.mainImageView?.let { imageView ->
+                        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            imageView,
+                            SettingShared.SHARED_ELEMENT_NAME
+                        ).toBundle()
+                        startActivity(intent, bundle)
+                    }
                 }
             } else {
                 startActivity(intent)
@@ -380,6 +354,16 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
             }
         }
         presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
+    }
+
+    private fun isActionPresent(actionId: Long): Boolean {
+        for (i in 0 until actionAdapter.size()) {
+            val action = actionAdapter.get(i) as? Action
+            if (action?.id == actionId) {
+                return true
+            }
+        }
+        return false
     }
 
     companion object {
