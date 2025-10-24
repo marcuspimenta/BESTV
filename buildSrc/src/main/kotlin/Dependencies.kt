@@ -39,6 +39,12 @@ object Versions {
     val androidx_tvprovider = "1.1.0"
     val androidx_room = "2.8.2"
     val androidx_work = "2.8.0-alpha02"
+    val compose_bom = "2024.12.01"
+    val compose_compiler = "1.5.15"
+    val androidx_tv_foundation = "1.0.0-alpha12"
+    val androidx_tv_material = "1.0.0"
+    val androidx_activity_compose = "1.10.0"
+    val coil_compose = "2.7.0"
 
     val dagger = "2.57.2"
     val dagger_compile = "2.57.2"
@@ -87,6 +93,18 @@ object Libs {
     val androidx_room_compiler = "androidx.room:room-compiler:${Versions.androidx_room}"
     val androidx_work = "androidx.work:work-runtime-ktx:${Versions.androidx_work}"
     val androidx_work_rxjava2 = "androidx.work:work-rxjava2:${Versions.androidx_work}"
+
+    // Compose for TV
+    val compose_bom = "androidx.compose:compose-bom:${Versions.compose_bom}"
+    val compose_ui = "androidx.compose.ui:ui"
+    val compose_ui_tooling = "androidx.compose.ui:ui-tooling"
+    val compose_ui_tooling_preview = "androidx.compose.ui:ui-tooling-preview"
+    val compose_foundation = "androidx.compose.foundation:foundation"
+    val compose_material3 = "androidx.compose.material3:material3"
+    val androidx_tv_foundation = "androidx.tv:tv-foundation:${Versions.androidx_tv_foundation}"
+    val androidx_tv_material = "androidx.tv:tv-material:${Versions.androidx_tv_material}"
+    val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.androidx_activity_compose}"
+    val coil_compose = "io.coil-kt:coil-compose:${Versions.coil_compose}"
 
     val dagger = "com.google.dagger:dagger:${Versions.dagger}"
     val dagger_compile = "com.google.dagger:dagger-compiler:${Versions.dagger_compile}"
