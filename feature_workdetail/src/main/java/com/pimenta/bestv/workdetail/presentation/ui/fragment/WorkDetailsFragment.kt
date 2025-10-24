@@ -232,7 +232,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
                 }
             }
 
-            if (casts.isNotEmpty() && !isActionPresent(ACTION_CAST)) {
+            if (casts.isNotEmpty()) {
                 castRowAdapter.addAll(0, casts)
                 if (!isActionPresent(ACTION_CAST)) {
                     actionAdapter.add(Action(ACTION_CAST, getString(workdetailR.string.cast)))
@@ -240,7 +240,7 @@ class WorkDetailsFragment : DetailsSupportFragment(), OnItemViewSelectedListener
                 }
             }
 
-            if (recommendedWorks.isNotEmpty() && !isActionPresent(ACTION_RECOMMENDED)) {
+            if (recommendedWorks.isNotEmpty()) {
                 recommendedRowAdapter.setItems(recommendedWorks, workDiffCallback)
                 if (!isActionPresent(ACTION_RECOMMENDED)) {
                     actionAdapter.add(Action(ACTION_RECOMMENDED, getString(workdetailR.string.recommended)))

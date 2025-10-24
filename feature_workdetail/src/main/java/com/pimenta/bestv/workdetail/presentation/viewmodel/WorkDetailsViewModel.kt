@@ -157,7 +157,7 @@ class WorkDetailsViewModel @Inject constructor(
 
                 updateState { currentState ->
                     currentState.copy(
-                        reviews = currentState.reviews + (pageResult.results ?: emptyList()),
+                        reviews = currentState.reviews + pageResult.results.orEmpty(),
                         reviewPagination = PaginationState(
                             currentPage = pageResult.page,
                             totalPages = pageResult.totalPages,
@@ -199,7 +199,7 @@ class WorkDetailsViewModel @Inject constructor(
 
                 updateState { currentState ->
                     currentState.copy(
-                        recommendedWorks = currentState.recommendedWorks + (pageResult.results ?: emptyList()),
+                        recommendedWorks = currentState.recommendedWorks + pageResult.results.orEmpty(),
                         recommendedPagination = PaginationState(
                             currentPage = pageResult.page,
                             totalPages = pageResult.totalPages,
@@ -241,7 +241,7 @@ class WorkDetailsViewModel @Inject constructor(
 
                 updateState { currentState ->
                     currentState.copy(
-                        similarWorks = currentState.similarWorks + (pageResult.results ?: emptyList()),
+                        similarWorks = currentState.similarWorks + pageResult.results.orEmpty(),
                         similarPagination = PaginationState(
                             currentPage = pageResult.page,
                             totalPages = pageResult.totalPages,
