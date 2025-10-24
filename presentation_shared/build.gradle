@@ -31,10 +31,6 @@ dependencies {
     implementation Libs.dagger
     kapt Libs.dagger_compile
 
-    // Rx
-    implementation Libs.rxandroid
-    implementation Libs.retrofit2_rxjava2_adapter
-
     // Glide
     implementation Libs.glide
 }

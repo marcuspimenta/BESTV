@@ -55,9 +55,6 @@ dependencies {
     // Retrofit
     implementation Libs.retrofit
 
-    // Rx
-    implementation Libs.rxandroid
-
     // Dagger
     implementation Libs.dagger
     kapt Libs.dagger_compile

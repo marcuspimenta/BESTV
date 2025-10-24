@@ -20,11 +20,8 @@ import com.pimenta.bestv.data.di.module.MediaLocalModule
 import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import com.pimenta.bestv.presentation.BuildConfig
 import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
 import dagger.Module
 import dagger.Provides
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Singleton
 
 /**
@@ -44,14 +41,6 @@ class ApplicationModule(
     @Provides
     @Singleton
     fun provideApplication() = application
-
-    @Provides
-    @Singleton
-    fun provideRxScheduler() = RxScheduler(
-        Schedulers.io(),
-        Schedulers.computation(),
-        AndroidSchedulers.mainThread()
-    )
 
     @Provides
     @Singleton
