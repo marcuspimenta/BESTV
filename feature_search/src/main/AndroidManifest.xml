@@ -5,7 +5,6 @@
         <activity
             android:name=".presentation.ui.activity.SearchActivity"
             android:exported="false"
-            android:screenOrientation="landscape"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -12,23 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.route.search
+package com.pimenta.bestv.search.presentation.model
 
-import android.app.Application
 import android.content.Intent
-import android.net.Uri
-import javax.inject.Inject
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 /**
- * Created by marcus on 27-11-2019.
+ * Represents one-time side effects that should happen in the Search screen.
+ * These are consumed once and don't persist in the state.
  */
-private const val SCHEMA_URI_PREFIX = "bestv://search/"
+sealed interface SearchEffect {
 
-class SearchRoute @Inject constructor(
-    private val application: Application
-) {
-
-    fun buildSearchIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()).apply {
-        setPackage(application.packageName)
-    }
+    data class OpenWorkDetails(val intent: Intent) : SearchEffect
+    data class ShowError(val message: String) : SearchEffect
 }

@@ -30,7 +30,9 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.Presenter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.loadBackdrop
 import com.pimenta.bestv.presentation.extension.addFragment
@@ -41,19 +43,24 @@ import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
 import com.pimenta.bestv.presentation.ui.setting.SettingShared
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.search.R as searchR
-import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
+import com.pimenta.bestv.search.presentation.model.SearchEffect
+import com.pimenta.bestv.search.presentation.model.SearchEvent
+import com.pimenta.bestv.search.presentation.model.SearchState
 import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
+import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val SEARCH_FRAGMENT_REQUEST_CODE = 1
 private const val ERROR_FRAGMENT_REQUEST_CODE = 2
-private const val MOVIE_HEADER_ID = 1
-private const val TV_SHOW_HEADER_ID = 2
+private const val NO_RESULT_ID = 0L
+private const val MOVIE_HEADER_ID = 1L
+private const val TV_SHOW_HEADER_ID = 2L
 
 /**
  * Created by marcus on 12-03-2018.
  */
-class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupportFragment.SearchResultProvider {
+class SearchFragment : SearchSupportFragment() {
 
     private val rowsAdapter by lazy { ArrayObjectAdapter(ListRowPresenter()) }
     private val movieRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
@@ -63,24 +70,16 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     private val workDiffCallback by lazy { WorkDiffCallback() }
 
     @Inject
-    lateinit var presenter: SearchPresenter
+    lateinit var viewModel: SearchViewModel
 
     private var query: String? = null
-    private var workSelected: WorkViewModel? = null
 
     override fun onAttach(context: Context) {
         (requireActivity() as SearchActivity).searchActivityComponent
             .searchFragmentComponent()
-            .create(this)
+            .create()
             .inject(this)
         super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.bindTo(this.lifecycle)
-
-        setupUI()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,91 +94,95 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             )
             initialDelay = 0
         }
+
+        setupUI()
+        observeViewModel()
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadBackdropImage()
-    }
-
-    override fun onShowProgress() {
-        progressBarManager.show()
-    }
-
-    override fun onHideProgress() {
-        progressBarManager.hide()
-    }
-
-    override fun onClear() {
-        backgroundManager.setBitmap(null)
-        rowsAdapter.clear()
-        rowsAdapter.add(
-            ListRow(
-                HeaderItem(0, getString(searchR.string.no_results)),
-                ArrayObjectAdapter(WorkCardRenderer())
-            )
-        )
-    }
-
-    override fun onResultLoaded(movies: List<WorkViewModel>, tvShows: List<WorkViewModel>) {
-        rowsAdapter.clear()
-
-        if (movies.isNotEmpty()) {
-            val header = HeaderItem(MOVIE_HEADER_ID.toLong(), getString(presentationR.string.movies))
-            movieRowAdapter.setItems(movies, workDiffCallback)
-            rowsAdapter.add(ListRow(header, movieRowAdapter))
+    private fun observeViewModel() {
+        // Observe state changes
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    renderState(state)
+                }
+            }
         }
-        if (tvShows.isNotEmpty()) {
-            val header = HeaderItem(TV_SHOW_HEADER_ID.toLong(), getString(presentationR.string.tv_shows))
-            tvShowRowAdapter.setItems(tvShows, workDiffCallback)
-            rowsAdapter.add(ListRow(header, tvShowRowAdapter))
+
+        // Observe effects
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.effects.collect { effect ->
+                    handleEffect(effect)
+                }
+            }
         }
     }
 
-    override fun onMoviesLoaded(movies: List<WorkViewModel>) {
-        movieRowAdapter.setItems(movies, workDiffCallback)
-    }
+    private fun renderState(state: SearchState) {
+        with(state) {
+            if (isSearching) {
+                progressBarManager.show()
+            } else {
+                progressBarManager.hide()
+            }
 
-    override fun onTvShowsLoaded(tvShows: List<WorkViewModel>) {
-        tvShowRowAdapter.setItems(tvShows, workDiffCallback)
-    }
-
-    override fun loadBackdropImage(workViewModel: WorkViewModel) {
-        workViewModel.loadBackdrop(requireContext()) {
-            backgroundManager.setBitmap(it)
+            if (hasResults) {
+                if (isHeaderPresent(NO_RESULT_ID)) {
+                    rowsAdapter.clear()
+                }
+                if (movies.isNotEmpty()) {
+                    movieRowAdapter.setItems(movies, workDiffCallback)
+                    if (!isHeaderPresent((MOVIE_HEADER_ID))) {
+                        val header = HeaderItem(MOVIE_HEADER_ID, getString(presentationR.string.movies))
+                        rowsAdapter.add(ListRow(header, movieRowAdapter))
+                    }
+                }
+                if (tvShows.isNotEmpty()) {
+                    tvShowRowAdapter.setItems(tvShows, workDiffCallback)
+                    if (!isHeaderPresent((TV_SHOW_HEADER_ID))) {
+                        val header = HeaderItem(TV_SHOW_HEADER_ID, getString(presentationR.string.tv_shows))
+                        rowsAdapter.add(ListRow(header, tvShowRowAdapter))
+                    }
+                }
+                selectedWork?.loadBackdrop(requireContext()) {
+                    backgroundManager.setBitmap(it)
+                }
+            } else if (!isHeaderPresent(NO_RESULT_ID)) {
+                backgroundManager.setBitmap(null)
+                rowsAdapter.clear()
+                rowsAdapter.add(
+                    ListRow(
+                        HeaderItem(NO_RESULT_ID, getString(searchR.string.no_results)),
+                        ArrayObjectAdapter(WorkCardRenderer())
+                    )
+                )
+            }
         }
     }
 
-    override fun onErrorSearch() {
-        val fragment = ErrorFragment.newInstance().apply {
-            setTargetFragment(this@SearchFragment, ERROR_FRAGMENT_REQUEST_CODE)
+    private fun handleEffect(effect: SearchEffect) {
+        when (effect) {
+            is SearchEffect.OpenWorkDetails -> {
+                view?.let { fragmentView ->
+                    val selectedView = fragmentView.findFocus() as? ImageCardView
+                    selectedView?.mainImageView?.let { imageView ->
+                        val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            imageView,
+                            SettingShared.SHARED_ELEMENT_NAME
+                        ).toBundle()
+                        startActivity(effect.intent, bundle)
+                    }
+                }
+            }
+            is SearchEffect.ShowError -> {
+                val fragment = ErrorFragment.newInstance().apply {
+                    setTargetFragment(this@SearchFragment, ERROR_FRAGMENT_REQUEST_CODE)
+                }
+                requireActivity().addFragment(fragment, ErrorFragment.TAG)
+            }
         }
-        requireActivity().addFragment(fragment, ErrorFragment.TAG)
-    }
-
-    override fun openWorkDetails(itemViewHolder: Presenter.ViewHolder, intent: Intent) {
-        (itemViewHolder.view as ImageCardView).mainImageView?.let {
-            val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                it,
-                SettingShared.SHARED_ELEMENT_NAME
-            ).toBundle()
-            startActivity(intent, bundle)
-        }
-    }
-
-    override fun getResultsAdapter() = rowsAdapter
-
-    override fun onQueryTextChange(text: String): Boolean {
-        query = text
-        presenter.searchWorksByQuery(query)
-        return true
-    }
-
-    override fun onQueryTextSubmit(text: String): Boolean {
-        query = text
-        presenter.searchWorksByQuery(query)
-        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -190,7 +193,7 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
             ERROR_FRAGMENT_REQUEST_CODE -> {
                 requireActivity().popBackStack(ErrorFragment.TAG, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 when (resultCode) {
-                    Activity.RESULT_OK -> presenter.searchWorksByQuery(query)
+                    Activity.RESULT_OK -> viewModel.handleEvent(SearchEvent.SearchQuerySubmitted(query ?: ""))
                     else -> requireActivity().finish()
                 }
             }
@@ -198,33 +201,55 @@ class SearchFragment : SearchSupportFragment(), SearchPresenter.View, SearchSupp
     }
 
     private fun setupUI() {
-        setSearchResultProvider(this)
-        setOnItemViewSelectedListener { _, item, _, row ->
-            workSelected = item as WorkViewModel?
-            loadBackdropImage()
+        setSearchResultProvider(
+            object : SearchResultProvider {
+                override fun getResultsAdapter() = rowsAdapter
 
-            workSelected?.let {
-                when (row?.run { id.toInt() }) {
-                    MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(it) >= movieRowAdapter.size() - 1) {
-                        presenter.loadMovies()
-                    }
-                    TV_SHOW_HEADER_ID -> if (tvShowRowAdapter.indexOf(it) >= tvShowRowAdapter.size() - 1) {
-                        presenter.loadTvShows()
+                override fun onQueryTextChange(text: String): Boolean {
+                    query = text
+                    viewModel.handleEvent(SearchEvent.SearchQueryChanged(query ?: ""))
+                    return true
+                }
+
+                override fun onQueryTextSubmit(text: String): Boolean {
+                    query = text
+                    viewModel.handleEvent(SearchEvent.SearchQuerySubmitted(query ?: ""))
+                    return true
+                }
+            }
+        )
+        setOnItemViewSelectedListener { _, item, _, row ->
+            val workSelected = item as? WorkViewModel
+            workSelected?.let { work ->
+                viewModel.handleEvent(SearchEvent.WorkItemSelected(workSelected))
+
+                row?.let {
+                    when (it.id) {
+                        MOVIE_HEADER_ID -> if (movieRowAdapter.indexOf(work) >= movieRowAdapter.size() - 1) {
+                            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+                        }
+                        TV_SHOW_HEADER_ID -> if (tvShowRowAdapter.indexOf(work) >= tvShowRowAdapter.size() - 1) {
+                            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+                        }
                     }
                 }
             }
         }
-        setOnItemViewClickedListener { itemViewHolder, item, _, _ ->
+        setOnItemViewClickedListener { _, item, _, _ ->
             if (item is WorkViewModel) {
-                presenter.workClicked(itemViewHolder, item)
+                viewModel.handleEvent(SearchEvent.WorkClicked(item))
             }
         }
     }
 
-    private fun loadBackdropImage() {
-        workSelected?.let {
-            presenter.countTimerLoadBackdropImage(it)
+    private fun isHeaderPresent(id: Long): Boolean {
+        for (i in 0 until rowsAdapter.size()) {
+            val action = rowsAdapter.get(i) as? ListRow
+            if (action?.headerItem?.id == id) {
+                return true
+            }
         }
+        return false
     }
 
     companion object {

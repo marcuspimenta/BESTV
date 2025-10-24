@@ -17,9 +17,7 @@ package com.pimenta.bestv.search.di
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.search.di.module.MovieRemoteDataSourceModule
 import com.pimenta.bestv.search.di.module.TvShowRemoteDataSourceModule
-import com.pimenta.bestv.search.presentation.presenter.SearchPresenter
 import com.pimenta.bestv.search.presentation.ui.fragment.SearchFragment
-import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
@@ -36,7 +34,7 @@ interface SearchFragmentComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance view: SearchPresenter.View): SearchFragmentComponent
+        fun create(): SearchFragmentComponent
     }
 
     fun inject(searchFragment: SearchFragment)
