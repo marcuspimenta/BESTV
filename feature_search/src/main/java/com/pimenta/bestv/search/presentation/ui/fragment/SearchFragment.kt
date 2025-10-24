@@ -146,7 +146,9 @@ class SearchFragment : SearchSupportFragment() {
                     }
                 }
                 selectedWork?.loadBackdrop(requireContext()) {
-                    backgroundManager.setBitmap(it)
+                    if (!isHeaderPresent(NO_RESULT_ID)) {
+                        backgroundManager.setBitmap(it)
+                    }
                 }
             } else if (!isHeaderPresent(NO_RESULT_ID)) {
                 backgroundManager.setBitmap(null)
