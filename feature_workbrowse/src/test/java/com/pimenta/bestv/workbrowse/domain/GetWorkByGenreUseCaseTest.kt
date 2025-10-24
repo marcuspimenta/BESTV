@@ -20,7 +20,8 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.Source
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -69,44 +70,48 @@ class GetWorkByGenreUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading a movie page`() {
+    fun `should return the right data when loading a movie page`() = runTest {
         whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
-        useCase(MOVIE_GENRE, 1)
-            .test()
-            .assertComplete()
-            .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
+        val result = useCase(MOVIE_GENRE, 1)
+
+        Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens when loading a movie page`() {
+    fun `should return an error when some exception happens when loading a movie page`() = runTest {
         whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
-        useCase(MOVIE_GENRE, 1)
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase(MOVIE_GENRE, 1)
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 
     @Test
-    fun `should return the right data when loading a tv show page`() {
+    fun `should return the right data when loading a tv show page`() = runTest {
         whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-            .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
+            .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
 
-        useCase(TV_SHOW_GENRE, 1)
-            .test()
-            .assertComplete()
-            .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
+        val result = useCase(TV_SHOW_GENRE, 1)
+
+        Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens when loading a tv show page`() {
+    fun `should return an error when some exception happens when loading a tv show page`() = runTest {
         whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
-        useCase(TV_SHOW_GENRE, 1)
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase(TV_SHOW_GENRE, 1)
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

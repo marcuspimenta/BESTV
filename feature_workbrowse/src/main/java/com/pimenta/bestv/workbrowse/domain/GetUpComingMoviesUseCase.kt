@@ -24,6 +24,6 @@ class GetUpComingMoviesUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    operator fun invoke(page: Int) =
+    suspend operator fun invoke(page: Int) =
         movieRepository.getUpComingMovies(page)
 }

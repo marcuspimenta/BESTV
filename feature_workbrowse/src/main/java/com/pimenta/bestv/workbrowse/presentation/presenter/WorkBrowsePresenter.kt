@@ -20,10 +20,9 @@ import androidx.leanback.widget.PageRow
 import androidx.leanback.widget.Row
 import androidx.leanback.widget.SectionRow
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
-import com.pimenta.bestv.presentation.extension.addTo
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.presenter.AutoCancelableCoroutineScopePresenter
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workbrowse.R as workbrowseR
@@ -35,6 +34,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.AboutHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.GenreHeaderItem
 import com.pimenta.bestv.workbrowse.presentation.ui.headeritem.WorkTypeHeaderItem
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,8 +55,8 @@ class WorkBrowsePresenter @Inject constructor(
     private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
     private val searchRoute: SearchRoute,
     private val resource: Resource,
-    private val rxScheduler: RxScheduler
-) : AutoDisposablePresenter() {
+    coroutineDispatchers: CoroutineDispatchers
+) : AutoCancelableCoroutineScopePresenter(coroutineDispatchers) {
 
     private var refreshRows = false
     private val rows by lazy { mutableListOf<Row>() }
@@ -70,31 +71,27 @@ class WorkBrowsePresenter @Inject constructor(
     }
 
     fun loadData() {
-        getWorkBrowseDetailsUseCase()
-            .subscribeOn(rxScheduler.ioScheduler)
-            .observeOn(rxScheduler.computationScheduler)
-            .map { result ->
+        launch {
+            view.onShowProgress()
+            try {
+                val result = withContext(coroutineContext) {
+                    getWorkBrowseDetailsUseCase()
+                }
+
                 val hasFavoriteMovie = result.first
                 val movieGenres = result.second?.map { genre -> genre.toViewModel() }
                 val tvShowGenres = result.third?.map { genre -> genre.toViewModel() }
 
-                Triple(hasFavoriteMovie, movieGenres, tvShowGenres)
-            }
-            .observeOn(rxScheduler.mainScheduler)
-            .doOnSubscribe { view.onShowProgress() }
-            .doFinally { view.onHideProgress() }
-            .subscribe({ result ->
-                val hasFavoriteMovie = result.first
-                val movieGenres = result.second
-                val tvShowGenres = result.third
-
                 buildRowList(hasFavoriteMovie, movieGenres, tvShowGenres)
 
                 view.onDataLoaded(rows)
-            }, { throwable ->
+            } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading data")
                 view.onErrorDataLoaded()
-            }).addTo(compositeDisposable)
+            } finally {
+                view.onHideProgress()
+            }
+        }
     }
 
     fun addFavoriteRow(selectedPosition: Int) {
@@ -102,10 +99,10 @@ class WorkBrowsePresenter @Inject constructor(
             return
         }
 
-        hasFavoriteUseCase()
-            .subscribeOn(rxScheduler.ioScheduler)
-            .observeOn(rxScheduler.mainScheduler)
-            .subscribe({ hasFavorite ->
+        launch {
+            try {
+                val hasFavorite = hasFavoriteUseCase()
+
                 if (hasFavorite) {
                     if (rows.indexOf(favoritePageRow) == INVALID_INDEX) {
                         rows.add(FAVORITE_INDEX, favoritePageRow)
@@ -120,9 +117,10 @@ class WorkBrowsePresenter @Inject constructor(
                         }
                     }
                 }
-            }, { throwable ->
+            } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while checking if has any work as favorite")
-            }).addTo(compositeDisposable)
+            }
+        }
     }
 
     fun refreshRows() {

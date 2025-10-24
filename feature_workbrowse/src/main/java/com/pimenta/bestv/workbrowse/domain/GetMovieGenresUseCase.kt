@@ -24,6 +24,6 @@ class GetMovieGenresUseCase @Inject constructor(
     private val genreRepository: GenreRepository
 ) {
 
-    operator fun invoke() =
+    suspend operator fun invoke() =
         genreRepository.getMovieGenres()
 }

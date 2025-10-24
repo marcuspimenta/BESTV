@@ -17,7 +17,8 @@ package com.pimenta.bestv.workbrowse.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -40,34 +41,35 @@ class HasFavoriteUseCaseTest {
     )
 
     @Test
-    fun `should return true if there is at least one favorite work`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
+    fun `should return true if there is at least one favorite work`() = runTest {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(emptyList())
 
-        useCase()
-            .test()
-            .assertComplete()
-            .assertResult(true)
+        val result = useCase()
+
+        Assert.assertEquals(true, result)
     }
 
     @Test
-    fun `should return false if there is no favorite work`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(emptyList()))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
+    fun `should return false if there is no favorite work`() = runTest {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(emptyList())
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(emptyList())
 
-        useCase()
-            .test()
-            .assertComplete()
-            .assertResult(false)
+        val result = useCase()
+
+        Assert.assertEquals(false, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+        whenever(getFavoriteTvShowsUseCase()).thenThrow(RuntimeException())
 
-        useCase()
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase()
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

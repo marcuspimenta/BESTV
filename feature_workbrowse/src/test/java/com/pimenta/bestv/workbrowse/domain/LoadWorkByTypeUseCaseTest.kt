@@ -19,7 +19,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -62,23 +63,25 @@ class LoadWorkByTypeUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the works by type`() {
+    fun `should return the right data when loading the works by type`() = runTest {
         whenever(getNowPlayingMoviesUseCase(1))
-            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
-        useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
-            .test()
-            .assertComplete()
-            .assertResult(MOVIE_PAGE_DOMAIN_MODEL)
+        val result = useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+
+        Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
+    fun `should return an error when some exception happens`() = runTest {
         whenever(getNowPlayingMoviesUseCase(1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
-        useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

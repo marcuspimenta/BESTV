@@ -27,9 +27,9 @@ class GenreRemoteDataSource @Inject constructor(
     private val genreTmdbApi: GenreTmdbApi
 ) {
 
-    fun getMovieGenres() =
+    suspend fun getMovieGenres() =
         genreTmdbApi.getMovieGenres(tmdbApiKey, tmdbFilterLanguage)
 
-    fun getTvShowGenres() =
+    suspend fun getTvShowGenres() =
         genreTmdbApi.getTvShowGenres(tmdbApiKey, tmdbFilterLanguage)
 }

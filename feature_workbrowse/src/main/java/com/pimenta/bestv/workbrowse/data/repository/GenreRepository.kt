@@ -16,6 +16,7 @@ package com.pimenta.bestv.workbrowse.data.repository
 
 import com.pimenta.bestv.workbrowse.data.remote.datasource.GenreRemoteDataSource
 import com.pimenta.bestv.workbrowse.data.remote.mapper.toDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import javax.inject.Inject
 
 /**
@@ -25,11 +26,13 @@ class GenreRepository @Inject constructor(
     private val genreRemoteDataSource: GenreRemoteDataSource
 ) {
 
-    fun getMovieGenres() =
-        genreRemoteDataSource.getMovieGenres()
-            .map { it.genres?.map { genre -> genre.toDomainModel() } }
+    suspend fun getMovieGenres(): List<GenreDomainModel>? {
+        val response = genreRemoteDataSource.getMovieGenres()
+        return response.genres?.map { genre -> genre.toDomainModel() }
+    }
 
-    fun getTvShowGenres() =
-        genreRemoteDataSource.getTvShowGenres()
-            .map { it.genres?.map { genre -> genre.toDomainModel() } }
+    suspend fun getTvShowGenres(): List<GenreDomainModel>? {
+        val response = genreRemoteDataSource.getTvShowGenres()
+        return response.genres?.map { genre -> genre.toDomainModel() }
+    }
 }

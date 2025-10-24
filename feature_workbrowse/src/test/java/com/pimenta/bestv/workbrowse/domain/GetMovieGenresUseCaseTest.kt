@@ -18,7 +18,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -40,23 +41,25 @@ class GetMovieGenresUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the movie genres`() {
+    fun `should return the right data when loading the movie genres`() = runTest {
         whenever(genreRepository.getMovieGenres())
-            .thenReturn(Single.just(MOVIE_GENRES_DOMAIN_MODEL))
+            .thenReturn(MOVIE_GENRES_DOMAIN_MODEL)
 
-        useCase()
-            .test()
-            .assertComplete()
-            .assertResult(MOVIE_GENRES_DOMAIN_MODEL)
+        val result = useCase()
+
+        Assert.assertEquals(MOVIE_GENRES_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
+    fun `should return an error when some exception happens`() = runTest {
         whenever(genreRepository.getMovieGenres())
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
-        useCase()
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase()
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

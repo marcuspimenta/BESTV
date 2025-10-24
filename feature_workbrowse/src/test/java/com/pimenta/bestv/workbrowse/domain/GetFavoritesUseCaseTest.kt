@@ -18,7 +18,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -47,23 +48,25 @@ class GetFavoritesUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the favorites`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.just(emptyList()))
+    fun `should return the right data when loading the favorites`() = runTest {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+        whenever(getFavoriteTvShowsUseCase()).thenReturn(emptyList())
 
-        useCase()
-            .test()
-            .assertComplete()
-            .assertResult(WORK_PAGE_DOMAIN_MODEL)
+        val result = useCase()
+
+        Assert.assertEquals(WORK_PAGE_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(Single.just(listOf(WORK_DOMAIN_MODEL)))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(Single.error(Throwable()))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+        whenever(getFavoriteTvShowsUseCase()).thenThrow(RuntimeException())
 
-        useCase()
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase()
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

@@ -16,8 +16,8 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
@@ -28,16 +28,17 @@ class GetFavoritesUseCase @Inject constructor(
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
 ) {
 
-    operator fun invoke(): Single<PageDomainModel<WorkDomainModel>> =
-        Single.zip(
-            getFavoriteMoviesUseCase(),
-            getFavoriteTvShowsUseCase(),
-            BiFunction { favoriteMovies, favoriteTvShows ->
-                PageDomainModel(
-                    page = 1,
-                    totalPages = 1,
-                    results = favoriteMovies + favoriteTvShows
-                )
-            }
+    suspend operator fun invoke(): PageDomainModel<WorkDomainModel> = coroutineScope {
+        val favoriteMoviesDeferred = async { getFavoriteMoviesUseCase() }
+        val favoriteTvShowsDeferred = async { getFavoriteTvShowsUseCase() }
+
+        val favoriteMovies = favoriteMoviesDeferred.await()
+        val favoriteTvShows = favoriteTvShowsDeferred.await()
+
+        PageDomainModel(
+            page = 1,
+            totalPages = 1,
+            results = favoriteMovies + favoriteTvShows
         )
+    }
 }

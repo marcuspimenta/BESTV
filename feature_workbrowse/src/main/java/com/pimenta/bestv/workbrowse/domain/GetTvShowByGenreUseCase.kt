@@ -24,6 +24,6 @@ class GetTvShowByGenreUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(genreId: Int, page: Int) =
+    suspend operator fun invoke(genreId: Int, page: Int) =
         tvShowRepository.getTvShowByGenre(genreId, page)
 }

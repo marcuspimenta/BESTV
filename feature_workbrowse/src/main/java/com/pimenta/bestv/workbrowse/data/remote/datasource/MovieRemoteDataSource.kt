@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.workbrowse.data.remote.datasource
 
+import com.pimenta.bestv.model.data.remote.MovieResponse
 import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
 import timber.log.Timber
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,26 +29,26 @@ class MovieRemoteDataSource @Inject constructor(
     private val movieTmdbApi: MovieTmdbApi
 ) {
 
-    fun getMovie(movieId: Int) =
+    suspend fun getMovie(movieId: Int): MovieResponse? =
         try {
-            movieTmdbApi.getMovie(movieId, tmdbApiKey, tmdbFilterLanguage).execute().body()
-        } catch (e: IOException) {
+            movieTmdbApi.getMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
+        } catch (e: Exception) {
             Timber.e(e, "Error while getting a movie")
             null
         }
 
-    fun getMoviesByGenre(genreId: Int, page: Int) =
+    suspend fun getMoviesByGenre(genreId: Int, page: Int) =
         movieTmdbApi.getMoviesByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
-    fun getNowPlayingMovies(page: Int) =
+    suspend fun getNowPlayingMovies(page: Int) =
         movieTmdbApi.getNowPlayingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getPopularMovies(page: Int) =
+    suspend fun getPopularMovies(page: Int) =
         movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getTopRatedMovies(page: Int) =
+    suspend fun getTopRatedMovies(page: Int) =
         movieTmdbApi.getTopRatedMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getUpComingMovies(page: Int) =
+    suspend fun getUpComingMovies(page: Int) =
         movieTmdbApi.getUpComingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

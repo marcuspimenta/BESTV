@@ -19,7 +19,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -49,23 +50,25 @@ class GetTvShowByGenreUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the tv shows by genre`() {
+    fun `should return the right data when loading the tv shows by genre`() = runTest {
         whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-            .thenReturn(Single.just(TV_SHOW_PAGE_DOMAIN_MODEL))
+            .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
 
-        useCase(GENRE_ID, PAGE)
-            .test()
-            .assertComplete()
-            .assertResult(TV_SHOW_PAGE_DOMAIN_MODEL)
+        val result = useCase(GENRE_ID, PAGE)
+
+        Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
+    fun `should return an error when some exception happens`() = runTest {
         whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
-        useCase(GENRE_ID, PAGE)
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase(GENRE_ID, PAGE)
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

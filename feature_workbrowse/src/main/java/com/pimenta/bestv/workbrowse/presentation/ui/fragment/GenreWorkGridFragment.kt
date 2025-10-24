@@ -82,7 +82,7 @@ class GenreWorkGridFragment : BaseWorkGridFragment(), GenreGridPresenter.View {
     }
 
     override fun onHideProgress() {
-        if (!isRemoving) {
+        if (!isDetached) {
             progressBarManager.hide()
         }
     }

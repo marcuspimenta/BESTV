@@ -16,8 +16,6 @@ package com.pimenta.bestv.workbrowse.data.remote.api
 
 import com.pimenta.bestv.model.data.remote.MovieResponse
 import com.pimenta.bestv.model.data.remote.PageResponse
-import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,46 +26,46 @@ import retrofit2.http.Query
 interface MovieTmdbApi {
 
     @GET("movie/{movie_id}")
-    fun getMovie(
+    suspend fun getMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<MovieResponse>
+    ): MovieResponse
 
     @GET("discover/movie")
-    fun getMoviesByGenre(
+    suspend fun getMoviesByGenre(
         @Query("with_genres") genreId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovies(
+    suspend fun getNowPlayingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(
+    suspend fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovies(
+    suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 
     @GET("movie/upcoming")
-    fun getUpComingMovies(
+    suspend fun getUpComingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<MovieResponse>>
+    ): PageResponse<MovieResponse>
 }

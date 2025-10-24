@@ -19,16 +19,15 @@ import androidx.leanback.widget.Presenter
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.FragmentScope
-import com.pimenta.bestv.presentation.extension.addTo
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
+import com.pimenta.bestv.presentation.presenter.AutoCancelableCoroutineScopePresenter
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import io.reactivex.Completable
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
@@ -41,19 +40,14 @@ class TopWorkGridPresenter @Inject constructor(
     private val view: View,
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
-    private val rxScheduler: RxScheduler
-) : AutoDisposablePresenter() {
+    coroutineDispatchers: CoroutineDispatchers
+) : AutoCancelableCoroutineScopePresenter(coroutineDispatchers) {
 
     private var currentPage = 0
     private var totalPages = 0
     private val works by lazy { mutableListOf<WorkViewModel>() }
 
-    private var loadBackdropImageDisposable: Disposable? = null
-
-    override fun dispose() {
-        disposeLoadBackdropImage()
-        super.dispose()
-    }
+    private var loadBackdropImageJob: Job? = null
 
     fun refreshPage(topWorkTypeViewModel: TopWorkTypeViewModel) {
         if (topWorkTypeViewModel == TopWorkTypeViewModel.FAVORITES_MOVIES) {
@@ -67,53 +61,42 @@ class TopWorkGridPresenter @Inject constructor(
             return
         }
 
-        loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)
-            .subscribeOn(rxScheduler.ioScheduler)
-            .observeOn(rxScheduler.computationScheduler)
-            .map { it.toViewModel() }
-            .observeOn(rxScheduler.mainScheduler)
-            .doOnSubscribe { view.onShowProgress() }
-            .doFinally { view.onHideProgress() }
-            .subscribe({ workPage ->
-                workPage?.let {
-                    currentPage = it.page
-                    totalPages = it.totalPages
+        launch {
+            view.onShowProgress()
+            try {
+                loadWorkByTypeUseCase(currentPage + 1, topWorkTypeViewModel)?.toViewModel()?.let { workPage ->
+                    currentPage = workPage.page
+                    totalPages = workPage.totalPages
 
-                    it.results?.let { worksViewModel ->
+                    workPage.results?.let { worksViewModel ->
                         works.addAll(worksViewModel)
                         view.onWorksLoaded(works)
                     }
                 }
-            }, { throwable ->
+            } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading the works by type")
                 view.onErrorWorksLoaded()
-            }).addTo(compositeDisposable)
+            } finally {
+                view.onHideProgress()
+            }
+        }
     }
 
     fun countTimerLoadBackdropImage(workViewModel: WorkViewModel) {
-        disposeLoadBackdropImage()
-        loadBackdropImageDisposable = Completable
-            .timer(BACKGROUND_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-            .subscribeOn(rxScheduler.ioScheduler)
-            .observeOn(rxScheduler.mainScheduler)
-            .subscribe({
+        loadBackdropImageJob?.cancel()
+        loadBackdropImageJob = launch {
+            try {
+                delay(BACKGROUND_UPDATE_DELAY)
                 view.loadBackdropImage(workViewModel)
-            }, { throwable ->
+            } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading backdrop image")
-            })
+            }
+        }
     }
 
     fun workClicked(itemViewHolder: Presenter.ViewHolder, workViewModel: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(workViewModel)
         view.openWorkDetails(itemViewHolder, intent)
-    }
-
-    private fun disposeLoadBackdropImage() {
-        loadBackdropImageDisposable?.run {
-            if (!isDisposed) {
-                dispose()
-            }
-        }
     }
 
     private fun resetPage() {

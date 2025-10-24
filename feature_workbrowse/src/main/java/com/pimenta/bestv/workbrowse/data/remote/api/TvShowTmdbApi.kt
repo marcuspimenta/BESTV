@@ -16,8 +16,6 @@ package com.pimenta.bestv.workbrowse.data.remote.api
 
 import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.TvShowResponse
-import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,47 +26,46 @@ import retrofit2.http.Query
 interface TvShowTmdbApi {
 
     @GET("tv/{tv_id}")
-    fun getTvShow(
+    suspend fun getTvShow(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<TvShowResponse>
+    ): TvShowResponse
 
     @GET("discover/tv")
-    fun getTvShowByGenre(
+    suspend fun getTvShowByGenre(
         @Query("with_genres") genreId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("include_adult") includeAdult:
-            Boolean,
+        @Query("include_adult") includeAdult: Boolean,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/airing_today")
-    fun getAiringTodayTvShows(
+    suspend fun getAiringTodayTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/on_the_air")
-    fun getOnTheAirTvShows(
+    suspend fun getOnTheAirTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/popular")
-    fun getPopularTvShows(
+    suspend fun getPopularTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 
     @GET("tv/top_rated")
-    fun getTopRatedTvShows(
+    suspend fun getTopRatedTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Single<PageResponse<TvShowResponse>>
+    ): PageResponse<TvShowResponse>
 }

@@ -26,17 +26,23 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.scheduler.RxScheduler
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.presenter.TopWorkGridPresenter
-import io.reactivex.Single
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.TestScheduler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by marcus on 2019-08-26.
@@ -71,30 +77,42 @@ private val EMPTY_PAGE_VIEW_MODEL = PageDomainModel<WorkDomainModel>(
     totalPages = 1
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TopWorkGridPresenterTest {
 
+    private val testDispatcher = StandardTestDispatcher()
     private val view: TopWorkGridPresenter.View = mock()
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
-    private val rxScheduler: RxScheduler = RxScheduler(
-        Schedulers.trampoline(),
-        Schedulers.trampoline(),
-        Schedulers.trampoline()
+    private val coroutineDispatchers = CoroutineDispatchers(
+        testDispatcher,
+        testDispatcher
     )
 
     private val presenter = TopWorkGridPresenter(
         view,
         loadWorkByTypeUseCase,
         workDetailsRoute,
-        rxScheduler
+        coroutineDispatchers
     )
 
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
-    fun `should show the works when loading them by type`() {
+    fun `should show the works when loading them by type`() = runTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
+            .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        advanceUntilIdle()
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -105,11 +123,12 @@ class TopWorkGridPresenterTest {
     }
 
     @Test
-    fun `should show an error message if an error happens while loading the works by type`() {
+    fun `should show an error message if an error happens while loading the works by type`() = runTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException())
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        advanceUntilIdle()
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -120,11 +139,12 @@ class TopWorkGridPresenterTest {
     }
 
     @Test
-    fun `should not show any work if any work is found when loading the works by type`() {
+    fun `should not show any work if any work is found when loading the works by type`() = runTest {
         whenever(loadWorkByTypeUseCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES))
-            .thenReturn(Single.just(EMPTY_PAGE_VIEW_MODEL))
+            .thenReturn(EMPTY_PAGE_VIEW_MODEL)
 
         presenter.loadWorkPageByType(TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+        advanceUntilIdle()
 
         inOrder(view) {
             verify(view).onShowProgress()
@@ -134,29 +154,26 @@ class TopWorkGridPresenterTest {
     }
 
     @Test
-    fun `should wait some time and then return the view model to the view`() {
-        val testScheduler = TestScheduler()
-        RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
-
+    fun `should wait some time and then return the view model to the view`() = runTest {
         presenter.countTimerLoadBackdropImage(MOVIE_VIEW_MODEL)
 
-        testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
+        advanceTimeBy(300L)
+        runCurrent()
 
         verify(view).loadBackdropImage(MOVIE_VIEW_MODEL)
     }
 
     @Test
-    fun `should return the right view model to the view if the counter is called before the first one finishes`() {
-        val testScheduler = TestScheduler()
-        RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
-
+    fun `should return the right view model to the view if the counter is called before the first one finishes`() = runTest {
         presenter.countTimerLoadBackdropImage(MOVIE_VIEW_MODEL)
 
-        testScheduler.advanceTimeBy(100L, TimeUnit.MILLISECONDS)
+        advanceTimeBy(100L)
+        runCurrent()
 
         presenter.countTimerLoadBackdropImage(TV_SHOW_VIEW_MODEL)
 
-        testScheduler.advanceTimeBy(300L, TimeUnit.MILLISECONDS)
+        advanceTimeBy(300L)
+        runCurrent()
 
         verify(view, times(1)).loadBackdropImage(TV_SHOW_VIEW_MODEL)
     }

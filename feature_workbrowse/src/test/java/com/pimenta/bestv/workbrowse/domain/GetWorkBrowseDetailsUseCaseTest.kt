@@ -17,7 +17,8 @@ package com.pimenta.bestv.workbrowse.domain
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -51,25 +52,27 @@ class GetWorkBrowseDetailsUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the browse details`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
-        whenever(getMovieGenresUseCase()).thenReturn(Single.just(MOVIE_GENRES))
-        whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
+    fun `should return the right data when loading the browse details`() = runTest {
+        whenever(hasFavoriteUseCase()).thenReturn(true)
+        whenever(getMovieGenresUseCase()).thenReturn(MOVIE_GENRES)
+        whenever(getTvShowGenresUseCase()).thenReturn(TV_SHOW_GENRES)
 
-        useCase()
-            .test()
-            .assertComplete()
-            .assertResult(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES))
+        val result = useCase()
+
+        Assert.assertEquals(Triple(true, MOVIE_GENRES, TV_SHOW_GENRES), result)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
-        whenever(hasFavoriteUseCase()).thenReturn(Single.just(true))
-        whenever(getMovieGenresUseCase()).thenReturn(Single.error(Throwable()))
-        whenever(getTvShowGenresUseCase()).thenReturn(Single.just(TV_SHOW_GENRES))
+    fun `should return an error when some exception happens`() = runTest {
+        whenever(hasFavoriteUseCase()).thenReturn(true)
+        whenever(getMovieGenresUseCase()).thenThrow(RuntimeException())
+        whenever(getTvShowGenresUseCase()).thenReturn(TV_SHOW_GENRES)
 
-        useCase()
-            .test()
-            .assertError(Throwable::class.java)
+        try {
+            useCase()
+            Assert.fail("Expected exception")
+        } catch (e: RuntimeException) {
+            // Expected
+        }
     }
 }

@@ -17,7 +17,8 @@ package com.pimenta.bestv.workbrowse.presentation.presenter
 import android.app.Activity
 import android.content.Intent
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import com.pimenta.bestv.presentation.presenter.AutoDisposablePresenter
+import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
+import com.pimenta.bestv.presentation.presenter.AutoCancelableCoroutineScopePresenter
 import com.pimenta.bestv.route.splash.SplashRoute
 import javax.inject.Inject
 
@@ -29,10 +30,10 @@ private const val SPLASH_ACTIVITY_REQUEST_CODE = 1
 @ActivityScope
 class MainPresenter @Inject constructor(
     private val view: View,
-    private val splashRoute: SplashRoute
-    // private val loadRecommendationUseCase: LoadRecommendationUseCase,
-    // private val rxScheduler: RxScheduler
-) : AutoDisposablePresenter() {
+    private val splashRoute: SplashRoute,
+    coroutineDispatchers: CoroutineDispatchers
+    // private val loadRecommendationUseCase: LoadRecommendationUseCase
+) : AutoCancelableCoroutineScopePresenter(coroutineDispatchers) {
 
     fun viewCreated(hasSavedInstanceState: Boolean) {
         if (hasSavedInstanceState) {
@@ -56,13 +57,13 @@ class MainPresenter @Inject constructor(
     }
 
     fun loadRecommendations() {
-        /*loadRecommendationUseCase()
-                .subscribeOn(rxScheduler.ioScheduler)
-                .observeOn(rxScheduler.mainScheduler)
-                .subscribe({ }, {
-                    Timber.e(it, "Error while loading the recommendations")
-                })
-                .addTo(compositeDisposable)*/
+        /*launch {
+            try {
+                loadRecommendationUseCase()
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, "Error while loading the recommendations")
+            }
+        }*/
     }
 
     interface View {

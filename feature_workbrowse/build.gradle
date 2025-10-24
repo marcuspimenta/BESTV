@@ -47,6 +47,9 @@ dependencies {
     // JUnit
     testImplementation Libs.junit
 
+    // Coroutines Test
+    testImplementation Libs.kotlinx_coroutines_test
+
     // Mockito
     testImplementation Libs.mockito_inline
     testImplementation Libs.mockito_core

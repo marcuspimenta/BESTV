@@ -21,7 +21,8 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -33,56 +34,37 @@ class MovieRepository @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    // TODO bring it back when migrating this module to coroutines
-    fun getFavoriteMovies() = Single.just(emptyList<WorkDomainModel>())
-        /*movieLocalDataSource.getMovies()
-            .map {
-                val movies = mutableListOf<WorkDomainModel>()
-                it.forEach { movieDbModel ->
-                    movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        val workDomainModel = work.toDomainModel(source).apply {
-                            isFavorite = true
-                        }
-
-                        movies.add(workDomainModel)
-                    }
-                }
-                movies.toList()
-            }*/
-
-    fun getMoviesByGenre(genreId: Int, page: Int) =
-        movieRemoteDataSource.getMoviesByGenre(genreId, page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
+    suspend fun getFavoriteMovies() = movieLocalDataSource.getMovies().mapNotNull { movieDbModel ->
+        movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
+            val source = resource.getStringResource(R.string.source_tmdb)
+            work.toDomainModel(source).apply {
+                isFavorite = true
             }
+        }
+    }
 
-    fun getNowPlayingMovies(page: Int) =
-        movieRemoteDataSource.getNowPlayingMovies(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getMoviesByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return movieRemoteDataSource.getMoviesByGenre(genreId, page).toDomainModel(source)
+    }
 
-    fun getPopularMovies(page: Int) =
-        movieRemoteDataSource.getPopularMovies(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getNowPlayingMovies(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return movieRemoteDataSource.getNowPlayingMovies(page).toDomainModel(source)
+    }
 
-    fun getTopRatedMovies(page: Int) =
-        movieRemoteDataSource.getTopRatedMovies(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return movieRemoteDataSource.getPopularMovies(page).toDomainModel(source)
+    }
 
-    fun getUpComingMovies(page: Int) =
-        movieRemoteDataSource.getUpComingMovies(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getTopRatedMovies(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return movieRemoteDataSource.getTopRatedMovies(page).toDomainModel(source)
+    }
+
+    suspend fun getUpComingMovies(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return movieRemoteDataSource.getUpComingMovies(page).toDomainModel(source)
+    }
 }

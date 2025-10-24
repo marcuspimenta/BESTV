@@ -32,7 +32,7 @@ class LoadWorkByTypeUseCase @Inject constructor(
     private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase
 ) {
 
-    operator fun invoke(page: Int, topWorkTypeViewModel: TopWorkTypeViewModel) =
+    suspend operator fun invoke(page: Int, topWorkTypeViewModel: TopWorkTypeViewModel) =
         when (topWorkTypeViewModel) {
             TopWorkTypeViewModel.FAVORITES_MOVIES -> getFavoritesUseCase()
             TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)

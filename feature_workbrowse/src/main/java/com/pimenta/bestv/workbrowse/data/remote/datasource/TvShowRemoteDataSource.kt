@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.workbrowse.data.remote.datasource
 
+import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
 import timber.log.Timber
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,26 +29,26 @@ class TvShowRemoteDataSource @Inject constructor(
     private val tvShowTmdbApi: TvShowTmdbApi
 ) {
 
-    fun getTvShow(tvId: Int) =
+    suspend fun getTvShow(tvId: Int): TvShowResponse? =
         try {
-            tvShowTmdbApi.getTvShow(tvId, tmdbApiKey, tmdbFilterLanguage).execute().body()
-        } catch (e: IOException) {
+            tvShowTmdbApi.getTvShow(tvId, tmdbApiKey, tmdbFilterLanguage)
+        } catch (e: Exception) {
             Timber.e(e, "Error while getting a tv show")
             null
         }
 
-    fun getTvShowByGenre(genreId: Int, page: Int) =
+    suspend fun getTvShowByGenre(genreId: Int, page: Int) =
         tvShowTmdbApi.getTvShowByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
-    fun getAiringTodayTvShows(page: Int) =
+    suspend fun getAiringTodayTvShows(page: Int) =
         tvShowTmdbApi.getAiringTodayTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getOnTheAirTvShows(page: Int) =
+    suspend fun getOnTheAirTvShows(page: Int) =
         tvShowTmdbApi.getOnTheAirTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getPopularTvShows(page: Int) =
+    suspend fun getPopularTvShows(page: Int) =
         tvShowTmdbApi.getPopularTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    fun getTopRatedTvShows(page: Int) =
+    suspend fun getTopRatedTvShows(page: Int) =
         tvShowTmdbApi.getTopRatedTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 }

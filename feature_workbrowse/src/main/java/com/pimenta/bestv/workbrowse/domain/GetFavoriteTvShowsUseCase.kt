@@ -24,6 +24,6 @@ class GetFavoriteTvShowsUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke() =
+    suspend operator fun invoke() =
         tvShowRepository.getFavoriteTvShows()
 }

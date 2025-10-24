@@ -21,7 +21,8 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -33,56 +34,38 @@ class TvShowRepository @Inject constructor(
     private val tvShowRemoteDataSource: TvShowRemoteDataSource
 ) {
 
-    // TODO bring it back when migrating this module to coroutines
-    fun getFavoriteTvShows() = Single.just(emptyList<WorkDomainModel>())
-        /*tvShowLocalDataSource.getTvShows()
-            .map {
-                val tvShows = mutableListOf<WorkDomainModel>()
-                it.forEach { tvShowDbModel ->
-                    tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
-                        val source = resource.getStringResource(R.string.source_tmdb)
-                        val workDomainModel = work.toDomainModel(source).apply {
-                            isFavorite = true
-                        }
-
-                        tvShows.add(workDomainModel)
-                    }
+    suspend fun getFavoriteTvShows() =
+        tvShowLocalDataSource.getTvShows().mapNotNull { tvShowDbModel ->
+            tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
+                val source = resource.getStringResource(R.string.source_tmdb)
+                work.toDomainModel(source).apply {
+                    isFavorite = true
                 }
-                tvShows.toList()
-            }*/
-
-    fun getTvShowByGenre(genreId: Int, page: Int) =
-        tvShowRemoteDataSource.getTvShowByGenre(genreId, page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
             }
+        }
 
-    fun getAiringTodayTvShows(page: Int) =
-        tvShowRemoteDataSource.getAiringTodayTvShows(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getTvShowByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel(source)
+    }
 
-    fun getOnTheAirTvShows(page: Int) =
-        tvShowRemoteDataSource.getOnTheAirTvShows(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getAiringTodayTvShows(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel(source)
+    }
 
-    fun getPopularTvShows(page: Int) =
-        tvShowRemoteDataSource.getPopularTvShows(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getOnTheAirTvShows(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel(source)
+    }
 
-    fun getTopRatedTvShows(page: Int) =
-        tvShowRemoteDataSource.getTopRatedTvShows(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getPopularTvShows(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel(source)
+    }
+
+    suspend fun getTopRatedTvShows(page: Int): PageDomainModel<WorkDomainModel> {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel(source)
+    }
 }

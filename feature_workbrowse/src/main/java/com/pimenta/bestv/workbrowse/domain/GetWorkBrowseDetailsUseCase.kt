@@ -15,8 +15,8 @@
 package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import io.reactivex.Single
-import io.reactivex.functions.Function3
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
@@ -28,13 +28,15 @@ class GetWorkBrowseDetailsUseCase @Inject constructor(
     private val getTvShowGenresUseCase: GetTvShowGenresUseCase
 ) {
 
-    operator fun invoke() =
-        Single.zip<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?, Triple<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?>>(
-            hasFavoriteUseCase(),
-            getMovieGenresUseCase(),
-            getTvShowGenresUseCase(),
-            Function3 { hasFavoriteMovie, movieGenreList, tvShowGenreList ->
-                Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
-            }
-        )
+    suspend operator fun invoke(): Triple<Boolean, List<GenreDomainModel>?, List<GenreDomainModel>?> = coroutineScope {
+        val hasFavoriteDeferred = async { hasFavoriteUseCase() }
+        val movieGenresDeferred = async { getMovieGenresUseCase() }
+        val tvShowGenresDeferred = async { getTvShowGenresUseCase() }
+
+        val hasFavoriteMovie = hasFavoriteDeferred.await()
+        val movieGenreList = movieGenresDeferred.await()
+        val tvShowGenreList = tvShowGenresDeferred.await()
+
+        Triple(hasFavoriteMovie, movieGenreList, tvShowGenreList)
+    }
 }

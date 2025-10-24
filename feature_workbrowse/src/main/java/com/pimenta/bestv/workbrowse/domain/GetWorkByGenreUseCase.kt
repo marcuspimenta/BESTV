@@ -26,7 +26,7 @@ class GetWorkByGenreUseCase @Inject constructor(
     private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
 ) {
 
-    operator fun invoke(genreViewModel: GenreViewModel, page: Int) =
+    suspend operator fun invoke(genreViewModel: GenreViewModel, page: Int) =
         when (genreViewModel.source) {
             Source.MOVIE -> getMovieByGenreUseCase(genreViewModel.id, page)
             Source.TV_SHOW -> getTvShowByGenreUseCase(genreViewModel.id, page)

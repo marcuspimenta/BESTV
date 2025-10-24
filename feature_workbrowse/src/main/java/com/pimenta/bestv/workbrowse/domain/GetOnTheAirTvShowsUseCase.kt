@@ -24,6 +24,6 @@ class GetOnTheAirTvShowsUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ) {
 
-    operator fun invoke(page: Int) =
+    suspend operator fun invoke(page: Int) =
         tvShowRepository.getOnTheAirTvShows(page)
 }

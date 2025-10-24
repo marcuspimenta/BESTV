@@ -16,7 +16,6 @@ package com.pimenta.bestv.workbrowse.data.remote.api
 
 import com.pimenta.bestv.workbrowse.data.remote.model.MovieGenreListResponse
 import com.pimenta.bestv.workbrowse.data.remote.model.TvShowGenreListResponse
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -26,14 +25,14 @@ import retrofit2.http.Query
 interface GenreTmdbApi {
 
     @GET("genre/movie/list")
-    fun getMovieGenres(
+    suspend fun getMovieGenres(
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<MovieGenreListResponse>
+    ): MovieGenreListResponse
 
     @GET("genre/tv/list")
-    fun getTvShowGenres(
+    suspend fun getTvShowGenres(
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Single<TvShowGenreListResponse>
+    ): TvShowGenreListResponse
 }
