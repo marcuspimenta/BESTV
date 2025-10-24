@@ -68,13 +68,13 @@ private const val TV_SHOWS_HEADER_ID = 2
  */
 class CastDetailsFragment : DetailsSupportFragment() {
 
+    private val castViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
     private val mainAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
     private val actionAdapter by lazy { ArrayObjectAdapter() }
     private val moviesRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val tvShowsRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
     private val presenterSelector by lazy { ClassPresenterSelector() }
     private val detailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
-    private val castViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
 
     @Inject
     lateinit var viewModel: CastDetailsViewModel
@@ -133,29 +133,25 @@ class CastDetailsFragment : DetailsSupportFragment() {
     }
 
     private fun renderState(state: CastDetailsState) {
-        // Handle loading state
         if (state.isLoading) {
             progressBarManager.show()
         } else {
             progressBarManager.hide()
         }
 
-        // Update cast details
         state.castDetails?.let { cast ->
             detailsOverviewRow.item = cast
             mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
         }
 
-        // Add movies section if available and not already added
-        if (state.movies.isNotEmpty() && moviesRowAdapter.size() == 0) {
+        if (state.movies.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
             moviesRowAdapter.addAll(0, state.movies)
             val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
             mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
         }
 
-        // Add TV shows section if available and not already added
-        if (state.tvShows.isNotEmpty() && tvShowsRowAdapter.size() == 0) {
+        if (state.tvShows.isNotEmpty()) {
             actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
             tvShowsRowAdapter.addAll(0, state.tvShows)
             val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
