@@ -21,60 +21,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
-import androidx.leanback.app.DetailsSupportFragment
-import androidx.leanback.widget.Action
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.ClassPresenterSelector
-import androidx.leanback.widget.DetailsOverviewRow
-import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
-import androidx.leanback.widget.FullWidthDetailsOverviewSharedElementHelper
-import androidx.leanback.widget.HeaderItem
-import androidx.leanback.widget.ImageCardView
-import androidx.leanback.widget.ListRow
-import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.RowPresenter
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
+import androidx.fragment.app.Fragment
+import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
-import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
-import com.pimenta.bestv.castdetail.presentation.ui.render.CastDetailsDescriptionRender
+import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.model.presentation.model.loadThumbnail
-import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.extension.addFragment
 import com.pimenta.bestv.presentation.extension.popBackStack
 import com.pimenta.bestv.presentation.ui.fragment.ErrorFragment
-import com.pimenta.bestv.presentation.ui.render.WorkCardRenderer
-import com.pimenta.bestv.presentation.ui.setting.SettingShared
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val CAST = "CAST"
 private const val ERROR_FRAGMENT_REQUEST_CODE = 1
-private const val ACTION_MOVIES = 1
-private const val ACTION_TV_SHOWS = 2
-private const val MOVIES_HEADER_ID = 1
-private const val TV_SHOWS_HEADER_ID = 2
 
 /**
+ * Fragment for displaying cast details using Jetpack Compose for TV.
+ *
  * Created by marcus on 04-04-2018.
  */
-class CastDetailsFragment : DetailsSupportFragment() {
+class CastDetailsFragment : Fragment() {
 
     private val castViewModel by lazy { arguments?.getSerializable(CAST) as CastViewModel }
-    private val mainAdapter by lazy { ArrayObjectAdapter(presenterSelector) }
-    private val actionAdapter by lazy { ArrayObjectAdapter() }
-    private val moviesRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val tvShowsRowAdapter by lazy { ArrayObjectAdapter(WorkCardRenderer()) }
-    private val presenterSelector by lazy { ClassPresenterSelector() }
-    private val detailsOverviewRow by lazy { DetailsOverviewRow(castViewModel) }
 
     @Inject
     lateinit var viewModel: CastDetailsViewModel
@@ -87,110 +58,43 @@ class CastDetailsFragment : DetailsSupportFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupDetailsOverviewRow()
-        setupDetailsOverviewRowPresenter()
-        adapter = mainAdapter
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        progressBarManager.apply {
-            enableProgressBar()
-            setProgressBarView(
-                LayoutInflater.from(context).inflate(R.layout.view_load, null).also {
-                    (view.parent as ViewGroup).addView(it)
-                }
-            )
-            initialDelay = 0
-        }
-
-        observeState()
-        observeEffects()
-        viewModel.handleEvent(CastDetailsEvent.LoadData)
-    }
-
-    private fun observeState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    renderState(state)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                MaterialTheme {
+                    CastDetailsScreen(
+                        viewModel = viewModel,
+                        openIntent = { openIntent(it) },
+                        showError = { showErrorFragment() }
+                    )
                 }
             }
         }
     }
 
-    private fun observeEffects() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.effects.collect { effect ->
-                    handleEffect(effect)
-                }
-            }
-        }
-    }
-
-    private fun renderState(state: CastDetailsState) {
-        if (state.isLoading) {
-            progressBarManager.show()
-        } else {
-            progressBarManager.hide()
-        }
-
-        state.castDetails?.let { cast ->
-            detailsOverviewRow.item = cast
-            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-        }
-
-        if (state.movies.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_MOVIES.toLong(), resources.getString(R.string.movies)))
-            moviesRowAdapter.addAll(0, state.movies)
-            val moviesHeader = HeaderItem(MOVIES_HEADER_ID.toLong(), getString(R.string.movies))
-            mainAdapter.add(ListRow(moviesHeader, moviesRowAdapter))
-        }
-
-        if (state.tvShows.isNotEmpty()) {
-            actionAdapter.add(Action(ACTION_TV_SHOWS.toLong(), resources.getString(R.string.tv_shows)))
-            tvShowsRowAdapter.addAll(0, state.tvShows)
-            val tvShowsHeader = HeaderItem(TV_SHOWS_HEADER_ID.toLong(), getString(R.string.tv_shows))
-            mainAdapter.add(ListRow(tvShowsHeader, tvShowsRowAdapter))
-        }
-    }
-
-    private fun handleEffect(effect: CastDetailsEffect) {
-        when (effect) {
-            is CastDetailsEffect.OpenIntent -> openIntent(effect.intent, effect.shareTransition)
-            is CastDetailsEffect.ShowError -> showErrorFragment()
-        }
-    }
-
-    private fun openIntent(intent: Intent, shareTransition: Boolean) {
-        if (shareTransition) {
-            view?.let { fragmentView ->
-                val selectedView = fragmentView.findFocus() as? ImageCardView
-                selectedView?.mainImageView?.let { imageView ->
-                    val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        requireActivity(),
-                        imageView,
-                        SettingShared.SHARED_ELEMENT_NAME
-                    ).toBundle()
-                    startActivity(intent, bundle)
-                }
-            }
-        } else {
-            startActivity(intent)
-        }
+    private fun openIntent(intent: Intent) {
+        // For full Compose shared element transitions, implement:
+        // - SharedTransitionLayout wrapping the screen
+        // - Modifier.sharedElement() on WorkCard images
+        // - Modifier.sharedBounds() for coordinated transitions
+        // Reference: https://developer.android.com/develop/ui/compose/animation/shared-elements
+        startActivity(intent)
     }
 
     private fun showErrorFragment() {
-        val fragment = ErrorFragment.newInstance().apply {
-            setTargetFragment(this@CastDetailsFragment, ERROR_FRAGMENT_REQUEST_CODE)
-        }
+        val fragment = ErrorFragment.newInstance()
+        // Note: Using deprecated setTargetFragment API
+        // ErrorFragment is shared in presentation_shared and still uses Leanback ErrorSupportFragment
+        // Full migration to Compose/Fragment Result API should be done when migrating all modules
+        fragment.setTargetFragment(this, ERROR_FRAGMENT_REQUEST_CODE)
         requireActivity().addFragment(fragment, ErrorFragment.TAG)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             ERROR_FRAGMENT_REQUEST_CODE -> {
@@ -201,57 +105,6 @@ class CastDetailsFragment : DetailsSupportFragment() {
                 }
             }
         }
-    }
-
-    private fun setupDetailsOverviewRow() {
-        presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-
-        castViewModel.loadThumbnail(requireContext()) {
-            detailsOverviewRow.imageDrawable = it
-            mainAdapter.notifyArrayItemRangeChanged(0, mainAdapter.size())
-        }
-
-        detailsOverviewRow.actionsAdapter = actionAdapter
-        mainAdapter.add(detailsOverviewRow)
-
-        setOnItemViewClickedListener { _, item, _, _ ->
-            if (item is WorkViewModel) {
-                viewModel.handleEvent(CastDetailsEvent.WorkClicked(item))
-            }
-        }
-    }
-
-    private fun setupDetailsOverviewRowPresenter() {
-        // Set detail background.
-        val detailsPresenter = object : FullWidthDetailsOverviewRowPresenter(CastDetailsDescriptionRender()) {
-
-            override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
-                val viewHolder = super.createRowViewHolder(parent)
-                // TODO bring it back
-                /*val detailsImageView = viewHolder.view.findViewById<ImageView>(R.id.details_overview_image)
-                val layoutParams = detailsImageView.layoutParams.apply {
-                    width = resources.getDimensionPixelSize(R.dimen.movie_card_width)
-                    height = resources.getDimensionPixelSize(R.dimen.movie_card_height)
-                }
-                detailsImageView.layoutParams = layoutParams*/
-                return viewHolder
-            }
-        }.apply {
-            actionsBackgroundColor = resources.getColor(R.color.detail_view_actionbar_background, requireActivity().theme)
-            backgroundColor = resources.getColor(R.color.detail_view_background, requireActivity().theme)
-
-            // Hook up transition element.
-            val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper().apply {
-                setSharedElementEnterTransition(requireActivity(), SettingShared.SHARED_ELEMENT_NAME)
-            }
-            setListener(sharedElementHelper)
-            isParticipatingEntranceTransition = true
-            setOnActionClickedListener {
-                val position = actionAdapter.indexOf(it) + 1
-                setSelectedPosition(position)
-            }
-        }
-        presenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
     }
 
     companion object {
