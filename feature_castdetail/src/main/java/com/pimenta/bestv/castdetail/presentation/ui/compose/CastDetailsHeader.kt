@@ -21,15 +21,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import coil.compose.AsyncImage
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.presentation.ui.compose.CastCard
 
 /**
  * Header component displaying cast member details.
@@ -68,13 +64,9 @@ fun CastDetailsHeader(
         verticalAlignment = Alignment.Top
     ) {
         // Profile photo
-        AsyncImage(
-            model = cast.thumbnailUrl,
-            contentDescription = cast.name,
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
+        CastCard(
+            cast = cast,
+            onClick = { /* Profile photo clicked */ }
         )
 
         Spacer(modifier = Modifier.width(32.dp))
@@ -114,7 +106,7 @@ fun CastDetailsHeader(
             cast.source?.let { source ->
                 Text(
                     text = "Source: $source",
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     color = Color.White.copy(alpha = 0.6f)
                 )
             }
@@ -126,7 +118,7 @@ fun CastDetailsHeader(
                 if (biography.isNotBlank()) {
                     Text(
                         text = biography,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = Color.White.copy(alpha = 0.9f),
                         maxLines = 8,
                         overflow = TextOverflow.Ellipsis
@@ -148,7 +140,9 @@ private fun CastDetailsHeaderPreview() {
                 character = null,
                 birthday = "January 30, 1974",
                 deathDay = null,
-                biography = "Christian Charles Philip Bale is an English actor. Known for his versatility and physical transformations for his roles, he has been a leading man in films of several genres.",
+                biography = "Christian Charles Philip Bale is an English actor. Known for his " +
+                        "versatility and physical transformations for his roles, he has been a " +
+                        "leading man in films of several genres.",
                 thumbnailUrl = null,
                 source = "TMDB"
             )
