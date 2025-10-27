@@ -21,6 +21,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
+import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
@@ -36,9 +37,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -108,13 +106,9 @@ class CastDetailsViewModelTest {
     }
 
     @Test
-    fun `initial state should have correct cast`() {
+    fun `initial state should be Loading`() {
         val initialState = viewModel.state.value
-        assertEquals(CAST, initialState.cast)
-        assertFalse(initialState.isLoading)
-        assertNull(initialState.castDetails)
-        assertTrue(initialState.movies.isEmpty())
-        assertTrue(initialState.tvShows.isEmpty())
+        assertTrue(initialState is CastDetailsState.Loading)
     }
 
     @Test
@@ -127,34 +121,29 @@ class CastDetailsViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
-        assertNotNull(state.castDetails)
-        assertEquals("John Doe", state.castDetails?.name)
-        assertEquals(2, state.movies.size)
-        assertEquals(1, state.tvShows.size)
+        assertTrue(state is CastDetailsState.Loaded)
+        val loadedState = state as CastDetailsState.Loaded
+        assertEquals("John Doe", loadedState.cast.name)
+        assertEquals(2, loadedState.movies.size)
+        assertEquals(1, loadedState.tvShows.size)
     }
 
     @Test
-    fun `loadData should show loading state`() = runTest(testDispatcher) {
+    fun `loadData should transition from Loading to Loaded state`() = runTest(testDispatcher) {
         val result = Triple(CAST_DETAILS, emptyList<WorkDomainModel>(), emptyList<WorkDomainModel>())
 
         whenever(getCastDetailsUseCase(CAST.id)).thenReturn(result)
 
         viewModel.state.test {
             val initialState = awaitItem()
-            assertFalse(initialState.isLoading)
+            assertTrue(initialState is CastDetailsState.Loading)
 
             viewModel.handleEvent(CastDetailsEvent.LoadData)
-
-            // Check loading state
-            val loadingState = awaitItem()
-            assertTrue(loadingState.isLoading)
-
             advanceUntilIdle()
 
             // Check state after loading completes
             val finalState = awaitItem()
-            assertFalse(finalState.isLoading)
+            assertTrue(finalState is CastDetailsState.Loaded)
         }
     }
 
@@ -163,16 +152,11 @@ class CastDetailsViewModelTest {
         val exception = RuntimeException("Network error")
         whenever(getCastDetailsUseCase(CAST.id)).thenThrow(exception)
 
-        viewModel.effects.test {
-            viewModel.handleEvent(CastDetailsEvent.LoadData)
-            advanceUntilIdle()
-
-            val effect = awaitItem()
-            assertTrue(effect is CastDetailsEffect.ShowError)
-        }
+        viewModel.handleEvent(CastDetailsEvent.LoadData)
+        advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
+        assertTrue(state is CastDetailsState.Error)
     }
 
     @Test
@@ -202,9 +186,10 @@ class CastDetailsViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
-        assertEquals(2, state.movies.size)
-        assertTrue(state.tvShows.isEmpty())
+        assertTrue(state is CastDetailsState.Loaded)
+        val loadedState = state as CastDetailsState.Loaded
+        assertEquals(2, loadedState.movies.size)
+        assertTrue(loadedState.tvShows.isEmpty())
     }
 
     @Test
@@ -217,8 +202,9 @@ class CastDetailsViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
-        assertTrue(state.movies.isEmpty())
-        assertEquals(1, state.tvShows.size)
+        assertTrue(state is CastDetailsState.Loaded)
+        val loadedState = state as CastDetailsState.Loaded
+        assertTrue(loadedState.movies.isEmpty())
+        assertEquals(1, loadedState.tvShows.size)
     }
 }

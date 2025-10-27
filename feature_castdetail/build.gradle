@@ -21,7 +21,6 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
-    implementation Libs.androidx_leanback  // Still needed for ErrorFragment in presentation_shared
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
     implementation Libs.androidx_lifecycle
@@ -47,9 +46,6 @@ dependencies {
 
     // Timber
     implementation Libs.timber
-
-    // Lottie
-    implementation Libs.lottie
 
     // JUnit
     testImplementation Libs.junit

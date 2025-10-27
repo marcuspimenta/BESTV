@@ -39,7 +39,7 @@ class CastDetailsViewModel @Inject constructor(
     private val cast: CastViewModel,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute
-) : BaseViewModel<CastDetailsState, CastDetailsEffect>(CastDetailsState(cast = cast)) {
+) : BaseViewModel<CastDetailsState, CastDetailsEffect>(CastDetailsState.Loading) {
 
     fun handleEvent(event: CastDetailsEvent) {
         when (event) {
@@ -51,22 +51,20 @@ class CastDetailsViewModel @Inject constructor(
     private fun loadData() {
         viewModelScope.launch {
             try {
-                updateState { state -> state.copy(isLoading = true) }
+                updateState { CastDetailsState.Loading }
 
                 val (castDetails, movies, tvShows) = getCastDetailsUseCase(cast.id)
 
-                updateState { state ->
-                    state.copy(
-                        isLoading = false,
-                        castDetails = castDetails.toViewModel(),
+                updateState {
+                    CastDetailsState.Loaded(
+                        cast = castDetails.toViewModel(),
                         movies = movies?.map { movie -> movie.toViewModel() } ?: emptyList(),
                         tvShows = tvShows?.map { tvShow -> tvShow.toViewModel() } ?: emptyList()
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while getting the cast details")
-                updateState { state -> state.copy(isLoading = false) }
-                emitEvent(CastDetailsEffect.ShowError)
+                updateState { CastDetailsState.Error }
             }
         }
     }

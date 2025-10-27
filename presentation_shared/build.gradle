@@ -47,6 +47,7 @@ dependencies {
     implementation Libs.compose_material3
     implementation Libs.androidx_tv_foundation
     implementation Libs.androidx_tv_material
+    implementation Libs.androidx_activity_compose
     implementation Libs.androidx_lifecycle_runtime_ktx
     implementation Libs.coil_compose
     debugImplementation Libs.compose_ui_tooling

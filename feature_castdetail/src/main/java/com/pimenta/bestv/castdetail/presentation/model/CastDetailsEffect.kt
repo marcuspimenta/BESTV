@@ -23,5 +23,4 @@ import android.content.Intent
  */
 sealed interface CastDetailsEffect {
     data class OpenIntent(val intent: Intent, val shareTransition: Boolean) : CastDetailsEffect
-    object ShowError : CastDetailsEffect
 }

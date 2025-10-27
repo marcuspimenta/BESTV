@@ -25,6 +25,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,6 +46,7 @@ import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -53,19 +57,13 @@ import kotlinx.coroutines.flow.collectLatest
  * - Collects state from ViewModel using collectAsStateWithLifecycle
  * - Handles loading, content, and error states
  * - Displays cast header, movies row, and TV shows row
- * - Manages side effects (navigation, errors)
- *
- * @param viewModel The ViewModel managing cast details state
- * @param onWorkClick Callback invoked when a work is clicked
- * @param onError Callback invoked when an error occurs
- * @param modifier Optional modifier for customization
+ * - Manages side effects (navigation)
  */
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun CastDetailsScreen(
     viewModel: CastDetailsViewModel,
     openIntent: (Intent) -> Unit,
-    showError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -74,7 +72,6 @@ fun CastDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is CastDetailsEffect.ShowError -> showError()
                 is CastDetailsEffect.OpenIntent -> openIntent(effect.intent)
             }
         }
@@ -87,9 +84,8 @@ fun CastDetailsScreen(
 
     CastDetailsContent(
         state = state,
-        onWorkClick = { work ->
-            viewModel.handleEvent(CastDetailsEvent.WorkClicked(work))
-        },
+        onWorkClick = { viewModel.handleEvent(CastDetailsEvent.WorkClicked(it)) },
+        onRetryClicked = { viewModel.handleEvent(CastDetailsEvent.LoadData) },
         modifier = modifier
     )
 }
@@ -99,18 +95,15 @@ fun CastDetailsScreen(
  *
  * Handles different UI states:
  * - Loading: Shows centered progress indicator
- * - Error: Handled via side effect
+ * - Error: Displays an error
  * - Content: Displays scrollable cast details with movies and TV shows
- *
- * @param state Current UI state
- * @param onWorkClick Callback invoked when a work is clicked
- * @param modifier Optional modifier for customization
  */
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 private fun CastDetailsContent(
     state: CastDetailsState,
     onWorkClick: (WorkViewModel) -> Unit,
+    onRetryClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -125,15 +118,22 @@ private fun CastDetailsContent(
                 )
             )
     ) {
-        when {
-            state.isLoading -> {
+        when (state) {
+            is CastDetailsState.Loading -> {
                 // Loading state
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
 
-            state.castDetails != null -> {
+            is CastDetailsState.Error -> {
+                ErrorScreen(
+                    onRetryClick = onRetryClicked,
+                    modifier = modifier
+                )
+            }
+
+            is CastDetailsState.Loaded -> {
                 // Content state
                 Column(
                     modifier = Modifier
@@ -142,7 +142,7 @@ private fun CastDetailsContent(
                 ) {
                     // Cast header
                     CastDetailsHeader(
-                        cast = state.castDetails
+                        cast = state.cast
                     )
 
                     // Movies section
@@ -173,7 +173,7 @@ private fun CastDetailsContent(
 private fun CastDetailsScreenPreview() {
     MaterialTheme {
         CastDetailsContent(
-            state = CastDetailsState(
+            state = CastDetailsState.Loaded(
                 cast = CastViewModel(
                     id = 1,
                     name = "Christian Bale",
@@ -181,17 +181,6 @@ private fun CastDetailsScreenPreview() {
                     birthday = "January 30, 1974",
                     deathDay = null,
                     biography = "Christian Charles Philip Bale is an English actor.",
-                    thumbnailUrl = null,
-                    source = "TMDB"
-                ),
-                isLoading = false,
-                castDetails = CastViewModel(
-                    id = 1,
-                    name = "Christian Bale",
-                    character = null,
-                    birthday = "January 30, 1974",
-                    deathDay = null,
-                    biography = "Christian Charles Philip Bale is an English actor. Known for his versatility and physical transformations for his roles.",
                     thumbnailUrl = null,
                     source = "TMDB"
                 ),
@@ -215,7 +204,8 @@ private fun CastDetailsScreenPreview() {
                 ),
                 tvShows = emptyList()
             ),
-            onWorkClick = {}
+            onWorkClick = {},
+            onRetryClicked = {},
         )
     }
 }
