@@ -14,13 +14,6 @@
 
 package com.pimenta.bestv.model.presentation.model
 
-import android.content.Context
-import android.graphics.drawable.Drawable
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import java.io.Serializable
 
 /**
@@ -36,18 +29,3 @@ data class CastViewModel(
     var biography: String? = null,
     var thumbnailUrl: String? = null
 ) : Serializable
-
-inline fun CastViewModel.loadThumbnail(context: Context, crossinline result: (resource: Drawable) -> Unit) {
-    Glide.with(context)
-        .load(thumbnailUrl)
-        .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-        .into(object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                result(resource)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // DO ANYTHING
-            }
-        })
-}

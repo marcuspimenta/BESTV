@@ -29,12 +29,38 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
-import com.pimenta.bestv.workdetail.presentation.model.ErrorState
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
 import com.pimenta.bestv.workdetail.presentation.model.PaginationState
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.DismissError
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreRecommendations
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreReviews
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreSimilar
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoClicked
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToRecommendedWorks
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToReviews
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToSimilarWorks
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToVideos
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Casts
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.RecommendedWorks
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Reviews
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.SimilarWorks
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Videos
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Error
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -54,62 +80,104 @@ class WorkDetailsViewModel @Inject constructor(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val castDetailsRoute: CastDetailsRoute,
-) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(WorkDetailsState(work = work)) {
+) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(WorkDetailsState(work, Loading)) {
 
     /**
      * Handle user events
      */
     fun handleEvent(event: WorkDetailsEvent) {
         when (event) {
-            is WorkDetailsEvent.LoadData -> loadData()
-            is WorkDetailsEvent.ToggleFavorite -> toggleFavorite()
-            is WorkDetailsEvent.ReviewItemSelected -> handleReviewItemSelected(event.review)
-            is WorkDetailsEvent.RecommendationItemSelected -> handleRecommendationItemSelected(event.work)
-            is WorkDetailsEvent.SimilarItemSelected -> handleSimilarItemSelected(event.work)
-            is WorkDetailsEvent.WorkClicked -> handleWorkClicked(event.work)
-            is WorkDetailsEvent.CastClicked -> handleCastClicked(event.cast)
-            is WorkDetailsEvent.VideoClicked -> handleVideoClicked(event.video)
-            is WorkDetailsEvent.DismissError -> dismissError()
+            is LoadData -> loadData()
+            is ActionButtonClicked -> actionButtonClicked(event.action)
+            is LoadMoreReviews -> loadMoreReviews()
+            is LoadMoreRecommendations -> loadMoreRecommendations()
+            is LoadMoreSimilar -> loadMoreSimilar()
+            is WorkClicked -> handleWorkClicked(event.work)
+            is CastClicked -> handleCastClicked(event.cast)
+            is VideoClicked -> handleVideoClicked(event.video)
+            is DismissError -> dismissError()
         }
     }
 
     private fun loadData() {
         viewModelScope.launch {
             try {
-                updateState { it.copy(isLoading = true, error = null) }
+                updateState { it.copy(state = Loading) }
 
                 val result = getWorkDetailsUseCase(work)
 
                 updateState {
                     it.copy(
-                        isLoading = false,
-                        isFavorite = result.isFavorite,
-                        videos = result.videos?.map { video -> video.toViewModel() } ?: emptyList(),
-                        casts = result.casts?.map { cast -> cast.toViewModel() } ?: emptyList(),
-                        recommendedWorks = result.recommended.results?.map { work -> work.toViewModel() } ?: emptyList(),
-                        recommendedPagination = PaginationState(
-                            currentPage = result.recommended.page,
-                            totalPages = result.recommended.totalPages
-                        ),
-                        similarWorks = result.similar.results?.map { work -> work.toViewModel() } ?: emptyList(),
-                        similarPagination = PaginationState(
-                            currentPage = result.similar.page,
-                            totalPages = result.similar.totalPages
-                        ),
-                        reviews = result.reviews.results?.map { review -> review.toViewModel() } ?: emptyList(),
-                        reviewPagination = PaginationState(
-                            currentPage = result.reviews.page,
-                            totalPages = result.reviews.totalPages
-                        ),
-                        error = null
+                        state = Loaded(
+                            contents = listOfNotNull(
+                                Header(
+                                    listOfNotNull(
+                                        SaveWork(result.isFavorite),
+                                        ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
+                                        ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
+                                        ScrollToRecommendedWorks.takeIf { result.recommended.results?.isNotEmpty() == true },
+                                        ScrollToSimilarWorks.takeIf { result.similar.results?.isNotEmpty() == true },
+                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
+                                    )
+                                ),
+                                result.videos?.let {
+                                    Videos(it.map { video -> video.toViewModel() })
+                                        .takeIf { it.videos.isNotEmpty() }
+                                },
+                                result.casts?.let {
+                                    Casts(it.map { cast -> cast.toViewModel() })
+                                        .takeIf { it.casts.isNotEmpty() }
+                                },
+                                result.recommended.results?.let {
+                                    RecommendedWorks(
+                                        recommended = it.map { work -> work.toViewModel() },
+                                        page = PaginationState(
+                                            currentPage = result.recommended.page,
+                                            totalPages = result.recommended.totalPages
+                                        )
+                                    ).takeIf { it.recommended.isNotEmpty() }
+                                },
+                                result.similar.results?.let {
+                                    SimilarWorks(
+                                        similar = it.map { work -> work.toViewModel() },
+                                        page = PaginationState(
+                                            currentPage = result.similar.page,
+                                            totalPages = result.similar.totalPages
+                                        )
+                                    ).takeIf { it.similar.isNotEmpty() }
+                                },
+                                result.reviews.results?.let {
+                                    Reviews(
+                                        reviews = it.map { work -> work.toViewModel() },
+                                        page = PaginationState(
+                                            currentPage = result.reviews.page,
+                                            totalPages = result.reviews.totalPages
+                                        )
+                                    ).takeIf { it.reviews.isNotEmpty() }
+                                }
+                            )
+                        )
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading work details")
                 updateState {
+                    it.copy(state = Error())
+                }
+            }
+        }
+    }
+
+    private fun actionButtonClicked(actionButton: ActionButton) {
+        when (actionButton) {
+            is SaveWork -> toggleFavorite()
+            else -> {
+                updateState {
                     it.copy(
-                        isLoading = false,
-                        error = ErrorState.LoadingError("Failed to load work details")
+                        state = (it.state as Loaded).copy(
+                            indexOfContentToScroll = it.state.contents
+                                .firstOf<Header>().actions.indexOf(actionButton)
+                        )
                     )
                 }
             }
@@ -119,142 +187,205 @@ class WorkDetailsViewModel @Inject constructor(
     private fun toggleFavorite() {
         viewModelScope.launch {
             try {
-                val currentFavoriteState = currentState.isFavorite
-                val updatedWork = work.copy(isFavorite = currentFavoriteState)
+                val currentFavoriteState = (currentState.state as Loaded).contents
+                    .firstOf<Header>().actions.firstOf<SaveWork>()
+                val updatedWork = work.copy(isFavorite = currentFavoriteState.isFavorite)
 
                 setFavoriteUseCase(updatedWork)
 
-                val newFavoriteState = !currentFavoriteState
-                updateState { it.copy(isFavorite = newFavoriteState) }
+                val newFavoriteState = !currentFavoriteState.isFavorite
+                updateState { currentState ->
+                    currentState.copy(
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<Header> {
+                                it.copy(
+                                    actions = it.actions.replaceFirst<SaveWork> {
+                                        it.copy(isFavorite = newFavoriteState)
+                                    }
+                                )
+                            }
+                        )
+                    )
+                }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while toggling favorite")
-                updateState {
-                    it.copy(error = ErrorState.FavoriteError("Failed to update favorite status"))
+
+                updateState { currentState ->
+                    currentState.copy(
+                        state = (currentState.state as Loaded).copy(
+                            error = FavoriteError
+                        )
+                    )
                 }
             }
         }
     }
 
-    private fun handleReviewItemSelected(review: com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel) {
-        val state = currentState
-        val reviewIndex = state.reviews.indexOf(review)
+    private fun loadMoreReviews() {
+        val reviews = (currentState.state as Loaded).contents.firstOf<Reviews>()
 
-        // Check if we need to load more
-        if (reviewIndex < state.reviews.size - 1 || !state.reviewPagination.canLoadMore) {
+        // Check if we can load more and are not already loading
+        if (!reviews.page.canLoadMore || reviews.page.isLoadingMore) {
             return
         }
 
-        updateState {
-            it.copy(
-                reviewPagination = it.reviewPagination.copy(isLoadingMore = true)
+        updateState { currentState ->
+            currentState.copy(
+                state = (currentState.state as Loaded).copy(
+                    contents = currentState.state.contents.replaceFirst<Reviews> {
+                        it.copy(page = it.page.copy(isLoadingMore = true))
+                    }
+                )
             )
         }
 
         viewModelScope.launch {
             try {
-                val nextPage = state.reviewPagination.currentPage + 1
-                val pageResult = getReviewByWorkUseCase(work.type, work.id, nextPage).toViewModel()
+                val nextPage = reviews.page.currentPage + 1
+                val pageResult = getReviewByWorkUseCase(work.type, work.id, nextPage)
+                    .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        reviews = currentState.reviews + pageResult.results.orEmpty(),
-                        reviewPagination = PaginationState(
-                            currentPage = pageResult.page,
-                            totalPages = pageResult.totalPages,
-                            isLoadingMore = false
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<Reviews> {
+                                it.copy(
+                                    reviews = it.reviews + pageResult.results.orEmpty(),
+                                    page = it.page.copy(
+                                        currentPage = pageResult.page,
+                                        totalPages = pageResult.totalPages,
+                                        isLoadingMore = false
+                                    )
+                                )
+                            }
                         )
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading more reviews")
-                updateState {
-                    it.copy(
-                        reviewPagination = it.reviewPagination.copy(isLoadingMore = false),
-                        error = ErrorState.PaginationError("Failed to load more reviews")
+
+                updateState { currentState ->
+                    currentState.copy(
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<Reviews> {
+                                it.copy(page = it.page.copy(isLoadingMore = false))
+                            },
+                            error = PaginationError
+                        )
                     )
                 }
             }
         }
     }
 
-    private fun handleRecommendationItemSelected(selectedWork: WorkViewModel) {
-        val state = currentState
-        val workIndex = state.recommendedWorks.indexOf(selectedWork)
+    private fun loadMoreRecommendations() {
+        val recommendedWorks = (currentState.state as Loaded).contents.firstOf<RecommendedWorks>()
 
-        // Check if we need to load more
-        if (workIndex < state.recommendedWorks.size - 1 || !state.recommendedPagination.canLoadMore) {
+        // Check if we can load more and are not already loading
+        if (!recommendedWorks.page.canLoadMore || recommendedWorks.page.isLoadingMore) {
             return
         }
 
-        updateState {
-            it.copy(
-                recommendedPagination = it.recommendedPagination.copy(isLoadingMore = true)
+        updateState { currentState ->
+            currentState.copy(
+                state = (currentState.state as Loaded).copy(
+                    contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
+                        it.copy(page = it.page.copy(isLoadingMore = true))
+                    }
+                )
             )
         }
 
         viewModelScope.launch {
             try {
-                val nextPage = state.recommendedPagination.currentPage + 1
-                val pageResult = getRecommendationByWorkUseCase(work.type, work.id, nextPage).toViewModel()
+                val nextPage = recommendedWorks.page.currentPage + 1
+                val pageResult = getRecommendationByWorkUseCase(work.type, work.id, nextPage)
+                        .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        recommendedWorks = currentState.recommendedWorks + pageResult.results.orEmpty(),
-                        recommendedPagination = PaginationState(
-                            currentPage = pageResult.page,
-                            totalPages = pageResult.totalPages,
-                            isLoadingMore = false
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
+                                it.copy(
+                                    recommended = it.recommended + pageResult.results.orEmpty(),
+                                    page = it.page.copy(
+                                        currentPage = pageResult.page,
+                                        totalPages = pageResult.totalPages,
+                                        isLoadingMore = false
+                                    )
+                                )
+                            }
                         )
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading more recommendations")
-                updateState {
-                    it.copy(
-                        recommendedPagination = it.recommendedPagination.copy(isLoadingMore = false),
-                        error = ErrorState.PaginationError("Failed to load more recommendations")
+
+                updateState { currentState ->
+                    currentState.copy(
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
+                                it.copy(page = it.page.copy(isLoadingMore = false))
+                            },
+                            error = PaginationError
+                        )
                     )
                 }
             }
         }
     }
 
-    private fun handleSimilarItemSelected(selectedWork: WorkViewModel) {
-        val state = currentState
-        val workIndex = state.similarWorks.indexOf(selectedWork)
+    private fun loadMoreSimilar() {
+        val similarWorks = (currentState.state as Loaded).contents.firstOf<SimilarWorks>()
 
-        // Check if we need to load more
-        if (workIndex < state.similarWorks.size - 1 || !state.similarPagination.canLoadMore) {
+        // Check if we can load more and are not already loading
+        if (!similarWorks.page.canLoadMore || similarWorks.page.isLoadingMore) {
             return
         }
 
-        updateState {
-            it.copy(
-                similarPagination = it.similarPagination.copy(isLoadingMore = true)
+        updateState { currentState ->
+            currentState.copy(
+                state = (currentState.state as Loaded).copy(
+                    contents = currentState.state.contents.replaceFirst<SimilarWorks> {
+                        it.copy(page = it.page.copy(isLoadingMore = true))
+                    }
+                )
             )
         }
 
         viewModelScope.launch {
             try {
-                val nextPage = state.similarPagination.currentPage + 1
-                val pageResult = getSimilarByWorkUseCase(work.type, work.id, nextPage).toViewModel()
+                val nextPage = similarWorks.page.currentPage + 1
+                val pageResult = getSimilarByWorkUseCase(work.type, work.id, nextPage)
+                    .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        similarWorks = currentState.similarWorks + pageResult.results.orEmpty(),
-                        similarPagination = PaginationState(
-                            currentPage = pageResult.page,
-                            totalPages = pageResult.totalPages,
-                            isLoadingMore = false
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<SimilarWorks> {
+                                it.copy(
+                                    similar = it.similar + pageResult.results.orEmpty(),
+                                    page = it.page.copy(
+                                        currentPage = pageResult.page,
+                                        totalPages = pageResult.totalPages,
+                                        isLoadingMore = false
+                                    )
+                                )
+                            }
                         )
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading more similar works")
-                updateState {
-                    it.copy(
-                        similarPagination = it.similarPagination.copy(isLoadingMore = false),
-                        error = ErrorState.PaginationError("Failed to load more similar works")
+
+                updateState { currentState ->
+                    currentState.copy(
+                        state = (currentState.state as Loaded).copy(
+                            contents = currentState.state.contents.replaceFirst<SimilarWorks> {
+                                it.copy(page = it.page.copy(isLoadingMore = false))
+                            },
+                            error = PaginationError
+                        )
                     )
                 }
             }
@@ -263,22 +394,39 @@ class WorkDetailsViewModel @Inject constructor(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEvent(WorkDetailsEffect.OpenIntent(intent, true))
+        emitEvent(WorkDetailsEffect.OpenIntent(intent))
     }
 
     private fun handleCastClicked(cast: CastViewModel) {
         val intent = castDetailsRoute.buildCastDetailIntent(cast)
-        emitEvent(WorkDetailsEffect.OpenIntent(intent, true))
+        emitEvent(WorkDetailsEffect.OpenIntent(intent))
     }
 
     private fun handleVideoClicked(video: VideoViewModel) {
         video.youtubeUrl?.let {
             val intent = Intent(Intent.ACTION_VIEW, it.toUri())
-            emitEvent(WorkDetailsEffect.OpenIntent(intent, false))
+            emitEvent(WorkDetailsEffect.OpenIntent(intent))
         }
     }
 
     private fun dismissError() {
-        updateState { it.copy(error = null) }
+        updateState { currentState ->
+            val loadedState = currentState.state as? Loaded ?: return@updateState currentState
+            currentState.copy(
+                state = loadedState.copy(error = null)
+            )
+        }
     }
+
+
+    @Suppress("UNCHECKED_CAST")
+    private inline fun <reified T> List<*>.replaceFirst(transform: (T) -> T) =
+        toMutableList().apply {
+            val current = firstOf<T>()
+            val indexOfCurrent = indexOf(current)
+            removeAt(indexOfCurrent)
+            add(indexOfCurrent, transform(current))
+        } as List<T>
+
+    private inline fun <reified T> Iterable<*>.firstOf(): T = first { it is T } as T
 }

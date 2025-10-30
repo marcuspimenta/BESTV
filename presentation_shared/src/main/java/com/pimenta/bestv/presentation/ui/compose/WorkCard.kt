@@ -31,40 +31,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
-import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 
-/**
- * A TV-optimized card component for displaying work (movie/TV show) items.
- *
- * This composable creates a card with:
- * - Work poster image loaded via Coil
- * - Title overlay with gradient background
- * - TV focus behavior with scale animation
- * - Standard poster aspect ratio (2:3)
- *
- * @param work The work view model containing poster URL and title
- * @param onClick Callback invoked when the card is clicked
- * @param modifier Optional modifier for customization
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun WorkCard(
     work: WorkViewModel,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    width: Dp = 150.dp,
+    includeWorkTitle: Boolean = true
 ) {
     Card(
         onClick = onClick,
         modifier = modifier
-            .width(150.dp)
+            .width(width)
             .aspectRatio(2f / 3f),
         shape = CardDefaults.shape(shape = RoundedCornerShape(8.dp)),
         scale = CardDefaults.scale(
@@ -91,28 +79,30 @@ fun WorkCard(
                 contentScale = ContentScale.Crop
             )
 
-            // Title overlay with gradient
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
+            if (includeWorkTitle) {
+                // Title overlay with gradient
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Black.copy(alpha = 0.7f)
+                                )
                             )
                         )
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = work.title ?: work.originalTitle ?: "",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = work.title ?: work.originalTitle ?: "",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                }
             }
         }
     }

@@ -32,25 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
-import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R
 
-/**
- * Error screen composable for TV displaying error state with retry capability.
- *
- * This composable shows:
- * - Error icon/image
- * - Error message
- * - Retry button
- *
- * Designed for TV with focus management and D-pad navigation.
- *
- * @param onRetryClick Callback invoked when the retry button is clicked
- * @param modifier Optional modifier for customization
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun ErrorScreen(
     onRetryClick: () -> Unit,

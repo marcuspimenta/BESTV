@@ -16,55 +16,17 @@ package com.pimenta.bestv.workdetail.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 
-/**
- * Represents user intents/actions in the Work Details screen.
- * These are the events that the user can trigger.
- */
 sealed interface WorkDetailsEvent {
 
-    /**
-     * Load initial data for the work details
-     */
     data object LoadData : WorkDetailsEvent
-
-    /**
-     * Toggle favorite status of the work
-     */
-    data object ToggleFavorite : WorkDetailsEvent
-
-    /**
-     * User selected a review item (for pagination)
-     */
-    data class ReviewItemSelected(val review: ReviewViewModel) : WorkDetailsEvent
-
-    /**
-     * User selected a recommendation item (for pagination)
-     */
-    data class RecommendationItemSelected(val work: WorkViewModel) : WorkDetailsEvent
-
-    /**
-     * User selected a similar work item (for pagination)
-     */
-    data class SimilarItemSelected(val work: WorkViewModel) : WorkDetailsEvent
-
-    /**
-     * User clicked on a work item to view details
-     */
+    data class ActionButtonClicked(val action: ActionButton) : WorkDetailsEvent
+    data object LoadMoreReviews : WorkDetailsEvent
+    data object LoadMoreRecommendations : WorkDetailsEvent
+    data object LoadMoreSimilar : WorkDetailsEvent
     data class WorkClicked(val work: WorkViewModel) : WorkDetailsEvent
-
-    /**
-     * User clicked on a cast member to view details
-     */
     data class CastClicked(val cast: CastViewModel) : WorkDetailsEvent
-
-    /**
-     * User clicked on a video to play
-     */
     data class VideoClicked(val video: VideoViewModel) : WorkDetailsEvent
-
-    /**
-     * Dismiss the current error
-     */
     data object DismissError : WorkDetailsEvent
 }

@@ -18,19 +18,7 @@ import android.content.Intent
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
-/**
- * Represents one-time side effects that should happen in the Work Details screen.
- * These are consumed once and don't persist in the state.
- */
 sealed interface WorkDetailsEffect {
 
-    /**
-     * Open an Intent
-     */
-    data class OpenIntent(val intent: Intent, val shareTransition: Boolean) : WorkDetailsEffect
-
-    /**
-     * Show an error message to the user
-     */
-    data class ShowError(val message: String) : WorkDetailsEffect
+    data class OpenIntent(val intent: Intent) : WorkDetailsEffect
 }

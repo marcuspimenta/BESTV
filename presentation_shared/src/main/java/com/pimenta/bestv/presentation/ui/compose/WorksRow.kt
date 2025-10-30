@@ -21,48 +21,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
-/**
- * A horizontal scrolling row of work cards with a section title.
- *
- * This composable creates a TV-optimized horizontal list:
- * - Section header with title
- * - Horizontal scrolling list of work cards
- * - Automatic focus management
- * - Proper spacing and padding for TV
- *
- * @param title The section title (e.g., "Movies", "TV Shows")
- * @param works List of works to display
- * @param onWorkClick Callback invoked when a work card is clicked
- * @param modifier Optional modifier for customization
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun WorksRow(
     title: String,
     works: List<WorkViewModel>,
     onWorkClick: (WorkViewModel) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoadingMore: Boolean = false,
+    onLoadMore: () -> Unit = {}
 ) {
     if (works.isEmpty()) return
+
+    val listState = rememberLazyListState()
+
+    // Monitor scroll position and trigger pagination when near the end
+    LazyRowPagination(
+        listState = listState,
+        isLoadingMore = isLoadingMore,
+        threshold = 3,
+        onLoadMore = onLoadMore
+    )
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
+            .padding(vertical = 20.dp)
     ) {
         // Section title
         Text(
@@ -73,10 +70,11 @@ fun WorksRow(
             modifier = Modifier.padding(horizontal = 48.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Horizontal scrolling row
         LazyRow(
+            state = listState,
             contentPadding = PaddingValues(horizontal = 48.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {

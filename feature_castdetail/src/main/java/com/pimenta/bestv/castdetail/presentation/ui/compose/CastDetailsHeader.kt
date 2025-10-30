@@ -30,27 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.ui.compose.CastCard
 
-/**
- * Header component displaying cast member details.
- *
- * This composable shows:
- * - Circular profile photo
- * - Cast name
- * - Birthday and place of birth (if available)
- * - Death day (if applicable)
- * - Biography text with expansion capability
- * - Source attribution
- *
- * @param cast The cast view model with profile information
- * @param modifier Optional modifier for customization
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun CastDetailsHeader(
     cast: CastViewModel,
@@ -59,33 +43,30 @@ fun CastDetailsHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 48.dp, vertical = 32.dp),
+            .padding(48.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.Top
     ) {
         // Profile photo
-        CastCard(
-            cast = cast,
-            onClick = { /* Profile photo clicked */ }
-        )
+        CastCard(cast = cast)
 
         Spacer(modifier = Modifier.width(32.dp))
 
         // Cast details
         Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.weight(1f)
         ) {
             // Name
             Text(
                 text = cast.name ?: "",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
 
             // Birthday
             cast.birthday?.let { birthday ->
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Born: $birthday",
                     style = MaterialTheme.typography.bodyLarge,
@@ -95,6 +76,7 @@ fun CastDetailsHeader(
 
             // Death day
             cast.deathDay?.let { deathDay ->
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Died: $deathDay",
                     style = MaterialTheme.typography.bodyLarge,
@@ -102,20 +84,10 @@ fun CastDetailsHeader(
                 )
             }
 
-            // Source
-            cast.source?.let { source ->
-                Text(
-                    text = "Source: $source",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White.copy(alpha = 0.6f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             // Biography
             cast.biography?.let { biography ->
                 if (biography.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = biography,
                         style = MaterialTheme.typography.bodyLarge,
@@ -124,6 +96,16 @@ fun CastDetailsHeader(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+
+            // Source
+            cast.source?.let {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
             }
         }
     }

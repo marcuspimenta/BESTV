@@ -25,9 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -36,9 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
@@ -50,16 +45,6 @@ import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import kotlinx.coroutines.flow.collectLatest
 
-/**
- * Main screen for displaying cast member details.
- *
- * This composable integrates with the MVI architecture:
- * - Collects state from ViewModel using collectAsStateWithLifecycle
- * - Handles loading, content, and error states
- * - Displays cast header, movies row, and TV shows row
- * - Manages side effects (navigation)
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun CastDetailsScreen(
     viewModel: CastDetailsViewModel,
@@ -68,7 +53,6 @@ fun CastDetailsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    // Collect side effects
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
@@ -77,7 +61,6 @@ fun CastDetailsScreen(
         }
     }
 
-    // Load data on first composition
     LaunchedEffect(Unit) {
         viewModel.handleEvent(CastDetailsEvent.LoadData)
     }
@@ -90,15 +73,6 @@ fun CastDetailsScreen(
     )
 }
 
-/**
- * Content component for cast details screen.
- *
- * Handles different UI states:
- * - Loading: Shows centered progress indicator
- * - Error: Displays an error
- * - Content: Displays scrollable cast details with movies and TV shows
- */
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 private fun CastDetailsContent(
     state: CastDetailsState,
@@ -134,18 +108,16 @@ private fun CastDetailsContent(
             }
 
             is CastDetailsState.Loaded -> {
-                // Content state
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
+                        .padding(bottom = 48.dp)
                 ) {
-                    // Cast header
                     CastDetailsHeader(
                         cast = state.cast
                     )
 
-                    // Movies section
                     if (state.movies.isNotEmpty()) {
                         WorksRow(
                             title = "Movies",
@@ -154,7 +126,6 @@ private fun CastDetailsContent(
                         )
                     }
 
-                    // TV Shows section
                     if (state.tvShows.isNotEmpty()) {
                         WorksRow(
                             title = "TV Shows",
