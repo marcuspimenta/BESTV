@@ -29,6 +29,7 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
 import com.pimenta.bestv.workdetail.presentation.model.PaginationState
@@ -37,11 +38,13 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ClearScrollIndex
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.DismissError
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreRecommendations
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreReviews
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreSimilar
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
@@ -95,7 +98,9 @@ class WorkDetailsViewModel @Inject constructor(
             is WorkClicked -> handleWorkClicked(event.work)
             is CastClicked -> handleCastClicked(event.cast)
             is VideoClicked -> handleVideoClicked(event.video)
+            is ShowError -> showError(event.error)
             is DismissError -> dismissError()
+            is ClearScrollIndex -> clearScrollIndex()
         }
     }
 
@@ -409,11 +414,30 @@ class WorkDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun showError(error: ErrorType) {
+        updateState { currentState ->
+            val loadedState = currentState.state as? Loaded ?: return@updateState currentState
+            currentState.copy(
+                state = loadedState.copy(error = error)
+            )
+        }
+    }
+
     private fun dismissError() {
         updateState { currentState ->
             val loadedState = currentState.state as? Loaded ?: return@updateState currentState
             currentState.copy(
                 state = loadedState.copy(error = null)
+            )
+        }
+    }
+
+    private fun clearScrollIndex() {
+        updateState { currentState ->
+            currentState.copy(
+                state = (currentState.state as Loaded).copy(
+                    indexOfContentToScroll = null
+                )
             )
         }
     }

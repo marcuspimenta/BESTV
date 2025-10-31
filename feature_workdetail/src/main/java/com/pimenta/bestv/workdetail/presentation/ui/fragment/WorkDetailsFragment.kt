@@ -21,13 +21,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.workdetail.R
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
 import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsScreen
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
@@ -77,8 +77,8 @@ class WorkDetailsFragment : Fragment() {
     private fun openIntent(intent: Intent) {
         try {
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), R.string.failed_open_video, Toast.LENGTH_LONG).show()
+        } catch (_: ActivityNotFoundException) {
+            viewModel.handleEvent(ShowError(FailedToOpenYouTubeVideo))
         }
     }
 

@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
+import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.OpenIntent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
@@ -56,7 +57,7 @@ fun CastDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is CastDetailsEffect.OpenIntent -> openIntent(effect.intent)
+                is OpenIntent -> openIntent(effect.intent)
             }
         }
     }
@@ -94,7 +95,6 @@ private fun CastDetailsContent(
     ) {
         when (state) {
             is CastDetailsState.Loading -> {
-                // Loading state
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )

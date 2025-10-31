@@ -50,7 +50,6 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionBu
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToReviews
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToSimilarWorks
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToVideos
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content
 
 @Composable
 fun WorkDetailsHeader(
@@ -131,7 +130,7 @@ private fun ActionButtonsRow(
     ) {
         items(
             items = actions,
-            key = { it.title }
+            key = { it.id }
         ) { action ->
             Button(
                 onClick = { actionClicked(action) }

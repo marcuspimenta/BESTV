@@ -28,5 +28,7 @@ sealed interface WorkDetailsEvent {
     data class WorkClicked(val work: WorkViewModel) : WorkDetailsEvent
     data class CastClicked(val cast: CastViewModel) : WorkDetailsEvent
     data class VideoClicked(val video: VideoViewModel) : WorkDetailsEvent
+    data class ShowError(val error: ErrorType) : WorkDetailsEvent
     data object DismissError : WorkDetailsEvent
+    data object ClearScrollIndex : WorkDetailsEvent
 }

@@ -16,34 +16,27 @@ package com.pimenta.bestv.workdetail.presentation.ui.compose
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.ui.compose.ErrorBanner
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.WorkBackground
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
@@ -53,6 +46,8 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenInt
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ClearScrollIndex
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.DismissError
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreRecommendations
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreReviews
@@ -71,6 +66,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Error
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -104,6 +100,8 @@ fun WorkDetailsScreen(
         onLoadMoreRecommendations = { viewModel.handleEvent(LoadMoreRecommendations) },
         onLoadMoreSimilar = { viewModel.handleEvent(LoadMoreSimilar) },
         onRetryClicked = { viewModel.handleEvent(LoadData) },
+        onDismissError = { viewModel.handleEvent(DismissError) },
+        onClearScrollIndex = { viewModel.handleEvent(ClearScrollIndex) },
         modifier = modifier
     )
 }
@@ -119,10 +117,10 @@ private fun WorkDetailsContent(
     onLoadMoreRecommendations: () -> Unit,
     onLoadMoreSimilar: () -> Unit,
     onRetryClicked: () -> Unit,
+    onDismissError: () -> Unit,
+    onClearScrollIndex: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val listState = rememberLazyListState()
-
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -143,59 +141,83 @@ private fun WorkDetailsContent(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+
             is Loaded -> {
+                val listState = rememberLazyListState()
+                val focusRequesters = remember(currentState.contents.size) {
+                    currentState.contents.map { FocusRequester() }
+                }
+
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 48.dp)
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    items(
+                    itemsIndexed(
                         items = currentState.contents,
-                        key = { it.hashCode() }
-                    ) { content ->
+                        key = { _, content -> content.id }
+                    ) { index, content ->
                         when (content) {
                             is Header -> WorkDetailsHeader(
                                 work = state.work,
                                 actions = content.actions,
-                                actionClicked = actionClicked
+                                actionClicked = actionClicked,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
+
                             is Casts -> CastRow(
                                 casts = content.casts,
                                 onCastClick = onCastClick,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
+
                             is RecommendedWorks -> WorksRow(
                                 title = "Recommended",
                                 works = content.recommended,
                                 onWorkClick = onWorkClick,
                                 isLoadingMore = content.page.isLoadingMore,
                                 onLoadMore = onLoadMoreRecommendations,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
+
                             is Reviews -> ReviewRow(
                                 reviews = content.reviews,
                                 isLoadingMore = content.page.isLoadingMore,
                                 onLoadMore = onLoadMoreReviews,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
+
                             is SimilarWorks -> WorksRow(
                                 title = "Similar",
                                 works = content.similar,
                                 onWorkClick = onWorkClick,
                                 isLoadingMore = content.page.isLoadingMore,
                                 onLoadMore = onLoadMoreSimilar,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
+
                             is Videos -> VideoRow(
                                 videos = content.videos,
                                 onVideoClick = onVideoClick,
+                                modifier = Modifier.focusRequester(focusRequesters[index])
                             )
                         }
                     }
                 }
 
-                currentState.indexOfContentToScroll?.let {
-                    LaunchedEffect(it) {
-                        //listState.animateScrollToItem(it)
+                currentState.indexOfContentToScroll?.let { targetIndex ->
+                    LaunchedEffect(targetIndex) {
+                        listState.animateScrollToItem(targetIndex)
+                        focusRequesters[targetIndex].requestFocus()
+                        onClearScrollIndex()
                     }
                 }
+
+                // Show error banner if there's an error
+                ErrorBanner(
+                    errorMessage = currentState.error?.message,
+                    onDismiss = onDismissError,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
             }
         }
     }
@@ -227,7 +249,43 @@ private fun WorkDetailsScreenPreview() {
             onLoadMoreReviews = {},
             onLoadMoreRecommendations = {},
             onLoadMoreSimilar = {},
-            onRetryClicked = {}
+            onRetryClicked = {},
+            onDismissError = {},
+            onClearScrollIndex = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun WorkDetailsScreenWithErrorPreview() {
+    MaterialTheme {
+        WorkDetailsContent(
+            state = WorkDetailsState(
+                work = WorkViewModel(
+                    id = 1,
+                    title = "The Dark Knight",
+                    originalTitle = "The Dark Knight",
+                    type = WorkType.MOVIE,
+                    posterUrl = null,
+                    backdropUrl = null,
+                    source = "TMDB"
+                ),
+                state = Loaded(
+                    contents = emptyList(),
+                    error = ErrorType.FavoriteError
+                )
+            ),
+            actionClicked = {},
+            onVideoClick = {},
+            onCastClick = {},
+            onWorkClick = {},
+            onLoadMoreReviews = {},
+            onLoadMoreRecommendations = {},
+            onLoadMoreSimilar = {},
+            onRetryClicked = {},
+            onDismissError = {},
+            onClearScrollIndex = {}
         )
     }
 }
