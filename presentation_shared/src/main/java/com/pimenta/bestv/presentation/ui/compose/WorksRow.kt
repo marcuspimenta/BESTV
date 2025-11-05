@@ -41,6 +41,7 @@ fun WorksRow(
     works: List<WorkViewModel>,
     onWorkClick: (WorkViewModel) -> Unit,
     modifier: Modifier = Modifier,
+    onWorkFocused: (WorkViewModel?) -> Unit = {},
     isLoadingMore: Boolean = false,
     onLoadMore: () -> Unit = {}
 ) {
@@ -84,7 +85,12 @@ fun WorksRow(
             ) { work ->
                 WorkCard(
                     work = work,
-                    onClick = { onWorkClick(work) }
+                    onClick = { onWorkClick(work) },
+                    onFocusChanged = { focused ->
+                        if (focused) {
+                            onWorkFocused(work)
+                        }
+                    }
                 )
             }
         }

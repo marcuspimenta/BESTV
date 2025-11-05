@@ -27,6 +27,12 @@ import com.pimenta.bestv.search.presentation.model.PaginationState
 import com.pimenta.bestv.search.presentation.model.SearchEffect
 import com.pimenta.bestv.search.presentation.model.SearchEvent
 import com.pimenta.bestv.search.presentation.model.SearchState
+import com.pimenta.bestv.search.presentation.model.SearchState.Content
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +41,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
+private const val SEARCH_DELAY = 500L
 
 /**
  * ViewModel for the Search screen following MVI architecture.
@@ -79,7 +86,7 @@ class SearchViewModel @Inject constructor(
         searchJob?.cancel()
         backdropJob?.cancel()
         updateState {
-            SearchState()
+            SearchState(query = "", isSearching = false, state = Empty)
         }
     }
 
@@ -88,20 +95,22 @@ class SearchViewModel @Inject constructor(
         searchJob?.cancel()
 
         if (query.hasNoContent()) {
-            updateState { SearchState() }
+            updateState { SearchState(query = "", isSearching = false, state = Empty) }
             return
         }
 
-        updateState {
-            it.copy(
+        // Set searching state at top level
+        updateState { currentState ->
+            currentState.copy(
                 query = query,
-                isSearching = true,
-                error = null
+                isSearching = true
             )
         }
 
         searchJob = viewModelScope.launch {
             try {
+                delay(SEARCH_DELAY)
+
                 val result = searchWorksByQueryUseCase(query)
                 val moviePage = result.first.toViewModel()
                 val tvShowPage = result.second.toViewModel()
@@ -109,20 +118,38 @@ class SearchViewModel @Inject constructor(
                 val movies = moviePage.results ?: emptyList()
                 val tvShows = tvShowPage.results ?: emptyList()
 
+                val contents = mutableListOf<Content>()
+                if (movies.isNotEmpty()) {
+                    contents.add(
+                        Movies(
+                            query = query,
+                            movies = movies,
+                            page = PaginationState(
+                                currentPage = moviePage.page,
+                                totalPages = moviePage.totalPages
+                            )
+                        )
+                    )
+                }
+                if (tvShows.isNotEmpty()) {
+                    contents.add(
+                        TvShows(
+                            query = query,
+                            tvShows = tvShows,
+                            page = PaginationState(
+                                currentPage = tvShowPage.page,
+                                totalPages = tvShowPage.totalPages
+                            )
+                        )
+                    )
+                }
+
                 updateState {
                     it.copy(
                         isSearching = false,
-                        movies = movies,
-                        tvShows = tvShows,
-                        moviePagination = PaginationState(
-                            currentPage = moviePage.page,
-                            totalPages = moviePage.totalPages
-                        ),
-                        tvShowPagination = PaginationState(
-                            currentPage = tvShowPage.page,
-                            totalPages = tvShowPage.totalPages
-                        ),
-                        hasResults = movies.isNotEmpty() || tvShows.isNotEmpty()
+                        state = Loaded(
+                            contents = contents
+                        )
                     )
                 }
             } catch (throwable: Throwable) {
@@ -131,73 +158,144 @@ class SearchViewModel @Inject constructor(
                     updateState {
                         it.copy(
                             isSearching = false,
-                            error = "Failed to search. Please try again."
+                            state = Error
                         )
                     }
-                    emitEvent(SearchEffect.ShowError("Failed to search. Please try again."))
                 }
             }
         }
     }
 
     private fun loadMoreMovies() {
-        val state = currentState
+        val loadedState = currentState.state as? Loaded ?: return
+        val moviesContent = loadedState.contents.filterIsInstance<Movies>().firstOrNull() ?: return
 
-        if (!state.moviePagination.hasMore || state.isSearching) {
+        if (!moviesContent.page.canLoadMore) {
             return
         }
 
-        updateState { it.copy(isSearching = true) }
+        // Set loading state
+        updateState { state ->
+            val currentLoadedState = state.state as? Loaded ?: return@updateState state
+            val updatedContents = currentLoadedState.contents.map { content ->
+                if (content is Movies) {
+                    content.copy(page = content.page.copy(isLoadingMore = true))
+                } else {
+                    content
+                }
+            }
+            state.copy(
+                state = currentLoadedState.copy(contents = updatedContents)
+            )
+        }
 
         viewModelScope.launch {
             try {
-                val nextPage = state.moviePagination.currentPage + 1
-                val moviePage = searchMoviesByQueryUseCase(state.query, nextPage).toViewModel()
+                val nextPage = moviesContent.page.currentPage + 1
+                val moviePage = searchMoviesByQueryUseCase(this@SearchViewModel.currentState.query, nextPage).toViewModel()
 
-                updateState { currentState ->
-                    currentState.copy(
-                        isSearching = false,
-                        movies = currentState.movies + moviePage.results.orEmpty(),
-                        moviePagination = PaginationState(
-                            currentPage = moviePage.page,
-                            totalPages = moviePage.totalPages,
-                        )
+                updateState { state ->
+                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
+                    val updatedContents = currentLoadedState.contents.map { content ->
+                        if (content is Movies) {
+                            content.copy(
+                                movies = content.movies + moviePage.results.orEmpty(),
+                                page = PaginationState(
+                                    currentPage = moviePage.page,
+                                    totalPages = moviePage.totalPages,
+                                    isLoadingMore = false
+                                )
+                            )
+                        } else {
+                            content
+                        }
+                    }
+                    state.copy(
+                        state = currentLoadedState.copy(contents = updatedContents)
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading more movies")
-                updateState { it.copy(isSearching = false) }
+                updateState { state ->
+                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
+                    val updatedContents = currentLoadedState.contents.map { content ->
+                        if (content is Movies) {
+                            content.copy(page = content.page.copy(isLoadingMore = false))
+                        } else {
+                            content
+                        }
+                    }
+                    state.copy(
+                        state = currentLoadedState.copy(contents = updatedContents)
+                    )
+                }
             }
         }
     }
 
     private fun loadMoreTvShows() {
-        val state = currentState
+        val loadedState = currentState.state as? Loaded ?: return
+        val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().firstOrNull() ?: return
 
-        if (!state.tvShowPagination.hasMore || state.isSearching) {
+        if (!tvShowsContent.page.canLoadMore) {
             return
         }
 
-        updateState { it.copy(isSearching = true) }
+        // Set loading state
+        updateState { state ->
+            val currentLoadedState = state.state as? Loaded ?: return@updateState state
+            val updatedContents = currentLoadedState.contents.map { content ->
+                if (content is TvShows) {
+                    content.copy(page = content.page.copy(isLoadingMore = true))
+                } else {
+                    content
+                }
+            }
+            state.copy(
+                state = currentLoadedState.copy(contents = updatedContents)
+            )
+        }
 
         viewModelScope.launch {
             try {
-                val nextPage = state.tvShowPagination.currentPage + 1
-                val tvShowPage = searchTvShowsByQueryUseCase(state.query, nextPage).toViewModel()
+                val nextPage = tvShowsContent.page.currentPage + 1
+                val tvShowPage = searchTvShowsByQueryUseCase(this@SearchViewModel.currentState.query, nextPage).toViewModel()
 
-                updateState { currentState ->
-                    currentState.copy(
-                        isSearching = true,
-                        tvShows = currentState.tvShows + tvShowPage.results.orEmpty(),
-                        tvShowPagination = PaginationState(
-                            currentPage = tvShowPage.page,
-                            totalPages = tvShowPage.totalPages,
-                        )
+                updateState { state ->
+                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
+                    val updatedContents = currentLoadedState.contents.map { content ->
+                        if (content is TvShows) {
+                            content.copy(
+                                tvShows = content.tvShows + tvShowPage.results.orEmpty(),
+                                page = PaginationState(
+                                    currentPage = tvShowPage.page,
+                                    totalPages = tvShowPage.totalPages,
+                                    isLoadingMore = false
+                                )
+                            )
+                        } else {
+                            content
+                        }
+                    }
+                    state.copy(
+                        state = currentLoadedState.copy(contents = updatedContents)
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading more TV shows")
-                updateState { it.copy(isSearching = true) }
+                updateState { state ->
+                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
+                    val updatedContents = currentLoadedState.contents.map { content ->
+                        if (content is TvShows) {
+                            content.copy(page = content.page.copy(isLoadingMore = false))
+                        } else {
+                            content
+                        }
+                    }
+                    state.copy(
+                        state = currentLoadedState.copy(contents = updatedContents)
+                    )
+                }
             }
         }
     }
@@ -206,15 +304,26 @@ class SearchViewModel @Inject constructor(
         // Cancel previous backdrop loading
         backdropJob?.cancel()
 
+        val currentState = currentState.state as? Loaded ?: return
+
         if (work == null) {
-            updateState { it.copy(selectedWork = null) }
+            updateState {
+                it.copy(
+                    state = currentState.copy(selectedWork = null)
+                )
+            }
             return
         }
 
         // Delay backdrop loading to avoid excessive updates
         backdropJob = viewModelScope.launch {
             delay(BACKGROUND_UPDATE_DELAY)
-            updateState { it.copy(selectedWork = work) }
+            val loadedState = this@SearchViewModel.currentState.state as? Loaded ?: return@launch
+            updateState { state ->
+                state.copy(
+                    state = loadedState.copy(selectedWork = work)
+                )
+            }
         }
     }
 

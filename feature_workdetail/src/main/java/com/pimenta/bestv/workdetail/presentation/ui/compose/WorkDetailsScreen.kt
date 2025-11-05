@@ -32,7 +32,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
-import kotlinx.coroutines.delay
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -41,9 +40,7 @@ import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.WorkBackground
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenIntent
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ClearScrollIndex
@@ -56,7 +53,6 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoCli
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Casts
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.RecommendedWorks
@@ -212,7 +208,6 @@ private fun WorkDetailsContent(
                     }
                 }
 
-                // Show error banner if there's an error
                 ErrorBanner(
                     errorMessage = currentState.error?.message,
                     onDismiss = onDismissError,

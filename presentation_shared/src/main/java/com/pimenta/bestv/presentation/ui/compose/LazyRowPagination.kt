@@ -45,8 +45,7 @@ fun LazyRowPagination(
             // Trigger load when the last visible item is within threshold items of the end
             lastVisibleItem != null &&
             totalItems > 0 &&
-            lastVisibleItem.index >= totalItems - threshold &&
-            !isLoadingMore
+            lastVisibleItem.index >= totalItems - threshold && !isLoadingMore
         }
     }
 

@@ -15,6 +15,7 @@
 package com.pimenta.bestv.search.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 
 /**
  * Represents the UI state for the Search screen.
@@ -23,22 +24,41 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 data class SearchState(
     val query: String = "",
     val isSearching: Boolean = false,
-    val movies: List<WorkViewModel> = emptyList(),
-    val tvShows: List<WorkViewModel> = emptyList(),
-    val selectedWork: WorkViewModel? = null,
-    val moviePagination: PaginationState = PaginationState(),
-    val tvShowPagination: PaginationState = PaginationState(),
-    val hasResults: Boolean = false,
-    val error: String? = null
-)
+    val state: State = Empty
+) {
+    sealed interface State {
 
-/**
- * Represents pagination state for movie and TV show lists
- */
+        data object Empty : State
+        data object Error : State
+        data class Loaded(
+            val selectedWork: WorkViewModel? = null,
+            val contents: List<Content>
+        ) : State {
+            val hasResults: Boolean
+                get() = contents.isNotEmpty()
+        }
+    }
+
+    sealed class Content(open val query: String) {
+        data class Movies(
+            override val query: String,
+            val movies: List<WorkViewModel>,
+            val page: PaginationState
+        ) : Content(query)
+
+        data class TvShows(
+            override val query: String,
+            val tvShows: List<WorkViewModel>,
+            val page: PaginationState
+        ) : Content(query)
+    }
+}
+
 data class PaginationState(
     val currentPage: Int = 0,
     val totalPages: Int = 0,
+    val isLoadingMore: Boolean = false
 ) {
-    val hasMore: Boolean
-        get() = currentPage > 0 && currentPage < totalPages
+    val canLoadMore: Boolean
+        get() = currentPage > 0 && currentPage < totalPages && !isLoadingMore
 }

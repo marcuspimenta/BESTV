@@ -27,6 +27,10 @@ import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.presentation.model.SearchEvent
+import com.pimenta.bestv.search.presentation.model.SearchState
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -37,7 +41,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -145,13 +148,20 @@ class SearchViewModelTest {
         val resultState = viewModel.state.value
         assertEquals(QUERY, resultState.query)
         assertFalse(resultState.isSearching)
-        assertEquals(MOVIE_VIEW_MODEL_LIST, resultState.movies)
-        assertEquals(TV_SHOW_VIEW_MODEL_LIST, resultState.tvShows)
-        assertTrue(resultState.hasResults)
-        assertEquals(1, resultState.moviePagination.currentPage)
-        assertEquals(10, resultState.moviePagination.totalPages)
-        assertEquals(1, resultState.tvShowPagination.currentPage)
-        assertEquals(10, resultState.tvShowPagination.totalPages)
+
+        val loadedState = resultState.state as SearchState.State.Loaded
+        assertTrue(loadedState.hasResults)
+        assertEquals(2, loadedState.contents.size)
+
+        val moviesContent = loadedState.contents.filterIsInstance<Movies>().first()
+        assertEquals(MOVIE_VIEW_MODEL_LIST, moviesContent.movies)
+        assertEquals(1, moviesContent.page.currentPage)
+        assertEquals(10, moviesContent.page.totalPages)
+
+        val tvShowsContent = loadedState.contents.filterIsInstance<SearchState.Content.TvShows>().first()
+        assertEquals(TV_SHOW_VIEW_MODEL_LIST, tvShowsContent.tvShows)
+        assertEquals(1, tvShowsContent.page.currentPage)
+        assertEquals(10, tvShowsContent.page.totalPages)
     }
 
     @Test
@@ -164,8 +174,7 @@ class SearchViewModelTest {
 
         val state = viewModel.state.value
         assertFalse(state.isSearching)
-        assertNotNull(state.error)
-        assertEquals("Failed to search. Please try again.", state.error)
+        assertTrue(state.state is Error)
     }
 
     @Test
@@ -179,9 +188,7 @@ class SearchViewModelTest {
         val state = viewModel.state.value
         assertEquals("", state.query)
         assertFalse(state.isSearching)
-        assertEquals(emptyList<WorkViewModel>(), state.movies)
-        assertEquals(emptyList<WorkViewModel>(), state.tvShows)
-        assertFalse(state.hasResults)
+        assertTrue(state.state is Empty)
     }
 
     @Test
@@ -204,8 +211,10 @@ class SearchViewModelTest {
 
         // State should have more movies
         val paginatedState = viewModel.state.value
-        assertEquals(2, paginatedState.moviePagination.currentPage)
-        assertTrue(paginatedState.movies.size >= MOVIE_VIEW_MODEL_LIST.size)
+        val loadedState = paginatedState.state as SearchState.State.Loaded
+        val moviesContent = loadedState.contents.filterIsInstance<Movies>().first()
+        assertEquals(2, moviesContent.page.currentPage)
+        assertTrue(moviesContent.movies.size >= MOVIE_VIEW_MODEL_LIST.size)
     }
 
     @Test
@@ -228,18 +237,29 @@ class SearchViewModelTest {
 
         // State should have more tv shows
         val paginatedState = viewModel.state.value
-        assertEquals(2, paginatedState.tvShowPagination.currentPage)
-        assertTrue(paginatedState.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
+        val loadedState = paginatedState.state as SearchState.State.Loaded
+        val tvShowsContent = loadedState.contents.filterIsInstance<SearchState.Content.TvShows>().first()
+        assertEquals(2, tvShowsContent.page.currentPage)
+        assertTrue(tvShowsContent.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
     }
 
     @Test
     fun `should update selected work when work is selected`() = runTest(testDispatcher) {
+        // First setup initial search to have a loaded state
+        val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+        whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+
+        viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+        advanceUntilIdle()
+
+        // Now select a work
         viewModel.handleEvent(SearchEvent.WorkItemSelected(WORK_VIEW_MODEL))
 
         advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertEquals(WORK_VIEW_MODEL, state.selectedWork)
+        val loadedState = state.state as SearchState.State.Loaded
+        assertEquals(WORK_VIEW_MODEL, loadedState.selectedWork)
     }
 
     @Test
@@ -268,8 +288,6 @@ class SearchViewModelTest {
         val clearedState = viewModel.state.value
         assertEquals("", clearedState.query)
         assertFalse(clearedState.isSearching)
-        assertEquals(emptyList<WorkViewModel>(), clearedState.movies)
-        assertEquals(emptyList<WorkViewModel>(), clearedState.tvShows)
-        assertFalse(clearedState.hasResults)
+        assertTrue(clearedState.state is Empty)
     }
 }

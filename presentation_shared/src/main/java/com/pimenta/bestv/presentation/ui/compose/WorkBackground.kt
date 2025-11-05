@@ -14,15 +14,10 @@
 
 package com.pimenta.bestv.presentation.ui.compose
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,28 +29,22 @@ fun WorkBackground(
     backdropUrl: String?,
     modifier: Modifier = Modifier,
     targetAlpha: Float = 0.3f,
-    animationDuration: Int = 2500
+    animationDuration: Int = 1200
 ) {
-    var isBackgroundVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(backdropUrl) {
-        isBackgroundVisible = backdropUrl != null
-    }
-
-    val backgroundAlpha by animateFloatAsState(
-        targetValue = if (isBackgroundVisible) targetAlpha else 0f,
-        animationSpec = tween(durationMillis = animationDuration),
-        label = "backgroundFadeIn"
-    )
-
-    backdropUrl?.let {
-        AsyncImage(
-            model = it,
-            contentDescription = null,
-            modifier = modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            alpha = backgroundAlpha
-        )
+    Crossfade(
+        targetState = backdropUrl,
+        label = "background_transition",
+        animationSpec = tween(durationMillis = animationDuration)
+    ) { url ->
+        url?.let {
+            AsyncImage(
+                model = it,
+                contentDescription = null,
+                modifier = modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                alpha = targetAlpha
+            )
+        }
     }
 }
 

@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -50,6 +51,7 @@ fun WorkCard(
     work: WorkViewModel,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    onFocusChanged: (Boolean) -> Unit = {},
     width: Dp = 150.dp,
     includeWorkTitle: Boolean = true
 ) {
@@ -57,7 +59,10 @@ fun WorkCard(
         onClick = onClick,
         modifier = modifier
             .width(width)
-            .aspectRatio(2f / 3f),
+            .aspectRatio(2f / 3f)
+            .onFocusChanged { focusState ->
+                onFocusChanged(focusState.isFocused)
+            },
         shape = CardDefaults.shape(shape = RoundedCornerShape(8.dp)),
         scale = CardDefaults.scale(
             focusedScale = 1.1f,

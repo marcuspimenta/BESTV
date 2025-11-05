@@ -24,5 +24,4 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 sealed interface SearchEffect {
 
     data class OpenWorkDetails(val intent: Intent) : SearchEffect
-    data class ShowError(val message: String) : SearchEffect
 }

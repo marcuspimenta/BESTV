@@ -16,7 +16,6 @@ package com.pimenta.bestv.search.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.search.di.SearchActivityComponent
 import com.pimenta.bestv.search.di.SearchActivityComponentProvider
@@ -27,8 +26,6 @@ import com.pimenta.bestv.search.presentation.ui.fragment.SearchFragment
  */
 class SearchActivity : FragmentActivity() {
 
-    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
-
     lateinit var searchActivityComponent: SearchActivityComponent
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +33,6 @@ class SearchActivity : FragmentActivity() {
             .searchActivityComponent()
         super.onCreate(savedInstanceState)
 
-        backgroundManager.attach(window)
-        backgroundManager.setBitmap(null)
-
         replaceFragment(SearchFragment.newInstance())
-    }
-
-    override fun onDestroy() {
-        backgroundManager.release()
-        super.onDestroy()
     }
 }
