@@ -148,29 +148,39 @@ private fun CastDetailsScreenPreview() {
                 cast = CastViewModel(
                     id = 1,
                     name = "Christian Bale",
-                    character = null,
-                    birthday = "January 30, 1974",
-                    deathDay = null,
-                    biography = "Christian Charles Philip Bale is an English actor.",
-                    thumbnailUrl = null,
-                    source = "TMDB"
+                    character = "Bruce Wayne / Batman",
+                    thumbnailUrl = "",
+                    source = "TMDB",
+                    birthday = "",
+                    deathDay = "",
+                    biography = ""
                 ),
                 movies = listOf(
                     WorkViewModel(
                         id = 1,
-                        title = "The Dark Knight",
+                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
                         originalTitle = "The Dark Knight",
-                        posterUrl = null,
+                        posterUrl = "",
                         type = WorkType.MOVIE,
-                        source = "TMDB"
+                        source = "TMDB",
+                        originalLanguage = "",
+                        overview = "",
+                        backdropUrl = "",
+                        releaseDate = "",
+                        isFavorite = false
                     ),
                     WorkViewModel(
                         id = 2,
-                        title = "Batman Begins",
-                        originalTitle = "Batman Begins",
-                        posterUrl = null,
+                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                        originalTitle = "The Dark Knight",
+                        posterUrl = "",
                         type = WorkType.MOVIE,
-                        source = "TMDB"
+                        source = "TMDB",
+                        originalLanguage = "",
+                        overview = "",
+                        backdropUrl = "",
+                        releaseDate = "",
+                        isFavorite = false
                     )
                 ),
                 tvShows = emptyList()

@@ -30,21 +30,32 @@ fun WorkViewModel.toMovieDbModel() =
 fun WorkViewModel.toTvShowDbModel() =
     TvShowDbModel(id = id)
 
-fun WorkDomainModel.toViewModel() = WorkViewModel(
-    id = id,
-    title = title,
-    originalLanguage = originalLanguage,
-    overview = overview,
-    source = source,
-    backdropUrl = backdropPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
-    posterUrl = posterPath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) },
-    originalTitle = originalTitle,
-    releaseDate = releaseDate?.takeUnless { it.isEmpty() || it.isBlank() }
+fun WorkDomainModel.toViewModel(): WorkViewModel? {
+    if (title == null || originalLanguage == null || overview == null ||
+        source == null || backdropPath == null || posterPath == null ||
+        originalTitle == null || releaseDate == null
+    ) {
+        return null
+    }
+    val formattedReleaseDate = releaseDate
+        .takeUnless { it.isEmpty() || it.isBlank() }
         ?.let { releaseDate ->
             SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
                 SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseDate) as Date
             )
-        },
-    isFavorite = isFavorite,
-    type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
-)
+        } ?: return null
+
+    return WorkViewModel(
+        id = id,
+        title = title,
+        originalLanguage = originalLanguage,
+        overview = overview,
+        source = source,
+        backdropUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, backdropPath),
+        posterUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, posterPath),
+        originalTitle = originalTitle,
+        releaseDate = formattedReleaseDate,
+        isFavorite = isFavorite,
+        type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
+    )
+}

@@ -1,10 +1,21 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.workbrowse'
+
+    buildFeatures {
+        compose true
+    }
+
+    testOptions {
+        unitTests.all {
+            jvmArgs '-Dnet.bytebuddy.experimental=true'
+        }
+    }
 }
 
 dependencies {
@@ -21,6 +32,18 @@ dependencies {
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
     implementation Libs.androidx_lifecycle
+
+    // Compose for TV
+    implementation platform(Libs.compose_bom)
+    implementation Libs.compose_ui
+    implementation Libs.compose_ui_tooling_preview
+    implementation Libs.compose_foundation
+    implementation Libs.compose_material3
+    implementation Libs.androidx_tv_foundation
+    implementation Libs.androidx_tv_material
+    implementation Libs.androidx_activity_compose
+    implementation Libs.coil_compose
+    debugImplementation Libs.compose_ui_tooling
 
     // Rx
     implementation Libs.rxandroid

@@ -12,28 +12,17 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
+package com.pimenta.bestv.workbrowse.presentation.model
 
-import java.io.Serializable
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 /**
- * Created by marcus on 18-04-2019.
+ * Represents events that can occur in the Work Browse screen.
  */
-data class WorkViewModel(
-    val id: Int,
-    val originalLanguage: String,
-    val overview: String,
-    val source: String,
-    val backdropUrl: String,
-    val posterUrl: String,
-    val title: String,
-    val originalTitle: String,
-    val releaseDate: String,
-    val isFavorite: Boolean = false,
-    val type: WorkType
-) : Serializable
-
-enum class WorkType {
-    TV_SHOW,
-    MOVIE
+sealed interface WorkBrowseEvent {
+    data object LoadData : WorkBrowseEvent
+    data object RetryLoad : WorkBrowseEvent
+    data class SectionClicked(val sectionClickedIndex: Int) : WorkBrowseEvent
+    data class WorkClicked(val work: WorkViewModel) : WorkBrowseEvent
+    data class WorkSelected(val work: WorkViewModel) : WorkBrowseEvent
 }

@@ -18,9 +18,7 @@ import com.pimenta.bestv.presentation.di.annotation.FragmentScope
 import com.pimenta.bestv.workbrowse.di.module.GenreApiModule
 import com.pimenta.bestv.workbrowse.di.module.MovieApiModule
 import com.pimenta.bestv.workbrowse.di.module.TvShowApiModule
-import com.pimenta.bestv.workbrowse.presentation.presenter.WorkBrowsePresenter
 import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
-import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
@@ -38,7 +36,7 @@ interface WorkBrowseFragmentComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance view: WorkBrowsePresenter.View): WorkBrowseFragmentComponent
+        fun create(): WorkBrowseFragmentComponent
     }
 
     fun inject(workBrowseFragment: WorkBrowseFragment)

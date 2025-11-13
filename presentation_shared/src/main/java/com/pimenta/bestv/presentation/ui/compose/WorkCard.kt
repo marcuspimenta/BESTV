@@ -20,9 +20,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -41,6 +44,7 @@ import androidx.tv.material3.Border
 import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
 import coil.compose.SubcomposeAsyncImage
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -52,80 +56,60 @@ fun WorkCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
-    width: Dp = 150.dp,
     includeWorkTitle: Boolean = true
 ) {
-    Card(
-        onClick = onClick,
-        modifier = modifier
-            .width(width)
-            .aspectRatio(2f / 3f)
-            .onFocusChanged { focusState ->
-                onFocusChanged(focusState.isFocused)
-            },
-        shape = CardDefaults.shape(shape = RoundedCornerShape(8.dp)),
-        scale = CardDefaults.scale(
-            focusedScale = 1.1f,
-            pressedScale = 1.05f
-        ),
-        border = CardDefaults.border(
-            focusedBorder = Border(
-                border = BorderStroke(
-                    width = 3.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-        )
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Poster image
-            SubcomposeAsyncImage(
-                model = work.posterUrl,
-                contentDescription = work.title,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(48.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
+    StandardCardContainer(
+        modifier = Modifier.width(250.dp),
+        imageCard = { interactionSource ->
+            Card(
+                onClick = onClick,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(143.dp)
+                    .onFocusChanged { focusState ->
+                        onFocusChanged(focusState.isFocused)
+                    },
+                interactionSource = interactionSource
+            ) {
+                // Poster image
+                SubcomposeAsyncImage(
+                    model = work.backdropUrl,
+                    contentDescription = work.title,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(48.dp),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                }
-            )
-
+                )
+            }
+        },
+        title = {
             if (includeWorkTitle) {
-                // Title overlay with gradient
-                Box(
+                Text(
+                    text = work.title ?: work.originalTitle ?: "",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black.copy(alpha = 0.7f)
-                                )
-                            )
-                        )
-                        .padding(8.dp)
-                ) {
-                    Text(
-                        text = work.title ?: work.originalTitle ?: "",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.White,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                        .padding(top = 18.dp)
+                )
             }
         }
-    }
+    )
+
+
 }
 
 @Preview
@@ -135,11 +119,16 @@ private fun WorkCardPreview() {
         WorkCard(
             work = WorkViewModel(
                 id = 1,
-                title = "The Dark Knight",
+                title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
                 originalTitle = "The Dark Knight",
-                posterUrl = null,
+                posterUrl = "",
                 type = WorkType.MOVIE,
-                source = "TMDB"
+                source = "TMDB",
+                originalLanguage = "",
+                overview = "",
+                backdropUrl = "",
+                releaseDate = "",
+                isFavorite = false
             ),
             onClick = {}
         )

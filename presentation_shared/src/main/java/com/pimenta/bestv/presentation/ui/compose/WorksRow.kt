@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -41,8 +41,11 @@ fun WorksRow(
     works: List<WorkViewModel>,
     onWorkClick: (WorkViewModel) -> Unit,
     modifier: Modifier = Modifier,
-    onWorkFocused: (WorkViewModel?) -> Unit = {},
+    titleStartPadding: Dp = 48.dp,
+    worksStartPadding: Dp = 48.dp,
+    onWorkFocused: (WorkViewModel) -> Unit = {},
     isLoadingMore: Boolean = false,
+    includeWorkTitle: Boolean = true,
     onLoadMore: () -> Unit = {}
 ) {
     if (works.isEmpty()) return
@@ -65,19 +68,19 @@ fun WorksRow(
         // Section title
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            modifier = Modifier.padding(horizontal = 48.dp)
+            modifier = Modifier.padding(start = titleStartPadding)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // Horizontal scrolling row
-        LazyRow(
+        // Horizontal scrolling row with start-aligned focus behavior
+        StartAlignedLazyRow(
             state = listState,
-            contentPadding = PaddingValues(horizontal = 48.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(horizontal = worksStartPadding),
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             items(
                 items = works,
@@ -85,6 +88,7 @@ fun WorksRow(
             ) { work ->
                 WorkCard(
                     work = work,
+                    includeWorkTitle = includeWorkTitle,
                     onClick = { onWorkClick(work) },
                     onFocusChanged = { focused ->
                         if (focused) {
@@ -106,28 +110,30 @@ private fun WorksRowPreview() {
             works = listOf(
                 WorkViewModel(
                     id = 1,
-                    title = "The Dark Knight",
+                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
                     originalTitle = "The Dark Knight",
-                    posterUrl = null,
+                    posterUrl = "",
                     type = WorkType.MOVIE,
-                    source = "TMDB"
+                    source = "TMDB",
+                    originalLanguage = "",
+                    overview = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    isFavorite = false
                 ),
                 WorkViewModel(
                     id = 2,
-                    title = "Batman Begins",
-                    originalTitle = "Batman Begins",
-                    posterUrl = null,
+                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                    originalTitle = "The Dark Knight",
+                    posterUrl = "",
                     type = WorkType.MOVIE,
-                    source = "TMDB"
+                    source = "TMDB",
+                    originalLanguage = "",
+                    overview = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    isFavorite = false
                 ),
-                WorkViewModel(
-                    id = 3,
-                    title = "The Prestige",
-                    originalTitle = "The Prestige",
-                    posterUrl = null,
-                    type = WorkType.MOVIE,
-                    source = "TMDB"
-                )
             ),
             onWorkClick = {}
         )

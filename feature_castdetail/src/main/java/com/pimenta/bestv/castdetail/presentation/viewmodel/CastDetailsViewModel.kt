@@ -56,11 +56,16 @@ class CastDetailsViewModel @Inject constructor(
                 val (castDetails, movies, tvShows) = getCastDetailsUseCase(cast.id)
 
                 updateState {
-                    CastDetailsState.Loaded(
-                        cast = castDetails.toViewModel(),
-                        movies = movies?.map { movie -> movie.toViewModel() } ?: emptyList(),
-                        tvShows = tvShows?.map { tvShow -> tvShow.toViewModel() } ?: emptyList()
-                    )
+                    val cast = castDetails.toViewModel()
+                    if (cast != null) {
+                        CastDetailsState.Loaded(
+                            cast = cast,
+                            movies = movies?.mapNotNull { movie -> movie.toViewModel() }.orEmpty(),
+                            tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel() }.orEmpty()
+                        )
+                    } else {
+                        CastDetailsState.Error
+                    }
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while getting the cast details")

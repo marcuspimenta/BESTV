@@ -1,4 +1,5 @@
 <resources>
+    <string name="search">Search</string>
     <string name="favorites">Favorites</string>
     <string name="now_playing">Now playing</string>
     <string name="popular">Popular</string>

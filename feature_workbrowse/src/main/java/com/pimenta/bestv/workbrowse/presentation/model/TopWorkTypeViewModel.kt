@@ -15,6 +15,14 @@
 package com.pimenta.bestv.workbrowse.presentation.model
 
 import androidx.annotation.StringRes
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.NOW_PLAYING_MOVIES
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.POPULAR_MOVIES
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.POPULAR_TV_SHOWS
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.TOP_RATED_MOVIES
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.TOP_RATED_TV_SHOWS
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.UP_COMING_MOVIES
 import com.pimenta.bestv.workbrowse.R
 
 /**
@@ -31,3 +39,17 @@ enum class TopWorkTypeViewModel(@StringRes val resource: Int) {
     POPULAR_TV_SHOWS(R.string.popular),
     TOP_RATED_TV_SHOWS(R.string.top_rated);
 }
+
+val topMoviesTypes: List<TopWorkTypeViewModel> = listOf(
+    NOW_PLAYING_MOVIES,
+    POPULAR_MOVIES,
+    TOP_RATED_MOVIES,
+    UP_COMING_MOVIES
+)
+
+val topTvShowTypes: List<TopWorkTypeViewModel> = listOf(
+    AIRING_TODAY_TV_SHOWS,
+    ON_THE_AIR_TV_SHOWS,
+    TOP_RATED_TV_SHOWS,
+    POPULAR_TV_SHOWS,
+)

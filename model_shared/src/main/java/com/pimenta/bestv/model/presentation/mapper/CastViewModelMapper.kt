@@ -18,13 +18,21 @@ import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 
-fun CastDomainModel.toViewModel() = CastViewModel(
-    id = id,
-    name = name,
-    character = character,
-    birthday = birthday,
-    source = source,
-    deathDay = deathDay,
-    biography = biography,
-    thumbnailUrl = profilePath?.let { String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, it) }
-)
+fun CastDomainModel.toViewModel(): CastViewModel? {
+    return if (name != null && character != null && birthday != null &&
+               source != null && deathDay != null && biography != null &&
+               profilePath != null) {
+        CastViewModel(
+            id = id,
+            name = name,
+            character = character,
+            birthday = birthday,
+            source = source,
+            deathDay = deathDay,
+            biography = biography,
+            thumbnailUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, profilePath)
+        )
+    } else {
+        null
+    }
+}

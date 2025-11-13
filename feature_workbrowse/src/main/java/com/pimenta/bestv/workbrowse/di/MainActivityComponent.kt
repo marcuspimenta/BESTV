@@ -36,9 +36,5 @@ interface MainActivityComponent {
 
     fun aboutFragmentComponent(): AboutFragmentComponent.Factory
 
-    fun genreWorkGridFragmentComponent(): GenreWorkGridFragmentComponent.Factory
-
-    fun topWorkGridFragmentComponent(): TopWorkGridFragmentComponent.Factory
-
     fun workBrowseFragmentComponent(): WorkBrowseFragmentComponent.Factory
 }

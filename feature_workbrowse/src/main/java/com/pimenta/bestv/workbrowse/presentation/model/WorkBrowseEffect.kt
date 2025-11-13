@@ -12,28 +12,14 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.model
+package com.pimenta.bestv.workbrowse.presentation.model
 
-import java.io.Serializable
+import android.content.Intent
 
 /**
- * Created by marcus on 18-04-2019.
+ * Represents one-time side effects that should happen in the Work Browse screen.
+ * These are consumed once and don't persist in the state.
  */
-data class WorkViewModel(
-    val id: Int,
-    val originalLanguage: String,
-    val overview: String,
-    val source: String,
-    val backdropUrl: String,
-    val posterUrl: String,
-    val title: String,
-    val originalTitle: String,
-    val releaseDate: String,
-    val isFavorite: Boolean = false,
-    val type: WorkType
-) : Serializable
-
-enum class WorkType {
-    TV_SHOW,
-    MOVIE
+sealed interface WorkBrowseEffect {
+    data class Navigate(val intent: Intent) : WorkBrowseEffect
 }

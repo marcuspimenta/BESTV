@@ -62,13 +62,13 @@ class CastDetailsRoute @Inject constructor(
             ?.let {
                 CastViewModel(
                     id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                    name = it.getQueryParameter(NAME),
-                    character = it.getQueryParameter(CHARACTER),
-                    birthday = it.getQueryParameter(BIRTHDAY),
-                    deathDay = it.getQueryParameter(DEATH_DAY),
-                    biography = it.getQueryParameter(BIOGRAPHY),
-                    source = it.getQueryParameter(SOURCE),
-                    thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL)
+                    name = it.getQueryParameter(NAME).orEmpty(),
+                    character = it.getQueryParameter(CHARACTER).orEmpty(),
+                    birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
+                    deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
+                    biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
+                    source = it.getQueryParameter(SOURCE).orEmpty(),
+                    thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty()
                 )
             }
 }

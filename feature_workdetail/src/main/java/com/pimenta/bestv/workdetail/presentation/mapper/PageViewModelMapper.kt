@@ -26,7 +26,7 @@ import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 fun PageDomainModel<ReviewDomainModel>.toViewModel() = PageViewModel(
     page = page,
     totalPages = totalPages,
-    results = results?.map { it.toViewModel() }
+    results = results?.map { it.toViewModel() }.orEmpty()
 )
 
 fun ReviewDomainModel.toViewModel() = ReviewViewModel(

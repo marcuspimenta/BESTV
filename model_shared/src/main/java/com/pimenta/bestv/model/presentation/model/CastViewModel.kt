@@ -20,12 +20,12 @@ import java.io.Serializable
  * Created by marcus on 15-04-2019.
  */
 data class CastViewModel(
-    var id: Int,
-    var name: String? = null,
-    var character: String? = null,
-    var birthday: String? = null,
-    val source: String? = null,
-    var deathDay: String? = null,
-    var biography: String? = null,
-    var thumbnailUrl: String? = null
+    val id: Int,
+    val name: String,
+    val character: String,
+    val birthday: String,
+    val source: String,
+    val deathDay: String,
+    val biography: String,
+    val thumbnailUrl: String
 ) : Serializable

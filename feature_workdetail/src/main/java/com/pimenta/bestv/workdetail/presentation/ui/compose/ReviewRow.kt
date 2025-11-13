@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
+import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 
 @Composable
@@ -70,8 +70,8 @@ fun ReviewRow(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Reviews list
-        LazyRow(
+        // Reviews list with start-aligned focus behavior
+        StartAlignedLazyRow(
             state = listState,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 48.dp)

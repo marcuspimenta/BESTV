@@ -119,13 +119,13 @@ private fun CastDetailsHeaderPreview() {
             cast = CastViewModel(
                 id = 1,
                 name = "Christian Bale",
-                character = null,
+                character = "",
                 birthday = "January 30, 1974",
-                deathDay = null,
+                deathDay = "",
                 biography = "Christian Charles Philip Bale is an English actor. Known for his " +
                         "versatility and physical transformations for his roles, he has been a " +
                         "leading man in films of several genres.",
-                thumbnailUrl = null,
+                thumbnailUrl = "",
                 source = "TMDB"
             )
         )

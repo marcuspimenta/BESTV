@@ -39,7 +39,7 @@ class RecommendationRowApi constructor(
         Completable.create {
             notificationManager.cancelAll()
 
-            works?.map { work -> work.toViewModel() }
+            works?.mapNotNull { work -> work.toViewModel() }
                 ?.forEach { workViewModel ->
                     val cardBitmap = Glide.with(application)
                         .asBitmap()
@@ -54,7 +54,7 @@ class RecommendationRowApi constructor(
                         .setAutoDismiss(true)
                         .setIdTag(workViewModel.id.toString())
                         .setGroup(application.getString(presentationR.string.app_name))
-                        .setBadgeIcon(recommendationR.drawable.movie)
+                        //.setBadgeIcon(recommendationR.drawable.movie_icon)
                         .setTitle(workViewModel.title)
                         .setContentImage(cardBitmap)
                         .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))

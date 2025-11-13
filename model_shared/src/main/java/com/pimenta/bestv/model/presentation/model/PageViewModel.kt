@@ -20,5 +20,5 @@ package com.pimenta.bestv.model.presentation.model
 data class PageViewModel<T>(
     var page: Int,
     var totalPages: Int,
-    var results: List<T>? = null
+    var results: List<T>
 )

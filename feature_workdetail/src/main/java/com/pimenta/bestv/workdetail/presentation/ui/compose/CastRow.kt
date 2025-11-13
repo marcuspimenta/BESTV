@@ -20,18 +20,18 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.text.font.FontWeight
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.ui.compose.CastCard
+import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
 
 @Composable
 fun CastRow(
@@ -53,8 +53,8 @@ fun CastRow(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Cast list
-        LazyRow(
+        // Cast list with start-aligned focus behavior
+        StartAlignedLazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 48.dp)
         ) {
@@ -83,22 +83,21 @@ private fun CastRowPreview() {
                     id = 1,
                     name = "Christian Bale",
                     character = "Bruce Wayne / Batman",
-                    thumbnailUrl = null,
-                    source = "TMDB"
+                    thumbnailUrl = "",
+                    source = "TMDB",
+                    birthday = "",
+                    deathDay = "",
+                    biography = ""
                 ),
                 CastViewModel(
                     id = 2,
                     name = "Heath Ledger",
                     character = "Joker",
-                    thumbnailUrl = null,
-                    source = "TMDB"
-                ),
-                CastViewModel(
-                    id = 3,
-                    name = "Aaron Eckhart",
-                    character = "Harvey Dent / Two-Face",
-                    thumbnailUrl = null,
-                    source = "TMDB"
+                    thumbnailUrl = "",
+                    source = "TMDB",
+                    birthday = "",
+                    deathDay = "",
+                    biography = ""
                 )
             ),
             onCastClick = {}

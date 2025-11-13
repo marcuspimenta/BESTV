@@ -226,12 +226,16 @@ private fun WorkDetailsScreenPreview() {
             state = WorkDetailsState(
                 work = WorkViewModel(
                     id = 1,
+                    overview = "Overview",
                     title = "The Dark Knight",
                     originalTitle = "The Dark Knight",
                     type = WorkType.MOVIE,
-                    posterUrl = null,
-                    backdropUrl = null,
-                    source = "TMDB"
+                    posterUrl = "",
+                    source = "TMDB",
+                    originalLanguage = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    isFavorite = false
                 ),
                 state = Loaded(
                     contents = emptyList()
@@ -259,12 +263,16 @@ private fun WorkDetailsScreenWithErrorPreview() {
             state = WorkDetailsState(
                 work = WorkViewModel(
                     id = 1,
+                    overview = "Overview",
                     title = "The Dark Knight",
                     originalTitle = "The Dark Knight",
                     type = WorkType.MOVIE,
-                    posterUrl = null,
-                    backdropUrl = null,
-                    source = "TMDB"
+                    posterUrl = "",
+                    source = "TMDB",
+                    originalLanguage = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    isFavorite = false
                 ),
                 state = Loaded(
                     contents = emptyList(),

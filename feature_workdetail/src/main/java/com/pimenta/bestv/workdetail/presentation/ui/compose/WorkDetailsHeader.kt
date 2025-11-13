@@ -17,9 +17,7 @@ package com.pimenta.bestv.workdetail.presentation.ui.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -35,7 +33,6 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.ui.compose.WorkCard
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
@@ -56,58 +53,36 @@ fun WorkDetailsHeader(
             .fillMaxWidth()
             .padding(48.dp),
     ) {
-        WorkCard(
-            work = work,
-            width = 220.dp,
-            includeWorkTitle = false
-        )
-
-        Column(
-            modifier = Modifier.padding(start = 28.dp),
-        ) {
-            // Title
+        Column {
             Text(
-                text = work.title ?: "Untitled",
-                style = MaterialTheme.typography.displayLarge,
+                text = work.title,
+                style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(26.dp))
-
             ActionButtonsRow(
                 actions = actions,
-                actionClicked = actionClicked
+                actionClicked = actionClicked,
+                modifier = Modifier.padding(top = 20.dp)
             )
 
-            Spacer(modifier = Modifier.height(26.dp))
+            Text(
+                text = "${work.releaseDate} · ${work.source}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.7f),
+                modifier = Modifier.padding(top = 20.dp)
+            )
 
-            if (!work.releaseDate.isNullOrEmpty() && !work.overview.isNullOrEmpty() &&
-                !work.source.isNullOrEmpty()
-            ) {
-                Text(
-                    text = work.releaseDate!!,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.7f)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = work.overview!!,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.7f)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = work.source!!,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.7f)
-                )
-            }
+            Text(
+                text = work.overview,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White.copy(alpha = 0.7f),
+                modifier = Modifier
+                    .padding(top = 18.dp)
+                    .fillMaxWidth(0.6f)
+            )
         }
     }
 }
@@ -116,10 +91,12 @@ fun WorkDetailsHeader(
 private fun ActionButtonsRow(
     actions: List<ActionButton>,
     actionClicked: (ActionButton) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
         items(
             items = actions,
@@ -145,8 +122,12 @@ private fun WorkDetailsHeaderPreview() {
                 title = "The Dark Knight",
                 originalTitle = "The Dark Knight",
                 type = WorkType.MOVIE,
-                posterUrl = null,
-                source = "TMDB"
+                posterUrl = "",
+                source = "TMDB",
+                originalLanguage = "",
+                backdropUrl = "",
+                releaseDate = "",
+                isFavorite = false
             ),
             actions = listOf(
                 SaveWork(true),

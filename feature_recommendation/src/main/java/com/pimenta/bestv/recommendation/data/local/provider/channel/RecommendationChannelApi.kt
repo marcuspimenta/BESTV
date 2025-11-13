@@ -48,7 +48,7 @@ class RecommendationChannelApi constructor(
         Completable.create {
             val channelId = getChannelId()
 
-            works?.map { work -> work.toViewModel() }
+            works?.mapNotNull { work -> work.toViewModel() }
                 ?.forEach { workViewModel ->
                     val programBuilder = PreviewProgram.Builder()
                         .setChannelId(channelId)

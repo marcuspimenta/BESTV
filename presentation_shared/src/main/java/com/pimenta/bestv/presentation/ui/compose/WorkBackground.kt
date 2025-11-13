@@ -16,9 +16,17 @@ package com.pimenta.bestv.presentation.ui.compose
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.MaterialTheme
@@ -28,23 +36,68 @@ import coil.compose.AsyncImage
 fun WorkBackground(
     backdropUrl: String?,
     modifier: Modifier = Modifier,
-    targetAlpha: Float = 0.3f,
     animationDuration: Int = 1200
 ) {
-    Crossfade(
-        targetState = backdropUrl,
-        label = "background_transition",
-        animationSpec = tween(durationMillis = animationDuration)
-    ) { url ->
-        url?.let {
-            AsyncImage(
-                model = it,
-                contentDescription = null,
-                modifier = modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                alpha = targetAlpha
-            )
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+        Crossfade(
+            targetState = backdropUrl,
+            label = "background_transition",
+            animationSpec = tween(durationMillis = animationDuration),
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) { url ->
+            url?.let {
+                AsyncImage(
+                    model = it,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth(0.60f)
+                        .aspectRatio(16f / 9f),
+                    contentScale = ContentScale.Crop,
+                )
+            }
         }
+
+        // Left edge fade gradient
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(0.20f)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color.Black,
+                            Color.Transparent,
+                        )
+                    )
+                )
+                .align(Alignment.Center)
+        )
+
+        // Bottom edge fade gradient
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.20f)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.Black,
+                        )
+                    )
+                )
+                .align(Alignment.Center)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+        )
     }
 }
 

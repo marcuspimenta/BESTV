@@ -130,26 +130,31 @@ class WorkDetailsViewModel @Inject constructor(
                                         .takeIf { it.videos.isNotEmpty() }
                                 },
                                 result.casts?.let {
-                                    Casts(it.map { cast -> cast.toViewModel() })
-                                        .takeIf { it.casts.isNotEmpty() }
+                                    it.mapNotNull { cast -> cast.toViewModel() }.let { casts ->
+                                        Casts(casts).takeIf { casts.isNotEmpty() }
+                                    }
                                 },
                                 result.recommended.results?.let {
-                                    RecommendedWorks(
-                                        recommended = it.map { work -> work.toViewModel() },
-                                        page = PaginationState(
-                                            currentPage = result.recommended.page,
-                                            totalPages = result.recommended.totalPages
-                                        )
-                                    ).takeIf { it.recommended.isNotEmpty() }
+                                    it.mapNotNull { work -> work.toViewModel() }.let { recos ->
+                                        RecommendedWorks(
+                                            recommended = recos,
+                                            page = PaginationState(
+                                                currentPage = result.recommended.page,
+                                                totalPages = result.recommended.totalPages
+                                            )
+                                        ).takeIf { recos.isNotEmpty() }
+                                    }
                                 },
                                 result.similar.results?.let {
-                                    SimilarWorks(
-                                        similar = it.map { work -> work.toViewModel() },
-                                        page = PaginationState(
-                                            currentPage = result.similar.page,
-                                            totalPages = result.similar.totalPages
-                                        )
-                                    ).takeIf { it.similar.isNotEmpty() }
+                                    it.mapNotNull { work -> work.toViewModel() }.let { similar ->
+                                        SimilarWorks(
+                                            similar = similar,
+                                            page = PaginationState(
+                                                currentPage = result.similar.page,
+                                                totalPages = result.similar.totalPages
+                                            )
+                                        ).takeIf { similar.isNotEmpty() }
+                                    }
                                 },
                                 result.reviews.results?.let {
                                     Reviews(

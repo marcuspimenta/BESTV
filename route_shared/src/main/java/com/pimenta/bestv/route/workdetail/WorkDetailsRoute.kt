@@ -68,14 +68,14 @@ class WorkDetailsRoute @Inject constructor(
             ?.let {
                 WorkViewModel(
                     id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                    title = it.getQueryParameter(TITLE),
-                    originalLanguage = it.getQueryParameter(LANGUAGE),
-                    overview = it.getQueryParameter(OVERVIEW),
-                    source = it.getQueryParameter(SOURCE),
-                    backdropUrl = it.getQueryParameter(BACKGROUND_URL),
-                    posterUrl = it.getQueryParameter(POSTER_URL),
-                    originalTitle = it.getQueryParameter(ORIGINAL_TITLE),
-                    releaseDate = it.getQueryParameter(RELEASE_DATE),
+                    title = it.getQueryParameter(TITLE).orEmpty(),
+                    originalLanguage = it.getQueryParameter(LANGUAGE).orEmpty(),
+                    overview = it.getQueryParameter(OVERVIEW).orEmpty(),
+                    source = it.getQueryParameter(SOURCE).orEmpty(),
+                    backdropUrl = it.getQueryParameter(BACKGROUND_URL).orEmpty(),
+                    posterUrl = it.getQueryParameter(POSTER_URL).orEmpty(),
+                    originalTitle = it.getQueryParameter(ORIGINAL_TITLE).orEmpty(),
+                    releaseDate = it.getQueryParameter(RELEASE_DATE).orEmpty(),
                     isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
                     type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
                 )

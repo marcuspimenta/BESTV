@@ -115,15 +115,12 @@ class SearchViewModel @Inject constructor(
                 val moviePage = result.first.toViewModel()
                 val tvShowPage = result.second.toViewModel()
 
-                val movies = moviePage.results ?: emptyList()
-                val tvShows = tvShowPage.results ?: emptyList()
-
                 val contents = mutableListOf<Content>()
-                if (movies.isNotEmpty()) {
+                if (moviePage.results.isNotEmpty()) {
                     contents.add(
                         Movies(
                             query = query,
-                            movies = movies,
+                            movies = moviePage.results,
                             page = PaginationState(
                                 currentPage = moviePage.page,
                                 totalPages = moviePage.totalPages
@@ -131,11 +128,11 @@ class SearchViewModel @Inject constructor(
                         )
                     )
                 }
-                if (tvShows.isNotEmpty()) {
+                if (tvShowPage.results.isNotEmpty()) {
                     contents.add(
                         TvShows(
                             query = query,
-                            tvShows = tvShows,
+                            tvShows = tvShowPage.results,
                             page = PaginationState(
                                 currentPage = tvShowPage.page,
                                 totalPages = tvShowPage.totalPages
