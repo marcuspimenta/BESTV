@@ -47,6 +47,14 @@ captures/
 .idea/.name
 .idea/caches/
 .idea/codeStyles/
+.idea/AndroidProjectSystem.xml
+.idea/deploymentTargetDropDown.xml
+.idea/deploymentTargetSelector.xml
+.idea/deviceManager.xml
+.idea/inspectionProfiles/
+.idea/kotlinc.xml
+.idea/migrations.xml
+.idea/markdown.xml
 
 # Keystore files
 *.jks
