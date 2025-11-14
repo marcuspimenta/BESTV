@@ -7,6 +7,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.topMoviesTypes
 import com.pimenta.bestv.workbrowse.presentation.model.topTvShowTypes
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
@@ -16,25 +17,23 @@ class GetSectionDetailsUseCase @Inject constructor(
 
     suspend operator fun invoke(): SectionDetails = coroutineScope {
         SectionDetails(
-            movieSectionDetails = topMoviesTypes.getWorks().mapNotNull { it.await() },
-            tvSectionDetails = topTvShowTypes.getWorks().mapNotNull { it.await() }
+            movieSectionDetails = topMoviesTypes.getWorks().awaitAll(),
+            tvSectionDetails = topTvShowTypes.getWorks().awaitAll(),
         )
     }
 
     private suspend fun List<TopWorkTypeViewModel>.getWorks() = coroutineScope {
         map { type ->
             async {
-                val result = loadWorkByTypeUseCase(1, type).toViewModel()
-                result.results?.let {
-                    ContentSection.TopContent(
-                        type = type,
-                        works = it,
-                        page = PaginationState(
-                            currentPage = result.page,
-                            totalPages = result.totalPages
-                        )
+                val resultPage = loadWorkByTypeUseCase(1, type).toViewModel()
+                ContentSection.TopContent(
+                    type = type,
+                    works = resultPage.results,
+                    page = PaginationState(
+                        currentPage = resultPage.page,
+                        totalPages = resultPage.totalPages
                     )
-                }
+                )
             }
         }
     }

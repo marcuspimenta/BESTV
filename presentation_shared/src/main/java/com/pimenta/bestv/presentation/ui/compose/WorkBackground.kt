@@ -47,14 +47,15 @@ fun WorkBackground(
             targetState = backdropUrl,
             label = "background_transition",
             animationSpec = tween(durationMillis = animationDuration),
-            modifier = Modifier.align(Alignment.TopEnd)
+            modifier = Modifier
+                .fillMaxWidth(0.60f)
+                .align(Alignment.TopEnd)
         ) { url ->
             url?.let {
                 AsyncImage(
                     model = it,
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth(0.60f)
                         .aspectRatio(16f / 9f),
                     contentScale = ContentScale.Crop,
                 )

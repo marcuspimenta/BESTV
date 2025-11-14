@@ -73,7 +73,7 @@ fun CastCard(
         // Cast name below the thumbnail
         if (includeCastName) {
             Text(
-                text = cast.name ?: "Undefined",
+                text = cast.name,
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White,
                 textAlign = TextAlign.Center,

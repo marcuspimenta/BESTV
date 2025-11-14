@@ -84,6 +84,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.F
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
+import kotlin.reflect.typeOf
 
 @Composable
 fun WorkBrowseScreen(
@@ -409,6 +410,7 @@ private fun SectionWorkList(
                     is Genre -> contentItem.genreViewModel.name.orEmpty()
                     is TopContent -> stringResource(contentItem.type.resource)
                 },
+                titleStyle = MaterialTheme.typography.labelLarge,
                 works = contentItem.works,
                 includeWorkTitle = false,
                 onWorkClick = onWorkClicked,

@@ -17,15 +17,14 @@ package com.pimenta.bestv.presentation.ui.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -41,6 +40,7 @@ fun WorksRow(
     works: List<WorkViewModel>,
     onWorkClick: (WorkViewModel) -> Unit,
     modifier: Modifier = Modifier,
+    titleStyle: TextStyle = MaterialTheme.typography.headlineSmall,
     titleStartPadding: Dp = 48.dp,
     worksStartPadding: Dp = 48.dp,
     onWorkFocused: (WorkViewModel) -> Unit = {},
@@ -68,19 +68,18 @@ fun WorksRow(
         // Section title
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
+            style = titleStyle,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.padding(start = titleStartPadding)
         )
 
-        Spacer(modifier = Modifier.height(18.dp))
-
         // Horizontal scrolling row with start-aligned focus behavior
         StartAlignedLazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = worksStartPadding),
-            horizontalArrangement = Arrangement.spacedBy(24.dp)
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(top = 18.dp)
         ) {
             items(
                 items = works,

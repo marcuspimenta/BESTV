@@ -51,12 +51,11 @@ fun CastRow(
             modifier = Modifier.padding(horizontal = 48.dp)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
         // Cast list with start-aligned focus behavior
         StartAlignedLazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 48.dp)
+            contentPadding = PaddingValues(horizontal = 48.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(top = 18.dp)
         ) {
             items(
                 items = casts,

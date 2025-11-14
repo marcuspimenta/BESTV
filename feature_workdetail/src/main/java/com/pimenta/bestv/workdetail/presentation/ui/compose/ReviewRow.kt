@@ -68,13 +68,12 @@ fun ReviewRow(
             modifier = Modifier.padding(horizontal = 48.dp, vertical = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
         // Reviews list with start-aligned focus behavior
         StartAlignedLazyRow(
             state = listState,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 48.dp)
+            contentPadding = PaddingValues(horizontal = 48.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(top = 18.dp)
         ) {
             items(
                 items = reviews,
