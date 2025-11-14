@@ -81,11 +81,6 @@ The app is modularized. We can see the dependency graph with all the modules.
 - ✅ Replaced RxJava/RxAndroid with Kotlin Coroutines and Flow
 - ✅ Updated UI layer to use declarative Compose components
 
-## TODO
-- Improve the test coverage
-- Give support to more languages
-- Create a introduction guide to show the features when the users open the app the first time
-
 ## References
 - [Jetpack Compose for TV](https://developer.android.com/jetpack/compose/tv)
 - [Compose for TV samples](https://github.com/android/tv-samples)
