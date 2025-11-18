@@ -4,7 +4,7 @@
     <application>
         <activity
             android:name=".presentation.ui.activity.WorkDetailsActivity"
-            android:exported="false"
+            android:exported="true"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
