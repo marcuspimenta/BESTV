@@ -40,13 +40,15 @@ data class WorkBrowseState(
         open val titleRes: Int
     ) {
         data object Search: Section(presentationR.drawable.search, workbrowseR.string.search)
-        data object Favorites: Section(presentationR.drawable.favorite, workbrowseR.string.favorites)
         data class Movies(
             val content: List<ContentSection>
         ): Section(presentationR.drawable.movie, presentationR.string.movies)
         data class TvShows(
             val content: List<ContentSection>
         ): Section(presentationR.drawable.tv, presentationR.string.tv_shows)
+        data class Favorites(
+            val content: List<ContentSection>
+        ): Section(presentationR.drawable.favorite, workbrowseR.string.favorites)
         data object About : Section(presentationR.drawable.info, workbrowseR.string.about)
     }
 }
@@ -75,5 +77,5 @@ data class PaginationState(
     val isLoadingMore: Boolean = false
 ) {
     val canLoadMore: Boolean
-        get() = currentPage > 0 && currentPage < totalPages && !isLoadingMore
+        get() = currentPage in 1..<totalPages && !isLoadingMore
 }

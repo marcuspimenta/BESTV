@@ -21,11 +21,11 @@ import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetWorkBrowseDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.HasFavoriteUseCase
+import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
@@ -42,8 +42,6 @@ import javax.inject.Inject
 @FragmentScope
 class WorkBrowseViewModel @Inject constructor(
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
-    private val getWorkBrowseDetailsUseCase: GetWorkBrowseDetailsUseCase,
-    private val hasFavoriteUseCase: HasFavoriteUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
 ) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(WorkBrowseState()) {
@@ -67,28 +65,17 @@ class WorkBrowseViewModel @Inject constructor(
             updateState { it.copy(state = Loading) }
 
             try {
-                /*
-                val result = getWorkBrowseDetailsUseCase()
-
-
-                val hasFavorite = result.first
-                val movieGenres = result.second?.map { it.toViewModel() }.orEmpty()
-                val tvShowGenres = result.third?.map { it.toViewModel() }.orEmpty()
-
-                val sections = buildSections(hasFavorite, movieGenres, tvShowGenres)
-                 */
-
-                val sectionDetails = getSectionDetailsUseCase()
+                val sectionDetails = getSectionDetailsUseCase.getAllSections()
                 updateState {
                     it.copy(
                         state = Loaded(
-                            workSelected = null,
-                            selectedSectionIndex = 1,
-                            sections = listOf(
-                                Search,
-                                Movies(sectionDetails.movieSectionDetails),
-                                TvShows(sectionDetails.tvSectionDetails)
-                            )
+                        workSelected = null,
+                        selectedSectionIndex = 1,
+                        sections = listOfNotNull(
+                            Search,
+                            Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
+                            TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
+                            Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() })
                         )
                     )
                 }
@@ -100,29 +87,38 @@ class WorkBrowseViewModel @Inject constructor(
     }
 
     fun checkAndUpdateFavorites() {
+        val currentState = currentState.state as? Loaded ?: return
         viewModelScope.launch {
-            /*try {
-                val hasFavorite = hasFavoriteUseCase()
-                val currentState = currentState.state as? Loaded ?: return@launch
+            try {
+                val favorites = getSectionDetailsUseCase.getFavoriteSections()
+                val updatedSections = updateSectionsWithFavorites(currentState.sections, favorites)
 
-                val currentHasFavorites = currentState.sections.any { it is Favorites }
-
-                if (hasFavorite != currentHasFavorites) {
-                    val updatedSections = currentState.sections.toMutableList().apply {
-                        if (hasFavorite) {
-                            add(0, Favorites)
-                        } else {
-                            remove(Favorites)
-                        }
-                    }
-
-                    updateState {
-                        it.copy(state = Loaded(sections = updatedSections))
-                    }
+                updateState {
+                    it.copy(
+                        state = currentState.copy(
+                            selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
+                            sections = updatedSections
+                        )
+                    )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while checking favorites")
-            }*/
+            }
+        }
+    }
+
+    private fun updateSectionsWithFavorites(
+        sections: List<WorkBrowseState.Section>,
+        favorites: List<ContentSection>
+    ): List<WorkBrowseState.Section> {
+        val hasFavorites = favorites.isNotEmpty()
+        val favoritesIndex = sections.indexOfFirst { it is Favorites }
+
+        return when {
+            hasFavorites && favoritesIndex >= 0 -> sections.toMutableList().apply { set(favoritesIndex, Favorites(favorites)) }
+            hasFavorites -> sections + Favorites(favorites)
+            favoritesIndex >= 0 -> sections.filterNot { it is Favorites }
+            else -> sections
         }
     }
 
@@ -133,6 +129,7 @@ class WorkBrowseViewModel @Inject constructor(
                 val intent = searchRoute.buildSearchIntent()
                 emitEvent(WorkBrowseEffect.Navigate(intent))
             }
+
             else -> {
                 updateState {
                     it.copy(

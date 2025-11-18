@@ -20,6 +20,8 @@ import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.extension.firstOf
+import com.pimenta.bestv.presentation.extension.replaceFirst
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
@@ -446,16 +448,4 @@ class WorkDetailsViewModel @Inject constructor(
             )
         }
     }
-
-
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified T> List<*>.replaceFirst(transform: (T) -> T) =
-        toMutableList().apply {
-            val current = firstOf<T>()
-            val indexOfCurrent = indexOf(current)
-            removeAt(indexOfCurrent)
-            add(indexOfCurrent, transform(current))
-        } as List<T>
-
-    private inline fun <reified T> Iterable<*>.firstOf(): T = first { it is T } as T
 }

@@ -289,7 +289,13 @@ private fun Section(
 ) {
     when (section) {
         is Search -> Unit
-        is Favorites -> Unit
+        is Favorites -> SectionWorks(
+            workSelected = workSelected,
+            content = section.content,
+            onWorkSelected = onWorkSelected,
+            onWorkClicked = onWorkClicked,
+            modifier = modifier
+        )
         is Movies -> SectionWorks(
             workSelected = workSelected,
             content = section.content,
@@ -297,7 +303,6 @@ private fun Section(
             onWorkClicked = onWorkClicked,
             modifier = modifier
         )
-
         is TvShows -> SectionWorks(
             workSelected = workSelected,
             content = section.content,
@@ -305,7 +310,6 @@ private fun Section(
             onWorkClicked = onWorkClicked,
             modifier = modifier
         )
-
         is About -> Unit
     }
 }
