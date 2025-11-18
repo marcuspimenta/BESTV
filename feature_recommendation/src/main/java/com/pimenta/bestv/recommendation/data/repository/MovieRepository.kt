@@ -15,6 +15,8 @@
 package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
@@ -28,10 +30,9 @@ class MovieRepository @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {
 
-    fun getPopularMovies(page: Int) =
-        movieRemoteDataSource.getPopularMovies(page)
-            .map {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                it.toDomainModel(source)
-            }
+    suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> {
+        val response = movieRemoteDataSource.getPopularMovies(page)
+        val source = resource.getStringResource(R.string.source_tmdb)
+        return response.toDomainModel(source)
+    }
 }

@@ -16,7 +16,6 @@ package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
-import io.reactivex.Completable
 import javax.inject.Inject
 
 /**
@@ -26,6 +25,6 @@ class RecommendationRepository @Inject constructor(
     private val recommendationProvider: RecommendationProvider
 ) {
 
-    fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
+    suspend fun loadRecommendations(works: List<WorkDomainModel>?) =
         recommendationProvider.loadRecommendations(works)
 }

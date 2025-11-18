@@ -22,7 +22,6 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
-    implementation Libs.androidx_leanback
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
     implementation Libs.androidx_lifecycle
@@ -32,9 +31,6 @@ dependencies {
     // Dagger
     implementation Libs.dagger
     kapt Libs.dagger_compile
-
-    // Glide
-    implementation Libs.glide
 
     // Lottie
     implementation Libs.lottie

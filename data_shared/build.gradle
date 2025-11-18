@@ -36,7 +36,6 @@ dependencies {
     api Libs.androidx_room
     kapt Libs.androidx_room_compiler
     implementation Libs.androidx_room_ktx
-    implementation Libs.androidx_room_rxjava
 
     // Retrofit
     implementation Libs.retrofit

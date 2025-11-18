@@ -28,7 +28,6 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
-    implementation Libs.androidx_leanback
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
     implementation Libs.androidx_lifecycle
@@ -44,12 +43,6 @@ dependencies {
     implementation Libs.androidx_activity_compose
     implementation Libs.coil_compose
     debugImplementation Libs.compose_ui_tooling
-
-    // Rx
-    implementation Libs.rxandroid
-
-    // Glide
-    implementation Libs.glide
 
     // Dagger
     implementation Libs.dagger

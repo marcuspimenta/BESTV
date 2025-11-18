@@ -24,7 +24,4 @@ dependencies {
 
     // Gson
     implementation Libs.gson
-
-    // Glide
-    implementation Libs.glide
 }

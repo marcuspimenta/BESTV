@@ -31,9 +31,6 @@ dependencies {
     implementation Libs.androidx_lifecycle_viewmodel_ktx
     implementation Libs.androidx_lifecycle_runtime_ktx
 
-    // Glide
-    implementation Libs.glide
-
     // Dagger
     implementation Libs.dagger
     kapt Libs.dagger_compile

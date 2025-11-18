@@ -27,6 +27,6 @@ class MovieRemoteDataSource @Inject constructor(
     private val movieTmdbApi: MovieTmdbApi
 ) {
 
-    fun getPopularMovies(page: Int) =
+    suspend fun getPopularMovies(page: Int) =
         movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

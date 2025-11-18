@@ -17,7 +17,6 @@ package com.pimenta.bestv.workbrowse.presentation.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import androidx.leanback.app.BackgroundManager
 import com.pimenta.bestv.presentation.extension.replaceFragment
 import com.pimenta.bestv.workbrowse.di.MainActivityComponent
 import com.pimenta.bestv.workbrowse.di.MainActivityComponentProvider
@@ -29,8 +28,6 @@ import javax.inject.Inject
  * Created by marcus on 11-02-2018.
  */
 class MainActivity : FragmentActivity(), MainPresenter.View {
-
-    private val backgroundManager: BackgroundManager by lazy { BackgroundManager.getInstance(this) }
 
     lateinit var mainActivityComponent: MainActivityComponent
 
@@ -45,11 +42,6 @@ class MainActivity : FragmentActivity(), MainPresenter.View {
             }
         super.onCreate(savedInstanceState)
 
-        backgroundManager.apply {
-            attach(window)
-            setBitmap(null)
-        }
-
         presenter.apply {
             bindTo(lifecycle)
         }.also {
@@ -61,11 +53,6 @@ class MainActivity : FragmentActivity(), MainPresenter.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.checkActivityResult(requestCode, resultCode)
-    }
-
-    override fun onDestroy() {
-        backgroundManager.release()
-        super.onDestroy()
     }
 
     override fun openSplashScreen(intent: Intent, requestCode: Int) {

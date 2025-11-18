@@ -16,7 +16,6 @@ package com.pimenta.bestv.recommendation.domain
 
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository
 import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
-import io.reactivex.Completable
 import javax.inject.Inject
 
 private const val RECOMMENDATION_NUMBER = 5
@@ -29,8 +28,9 @@ class LoadRecommendationUseCase @Inject constructor(
     private val recommendationRepository: RecommendationRepository
 ) {
 
-    operator fun invoke(): Completable =
-        movieRepository.getPopularMovies(1)
-            .map { it.results?.take(RECOMMENDATION_NUMBER) }
-            .flatMapCompletable { recommendationRepository.loadRecommendations(it) }
+    suspend operator fun invoke() {
+        val popularMovies = movieRepository.getPopularMovies(1)
+        val topMovies = popularMovies.results?.take(RECOMMENDATION_NUMBER)
+        recommendationRepository.loadRecommendations(topMovies)
+    }
 }

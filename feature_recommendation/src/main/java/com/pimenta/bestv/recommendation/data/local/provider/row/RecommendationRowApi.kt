@@ -16,15 +16,16 @@ package com.pimenta.bestv.recommendation.data.local.provider.row
 
 import android.app.Application
 import android.app.NotificationManager
+import android.graphics.drawable.BitmapDrawable
 import androidx.recommendation.app.ContentRecommendation
-import com.bumptech.glide.Glide
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import io.reactivex.Completable
 
 /**
  * Created by marcus on 23-04-2019.
@@ -35,44 +36,46 @@ class RecommendationRowApi constructor(
     private val workDetailsRoute: WorkDetailsRoute
 ) : RecommendationProvider {
 
-    override fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
-        Completable.create {
-            notificationManager.cancelAll()
+    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
+        notificationManager.cancelAll()
 
-            works?.mapNotNull { work -> work.toViewModel() }
-                ?.forEach { workViewModel ->
-                    val cardBitmap = Glide.with(application)
-                        .asBitmap()
-                        .load(workViewModel.posterUrl)
-                        .submit(
-                            application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_width),
-                            application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_height)
-                        )
-                        .get()
+        val imageLoader = ImageLoader(application)
 
-                    val contentRecommendation = ContentRecommendation.Builder()
-                        .setAutoDismiss(true)
-                        .setIdTag(workViewModel.id.toString())
-                        .setGroup(application.getString(presentationR.string.app_name))
-                        //.setBadgeIcon(recommendationR.drawable.movie_icon)
-                        .setTitle(workViewModel.title)
-                        .setContentImage(cardBitmap)
-                        .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))
-                        .setBackgroundImageUri(workViewModel.backdropUrl)
-                        .setText(application.getString(recommendationR.string.popular))
-                        .setContentIntentData(
-                            ContentRecommendation.INTENT_TYPE_ACTIVITY,
-                            workDetailsRoute.buildWorkDetailIntent(workViewModel).apply {
-                                // Ensure a unique PendingIntents, otherwise all
-                                // recommendations end up with the same PendingIntent
-                                action = workViewModel.id.toString()
-                            },
-                            0, null
-                        )
-                        .build()
+        works?.mapNotNull { work -> work.toViewModel() }
+            ?.forEach { workViewModel ->
+                val request = ImageRequest.Builder(application)
+                    .data(workViewModel.posterUrl)
+                    .size(
+                        application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_width),
+                        application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_height)
+                    )
+                    .build()
 
-                    notificationManager.notify(workViewModel.id, contentRecommendation.getNotificationObject(application))
-                }
-            it.onComplete()
-        }
+                val result = imageLoader.execute(request)
+                val cardBitmap = (result.drawable as? BitmapDrawable)?.bitmap
+
+                val contentRecommendation = ContentRecommendation.Builder()
+                    .setAutoDismiss(true)
+                    .setIdTag(workViewModel.id.toString())
+                    .setGroup(application.getString(presentationR.string.app_name))
+                    //.setBadgeIcon(recommendationR.drawable.movie_icon)
+                    .setTitle(workViewModel.title)
+                    .setContentImage(cardBitmap)
+                    .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))
+                    .setBackgroundImageUri(workViewModel.backdropUrl)
+                    .setText(application.getString(recommendationR.string.popular))
+                    .setContentIntentData(
+                        ContentRecommendation.INTENT_TYPE_ACTIVITY,
+                        workDetailsRoute.buildWorkDetailIntent(workViewModel).apply {
+                            // Ensure a unique PendingIntents, otherwise all
+                            // recommendations end up with the same PendingIntent
+                            action = workViewModel.id.toString()
+                        },
+                        0, null
+                    )
+                    .build()
+
+                notificationManager.notify(workViewModel.id, contentRecommendation.getNotificationObject(application))
+            }
+    }
 }

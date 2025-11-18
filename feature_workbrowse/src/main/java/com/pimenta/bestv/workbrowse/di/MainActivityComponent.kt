@@ -34,7 +34,5 @@ interface MainActivityComponent {
 
     fun inject(activity: MainActivity)
 
-    fun aboutFragmentComponent(): AboutFragmentComponent.Factory
-
     fun workBrowseFragmentComponent(): WorkBrowseFragmentComponent.Factory
 }

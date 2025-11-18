@@ -30,7 +30,6 @@ import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvid
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import io.reactivex.Completable
 
 /**
  * Created by marcus on 23-04-2019.
@@ -44,12 +43,11 @@ class RecommendationChannelApi constructor(
     private val workBrowseRoute: WorkBrowseRoute
 ) : RecommendationProvider {
 
-    override fun loadRecommendations(works: List<WorkDomainModel>?): Completable =
-        Completable.create {
-            val channelId = getChannelId()
+    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
+        val channelId = getChannelId()
 
-            works?.mapNotNull { work -> work.toViewModel() }
-                ?.forEach { workViewModel ->
+        works?.mapNotNull { work -> work.toViewModel() }
+            ?.forEach { workViewModel ->
                     val programBuilder = PreviewProgram.Builder()
                         .setChannelId(channelId)
                         .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
@@ -79,8 +77,7 @@ class RecommendationChannelApi constructor(
                             }
                         }
                 }
-            it.onComplete()
-        }
+    }
 
     private fun getChannelId() =
         localSettings.getLongFromPersistence(CHANNEL_ID_KEY, 0L)

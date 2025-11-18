@@ -15,12 +15,11 @@
 package com.pimenta.bestv.recommendation.data.local.provider
 
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import io.reactivex.Completable
 
 /**
  * Created by marcus on 06-03-2018.
  */
 interface RecommendationProvider {
 
-    fun loadRecommendations(works: List<WorkDomainModel>?): Completable
+    suspend fun loadRecommendations(works: List<WorkDomainModel>?)
 }

@@ -31,7 +31,6 @@ object Versions {
     val ktlint = "10.2.1"
     val ben_mane_gralde = "0.53.0"
 
-    val androidx_leanback = "1.2.0"
     val androidx_core = "1.17.0"
     val androidx_fragment = "1.8.9"
     val androidx_lifecycle = "2.10.0-alpha05"
@@ -55,9 +54,7 @@ object Versions {
     val gson = "2.13.2"
     val retrofit2_rxjava2_adapter = "1.0.0"
     val timber = "5.0.1"
-    val glide = "5.0.5"
     val lottie = "6.6.1"
-    val rxandroid = "2.1.1"
     val junit = "4.13.2"
     val mockito_inline = "5.2.0"
     val mockito_core = "4.5.0"
@@ -79,7 +76,6 @@ object Libs {
     val ktlint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlint}"
     val ben_mane_gralde = "com.github.ben-manes:gradle-versions-plugin:${Versions.ben_mane_gralde}"
 
-    val androidx_leanback = "androidx.leanback:leanback:${Versions.androidx_leanback}"
     val androidx_core = "androidx.core:core-ktx:${Versions.androidx_core}"
     val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
     val androidx_lifecycle = "androidx.lifecycle:lifecycle-viewmodel:${Versions.androidx_lifecycle}"
@@ -88,11 +84,9 @@ object Libs {
     val androidx_recommendation = "androidx.recommendation:recommendation:${Versions.androidx_recommendation}"
     val androidx_tvprovider = "androidx.tvprovider:tvprovider:${Versions.androidx_tvprovider}"
     val androidx_room = "androidx.room:room-runtime:${Versions.androidx_room}"
-    val androidx_room_rxjava = "androidx.room:room-rxjava2:${Versions.androidx_room}"
     val androidx_room_ktx = "androidx.room:room-ktx:${Versions.androidx_room}"
     val androidx_room_compiler = "androidx.room:room-compiler:${Versions.androidx_room}"
     val androidx_work = "androidx.work:work-runtime-ktx:${Versions.androidx_work}"
-    val androidx_work_rxjava2 = "androidx.work:work-rxjava2:${Versions.androidx_work}"
 
     // Compose for TV
     val compose_bom = "androidx.compose:compose-bom:${Versions.compose_bom}"
@@ -115,9 +109,7 @@ object Libs {
     val gson = "com.google.code.gson:gson:${Versions.gson}"
     val retrofit2_rxjava2_adapter = "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${Versions.retrofit2_rxjava2_adapter}"
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"
-    val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
     val lottie = "com.airbnb.android:lottie:${Versions.lottie}"
-    val rxandroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxandroid}"
     val junit = "junit:junit:${Versions.junit}"
     val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito_inline}"
     val mockito_core = "org.mockito:mockito-core:${Versions.mockito_core}"

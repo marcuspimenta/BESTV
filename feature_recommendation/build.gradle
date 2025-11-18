@@ -20,13 +20,13 @@ dependencies {
     implementation Libs.androidx_recommendation
     implementation Libs.androidx_tvprovider
     implementation Libs.androidx_work
-    implementation Libs.androidx_work_rxjava2
 
-    // Rx
-    implementation Libs.rxandroid
+    // Coil
+    implementation Libs.coil_compose
 
-    // Glide
-    implementation Libs.glide
+    // Coroutines
+    implementation Libs.kotlinx_coroutines_core
+    implementation Libs.kotlinx_coroutines_android
 
     // Dagger
     implementation Libs.dagger

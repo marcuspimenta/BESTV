@@ -48,9 +48,9 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
-    implementation Libs.androidx_leanback
+    implementation Libs.androidx_lifecycle
+    implementation Libs.androidx_fragment
     implementation Libs.androidx_work
-    implementation Libs.androidx_work_rxjava2
 
     // Retrofit
     implementation Libs.retrofit
