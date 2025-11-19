@@ -20,6 +20,7 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
  * Represents events that can occur in the Work Browse screen.
  */
 sealed interface WorkBrowseEvent {
+    data object BackClicked : WorkBrowseEvent
     data object LoadData : WorkBrowseEvent
     data object RetryLoad : WorkBrowseEvent
     data object SplashAnimationFinished : WorkBrowseEvent

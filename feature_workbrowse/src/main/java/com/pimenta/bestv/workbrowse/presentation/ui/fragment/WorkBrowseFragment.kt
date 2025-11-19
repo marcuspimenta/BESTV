@@ -58,6 +58,7 @@ class WorkBrowseFragment : Fragment() {
                 MaterialTheme {
                     WorkBrowseScreen(
                         viewModel = viewModel,
+                        closeScreen = { requireActivity().finish() },
                         openIntent = { openIntent(it) },
                     )
                 }

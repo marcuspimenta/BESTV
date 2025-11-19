@@ -16,8 +16,8 @@ package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.widget.VideoView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -31,17 +31,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomStart
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.Icon
@@ -50,52 +66,38 @@ import androidx.tv.material3.ModalNavigationDrawer
 import androidx.tv.material3.NavigationDrawerItem
 import androidx.tv.material3.Text
 import androidx.tv.material3.rememberDrawerState
-import kotlinx.coroutines.launch
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
-import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
-import kotlinx.coroutines.flow.collectLatest
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomStart
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.net.toUri
-import com.pimenta.bestv.presentation.extension.finish
+import com.pimenta.bestv.presentation.ui.compose.SlideInFromBottom
 import com.pimenta.bestv.presentation.ui.compose.WorkBackground
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.presentation.ui.compose.fadeAtTopEdge
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.Genre
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.TopContent
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.About
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
-import kotlin.reflect.typeOf
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
+import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/raw/splash_animation"
+private const val SPLASH_ANIMATION_FILE =
+    "android.resource://com.pimenta.bestv/raw/splash_animation"
 
 @Composable
 fun WorkBrowseScreen(
     viewModel: WorkBrowseViewModel,
+    closeScreen: () -> Unit,
     openIntent: (Intent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -104,6 +106,7 @@ fun WorkBrowseScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
+                is WorkBrowseEffect.CloseScreen -> closeScreen()
                 is WorkBrowseEffect.Navigate -> openIntent(effect.intent)
             }
         }
@@ -111,6 +114,7 @@ fun WorkBrowseScreen(
 
     WorkBrowseContent(
         state = state,
+        onBackClicked = { viewModel.handleEvent(WorkBrowseEvent.BackClicked) },
         onSplashAnimationFinished = { viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished) },
         onSectionClicked = { viewModel.handleEvent(WorkBrowseEvent.SectionClicked(it)) },
         onWorkSelected = { viewModel.handleEvent(WorkBrowseEvent.WorkSelected(it)) },
@@ -123,6 +127,7 @@ fun WorkBrowseScreen(
 @Composable
 private fun WorkBrowseContent(
     state: WorkBrowseState,
+    onBackClicked: () -> Unit,
     onSplashAnimationFinished: () -> Unit,
     onSectionClicked: (Int) -> Unit,
     onWorkSelected: (WorkViewModel) -> Unit,
@@ -151,6 +156,7 @@ private fun WorkBrowseContent(
                     workSelected = contentState.workSelected,
                     selectedSectionIndex = contentState.selectedSectionIndex,
                     sections = contentState.sections,
+                    onBackClicked = onBackClicked,
                     onSectionClicked = onSectionClicked,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
@@ -183,6 +189,7 @@ private fun BrowseSections(
     workSelected: WorkViewModel?,
     selectedSectionIndex: Int,
     sections: List<Section>,
+    onBackClicked: () -> Unit,
     onWorkSelected: (WorkViewModel) -> Unit,
     onSectionClicked: (Int) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
@@ -191,6 +198,14 @@ private fun BrowseSections(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val focusRequester = FocusRequester()
+
+    BackHandler {
+        if (drawerState.currentValue == DrawerValue.Open) {
+            drawerState.setValue(DrawerValue.Closed)
+        } else {
+            onBackClicked()
+        }
+    }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -266,6 +281,8 @@ private fun BrowseSections(
                     }
             ) {
                 Section(
+                    drawerValue = drawerState.currentValue,
+                    focusRequester = focusRequester,
                     section = sections[selectedSectionIndex],
                     workSelected = workSelected,
                     onWorkSelected = onWorkSelected,
@@ -297,17 +314,13 @@ private fun BrowseSections(
                 )
             }
         }
-
-        LaunchedEffect(drawerState.currentValue) {
-            if (drawerState.currentValue == DrawerValue.Closed) {
-                focusRequester.requestFocus()
-            }
-        }
     }
 }
 
 @Composable
 private fun Section(
+    drawerValue: DrawerValue,
+    focusRequester: FocusRequester,
     section: Section,
     workSelected: WorkViewModel?,
     onWorkSelected: (WorkViewModel) -> Unit,
@@ -317,32 +330,43 @@ private fun Section(
     when (section) {
         is Search -> Unit
         is Favorites -> SectionWorks(
+            drawerValue = drawerValue,
+            focusRequester = focusRequester,
             workSelected = workSelected,
             content = section.content,
             onWorkSelected = onWorkSelected,
             onWorkClicked = onWorkClicked,
             modifier = modifier
         )
+
         is Movies -> SectionWorks(
+            drawerValue = drawerValue,
+            focusRequester = focusRequester,
             workSelected = workSelected,
             content = section.content,
             onWorkSelected = onWorkSelected,
             onWorkClicked = onWorkClicked,
             modifier = modifier
         )
+
         is TvShows -> SectionWorks(
+            drawerValue = drawerValue,
+            focusRequester = focusRequester,
             workSelected = workSelected,
             content = section.content,
             onWorkSelected = onWorkSelected,
             onWorkClicked = onWorkClicked,
             modifier = modifier
         )
+
         is About -> Unit
     }
 }
 
 @Composable
 private fun SectionWorks(
+    drawerValue: DrawerValue,
+    focusRequester: FocusRequester,
     workSelected: WorkViewModel?,
     content: List<ContentSection>,
     onWorkSelected: (WorkViewModel) -> Unit,
@@ -351,29 +375,39 @@ private fun SectionWorks(
 ) {
     val listState = rememberLazyListState()
 
-    Column(
+    SlideInFromBottom(
         modifier = modifier.fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .fillMaxHeight(0.45f)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            WorkSelectedHeader(
-                workSelected = workSelected,
-                modifier = Modifier.align(BottomStart)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .fillMaxHeight(0.45f)
+            ) {
+                WorkSelectedHeader(
+                    workSelected = workSelected,
+                    modifier = Modifier.align(BottomStart)
+                )
+            }
+
+            SectionWorkList(
+                content = content,
+                listState = listState,
+                onWorkSelected = onWorkSelected,
+                onWorkClicked = onWorkClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
             )
         }
 
-        SectionWorkList(
-            content = content,
-            listState = listState,
-            onWorkSelected = onWorkSelected,
-            onWorkClicked = onWorkClicked,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        )
+        LaunchedEffect(drawerValue) {
+            if (drawerValue == DrawerValue.Closed) {
+                focusRequester.requestFocus()
+            }
+        }
     }
 }
 
@@ -423,7 +457,7 @@ private fun WorkSelectedHeader(
 @Composable
 private fun SectionWorkList(
     content: List<ContentSection>,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
     modifier: Modifier = Modifier

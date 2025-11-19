@@ -44,7 +44,7 @@ abstract class BaseViewModel<ViewState, ViewEffect>(initialState: ViewState) : V
         mutableStateFlow.update(function)
     }
 
-    protected fun emitEvent(effect: ViewEffect) {
+    protected fun emitEffect(effect: ViewEffect) {
         effectChannel.trySend(effect)
     }
 }

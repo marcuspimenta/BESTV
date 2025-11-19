@@ -406,18 +406,18 @@ class WorkDetailsViewModel @Inject constructor(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEvent(WorkDetailsEffect.OpenIntent(intent))
+        emitEffect(WorkDetailsEffect.OpenIntent(intent))
     }
 
     private fun handleCastClicked(cast: CastViewModel) {
         val intent = castDetailsRoute.buildCastDetailIntent(cast)
-        emitEvent(WorkDetailsEffect.OpenIntent(intent))
+        emitEffect(WorkDetailsEffect.OpenIntent(intent))
     }
 
     private fun handleVideoClicked(video: VideoViewModel) {
         video.youtubeUrl?.let {
             val intent = Intent(Intent.ACTION_VIEW, it.toUri())
-            emitEvent(WorkDetailsEffect.OpenIntent(intent))
+            emitEffect(WorkDetailsEffect.OpenIntent(intent))
         }
     }
 

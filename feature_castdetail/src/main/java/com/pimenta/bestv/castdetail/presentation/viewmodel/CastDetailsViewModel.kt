@@ -76,6 +76,6 @@ class CastDetailsViewModel @Inject constructor(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEvent(CastDetailsEffect.OpenIntent(intent, true))
+        emitEffect(CastDetailsEffect.OpenIntent(intent, true))
     }
 }

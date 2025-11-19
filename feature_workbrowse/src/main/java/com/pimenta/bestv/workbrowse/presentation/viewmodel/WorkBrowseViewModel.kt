@@ -48,13 +48,14 @@ class WorkBrowseViewModel @Inject constructor(
 ) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(WorkBrowseState()) {
 
     init {
-        loadData()
+        handleLoadData()
     }
 
     fun handleEvent(event: WorkBrowseEvent) {
         when (event) {
-            is WorkBrowseEvent.LoadData -> loadData()
-            is WorkBrowseEvent.RetryLoad -> loadData()
+            is WorkBrowseEvent.BackClicked -> handleBackClicked()
+            is WorkBrowseEvent.LoadData -> handleLoadData()
+            is WorkBrowseEvent.RetryLoad -> handleLoadData()
             is WorkBrowseEvent.SplashAnimationFinished -> handleSplashAnimationFinished()
             is WorkBrowseEvent.SectionClicked -> handleSectionClicked(event.sectionClickedIndex)
             is WorkBrowseEvent.WorkSelected -> handleWorkSelected(event.work)
@@ -62,7 +63,9 @@ class WorkBrowseViewModel @Inject constructor(
         }
     }
 
-    private fun loadData() {
+    private fun handleBackClicked() = emitEffect(WorkBrowseEffect.CloseScreen)
+
+    private fun handleLoadData() {
         viewModelScope.launch {
             updateState { it.copy(state = Loading(false)) }
 
@@ -138,7 +141,7 @@ class WorkBrowseViewModel @Inject constructor(
         when {
             selectedSectionIndex == 0 -> {
                 val intent = searchRoute.buildSearchIntent()
-                emitEvent(WorkBrowseEffect.Navigate(intent))
+                emitEffect(WorkBrowseEffect.Navigate(intent))
             }
 
             else -> {
@@ -162,6 +165,6 @@ class WorkBrowseViewModel @Inject constructor(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEvent(WorkBrowseEffect.Navigate(intent))
+        emitEffect(WorkBrowseEffect.Navigate(intent))
     }
 }

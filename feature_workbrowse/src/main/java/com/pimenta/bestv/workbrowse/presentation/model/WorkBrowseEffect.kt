@@ -21,5 +21,6 @@ import android.content.Intent
  * These are consumed once and don't persist in the state.
  */
 sealed interface WorkBrowseEffect {
+    data object CloseScreen : WorkBrowseEffect
     data class Navigate(val intent: Intent) : WorkBrowseEffect
 }

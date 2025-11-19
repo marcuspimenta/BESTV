@@ -326,6 +326,6 @@ class SearchViewModel @Inject constructor(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEvent(SearchEffect.OpenWorkDetails(intent))
+        emitEffect(SearchEffect.OpenWorkDetails(intent))
     }
 }
