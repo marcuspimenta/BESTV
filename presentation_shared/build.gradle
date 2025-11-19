@@ -33,7 +33,7 @@ dependencies {
     kapt Libs.dagger_compile
 
     // Lottie
-    implementation Libs.lottie
+    implementation Libs.lottie_compose
 
     // Compose for TV
     implementation platform(Libs.compose_bom)

@@ -58,7 +58,7 @@ dependencies {
     implementation Libs.timber
 
     // Lottie
-    implementation Libs.lottie
+    implementation Libs.lottie_compose
 
     // JUnit
     testImplementation Libs.junit

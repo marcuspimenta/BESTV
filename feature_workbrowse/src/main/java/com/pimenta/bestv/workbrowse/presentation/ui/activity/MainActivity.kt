@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.pimenta.bestv.presentation.extension.replaceFragment
@@ -46,17 +45,8 @@ class MainActivity : FragmentActivity(), MainPresenter.View {
             bindTo(lifecycle)
         }.also {
             it.loadRecommendations()
-            it.viewCreated(savedInstanceState == null)
+            it.viewCreated()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        presenter.checkActivityResult(requestCode, resultCode)
-    }
-
-    override fun openSplashScreen(intent: Intent, requestCode: Int) {
-        startActivityForResult(intent, requestCode)
     }
 
     override fun showWorkBrowseScreen() {

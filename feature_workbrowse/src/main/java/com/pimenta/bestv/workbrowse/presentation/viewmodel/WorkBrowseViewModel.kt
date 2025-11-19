@@ -32,6 +32,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.T
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -54,6 +55,7 @@ class WorkBrowseViewModel @Inject constructor(
         when (event) {
             is WorkBrowseEvent.LoadData -> loadData()
             is WorkBrowseEvent.RetryLoad -> loadData()
+            is WorkBrowseEvent.SplashAnimationFinished -> handleSplashAnimationFinished()
             is WorkBrowseEvent.SectionClicked -> handleSectionClicked(event.sectionClickedIndex)
             is WorkBrowseEvent.WorkSelected -> handleWorkSelected(event.work)
             is WorkBrowseEvent.WorkClicked -> handleWorkClicked(event.work)
@@ -62,10 +64,14 @@ class WorkBrowseViewModel @Inject constructor(
 
     private fun loadData() {
         viewModelScope.launch {
-            updateState { it.copy(state = Loading) }
+            updateState { it.copy(state = Loading(false)) }
 
             try {
                 val sectionDetails = getSectionDetailsUseCase.getAllSections()
+
+                // Wait for splash animation to finish reactively
+                state.first { (it.state as? Loading)?.isSplashAnimationFinished == true }
+
                 updateState {
                     it.copy(
                         state = Loaded(
@@ -120,6 +126,11 @@ class WorkBrowseViewModel @Inject constructor(
             favoritesIndex >= 0 -> sections.filterNot { it is Favorites }
             else -> sections
         }
+    }
+
+    private fun handleSplashAnimationFinished() {
+        val currentState = currentState.state as? Loading ?: return
+        updateState { it.copy(state = currentState.copy(isSplashAnimationFinished = true)) }
     }
 
     private fun handleSectionClicked(selectedSectionIndex: Int) {

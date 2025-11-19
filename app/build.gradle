@@ -37,7 +37,6 @@ dependencies {
     implementation project(':feature_castdetail')
     implementation project(':feature_search')
     implementation project(':feature_recommendation')
-    implementation project(':feature_splash')
     implementation project(':feature_workbrowse')
     implementation project(':model_shared')
     implementation project(':data_shared')

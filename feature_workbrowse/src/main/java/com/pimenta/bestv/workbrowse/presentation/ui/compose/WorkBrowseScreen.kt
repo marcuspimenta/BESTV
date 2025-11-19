@@ -14,7 +14,10 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
+import android.widget.VideoView
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -70,9 +73,11 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
+import com.pimenta.bestv.presentation.extension.finish
 import com.pimenta.bestv.presentation.ui.compose.WorkBackground
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.presentation.ui.compose.fadeAtTopEdge
@@ -85,6 +90,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.M
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
 import kotlin.reflect.typeOf
+
+private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/raw/splash_animation"
 
 @Composable
 fun WorkBrowseScreen(
@@ -104,6 +111,7 @@ fun WorkBrowseScreen(
 
     WorkBrowseContent(
         state = state,
+        onSplashAnimationFinished = { viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished) },
         onSectionClicked = { viewModel.handleEvent(WorkBrowseEvent.SectionClicked(it)) },
         onWorkSelected = { viewModel.handleEvent(WorkBrowseEvent.WorkSelected(it)) },
         onWorkClicked = { viewModel.handleEvent(WorkBrowseEvent.WorkClicked(it)) },
@@ -115,6 +123,7 @@ fun WorkBrowseScreen(
 @Composable
 private fun WorkBrowseContent(
     state: WorkBrowseState,
+    onSplashAnimationFinished: () -> Unit,
     onSectionClicked: (Int) -> Unit,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
@@ -124,8 +133,9 @@ private fun WorkBrowseContent(
     Box(modifier = modifier.fillMaxSize()) {
         when (val contentState = state.state) {
             is Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                LoadingSplashScreen(
+                    onSplashAnimationFinished = onSplashAnimationFinished,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -149,6 +159,23 @@ private fun WorkBrowseContent(
             }
         }
     }
+}
+
+@Composable
+private fun LoadingSplashScreen(
+    onSplashAnimationFinished: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier,
+        factory = { context ->
+            VideoView(context).apply {
+                setOnCompletionListener { onSplashAnimationFinished() }
+                setVideoURI(SPLASH_ANIMATION_FILE.toUri())
+                start()
+            }
+        }
+    )
 }
 
 @Composable

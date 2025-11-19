@@ -23,10 +23,10 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loa
  * Represents the state of the Work Browse screen.
  */
 data class WorkBrowseState(
-    val state: State = Loading
+    val state: State = Loading(false)
 ) {
     sealed interface State {
-        data object Loading : State
+        data class Loading(val isSplashAnimationFinished: Boolean) : State
         data object Error : State
         data class Loaded(
             val workSelected: WorkViewModel?,
