@@ -47,64 +47,38 @@ fun CastDetailsHeader(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.Top
     ) {
-        // Profile photo
-        CastCard(cast = cast)
+        CastCard(
+            cast = cast,
+            includeCastName = false
+        )
 
-        Spacer(modifier = Modifier.width(32.dp))
-
-        // Cast details
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 32.dp)
         ) {
-            // Name
             Text(
-                text = cast.name ?: "",
+                text = cast.name,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
 
-            // Birthday
-            cast.birthday?.let { birthday ->
-                Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Born: ${cast.birthday}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White.copy(alpha = 0.8f),
+                modifier = Modifier.padding(top = 12.dp)
+            )
+
+            if (cast.biography.isNotBlank()) {
                 Text(
-                    text = "Born: $birthday",
+                    text = cast.biography,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-            }
-
-            // Death day
-            cast.deathDay?.let { deathDay ->
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Died: $deathDay",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-            }
-
-            // Biography
-            cast.biography?.let { biography ->
-                if (biography.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = biography,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White.copy(alpha = 0.9f),
-                        maxLines = 8,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-
-            // Source
-            cast.source?.let {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.6f)
+                    color = Color.White.copy(alpha = 0.9f),
+                    maxLines = 8,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 12.dp)
                 )
             }
         }

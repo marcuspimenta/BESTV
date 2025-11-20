@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +36,8 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorBanner
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
-import com.pimenta.bestv.presentation.ui.compose.WorkBackground
+import com.pimenta.bestv.presentation.ui.compose.Loading
+import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenIntent
@@ -120,13 +120,13 @@ private fun WorkDetailsContent(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        WorkBackground(
+        BackgroundScreen(
             backdropUrl = state.work.backdropUrl
         )
 
         when (val currentState = state.state) {
             is Loading -> {
-                CircularProgressIndicator(
+                Loading(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
@@ -139,80 +139,118 @@ private fun WorkDetailsContent(
             }
 
             is Loaded -> {
-                val listState = rememberLazyListState()
-                val focusRequesters = remember(currentState.contents.size) {
-                    currentState.contents.map { FocusRequester() }
-                }
-
-                LazyColumn(
-                    state = listState,
+                LoadedWorkDetails(
+                    work = state.work,
+                    loadedState = currentState,
+                    actionClicked = actionClicked,
+                    onVideoClick = onVideoClick,
+                    onCastClick = onCastClick,
+                    onWorkClick = onWorkClick,
+                    onLoadMoreReviews = onLoadMoreReviews,
+                    onLoadMoreRecommendations = onLoadMoreRecommendations,
+                    onLoadMoreSimilar = onLoadMoreSimilar,
+                    onDismissError = onDismissError,
+                    onClearScrollIndex = onClearScrollIndex,
                     modifier = Modifier.fillMaxSize()
-                ) {
-                    itemsIndexed(
-                        items = currentState.contents,
-                        key = { _, content -> content.id }
-                    ) { index, content ->
-                        when (content) {
-                            is Header -> WorkDetailsHeader(
-                                work = state.work,
-                                actions = content.actions,
-                                actionClicked = actionClicked,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-
-                            is Casts -> CastRow(
-                                casts = content.casts,
-                                onCastClick = onCastClick,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-
-                            is RecommendedWorks -> WorksRow(
-                                title = "Recommended",
-                                works = content.recommended,
-                                onWorkClick = onWorkClick,
-                                isLoadingMore = content.page.isLoadingMore,
-                                onLoadMore = onLoadMoreRecommendations,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-
-                            is Reviews -> ReviewRow(
-                                reviews = content.reviews,
-                                isLoadingMore = content.page.isLoadingMore,
-                                onLoadMore = onLoadMoreReviews,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-
-                            is SimilarWorks -> WorksRow(
-                                title = "Similar",
-                                works = content.similar,
-                                onWorkClick = onWorkClick,
-                                isLoadingMore = content.page.isLoadingMore,
-                                onLoadMore = onLoadMoreSimilar,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-
-                            is Videos -> VideoRow(
-                                videos = content.videos,
-                                onVideoClick = onVideoClick,
-                                modifier = Modifier.focusRequester(focusRequesters[index])
-                            )
-                        }
-                    }
-                }
-
-                currentState.indexOfContentToScroll?.let { targetIndex ->
-                    LaunchedEffect(targetIndex) {
-                        listState.animateScrollToItem(targetIndex)
-                        focusRequesters[targetIndex].requestFocus()
-                        onClearScrollIndex()
-                    }
-                }
-
-                ErrorBanner(
-                    errorMessage = currentState.error?.message,
-                    onDismiss = onDismissError,
-                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadedWorkDetails(
+    work: WorkViewModel,
+    loadedState: Loaded,
+    actionClicked: (ActionButton) -> Unit,
+    onVideoClick: (VideoViewModel) -> Unit,
+    onCastClick: (CastViewModel) -> Unit,
+    onWorkClick: (WorkViewModel) -> Unit,
+    onLoadMoreReviews: () -> Unit,
+    onLoadMoreRecommendations: () -> Unit,
+    onLoadMoreSimilar: () -> Unit,
+    onDismissError: () -> Unit,
+    onClearScrollIndex: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val listState = rememberLazyListState()
+    val focusRequesters = remember(loadedState.contents.size) {
+        loadedState.contents.map { FocusRequester() }
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        LazyColumn(
+            state = listState,
+        ) {
+            itemsIndexed(
+                items = loadedState.contents,
+                key = { _, content -> content.id }
+            ) { index, content ->
+                when (content) {
+                    is Header -> WorkDetailsHeader(
+                        work = work,
+                        actions = content.actions,
+                        actionClicked = actionClicked,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+
+                    is Casts -> CastRow(
+                        casts = content.casts,
+                        onCastClick = onCastClick,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+
+                    is RecommendedWorks -> WorksRow(
+                        title = "Recommended",
+                        works = content.recommended,
+                        onWorkClick = onWorkClick,
+                        isLoadingMore = content.page.isLoadingMore,
+                        onLoadMore = onLoadMoreRecommendations,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+
+                    is Reviews -> ReviewRow(
+                        reviews = content.reviews,
+                        isLoadingMore = content.page.isLoadingMore,
+                        onLoadMore = onLoadMoreReviews,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+
+                    is SimilarWorks -> WorksRow(
+                        title = "Similar",
+                        works = content.similar,
+                        onWorkClick = onWorkClick,
+                        isLoadingMore = content.page.isLoadingMore,
+                        onLoadMore = onLoadMoreSimilar,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+
+                    is Videos -> VideoRow(
+                        videos = content.videos,
+                        onVideoClick = onVideoClick,
+                        modifier = Modifier.focusRequester(focusRequesters[index])
+                    )
+                }
+            }
+        }
+
+        ErrorBanner(
+            errorMessage = loadedState.error?.message,
+            onDismiss = onDismissError,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+
+        LaunchedEffect(Unit) {
+            focusRequesters.getOrNull(0)?.requestFocus()
+        }
+
+        loadedState.indexOfContentToScroll?.let { targetIndex ->
+            LaunchedEffect(targetIndex) {
+                listState.animateScrollToItem(targetIndex)
+                focusRequesters.getOrNull(targetIndex)?.requestFocus()
+                onClearScrollIndex()
             }
         }
     }

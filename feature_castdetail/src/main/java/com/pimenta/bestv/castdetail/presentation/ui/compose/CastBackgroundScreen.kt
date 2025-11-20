@@ -33,11 +33,10 @@ import androidx.tv.material3.MaterialTheme
 import coil.compose.AsyncImage
 
 @Composable
-fun BackgroundScreen(
+fun CastBackgroundScreen(
     backdropUrl: String?,
     modifier: Modifier = Modifier,
     animationDuration: Int = 1200,
-    contentScale: ContentScale = ContentScale.Crop
 ) {
     Box(
         modifier = modifier
@@ -57,8 +56,8 @@ fun BackgroundScreen(
                     model = it,
                     contentDescription = null,
                     modifier = Modifier
-                        .aspectRatio(16f / 9f),
-                    contentScale = contentScale,
+                        .aspectRatio( 2f/3f),
+                    contentScale = ContentScale.Fit,
                 )
             }
         }

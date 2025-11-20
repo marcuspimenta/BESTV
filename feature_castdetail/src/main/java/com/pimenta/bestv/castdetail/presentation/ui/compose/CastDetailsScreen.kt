@@ -27,14 +27,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.OpenIntent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
@@ -43,6 +40,8 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
+import com.pimenta.bestv.presentation.ui.compose.Loading
+import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -84,18 +83,11 @@ private fun CastDetailsContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1A1A2E),
-                        Color(0xFF16213E)
-                    )
-                )
-            )
+            .background(Color.Black)
     ) {
         when (state) {
             is CastDetailsState.Loading -> {
-                CircularProgressIndicator(
+                Loading(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }

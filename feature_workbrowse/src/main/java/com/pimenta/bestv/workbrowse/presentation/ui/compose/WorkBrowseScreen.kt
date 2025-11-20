@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
-import android.app.Activity
 import android.content.Intent
 import android.widget.VideoView
 import androidx.activity.compose.BackHandler
@@ -34,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -69,7 +67,7 @@ import androidx.tv.material3.rememberDrawerState
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.SlideInFromBottom
-import com.pimenta.bestv.presentation.ui.compose.WorkBackground
+import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.presentation.ui.compose.fadeAtTopEdge
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
@@ -210,7 +208,7 @@ private fun BrowseSections(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        WorkBackground(
+        BackgroundScreen(
             backdropUrl = workSelected?.backdropUrl
         )
 

@@ -17,8 +17,6 @@ package com.pimenta.bestv.workdetail.presentation.ui.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -64,8 +62,6 @@ fun CastRow(
                 CastCard(
                     cast = cast,
                     onClick = { onCastClick(cast) },
-                    size = 150.dp,
-                    includeCastName = true
                 )
             }
         }

@@ -5,7 +5,7 @@
     <string name="tv_shows">TV SHOWS</string>
     <string name="genres">Genres</string>
 
-    <string name="source_tmdb">Source: TMDb</string>
+    <string name="source_tmdb">TMDb</string>
     <string name="empty_line">\n</string>
 
     <!-- Error messages -->

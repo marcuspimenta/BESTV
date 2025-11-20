@@ -35,7 +35,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
-import com.pimenta.bestv.presentation.ui.compose.WorkBackground
+import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.search.presentation.model.SearchEffect.OpenWorkDetails
 import com.pimenta.bestv.search.presentation.model.SearchEvent.ClearSearch
@@ -74,7 +74,7 @@ fun SearchScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        WorkBackground(backdropUrl = (state.state as? Loaded)?.selectedWork?.backdropUrl)
+        BackgroundScreen(backdropUrl = (state.state as? Loaded)?.selectedWork?.backdropUrl)
 
         Column(modifier = modifier.fillMaxSize()) {
             SearchBar(
