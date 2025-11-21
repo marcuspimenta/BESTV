@@ -17,7 +17,6 @@ package com.pimenta.bestv.application
 import android.app.Application
 import android.os.StrictMode
 import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
-import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.data.BuildConfig
 import com.pimenta.bestv.di.ApplicationComponent
 import com.pimenta.bestv.di.DaggerApplicationComponent
