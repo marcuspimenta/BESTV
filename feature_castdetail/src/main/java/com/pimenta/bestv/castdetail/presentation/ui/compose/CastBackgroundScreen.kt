@@ -56,7 +56,7 @@ fun CastBackgroundScreen(
                     model = it,
                     contentDescription = null,
                     modifier = Modifier
-                        .aspectRatio( 2f/3f),
+                        .aspectRatio(2f / 3f),
                     contentScale = ContentScale.Fit,
                 )
             }

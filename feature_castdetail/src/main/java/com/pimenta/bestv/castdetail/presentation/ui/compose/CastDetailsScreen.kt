@@ -41,7 +41,6 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.Loading
-import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import kotlinx.coroutines.flow.collectLatest
 

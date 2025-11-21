@@ -15,7 +15,6 @@
 package com.pimenta.bestv.search.presentation.model
 
 import android.content.Intent
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 /**
  * Represents one-time side effects that should happen in the Search screen.

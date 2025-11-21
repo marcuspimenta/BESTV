@@ -15,7 +15,6 @@
 package com.pimenta.bestv.route.castdetail
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.pimenta.bestv.model.presentation.model.CastViewModel

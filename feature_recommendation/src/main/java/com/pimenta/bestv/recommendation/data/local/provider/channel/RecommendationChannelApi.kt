@@ -24,12 +24,12 @@ import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.R as presentationR
-import com.pimenta.bestv.recommendation.R as recommendationR
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.recommendation.R as recommendationR
 
 /**
  * Created by marcus on 23-04-2019.
@@ -48,35 +48,35 @@ class RecommendationChannelApi constructor(
 
         works?.mapNotNull { work -> work.toViewModel() }
             ?.forEach { workViewModel ->
-                    val programBuilder = PreviewProgram.Builder()
-                        .setChannelId(channelId)
-                        .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
-                        .setTitle(workViewModel.title)
-                        .setDescription(workViewModel.overview)
-                        .setPosterArtUri(Uri.parse(workViewModel.backdropUrl))
-                        .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
-                        .setInternalProviderId(workViewModel.id.toString())
+                val programBuilder = PreviewProgram.Builder()
+                    .setChannelId(channelId)
+                    .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
+                    .setTitle(workViewModel.title)
+                    .setDescription(workViewModel.overview)
+                    .setPosterArtUri(Uri.parse(workViewModel.backdropUrl))
+                    .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
+                    .setInternalProviderId(workViewModel.id.toString())
 
-                    localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)
-                        .takeUnless { workId -> workId == 0L }
-                        ?.let {
-                            application.contentResolver.update(
-                                TvContractCompat.buildProgramUri(channelId),
-                                programBuilder.build().toContentValues(),
-                                null,
-                                null
-                            )
+                localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)
+                    .takeUnless { workId -> workId == 0L }
+                    ?.let {
+                        application.contentResolver.update(
+                            TvContractCompat.buildProgramUri(channelId),
+                            programBuilder.build().toContentValues(),
+                            null,
+                            null
+                        )
+                    }
+                    ?: run {
+                        application.contentResolver.insert(
+                            TvContractCompat.PreviewPrograms.CONTENT_URI,
+                            programBuilder.build().toContentValues()
+                        )?.let { programUri ->
+                            val programId = ContentUris.parseId(programUri)
+                            localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
                         }
-                        ?: run {
-                            application.contentResolver.insert(
-                                TvContractCompat.PreviewPrograms.CONTENT_URI,
-                                programBuilder.build().toContentValues()
-                            )?.let { programUri ->
-                                val programId = ContentUris.parseId(programUri)
-                                localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
-                            }
-                        }
-                }
+                    }
+            }
     }
 
     private fun getChannelId() =

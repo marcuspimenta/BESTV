@@ -22,10 +22,10 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.R as presentationR
-import com.pimenta.bestv.recommendation.R as recommendationR
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.recommendation.R as recommendationR
 
 /**
  * Created by marcus on 23-04-2019.
@@ -58,7 +58,7 @@ class RecommendationRowApi constructor(
                     .setAutoDismiss(true)
                     .setIdTag(workViewModel.id.toString())
                     .setGroup(application.getString(presentationR.string.app_name))
-                    //.setBadgeIcon(recommendationR.drawable.movie_icon)
+                    // .setBadgeIcon(recommendationR.drawable.movie_icon)
                     .setTitle(workViewModel.title)
                     .setContentImage(cardBitmap)
                     .setContentTypes(arrayOf(ContentRecommendation.CONTENT_TYPE_MOVIE))

@@ -39,16 +39,16 @@ data class WorkBrowseState(
         open val iconRes: Int,
         open val titleRes: Int
     ) {
-        data object Search: Section(presentationR.drawable.search, workbrowseR.string.search)
+        data object Search : Section(presentationR.drawable.search, workbrowseR.string.search)
         data class Movies(
             val content: List<ContentSection>
-        ): Section(presentationR.drawable.movie, presentationR.string.movies)
+        ) : Section(presentationR.drawable.movie, presentationR.string.movies)
         data class TvShows(
             val content: List<ContentSection>
-        ): Section(presentationR.drawable.tv, presentationR.string.tv_shows)
+        ) : Section(presentationR.drawable.tv, presentationR.string.tv_shows)
         data class Favorites(
             val content: List<ContentSection>
-        ): Section(presentationR.drawable.favorite, workbrowseR.string.favorites)
+        ) : Section(presentationR.drawable.favorite, workbrowseR.string.favorites)
         data object About : Section(presentationR.drawable.info, workbrowseR.string.about)
     }
 }

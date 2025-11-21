@@ -34,8 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
+import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.search.presentation.model.SearchEffect.OpenWorkDetails
 import com.pimenta.bestv.search.presentation.model.SearchEvent.ClearSearch
@@ -164,7 +164,7 @@ private fun SearchResultsContent(
     ) {
         itemsIndexed(
             items = contents,
-            key = { index, content -> "${content.query}_${index}" }
+            key = { index, content -> "${content.query}_$index" }
         ) { index, content ->
             when (content) {
                 is Movies -> WorksRow(
