@@ -14,10 +14,12 @@
 
 package com.pimenta.bestv.castdetail.di
 
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+
 /**
  * Created by marcus on 24-02-2020.
  */
 interface CastDetailsActivityComponentProvider {
 
-    fun castDetailsActivityComponent(): CastDetailsActivityComponent
+    fun castDetailsActivityComponent(cast: CastViewModel): CastDetailsActivityComponent
 }

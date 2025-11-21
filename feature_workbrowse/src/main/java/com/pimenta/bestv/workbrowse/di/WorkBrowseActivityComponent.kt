@@ -14,17 +14,17 @@
 
 package com.pimenta.bestv.workbrowse.di
 
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workbrowse.di.module.GenreApiModule
 import com.pimenta.bestv.workbrowse.di.module.MovieApiModule
 import com.pimenta.bestv.workbrowse.di.module.TvShowApiModule
-import com.pimenta.bestv.workbrowse.presentation.ui.fragment.WorkBrowseFragment
+import com.pimenta.bestv.workbrowse.presentation.ui.activity.WorkBrowseActivity
 import dagger.Subcomponent
 
 /**
- * Created by marcus on 2019-08-28.
+ * Created by marcus on 2019-08-29.
  */
-@FragmentScope
+@ActivityScope
 @Subcomponent(
     modules = [
         GenreApiModule::class,
@@ -32,12 +32,12 @@ import dagger.Subcomponent
         TvShowApiModule::class
     ]
 )
-interface WorkBrowseFragmentComponent {
+interface WorkBrowseActivityComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): WorkBrowseFragmentComponent
+        fun create(): WorkBrowseActivityComponent
     }
 
-    fun inject(workBrowseFragment: WorkBrowseFragment)
+    fun inject(activity: WorkBrowseActivity)
 }

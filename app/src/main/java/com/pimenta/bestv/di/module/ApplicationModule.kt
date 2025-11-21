@@ -19,7 +19,6 @@ import android.content.Context
 import com.pimenta.bestv.data.di.module.MediaLocalModule
 import com.pimenta.bestv.data.di.module.MediaRemoteModule
 import com.pimenta.bestv.presentation.BuildConfig
-import com.pimenta.bestv.presentation.dispatcher.CoroutineDispatchers
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -41,10 +40,6 @@ class ApplicationModule(
     @Provides
     @Singleton
     fun provideApplication() = application
-
-    @Provides
-    @Singleton
-    fun provideCoroutineDispatchers() = CoroutineDispatchers()
 
     @Provides
     @Singleton

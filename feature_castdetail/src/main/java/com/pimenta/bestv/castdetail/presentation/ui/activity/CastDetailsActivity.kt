@@ -14,36 +14,45 @@
 
 package com.pimenta.bestv.castdetail.presentation.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
-import com.pimenta.bestv.castdetail.presentation.ui.fragment.CastDetailsFragment
-import com.pimenta.bestv.presentation.extension.replaceFragment
-import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
+import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
+import com.pimenta.bestv.route.castdetail.getCastDeepLink
 import javax.inject.Inject
+import kotlin.Throwable
 
 /**
  * Created by marcus on 04-04-2018.
  */
-class CastDetailsActivity : FragmentActivity() {
+class CastDetailsActivity : ComponentActivity() {
 
-    lateinit var castDetailsActivityComponent: CastDetailsActivityComponent
-
-    @Inject
-    lateinit var castDetailsRoute: CastDetailsRoute
+    @Inject lateinit var viewModel: CastDetailsViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        castDetailsActivityComponent = (application as CastDetailsActivityComponentProvider)
-            .castDetailsActivityComponent()
-            .also {
-                it.inject(this)
-            }
         super.onCreate(savedInstanceState)
 
-        when (val castViewModel = castDetailsRoute.getCastDetailDeepLink(intent)) {
-            null -> finish()
-            else -> replaceFragment(CastDetailsFragment.newInstance(castViewModel))
+        intent.getCastDeepLink()?.let {
+            (application as CastDetailsActivityComponentProvider)
+                .castDetailsActivityComponent(it)
+                .inject(this)
+        } ?: Throwable("Couldn't open a null cast")
+
+        setContent {
+            MaterialTheme {
+                CastDetailsScreen(
+                    viewModel = viewModel,
+                    openIntent = { openIntent(it) },
+                )
+            }
         }
+    }
+
+    private fun openIntent(intent: Intent) {
+        startActivity(intent)
     }
 }

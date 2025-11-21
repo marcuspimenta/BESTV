@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
 import dagger.Module
 import dagger.Provides
@@ -27,7 +27,7 @@ import retrofit2.Retrofit
 class GenreApiModule {
 
     @Provides
-    @FragmentScope
+    @ActivityScope
     fun provideGenreApi(retrofit: Retrofit) =
         retrofit.create(GenreTmdbApi::class.java)
 }

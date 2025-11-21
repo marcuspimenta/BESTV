@@ -22,9 +22,6 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
-    implementation Libs.androidx_core
-    implementation Libs.androidx_fragment
-    implementation Libs.androidx_lifecycle
     implementation Libs.androidx_recommendation
     implementation Libs.androidx_tvprovider
 

@@ -14,23 +14,30 @@
 
 package com.pimenta.bestv.workdetail.di
 
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
+import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
+import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-29.
  */
 @ActivityScope
-@Subcomponent
+@Subcomponent(
+    modules = [
+        MovieRemoteDataSourceModule::class,
+        TvShowRemoteDataSourceModule::class,
+    ]
+)
 interface WorkDetailsActivityComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): WorkDetailsActivityComponent
+        fun create(@BindsInstance workViewModel: WorkViewModel): WorkDetailsActivityComponent
     }
 
     fun inject(activity: WorkDetailsActivity)
-
-    fun workDetailsFragmentComponent(): WorkDetailsFragmentComponent.Factory
 }

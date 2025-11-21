@@ -42,11 +42,10 @@ class WorkDetailsRoute @Inject constructor(
     private val application: Application
 ) {
 
-    fun buildWorkDetailIntent(workViewModel: WorkViewModel) = Intent(Intent.ACTION_VIEW, workViewModel.toUri()).apply {
-        setPackage(application.packageName)
-    }
-
-    fun getWorkDetail(intent: Intent) = intent.getWorkDeepLink()
+    fun buildWorkDetailIntent(workViewModel: WorkViewModel) =
+        Intent(Intent.ACTION_VIEW, workViewModel.toUri()).apply {
+            setPackage(application.packageName)
+        }
 
     private fun WorkViewModel.toUri(): Uri =
         Uri.parse(SCHEMA_URI_PREFIX.plus(WORK)).buildUpon()
@@ -62,22 +61,22 @@ class WorkDetailsRoute @Inject constructor(
             .appendQueryParameter(FAVORITE, isFavorite.toString())
             .appendQueryParameter(TYPE, type.toString())
             .build()
-
-    private fun Intent.getWorkDeepLink() =
-        data?.takeIf { it.pathSegments.first() == WORK }
-            ?.let {
-                WorkViewModel(
-                    id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                    title = it.getQueryParameter(TITLE).orEmpty(),
-                    originalLanguage = it.getQueryParameter(LANGUAGE).orEmpty(),
-                    overview = it.getQueryParameter(OVERVIEW).orEmpty(),
-                    source = it.getQueryParameter(SOURCE).orEmpty(),
-                    backdropUrl = it.getQueryParameter(BACKGROUND_URL).orEmpty(),
-                    posterUrl = it.getQueryParameter(POSTER_URL).orEmpty(),
-                    originalTitle = it.getQueryParameter(ORIGINAL_TITLE).orEmpty(),
-                    releaseDate = it.getQueryParameter(RELEASE_DATE).orEmpty(),
-                    isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
-                    type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
-                )
-            }
 }
+
+fun Intent.getWorkDetail() = data
+    ?.takeIf { it.pathSegments.first() == WORK }
+    ?.let {
+        WorkViewModel(
+            id = it.getQueryParameter(ID)?.toInt() ?: 1,
+            title = it.getQueryParameter(TITLE).orEmpty(),
+            originalLanguage = it.getQueryParameter(LANGUAGE).orEmpty(),
+            overview = it.getQueryParameter(OVERVIEW).orEmpty(),
+            source = it.getQueryParameter(SOURCE).orEmpty(),
+            backdropUrl = it.getQueryParameter(BACKGROUND_URL).orEmpty(),
+            posterUrl = it.getQueryParameter(POSTER_URL).orEmpty(),
+            originalTitle = it.getQueryParameter(ORIGINAL_TITLE).orEmpty(),
+            releaseDate = it.getQueryParameter(RELEASE_DATE).orEmpty(),
+            isFavorite = it.getQueryParameter(FAVORITE)?.toBoolean() ?: false,
+            type = WorkType.valueOf(it.getQueryParameter(TYPE) ?: "MOVIE")
+        )
+    }

@@ -20,7 +20,7 @@ import com.pimenta.bestv.di.module.SubcomponentsModule
 import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponent
 import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponent
 import com.pimenta.bestv.search.di.SearchActivityComponent
-import com.pimenta.bestv.workbrowse.di.MainActivityComponent
+import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponent
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponent
 import dagger.Component
 import javax.inject.Singleton
@@ -43,7 +43,7 @@ interface ApplicationComponent {
 
     fun workDetailsActivityComponent(): WorkDetailsActivityComponent.Factory
 
-    fun mainActivityComponent(): MainActivityComponent.Factory
+    fun workBrowseActivityComponent(): WorkBrowseActivityComponent.Factory
 
     fun bootBroadcastReceiverComponent(): BootBroadcastReceiverComponent.Factory
 

@@ -14,36 +14,51 @@
 
 package com.pimenta.bestv.workdetail.presentation.ui.activity
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
-import com.pimenta.bestv.presentation.extension.replaceFragment
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.tv.material3.MaterialTheme
+import com.pimenta.bestv.route.workdetail.getWorkDetail
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponentProvider
-import com.pimenta.bestv.workdetail.presentation.ui.fragment.WorkDetailsFragment
+import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsScreen
+import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import javax.inject.Inject
 
 /**
  * Created by marcus on 11-02-2018.
  */
-class WorkDetailsActivity : FragmentActivity() {
+class WorkDetailsActivity : ComponentActivity() {
 
-    lateinit var workDetailsActivityComponent: WorkDetailsActivityComponent
-
-    @Inject
-    lateinit var workDetailsRoute: WorkDetailsRoute
+    @Inject lateinit var viewModel: WorkDetailsViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        workDetailsActivityComponent = (application as WorkDetailsActivityComponentProvider)
-            .workDetailsActivityComponent()
-            .also {
-                it.inject(this)
-            }
         super.onCreate(savedInstanceState)
 
-        when (val workViewModel = workDetailsRoute.getWorkDetail(intent)) {
-            null -> finish()
-            else -> replaceFragment(WorkDetailsFragment.newInstance(workViewModel))
+        intent.getWorkDetail()?.let {
+            (application as WorkDetailsActivityComponentProvider)
+                .workDetailsActivityComponent(it)
+                .inject(this)
+        } ?: Throwable("Couldn't open a null work")
+
+        setContent {
+            MaterialTheme {
+                WorkDetailsScreen(
+                    viewModel = viewModel,
+                    openIntent = { openIntent(it) }
+                )
+            }
+        }
+    }
+
+    private fun openIntent(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            viewModel.handleEvent(ShowError(FailedToOpenYouTubeVideo))
         }
     }
 }

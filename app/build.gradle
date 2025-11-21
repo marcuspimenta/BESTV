@@ -47,8 +47,8 @@ dependencies {
     implementation Libs.kotlin
 
     // AndroidX
+    implementation Libs.androidx_activity
     implementation Libs.androidx_lifecycle
-    implementation Libs.androidx_fragment
     implementation Libs.androidx_work
 
     // Retrofit
@@ -60,5 +60,4 @@ dependencies {
 
     // Timber
     implementation Libs.timber
-
 }

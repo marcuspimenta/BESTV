@@ -14,23 +14,28 @@
 
 package com.pimenta.bestv.castdetail.di
 
+import com.pimenta.bestv.castdetail.di.module.CastRemoteDataSourceModule
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
+import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
  * Created by marcus on 25-11-2018.
  */
 @ActivityScope
-@Subcomponent
+@Subcomponent(
+    modules = [
+        CastRemoteDataSourceModule::class
+    ]
+)
 interface CastDetailsActivityComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): CastDetailsActivityComponent
+        fun create(@BindsInstance cast: CastViewModel): CastDetailsActivityComponent
     }
 
     fun inject(activity: CastDetailsActivity)
-
-    fun castDetailsFragmentComponent(): CastDetailsFragmentComponent.Factory
 }

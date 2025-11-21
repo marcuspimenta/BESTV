@@ -14,25 +14,10 @@
 
 package com.pimenta.bestv.workbrowse.di
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
-import com.pimenta.bestv.workbrowse.presentation.ui.activity.MainActivity
-import dagger.BindsInstance
-import dagger.Subcomponent
-
 /**
- * Created by marcus on 2019-08-29.
+ * Created by marcus on 26-02-2020.
  */
-@ActivityScope
-@Subcomponent
-interface MainActivityComponent {
+interface WorkBrowseActivityComponentProvider {
 
-    @Subcomponent.Factory
-    interface Factory {
-        fun create(@BindsInstance view: MainPresenter.View): MainActivityComponent
-    }
-
-    fun inject(activity: MainActivity)
-
-    fun workBrowseFragmentComponent(): WorkBrowseFragmentComponent.Factory
+    fun workBrowseActivityComponent(): WorkBrowseActivityComponent
 }

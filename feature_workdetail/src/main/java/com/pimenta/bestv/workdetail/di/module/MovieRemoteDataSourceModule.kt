@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workdetail.data.remote.api.MovieDetailTmdbApi
 import dagger.Module
 import dagger.Provides
@@ -27,7 +27,7 @@ import retrofit2.Retrofit
 class MovieRemoteDataSourceModule {
 
     @Provides
-    @FragmentScope
+    @ActivityScope
     fun provideMovieDetailApi(retrofit: Retrofit) =
         retrofit.create(MovieDetailTmdbApi::class.java)
 }

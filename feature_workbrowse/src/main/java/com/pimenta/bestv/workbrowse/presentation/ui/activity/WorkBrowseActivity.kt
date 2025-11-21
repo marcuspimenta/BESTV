@@ -12,40 +12,45 @@
  * the License.
  */
 
-package com.pimenta.bestv.search.presentation.ui.activity
+package com.pimenta.bestv.workbrowse.presentation.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.search.di.SearchActivityComponentProvider
-import com.pimenta.bestv.search.presentation.ui.compose.SearchScreen
-import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
+import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponentProvider
+import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseScreen
+import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import javax.inject.Inject
 
 /**
- * Created by marcus on 12/07/18.
+ * Created by marcus on 11-02-2018.
  */
-class SearchActivity : ComponentActivity() {
+class WorkBrowseActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModel: SearchViewModel
+    @Inject lateinit var viewModel: WorkBrowseViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        (application as SearchActivityComponentProvider)
-            .searchActivityComponent()
+        (application as WorkBrowseActivityComponentProvider)
+            .workBrowseActivityComponent()
             .inject(this)
 
         setContent {
             MaterialTheme {
-                SearchScreen(
+                WorkBrowseScreen(
                     viewModel = viewModel,
-                    openIntent = { openIntent(it) }
+                    closeScreen = { finish() },
+                    openIntent = { openIntent(it) },
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkAndUpdateFavorites()
     }
 
     private fun openIntent(intent: Intent) {

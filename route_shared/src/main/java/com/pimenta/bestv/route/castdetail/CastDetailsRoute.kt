@@ -39,11 +39,10 @@ class CastDetailsRoute @Inject constructor(
     private val application: Application
 ) {
 
-    fun buildCastDetailIntent(castViewModel: CastViewModel) = Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
-        setPackage(application.packageName)
-    }
-
-    fun getCastDetailDeepLink(intent: Intent) = intent.getCastDeepLink()
+    fun buildCastDetailIntent(castViewModel: CastViewModel) =
+        Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
+            setPackage(application.packageName)
+        }
 
     private fun CastViewModel.toUri(): Uri =
         Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
@@ -56,19 +55,19 @@ class CastDetailsRoute @Inject constructor(
             .appendQueryParameter(BIOGRAPHY, biography)
             .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
             .build()
-
-    private fun Intent.getCastDeepLink() =
-        data?.takeIf { it.pathSegments.first() == CAST }
-            ?.let {
-                CastViewModel(
-                    id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                    name = it.getQueryParameter(NAME).orEmpty(),
-                    character = it.getQueryParameter(CHARACTER).orEmpty(),
-                    birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
-                    deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
-                    biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
-                    source = it.getQueryParameter(SOURCE).orEmpty(),
-                    thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty()
-                )
-            }
 }
+
+fun Intent.getCastDeepLink() = data
+    ?.takeIf { it.pathSegments.first() == CAST }
+    ?.let {
+        CastViewModel(
+            id = it.getQueryParameter(ID)?.toInt() ?: 1,
+            name = it.getQueryParameter(NAME).orEmpty(),
+            character = it.getQueryParameter(CHARACTER).orEmpty(),
+            birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
+            deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
+            biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
+            source = it.getQueryParameter(SOURCE).orEmpty(),
+            thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty()
+        )
+    }

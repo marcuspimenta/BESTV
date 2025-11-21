@@ -20,11 +20,6 @@ dependencies {
     // Kotlin
     implementation Libs.kotlin
 
-    // AndroidX
-    implementation Libs.androidx_core
-    implementation Libs.androidx_fragment
-    implementation Libs.androidx_lifecycle
-
     // Compose for TV
     implementation platform(Libs.compose_bom)
     implementation Libs.compose_ui

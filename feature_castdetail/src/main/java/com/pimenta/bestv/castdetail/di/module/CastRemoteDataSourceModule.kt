@@ -15,7 +15,7 @@
 package com.pimenta.bestv.castdetail.di.module
 
 import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -27,7 +27,7 @@ import retrofit2.Retrofit
 class CastRemoteDataSourceModule {
 
     @Provides
-    @FragmentScope
+    @ActivityScope
     fun provideCastApi(retrofit: Retrofit) =
         retrofit.create(CastTmdbApi::class.java)
 }

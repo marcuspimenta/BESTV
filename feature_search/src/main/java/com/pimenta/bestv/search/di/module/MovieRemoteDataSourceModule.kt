@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.search.data.remote.api.SearchMovieTmdbApi
 import dagger.Module
 import dagger.Provides
@@ -27,7 +27,7 @@ import retrofit2.Retrofit
 class MovieRemoteDataSourceModule {
 
     @Provides
-    @FragmentScope
+    @ActivityScope
     fun provideCastApi(retrofit: Retrofit) =
         retrofit.create(SearchMovieTmdbApi::class.java)
 }

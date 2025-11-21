@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".presentation.ui.activity.MainActivity"
+            android:name=".presentation.ui.activity.WorkBrowseActivity"
             android:exported="true"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>

@@ -17,15 +17,17 @@ package com.pimenta.bestv.application
 import android.app.Application
 import android.os.StrictMode
 import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
+import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.data.BuildConfig
 import com.pimenta.bestv.di.ApplicationComponent
 import com.pimenta.bestv.di.DaggerApplicationComponent
 import com.pimenta.bestv.di.module.ApplicationModule
+import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponentProvider
 import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponentProvider
 import com.pimenta.bestv.search.di.SearchActivityComponentProvider
-import com.pimenta.bestv.workbrowse.di.MainActivityComponentProvider
-import com.pimenta.bestv.workbrowse.presentation.presenter.MainPresenter
+import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponentProvider
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponentProvider
 import timber.log.Timber
 
@@ -37,7 +39,7 @@ class BesTVApplication :
     CastDetailsActivityComponentProvider,
     SearchActivityComponentProvider,
     WorkDetailsActivityComponentProvider,
-    MainActivityComponentProvider,
+    WorkBrowseActivityComponentProvider,
     BootBroadcastReceiverComponentProvider,
     RecommendationWorkerComponentProvider {
 
@@ -70,17 +72,17 @@ class BesTVApplication :
             .build()
     }
 
-    override fun castDetailsActivityComponent() =
-        applicationComponent.castDetailsActivityComponent().create()
+    override fun castDetailsActivityComponent(cast: CastViewModel) =
+        applicationComponent.castDetailsActivityComponent().create(cast)
 
     override fun searchActivityComponent() =
         applicationComponent.searchActivityComponent().create()
 
-    override fun workDetailsActivityComponent() =
-        applicationComponent.workDetailsActivityComponent().create()
+    override fun workDetailsActivityComponent(workViewModel: WorkViewModel) =
+        applicationComponent.workDetailsActivityComponent().create(workViewModel)
 
-    override fun mainActivityComponent(view: MainPresenter.View) =
-        applicationComponent.mainActivityComponent().create(view)
+    override fun workBrowseActivityComponent() =
+        applicationComponent.workBrowseActivityComponent().create()
 
     override fun bootBroadcastReceiverComponent() =
         applicationComponent.bootBroadcastReceiverComponent().create()

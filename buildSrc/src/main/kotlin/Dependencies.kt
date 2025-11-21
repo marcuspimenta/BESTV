@@ -39,9 +39,9 @@ object Versions {
     val androidx_room = "2.8.2"
     val androidx_work = "2.8.0-alpha02"
     val compose_bom = "2024.12.01"
-    val compose_compiler = "1.5.15"
     val androidx_tv_foundation = "1.0.0-alpha12"
     val androidx_tv_material = "1.0.0"
+    val androidx_activity = "1.10.0"
     val androidx_activity_compose = "1.10.0"
     val coil_compose = "2.7.0"
 
@@ -79,7 +79,6 @@ object Libs {
     val androidx_core = "androidx.core:core-ktx:${Versions.androidx_core}"
     val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
     val androidx_lifecycle = "androidx.lifecycle:lifecycle-viewmodel:${Versions.androidx_lifecycle}"
-    val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidx_lifecycle}"
     val androidx_lifecycle_runtime_ktx = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
     val androidx_recommendation = "androidx.recommendation:recommendation:${Versions.androidx_recommendation}"
     val androidx_tvprovider = "androidx.tvprovider:tvprovider:${Versions.androidx_tvprovider}"
@@ -97,6 +96,7 @@ object Libs {
     val compose_material3 = "androidx.compose.material3:material3"
     val androidx_tv_foundation = "androidx.tv:tv-foundation:${Versions.androidx_tv_foundation}"
     val androidx_tv_material = "androidx.tv:tv-material:${Versions.androidx_tv_material}"
+    val androidx_activity = "androidx.activity:activity-ktx:${Versions.androidx_activity}"
     val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.androidx_activity_compose}"
     val coil_compose = "io.coil-kt:coil-compose:${Versions.coil_compose}"
 

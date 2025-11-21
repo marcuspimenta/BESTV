@@ -26,10 +26,6 @@ dependencies {
 
     // AndroidX
     implementation Libs.androidx_core
-    implementation Libs.androidx_fragment
-    implementation Libs.androidx_lifecycle
-    implementation Libs.androidx_lifecycle_viewmodel_ktx
-    implementation Libs.androidx_lifecycle_runtime_ktx
 
     // Dagger
     implementation Libs.dagger

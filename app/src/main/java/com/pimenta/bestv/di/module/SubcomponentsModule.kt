@@ -18,7 +18,7 @@ import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponent
 import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponent
 import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponent
 import com.pimenta.bestv.search.di.SearchActivityComponent
-import com.pimenta.bestv.workbrowse.di.MainActivityComponent
+import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponent
 import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponent
 import dagger.Module
 
@@ -30,7 +30,7 @@ import dagger.Module
         CastDetailsActivityComponent::class,
         SearchActivityComponent::class,
         WorkDetailsActivityComponent::class,
-        MainActivityComponent::class,
+        WorkBrowseActivityComponent::class,
         BootBroadcastReceiverComponent::class,
         RecommendationWorkerComponent::class
     ]

@@ -15,13 +15,21 @@
 package com.pimenta.bestv.search.di
 
 import com.pimenta.bestv.presentation.di.annotation.ActivityScope
+import com.pimenta.bestv.search.di.module.MovieRemoteDataSourceModule
+import com.pimenta.bestv.search.di.module.TvShowRemoteDataSourceModule
+import com.pimenta.bestv.search.presentation.ui.activity.SearchActivity
 import dagger.Subcomponent
 
 /**
  * Created by marcus on 2019-08-29.
  */
 @ActivityScope
-@Subcomponent
+@Subcomponent(
+    modules = [
+        MovieRemoteDataSourceModule::class,
+        TvShowRemoteDataSourceModule::class
+    ]
+)
 interface SearchActivityComponent {
 
     @Subcomponent.Factory
@@ -29,5 +37,5 @@ interface SearchActivityComponent {
         fun create(): SearchActivityComponent
     }
 
-    fun searchFragmentComponent(): SearchFragmentComponent.Factory
+    fun inject(activity: SearchActivity)
 }

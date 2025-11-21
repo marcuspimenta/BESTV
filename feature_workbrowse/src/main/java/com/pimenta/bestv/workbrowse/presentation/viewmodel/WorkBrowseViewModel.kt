@@ -16,7 +16,7 @@ package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.di.annotation.FragmentScope
+import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
@@ -40,9 +40,10 @@ import javax.inject.Inject
 /**
  * ViewModel for the Work Browse screen.
  */
-@FragmentScope
+@ActivityScope
 class WorkBrowseViewModel @Inject constructor(
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
+    //private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
 ) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(WorkBrowseState()) {
@@ -62,6 +63,16 @@ class WorkBrowseViewModel @Inject constructor(
             is WorkBrowseEvent.WorkClicked -> handleWorkClicked(event.work)
         }
     }
+
+    /*private fun loadRecommendations() {
+        viewModelScope.launch {
+            try {
+                loadRecommendationUseCase()
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, "Error while loading the recommendations")
+            }
+        }
+    }*/
 
     private fun handleBackClicked() = emitEffect(WorkBrowseEffect.CloseScreen)
 

@@ -89,8 +89,7 @@ import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private const val SPLASH_ANIMATION_FILE =
-    "android.resource://com.pimenta.bestv/raw/splash_animation"
+private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/raw/splash_animation"
 
 @Composable
 fun WorkBrowseScreen(

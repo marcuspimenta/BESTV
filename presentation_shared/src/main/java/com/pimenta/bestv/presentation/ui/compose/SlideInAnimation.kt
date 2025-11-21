@@ -37,7 +37,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SlideInFromBottom(
     modifier: Modifier = Modifier,
-    delayMillis: Long = 15L,
+    delayMillis: Long = 10L,
     content: @Composable () -> Unit
 ) {
     val isVisible = remember { mutableStateOf(false) }

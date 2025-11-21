@@ -14,10 +14,12 @@
 
 package com.pimenta.bestv.workdetail.di
 
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+
 /**
  * Created by marcus on 26-02-2020.
  */
 interface WorkDetailsActivityComponentProvider {
 
-    fun workDetailsActivityComponent(): WorkDetailsActivityComponent
+    fun workDetailsActivityComponent(workViewModel: WorkViewModel): WorkDetailsActivityComponent
 }
