@@ -17,8 +17,9 @@ package com.pimenta.bestv.recommendation.di.module
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
-import com.pimenta.bestv.presentation.di.annotation.WorkerScope
+import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.recommendation.data.local.provider.channel.RecommendationChannelApi
 import com.pimenta.bestv.recommendation.data.local.provider.row.RecommendationRowApi
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
@@ -26,29 +27,40 @@ import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 23-04-2019.
  */
 @Module
-class RecommendationModule {
+@InstallIn(SingletonComponent::class)
+object RecommendationModule {
+    private const val SHARED_PREFERENCES_NAME = "recommendation_preferences"
 
     @Provides
-    @WorkerScope
-    fun provideNotificationManager(application: Application) =
+    @Singleton
+    fun provideSharedPreferences(application: Application): SharedPreferences =
+        application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(application: Application): NotificationManager =
         application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
-    @WorkerScope
-    fun provideRecommendationManager(
+    @Singleton
+    fun provideRecommendationProvider(
         application: Application,
         localSettings: LocalSettings,
         notificationManager: NotificationManager,
         workDetailsRoute: WorkDetailsRoute,
-        workBrowseRoute: WorkBrowseRoute
-    ) =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        workBrowseRoute: WorkBrowseRoute,
+    ): RecommendationProvider =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             RecommendationChannelApi(application, localSettings, workDetailsRoute, workBrowseRoute)
-        else
+        } else {
             RecommendationRowApi(application, notificationManager, workDetailsRoute)
+        }
 }

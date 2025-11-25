@@ -12,30 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.castdetail.di
+package com.pimenta.bestv.castdetail.di.module
 
-import com.pimenta.bestv.castdetail.di.module.CastRemoteDataSourceModule
+import android.app.Activity
 import com.pimenta.bestv.castdetail.presentation.ui.activity.CastDetailsActivity
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import dagger.BindsInstance
-import dagger.Subcomponent
+import com.pimenta.bestv.route.castdetail.getCastDeepLink
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
 /**
- * Created by marcus on 25-11-2018.
+ * Module to provide CastViewModel from the activity intent
  */
-@ActivityScope
-@Subcomponent(
-    modules = [
-        CastRemoteDataSourceModule::class
-    ]
-)
-interface CastDetailsActivityComponent {
-
-    @Subcomponent.Factory
-    interface Factory {
-        fun create(@BindsInstance cast: CastViewModel): CastDetailsActivityComponent
+@Module
+@InstallIn(ActivityComponent::class)
+object CastViewModelModule {
+    @Provides
+    fun provideCastViewModel(activity: Activity): CastViewModel {
+        require(activity is CastDetailsActivity) { "Activity must be CastDetailsActivity" }
+        return activity.intent.getCastDeepLink()
+            ?: throw IllegalStateException("CastViewModel not found in intent")
     }
-
-    fun inject(activity: CastDetailsActivity)
 }

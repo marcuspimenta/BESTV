@@ -16,7 +16,6 @@ package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
@@ -32,6 +31,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.T
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -40,7 +40,6 @@ import javax.inject.Inject
 /**
  * ViewModel for the Work Browse screen.
  */
-@ActivityScope
 class WorkBrowseViewModel @Inject constructor(
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
     //private val loadRecommendationUseCase: LoadRecommendationUseCase,

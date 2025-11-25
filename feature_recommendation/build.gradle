@@ -1,10 +1,18 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.recommendation'
+
+    // Workaround for Kotlin 2.x metadata compatibility with kapt
+    tasks.withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask.class).configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }
 
 dependencies {
@@ -28,9 +36,12 @@ dependencies {
     implementation Libs.kotlinx_coroutines_core
     implementation Libs.kotlinx_coroutines_android
 
-    // Dagger
-    implementation Libs.dagger
-    kapt Libs.dagger_compile
+
+    // Hilt
+    implementation Libs.hilt_android
+    kapt Libs.hilt_compiler
+    implementation Libs.hilt_work
+    kapt Libs.hilt_work_compiler
 
     // Retrofit
     implementation Libs.retrofit

@@ -19,14 +19,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.search.di.SearchActivityComponentProvider
 import com.pimenta.bestv.search.presentation.ui.compose.SearchScreen
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by marcus on 12/07/18.
  */
+@AndroidEntryPoint
 class SearchActivity : ComponentActivity() {
 
     @Inject lateinit var viewModel: SearchViewModel
@@ -34,15 +35,11 @@ class SearchActivity : ComponentActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (application as SearchActivityComponentProvider)
-            .searchActivityComponent()
-            .inject(this)
-
         setContent {
             MaterialTheme {
                 SearchScreen(
                     viewModel = viewModel,
-                    openIntent = { openIntent(it) }
+                    openIntent = { openIntent(it) },
                 )
             }
         }

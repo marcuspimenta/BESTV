@@ -15,19 +15,20 @@
 package com.pimenta.bestv.castdetail.di.module
 
 import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 29-10-2019.
  */
 @Module
-class CastRemoteDataSourceModule {
-
+@InstallIn(SingletonComponent::class)
+object CastRemoteDataSourceModule {
     @Provides
-    @ActivityScope
-    fun provideCastApi(retrofit: Retrofit) =
-        retrofit.create(CastTmdbApi::class.java)
+    @Singleton
+    fun provideCastApi(retrofit: Retrofit) = retrofit.create(CastTmdbApi::class.java)
 }

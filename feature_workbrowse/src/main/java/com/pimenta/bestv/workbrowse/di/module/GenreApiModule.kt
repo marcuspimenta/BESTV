@@ -14,20 +14,21 @@
 
 package com.pimenta.bestv.workbrowse.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 20-10-2019.
  */
 @Module
-class GenreApiModule {
-
+@InstallIn(SingletonComponent::class)
+object GenreApiModule {
     @Provides
-    @ActivityScope
-    fun provideGenreApi(retrofit: Retrofit) =
-        retrofit.create(GenreTmdbApi::class.java)
+    @Singleton
+    fun provideGenreApi(retrofit: Retrofit) = retrofit.create(GenreTmdbApi::class.java)
 }

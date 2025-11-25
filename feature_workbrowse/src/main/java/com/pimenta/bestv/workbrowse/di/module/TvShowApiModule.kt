@@ -14,20 +14,21 @@
 
 package com.pimenta.bestv.workbrowse.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 20-10-2019.
  */
 @Module
-class TvShowApiModule {
-
+@InstallIn(SingletonComponent::class)
+object TvShowApiModule {
     @Provides
-    @ActivityScope
-    fun provideTvShowApi(retrofit: Retrofit) =
-        retrofit.create(TvShowTmdbApi::class.java)
+    @Singleton
+    fun provideTvShowApi(retrofit: Retrofit) = retrofit.create(TvShowTmdbApi::class.java)
 }

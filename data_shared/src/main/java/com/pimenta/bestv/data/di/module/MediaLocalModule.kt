@@ -19,6 +19,8 @@ import androidx.room.Room
 import com.pimenta.bestv.data.local.database.MediaDb
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
@@ -27,6 +29,7 @@ import javax.inject.Singleton
 private const val DB_NAME = "bestv.db"
 
 @Module
+@InstallIn(SingletonComponent::class)
 class MediaLocalModule {
 
     @Provides

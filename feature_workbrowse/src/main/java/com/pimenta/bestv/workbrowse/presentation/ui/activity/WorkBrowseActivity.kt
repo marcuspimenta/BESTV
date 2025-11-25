@@ -19,23 +19,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponentProvider
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by marcus on 11-02-2018.
  */
+@AndroidEntryPoint
 class WorkBrowseActivity : ComponentActivity() {
 
     @Inject lateinit var viewModel: WorkBrowseViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WorkBrowseActivityComponentProvider)
-            .workBrowseActivityComponent()
-            .inject(this)
 
         setContent {
             MaterialTheme {

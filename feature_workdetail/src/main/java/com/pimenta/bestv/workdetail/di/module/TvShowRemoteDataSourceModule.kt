@@ -14,20 +14,22 @@
 
 package com.pimenta.bestv.workdetail.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workdetail.data.remote.api.TvShowDetailTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 import retrofit2.Retrofit
 
 /**
  * Created by marcus on 20-10-2019.
  */
 @Module
-class TvShowRemoteDataSourceModule {
+@InstallIn(ActivityComponent::class)
+object TvShowRemoteDataSourceModule {
 
     @Provides
-    @ActivityScope
-    fun provideTvShowDetailApi(retrofit: Retrofit) =
-        retrofit.create(TvShowDetailTmdbApi::class.java)
+    @ActivityScoped
+    fun provideTvShowDetailApi(retrofit: Retrofit) = retrofit.create(TvShowDetailTmdbApi::class.java)
 }

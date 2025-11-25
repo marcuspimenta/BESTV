@@ -19,28 +19,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
 import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import com.pimenta.bestv.route.castdetail.getCastDeepLink
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlin.Throwable
 
 /**
  * Created by marcus on 04-04-2018.
  */
+@AndroidEntryPoint
 class CastDetailsActivity : ComponentActivity() {
 
     @Inject lateinit var viewModel: CastDetailsViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        intent.getCastDeepLink()?.let {
-            (application as CastDetailsActivityComponentProvider)
-                .castDetailsActivityComponent(it)
-                .inject(this)
-        } ?: Throwable("Couldn't open a null cast")
 
         setContent {
             MaterialTheme {

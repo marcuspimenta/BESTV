@@ -10,8 +10,9 @@ buildscript {
         classpath "com.android.tools.build:gradle:8.13.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20"
         classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.2.20"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.57.2"
         classpath "com.google.gms:google-services:4.4.4"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:10.2.1"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:12.1.1"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.53.0"
     }
 }
@@ -44,6 +45,14 @@ subprojects {
                 kotlinOptions {
                     jvmTarget = Config.jvmTarget
                 }
+            }
+        }
+
+        // Configure ktlint for Java 21 compatibility
+        if (project.plugins.hasPlugin('org.jlleitschuh.gradle.ktlint')) {
+            ktlint {
+                android = true
+                outputToConsole = true
             }
         }
     }

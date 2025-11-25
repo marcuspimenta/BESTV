@@ -14,20 +14,21 @@
 
 package com.pimenta.bestv.recommendation.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.WorkerScope
 import com.pimenta.bestv.recommendation.data.remote.api.MovieTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 /**
  * Created by marcus on 20-10-2019.
  */
 @Module
-class MovieApiModule {
-
+@InstallIn(SingletonComponent::class)
+object MovieApiModule {
     @Provides
-    @WorkerScope
-    fun provideMovieApi(retrofit: Retrofit) =
-        retrofit.create(MovieTmdbApi::class.java)
+    @Singleton
+    fun provideMovieApi(retrofit: Retrofit): MovieTmdbApi = retrofit.create(MovieTmdbApi::class.java)
 }

@@ -14,20 +14,21 @@
 
 package com.pimenta.bestv.search.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 import retrofit2.Retrofit
 
 /**
  * Created by marcus on 29-10-2019.
  */
 @Module
-class TvShowRemoteDataSourceModule {
-
+@InstallIn(ActivityComponent::class)
+object TvShowRemoteDataSourceModule {
     @Provides
-    @ActivityScope
-    fun provideCastApi(retrofit: Retrofit) =
-        retrofit.create(SearchTvShowTmdbApi::class.java)
+    @ActivityScoped
+    fun provideCastApi(retrofit: Retrofit) = retrofit.create(SearchTvShowTmdbApi::class.java)
 }

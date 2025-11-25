@@ -22,7 +22,6 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.launch
@@ -34,7 +33,6 @@ import javax.inject.Inject
  *
  * Created by marcus on 21-10-2025.
  */
-@ActivityScope
 class CastDetailsViewModel @Inject constructor(
     private val cast: CastViewModel,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,

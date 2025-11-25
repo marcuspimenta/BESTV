@@ -16,33 +16,15 @@ package com.pimenta.bestv.application
 
 import android.app.Application
 import android.os.StrictMode
-import com.pimenta.bestv.castdetail.di.CastDetailsActivityComponentProvider
 import com.pimenta.bestv.data.BuildConfig
-import com.pimenta.bestv.di.ApplicationComponent
-import com.pimenta.bestv.di.DaggerApplicationComponent
-import com.pimenta.bestv.di.module.ApplicationModule
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.recommendation.di.BootBroadcastReceiverComponentProvider
-import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponentProvider
-import com.pimenta.bestv.search.di.SearchActivityComponentProvider
-import com.pimenta.bestv.workbrowse.di.WorkBrowseActivityComponentProvider
-import com.pimenta.bestv.workdetail.di.WorkDetailsActivityComponentProvider
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 /**
  * Created by marcus on 07-02-2018.
  */
-class BesTVApplication :
-    Application(),
-    CastDetailsActivityComponentProvider,
-    SearchActivityComponentProvider,
-    WorkDetailsActivityComponentProvider,
-    WorkBrowseActivityComponentProvider,
-    BootBroadcastReceiverComponentProvider,
-    RecommendationWorkerComponentProvider {
-
-    private lateinit var applicationComponent: ApplicationComponent
+@HiltAndroidApp
+class BesTVApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -53,39 +35,16 @@ class BesTVApplication :
                     StrictMode.ThreadPolicy.Builder()
                         .detectAll()
                         .penaltyLog()
-                        .build()
+                        .build(),
                 )
                 StrictMode.setVmPolicy(
                     StrictMode.VmPolicy.Builder()
                         .detectLeakedSqlLiteObjects()
                         .detectLeakedClosableObjects()
                         .penaltyLog()
-                        .build()
+                        .build(),
                 )
             }
         }
-
-        applicationComponent = DaggerApplicationComponent
-            .builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
     }
-
-    override fun castDetailsActivityComponent(cast: CastViewModel) =
-        applicationComponent.castDetailsActivityComponent().create(cast)
-
-    override fun searchActivityComponent() =
-        applicationComponent.searchActivityComponent().create()
-
-    override fun workDetailsActivityComponent(workViewModel: WorkViewModel) =
-        applicationComponent.workDetailsActivityComponent().create(workViewModel)
-
-    override fun workBrowseActivityComponent() =
-        applicationComponent.workBrowseActivityComponent().create()
-
-    override fun bootBroadcastReceiverComponent() =
-        applicationComponent.bootBroadcastReceiverComponent().create()
-
-    override fun recommendationWorkerComponent() =
-        applicationComponent.recommendationWorkerComponent().create()
 }

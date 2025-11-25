@@ -24,11 +24,13 @@ import javax.inject.Inject
  */
 private const val SCHEMA_URI_PREFIX = "bestv://workbrowse/"
 
-class WorkBrowseRoute @Inject constructor(
-    private val application: Application
-) {
-
-    fun buildWorkBrowseIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()).apply {
-        setPackage(application.packageName)
+class WorkBrowseRoute
+    @Inject
+    constructor(
+        private val application: Application,
+    ) {
+        fun buildWorkBrowseIntent() =
+            Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()).apply {
+                setPackage(application.packageName)
+            }
     }
-}

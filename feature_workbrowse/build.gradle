@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
@@ -39,9 +40,10 @@ dependencies {
     implementation Libs.coil_compose
     debugImplementation Libs.compose_ui_tooling
 
-    // Dagger
-    implementation Libs.dagger
-    kapt Libs.dagger_compile
+
+    // Hilt
+    implementation Libs.hilt_android
+    kapt Libs.hilt_compiler
 
     // Retrofit
     implementation Libs.retrofit

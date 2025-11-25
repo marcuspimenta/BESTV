@@ -21,13 +21,13 @@ dependencies {
     // Kotlin
     implementation Libs.kotlin
 
+    // Hilt (for javax.inject)
+    implementation Libs.hilt_android
+    kapt Libs.hilt_compiler
+
     // AndroidX
     implementation Libs.androidx_recommendation
     implementation Libs.androidx_tvprovider
-
-    // Dagger
-    implementation Libs.dagger
-    kapt Libs.dagger_compile
 
     // Lottie
     implementation Libs.lottie_compose

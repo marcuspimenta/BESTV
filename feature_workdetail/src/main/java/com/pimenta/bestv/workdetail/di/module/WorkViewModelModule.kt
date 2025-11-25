@@ -12,32 +12,28 @@
  * the License.
  */
 
-package com.pimenta.bestv.workdetail.di
+package com.pimenta.bestv.workdetail.di.module
 
+import android.app.Activity
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
-import com.pimenta.bestv.workdetail.di.module.MovieRemoteDataSourceModule
-import com.pimenta.bestv.workdetail.di.module.TvShowRemoteDataSourceModule
+import com.pimenta.bestv.route.workdetail.getWorkDetail
 import com.pimenta.bestv.workdetail.presentation.ui.activity.WorkDetailsActivity
-import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
 /**
- * Created by marcus on 2019-08-29.
+ * Module to provide WorkViewModel from the activity intent
  */
-@ActivityScope
-@Subcomponent(
-    modules = [
-        MovieRemoteDataSourceModule::class,
-        TvShowRemoteDataSourceModule::class,
-    ]
-)
-interface WorkDetailsActivityComponent {
+@Module
+@InstallIn(ActivityComponent::class)
+object WorkViewModelModule {
 
-    @Subcomponent.Factory
-    interface Factory {
-        fun create(@BindsInstance workViewModel: WorkViewModel): WorkDetailsActivityComponent
+    @Provides
+    fun provideWorkViewModel(activity: Activity): WorkViewModel {
+        require(activity is WorkDetailsActivity) { "Activity must be WorkDetailsActivity" }
+        return activity.intent.getWorkDetail()
+            ?: throw IllegalStateException("WorkViewModel not found in intent")
     }
-
-    fun inject(activity: WorkDetailsActivity)
 }

@@ -34,39 +34,41 @@ private const val DEATH_DAY = "DEATH_DAY"
 private const val BIOGRAPHY = "BIOGRAPHY"
 private const val THUMBNAIL_URL = "THUMBNAIL_URL"
 
-class CastDetailsRoute @Inject constructor(
-    private val application: Application
-) {
+class CastDetailsRoute
+    @Inject
+    constructor(
+        private val application: Application,
+    ) {
+        fun buildCastDetailIntent(castViewModel: CastViewModel) =
+            Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
+                setPackage(application.packageName)
+            }
 
-    fun buildCastDetailIntent(castViewModel: CastViewModel) =
-        Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
-            setPackage(application.packageName)
-        }
-
-    private fun CastViewModel.toUri(): Uri =
-        Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
-            .appendQueryParameter(ID, id.toString())
-            .appendQueryParameter(NAME, name)
-            .appendQueryParameter(CHARACTER, character)
-            .appendQueryParameter(BIRTHDAY, birthday)
-            .appendQueryParameter(SOURCE, source)
-            .appendQueryParameter(DEATH_DAY, deathDay)
-            .appendQueryParameter(BIOGRAPHY, biography)
-            .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
-            .build()
-}
-
-fun Intent.getCastDeepLink() = data
-    ?.takeIf { it.pathSegments.first() == CAST }
-    ?.let {
-        CastViewModel(
-            id = it.getQueryParameter(ID)?.toInt() ?: 1,
-            name = it.getQueryParameter(NAME).orEmpty(),
-            character = it.getQueryParameter(CHARACTER).orEmpty(),
-            birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
-            deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
-            biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
-            source = it.getQueryParameter(SOURCE).orEmpty(),
-            thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty()
-        )
+        private fun CastViewModel.toUri(): Uri =
+            Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
+                .appendQueryParameter(ID, id.toString())
+                .appendQueryParameter(NAME, name)
+                .appendQueryParameter(CHARACTER, character)
+                .appendQueryParameter(BIRTHDAY, birthday)
+                .appendQueryParameter(SOURCE, source)
+                .appendQueryParameter(DEATH_DAY, deathDay)
+                .appendQueryParameter(BIOGRAPHY, biography)
+                .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
+                .build()
     }
+
+fun Intent.getCastDeepLink() =
+    data
+        ?.takeIf { it.pathSegments.first() == CAST }
+        ?.let {
+            CastViewModel(
+                id = it.getQueryParameter(ID)?.toInt() ?: 1,
+                name = it.getQueryParameter(NAME).orEmpty(),
+                character = it.getQueryParameter(CHARACTER).orEmpty(),
+                birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
+                deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
+                biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
+                source = it.getQueryParameter(SOURCE).orEmpty(),
+                thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty(),
+            )
+        }

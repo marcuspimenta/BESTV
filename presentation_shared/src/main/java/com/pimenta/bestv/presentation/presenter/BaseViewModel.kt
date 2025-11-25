@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.update
  * Created by marcus on 21-10-2025.
  */
 abstract class BaseViewModel<ViewState, ViewEffect>(initialState: ViewState) : ViewModel() {
-
     private val mutableStateFlow = MutableStateFlow(initialState)
     private val effectChannel = Channel<ViewEffect>(Channel.BUFFERED)
 

@@ -19,6 +19,8 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.data.BuildConfig
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -33,6 +35,7 @@ import javax.inject.Singleton
 private const val TIME_OUT_SEC = 60L
 
 @Module
+@InstallIn(SingletonComponent::class)
 class MediaRemoteModule {
 
     @Provides

@@ -26,10 +26,7 @@ object Versions {
     val kotlin = "2.2.20"
     val kotlinx_coroutines = "1.10.2"
     val kotlinx_coroutines_test = "1.10.2"
-    val build_gradle = "8.13.0"
-    val google_service = "4.4.4"
     val ktlint = "10.2.1"
-    val ben_mane_gralde = "0.53.0"
 
     val androidx_core = "1.17.0"
     val androidx_lifecycle = "2.10.0"
@@ -44,8 +41,8 @@ object Versions {
     val androidx_activity_compose = "1.12.0"
     val coil_compose = "2.7.0"
 
-    val dagger = "2.57.2"
-    val dagger_compile = "2.57.2"
+    val hilt = "2.57.2"
+    val hilt_work = "1.2.0"
     val retrofit = "3.0.0"
     val retrofit_converter_gson = "3.0.0"
     val okhttp = "5.3.2"
@@ -68,12 +65,7 @@ object Libs {
     val kotlinx_coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx_coroutines}"
     val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx_coroutines_test}"
     val kotlin_test_junit = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
-
-    val build_gradle = "com.android.tools.build:gradle:${Versions.build_gradle}"
-    val kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    val google_services = "com.google.gms:google-services:${Versions.google_service}"
     val ktlint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlint}"
-    val ben_mane_gralde = "com.github.ben-manes:gradle-versions-plugin:${Versions.ben_mane_gralde}"
 
     val androidx_core = "androidx.core:core-ktx:${Versions.androidx_core}"
     val androidx_lifecycle = "androidx.lifecycle:lifecycle-viewmodel:${Versions.androidx_lifecycle}"
@@ -98,8 +90,10 @@ object Libs {
     val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.androidx_activity_compose}"
     val coil_compose = "io.coil-kt:coil-compose:${Versions.coil_compose}"
 
-    val dagger = "com.google.dagger:dagger:${Versions.dagger}"
-    val dagger_compile = "com.google.dagger:dagger-compiler:${Versions.dagger_compile}"
+    val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
+    val hilt_compiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
+    val hilt_work = "androidx.hilt:hilt-work:${Versions.hilt_work}"
+    val hilt_work_compiler = "androidx.hilt:hilt-compiler:${Versions.hilt_work}"
     val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit_converter_gson}"
     val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"

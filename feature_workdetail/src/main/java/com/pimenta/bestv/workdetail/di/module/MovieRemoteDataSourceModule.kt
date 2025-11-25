@@ -14,20 +14,22 @@
 
 package com.pimenta.bestv.workdetail.di.module
 
-import com.pimenta.bestv.presentation.di.annotation.ActivityScope
 import com.pimenta.bestv.workdetail.data.remote.api.MovieDetailTmdbApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 import retrofit2.Retrofit
 
 /**
  * Created by marcus on 20-10-2019.
  */
 @Module
-class MovieRemoteDataSourceModule {
+@InstallIn(ActivityComponent::class)
+object MovieRemoteDataSourceModule {
 
     @Provides
-    @ActivityScope
-    fun provideMovieDetailApi(retrofit: Retrofit) =
-        retrofit.create(MovieDetailTmdbApi::class.java)
+    @ActivityScoped
+    fun provideMovieDetailApi(retrofit: Retrofit) = retrofit.create(MovieDetailTmdbApi::class.java)
 }

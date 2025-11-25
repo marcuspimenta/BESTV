@@ -17,31 +17,40 @@ package com.pimenta.bestv.recommendation.presentation.worker
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.pimenta.bestv.recommendation.di.RecommendationWorkerComponentProvider
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
 /**
  * Created by marcus on 28-01-2020.
  */
 class RecommendationWorker(
     context: Context,
-    workerParameters: WorkerParameters
+    workerParameters: WorkerParameters,
 ) : CoroutineWorker(context, workerParameters) {
-
-    @Inject
-    lateinit var loadRecommendationUseCase: LoadRecommendationUseCase
-
-    init {
-        (context.applicationContext as RecommendationWorkerComponentProvider)
-            .recommendationWorkerComponent()
-            .inject(this)
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface RecommendationWorkerEntryPoint {
+        fun loadRecommendationUseCase(): LoadRecommendationUseCase
     }
 
-    override suspend fun doWork(): Result = try {
-        loadRecommendationUseCase()
-        Result.success()
-    } catch (e: Exception) {
-        Result.failure()
+    private val loadRecommendationUseCase: LoadRecommendationUseCase by lazy {
+        val appContext = applicationContext
+        val entryPoint =
+            EntryPointAccessors.fromApplication(
+                appContext,
+                RecommendationWorkerEntryPoint::class.java,
+            )
+        entryPoint.loadRecommendationUseCase()
     }
+
+    override suspend fun doWork(): Result =
+        try {
+            loadRecommendationUseCase()
+            Result.success()
+        } catch (e: Exception) {
+            Result.failure()
+        }
 }
