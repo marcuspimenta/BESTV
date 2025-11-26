@@ -118,6 +118,7 @@ private fun WorksRowPreview() {
                     overview = "",
                     backdropUrl = "",
                     releaseDate = "",
+                    voteAverage = 0f,
                     isFavorite = false
                 ),
                 WorkViewModel(
@@ -131,6 +132,7 @@ private fun WorksRowPreview() {
                     overview = "",
                     backdropUrl = "",
                     releaseDate = "",
+                    voteAverage = 0f,
                     isFavorite = false
                 ),
             ),

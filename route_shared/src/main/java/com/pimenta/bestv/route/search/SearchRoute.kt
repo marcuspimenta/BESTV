@@ -17,18 +17,20 @@ package com.pimenta.bestv.route.search
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import javax.inject.Inject
 
 /**
  * Created by marcus on 27-11-2019.
  */
-private const val SCHEMA_URI_PREFIX = "bestv://search/"
+private const val SCHEMA_URI = "bestv://search/"
 
 class SearchRoute @Inject constructor(
     private val application: Application
 ) {
 
-    fun buildSearchIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()).apply {
-        setPackage(application.packageName)
-    }
+    fun buildSearchIntent() =
+        Intent(Intent.ACTION_VIEW, SCHEMA_URI.toUri()).apply {
+            setPackage(application.packageName)
+        }
 }

@@ -87,9 +87,6 @@ class WorkDetailsViewModel @Inject constructor(
     private val castDetailsRoute: CastDetailsRoute,
 ) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(WorkDetailsState(work, Loading)) {
 
-    /**
-     * Handle user events
-     */
     fun handleEvent(event: WorkDetailsEvent) {
         when (event) {
             is LoadData -> loadData()

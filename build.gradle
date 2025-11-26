@@ -27,7 +27,8 @@ allprojects {
 subprojects {
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
-            apply plugin: "com.github.ben-manes.versions"
+            apply plugin: 'com.github.ben-manes.versions'
+            apply plugin: 'kotlin-parcelize'
 
             android {
                 compileSdkVersion Config.compileSdk

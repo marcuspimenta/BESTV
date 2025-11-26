@@ -18,7 +18,7 @@ package com.pimenta.bestv.model.presentation.model
  * Created by marcus on 18-04-2019.
  */
 data class PageViewModel<T>(
-    var page: Int,
-    var totalPages: Int,
-    var results: List<T>
+    val page: Int,
+    val totalPages: Int,
+    val results: List<T>
 )

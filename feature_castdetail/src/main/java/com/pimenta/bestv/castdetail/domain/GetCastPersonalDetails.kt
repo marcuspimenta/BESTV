@@ -20,10 +20,8 @@ import javax.inject.Inject
 /**
  * Created by marcus on 20-05-2019.
  */
-class GetCastPersonalDetails
-    @Inject
-    constructor(
-        private val castRepository: CastRepository,
-    ) {
-        suspend operator fun invoke(castId: Int) = castRepository.getCastDetails(castId)
-    }
+class GetCastPersonalDetails @Inject constructor(
+    private val castRepository: CastRepository,
+) {
+    suspend operator fun invoke(castId: Int) = castRepository.getCastDetails(castId)
+}

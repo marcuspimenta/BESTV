@@ -17,20 +17,20 @@ package com.pimenta.bestv.route.workbrowse
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import javax.inject.Inject
 
 /**
  * Created by marcus on 2-12-2019.
  */
-private const val SCHEMA_URI_PREFIX = "bestv://workbrowse/"
+private const val SCHEMA_URI = "bestv://workbrowse/"
 
-class WorkBrowseRoute
-    @Inject
-    constructor(
-        private val application: Application,
-    ) {
-        fun buildWorkBrowseIntent() =
-            Intent(Intent.ACTION_VIEW, Uri.parse(SCHEMA_URI_PREFIX).buildUpon().build()).apply {
-                setPackage(application.packageName)
-            }
-    }
+class WorkBrowseRoute @Inject constructor(
+    private val application: Application,
+) {
+
+    fun buildWorkBrowseIntent() =
+        Intent(Intent.ACTION_VIEW, SCHEMA_URI.toUri()).apply {
+            setPackage(application.packageName)
+        }
+}

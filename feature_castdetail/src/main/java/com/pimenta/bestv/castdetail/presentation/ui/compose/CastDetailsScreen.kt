@@ -158,6 +158,7 @@ private fun CastDetailsScreenPreview() {
                         overview = "",
                         backdropUrl = "",
                         releaseDate = "",
+                        voteAverage = 0f,
                         isFavorite = false
                     ),
                     WorkViewModel(
@@ -171,6 +172,7 @@ private fun CastDetailsScreenPreview() {
                         overview = "",
                         backdropUrl = "",
                         releaseDate = "",
+                        voteAverage = 0f,
                         isFavorite = false
                     )
                 ),

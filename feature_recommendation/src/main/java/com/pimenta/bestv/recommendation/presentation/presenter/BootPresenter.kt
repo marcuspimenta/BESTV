@@ -20,12 +20,10 @@ import javax.inject.Inject
 /**
  * Created by marcus on 06-03-2018.
  */
-class BootPresenter
-    @Inject
-    constructor(
-        private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase,
-    ) {
-        fun scheduleRecommendationUpdate() {
-            scheduleRecommendationUseCase()
-        }
+class BootPresenter @Inject constructor(
+    private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase,
+) {
+    fun scheduleRecommendationUpdate() {
+        scheduleRecommendationUseCase()
     }
+}

@@ -127,6 +127,7 @@ private fun WorkDetailsHeaderPreview() {
                 originalLanguage = "",
                 backdropUrl = "",
                 releaseDate = "",
+                voteAverage = 0f,
                 isFavorite = false
             ),
             actions = listOf(

@@ -55,7 +55,8 @@ fun WorkDomainModel.toViewModel(): WorkViewModel? {
         posterUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, posterPath),
         originalTitle = originalTitle,
         releaseDate = formattedReleaseDate,
+        voteAverage = voteAverage,
+        type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE,
         isFavorite = isFavorite,
-        type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE
     )
 }

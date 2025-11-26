@@ -14,11 +14,13 @@
 
 package com.pimenta.bestv.model.presentation.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by marcus on 18-04-2019.
  */
+@Parcelize
 data class WorkViewModel(
     val id: Int,
     val originalLanguage: String,
@@ -29,9 +31,10 @@ data class WorkViewModel(
     val title: String,
     val originalTitle: String,
     val releaseDate: String,
+    val type: WorkType,
+    val voteAverage: Float,
     val isFavorite: Boolean = false,
-    val type: WorkType
-) : Serializable
+) : Parcelable
 
 enum class WorkType {
     TV_SHOW,

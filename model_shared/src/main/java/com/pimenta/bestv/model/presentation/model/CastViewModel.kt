@@ -14,11 +14,13 @@
 
 package com.pimenta.bestv.model.presentation.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by marcus on 15-04-2019.
  */
+@Parcelize
 data class CastViewModel(
     val id: Int,
     val name: String,
@@ -28,4 +30,4 @@ data class CastViewModel(
     val deathDay: String,
     val biography: String,
     val thumbnailUrl: String
-) : Serializable
+) : Parcelable

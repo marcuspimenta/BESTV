@@ -17,58 +17,25 @@ package com.pimenta.bestv.route.castdetail
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import javax.inject.Inject
 
 /**
  * Created by marcus on 25-11-2019.
  */
-private const val SCHEMA_URI_PREFIX = "bestv://castdetail/"
-private const val CAST = "cast"
-private const val ID = "ID"
-private const val NAME = "NAME"
-private const val CHARACTER = "CHARACTER"
-private const val BIRTHDAY = "BIRTHDAY"
-private const val SOURCE = "SOURCE"
-private const val DEATH_DAY = "DEATH_DAY"
-private const val BIOGRAPHY = "BIOGRAPHY"
-private const val THUMBNAIL_URL = "THUMBNAIL_URL"
+private const val SCHEMA_URI = "bestv://castdetail/"
+private const val CAST = "CAST"
 
-class CastDetailsRoute
-    @Inject
-    constructor(
-        private val application: Application,
-    ) {
-        fun buildCastDetailIntent(castViewModel: CastViewModel) =
-            Intent(Intent.ACTION_VIEW, castViewModel.toUri()).apply {
-                setPackage(application.packageName)
-            }
+class CastDetailsRoute @Inject constructor(
+    private val application: Application,
+) {
 
-        private fun CastViewModel.toUri(): Uri =
-            Uri.parse(SCHEMA_URI_PREFIX.plus(CAST)).buildUpon()
-                .appendQueryParameter(ID, id.toString())
-                .appendQueryParameter(NAME, name)
-                .appendQueryParameter(CHARACTER, character)
-                .appendQueryParameter(BIRTHDAY, birthday)
-                .appendQueryParameter(SOURCE, source)
-                .appendQueryParameter(DEATH_DAY, deathDay)
-                .appendQueryParameter(BIOGRAPHY, biography)
-                .appendQueryParameter(THUMBNAIL_URL, thumbnailUrl)
-                .build()
-    }
-
-fun Intent.getCastDeepLink() =
-    data
-        ?.takeIf { it.pathSegments.first() == CAST }
-        ?.let {
-            CastViewModel(
-                id = it.getQueryParameter(ID)?.toInt() ?: 1,
-                name = it.getQueryParameter(NAME).orEmpty(),
-                character = it.getQueryParameter(CHARACTER).orEmpty(),
-                birthday = it.getQueryParameter(BIRTHDAY).orEmpty(),
-                deathDay = it.getQueryParameter(DEATH_DAY).orEmpty(),
-                biography = it.getQueryParameter(BIOGRAPHY).orEmpty(),
-                source = it.getQueryParameter(SOURCE).orEmpty(),
-                thumbnailUrl = it.getQueryParameter(THUMBNAIL_URL).orEmpty(),
-            )
+    fun buildCastDetailIntent(castViewModel: CastViewModel) =
+        Intent(Intent.ACTION_VIEW, SCHEMA_URI.toUri()).apply {
+            putExtra(CAST, castViewModel)
+            setPackage(application.packageName)
         }
+}
+
+fun Intent.getCastDeepLink() = getParcelableExtra<CastViewModel>(CAST)

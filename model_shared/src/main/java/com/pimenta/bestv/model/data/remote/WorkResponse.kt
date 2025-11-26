@@ -20,20 +20,20 @@ import com.google.gson.annotations.SerializedName
  * Created by marcus on 06/07/18.
  */
 abstract class WorkResponse(
-    @SerializedName("id") var id: Int = 0,
-    @SerializedName("original_language") var originalLanguage: String? = null,
-    @SerializedName("overview") var overview: String? = null,
-    @SerializedName("backdrop_path") var backdropPath: String? = null,
-    @SerializedName("poster_path") var posterPath: String? = null,
-    @SerializedName("popularity") var popularity: Float = 0f,
-    @SerializedName("vote_average") var voteAverage: Float = 0f,
-    @SerializedName("vote_count") var voteCount: Float = 0f,
-    @SerializedName("adult") var isAdult: Boolean = false
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("original_language") val originalLanguage: String? = null,
+    @SerializedName("overview") val overview: String? = null,
+    @SerializedName("backdrop_path") val backdropPath: String? = null,
+    @SerializedName("poster_path") val posterPath: String? = null,
+    @SerializedName("popularity") val popularity: Float = 0f,
+    @SerializedName("vote_average") val voteAverage: Float = 0f,
+    @SerializedName("vote_count") val voteCount: Float = 0f,
+    @SerializedName("adult") val isAdult: Boolean = false
 ) {
 
-    abstract var title: String?
+    abstract val title: String?
 
-    abstract var originalTitle: String?
+    abstract val originalTitle: String?
 
-    abstract var releaseDate: String?
+    abstract val releaseDate: String?
 }

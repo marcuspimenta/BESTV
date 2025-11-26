@@ -273,6 +273,7 @@ private fun WorkDetailsScreenPreview() {
                     originalLanguage = "",
                     backdropUrl = "",
                     releaseDate = "",
+                    voteAverage = 0f,
                     isFavorite = false
                 ),
                 state = Loaded(
@@ -310,6 +311,7 @@ private fun WorkDetailsScreenWithErrorPreview() {
                     originalLanguage = "",
                     backdropUrl = "",
                     releaseDate = "",
+                    voteAverage = 0f,
                     isFavorite = false
                 ),
                 state = Loaded(

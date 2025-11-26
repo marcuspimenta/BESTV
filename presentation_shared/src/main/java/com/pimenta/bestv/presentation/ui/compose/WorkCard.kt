@@ -117,6 +117,7 @@ private fun WorkCardPreview() {
                 overview = "",
                 backdropUrl = "",
                 releaseDate = "",
+                voteAverage = 0f,
                 isFavorite = false
             ),
             onClick = {}
