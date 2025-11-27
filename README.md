@@ -7,9 +7,9 @@ Android TV App powered by [TMDb](https://www.themoviedb.org/)
 
 It is a easy way to find the best TV content, the top movies, tv shows and more, all of that in your TV. The goal of the project is to be a guide line about Android TV, showcasing modern Android TV development using Jetpack Compose for TV. The project also uses the popular libraries and tools from the Android ecosystem with a focus on declarative UI and reactive programming.
 
-<p align="center">
-  <img src="gif/app.gif">
-</p>
+<br />
+
+https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
