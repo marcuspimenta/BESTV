@@ -55,6 +55,7 @@ class WorkBrowseViewModel @Inject constructor(
         when (event) {
             is WorkBrowseEvent.BackClicked -> handleBackClicked()
             is WorkBrowseEvent.LoadData -> handleLoadData()
+            is WorkBrowseEvent.ScreenResumed -> handleScreenResumed()
             is WorkBrowseEvent.RetryLoad -> handleLoadData()
             is WorkBrowseEvent.SplashAnimationFinished -> handleSplashAnimationFinished()
             is WorkBrowseEvent.SectionClicked -> handleSectionClicked(event.sectionClickedIndex)
@@ -105,7 +106,7 @@ class WorkBrowseViewModel @Inject constructor(
         }
     }
 
-    fun checkAndUpdateFavorites() {
+    private fun handleScreenResumed() {
         val currentState = currentState.state as? Loaded ?: return
         viewModelScope.launch {
             try {

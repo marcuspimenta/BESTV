@@ -22,6 +22,7 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 sealed interface WorkBrowseEvent {
     data object BackClicked : WorkBrowseEvent
     data object LoadData : WorkBrowseEvent
+    data object ScreenResumed : WorkBrowseEvent
     data object RetryLoad : WorkBrowseEvent
     data object SplashAnimationFinished : WorkBrowseEvent
     data class SectionClicked(val sectionClickedIndex: Int) : WorkBrowseEvent

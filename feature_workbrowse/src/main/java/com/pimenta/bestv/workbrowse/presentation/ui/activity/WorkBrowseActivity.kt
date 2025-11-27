@@ -46,11 +46,6 @@ class WorkBrowseActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.checkAndUpdateFavorites()
-    }
-
     private fun openIntent(intent: Intent) {
         startActivity(intent)
     }

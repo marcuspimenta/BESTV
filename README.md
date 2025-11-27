@@ -1,5 +1,5 @@
 # BESTV
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.6.20-blue.svg)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.2.20-blue.svg)](https://kotlinlang.org)
 
 <img src="/app/src/main/res/drawable/app_icon.png"  align="left" hspace="20" height="150" width="150">
 
@@ -32,7 +32,6 @@ This project uses the popular libraries and tools from the Android ecosystem.
         - [Lifecycle-aware components](https://developer.android.com/topic/libraries/architecture/lifecycle)
         - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) UI state management
     - [Retrofit](https://square.github.io/retrofit/) networking
-    - [Dagger](https://dagger.dev/android.html) dependency injection
     - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) asynchronous programming
     - [Kotlin Flow](https://kotlinlang.org/docs/flow.html) reactive streams
     - [Coil](https://coil-kt.github.io/coil/) image loading library for Compose
@@ -67,17 +66,17 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 <li>Search the movies and the tv shows by title</li>
 </ul>
 
-## Modules
-The app is modularized. We can see the dependency graph with all the modules.
-<p align="center">
-  <img src="dependency_graph/dependency_graph.png">
-</p>
-
 ## Recent Updates
 - ✅ Migrated from Leanback library to Jetpack Compose for TV
 - ✅ Adopted MVI (Model-View-Intent) architecture pattern
 - ✅ Replaced RxJava/RxAndroid with Kotlin Coroutines and Flow
 - ✅ Updated UI layer to use declarative Compose components
+
+## Modules
+The app is modularized. We can see the dependency graph with all the modules.
+<p align="center">
+  <img src="dependency_graph/dependency_graph.png">
+</p>
 
 ## References
 - [Jetpack Compose for TV](https://developer.android.com/jetpack/compose/tv)

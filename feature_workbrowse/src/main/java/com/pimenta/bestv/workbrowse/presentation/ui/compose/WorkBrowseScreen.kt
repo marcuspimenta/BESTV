@@ -36,6 +36,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
@@ -56,6 +57,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.Icon
@@ -99,6 +101,12 @@ fun WorkBrowseScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LifecycleResumeEffect(Unit) {
+        viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
+        // Nothing to do onPause
+        onPauseOrDispose { }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -194,7 +202,7 @@ private fun BrowseSections(
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val focusRequester = FocusRequester()
+    val focusRequester = remember { FocusRequester() }
 
     BackHandler {
         if (drawerState.currentValue == DrawerValue.Open) {

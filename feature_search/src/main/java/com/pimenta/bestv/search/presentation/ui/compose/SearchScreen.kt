@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +35,7 @@ import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
+import com.pimenta.bestv.presentation.ui.compose.Loading
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
 import com.pimenta.bestv.search.presentation.model.SearchEffect.OpenWorkDetails
 import com.pimenta.bestv.search.presentation.model.SearchEvent.ClearSearch
@@ -96,7 +96,7 @@ fun SearchScreen(
         }
 
         if (state.isSearching) {
-            CircularProgressIndicator(
+            Loading(
                 modifier = Modifier.align(Alignment.Center)
             )
         }

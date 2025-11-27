@@ -304,11 +304,7 @@ class SearchViewModel @Inject constructor(
         val currentState = currentState.state as? Loaded ?: return
 
         if (work == null) {
-            updateState {
-                it.copy(
-                    state = currentState.copy(selectedWork = null)
-                )
-            }
+            updateState { it.copy(state = currentState.copy(selectedWork = null)) }
             return
         }
 
