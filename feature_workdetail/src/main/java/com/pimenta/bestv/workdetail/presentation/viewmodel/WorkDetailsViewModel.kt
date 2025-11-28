@@ -68,7 +68,6 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Lo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * ViewModel for the Work Details screen following MVI architecture.
@@ -76,7 +75,7 @@ import javax.inject.Inject
  *
  * Created by marcus on 20-10-2025.
  */
-class WorkDetailsViewModel @Inject constructor(
+class WorkDetailsViewModel(
     private val work: WorkViewModel,
     private val setFavoriteUseCase: SetFavoriteUseCase,
     private val getWorkDetailsUseCase: GetWorkDetailsUseCase,

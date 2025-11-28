@@ -15,15 +15,13 @@
 package com.pimenta.bestv.castdetail.data.remote.datasource
 
 import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Created by marcus on 29-10-2019.
  */
-class CastRemoteDataSource @Inject constructor(
-    @Named("tmdbApiKey") private val tmdbApiKey: String,
-    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
+class CastRemoteDataSource(
+    private val tmdbApiKey: String,
+    private val tmdbFilterLanguage: String,
     private val castTmdbApi: CastTmdbApi
 ) {
 

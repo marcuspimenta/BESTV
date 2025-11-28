@@ -16,12 +16,11 @@ package com.pimenta.bestv.data.local.datasource
 
 import com.pimenta.bestv.data.local.dao.MovieDao
 import com.pimenta.bestv.model.data.local.MovieDbModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 21-11-2019.
  */
-class MovieLocalDataSource @Inject constructor(
+class MovieLocalDataSource(
     private val movieDao: MovieDao
 ) {
 

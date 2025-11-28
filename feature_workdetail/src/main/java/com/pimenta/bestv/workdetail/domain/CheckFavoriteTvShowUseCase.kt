@@ -16,12 +16,11 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-04-2020.
  */
-class CheckFavoriteTvShowUseCase @Inject constructor(
+class CheckFavoriteTvShowUseCase(
     private val tvShowRepository: TvShowRepository
 ) {
 

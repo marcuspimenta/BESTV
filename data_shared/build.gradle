@@ -28,9 +28,9 @@ dependencies {
     // Kotlin
     implementation Libs.kotlin
 
-    // Hilt
-    implementation Libs.hilt_android
-    kapt Libs.hilt_compiler
+    // Koin
+    implementation Libs.koin_core
+    implementation Libs.koin_android
 
     // Room components
     api Libs.androidx_room

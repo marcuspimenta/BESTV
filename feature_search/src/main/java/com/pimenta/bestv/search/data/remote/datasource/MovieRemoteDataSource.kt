@@ -15,15 +15,13 @@
 package com.pimenta.bestv.search.data.remote.datasource
 
 import com.pimenta.bestv.search.data.remote.api.SearchMovieTmdbApi
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Created by marcus on 29-10-2019.
  */
-class MovieRemoteDataSource @Inject constructor(
-    @Named("tmdbApiKey") private val tmdbApiKey: String,
-    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
+class MovieRemoteDataSource(
+    private val tmdbApiKey: String,
+    private val tmdbFilterLanguage: String,
     private val searchMovieTmdbApi: SearchMovieTmdbApi
 ) {
 

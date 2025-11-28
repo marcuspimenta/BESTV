@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class LoadWorkByTypeUseCase @Inject constructor(
+class LoadWorkByTypeUseCase(
     private val getFavoritesUseCase: GetFavoritesUseCase,
     private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,

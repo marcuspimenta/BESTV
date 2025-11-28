@@ -16,12 +16,11 @@ package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-10-2019.
  */
-class RecommendationRepository @Inject constructor(
+class RecommendationRepository(
     private val recommendationProvider: RecommendationProvider
 ) {
 

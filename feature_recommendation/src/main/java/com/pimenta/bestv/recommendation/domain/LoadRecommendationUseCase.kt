@@ -16,14 +16,13 @@ package com.pimenta.bestv.recommendation.domain
 
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository
 import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
-import javax.inject.Inject
 
 private const val RECOMMENDATION_NUMBER = 5
 
 /**
  * Created by marcus on 23-04-2019.
  */
-class LoadRecommendationUseCase @Inject constructor(
+class LoadRecommendationUseCase(
     private val movieRepository: MovieRepository,
     private val recommendationRepository: RecommendationRepository
 ) {

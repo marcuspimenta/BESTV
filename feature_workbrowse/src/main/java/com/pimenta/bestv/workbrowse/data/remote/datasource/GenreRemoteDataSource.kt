@@ -15,15 +15,13 @@
 package com.pimenta.bestv.workbrowse.data.remote.datasource
 
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Created by marcus on 20-10-2019.
  */
-class GenreRemoteDataSource @Inject constructor(
-    @Named("tmdbApiKey") private val tmdbApiKey: String,
-    @Named("tmdbFilterLanguage") private val tmdbFilterLanguage: String,
+class GenreRemoteDataSource(
+    private val tmdbApiKey: String,
+    private val tmdbFilterLanguage: String,
     private val genreTmdbApi: GenreTmdbApi
 ) {
 

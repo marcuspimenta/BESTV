@@ -16,11 +16,8 @@ package com.pimenta.bestv.route.workdetail
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import androidx.core.net.toUri
-import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 22-11-2019.
@@ -28,7 +25,7 @@ import javax.inject.Inject
 private const val SCHEMA_URI = "bestv://workdetail/"
 private const val WORK = "WORK"
 
-class WorkDetailsRoute @Inject constructor(
+class WorkDetailsRoute(
     private val application: Application,
 ) {
 

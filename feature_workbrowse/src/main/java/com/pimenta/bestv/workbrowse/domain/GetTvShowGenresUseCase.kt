@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class GetTvShowGenresUseCase @Inject constructor(
+class GetTvShowGenresUseCase(
     private val genreRepository: GenreRepository
 ) {
 

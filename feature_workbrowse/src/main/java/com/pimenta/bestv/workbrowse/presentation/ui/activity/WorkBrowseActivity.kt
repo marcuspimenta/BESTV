@@ -21,16 +21,14 @@ import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by marcus on 11-02-2018.
  */
-@AndroidEntryPoint
 class WorkBrowseActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModel: WorkBrowseViewModel
+    private val viewModel: WorkBrowseViewModel by viewModel()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

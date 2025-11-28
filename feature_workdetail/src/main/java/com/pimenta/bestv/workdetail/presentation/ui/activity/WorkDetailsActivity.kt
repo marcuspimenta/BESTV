@@ -20,20 +20,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
+import com.pimenta.bestv.route.workdetail.getWorkDetail
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
 import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsScreen
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Created by marcus on 11-02-2018.
  */
-@AndroidEntryPoint
 class WorkDetailsActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModel: WorkDetailsViewModel
+    private val viewModel: WorkDetailsViewModel by viewModel {
+        parametersOf(
+            intent.getWorkDetail()
+                ?: throw IllegalStateException("WorkViewModel not found in intent")
+        )
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -17,12 +17,11 @@ package com.pimenta.bestv.workbrowse.data.repository
 import com.pimenta.bestv.workbrowse.data.remote.datasource.GenreRemoteDataSource
 import com.pimenta.bestv.workbrowse.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-10-2019.
  */
-class GenreRepository @Inject constructor(
+class GenreRepository(
     private val genreRemoteDataSource: GenreRemoteDataSource
 ) {
 

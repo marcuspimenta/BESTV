@@ -18,17 +18,14 @@ import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-10-2019.
  */
-class MovieRepository @Inject constructor(
+class MovieRepository(
     private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource

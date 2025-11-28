@@ -12,9 +12,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.topTvShowTypes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
-class GetSectionDetailsUseCase @Inject constructor(
+class GetSectionDetailsUseCase(
     private val getMovieGenresUseCase: GetMovieGenresUseCase,
     private val getTvShowGenresUseCase: GetTvShowGenresUseCase,
     private val getWorkByGenreUseCase: GetWorkByGenreUseCase,

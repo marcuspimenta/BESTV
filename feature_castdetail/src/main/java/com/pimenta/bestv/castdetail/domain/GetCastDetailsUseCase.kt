@@ -19,12 +19,11 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
 /**
  * Created by marcus on 15-04-2019.
  */
-class GetCastDetailsUseCase @Inject constructor(
+class GetCastDetailsUseCase(
     private val getCastPersonalDetails: GetCastPersonalDetails,
     private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
     private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase

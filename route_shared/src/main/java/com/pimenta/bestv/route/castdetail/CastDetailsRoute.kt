@@ -16,10 +16,8 @@ package com.pimenta.bestv.route.castdetail
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 25-11-2019.
@@ -27,7 +25,7 @@ import javax.inject.Inject
 private const val SCHEMA_URI = "bestv://castdetail/"
 private const val CAST = "CAST"
 
-class CastDetailsRoute @Inject constructor(
+class CastDetailsRoute(
     private val application: Application,
 ) {
 

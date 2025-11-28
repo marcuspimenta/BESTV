@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-10-2019.
  */
-class GetSimilarByMovieUseCase @Inject constructor(
+class GetSimilarByMovieUseCase(
     private val movieRepository: MovieRepository
 ) {
 

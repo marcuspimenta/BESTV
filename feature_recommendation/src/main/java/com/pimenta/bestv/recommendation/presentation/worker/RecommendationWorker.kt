@@ -18,10 +18,8 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by marcus on 28-01-2020.
@@ -29,22 +27,9 @@ import dagger.hilt.components.SingletonComponent
 class RecommendationWorker(
     context: Context,
     workerParameters: WorkerParameters,
-) : CoroutineWorker(context, workerParameters) {
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface RecommendationWorkerEntryPoint {
-        fun loadRecommendationUseCase(): LoadRecommendationUseCase
-    }
+) : CoroutineWorker(context, workerParameters), KoinComponent {
 
-    private val loadRecommendationUseCase: LoadRecommendationUseCase by lazy {
-        val appContext = applicationContext
-        val entryPoint =
-            EntryPointAccessors.fromApplication(
-                appContext,
-                RecommendationWorkerEntryPoint::class.java,
-            )
-        entryPoint.loadRecommendationUseCase()
-    }
+    private val loadRecommendationUseCase: LoadRecommendationUseCase by inject()
 
     override suspend fun doWork(): Result =
         try {

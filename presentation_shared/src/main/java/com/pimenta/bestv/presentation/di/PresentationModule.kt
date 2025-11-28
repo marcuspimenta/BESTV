@@ -12,23 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.di.module
+package com.pimenta.bestv.presentation.di
 
-import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import javax.inject.Singleton
+import com.pimenta.bestv.presentation.platform.Resource
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-/**
- * Created by marcus on 20-10-2019.
- */
-@Module
-@InstallIn(SingletonComponent::class)
-object GenreApiModule {
-    @Provides
-    @Singleton
-    fun provideGenreApi(retrofit: Retrofit) = retrofit.create(GenreTmdbApi::class.java)
+val presentationModule = module {
+    singleOf(::Resource)
 }

@@ -38,7 +38,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 private const val BACKGROUND_UPDATE_DELAY = 300L
 private const val SEARCH_DELAY = 500L
@@ -49,7 +48,7 @@ private const val SEARCH_DELAY = 500L
  *
  * Created by marcus on 23-10-2025.
  */
-class SearchViewModel @Inject constructor(
+class SearchViewModel(
     private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,

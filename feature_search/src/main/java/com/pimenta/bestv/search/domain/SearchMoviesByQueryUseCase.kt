@@ -15,12 +15,11 @@
 package com.pimenta.bestv.search.domain
 
 import com.pimenta.bestv.search.data.repository.MovieRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class SearchMoviesByQueryUseCase @Inject constructor(
+class SearchMoviesByQueryUseCase(
     private val movieRepository: MovieRepository
 ) {
 

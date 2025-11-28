@@ -12,36 +12,27 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.di.module
+package com.pimenta.bestv.data.di
 
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pimenta.bestv.data.BuildConfig
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
-import javax.inject.Singleton
 
-/**
- * Created by marcus on 3-12-2019.
- */
 private const val TIME_OUT_SEC = 60L
 
-@Module
-@InstallIn(SingletonComponent::class)
-class MediaRemoteModule {
+val networkModule = module {
+    single(named("tmdbApiKey")) { BuildConfig.TMDB_API_KEY }
+    single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
-    @Provides
-    @Singleton
-    fun provideTmdbRetrofit(): Retrofit {
-        val okHttpClient = OkHttpClient.Builder().apply {
+    single {
+        OkHttpClient.Builder().apply {
             if (BuildConfig.BUILD_TYPE == "debug") {
                 addInterceptor(
                     HttpLoggingInterceptor().apply {
@@ -53,24 +44,13 @@ class MediaRemoteModule {
             writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
             connectTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
         }.build()
-
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.TMDB_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
     }
 
-    @Provides
-    @Singleton
-    @Named("tmdbApiKey")
-    fun provideTmdbApiKey() =
-        BuildConfig.TMDB_API_KEY
-
-    @Provides
-    @Singleton
-    @Named("tmdbFilterLanguage")
-    fun provideTmdbFilterLanguage() =
-        BuildConfig.TMDB_FILTER_LANGUAGE
+    single {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.TMDB_BASE_URL)
+            .client(get())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+    }
 }

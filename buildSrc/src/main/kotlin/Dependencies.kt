@@ -41,8 +41,6 @@ object Versions {
     val androidx_activity_compose = "1.12.0"
     val coil_compose = "2.7.0"
 
-    val hilt = "2.57.2"
-    val hilt_work = "1.2.0"
     val retrofit = "3.0.0"
     val retrofit_converter_gson = "3.0.0"
     val okhttp = "5.3.2"
@@ -57,6 +55,9 @@ object Versions {
     val mockito_kotlin = "2.2.0"
     val turbine = "1.2.1"
     val robolectric = "4.16"
+
+    // Koin
+    val koin = "3.5.6"
 }
 
 object Libs {
@@ -90,10 +91,6 @@ object Libs {
     val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.androidx_activity_compose}"
     val coil_compose = "io.coil-kt:coil-compose:${Versions.coil_compose}"
 
-    val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
-    val hilt_compiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
-    val hilt_work = "androidx.hilt:hilt-work:${Versions.hilt_work}"
-    val hilt_work_compiler = "androidx.hilt:hilt-compiler:${Versions.hilt_work}"
     val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit_converter_gson}"
     val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
@@ -108,4 +105,11 @@ object Libs {
     val mockito_kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito_kotlin}"
     val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
     val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+
+    // Koin
+    val koin_core = "io.insert-koin:koin-core:${Versions.koin}"
+    val koin_android = "io.insert-koin:koin-android:${Versions.koin}"
+    val koin_android_compose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
+    val koin_workmanager = "io.insert-koin:koin-androidx-workmanager:${Versions.koin}"
+    val koin_test = "io.insert-koin:koin-test:${Versions.koin}"
 }

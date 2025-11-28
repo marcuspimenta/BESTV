@@ -21,12 +21,11 @@ import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-10-2019.
  */
-class TvShowRepository @Inject constructor(
+class TvShowRepository(
     private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource

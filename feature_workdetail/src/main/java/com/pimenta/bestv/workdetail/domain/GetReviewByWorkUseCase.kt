@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.presentation.model.WorkType
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-04-2020.
  */
-class GetReviewByWorkUseCase @Inject constructor(
+class GetReviewByWorkUseCase(
     private val getReviewByMovieUseCase: GetReviewByMovieUseCase,
     private val getReviewByTvShowUseCase: GetReviewByTvShowUseCase
 ) {

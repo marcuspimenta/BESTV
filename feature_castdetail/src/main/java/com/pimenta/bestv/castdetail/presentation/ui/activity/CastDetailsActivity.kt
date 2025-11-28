@@ -21,16 +21,21 @@ import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.pimenta.bestv.route.castdetail.getCastDeepLink
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Created by marcus on 04-04-2018.
  */
-@AndroidEntryPoint
 class CastDetailsActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModel: CastDetailsViewModel
+    private val viewModel: CastDetailsViewModel by viewModel {
+        parametersOf(
+            intent.getCastDeepLink()
+                ?: throw IllegalStateException("CastViewModel not found in intent")
+        )
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

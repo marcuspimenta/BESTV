@@ -18,12 +18,11 @@ import com.pimenta.bestv.castdetail.data.remote.datasource.CastRemoteDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
-import javax.inject.Inject
 
 /**
  * Created by marcus on 29-10-2019.
  */
-class CastRepository @Inject constructor(
+class CastRepository(
     private val resource: Resource,
     private val castRemoteDataSource: CastRemoteDataSource
 ) {

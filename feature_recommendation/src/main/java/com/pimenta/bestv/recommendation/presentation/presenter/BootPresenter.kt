@@ -15,12 +15,11 @@
 package com.pimenta.bestv.recommendation.presentation.presenter
 
 import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
-import javax.inject.Inject
 
 /**
  * Created by marcus on 06-03-2018.
  */
-class BootPresenter @Inject constructor(
+class BootPresenter(
     private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase,
 ) {
     fun scheduleRecommendationUpdate() {

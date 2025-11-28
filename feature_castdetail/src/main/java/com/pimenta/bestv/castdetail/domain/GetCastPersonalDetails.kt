@@ -15,12 +15,11 @@
 package com.pimenta.bestv.castdetail.domain
 
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
-class GetCastPersonalDetails @Inject constructor(
+class GetCastPersonalDetails(
     private val castRepository: CastRepository,
 ) {
     suspend operator fun invoke(castId: Int) = castRepository.getCastDetails(castId)

@@ -16,17 +16,11 @@ package com.pimenta.bestv.presentation.platform
 
 import android.app.Application
 import androidx.annotation.StringRes
-import javax.inject.Inject
 
 /**
  * Created by marcus on 9-12-2019.
  */
-class Resource
-    @Inject
-    constructor(
-        private val application: Application,
-    ) {
-        fun getStringResource(
-            @StringRes resourceId: Int,
-        ) = application.getString(resourceId)
-    }
+class Resource(private val application: Application) {
+
+    fun getStringResource(@StringRes resourceId: Int) = application.getString(resourceId)
+}

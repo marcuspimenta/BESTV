@@ -21,16 +21,14 @@ import androidx.activity.compose.setContent
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.search.presentation.ui.compose.SearchScreen
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by marcus on 12/07/18.
  */
-@AndroidEntryPoint
 class SearchActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -20,12 +20,11 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class SetFavoriteUseCase @Inject constructor(
+class SetFavoriteUseCase(
     private val movieRepository: MovieRepository,
     private val tvShowRepository: TvShowRepository
 ) {

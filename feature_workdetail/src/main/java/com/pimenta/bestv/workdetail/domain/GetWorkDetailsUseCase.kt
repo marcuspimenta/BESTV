@@ -22,12 +22,11 @@ import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
-class GetWorkDetailsUseCase @Inject constructor(
+class GetWorkDetailsUseCase(
     private val checkFavoriteWorkUseCase: CheckFavoriteWorkUseCase,
     private val getVideosUseCase: GetVideosUseCase,
     private val getCastsUseCase: GetCastsUseCase,

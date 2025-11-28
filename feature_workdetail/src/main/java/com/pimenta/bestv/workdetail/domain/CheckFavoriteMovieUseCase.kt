@@ -16,12 +16,11 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-04-2020.
  */
-class CheckFavoriteMovieUseCase @Inject constructor(
+class CheckFavoriteMovieUseCase(
     private val movieRepository: MovieRepository
 ) {
 

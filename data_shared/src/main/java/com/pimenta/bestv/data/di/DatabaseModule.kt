@@ -12,39 +12,28 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.di.module
+package com.pimenta.bestv.data.di
 
-import android.app.Application
 import androidx.room.Room
 import com.pimenta.bestv.data.local.database.MediaDb
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
+import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-/**
- * Created by marcus on 24-06-2019.
- */
 private const val DB_NAME = "bestv.db"
 
-@Module
-@InstallIn(SingletonComponent::class)
-class MediaLocalModule {
-
-    @Provides
-    @Singleton
-    fun provideLocalDatabase(application: Application) =
-        Room.databaseBuilder(application, MediaDb::class.java, DB_NAME)
+val databaseModule = module {
+    single {
+        Room.databaseBuilder(androidApplication(), MediaDb::class.java, DB_NAME)
             .build()
+    }
 
-    @Provides
-    @Singleton
-    fun provideMovieDao(mediaDb: MediaDb) =
-        mediaDb.movieDao()
+    single { get<MediaDb>().movieDao() }
 
-    @Provides
-    @Singleton
-    fun provideTvShowDao(mediaDb: MediaDb) =
-        mediaDb.tvShowDao()
+    single { get<MediaDb>().tvShowDao() }
+
+    single { MovieLocalDataSource(get()) }
+
+    single { TvShowLocalDataSource(get()) }
 }

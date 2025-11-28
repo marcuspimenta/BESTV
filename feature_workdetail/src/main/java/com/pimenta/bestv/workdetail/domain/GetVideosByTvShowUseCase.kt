@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 22-10-2019.
  */
-class GetVideosByTvShowUseCase @Inject constructor(
+class GetVideosByTvShowUseCase(
     private val tvShowRepository: TvShowRepository
 ) {
 

@@ -16,12 +16,11 @@ package com.pimenta.bestv.data.local.datasource
 
 import com.pimenta.bestv.data.local.dao.TvShowDao
 import com.pimenta.bestv.model.data.local.TvShowDbModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 21-11-2019.
  */
-class TvShowLocalDataSource @Inject constructor(
+class TvShowLocalDataSource(
     private val tvShowDao: TvShowDao
 ) {
 

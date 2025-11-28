@@ -18,7 +18,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.pimenta.bestv.recommendation.presentation.worker.RecommendationWorker
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
@@ -26,7 +25,7 @@ import javax.inject.Inject
 private const val REPEAT_INTERVAL_MINUTES = 1L
 private const val WORK_TAG = "RECOMMENDATION"
 
-class ScheduleRecommendationUseCase @Inject constructor(
+class ScheduleRecommendationUseCase(
     private val workerManager: WorkManager
 ) {
 

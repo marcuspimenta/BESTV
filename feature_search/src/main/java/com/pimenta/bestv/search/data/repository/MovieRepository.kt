@@ -18,12 +18,11 @@ import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
-import javax.inject.Inject
 
 /**
  * Created by marcus on 29-10-2019.
  */
-class MovieRepository @Inject constructor(
+class MovieRepository(
     private val resource: Resource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) {

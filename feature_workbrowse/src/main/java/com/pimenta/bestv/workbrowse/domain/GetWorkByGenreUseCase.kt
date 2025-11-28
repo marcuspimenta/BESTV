@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.Source
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class GetWorkByGenreUseCase @Inject constructor(
+class GetWorkByGenreUseCase(
     private val getMovieByGenreUseCase: GetMovieByGenreUseCase,
     private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
 ) {

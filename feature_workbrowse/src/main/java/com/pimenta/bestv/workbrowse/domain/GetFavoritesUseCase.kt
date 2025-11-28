@@ -18,12 +18,11 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-08-2019.
  */
-class GetFavoritesUseCase @Inject constructor(
+class GetFavoritesUseCase(
     private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
 ) {

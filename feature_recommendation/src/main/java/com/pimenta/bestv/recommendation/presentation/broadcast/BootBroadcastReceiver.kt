@@ -18,36 +18,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 /**
  * Created by marcus on 06-03-2018.
  */
-class BootBroadcastReceiver : BroadcastReceiver() {
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface BootBroadcastReceiverEntryPoint {
-        fun bootPresenter(): BootPresenter
-    }
+class BootBroadcastReceiver : BroadcastReceiver(), KoinComponent {
+
+    private val presenter: BootPresenter by inject()
 
     override fun onReceive(
         context: Context,
         intent: Intent,
     ) {
         Timber.d("Boot initiated")
-
-        val appContext = context.applicationContext
-        val entryPoint =
-            EntryPointAccessors.fromApplication(
-                appContext,
-                BootBroadcastReceiverEntryPoint::class.java,
-            )
-        val presenter = entryPoint.bootPresenter()
-
         presenter.scheduleRecommendationUpdate()
     }
 }

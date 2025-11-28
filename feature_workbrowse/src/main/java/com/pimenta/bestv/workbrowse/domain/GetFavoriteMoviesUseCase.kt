@@ -15,12 +15,11 @@
 package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
-import javax.inject.Inject
 
 /**
  * Created by marcus on 13-10-2019.
  */
-class GetFavoriteMoviesUseCase @Inject constructor(
+class GetFavoriteMoviesUseCase(
     private val movieRepository: MovieRepository
 ) {
 

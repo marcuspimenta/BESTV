@@ -16,35 +16,49 @@ package com.pimenta.bestv.application
 
 import android.app.Application
 import android.os.StrictMode
+import com.pimenta.bestv.application.di.appModule
 import com.pimenta.bestv.data.BuildConfig
-import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 
 /**
  * Created by marcus on 07-02-2018.
  */
-@HiltAndroidApp
 class BesTVApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        when (BuildConfig.BUILD_TYPE) {
-            "debug" -> {
-                Timber.plant(Timber.DebugTree())
-                StrictMode.setThreadPolicy(
-                    StrictMode.ThreadPolicy.Builder()
-                        .detectAll()
-                        .penaltyLog()
-                        .build(),
-                )
-                StrictMode.setVmPolicy(
-                    StrictMode.VmPolicy.Builder()
-                        .detectLeakedSqlLiteObjects()
-                        .detectLeakedClosableObjects()
-                        .penaltyLog()
-                        .build(),
-                )
-            }
+        initKoin()
+        initDebugTools()
+    }
+
+    private fun initKoin() {
+        startKoin {
+            androidLogger(if (BuildConfig.BUILD_TYPE == "debug") Level.DEBUG else Level.ERROR)
+            androidContext(this@BesTVApplication)
+            modules(appModule)
+        }
+    }
+
+    private fun initDebugTools() {
+        if (BuildConfig.BUILD_TYPE == "debug") {
+            Timber.plant(Timber.DebugTree())
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build(),
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .build(),
+            )
         }
     }
 }

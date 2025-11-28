@@ -12,23 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.di.module
+package com.pimenta.bestv.route.di
 
-import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import javax.inject.Singleton
+import com.pimenta.bestv.route.castdetail.CastDetailsRoute
+import com.pimenta.bestv.route.search.SearchRoute
+import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-/**
- * Created by marcus on 20-10-2019.
- */
-@Module
-@InstallIn(SingletonComponent::class)
-object MovieApiModule {
-    @Provides
-    @Singleton
-    fun provideMovieApi(retrofit: Retrofit) = retrofit.create(MovieTmdbApi::class.java)
+val routeModule = module {
+    singleOf(::WorkDetailsRoute)
+    singleOf(::CastDetailsRoute)
+    singleOf(::SearchRoute)
+    singleOf(::WorkBrowseRoute)
 }

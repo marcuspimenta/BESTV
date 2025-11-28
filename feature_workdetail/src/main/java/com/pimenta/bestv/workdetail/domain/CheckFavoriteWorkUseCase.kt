@@ -18,12 +18,11 @@ import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23-04-2020.
  */
-class CheckFavoriteWorkUseCase @Inject constructor(
+class CheckFavoriteWorkUseCase(
     private val checkFavoriteMovieUseCase: CheckFavoriteMovieUseCase,
     private val checkFavoriteTvShowUseCase: CheckFavoriteTvShowUseCase
 ) {

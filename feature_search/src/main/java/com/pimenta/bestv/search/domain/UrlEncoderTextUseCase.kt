@@ -16,14 +16,13 @@ package com.pimenta.bestv.search.domain
 
 import kotlinx.coroutines.coroutineScope
 import java.net.URLEncoder
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
 private const val enc = "UTF-8"
 
-class UrlEncoderTextUseCase @Inject constructor() {
+class UrlEncoderTextUseCase() {
 
     suspend operator fun invoke(text: String): String =
         coroutineScope { URLEncoder.encode(text, enc) }

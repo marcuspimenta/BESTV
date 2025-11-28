@@ -19,12 +19,11 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
 /**
  * Created by marcus on 20-05-2019.
  */
-class SearchWorksByQueryUseCase @Inject constructor(
+class SearchWorksByQueryUseCase(
     private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase

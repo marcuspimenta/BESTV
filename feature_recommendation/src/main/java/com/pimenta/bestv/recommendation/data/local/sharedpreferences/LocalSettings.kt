@@ -16,12 +16,11 @@ package com.pimenta.bestv.recommendation.data.local.sharedpreferences
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import javax.inject.Inject
 
 /**
  * Created by marcus on 23/08/19.
  */
-class LocalSettings @Inject constructor(
+class LocalSettings(
     private val sharedPreferences: SharedPreferences
 ) {
 

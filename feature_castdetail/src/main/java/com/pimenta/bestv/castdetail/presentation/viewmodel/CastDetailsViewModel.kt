@@ -26,14 +26,13 @@ import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * ViewModel for the Cast Details screen following MVI architecture
  *
  * Created by marcus on 21-10-2025.
  */
-class CastDetailsViewModel @Inject constructor(
+class CastDetailsViewModel(
     private val cast: CastViewModel,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute
