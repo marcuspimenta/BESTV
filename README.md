@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 - MVI Architecture Pattern
 - Clean Architecture
 - Android Architecture Components
-- Dependency Injection with Dagger
+- Dependency Injection with Koin
 - Reactive Programming with Kotlin Coroutines and Flow
 
 ## Tech-stack
@@ -36,6 +36,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
     - [Kotlin Flow](https://kotlinlang.org/docs/flow.html) reactive streams
     - [Coil](https://coil-kt.github.io/coil/) image loading library for Compose
     - [Lottie](http://airbnb.io/lottie) animation library
+    - [Koin](https://insert-koin.io/) dependency injection framework
 - Architecture
     - MVI (Model-View-Intent)
     - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
@@ -71,6 +72,7 @@ buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 - ✅ Adopted MVI (Model-View-Intent) architecture pattern
 - ✅ Replaced RxJava/RxAndroid with Kotlin Coroutines and Flow
 - ✅ Updated UI layer to use declarative Compose components
+- ✅ Migrated from Dagger to Koin for dependency injection
 
 ## Modules
 The app is modularized. We can see the dependency graph with all the modules.
@@ -83,11 +85,10 @@ The app is modularized. We can see the dependency graph with all the modules.
 - [Compose for TV samples](https://github.com/android/tv-samples)
 - [Google Codelab TV Recommendations](https://github.com/googlecodelabs/tv-recommendations)
 - [MVI Architecture with Kotlin](https://proandroiddev.com/mvi-architecture-with-kotlin-flows-and-channels-d36820b2028d)
-- [Dagger2: @Component.Factory and @SubComponent.Factory](https://android.jlelse.eu/dagger2-component-factory-and-subcomponent-factory-b181ec96b213)
+- [Koin - The Kotlin Injection Framework](https://insert-koin.io/docs/quickstart/android/)
 - [Why you need Use Cases/Interactors](https://proandroiddev.com/why-you-need-use-cases-interactors-142e8a6fe576)
 - [Modularization - Lessons learned](https://jeroenmols.com/blog/2019/06/12/modularizationtips/)
 - [Gradle dependency management with Kotlin (buildSrc)](https://proandroiddev.com/gradle-dependency-management-with-kotlin-94eed4df9a28)
-- [Using Dagger in Android apps](https://developer.android.com/training/dependency-injection/dagger-android)
 - [Kotlin Coroutines and Flow](https://kotlinlang.org/docs/coroutines-guide.html)
 
 ## Licence
