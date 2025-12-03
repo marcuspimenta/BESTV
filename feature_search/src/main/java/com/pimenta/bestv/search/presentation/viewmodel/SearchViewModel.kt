@@ -23,7 +23,7 @@ import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
-import com.pimenta.bestv.search.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.search.presentation.model.SearchEffect
 import com.pimenta.bestv.search.presentation.model.SearchEvent
 import com.pimenta.bestv.search.presentation.model.SearchState

@@ -16,6 +16,7 @@ package com.pimenta.bestv.workdetail.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.LoadingError
 
 private const val ID_HEADER = 1
@@ -91,15 +92,6 @@ data class WorkDetailsState(
         data object ScrollToSimilarWorks : ActionButton(ID_ACTION_SCROLL_TO_SIMILAR, "Similar")
         data object ScrollToReviews : ActionButton(ID_ACTION_SCROLL_TO_REVIEWS, "Reviews")
     }
-}
-
-data class PaginationState(
-    val currentPage: Int = 0,
-    val totalPages: Int = 0,
-    val isLoadingMore: Boolean = false
-) {
-    val canLoadMore: Boolean
-        get() = currentPage > 0 && currentPage < totalPages && !isLoadingMore
 }
 
 sealed class ErrorType(open val message: String) {

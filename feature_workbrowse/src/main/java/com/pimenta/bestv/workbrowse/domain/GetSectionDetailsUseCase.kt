@@ -3,7 +3,7 @@ package com.pimenta.bestv.workbrowse.domain
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
-import com.pimenta.bestv.workbrowse.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.FAVORITES_MOVIES

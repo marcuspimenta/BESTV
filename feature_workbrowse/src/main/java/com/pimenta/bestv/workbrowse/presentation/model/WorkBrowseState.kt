@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workbrowse.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workbrowse.R as workbrowseR
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
@@ -69,13 +70,4 @@ sealed class ContentSection(
         override val works: List<WorkViewModel>,
         override val page: PaginationState
     ) : ContentSection(works, page)
-}
-
-data class PaginationState(
-    val currentPage: Int = 0,
-    val totalPages: Int = 0,
-    val isLoadingMore: Boolean = false
-) {
-    val canLoadMore: Boolean
-        get() = currentPage in 1..<totalPages && !isLoadingMore
 }

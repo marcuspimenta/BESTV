@@ -34,7 +34,7 @@ import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
-import com.pimenta.bestv.workdetail.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
