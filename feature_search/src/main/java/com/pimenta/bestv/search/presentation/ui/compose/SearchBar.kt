@@ -14,15 +14,8 @@
 
 package com.pimenta.bestv.search.presentation.ui.compose
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -30,24 +23,18 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 
 @Composable
 fun SearchBar(
@@ -58,96 +45,36 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     placeholder: String = "Search movies and TV shows..."
 ) {
-    var textFieldValue by remember {
-        mutableStateOf(TextFieldValue(query))
-    }
     val focusRequester = remember { FocusRequester() }
-
-    // Sync external query changes (e.g., from clear button or external state)
-    // but preserve cursor position during normal typing
-    LaunchedEffect(query) {
-        if (textFieldValue.text != query) {
-            textFieldValue = TextFieldValue(
-                text = query,
-                selection = TextRange(query.length)
-            )
-        }
-    }
 
     // Request focus when the search bar is first displayed
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 
-    Box(
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 48.dp, vertical = 24.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(72.dp)
-                .background(
-                    color = Color.White.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .border(
-                    width = 2.dp,
-                    color = Color.White.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            .focusRequester(focusRequester),
+        placeholder = {
+            Text(
+                text = placeholder,
+                color = Color.White.copy(alpha = 0.5f)
+            )
+        },
+        leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier.padding(end = 24.dp)
+                tint = Color.White.copy(alpha = 0.7f)
             )
-
-            BasicTextField(
-                value = textFieldValue,
-                onValueChange = { newValue ->
-                    textFieldValue = newValue
-                    onQueryChange(newValue.text)
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color.White
-                ),
-                cursorBrush = SolidColor(Color.White),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search
-                ),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onQuerySubmit(textFieldValue.text)
-                    }
-                ),
-                decorationBox = { innerTextField ->
-                    if (textFieldValue.text.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White.copy(alpha = 0.5f)
-                        )
-                    }
-                    innerTextField()
-                }
-            )
-
-            if (textFieldValue.text.isNotEmpty()) {
-                IconButton(
-                    onClick = {
-                        textFieldValue = TextFieldValue("")
-                        onClear()
-                    }
-                ) {
+        },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = onClear) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Clear search",
@@ -155,6 +82,22 @@ fun SearchBar(
                     )
                 }
             }
-        }
-    }
+        },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { onQuerySubmit(query) }
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            cursorColor = Color.White,
+            focusedBorderColor = Color.White.copy(alpha = 0.5f),
+            unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
+            focusedContainerColor = Color.White.copy(alpha = 0.15f),
+            unfocusedContainerColor = Color.White.copy(alpha = 0.15f)
+        )
+    )
 }
