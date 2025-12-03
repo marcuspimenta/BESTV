@@ -33,7 +33,16 @@ import kotlin.test.assertFailsWith
  */
 private val WORK = WorkViewModel(
     id = 1,
-    type = WorkType.MOVIE
+    title = "Test Movie",
+    originalTitle = "Test Movie",
+    originalLanguage = "en",
+    overview = "A test movie",
+    source = "tmdb",
+    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+    posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+    releaseDate = "Jan 01, 2023",
+    type = WorkType.MOVIE,
+    voteAverage = 8.0f
 )
 private val VIDEO_LIST = listOf(
     VideoDomainModel(

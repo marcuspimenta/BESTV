@@ -34,13 +34,27 @@ private val MOVIE_VIEW_MODEL = WorkViewModel(
     id = 1,
     title = "Batman",
     originalTitle = "Batman",
-    type = WorkType.MOVIE
+    originalLanguage = "en",
+    overview = "A superhero movie",
+    source = "tmdb",
+    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+    posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+    releaseDate = "Jan 01, 2023",
+    type = WorkType.MOVIE,
+    voteAverage = 8.0f
 )
 private val TV_SHOW_VIEW_MODEL = WorkViewModel(
     id = 1,
     title = "Batman",
     originalTitle = "Batman",
-    type = WorkType.TV_SHOW
+    originalLanguage = "en",
+    overview = "A superhero TV show",
+    source = "tmdb",
+    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+    posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+    releaseDate = "Jan 01, 2023",
+    type = WorkType.TV_SHOW,
+    voteAverage = 8.0f
 )
 
 class SetFavoriteUseCaseTest {

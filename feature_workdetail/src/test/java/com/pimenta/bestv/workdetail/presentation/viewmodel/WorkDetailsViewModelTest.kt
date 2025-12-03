@@ -60,7 +60,15 @@ import org.robolectric.annotation.Config
 private val WORK = WorkViewModel(
     id = 1,
     title = "Test Movie",
-    type = WorkType.MOVIE
+    originalTitle = "Test Movie",
+    originalLanguage = "en",
+    overview = "A test movie",
+    source = "tmdb",
+    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+    posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+    releaseDate = "Jan 01, 2023",
+    type = WorkType.MOVIE,
+    voteAverage = 8.0f
 )
 
 private val VIDEO_LIST = listOf(
@@ -77,7 +85,8 @@ private val CAST_LIST = listOf(
         character = "Character Name",
         birthday = "1990-01-01",
         deathDay = null,
-        biography = null
+        biography = null,
+        profilePath = "/photo.jpg"
     )
 )
 
@@ -87,7 +96,16 @@ private val WORK_PAGE = PageDomainModel(
     results = listOf(
         WorkDomainModel(
             id = 2,
-            title = "Recommended Movie"
+            title = "Recommended Movie",
+            originalTitle = "Recommended Movie",
+            originalLanguage = "en",
+            overview = "A recommended movie",
+            source = "tmdb",
+            backdropPath = "/backdrop.jpg",
+            posterPath = "/poster.jpg",
+            releaseDate = "2023-01-01",
+            type = WorkDomainModel.Type.MOVIE,
+            voteAverage = 7.5f
         )
     )
 )
@@ -266,7 +284,19 @@ class WorkDetailsViewModelTest {
 
     @Test
     fun `workClicked should emit OpenIntent effect`() = runTest(testDispatcher) {
-        val clickedWork = WorkViewModel(id = 2, title = "Another Movie", type = WorkType.MOVIE)
+        val clickedWork = WorkViewModel(
+            id = 2,
+            title = "Another Movie",
+            originalTitle = "Another Movie",
+            originalLanguage = "en",
+            overview = "Another test movie",
+            source = "tmdb",
+            backdropUrl = "https://image.tmdb.org/t/p/original/backdrop2.jpg",
+            posterUrl = "https://image.tmdb.org/t/p/original/poster2.jpg",
+            releaseDate = "Feb 01, 2023",
+            type = WorkType.MOVIE,
+            voteAverage = 7.5f
+        )
         val intent = mock<Intent>()
         whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
 
@@ -285,7 +315,12 @@ class WorkDetailsViewModelTest {
         val cast = CastViewModel(
             id = 1,
             name = "Actor Name",
-            character = "Character Name"
+            character = "Character Name",
+            birthday = "1990-01-01",
+            source = "tmdb",
+            deathDay = "",
+            biography = "An actor biography",
+            thumbnailUrl = "https://image.tmdb.org/t/p/original/photo.jpg"
         )
         val intent = mock<Intent>()
         whenever(castDetailsRoute.buildCastDetailIntent(cast)).thenReturn(intent)

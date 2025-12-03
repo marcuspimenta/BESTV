@@ -74,7 +74,7 @@ class GetWorkByGenreUseCaseTest {
         whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
             .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
-        val result = useCase(MOVIE_GENRE, 1)
+        val result = useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
 
         Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
     }
@@ -85,7 +85,7 @@ class GetWorkByGenreUseCaseTest {
             .thenThrow(RuntimeException())
 
         try {
-            useCase(MOVIE_GENRE, 1)
+            useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
             Assert.fail("Expected exception")
         } catch (e: RuntimeException) {
             // Expected
@@ -97,7 +97,7 @@ class GetWorkByGenreUseCaseTest {
         whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
             .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
 
-        val result = useCase(TV_SHOW_GENRE, 1)
+        val result = useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
 
         Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
     }
@@ -108,7 +108,7 @@ class GetWorkByGenreUseCaseTest {
             .thenThrow(RuntimeException())
 
         try {
-            useCase(TV_SHOW_GENRE, 1)
+            useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
             Assert.fail("Expected exception")
         } catch (e: RuntimeException) {
             // Expected

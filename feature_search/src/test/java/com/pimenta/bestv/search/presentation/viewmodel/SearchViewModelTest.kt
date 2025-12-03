@@ -54,7 +54,14 @@ private val WORK_VIEW_MODEL = WorkViewModel(
     id = 1,
     title = "Game of thrones",
     originalTitle = "Game of thrones",
-    type = WorkType.TV_SHOW
+    originalLanguage = "en",
+    overview = "A great TV show",
+    source = "tmdb",
+    backdropUrl = "https://example.com/backdrop.jpg",
+    posterUrl = "https://example.com/poster.jpg",
+    releaseDate = "Jan 01, 2020",
+    type = WorkType.TV_SHOW,
+    voteAverage = 9.0f
 )
 
 private val MOVIE_VIEW_MODEL_LIST = listOf(
@@ -62,7 +69,14 @@ private val MOVIE_VIEW_MODEL_LIST = listOf(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
-        type = WorkType.MOVIE
+        originalLanguage = "en",
+        overview = "A superhero movie",
+        source = "tmdb",
+        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+        posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+        releaseDate = "Jan 01, 2023",
+        type = WorkType.MOVIE,
+        voteAverage = 8.0f
     )
 )
 
@@ -71,7 +85,14 @@ private val MOVIE_DOMAIN_MODEL_LIST = listOf(
         id = 1,
         title = "Batman",
         originalTitle = "Batman",
-        type = WorkDomainModel.Type.MOVIE
+        originalLanguage = "en",
+        overview = "A superhero movie",
+        source = "tmdb",
+        backdropPath = "/backdrop.jpg",
+        posterPath = "/poster.jpg",
+        releaseDate = "2023-01-01",
+        type = WorkDomainModel.Type.MOVIE,
+        voteAverage = 8.0f
     )
 )
 
@@ -83,19 +104,33 @@ private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
 
 private val TV_SHOW_VIEW_MODEL_LIST = listOf(
     WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkType.TV_SHOW
+        id = 2,
+        title = "Batman TV",
+        originalTitle = "Batman TV",
+        originalLanguage = "en",
+        overview = "A superhero TV show",
+        source = "tmdb",
+        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop_tv.jpg",
+        posterUrl = "https://image.tmdb.org/t/p/original/poster_tv.jpg",
+        releaseDate = "Feb 01, 2023",
+        type = WorkType.TV_SHOW,
+        voteAverage = 7.5f
     )
 )
 
 private val TV_SHOW_DOMAIN_MODEL_LIST = listOf(
     WorkDomainModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        type = WorkDomainModel.Type.TV_SHOW
+        id = 2,
+        title = "Batman TV",
+        originalTitle = "Batman TV",
+        originalLanguage = "en",
+        overview = "A superhero TV show",
+        source = "tmdb",
+        backdropPath = "/backdrop_tv.jpg",
+        posterPath = "/poster_tv.jpg",
+        releaseDate = "2023-02-01",
+        type = WorkDomainModel.Type.TV_SHOW,
+        voteAverage = 7.5f
     )
 )
 

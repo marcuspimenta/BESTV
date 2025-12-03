@@ -47,7 +47,12 @@ import org.robolectric.annotation.Config
 private val CAST = CastViewModel(
     id = 1,
     name = "John Doe",
-    character = "Hero"
+    character = "Hero",
+    birthday = "1990-01-01",
+    source = "tmdb",
+    deathDay = "",
+    biography = "An actor biography",
+    thumbnailUrl = "https://example.com/photo.jpg"
 )
 
 private val CAST_DETAILS = CastDomainModel(
@@ -56,24 +61,52 @@ private val CAST_DETAILS = CastDomainModel(
     character = "Hero",
     birthday = "1990-01-01",
     deathDay = null,
-    biography = "An actor biography"
+    biography = "An actor biography",
+    profilePath = "/photo.jpg"
 )
 
 private val MOVIE_LIST = listOf(
     WorkDomainModel(
         id = 1,
-        title = "Movie 1"
+        title = "Movie 1",
+        originalLanguage = "en",
+        overview = "Movie 1 overview",
+        source = "tmdb",
+        backdropPath = "/backdrop1.jpg",
+        posterPath = "/poster1.jpg",
+        originalTitle = "Movie 1",
+        releaseDate = "2023-01-01",
+        type = WorkDomainModel.Type.MOVIE,
+        voteAverage = 7.5f
     ),
     WorkDomainModel(
         id = 2,
-        title = "Movie 2"
+        title = "Movie 2",
+        originalLanguage = "en",
+        overview = "Movie 2 overview",
+        source = "tmdb",
+        backdropPath = "/backdrop2.jpg",
+        posterPath = "/poster2.jpg",
+        originalTitle = "Movie 2",
+        releaseDate = "2023-02-01",
+        type = WorkDomainModel.Type.MOVIE,
+        voteAverage = 8.0f
     )
 )
 
 private val TV_SHOW_LIST = listOf(
     WorkDomainModel(
         id = 3,
-        title = "TV Show 1"
+        title = "TV Show 1",
+        originalLanguage = "en",
+        overview = "TV Show 1 overview",
+        source = "tmdb",
+        backdropPath = "/backdrop3.jpg",
+        posterPath = "/poster3.jpg",
+        originalTitle = "TV Show 1",
+        releaseDate = "2023-03-01",
+        type = WorkDomainModel.Type.TV_SHOW,
+        voteAverage = 8.5f
     )
 )
 
@@ -161,7 +194,19 @@ class CastDetailsViewModelTest {
 
     @Test
     fun `workClicked should emit OpenIntent effect with transition`() = runTest(testDispatcher) {
-        val clickedWork = WorkViewModel(id = 2, title = "Another Movie", type = WorkType.MOVIE)
+        val clickedWork = WorkViewModel(
+            id = 2,
+            originalLanguage = "en",
+            overview = "A movie overview",
+            source = "tmdb",
+            backdropUrl = "https://example.com/backdrop.jpg",
+            posterUrl = "https://example.com/poster.jpg",
+            title = "Another Movie",
+            originalTitle = "Another Movie",
+            releaseDate = "2023-01-01",
+            type = WorkType.MOVIE,
+            voteAverage = 7.5f
+        )
         val intent = mock<Intent>()
         whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
 
