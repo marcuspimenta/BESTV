@@ -23,6 +23,8 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -70,6 +72,20 @@ private val REVIEW_PAGE = PageDomainModel<ReviewDomainModel>(
     totalPages = 0,
     results = null
 )
+private const val COUNTRY_CODE = "US"
+private val WATCH_PROVIDERS = WatchProvidersDomainModel(
+    tmdbLink = "https://www.themoviedb.org/movie/1/watch",
+    streaming = listOf(
+        WatchProviderDomainModel(
+            id = 1,
+            name = "Netflix",
+            logoPath = "/logo.jpg",
+            displayPriority = 1
+        )
+    ),
+    rent = emptyList(),
+    buy = emptyList()
+)
 
 class GetWorkDetailsUseCaseTest {
 
@@ -79,13 +95,15 @@ class GetWorkDetailsUseCaseTest {
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase = mock()
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
+    private val getWatchProvidersUseCase: GetWatchProvidersUseCase = mock()
     private val useCase = GetWorkDetailsUseCase(
         checkFavoriteWorkUseCase,
         getVideosUseCase,
         getCastsUseCase,
         getRecommendationByWorkUseCase,
         getSimilarByWorkUseCase,
-        getReviewByWorkUseCase
+        getReviewByWorkUseCase,
+        getWatchProvidersUseCase
     )
 
     @Test
@@ -102,8 +120,10 @@ class GetWorkDetailsUseCaseTest {
             .thenReturn(WORK_PAGE)
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
             .thenReturn(REVIEW_PAGE)
+        whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            .thenReturn(WATCH_PROVIDERS)
 
-        val result = useCase(WORK)
+        val result = useCase(WORK, COUNTRY_CODE)
 
         val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
             isFavorite = true,
@@ -111,7 +131,8 @@ class GetWorkDetailsUseCaseTest {
             casts = CAST_LIST,
             recommended = WORK_PAGE,
             similar = WORK_PAGE,
-            reviews = REVIEW_PAGE
+            reviews = REVIEW_PAGE,
+            watchProviders = WATCH_PROVIDERS
         )
         assertEquals(expected, result)
     }
@@ -132,9 +153,44 @@ class GetWorkDetailsUseCaseTest {
             .thenThrow(exception)
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
             .thenReturn(REVIEW_PAGE)
+        whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            .thenReturn(WATCH_PROVIDERS)
 
         assertFailsWith<RuntimeException> {
-            useCase(WORK)
+            useCase(WORK, COUNTRY_CODE)
         }
+    }
+
+    @Test
+    fun `should return null watch providers when watch providers fails`() = runTest {
+        val exception = RuntimeException("Watch providers error")
+
+        whenever(checkFavoriteWorkUseCase(WORK))
+            .thenReturn(true)
+        whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+            .thenReturn(VIDEO_LIST)
+        whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+            .thenReturn(CAST_LIST)
+        whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenReturn(WORK_PAGE)
+        whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenReturn(WORK_PAGE)
+        whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            .thenReturn(REVIEW_PAGE)
+        whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            .thenThrow(exception)
+
+        val result = useCase(WORK, COUNTRY_CODE)
+
+        val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+            isFavorite = true,
+            videos = VIDEO_LIST,
+            casts = CAST_LIST,
+            recommended = WORK_PAGE,
+            similar = WORK_PAGE,
+            reviews = REVIEW_PAGE,
+            watchProviders = null
+        )
+        assertEquals(expected, result)
     }
 }

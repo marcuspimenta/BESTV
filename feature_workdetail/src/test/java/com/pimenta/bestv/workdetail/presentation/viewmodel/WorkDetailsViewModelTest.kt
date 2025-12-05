@@ -34,6 +34,8 @@ import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
@@ -122,6 +124,20 @@ private val REVIEW_PAGE = PageDomainModel(
     )
 )
 
+private val WATCH_PROVIDERS = WatchProvidersDomainModel(
+    tmdbLink = "https://www.themoviedb.org/movie/1/watch",
+    streaming = listOf(
+        WatchProviderDomainModel(
+            id = 1,
+            name = "Netflix",
+            logoPath = "/logo.jpg",
+            displayPriority = 1
+        )
+    ),
+    rent = emptyList(),
+    buy = emptyList()
+)
+
 /**
  * Unit tests for WorkDetailsViewModel following MVI architecture with Coroutines
  */
@@ -175,10 +191,11 @@ class WorkDetailsViewModelTest {
             casts = CAST_LIST,
             recommended = WORK_PAGE,
             similar = WORK_PAGE,
-            reviews = REVIEW_PAGE
+            reviews = REVIEW_PAGE,
+            watchProviders = WATCH_PROVIDERS
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
         advanceUntilIdle()
@@ -218,10 +235,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = PageDomainModel(1, 1, emptyList())
+            reviews = PageDomainModel(1, 1, emptyList()),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
         // Initial state should be Loading
         val initialState = viewModel.state.value
@@ -238,7 +256,7 @@ class WorkDetailsViewModelTest {
     @Test
     fun `loadData should handle error`() = runTest(testDispatcher) {
         val exception = RuntimeException("Network error")
-        whenever(getWorkDetailsUseCase(WORK)).thenThrow(exception)
+        whenever(getWorkDetailsUseCase(any(), any())).thenThrow(exception)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
         advanceUntilIdle()
@@ -256,10 +274,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = PageDomainModel(1, 1, emptyList())
+            reviews = PageDomainModel(1, 1, emptyList()),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
         whenever(setFavoriteUseCase(any())).thenReturn(Unit)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
@@ -379,7 +398,8 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = REVIEW_PAGE.copy(totalPages = 2)
+            reviews = REVIEW_PAGE.copy(totalPages = 2),
+            watchProviders = null
         )
 
         val secondReviewPage = PageDomainModel<ReviewDomainModel>(
@@ -394,7 +414,7 @@ class WorkDetailsViewModelTest {
             )
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(initialDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
             .thenReturn(secondReviewPage)
 
@@ -428,10 +448,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = PageDomainModel(1, 1, emptyList())
+            reviews = PageDomainModel(1, 1, emptyList()),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
         whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
@@ -467,10 +488,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = REVIEW_PAGE.copy(totalPages = 2)
+            reviews = REVIEW_PAGE.copy(totalPages = 2),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(initialDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
         whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
             .thenThrow(RuntimeException("Network error"))
 
@@ -523,10 +545,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = PageDomainModel(1, 1, emptyList())
+            reviews = PageDomainModel(1, 1, emptyList()),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
         advanceUntilIdle()
@@ -573,10 +596,11 @@ class WorkDetailsViewModelTest {
             casts = emptyList(),
             recommended = PageDomainModel(1, 1, emptyList()),
             similar = PageDomainModel(1, 1, emptyList()),
-            reviews = PageDomainModel(1, 1, emptyList())
+            reviews = PageDomainModel(1, 1, emptyList()),
+            watchProviders = null
         )
 
-        whenever(getWorkDetailsUseCase(WORK)).thenReturn(workDetails)
+        whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
         whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))
 
         viewModel.handleEvent(WorkDetailsEvent.LoadData)
