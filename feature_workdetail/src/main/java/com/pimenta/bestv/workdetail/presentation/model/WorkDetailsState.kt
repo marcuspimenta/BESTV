@@ -57,7 +57,8 @@ data class WorkDetailsState(
 
     sealed class Content(open val id: Int) {
         data class Header(
-            val actions: List<ActionButton>
+            val actions: List<ActionButton>,
+            val watchProviders: WatchProvidersViewModel?
         ) : Content(ID_HEADER)
 
         data class Videos(

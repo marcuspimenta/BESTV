@@ -19,6 +19,7 @@ import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
+import com.pimenta.bestv.workdetail.data.remote.model.WatchProvidersResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -65,4 +66,10 @@ interface TvShowDetailTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): VideoListResponse
+
+    @GET("tv/{tv_id}/watch/providers")
+    suspend fun getWatchProvidersByTvShow(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String
+    ): WatchProvidersResponse
 }

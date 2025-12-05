@@ -39,6 +39,9 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetVideosByMovieUseCase
 import com.pimenta.bestv.workdetail.domain.GetVideosByTvShowUseCase
 import com.pimenta.bestv.workdetail.domain.GetVideosUseCase
+import com.pimenta.bestv.workdetail.domain.GetWatchProvidersByMovieUseCase
+import com.pimenta.bestv.workdetail.domain.GetWatchProvidersByTvShowUseCase
+import com.pimenta.bestv.workdetail.domain.GetWatchProvidersUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
@@ -91,6 +94,9 @@ val workDetailModule = module {
     factoryOf(::GetVideosByMovieUseCase)
     factoryOf(::GetVideosByTvShowUseCase)
     factoryOf(::GetVideosUseCase)
+    factoryOf(::GetWatchProvidersByMovieUseCase)
+    factoryOf(::GetWatchProvidersByTvShowUseCase)
+    factoryOf(::GetWatchProvidersUseCase)
     factoryOf(::GetWorkDetailsUseCase)
     factoryOf(::SetFavoriteUseCase)
 

@@ -39,4 +39,7 @@ class TvShowRemoteDataSource(
 
     suspend fun getVideosByTvShow(tvShowId: Int) =
         tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+
+    suspend fun getWatchProvidersByTvShow(tvShowId: Int) =
+        tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
 }

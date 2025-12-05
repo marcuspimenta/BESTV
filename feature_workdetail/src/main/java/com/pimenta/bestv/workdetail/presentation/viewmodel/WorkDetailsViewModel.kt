@@ -17,6 +17,7 @@ package com.pimenta.bestv.workdetail.presentation.viewmodel
 import android.content.Intent
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
+import java.util.Locale
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -107,22 +108,26 @@ class WorkDetailsViewModel(
             try {
                 updateState { it.copy(state = Loading) }
 
-                val result = getWorkDetailsUseCase(work)
+                val countryCode = Locale.getDefault().country.takeIf { it.isNotEmpty() } ?: "US"
+                val result = getWorkDetailsUseCase(work, countryCode)
 
                 updateState {
                     it.copy(
                         state = Loaded(
                             contents = listOfNotNull(
                                 Header(
-                                    listOfNotNull(
+                                    actions = listOfNotNull(
                                         SaveWork(result.isFavorite),
                                         ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
                                         ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
                                         ScrollToRecommendedWorks.takeIf { result.recommended.results?.isNotEmpty() == true },
                                         ScrollToSimilarWorks.takeIf { result.similar.results?.isNotEmpty() == true },
-                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
-                                    )
-                                ),
+                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true }
+                                    ),
+                                    watchProviders = result.watchProviders?.let {
+                                        it.toViewModel().takeIf { it.hasAnyProvider }
+                                    }
+                                ).takeIf { it.actions.isNotEmpty() },
                                 result.videos?.let {
                                     Videos(it.map { video -> video.toViewModel() })
                                         .takeIf { it.videos.isNotEmpty() }
@@ -308,7 +313,7 @@ class WorkDetailsViewModel(
             try {
                 val nextPage = recommendedWorks.page.currentPage + 1
                 val pageResult = getRecommendationByWorkUseCase(work.type, work.id, nextPage)
-                        .toViewModel()
+                    .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(

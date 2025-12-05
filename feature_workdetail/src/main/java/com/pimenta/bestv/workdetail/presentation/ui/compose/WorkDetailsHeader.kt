@@ -40,18 +40,19 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionBu
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToReviews
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToSimilarWorks
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToVideos
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
 
 @Composable
 fun WorkDetailsHeader(
     work: WorkViewModel,
-    actions: List<ActionButton>,
+    header: Header,
     actionClicked: (ActionButton) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(48.dp),
+            .padding(start = 48.dp, top = 48.dp, end = 48.dp, bottom = 12.dp),
     ) {
         Column {
             Text(
@@ -63,13 +64,13 @@ fun WorkDetailsHeader(
             )
 
             ActionButtonsRow(
-                actions = actions,
+                actions = header.actions,
                 actionClicked = actionClicked,
                 modifier = Modifier.padding(top = 20.dp)
             )
 
             Text(
-                text = "${work.releaseDate} · ${work.source}",
+                text = "${work.releaseDate} · ${work.voteAverage} · ${work.source}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier.padding(top = 20.dp)
@@ -83,6 +84,13 @@ fun WorkDetailsHeader(
                     .padding(top = 18.dp)
                     .fillMaxWidth(0.6f)
             )
+
+            header.watchProviders?.let {
+                WatchProvidersRow(
+                    watchProviders = it,
+                    modifier = Modifier.padding(top = 18.dp)
+                )
+            }
         }
     }
 }
@@ -96,7 +104,7 @@ private fun ActionButtonsRow(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         items(
             items = actions,
@@ -130,13 +138,16 @@ private fun WorkDetailsHeaderPreview() {
                 voteAverage = 0f,
                 isFavorite = false
             ),
-            actions = listOf(
-                SaveWork(true),
-                ScrollToVideos,
-                ScrollToCasts,
-                ScrollToRecommendedWorks,
-                ScrollToSimilarWorks,
-                ScrollToReviews
+            header = Header(
+                actions = listOf(
+                    SaveWork(true),
+                    ScrollToVideos,
+                    ScrollToCasts,
+                    ScrollToRecommendedWorks,
+                    ScrollToSimilarWorks,
+                    ScrollToReviews
+                ),
+                watchProviders = null
             ),
             actionClicked = {}
         )

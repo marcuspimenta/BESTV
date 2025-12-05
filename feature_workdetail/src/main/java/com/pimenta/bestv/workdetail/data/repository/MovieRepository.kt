@@ -21,6 +21,7 @@ import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchProvidersToDomainModel
 
 /**
  * Created by marcus on 20-10-2019.
@@ -71,4 +72,7 @@ class MovieRepository(
                 video.toDomainModel()
             }
         }
+
+    suspend fun getWatchProvidersByMovie(movieId: Int, countryCode: String) =
+        movieRemoteDataSource.getWatchProvidersByMovie(movieId).watchProvidersToDomainModel(countryCode)
 }

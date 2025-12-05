@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workdetail.presentation.ui.compose
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
@@ -191,7 +193,7 @@ private fun LoadedWorkDetails(
                 when (content) {
                     is Header -> WorkDetailsHeader(
                         work = work,
-                        actions = content.actions,
+                        header = content,
                         actionClicked = actionClicked,
                         modifier = Modifier.focusRequester(focusRequesters[index])
                     )

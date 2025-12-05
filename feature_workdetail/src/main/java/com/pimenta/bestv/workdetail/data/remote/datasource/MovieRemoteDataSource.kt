@@ -39,4 +39,7 @@ class MovieRemoteDataSource(
 
     suspend fun getVideosByMovie(movieId: Int) =
         movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
+
+    suspend fun getWatchProvidersByMovie(movieId: Int) =
+        movieDetailTmdbApi.getWatchProvidersByMovie(movieId, tmdbApiKey)
 }

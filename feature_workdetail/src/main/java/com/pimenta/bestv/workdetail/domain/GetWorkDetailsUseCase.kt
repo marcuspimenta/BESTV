@@ -20,6 +20,7 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -32,16 +33,20 @@ class GetWorkDetailsUseCase(
     private val getCastsUseCase: GetCastsUseCase,
     private val getRecommendationByWorkUseCase: GetRecommendationByWorkUseCase,
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
-    private val getReviewByWorkUseCase: GetReviewByWorkUseCase
+    private val getReviewByWorkUseCase: GetReviewByWorkUseCase,
+    private val getWatchProvidersUseCase: GetWatchProvidersUseCase
 ) {
 
-    suspend operator fun invoke(workViewModel: WorkViewModel): WorkDetailsDomainWrapper = coroutineScope {
+    suspend operator fun invoke(workViewModel: WorkViewModel, countryCode: String): WorkDetailsDomainWrapper = coroutineScope {
         val isFavoriteDeferred = async { checkFavoriteWorkUseCase(workViewModel) }
         val videosDeferred = async { getVideosUseCase(workViewModel.type, workViewModel.id) }
         val castsDeferred = async { getCastsUseCase(workViewModel.type, workViewModel.id) }
         val recommendedDeferred = async { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
         val similarDeferred = async { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
         val reviewsDeferred = async { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val watchProvidersDeferred = async {
+            runCatching { getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode) }.getOrNull()
+        }
 
         WorkDetailsDomainWrapper(
             isFavorite = isFavoriteDeferred.await(),
@@ -49,7 +54,8 @@ class GetWorkDetailsUseCase(
             casts = castsDeferred.await(),
             recommended = recommendedDeferred.await(),
             similar = similarDeferred.await(),
-            reviews = reviewsDeferred.await()
+            reviews = reviewsDeferred.await(),
+            watchProviders = watchProvidersDeferred.await()
         )
     }
 
@@ -59,6 +65,7 @@ class GetWorkDetailsUseCase(
         val casts: List<CastDomainModel>?,
         val recommended: PageDomainModel<WorkDomainModel>,
         val similar: PageDomainModel<WorkDomainModel>,
-        val reviews: PageDomainModel<ReviewDomainModel>
+        val reviews: PageDomainModel<ReviewDomainModel>,
+        val watchProviders: WatchProvidersDomainModel?
     )
 }
