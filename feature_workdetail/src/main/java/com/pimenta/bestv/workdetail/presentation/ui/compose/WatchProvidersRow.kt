@@ -42,7 +42,7 @@ fun WatchProvidersRow(
         modifier = modifier
     ) {
         Text(
-            text = "Where to Watch · Powered by JustWatch",
+            text = "Where to watch · Powered by JustWatch",
             style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.7f),
             modifier = Modifier.padding(bottom = 8.dp)
@@ -82,7 +82,7 @@ private fun ProviderItem(
         contentDescription = provider.name,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .size(35.dp)
+            .size(48.dp)
             .clip(RoundedCornerShape(8.dp))
     )
 }

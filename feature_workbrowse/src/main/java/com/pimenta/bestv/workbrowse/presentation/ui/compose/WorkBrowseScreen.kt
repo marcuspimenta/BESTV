@@ -458,6 +458,7 @@ private fun WorkSelectedHeader(
                     text = work.overview,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.7f),
+                    minLines = 3,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
