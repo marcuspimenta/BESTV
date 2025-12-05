@@ -203,12 +203,21 @@ private fun BrowseSections(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val focusRequester = remember { FocusRequester() }
+    val drawerItemFocusRequesters = remember(sections.size) {
+        List(sections.size) { FocusRequester() }
+    }
 
     BackHandler {
         if (drawerState.currentValue == DrawerValue.Open) {
             drawerState.setValue(DrawerValue.Closed)
         } else {
             onBackClicked()
+        }
+    }
+
+    LaunchedEffect(drawerState.currentValue) {
+        if (drawerState.currentValue == DrawerValue.Open) {
+            drawerItemFocusRequesters.getOrNull(selectedSectionIndex)?.requestFocus()
         }
     }
 
@@ -259,6 +268,7 @@ private fun BrowseSections(
                                         tint = Color.White
                                     )
                                 },
+                                modifier = Modifier.focusRequester(drawerItemFocusRequesters[index]),
                                 content = {
                                     Text(
                                         text = stringResource(section.titleRes),
