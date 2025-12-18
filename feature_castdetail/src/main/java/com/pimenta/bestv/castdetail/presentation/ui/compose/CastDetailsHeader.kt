@@ -24,13 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.ui.compose.CastCard
+import com.pimenta.bestv.presentation.ui.compose.ExpandableText
 
 @Composable
 fun CastDetailsHeader(
@@ -69,12 +69,9 @@ fun CastDetailsHeader(
             )
 
             if (cast.biography.isNotBlank()) {
-                Text(
+                ExpandableText(
                     text = cast.biography,
-                    style = MaterialTheme.typography.bodyLarge,
                     color = Color.White.copy(alpha = 0.9f),
-                    maxLines = 8,
-                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 12.dp)
                 )
             }

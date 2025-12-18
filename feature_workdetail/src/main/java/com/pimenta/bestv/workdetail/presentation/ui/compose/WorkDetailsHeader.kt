@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workdetail.presentation.ui.compose
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,10 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,12 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
-import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.ui.compose.ExpandableText
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
@@ -48,8 +42,6 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionBu
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToSimilarWorks
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToVideos
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
-
-private const val MAX_LINES_COLLAPSED = 4
 
 @Composable
 fun WorkDetailsHeader(
@@ -85,8 +77,8 @@ fun WorkDetailsHeader(
                 modifier = Modifier.padding(top = 20.dp)
             )
 
-            ExpandableOverview(
-                overview = work.overview,
+            ExpandableText(
+                text = work.overview,
                 modifier = Modifier
                     .padding(top = 18.dp)
                     .fillMaxWidth(0.6f)
@@ -96,48 +88,6 @@ fun WorkDetailsHeader(
                 WatchProvidersRow(
                     watchProviders = it,
                     modifier = Modifier.padding(top = 18.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ExpandableOverview(
-    overview: String,
-    modifier: Modifier = Modifier
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var hasTextOverflow by remember { mutableStateOf(false) }
-
-    Column(modifier = modifier.animateContentSize()) {
-        Text(
-            text = overview,
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.White.copy(alpha = 0.7f),
-            maxLines = if (isExpanded) Int.MAX_VALUE else MAX_LINES_COLLAPSED,
-            overflow = TextOverflow.Ellipsis,
-            onTextLayout = { textLayoutResult ->
-                if (!isExpanded) {
-                    hasTextOverflow = textLayoutResult.hasVisualOverflow
-                }
-            }
-        )
-
-        if (hasTextOverflow || isExpanded) {
-            Surface(
-                onClick = { isExpanded = !isExpanded },
-                colors = ClickableSurfaceDefaults.colors(
-                    containerColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.4f)
-                ),
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp)
-            ) {
-                Text(
-                    text = if (isExpanded) "Show less" else "Read more",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
         }
