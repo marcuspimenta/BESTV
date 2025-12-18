@@ -22,6 +22,7 @@ dependencies {
 
     // Coil
     implementation Libs.coil_compose
+    implementation Libs.coil_network_okhttp
 
     // Coroutines
     implementation Libs.kotlinx_coroutines_core

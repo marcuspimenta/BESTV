@@ -29,6 +29,7 @@ dependencies {
     implementation Libs.androidx_tv_material
     implementation Libs.androidx_activity_compose
     implementation Libs.coil_compose
+    implementation Libs.coil_network_okhttp
     debugImplementation Libs.compose_ui_tooling
 
 

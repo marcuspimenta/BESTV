@@ -29,7 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
 

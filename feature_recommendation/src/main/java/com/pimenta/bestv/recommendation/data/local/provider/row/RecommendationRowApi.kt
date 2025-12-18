@@ -18,8 +18,10 @@ import android.app.Application
 import android.app.NotificationManager
 import android.graphics.drawable.BitmapDrawable
 import androidx.recommendation.app.ContentRecommendation
-import coil.ImageLoader
-import coil.request.ImageRequest
+import coil3.ImageLoader
+import coil3.asDrawable
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
@@ -52,7 +54,9 @@ class RecommendationRowApi constructor(
                     .build()
 
                 val result = imageLoader.execute(request)
-                val cardBitmap = (result.drawable as? BitmapDrawable)?.bitmap
+                val cardBitmap = (result as? SuccessResult)?.image
+                    ?.asDrawable(application.resources)
+                    ?.let { (it as? BitmapDrawable)?.bitmap }
 
                 val contentRecommendation = ContentRecommendation.Builder()
                     .setAutoDismiss(true)

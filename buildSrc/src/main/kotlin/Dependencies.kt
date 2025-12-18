@@ -23,7 +23,7 @@ object Config {
 }
 
 object Versions {
-    val kotlin = "2.2.20"
+    val kotlin = "2.3.0"
     val kotlinx_coroutines = "1.10.2"
     val kotlinx_coroutines_test = "1.10.2"
     val ktlint = "10.2.1"
@@ -34,12 +34,12 @@ object Versions {
     val androidx_tvprovider = "1.1.0"
     val androidx_room = "2.8.4"
     val androidx_work = "2.11.0"
-    val compose_bom = "2025.11.01"
+    val compose_bom = "2025.12.00"
     val androidx_tv_foundation = "1.0.0-alpha12"
     val androidx_tv_material = "1.1.0-alpha01"
     val androidx_activity = "1.12.0"
     val androidx_activity_compose = "1.12.0"
-    val coil_compose = "2.7.0"
+    val coil_compose = "3.3.0"
 
     val retrofit = "3.0.0"
     val retrofit_converter_gson = "3.0.0"
@@ -52,12 +52,12 @@ object Versions {
     val junit = "4.13.2"
     val mockito_inline = "5.2.0"
     val mockito_core = "5.20.0"
-    val mockito_kotlin = "2.2.0"
+    val mockito_kotlin = "6.1.0"
     val turbine = "1.2.1"
     val robolectric = "4.16"
 
     // Koin
-    val koin = "3.5.6"
+    val koin = "4.0.0"
 }
 
 object Libs {
@@ -89,7 +89,8 @@ object Libs {
     val androidx_tv_material = "androidx.tv:tv-material:${Versions.androidx_tv_material}"
     val androidx_activity = "androidx.activity:activity-ktx:${Versions.androidx_activity}"
     val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.androidx_activity_compose}"
-    val coil_compose = "io.coil-kt:coil-compose:${Versions.coil_compose}"
+    val coil_compose = "io.coil-kt.coil3:coil-compose:${Versions.coil_compose}"
+    val coil_network_okhttp = "io.coil-kt.coil3:coil-network-okhttp:${Versions.coil_compose}"
 
     val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit_converter_gson}"
@@ -102,7 +103,7 @@ object Libs {
     val junit = "junit:junit:${Versions.junit}"
     val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito_inline}"
     val mockito_core = "org.mockito:mockito-core:${Versions.mockito_core}"
-    val mockito_kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito_kotlin}"
+    val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}"
     val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
     val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
 

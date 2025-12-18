@@ -46,7 +46,7 @@ import androidx.tv.material3.Card
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
-import coil.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
