@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 ## Project
 - 100% [Kotlin](https://kotlinlang.org/)
 - Android TV with Jetpack Compose for TV
-- MVI Architecture Pattern
+- [MVI Architecture Pattern](MVI_ARCHITECTURE.md)
 - Clean Architecture
 - Android Architecture Components
 - Dependency Injection with Koin
@@ -38,7 +38,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
     - [Lottie](http://airbnb.io/lottie) animation library
     - [Koin](https://insert-koin.io/) dependency injection framework
 - Architecture
-    - MVI (Model-View-Intent)
+    - [MVI (Model-View-Intent)](MVI_ARCHITECTURE.md)
     - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
 - Tests
     - [Unit Tests](https://en.wikipedia.org/wiki/Unit_testing)
