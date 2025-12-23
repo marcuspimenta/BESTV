@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
 import com.pimenta.bestv.model.domain.CastDomainModel
 import kotlinx.coroutines.test.runTest

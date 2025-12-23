@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.recommendation.presenter
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.only
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.only
+import org.mockito.kotlin.verify
 import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
 import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
 import org.junit.Test

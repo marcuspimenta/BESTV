@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import kotlinx.coroutines.test.runTest

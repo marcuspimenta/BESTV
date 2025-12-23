@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.only
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.only
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
 import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
 import com.pimenta.bestv.model.presentation.model.WorkType

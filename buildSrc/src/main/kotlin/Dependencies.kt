@@ -18,8 +18,8 @@ object Config {
     val minSdk = 26
     val compileSdk = 36
     val targetSdk = 36
-    val javaVersion = JavaVersion.VERSION_1_8
-    val jvmTarget = "1.8"
+    val javaVersion = JavaVersion.VERSION_11
+    val jvmTarget = "11"
 }
 
 object Versions {

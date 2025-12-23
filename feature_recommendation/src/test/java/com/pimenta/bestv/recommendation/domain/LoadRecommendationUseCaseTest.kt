@@ -14,16 +14,16 @@
 
 package com.pimenta.bestv.recommendation.domain
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository
 import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertThrows
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 /**
  * Created by marcus on 2019-08-27.
@@ -51,26 +51,22 @@ class LoadRecommendationUseCaseTest {
     )
 
     @Test
-    fun `should return the right data when loading the recommendations`() {
+    fun `should return the right data when loading the recommendations`() = runTest {
         whenever(movieRepository.getPopularMovies(1))
-            .thenReturn(Single.just(MOVIE_PAGE_DOMAIN_MODEL))
-        whenever(recommendationRepository.loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results))
-            .thenReturn(Completable.complete())
+            .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
         useCase()
-            .test()
-            .assertComplete()
 
         verify(recommendationRepository).loadRecommendations(MOVIE_PAGE_DOMAIN_MODEL.results)
     }
 
     @Test
-    fun `should return an error when some exception happens`() {
+    fun `should return an error when some exception happens`() = runTest {
         whenever(movieRepository.getPopularMovies(1))
-            .thenReturn(Single.error(Throwable()))
+            .thenThrow(RuntimeException("Network error"))
 
-        useCase()
-            .test()
-            .assertError(Throwable::class.java)
+        assertThrows(RuntimeException::class.java) {
+            runTest { useCase() }
+        }
     }
 }

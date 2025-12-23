@@ -16,10 +16,10 @@ package com.pimenta.bestv.recommendation.domain
 
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.mockito.kotlin.any
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 
 /**
