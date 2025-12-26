@@ -55,6 +55,7 @@ object Versions {
     val mockito_kotlin = "6.1.0"
     val turbine = "1.2.1"
     val robolectric = "4.16"
+    val androidx_test_ext_junit = "1.2.1"
 
     // Koin
     val koin = "4.0.0"
@@ -106,6 +107,11 @@ object Libs {
     val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}"
     val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
     val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+
+    // Compose UI Testing
+    val compose_ui_test_junit4 = "androidx.compose.ui:ui-test-junit4"
+    val compose_ui_test_manifest = "androidx.compose.ui:ui-test-manifest"
+    val androidx_test_ext_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext_junit}"
 
     // Koin
     val koin_core = "io.insert-koin:koin-core:${Versions.koin}"

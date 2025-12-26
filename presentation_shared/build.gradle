@@ -11,6 +11,7 @@ android {
     }
     defaultConfig {
         buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -44,4 +45,10 @@ dependencies {
     implementation Libs.coil_compose
     implementation Libs.coil_network_okhttp
     debugImplementation Libs.compose_ui_tooling
+
+    // Compose UI Testing (instrumented tests)
+    androidTestImplementation platform(Libs.compose_bom)
+    androidTestImplementation Libs.compose_ui_test_junit4
+    androidTestImplementation Libs.androidx_test_ext_junit
+    debugImplementation Libs.compose_ui_test_manifest
 }
