@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 - [MVI Architecture Pattern](MVI_ARCHITECTURE.md)
 - Clean Architecture
 - Android Architecture Components
-- Dependency Injection with Koin
+- [Dependency Injection with Koin](KOIN_DI.md)
 - Reactive Programming with Kotlin Coroutines and Flow
 
 ## Tech-stack
@@ -36,7 +36,7 @@ This project uses the popular libraries and tools from the Android ecosystem.
     - [Kotlin Flow](https://kotlinlang.org/docs/flow.html) reactive streams
     - [Coil](https://coil-kt.github.io/coil/) image loading library for Compose
     - [Lottie](http://airbnb.io/lottie) animation library
-    - [Koin](https://insert-koin.io/) dependency injection framework
+    - [Koin](https://insert-koin.io/) dependency injection framework ([see documentation](KOIN_DI.md))
 - Architecture
     - [MVI (Model-View-Intent)](MVI_ARCHITECTURE.md)
     - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
