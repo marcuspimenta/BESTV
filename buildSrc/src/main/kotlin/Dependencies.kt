@@ -34,11 +34,11 @@ object Versions {
     val androidx_tvprovider = "1.1.0"
     val androidx_room = "2.8.4"
     val androidx_work = "2.11.0"
-    val compose_bom = "2025.12.00"
+    val compose_bom = "2025.12.01"
     val androidx_tv_foundation = "1.0.0-alpha12"
     val androidx_tv_material = "1.1.0-alpha01"
-    val androidx_activity = "1.12.0"
-    val androidx_activity_compose = "1.12.0"
+    val androidx_activity = "1.12.2"
+    val androidx_activity_compose = "1.12.2"
     val coil_compose = "3.3.0"
 
     val retrofit = "3.0.0"
@@ -51,11 +51,11 @@ object Versions {
     val lottie_compose = "6.7.1"
     val junit = "4.13.2"
     val mockito_inline = "5.2.0"
-    val mockito_core = "5.20.0"
+    val mockito_core = "5.21.0"
     val mockito_kotlin = "6.1.0"
     val turbine = "1.2.1"
     val robolectric = "4.16"
-    val androidx_test_ext_junit = "1.2.1"
+    val androidx_test_ext_junit = "1.3.0"
 
     // Koin
     val koin = "4.0.0"
