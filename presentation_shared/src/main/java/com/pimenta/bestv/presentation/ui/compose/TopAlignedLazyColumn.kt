@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.dp
 private class TopAlignedBringIntoViewSpec(
     private val topPaddingPx: Float
 ) : BringIntoViewSpec {
-    override val scrollAnimationSpec = spring<Float>()
 
     override fun calculateScrollDistance(
         offset: Float,

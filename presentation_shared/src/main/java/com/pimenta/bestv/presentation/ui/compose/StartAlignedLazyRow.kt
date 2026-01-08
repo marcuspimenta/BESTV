@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.presentation.ui.compose
 
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.BringIntoViewSpec
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
@@ -43,7 +41,6 @@ import androidx.compose.ui.unit.dp
 private class StartAlignedBringIntoViewSpec(
     private val startPaddingPx: Float
 ) : BringIntoViewSpec {
-    override val scrollAnimationSpec = spring<Float>()
 
     override fun calculateScrollDistance(
         offset: Float,
