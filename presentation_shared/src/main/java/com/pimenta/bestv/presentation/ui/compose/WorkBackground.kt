@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import coil3.compose.AsyncImage
 
@@ -44,56 +47,61 @@ fun BackgroundScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        Crossfade(
-            targetState = backdropUrl,
-            label = "background_transition",
-            animationSpec = tween(durationMillis = animationDuration),
+        Box(
             modifier = Modifier
-                .fillMaxWidth(0.60f)
-                .align(Alignment.TopEnd)
-        ) { url ->
-            url?.let {
-                AsyncImage(
-                    model = it,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .aspectRatio(16f / 9f),
-                    contentScale = contentScale,
-                )
+                .width(758.dp)
+                .height(428.dp)
+                .align(Alignment.TopEnd),
+        ) {
+            Crossfade(
+                targetState = backdropUrl,
+                label = "background_transition",
+                animationSpec = tween(durationMillis = animationDuration),
+                modifier = Modifier.fillMaxSize()
+            ) { url ->
+                url?.let {
+                    AsyncImage(
+                        model = it,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .aspectRatio(16f / 9f),
+                        contentScale = contentScale,
+                    )
+                }
             }
+
+            // Left edge fade gradient
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(0.50f)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color.Black,
+                                Color.Transparent,
+                            )
+                        )
+                    )
+                    .align(Alignment.TopStart)
+            )
+
+            // Bottom edge fade gradient
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.50f)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black,
+                            )
+                        )
+                    )
+                    .align(Alignment.BottomStart)
+            )
         }
-
-        // Left edge fade gradient
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.20f)
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            Color.Black,
-                            Color.Transparent,
-                        )
-                    )
-                )
-                .align(Alignment.Center)
-        )
-
-        // Bottom edge fade gradient
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.20f)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black,
-                        )
-                    )
-                )
-                .align(Alignment.Center)
-        )
 
         Box(
             modifier = Modifier
