@@ -16,7 +16,7 @@ import org.gradle.api.JavaVersion
 
 object Config {
     val minSdk = 26
-    val compileSdk = 36
+    val compileSdk = "android-37.0"
     val targetSdk = 36
     val javaVersion = JavaVersion.VERSION_11
     val jvmTarget = "11"
@@ -24,41 +24,40 @@ object Config {
 
 object Versions {
     val kotlin = "2.3.0"
-    val kotlinx_coroutines = "1.10.2"
-    val kotlinx_coroutines_test = "1.10.2"
+    val kotlinx_coroutines = "1.11.0"
+    val kotlinx_coroutines_test = "1.11.0"
     val ktlint = "10.2.1"
 
-    val androidx_core = "1.17.0"
-    val androidx_lifecycle = "2.10.0"
+    val androidx_core = "1.19.0-alpha02"
+    val androidx_lifecycle = "2.11.0-beta01"
     val androidx_recommendation = "1.0.0"
     val androidx_tvprovider = "1.1.0"
     val androidx_room = "2.8.4"
-    val androidx_work = "2.11.0"
-    val compose_bom = "2025.12.01"
-    val androidx_tv_foundation = "1.0.0-alpha12"
-    val androidx_tv_material = "1.1.0-alpha01"
-    val androidx_activity = "1.12.2"
-    val androidx_activity_compose = "1.12.2"
-    val coil_compose = "3.3.0"
+    val androidx_work = "2.11.2"
+    val compose_bom = "2026.05.00"
+    val androidx_tv_foundation = "1.0.0"
+    val androidx_tv_material = "1.1.0"
+    val androidx_activity = "1.13.0"
+    val androidx_activity_compose = "1.13.0"
+    val coil_compose = "3.5.0-beta01"
 
     val retrofit = "3.0.0"
     val retrofit_converter_gson = "3.0.0"
     val okhttp = "5.3.2"
     val logging_interceptor = "5.3.2"
-    val gson = "2.13.2"
-    val retrofit2_rxjava2_adapter = "1.0.0"
+    val gson = "2.14.0"
     val timber = "5.0.1"
     val lottie_compose = "6.7.1"
     val junit = "4.13.2"
     val mockito_inline = "5.2.0"
-    val mockito_core = "5.21.0"
-    val mockito_kotlin = "6.1.0"
+    val mockito_core = "5.23.0"
+    val mockito_kotlin = "6.3.0"
     val turbine = "1.2.1"
-    val robolectric = "4.16"
+    val robolectric = "4.16.1"
     val androidx_test_ext_junit = "1.3.0"
 
     // Koin
-    val koin = "4.0.0"
+    val koin = "4.2.1"
 }
 
 object Libs {
@@ -98,7 +97,6 @@ object Libs {
     val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
     val logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.logging_interceptor}"
     val gson = "com.google.code.gson:gson:${Versions.gson}"
-    val retrofit2_rxjava2_adapter = "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${Versions.retrofit2_rxjava2_adapter}"
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"
     val lottie_compose = "com.airbnb.android:lottie-compose:${Versions.lottie_compose}"
     val junit = "junit:junit:${Versions.junit}"
