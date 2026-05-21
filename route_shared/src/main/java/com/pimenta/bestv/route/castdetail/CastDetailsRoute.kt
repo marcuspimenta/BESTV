@@ -18,6 +18,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.route.parcelableExtra
 
 /**
  * Created by marcus on 25-11-2019.
@@ -36,4 +37,4 @@ class CastDetailsRoute(
         }
 }
 
-fun Intent.getCastDeepLink() = getParcelableExtra<CastViewModel>(CAST)
+fun Intent.getCastDeepLink() = parcelableExtra<CastViewModel>(CAST)

@@ -18,6 +18,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.route.parcelableExtra
 
 /**
  * Created by marcus on 22-11-2019.
@@ -36,4 +37,4 @@ class WorkDetailsRoute(
         }
 }
 
-fun Intent.getWorkDetail() = getParcelableExtra<WorkViewModel>(WORK)
+fun Intent.getWorkDetail() = parcelableExtra<WorkViewModel>(WORK)
