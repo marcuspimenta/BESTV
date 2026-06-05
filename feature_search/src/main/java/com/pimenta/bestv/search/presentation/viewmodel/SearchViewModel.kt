@@ -16,31 +16,25 @@ package com.pimenta.bestv.search.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.extension.hasNoContent
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.search.presentation.model.SearchEffect
 import com.pimenta.bestv.search.presentation.model.SearchEvent
 import com.pimenta.bestv.search.presentation.model.SearchState
-import com.pimenta.bestv.search.presentation.model.SearchState.Content
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
-import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
-import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
+import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
+import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
-
-private const val BACKGROUND_UPDATE_DELAY = 300L
-private const val SEARCH_DELAY = 500L
 
 /**
  * ViewModel for the Search screen following MVI architecture.
@@ -52,19 +46,23 @@ class SearchViewModel(
     private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
-    private val workDetailsRoute: WorkDetailsRoute
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val searchRequestProcessor: SearchRequestProcessor,
+    private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor
 ) : BaseViewModel<SearchState, SearchEffect>(SearchState()) {
 
-    private var searchJob: Job? = null
-    private var backdropJob: Job? = null
+    init {
+        observeSearchRequests()
+        observeSelectedWorkRequests()
+    }
 
     /**
      * Handle user events
      */
     fun handleEvent(event: SearchEvent) {
         when (event) {
-            is SearchEvent.SearchQueryChanged -> handleSearchQueryChanged(event.query)
-            is SearchEvent.SearchQuerySubmitted -> handleSearchQuerySubmitted(event.query)
+            is SearchEvent.SearchQueryChanged -> handleSearchQuery(event.query)
+            is SearchEvent.SearchQuerySubmitted -> handleSearchQuery(event.query)
             is SearchEvent.ClearSearch -> handleClearSearch()
             is SearchEvent.LoadMoreMovies -> loadMoreMovies()
             is SearchEvent.LoadMoreTvShows -> loadMoreTvShows()
@@ -73,254 +71,136 @@ class SearchViewModel(
         }
     }
 
-    private fun handleSearchQueryChanged(query: String) {
-        searchWorksByQuery(query)
-    }
-
-    private fun handleSearchQuerySubmitted(query: String) {
-        searchWorksByQuery(query)
+    private fun handleSearchQuery(query: String) {
+        updateState { currentState -> currentState.searchStarted(query) }
+        emitSearchRequest(query)
     }
 
     private fun handleClearSearch() {
-        searchJob?.cancel()
-        backdropJob?.cancel()
-        updateState {
-            SearchState(query = "", isSearching = false, state = Empty)
-        }
-    }
-
-    private fun searchWorksByQuery(query: String) {
-        // Cancel previous search
-        searchJob?.cancel()
-
-        if (query.hasNoContent()) {
-            updateState { SearchState(query = "", isSearching = false, state = Empty) }
-            return
-        }
-
-        // Set searching state at top level
-        updateState { currentState ->
-            currentState.copy(
-                query = query,
-                isSearching = true
-            )
-        }
-
-        searchJob = viewModelScope.launch {
-            try {
-                delay(SEARCH_DELAY)
-
-                val result = searchWorksByQueryUseCase(query)
-                val moviePage = result.first.toViewModel()
-                val tvShowPage = result.second.toViewModel()
-
-                val contents = mutableListOf<Content>()
-                if (moviePage.results.isNotEmpty()) {
-                    contents.add(
-                        Movies(
-                            query = query,
-                            movies = moviePage.results,
-                            page = PaginationState(
-                                currentPage = moviePage.page,
-                                totalPages = moviePage.totalPages
-                            )
-                        )
-                    )
-                }
-                if (tvShowPage.results.isNotEmpty()) {
-                    contents.add(
-                        TvShows(
-                            query = query,
-                            tvShows = tvShowPage.results,
-                            page = PaginationState(
-                                currentPage = tvShowPage.page,
-                                totalPages = tvShowPage.totalPages
-                            )
-                        )
-                    )
-                }
-
-                updateState {
-                    it.copy(
-                        isSearching = false,
-                        state = Loaded(
-                            contents = contents
-                        )
-                    )
-                }
-            } catch (throwable: Throwable) {
-                if (throwable !is CancellationException) {
-                    Timber.e(throwable, "Error while searching by query")
-                    updateState {
-                        it.copy(
-                            isSearching = false,
-                            state = Error
-                        )
-                    }
-                }
-            }
-        }
+        updateState { clearSearch() }
+        emitSearchRequest("")
     }
 
     private fun loadMoreMovies() {
-        val loadedState = currentState.state as? Loaded ?: return
-        val moviesContent = loadedState.contents.filterIsInstance<Movies>().firstOrNull() ?: return
-
+        val moviesContent = currentState.moviesContent() ?: return
         if (!moviesContent.page.canLoadMore) {
             return
         }
 
-        // Set loading state
-        updateState { state ->
-            val currentLoadedState = state.state as? Loaded ?: return@updateState state
-            val updatedContents = currentLoadedState.contents.map { content ->
-                if (content is Movies) {
-                    content.copy(page = content.page.copy(isLoadingMore = true))
-                } else {
-                    content
-                }
-            }
-            state.copy(
-                state = currentLoadedState.copy(contents = updatedContents)
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                val nextPage = moviesContent.page.currentPage + 1
-                val moviePage = searchMoviesByQueryUseCase(this@SearchViewModel.currentState.query, nextPage).toViewModel()
-
-                updateState { state ->
-                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
-                    val updatedContents = currentLoadedState.contents.map { content ->
-                        if (content is Movies) {
-                            content.copy(
-                                movies = content.movies + moviePage.results.orEmpty(),
-                                page = PaginationState(
-                                    currentPage = moviePage.page,
-                                    totalPages = moviePage.totalPages,
-                                    isLoadingMore = false
-                                )
-                            )
-                        } else {
-                            content
-                        }
-                    }
-                    state.copy(
-                        state = currentLoadedState.copy(contents = updatedContents)
-                    )
-                }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more movies")
-                updateState { state ->
-                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
-                    val updatedContents = currentLoadedState.contents.map { content ->
-                        if (content is Movies) {
-                            content.copy(page = content.page.copy(isLoadingMore = false))
-                        } else {
-                            content
-                        }
-                    }
-                    state.copy(
-                        state = currentLoadedState.copy(contents = updatedContents)
-                    )
-                }
-            }
-        }
+        updateState { state -> state.moviesPaginationStarted() }
+        loadMoreContent(
+            nextPage = moviesContent.page.currentPage + 1,
+            errorMessage = "Error while loading more movies",
+            loadPage = { query, page -> searchMoviesByQueryUseCase(query, page).toViewModel() },
+            onSuccess = SearchState::moviesPaginationSucceeded,
+            onFailure = SearchState::moviesPaginationFailed
+        )
     }
 
     private fun loadMoreTvShows() {
-        val loadedState = currentState.state as? Loaded ?: return
-        val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().firstOrNull() ?: return
-
+        val tvShowsContent = currentState.tvShowsContent() ?: return
         if (!tvShowsContent.page.canLoadMore) {
             return
         }
 
-        // Set loading state
-        updateState { state ->
-            val currentLoadedState = state.state as? Loaded ?: return@updateState state
-            val updatedContents = currentLoadedState.contents.map { content ->
-                if (content is TvShows) {
-                    content.copy(page = content.page.copy(isLoadingMore = true))
-                } else {
-                    content
-                }
-            }
-            state.copy(
-                state = currentLoadedState.copy(contents = updatedContents)
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                val nextPage = tvShowsContent.page.currentPage + 1
-                val tvShowPage = searchTvShowsByQueryUseCase(this@SearchViewModel.currentState.query, nextPage).toViewModel()
-
-                updateState { state ->
-                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
-                    val updatedContents = currentLoadedState.contents.map { content ->
-                        if (content is TvShows) {
-                            content.copy(
-                                tvShows = content.tvShows + tvShowPage.results.orEmpty(),
-                                page = PaginationState(
-                                    currentPage = tvShowPage.page,
-                                    totalPages = tvShowPage.totalPages,
-                                    isLoadingMore = false
-                                )
-                            )
-                        } else {
-                            content
-                        }
-                    }
-                    state.copy(
-                        state = currentLoadedState.copy(contents = updatedContents)
-                    )
-                }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more TV shows")
-                updateState { state ->
-                    val currentLoadedState = state.state as? Loaded ?: return@updateState state
-                    val updatedContents = currentLoadedState.contents.map { content ->
-                        if (content is TvShows) {
-                            content.copy(page = content.page.copy(isLoadingMore = false))
-                        } else {
-                            content
-                        }
-                    }
-                    state.copy(
-                        state = currentLoadedState.copy(contents = updatedContents)
-                    )
-                }
-            }
-        }
+        updateState { state -> state.tvShowsPaginationStarted() }
+        loadMoreContent(
+            nextPage = tvShowsContent.page.currentPage + 1,
+            errorMessage = "Error while loading more TV shows",
+            loadPage = { query, page -> searchTvShowsByQueryUseCase(query, page).toViewModel() },
+            onSuccess = SearchState::tvShowsPaginationSucceeded,
+            onFailure = SearchState::tvShowsPaginationFailed
+        )
     }
 
     private fun handleWorkItemSelected(work: WorkViewModel?) {
-        // Cancel previous backdrop loading
-        backdropJob?.cancel()
-
-        val currentState = currentState.state as? Loaded ?: return
-
-        if (work == null) {
-            updateState { it.copy(state = currentState.copy(selectedWork = null)) }
-            return
-        }
-
-        // Delay backdrop loading to avoid excessive updates
-        backdropJob = viewModelScope.launch {
-            delay(BACKGROUND_UPDATE_DELAY)
-            val loadedState = this@SearchViewModel.currentState.state as? Loaded ?: return@launch
-            updateState { state ->
-                state.copy(
-                    state = loadedState.copy(selectedWork = work)
-                )
-            }
-        }
+        if (currentState.state !is Loaded) return
+        emitSelectedWorkRequest(work)
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
         emitEffect(SearchEffect.OpenWorkDetails(intent))
     }
+
+    private fun loadMoreContent(
+        nextPage: Int,
+        errorMessage: String,
+        loadPage: suspend (query: String, page: Int) -> PageViewModel<WorkViewModel>,
+        onSuccess: (SearchState, PageViewModel<WorkViewModel>) -> SearchState,
+        onFailure: (SearchState) -> SearchState
+    ) {
+        viewModelScope.launch {
+            try {
+                val page = loadPage(currentState.query, nextPage)
+                updateState { state -> onSuccess(state, page) }
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, errorMessage)
+                updateState { state -> onFailure(state) }
+            }
+        }
+    }
+
+    private fun observeSearchRequests() {
+        viewModelScope.launch {
+            searchRequestProcessor.observe()
+                .collectLatest { action ->
+                    when (action) {
+                        is SearchAction.Clear -> updateState { clearSearch() }
+                        is SearchAction.Search -> performSearch(action.query)
+                    }
+                }
+        }
+    }
+
+    private fun observeSelectedWorkRequests() {
+        viewModelScope.launch {
+            selectedWorkRequestProcessor.observe()
+                .collectLatest { action ->
+                    if (currentState.state !is Loaded) return@collectLatest
+                    when (action) {
+                        is SelectedWorkAction.Clear -> updateState { state -> state.workSelected(null) }
+                        is SelectedWorkAction.Select -> updateState { state -> state.workSelected(action.work) }
+                    }
+                }
+        }
+    }
+
+    private fun emitSearchRequest(query: String) {
+        viewModelScope.launch {
+            searchRequestProcessor.emitSearchRequest(query)
+        }
+    }
+
+    private fun emitSelectedWorkRequest(work: WorkViewModel?) {
+        viewModelScope.launch {
+            selectedWorkRequestProcessor.emitSelectedWorkRequest(work)
+        }
+    }
+
+    private suspend fun performSearch(query: String) {
+        try {
+            val result = searchWorksByQueryUseCase(query)
+            val moviePage = result.first.toViewModel()
+            val tvShowPage = result.second.toViewModel()
+            val contents = create(query, moviePage, tvShowPage)
+
+            updateState { state -> state.searchLoaded(contents) }
+        } catch (throwable: Throwable) {
+            if (throwable !is CancellationException) {
+                Timber.e(throwable, "Error while searching by query")
+                updateState { state -> state.searchFailed() }
+            }
+        }
+    }
+
+    private fun SearchState.moviesContent() = (state as? Loaded)
+        ?.contents
+        ?.filterIsInstance<Movies>()
+        ?.firstOrNull()
+
+    private fun SearchState.tvShowsContent() = (state as? Loaded)
+        ?.contents
+        ?.filterIsInstance<TvShows>()
+        ?.firstOrNull()
 }

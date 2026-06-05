@@ -24,6 +24,8 @@ import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.UrlEncoderTextUseCase
+import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor
+import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
@@ -61,6 +63,10 @@ val searchModule = module {
     factoryOf(::SearchMoviesByQueryUseCase)
     factoryOf(::SearchTvShowsByQueryUseCase)
     factoryOf(::SearchWorksByQueryUseCase)
+
+    // RequestProcessors
+    factoryOf(::SearchRequestProcessor)
+    factoryOf(::SelectedWorkRequestProcessor)
 
     // ViewModel
     viewModelOf(::SearchViewModel)

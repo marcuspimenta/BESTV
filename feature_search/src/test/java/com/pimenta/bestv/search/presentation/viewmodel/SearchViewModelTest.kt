@@ -15,6 +15,9 @@
 package com.pimenta.bestv.search.presentation.viewmodel
 
 import android.content.Intent
+import kotlinx.coroutines.flow.MutableSharedFlow
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -29,10 +32,14 @@ import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.presentation.model.SearchEvent
 import com.pimenta.bestv.search.presentation.model.SearchState
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
+import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
+import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -143,23 +150,55 @@ private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
+    private val testDispatcher = StandardTestDispatcher()
     private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase = mock()
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
-
-    private val testDispatcher = StandardTestDispatcher()
+    private val searchRequestProcessor: SearchRequestProcessor = mock()
+    private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor = mock()
+    private val searchActions = MutableSharedFlow<SearchAction>(extraBufferCapacity = 1)
+    private val selectedWorkActions = MutableSharedFlow<SelectedWorkAction>(extraBufferCapacity = 1)
 
     private lateinit var viewModel: SearchViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        whenever(searchRequestProcessor.observe()).thenReturn(searchActions)
+        whenever(selectedWorkRequestProcessor.observe()).thenReturn(selectedWorkActions)
+
+        doAnswer { invocation ->
+            val query = invocation.arguments[0] as String
+            searchActions.tryEmit(
+                if (query.isBlank()) SearchAction.Clear else SearchAction.Search(query)
+            )
+            Unit
+        }.also { stub ->
+            runBlocking {
+                stub.whenever(searchRequestProcessor).emitSearchRequest(any())
+            }
+        }
+
+        doAnswer { invocation ->
+            val work = invocation.arguments[0] as WorkViewModel?
+            selectedWorkActions.tryEmit(
+                if (work == null) SelectedWorkAction.Clear else SelectedWorkAction.Select(work)
+            )
+            Unit
+        }.also { stub ->
+            runBlocking {
+                stub.whenever(selectedWorkRequestProcessor).emitSelectedWorkRequest(any())
+            }
+        }
+
         viewModel = SearchViewModel(
             searchWorksByQueryUseCase,
             searchMoviesByQueryUseCase,
             searchTvShowsByQueryUseCase,
-            workDetailsRoute
+            workDetailsRoute,
+            searchRequestProcessor,
+            selectedWorkRequestProcessor
         )
     }
 
@@ -193,7 +232,7 @@ class SearchViewModelTest {
         assertEquals(1, moviesContent.page.currentPage)
         assertEquals(10, moviesContent.page.totalPages)
 
-        val tvShowsContent = loadedState.contents.filterIsInstance<SearchState.Content.TvShows>().first()
+        val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().first()
         assertEquals(TV_SHOW_VIEW_MODEL_LIST, tvShowsContent.tvShows)
         assertEquals(1, tvShowsContent.page.currentPage)
         assertEquals(10, tvShowsContent.page.totalPages)
@@ -273,7 +312,8 @@ class SearchViewModelTest {
         // State should have more tv shows
         val paginatedState = viewModel.state.value
         val loadedState = paginatedState.state as SearchState.State.Loaded
-        val tvShowsContent = loadedState.contents.filterIsInstance<SearchState.Content.TvShows>().first()
+        val tvShowsContent =
+            loadedState.contents.filterIsInstance<TvShows>().first()
         assertEquals(2, tvShowsContent.page.currentPage)
         assertTrue(tvShowsContent.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
     }
