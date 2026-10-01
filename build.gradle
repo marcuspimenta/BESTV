@@ -7,13 +7,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:9.1.0"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0"
-        classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.0"
-        classpath "com.google.gms:google-services:4.4.4"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:12.1.1"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.54.0"
-        classpath "com.android.legacy-kapt:com.android.legacy-kapt.gradle.plugin:9.1.0"
+        classpath "com.android.tools.build:gradle:9.1.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.21"
+        classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.21"
+        classpath "com.google.gms:google-services:4.5.0"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:14.2.0"
+        classpath "io.github.ben-manes:gradle-versions-plugin:0.61.0"
+        classpath "com.android.legacy-kapt:com.android.legacy-kapt.gradle.plugin:9.1.1"
     }
 }
 
@@ -27,7 +27,7 @@ allprojects {
 subprojects {
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
-            apply plugin: 'com.github.ben-manes.versions'
+            apply plugin: 'io.github.ben-manes.versions'
             apply plugin: 'kotlin-parcelize'
 
             android {

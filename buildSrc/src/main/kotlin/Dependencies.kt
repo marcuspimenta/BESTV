@@ -23,7 +23,7 @@ object Config {
 }
 
 object Versions {
-    val kotlin = "2.3.0"
+    val kotlin = "2.3.21"
     val kotlinx_coroutines = "1.11.0"
     val kotlinx_coroutines_test = "1.11.0"
     val ktlint = "10.2.1"
