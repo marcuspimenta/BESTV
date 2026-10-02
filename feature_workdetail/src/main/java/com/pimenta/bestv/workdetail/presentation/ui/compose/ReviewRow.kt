@@ -17,7 +17,7 @@ package com.pimenta.bestv.workdetail.presentation.ui.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -33,6 +33,7 @@ import androidx.tv.material3.Border
 import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
@@ -97,46 +98,43 @@ private fun ReviewCard(
     review: ReviewViewModel,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        onClick = {},
-        modifier = modifier
-            .width(BESTVTheme.scale.s2000)
-            .height(BESTVTheme.scale.s1000),
-        scale = CardDefaults.scale(focusedScale = 1.05f),
-        border = CardDefaults.border(
-            focusedBorder = Border(
-                border = androidx.compose.foundation.BorderStroke(
-                    width = BESTVTheme.scale.s015,
-                    color = MaterialTheme.colorScheme.primary
+    StandardCardContainer(
+        modifier = modifier.width(BESTVTheme.scale.s2000),
+        imageCard = { interactionSource ->
+            Card(
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(BESTVTheme.scale.s1000),
+                interactionSource = interactionSource,
+                colors = CardDefaults.colors(
+                    containerColor = BESTVTheme.colors.reviewCardSurface
                 )
-            )
-        ),
-        colors = CardDefaults.colors(
-            containerColor = BESTVTheme.colors.reviewCardSurface
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(BESTVTheme.scale.s080),
-            verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s040)
-        ) {
-            Text(
-                text = review.author ?: stringResource(PresentationR.string.unknown),
-                style = MaterialTheme.typography.titleMedium,
-                color = BESTVTheme.colors.white,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            ) {
+                Column(
+                    modifier = Modifier.padding(BESTVTheme.scale.s080),
+                    verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s040)
+                ) {
+                    Text(
+                        text = review.author ?: stringResource(PresentationR.string.unknown),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = BESTVTheme.colors.white,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-            // Review content (truncated)
-            Text(
-                text = review.content ?: "",
-                style = MaterialTheme.typography.bodyMedium,
-                color = BESTVTheme.colors.reviewText,
-                maxLines = 6,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
+                    // Review content (truncated)
+                    Text(
+                        text = review.content ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = BESTVTheme.colors.reviewText,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        },
+        title = {}
+    )
 }
 
 @Preview
