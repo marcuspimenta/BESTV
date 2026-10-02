@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
+import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -205,7 +207,7 @@ private fun LoadedWorkDetails(
                     )
 
                     is RecommendedWorks -> WorksRow(
-                        title = "Recommended",
+                        title = stringResource(R.string.recommended),
                         works = content.recommended,
                         onWorkClick = onWorkClick,
                         isLoadingMore = content.page.isLoadingMore,
@@ -221,7 +223,7 @@ private fun LoadedWorkDetails(
                     )
 
                     is SimilarWorks -> WorksRow(
-                        title = "Similar",
+                        title = stringResource(R.string.similar),
                         works = content.similar,
                         onWorkClick = onWorkClick,
                         isLoadingMore = content.page.isLoadingMore,

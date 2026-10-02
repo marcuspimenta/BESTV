@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
+import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
 
@@ -42,7 +44,7 @@ fun WatchProvidersRow(
         modifier = modifier
     ) {
         Text(
-            text = "Where to watch · Powered by JustWatch",
+            text = stringResource(R.string.where_to_watch),
             style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.7f),
             modifier = Modifier.padding(bottom = 8.dp)

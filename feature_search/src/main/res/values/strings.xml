@@ -1,4 +1,7 @@
 <resources>
     <string name="no_results">No results</string>
     <string name="results">Results</string>
+    <string name="search_placeholder">Search movies and TV shows...</string>
+    <string name="search_action">Search</string>
+    <string name="clear_search">Clear search</string>
 </resources>

@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.ui.compose.CastCard
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
+import com.pimenta.bestv.workdetail.R
 
 @Composable
 fun CastRow(
@@ -42,7 +44,7 @@ fun CastRow(
     ) {
         // Section title
         Text(
-            text = "Cast",
+            text = stringResource(R.string.cast),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = Color.White,

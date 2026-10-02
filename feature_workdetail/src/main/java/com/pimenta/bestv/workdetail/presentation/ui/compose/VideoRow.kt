@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,7 +48,9 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
 import coil3.compose.SubcomposeAsyncImage
+import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
+import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
 @Composable
@@ -61,7 +64,7 @@ fun VideoRow(
     ) {
         // Section title
         Text(
-            text = "Videos",
+            text = stringResource(R.string.videos),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -135,7 +138,7 @@ private fun VideoCard(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = "Play video",
+                            contentDescription = stringResource(R.string.play_video),
                             tint = Color.White,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -147,7 +150,7 @@ private fun VideoCard(
         },
         title = {
             Text(
-                text = video.name ?: "Untitled",
+                text = video.name ?: stringResource(PresentationR.string.untitled),
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White,
                 maxLines = 2,

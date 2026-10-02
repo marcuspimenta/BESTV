@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,6 +40,7 @@ import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.Loading
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
@@ -111,7 +113,7 @@ private fun CastDetailsContent(
 
                     if (state.movies.isNotEmpty()) {
                         WorksRow(
-                            title = "Movies",
+                            title = stringResource(PresentationR.string.movies_title),
                             works = state.movies,
                             onWorkClick = onWorkClick
                         )
@@ -119,7 +121,7 @@ private fun CastDetailsContent(
 
                     if (state.tvShows.isNotEmpty()) {
                         WorksRow(
-                            title = "TV Shows",
+                            title = stringResource(PresentationR.string.tv_shows_title),
                             works = state.tvShows,
                             onWorkClick = onWorkClick
                         )

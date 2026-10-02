@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,9 +36,11 @@ import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
+import com.pimenta.bestv.workdetail.R
 
 @Composable
 fun ReviewRow(
@@ -61,7 +64,7 @@ fun ReviewRow(
     ) {
         // Section title
         Text(
-            text = "Reviews",
+            text = stringResource(R.string.reviews),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -115,7 +118,7 @@ private fun ReviewCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = review.author ?: "Unknown",
+                text = review.author ?: stringResource(PresentationR.string.unknown),
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
                 maxLines = 1,

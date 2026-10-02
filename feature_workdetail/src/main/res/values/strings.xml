@@ -7,4 +7,6 @@
     <string name="save_favorites">Add to favorites</string>
     <string name="remove_favorites">Remove from favorites</string>
     <string name="failed_open_video">Failed to open the video. Check if you have YouTube installed and try again.</string>
+    <string name="where_to_watch">Where to watch · Powered by JustWatch</string>
+    <string name="play_video">Play video</string>
 </resources>

@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
@@ -40,6 +41,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.SurfaceDefaults
 import androidx.tv.material3.Text
+import com.pimenta.bestv.presentation.R
 
 /**
  * A dismissible error banner component for Android TV.
@@ -97,7 +99,7 @@ fun ErrorBanner(
                         onClick = onDismiss,
                         modifier = Modifier.focusRequester(focusRequester)
                     ) {
-                        Text(text = "Dismiss")
+                        Text(text = stringResource(R.string.dismiss))
                     }
                 }
             }

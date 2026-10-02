@@ -33,8 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.pimenta.bestv.search.R
 
 @Composable
 fun SearchBar(
@@ -42,8 +44,8 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit,
     onClear: () -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: String = "Search movies and TV shows..."
+    placeholder: String,
+    modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -68,7 +70,7 @@ fun SearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.search_action),
                 tint = Color.White.copy(alpha = 0.7f)
             )
         },
@@ -77,7 +79,7 @@ fun SearchBar(
                 IconButton(onClick = onClear) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear search",
+                        contentDescription = stringResource(R.string.clear_search),
                         tint = Color.White.copy(alpha = 0.7f)
                     )
                 }

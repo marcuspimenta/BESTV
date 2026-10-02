@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,7 @@ import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import com.pimenta.bestv.presentation.R
 
 private const val DEFAULT_MAX_LINES_COLLAPSED = 4
 
@@ -70,7 +72,7 @@ fun ExpandableText(
                 modifier = Modifier.padding(start = 8.dp, top = 8.dp)
             ) {
                 Text(
-                    text = if (isExpanded) "Show less" else "Read more",
+                    text = stringResource(if (isExpanded) R.string.show_less else R.string.read_more),
                     style = MaterialTheme.typography.labelLarge,
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)

@@ -27,12 +27,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.search.R
 import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.Loading
@@ -79,6 +82,7 @@ fun SearchScreen(
         Column(modifier = modifier.fillMaxSize()) {
             SearchBar(
                 query = state.query,
+                placeholder = stringResource(R.string.search_placeholder),
                 onQueryChange = { viewModel.handleEvent(SearchQueryChanged(it)) },
                 onQuerySubmit = { viewModel.handleEvent(SearchQuerySubmitted(it)) },
                 onClear = { viewModel.handleEvent(ClearSearch) }
@@ -168,7 +172,7 @@ private fun SearchResultsContent(
         ) { index, content ->
             when (content) {
                 is Movies -> WorksRow(
-                    title = "Movies",
+                    title = stringResource(PresentationR.string.movies_title),
                     works = content.movies,
                     onWorkClick = onWorkClick,
                     onWorkFocused = onWorkSelected,
@@ -177,7 +181,7 @@ private fun SearchResultsContent(
                 )
 
                 is TvShows -> WorksRow(
-                    title = "TV Shows",
+                    title = stringResource(PresentationR.string.tv_shows_title),
                     works = content.tvShows,
                     onWorkClick = onWorkClick,
                     onWorkFocused = onWorkSelected,
@@ -194,7 +198,7 @@ private fun NoResultsView(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = "No results",
+        text = stringResource(R.string.no_results),
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold,
         color = Color.White,
