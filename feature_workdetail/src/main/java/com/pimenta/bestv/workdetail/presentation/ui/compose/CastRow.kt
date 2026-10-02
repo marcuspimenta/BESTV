@@ -21,16 +21,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.ui.compose.CastCard
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.R
 
 @Composable
@@ -40,22 +39,22 @@ fun CastRow(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(vertical = 20.dp)
+        modifier = modifier.padding(vertical = BESTVTheme.scale.s100)
     ) {
         // Section title
         Text(
             text = stringResource(R.string.cast),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.padding(horizontal = 48.dp)
+            color = BESTVTheme.colors.white,
+            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240)
         )
 
         // Cast list with start-aligned focus behavior
         StartAlignedLazyRow(
-            contentPadding = PaddingValues(horizontal = 48.dp),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(top = 18.dp)
+            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
+            modifier = Modifier.padding(top = BESTVTheme.scale.s090)
         ) {
             items(
                 items = casts,

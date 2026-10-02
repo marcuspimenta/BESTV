@@ -15,8 +15,12 @@
 package com.pimenta.bestv.presentation.ui.compose
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 /**
  * Applies a fade effect to items at the top edge of a LazyColumn.
@@ -26,14 +30,16 @@ import androidx.compose.ui.graphics.graphicsLayer
  *
  * @param listState The LazyListState to monitor for item positions
  * @param itemIndex The index of this item in the list
- * @param fadeThreshold The distance (in pixels) from the top edge where fading begins. Default is 200px.
+ * @param fadeThreshold The distance from the top edge where fading begins. Default is 200dp.
  * @return A Modifier that applies the appropriate alpha based on the item's position
  */
+@Composable
 fun Modifier.fadeAtTopEdge(
     listState: LazyListState,
     itemIndex: Int,
-    fadeThreshold: Float = 200f
+    fadeThreshold: Dp = BESTVTheme.scale.s1000
 ): Modifier {
+    val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
     val alpha = if (itemInfo != null) {
@@ -41,9 +47,9 @@ fun Modifier.fadeAtTopEdge(
 
         when {
             itemTop >= 0 -> 1f // Item is fully visible
-            itemTop > -fadeThreshold -> {
+            itemTop > -fadeThresholdPx -> {
                 // Item is leaving the top, fade out proportionally
-                (fadeThreshold + itemTop) / fadeThreshold
+                (fadeThresholdPx + itemTop) / fadeThresholdPx
             }
             else -> 0f // Item is completely off screen
         }
@@ -62,14 +68,16 @@ fun Modifier.fadeAtTopEdge(
  *
  * @param listState The LazyListState to monitor for item positions
  * @param itemIndex The index of this item in the list
- * @param fadeThreshold The distance (in pixels) from the bottom edge where fading begins. Default is 200px.
+ * @param fadeThreshold The distance from the bottom edge where fading begins. Default is 200dp.
  * @return A Modifier that applies the appropriate alpha based on the item's position
  */
+@Composable
 fun Modifier.fadeAtBottomEdge(
     listState: LazyListState,
     itemIndex: Int,
-    fadeThreshold: Float = 200f
+    fadeThreshold: Dp = BESTVTheme.scale.s1000
 ): Modifier {
+    val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
     val alpha = if (itemInfo != null) {
@@ -78,9 +86,9 @@ fun Modifier.fadeAtBottomEdge(
 
         when {
             itemBottom <= viewportHeight -> 1f // Item is fully visible
-            itemBottom < viewportHeight + fadeThreshold -> {
+            itemBottom < viewportHeight + fadeThresholdPx -> {
                 // Item is leaving the bottom, fade out proportionally
-                (viewportHeight + fadeThreshold - itemBottom) / fadeThreshold
+                (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
             }
             else -> 0f // Item is completely off screen
         }
@@ -99,14 +107,16 @@ fun Modifier.fadeAtBottomEdge(
  *
  * @param listState The LazyListState to monitor for item positions
  * @param itemIndex The index of this item in the list
- * @param fadeThreshold The distance (in pixels) from each edge where fading begins. Default is 200px.
+ * @param fadeThreshold The distance from each edge where fading begins. Default is 200dp.
  * @return A Modifier that applies the appropriate alpha based on the item's position
  */
+@Composable
 fun Modifier.fadeAtBothEdges(
     listState: LazyListState,
     itemIndex: Int,
-    fadeThreshold: Float = 200f
+    fadeThreshold: Dp = BESTVTheme.scale.s1000
 ): Modifier {
+    val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
     val alpha = if (itemInfo != null) {
@@ -117,15 +127,15 @@ fun Modifier.fadeAtBothEdges(
         // Calculate alpha for top edge
         val topAlpha = when {
             itemTop >= 0 -> 1f
-            itemTop > -fadeThreshold -> (fadeThreshold + itemTop) / fadeThreshold
+            itemTop > -fadeThresholdPx -> (fadeThresholdPx + itemTop) / fadeThresholdPx
             else -> 0f
         }
 
         // Calculate alpha for bottom edge
         val bottomAlpha = when {
             itemBottom <= viewportHeight -> 1f
-            itemBottom < viewportHeight + fadeThreshold -> {
-                (viewportHeight + fadeThreshold - itemBottom) / fadeThreshold
+            itemBottom < viewportHeight + fadeThresholdPx -> {
+                (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
             }
             else -> 0f
         }

@@ -21,18 +21,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Card
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun CastCard(
@@ -48,8 +47,8 @@ fun CastCard(
                 onClick = onClick,
                 interactionSource = interactionSource,
                 modifier = Modifier
-                    .width(140.dp)
-                    .height(170.dp),
+                    .width(BESTVTheme.scale.s700)
+                    .height(BESTVTheme.scale.s850),
             ) {
                 AsyncImage(
                     model = cast.thumbnailUrl,
@@ -64,11 +63,11 @@ fun CastCard(
                 Text(
                     text = cast.name,
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White,
+                    color = BESTVTheme.colors.white,
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 12.dp)
+                    modifier = Modifier.padding(top = BESTVTheme.scale.s060)
                 )
             }
         }

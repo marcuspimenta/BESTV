@@ -22,12 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.pimenta.bestv.castdetail.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
@@ -42,7 +41,7 @@ fun CastDetailsHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(48.dp),
+            .padding(BESTVTheme.scale.s240),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.Top
     ) {
@@ -54,27 +53,27 @@ fun CastDetailsHeader(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 32.dp)
+                .padding(start = BESTVTheme.scale.s160)
         ) {
             Text(
                 text = cast.name,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = BESTVTheme.colors.white
             )
 
             Text(
                 text = stringResource(R.string.born, cast.birthday),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.8f),
-                modifier = Modifier.padding(top = 12.dp)
+                color = BESTVTheme.colors.secondaryInfoText,
+                modifier = Modifier.padding(top = BESTVTheme.scale.s060)
             )
 
             if (cast.biography.isNotBlank()) {
                 ExpandableText(
                     text = cast.biography,
-                    color = Color.White.copy(alpha = 0.9f),
-                    modifier = Modifier.padding(top = 12.dp)
+                    color = BESTVTheme.colors.biographyText,
+                    modifier = Modifier.padding(top = BESTVTheme.scale.s060)
                 )
             }
         }

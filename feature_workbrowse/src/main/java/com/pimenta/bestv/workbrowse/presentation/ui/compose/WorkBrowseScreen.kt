@@ -45,7 +45,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -54,7 +53,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -67,6 +65,7 @@ import androidx.tv.material3.NavigationDrawerItem
 import androidx.tv.material3.Text
 import androidx.tv.material3.rememberDrawerState
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.SlideInFromBottom
 import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
@@ -248,9 +247,9 @@ private fun BrowseSections(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(12.dp)
+                            .padding(BESTVTheme.scale.s060)
                             .align(Alignment.Center),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060)
                     ) {
                         sections.forEachIndexed { index, section ->
                             NavigationDrawerItem(
@@ -265,7 +264,7 @@ private fun BrowseSections(
                                     Icon(
                                         painter = painterResource(section.iconRes),
                                         contentDescription = null,
-                                        tint = Color.White
+                                        tint = BESTVTheme.colors.white
                                     )
                                 },
                                 modifier = Modifier.focusRequester(drawerItemFocusRequesters[index]),
@@ -273,7 +272,7 @@ private fun BrowseSections(
                                     Text(
                                         text = stringResource(section.titleRes),
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = Color.White
+                                        color = BESTVTheme.colors.white
                                     )
                                 }
                             )
@@ -281,7 +280,7 @@ private fun BrowseSections(
                     }
                 }
             },
-            scrimBrush = Brush.horizontalGradient(listOf(Color.Black, Color.Transparent)),
+            scrimBrush = Brush.horizontalGradient(listOf(BESTVTheme.colors.black, BESTVTheme.colors.transparent)),
             modifier = modifier
         ) {
             Box(
@@ -308,20 +307,20 @@ private fun BrowseSections(
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .width(80.dp)
-                        .background(Color.Black.copy(alpha = 0.80f))
+                        .width(BESTVTheme.scale.s400)
+                        .background(BESTVTheme.colors.drawerScrim)
                         .align(Alignment.TopStart)
                 )
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(BESTVTheme.scale.s250)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black.copy(alpha = 0.80f),
+                                    BESTVTheme.colors.transparent,
+                                    BESTVTheme.colors.drawerScrim,
                                 )
                             )
                         )
@@ -436,13 +435,13 @@ private fun WorkSelectedHeader(
             targetState = it,
             label = "work_selected",
             animationSpec = tween(durationMillis = 500),
-            modifier = modifier.padding(start = 100.dp)
+            modifier = modifier.padding(start = BESTVTheme.scale.s500)
         ) { work ->
             Column {
                 Text(
                     text = work.title,
                     style = MaterialTheme.typography.displaySmall,
-                    color = Color.White,
+                    color = BESTVTheme.colors.white,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -450,19 +449,19 @@ private fun WorkSelectedHeader(
                 Text(
                     text = "${work.releaseDate} · ${work.source}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 8.dp)
+                    color = BESTVTheme.colors.secondaryText,
+                    modifier = Modifier.padding(top = BESTVTheme.scale.s040)
                 )
 
                 Text(
                     text = work.overview,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = BESTVTheme.colors.secondaryText,
                     minLines = 3,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .padding(top = 8.dp)
+                        .padding(top = BESTVTheme.scale.s040)
                         .fillMaxWidth(0.6f)
                 )
             }
@@ -497,13 +496,13 @@ private fun SectionWorkList(
                 onWorkClick = onWorkClicked,
                 onWorkFocused = onWorkSelected,
                 isLoadingMore = contentItem.page.isLoadingMore,
-                titleStartPadding = 100.dp,
-                worksStartPadding = 100.dp,
+                titleStartPadding = BESTVTheme.scale.s500,
+                worksStartPadding = BESTVTheme.scale.s500,
                 onLoadMore = {},
                 modifier = Modifier.fadeAtTopEdge(
                     listState = listState,
                     itemIndex = index,
-                    fadeThreshold = 100f
+                    fadeThreshold = BESTVTheme.scale.s500
                 )
             )
         }

@@ -17,4 +17,5 @@
 
     <dimen name="lb_details_v2_logo_max_width">@dimen/movie_card_width</dimen>
     <dimen name="lb_details_v2_logo_max_height">@dimen/movie_card_height</dimen>
+
 </resources>

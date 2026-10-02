@@ -24,16 +24,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.ExpandableText
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
@@ -53,13 +52,18 @@ fun WorkDetailsHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 48.dp, top = 48.dp, end = 48.dp, bottom = 12.dp),
+            .padding(
+                start = BESTVTheme.scale.s240,
+                top = BESTVTheme.scale.s240,
+                end = BESTVTheme.scale.s240,
+                bottom = BESTVTheme.scale.s060
+            ),
     ) {
         Column {
             Text(
                 text = work.title,
                 style = MaterialTheme.typography.displaySmall,
-                color = Color.White,
+                color = BESTVTheme.colors.white,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -67,27 +71,27 @@ fun WorkDetailsHeader(
             ActionButtonsRow(
                 actions = header.actions,
                 actionClicked = actionClicked,
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = BESTVTheme.scale.s100)
             )
 
             Text(
                 text = "${work.releaseDate} · ${work.voteAverage} · ${work.source}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier.padding(top = 20.dp)
+                color = BESTVTheme.colors.secondaryText,
+                modifier = Modifier.padding(top = BESTVTheme.scale.s100)
             )
 
             ExpandableText(
                 text = work.overview,
                 modifier = Modifier
-                    .padding(top = 18.dp)
+                    .padding(top = BESTVTheme.scale.s090)
                     .fillMaxWidth(0.6f)
             )
 
             header.watchProviders?.let {
                 WatchProvidersRow(
                     watchProviders = it,
-                    modifier = Modifier.padding(top = 18.dp)
+                    modifier = Modifier.padding(top = BESTVTheme.scale.s090)
                 )
             }
         }
@@ -101,7 +105,7 @@ private fun ActionButtonsRow(
     modifier: Modifier = Modifier
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
     ) {

@@ -27,10 +27,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.OpenIntent
@@ -41,6 +39,7 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.Loading
 import com.pimenta.bestv.presentation.ui.compose.WorksRow
@@ -84,7 +83,7 @@ private fun CastDetailsContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(BESTVTheme.colors.black)
     ) {
         when (state) {
             is CastDetailsState.Loading -> {
@@ -105,7 +104,7 @@ private fun CastDetailsContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
-                        .padding(bottom = 48.dp)
+                        .padding(bottom = BESTVTheme.scale.s240)
                 ) {
                     CastDetailsHeader(
                         cast = state.cast

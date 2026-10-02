@@ -26,11 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.MaterialTheme
 import coil3.compose.AsyncImage
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun CastBackgroundScreen(
@@ -41,7 +41,7 @@ fun CastBackgroundScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(BESTVTheme.colors.black)
     ) {
         Crossfade(
             targetState = backdropUrl,
@@ -70,8 +70,8 @@ fun CastBackgroundScreen(
                 .background(
                     brush = Brush.horizontalGradient(
                         colors = listOf(
-                            Color.Black,
-                            Color.Transparent,
+                            BESTVTheme.colors.black,
+                            BESTVTheme.colors.transparent,
                         )
                     )
                 )
@@ -86,8 +86,8 @@ fun CastBackgroundScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color.Transparent,
-                            Color.Black,
+                            BESTVTheme.colors.transparent,
+                            BESTVTheme.colors.black,
                         )
                     )
                 )
@@ -97,7 +97,7 @@ fun CastBackgroundScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f))
+                .background(BESTVTheme.colors.imageScrim)
         )
     }
 }

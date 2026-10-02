@@ -25,12 +25,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Border
 import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
@@ -39,6 +37,7 @@ import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.R
 
@@ -60,23 +59,26 @@ fun ReviewRow(
     )
 
     Column(
-        modifier = modifier.padding(vertical = 20.dp)
+        modifier = modifier.padding(vertical = BESTVTheme.scale.s100)
     ) {
         // Section title
         Text(
             text = stringResource(R.string.reviews),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.padding(horizontal = 48.dp, vertical = 8.dp)
+            color = BESTVTheme.colors.white,
+            modifier = Modifier.padding(
+                horizontal = BESTVTheme.scale.s240,
+                vertical = BESTVTheme.scale.s040
+            )
         )
 
         // Reviews list with start-aligned focus behavior
         StartAlignedLazyRow(
             state = listState,
-            contentPadding = PaddingValues(horizontal = 48.dp),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(top = 18.dp)
+            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
+            modifier = Modifier.padding(top = BESTVTheme.scale.s090)
         ) {
             items(
                 items = reviews,
@@ -98,29 +100,29 @@ private fun ReviewCard(
     Card(
         onClick = {},
         modifier = modifier
-            .width(400.dp)
-            .height(200.dp),
+            .width(BESTVTheme.scale.s2000)
+            .height(BESTVTheme.scale.s1000),
         scale = CardDefaults.scale(focusedScale = 1.05f),
         border = CardDefaults.border(
             focusedBorder = Border(
                 border = androidx.compose.foundation.BorderStroke(
-                    width = 3.dp,
+                    width = BESTVTheme.scale.s015,
                     color = MaterialTheme.colorScheme.primary
                 )
             )
         ),
         colors = CardDefaults.colors(
-            containerColor = Color.DarkGray
+            containerColor = BESTVTheme.colors.reviewCardSurface
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(BESTVTheme.scale.s080),
+            verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s040)
         ) {
             Text(
                 text = review.author ?: stringResource(PresentationR.string.unknown),
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
+                color = BESTVTheme.colors.white,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -129,7 +131,7 @@ private fun ReviewCard(
             Text(
                 text = review.content ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.8f),
+                color = BESTVTheme.colors.reviewText,
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis
             )

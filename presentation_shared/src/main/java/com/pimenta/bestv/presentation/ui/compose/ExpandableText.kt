@@ -28,12 +28,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 private const val DEFAULT_MAX_LINES_COLLAPSED = 4
 
@@ -42,7 +42,7 @@ fun ExpandableText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
-    color: Color = Color.White.copy(alpha = 0.7f),
+    color: Color = BESTVTheme.colors.secondaryText,
     maxLinesCollapsed: Int = DEFAULT_MAX_LINES_COLLAPSED
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -66,16 +66,22 @@ fun ExpandableText(
             Surface(
                 onClick = { isExpanded = !isExpanded },
                 colors = ClickableSurfaceDefaults.colors(
-                    containerColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.4f)
+                    containerColor = BESTVTheme.colors.transparent,
+                    focusedContainerColor = BESTVTheme.colors.focusSurface
                 ),
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                modifier = Modifier.padding(
+                    start = BESTVTheme.scale.s040,
+                    top = BESTVTheme.scale.s040
+                )
             ) {
                 Text(
                     text = stringResource(if (isExpanded) R.string.show_less else R.string.read_more),
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    color = BESTVTheme.colors.white,
+                    modifier = Modifier.padding(
+                        horizontal = BESTVTheme.scale.s040,
+                        vertical = BESTVTheme.scale.s020
+                    )
                 )
             }
         }

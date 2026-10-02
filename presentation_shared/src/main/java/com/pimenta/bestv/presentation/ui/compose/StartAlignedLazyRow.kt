@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 
 /**
  * Custom BringIntoViewSpec that aligns focused items at the start position.
@@ -71,7 +70,7 @@ private class StartAlignedBringIntoViewSpec(
 fun StartAlignedLazyRow(
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     content: LazyListScope.() -> Unit
 ) {

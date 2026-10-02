@@ -32,16 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.SurfaceDefaults
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 /**
  * A dismissible error banner component for Android TV.
@@ -73,17 +72,20 @@ fun ErrorBanner(
             Surface(
                 shape = MaterialTheme.shapes.medium,
                 colors = SurfaceDefaults.colors(
-                    containerColor = Color(0xFFD32F2F).copy(alpha = 0.95f),
-                    contentColor = Color.White
+                    containerColor = BESTVTheme.colors.errorBannerSurface,
+                    contentColor = BESTVTheme.colors.white
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 48.dp, vertical = 32.dp)
+                    .padding(
+                        horizontal = BESTVTheme.scale.s240,
+                        vertical = BESTVTheme.scale.s160
+                    )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(24.dp),
+                        .padding(BESTVTheme.scale.s120),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -93,7 +95,7 @@ fun ErrorBanner(
                         modifier = Modifier.weight(1f)
                     )
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(BESTVTheme.scale.s080))
 
                     Button(
                         onClick = onDismiss,

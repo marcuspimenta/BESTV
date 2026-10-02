@@ -25,16 +25,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun ErrorScreen(
@@ -44,7 +43,7 @@ fun ErrorScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(48.dp),
+            .padding(BESTVTheme.scale.s240),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -52,21 +51,21 @@ fun ErrorScreen(
         Image(
             painter = painterResource(R.drawable.movie),
             contentDescription = null,
-            modifier = Modifier.size(120.dp)
+            modifier = Modifier.size(BESTVTheme.scale.s600)
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(BESTVTheme.scale.s160))
 
         // Error message
         Text(
             text = stringResource(R.string.error_fragment_message),
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.White,
+            color = BESTVTheme.colors.white,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 48.dp)
+            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240)
         )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(BESTVTheme.scale.s240))
 
         // Retry button
         Button(

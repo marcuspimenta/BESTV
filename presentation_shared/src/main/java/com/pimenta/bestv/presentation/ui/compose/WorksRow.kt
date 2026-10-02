@@ -23,16 +23,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun WorksRow(
@@ -41,8 +40,8 @@ fun WorksRow(
     onWorkClick: (WorkViewModel) -> Unit,
     modifier: Modifier = Modifier,
     titleStyle: TextStyle = MaterialTheme.typography.headlineSmall,
-    titleStartPadding: Dp = 48.dp,
-    worksStartPadding: Dp = 48.dp,
+    titleStartPadding: Dp = BESTVTheme.scale.s240,
+    worksStartPadding: Dp = BESTVTheme.scale.s240,
     onWorkFocused: (WorkViewModel) -> Unit = {},
     isLoadingMore: Boolean = false,
     includeWorkTitle: Boolean = true,
@@ -63,14 +62,14 @@ fun WorksRow(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp)
+            .padding(vertical = BESTVTheme.scale.s100)
     ) {
         // Section title
         Text(
             text = title,
             style = titleStyle,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = BESTVTheme.colors.white,
             modifier = Modifier.padding(start = titleStartPadding)
         )
 
@@ -78,8 +77,8 @@ fun WorksRow(
         StartAlignedLazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = worksStartPadding),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(top = 18.dp)
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
+            modifier = Modifier.padding(top = BESTVTheme.scale.s090)
         ) {
             items(
                 items = works,

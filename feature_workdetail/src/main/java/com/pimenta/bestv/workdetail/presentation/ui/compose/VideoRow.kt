@@ -36,13 +36,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Card
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
@@ -50,6 +48,7 @@ import androidx.tv.material3.Text
 import coil3.compose.SubcomposeAsyncImage
 import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.presentation.ui.compose.StartAlignedLazyRow
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
@@ -60,22 +59,22 @@ fun VideoRow(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(vertical = 20.dp)
+        modifier = modifier.padding(vertical = BESTVTheme.scale.s100)
     ) {
         // Section title
         Text(
             text = stringResource(R.string.videos),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.padding(horizontal = 48.dp)
+            color = BESTVTheme.colors.white,
+            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240)
         )
 
         // Videos list with start-aligned focus behavior
         StartAlignedLazyRow(
-            contentPadding = PaddingValues(horizontal = 48.dp),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(top = 18.dp)
+            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
+            modifier = Modifier.padding(top = BESTVTheme.scale.s090)
         ) {
             items(
                 items = videos,
@@ -97,13 +96,13 @@ private fun VideoCard(
     modifier: Modifier = Modifier
 ) {
     StandardCardContainer(
-        modifier = Modifier.width(250.dp),
+        modifier = Modifier.width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(143.dp),
+                    .height(BESTVTheme.scale.s715),
                 interactionSource = interactionSource
             ) {
                 Box(
@@ -114,7 +113,7 @@ private fun VideoCard(
                         contentDescription = video.name,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(8.dp)),
+                            .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                         contentScale = ContentScale.Crop,
                         loading = {
                             Box(
@@ -122,7 +121,7 @@ private fun VideoCard(
                                 contentAlignment = Alignment.Center
                             ) {
                                 CircularProgressIndicator(
-                                    modifier = Modifier.size(48.dp),
+                                    modifier = Modifier.size(BESTVTheme.scale.s240),
                                     color = MaterialTheme.colorScheme.primary
                                 )
                             }
@@ -132,17 +131,17 @@ private fun VideoCard(
                     Surface(
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .size(64.dp),
+                            .size(BESTVTheme.scale.s320),
                         shape = CircleShape,
-                        color = Color.Black.copy(alpha = 0.4f)
+                        color = BESTVTheme.colors.imageScrim
                     ) {
                         Icon(
                             imageVector = Icons.Filled.PlayArrow,
                             contentDescription = stringResource(R.string.play_video),
-                            tint = Color.White,
+                            tint = BESTVTheme.colors.white,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(12.dp)
+                                .padding(BESTVTheme.scale.s060)
                         )
                     }
                 }
@@ -152,12 +151,12 @@ private fun VideoCard(
             Text(
                 text = video.name ?: stringResource(PresentationR.string.untitled),
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.White,
+                color = BESTVTheme.colors.white,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 18.dp)
+                    .padding(top = BESTVTheme.scale.s090)
             )
         }
     )

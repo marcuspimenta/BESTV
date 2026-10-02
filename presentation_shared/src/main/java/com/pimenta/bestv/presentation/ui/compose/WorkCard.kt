@@ -28,11 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Card
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
@@ -40,6 +38,7 @@ import androidx.tv.material3.Text
 import coil3.compose.SubcomposeAsyncImage
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun WorkCard(
@@ -50,13 +49,13 @@ fun WorkCard(
     includeWorkTitle: Boolean = true
 ) {
     StandardCardContainer(
-        modifier = Modifier.width(250.dp),
+        modifier = Modifier.width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(143.dp)
+                    .height(BESTVTheme.scale.s715)
                     .onFocusChanged { focusState ->
                         onFocusChanged(focusState.isFocused)
                     },
@@ -68,7 +67,7 @@ fun WorkCard(
                     contentDescription = work.title,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                     contentScale = ContentScale.Crop,
                     loading = {
                         Box(
@@ -76,7 +75,7 @@ fun WorkCard(
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(48.dp),
+                                modifier = Modifier.size(BESTVTheme.scale.s240),
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
@@ -89,12 +88,12 @@ fun WorkCard(
                 Text(
                     text = work.title,
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White,
+                    color = BESTVTheme.colors.white,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 18.dp)
+                    .padding(top = BESTVTheme.scale.s090)
                 )
             }
         }

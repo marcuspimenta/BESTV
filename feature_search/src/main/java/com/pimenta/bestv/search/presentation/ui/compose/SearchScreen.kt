@@ -26,16 +26,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.R as PresentationR
 import com.pimenta.bestv.search.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.BackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.ErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.Loading
@@ -164,7 +163,7 @@ private fun SearchResultsContent(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = 16.dp)
+        modifier = modifier.padding(top = BESTVTheme.scale.s080)
     ) {
         itemsIndexed(
             items = contents,
@@ -201,7 +200,10 @@ private fun NoResultsView(
         text = stringResource(R.string.no_results),
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold,
-        color = Color.White,
-        modifier = modifier.padding(start = 48.dp, top = 36.dp)
+        color = BESTVTheme.colors.white,
+        modifier = modifier.padding(
+            start = BESTVTheme.scale.s240,
+            top = BESTVTheme.scale.s180
+        )
     )
 }

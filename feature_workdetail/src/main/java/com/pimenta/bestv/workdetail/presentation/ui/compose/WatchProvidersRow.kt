@@ -24,13 +24,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
@@ -46,8 +45,8 @@ fun WatchProvidersRow(
         Text(
             text = stringResource(R.string.where_to_watch),
             style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.7f),
-            modifier = Modifier.padding(bottom = 8.dp)
+            color = BESTVTheme.colors.secondaryText,
+            modifier = Modifier.padding(bottom = BESTVTheme.scale.s040)
         )
 
         ProviderSection(
@@ -62,7 +61,7 @@ private fun ProviderSection(
     modifier: Modifier = Modifier
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
         modifier = modifier
     ) {
         items(
@@ -84,7 +83,7 @@ private fun ProviderItem(
         contentDescription = provider.name,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .size(48.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .size(BESTVTheme.scale.s240)
+            .clip(RoundedCornerShape(BESTVTheme.scale.s040))
     )
 }

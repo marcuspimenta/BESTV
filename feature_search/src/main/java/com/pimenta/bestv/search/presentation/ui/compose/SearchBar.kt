@@ -32,11 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.pimenta.bestv.search.R
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun SearchBar(
@@ -59,19 +58,22 @@ fun SearchBar(
         onValueChange = onQueryChange,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 48.dp, vertical = 24.dp)
+            .padding(
+                horizontal = BESTVTheme.scale.s240,
+                vertical = BESTVTheme.scale.s120
+            )
             .focusRequester(focusRequester),
         placeholder = {
             Text(
                 text = placeholder,
-                color = Color.White.copy(alpha = 0.5f)
+                color = BESTVTheme.colors.searchPlaceholder
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = stringResource(R.string.search_action),
-                tint = Color.White.copy(alpha = 0.7f)
+                tint = BESTVTheme.colors.secondaryText
             )
         },
         trailingIcon = {
@@ -80,7 +82,7 @@ fun SearchBar(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.clear_search),
-                        tint = Color.White.copy(alpha = 0.7f)
+                        tint = BESTVTheme.colors.secondaryText
                     )
                 }
             }
@@ -93,13 +95,13 @@ fun SearchBar(
             onSearch = { onQuerySubmit(query) }
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            cursorColor = Color.White,
-            focusedBorderColor = Color.White.copy(alpha = 0.5f),
-            unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
-            focusedContainerColor = Color.White.copy(alpha = 0.15f),
-            unfocusedContainerColor = Color.White.copy(alpha = 0.15f)
+            focusedTextColor = BESTVTheme.colors.white,
+            unfocusedTextColor = BESTVTheme.colors.white,
+            cursorColor = BESTVTheme.colors.white,
+            focusedBorderColor = BESTVTheme.colors.searchFocusedBorder,
+            unfocusedBorderColor = BESTVTheme.colors.searchUnfocusedBorder,
+            focusedContainerColor = BESTVTheme.colors.searchFieldSurface,
+            unfocusedContainerColor = BESTVTheme.colors.searchFieldSurface
         )
     )
 }

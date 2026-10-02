@@ -28,12 +28,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import coil3.compose.AsyncImage
+import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun BackgroundScreen(
@@ -45,12 +44,12 @@ fun BackgroundScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(BESTVTheme.colors.black)
     ) {
         Box(
             modifier = Modifier
-                .width(758.dp)
-                .height(428.dp)
+                .width(BESTVTheme.scale.s3790)
+                .height(BESTVTheme.scale.s2140)
                 .align(Alignment.TopEnd),
         ) {
             Crossfade(
@@ -78,8 +77,8 @@ fun BackgroundScreen(
                     .background(
                         brush = Brush.horizontalGradient(
                             colors = listOf(
-                                Color.Black,
-                                Color.Transparent,
+                                BESTVTheme.colors.black,
+                                BESTVTheme.colors.transparent,
                             )
                         )
                     )
@@ -94,8 +93,8 @@ fun BackgroundScreen(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color.Black,
+                                BESTVTheme.colors.transparent,
+                                BESTVTheme.colors.black,
                             )
                         )
                     )
@@ -106,7 +105,7 @@ fun BackgroundScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f))
+                .background(BESTVTheme.colors.imageScrim)
         )
     }
 }
