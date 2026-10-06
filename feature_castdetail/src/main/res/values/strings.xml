@@ -1,3 +1,4 @@
 <resources>
+    <string name="cast">Cast</string>
     <string name="born">Born: %1$s</string>
 </resources>

@@ -23,11 +23,17 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
  * Created by marcus on 21-10-2025.
  */
 sealed interface CastDetailsState {
-    data object Error : CastDetailsState
-    data object Loading : CastDetailsState
+
+    val isMobileDevice: Boolean
+
+    data class Error(override val isMobileDevice: Boolean = false) : CastDetailsState
+
+    data class Loading(override val isMobileDevice: Boolean = false) : CastDetailsState
+
     data class Loaded(
         val cast: CastViewModel,
         val movies: List<WorkViewModel>,
         val tvShows: List<WorkViewModel>,
+        override val isMobileDevice: Boolean = false,
     ) : CastDetailsState
 }

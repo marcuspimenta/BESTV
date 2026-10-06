@@ -22,6 +22,7 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.launch
@@ -35,9 +36,11 @@ import timber.log.Timber
 class CastDetailsViewModel(
     private val cast: CastViewModel,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
-    private val workDetailsRoute: WorkDetailsRoute
-) : BaseViewModel<CastDetailsState, CastDetailsEffect>(CastDetailsState.Loading) {
-
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val deviceCapabilities: DeviceCapabilities,
+) : BaseViewModel<CastDetailsState, CastDetailsEffect>(
+    CastDetailsState.Loading(deviceCapabilities.isMobileDevice),
+) {
     fun handleEvent(event: CastDetailsEvent) {
         when (event) {
             is CastDetailsEvent.LoadData -> loadData()
@@ -48,7 +51,7 @@ class CastDetailsViewModel(
     private fun loadData() {
         viewModelScope.launch {
             try {
-                updateState { CastDetailsState.Loading }
+                updateState { CastDetailsState.Loading(deviceCapabilities.isMobileDevice) }
 
                 val (castDetails, movies, tvShows) = getCastDetailsUseCase(cast.id)
 
@@ -58,21 +61,22 @@ class CastDetailsViewModel(
                         CastDetailsState.Loaded(
                             cast = cast,
                             movies = movies?.mapNotNull { movie -> movie.toViewModel() }.orEmpty(),
-                            tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel() }.orEmpty()
+                            tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel() }.orEmpty(),
+                            isMobileDevice = deviceCapabilities.isMobileDevice,
                         )
                     } else {
-                        CastDetailsState.Error
+                        CastDetailsState.Error(deviceCapabilities.isMobileDevice)
                     }
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while getting the cast details")
-                updateState { CastDetailsState.Error }
+                updateState { CastDetailsState.Error(deviceCapabilities.isMobileDevice) }
             }
         }
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(CastDetailsEffect.OpenIntent(intent, true))
+        emitEffect(CastDetailsEffect.Navigate(intent))
     }
 }

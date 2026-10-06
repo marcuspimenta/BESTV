@@ -27,27 +27,30 @@ import kotlinx.coroutines.flow.merge
 private const val SEARCH_DELAY = 500L
 
 class SearchRequestProcessor {
-
     private val searchRequests = MutableSharedFlow<String>(replay = 1, extraBufferCapacity = 1)
 
     @OptIn(FlowPreview::class)
-    fun observe(): Flow<SearchAction> = merge(
-        searchRequests
-            .debounce(SEARCH_DELAY)
-            .distinctUntilChangedBy { it }
-            .filter { it.hasContent() }
-            .map { SearchAction.Search(it) },
-        searchRequests
-            .filter { !it.hasContent() }
-            .map { SearchAction.Clear }
-    )
+    fun observe(): Flow<SearchAction> =
+        merge(
+            searchRequests
+                .debounce(SEARCH_DELAY)
+                .distinctUntilChangedBy { it }
+                .filter { it.hasContent() }
+                .map { SearchAction.Search(it) },
+            searchRequests
+                .filter { !it.hasContent() }
+                .map { SearchAction.Clear },
+        )
 
     suspend fun emitSearchRequest(query: String) {
         searchRequests.emit(query)
     }
 
     sealed interface SearchAction {
-        data class Search(val query: String) : SearchAction
+        data class Search(
+            val query: String,
+        ) : SearchAction
+
         data object Clear : SearchAction
     }
 }

@@ -18,10 +18,11 @@ import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 
-fun VideoDomainModel.toViewModel() = VideoViewModel(
-    id = id,
-    name = name,
-    type = type,
-    thumbnailUrl = key?.let { String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, it) },
-    youtubeUrl = key?.let { String.format(BuildConfig.YOUTUBE_BASE_URL, it) }
-)
+fun VideoDomainModel.toViewModel() =
+    VideoViewModel(
+        id = id,
+        name = name,
+        type = type,
+        thumbnailUrl = key?.let { String.format(BuildConfig.YOUTUBE_THUMBNAIL_BASE_URL, it) },
+        youtubeUrl = key?.let { String.format(BuildConfig.YOUTUBE_BASE_URL, it) },
+    )

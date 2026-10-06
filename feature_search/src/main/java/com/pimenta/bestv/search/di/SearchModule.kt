@@ -25,49 +25,50 @@ import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.UrlEncoderTextUseCase
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor
-import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
+import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-val searchModule = module {
-    // APIs
-    single { get<Retrofit>().create(SearchMovieTmdbApi::class.java) }
-    single { get<Retrofit>().create(SearchTvShowTmdbApi::class.java) }
+val searchModule =
+    module {
+        // APIs
+        single { get<Retrofit>().create(SearchMovieTmdbApi::class.java) }
+        single { get<Retrofit>().create(SearchTvShowTmdbApi::class.java) }
 
-    // DataSources
-    factory {
-        MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
-            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-            searchMovieTmdbApi = get()
-        )
+        // DataSources
+        factory {
+            MovieRemoteDataSource(
+                tmdbApiKey = get(named("tmdbApiKey")),
+                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+                searchMovieTmdbApi = get(),
+            )
+        }
+        factory {
+            TvShowRemoteDataSource(
+                tmdbApiKey = get(named("tmdbApiKey")),
+                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+                searchTvShowTmdbApi = get(),
+            )
+        }
+
+        // Repositories
+        factoryOf(::MovieRepository)
+        factoryOf(::TvShowRepository)
+
+        // UseCases
+        factoryOf(::UrlEncoderTextUseCase)
+        factoryOf(::SearchMoviesByQueryUseCase)
+        factoryOf(::SearchTvShowsByQueryUseCase)
+        factoryOf(::SearchWorksByQueryUseCase)
+
+        // RequestProcessors
+        factoryOf(::SearchRequestProcessor)
+        factoryOf(::SelectedWorkRequestProcessor)
+
+        // ViewModel
+        viewModelOf(::SearchViewModel)
     }
-    factory {
-        TvShowRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
-            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-            searchTvShowTmdbApi = get()
-        )
-    }
-
-    // Repositories
-    factoryOf(::MovieRepository)
-    factoryOf(::TvShowRepository)
-
-    // UseCases
-    factoryOf(::UrlEncoderTextUseCase)
-    factoryOf(::SearchMoviesByQueryUseCase)
-    factoryOf(::SearchTvShowsByQueryUseCase)
-    factoryOf(::SearchWorksByQueryUseCase)
-
-    // RequestProcessors
-    factoryOf(::SearchRequestProcessor)
-    factoryOf(::SelectedWorkRequestProcessor)
-
-    // ViewModel
-    viewModelOf(::SearchViewModel)
-}

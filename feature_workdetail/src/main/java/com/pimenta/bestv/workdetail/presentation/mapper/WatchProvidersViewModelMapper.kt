@@ -21,17 +21,20 @@ import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
 
 private const val TMDB_LOGO_BASE_URL = "https://image.tmdb.org/t/p/w92%s"
 
-fun WatchProvidersDomainModel.toViewModel() = WatchProvidersViewModel(
-    tmdbLink = tmdbLink,
-    providers = (
-            streaming.map { it.toViewModel() } +
+fun WatchProvidersDomainModel.toViewModel() =
+    WatchProvidersViewModel(
+        tmdbLink = tmdbLink,
+        providers =
+            (
+                streaming.map { it.toViewModel() } +
                     rent.map { it.toViewModel() } +
                     buy.map { it.toViewModel() }
-            ).distinctBy { it.id }
-)
+            ).distinctBy { it.id },
+    )
 
-fun WatchProviderDomainModel.toViewModel() = WatchProviderViewModel(
-    id = id,
-    name = name,
-    logoUrl = logoPath?.let { String.format(TMDB_LOGO_BASE_URL, it) }
-)
+fun WatchProviderDomainModel.toViewModel() =
+    WatchProviderViewModel(
+        id = id,
+        name = name,
+        logoUrl = logoPath?.let { String.format(TMDB_LOGO_BASE_URL, it) },
+    )

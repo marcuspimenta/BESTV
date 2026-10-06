@@ -27,77 +27,85 @@ import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-private val WORK = WorkViewModel(
-    id = 1,
-    title = "Batman",
-    originalTitle = "Batman",
-    originalLanguage = "en",
-    overview = "A superhero movie",
-    source = "tmdb",
-    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
-    posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
-    releaseDate = "Jan 01, 2023",
-    type = WorkType.MOVIE,
-    voteAverage = 8.0f
-)
+private val WORK =
+    WorkViewModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        originalLanguage = "en",
+        overview = "A superhero movie",
+        source = "tmdb",
+        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
+        posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+        releaseDate = "Jan 01, 2023",
+        type = WorkType.MOVIE,
+        voteAverage = 8.0f,
+    )
 
 private val UPDATED_WORK = WORK.copy(id = 2, title = "Batman Begins", originalTitle = "Batman Begins")
 
 class SelectedWorkRequestProcessorTest {
-
     private val processor = SelectedWorkRequestProcessor()
 
     @Test
-    fun `should emit selected work after debounce`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(800) { processor.observe().first() }
+    fun `should emit selected work after debounce`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(800) { processor.observe().first() }
+                }
+
+            processor.emitSelectedWorkRequest(WORK)
+
+            assertEquals(SelectedWorkAction.Select(WORK), action.await())
         }
-
-        processor.emitSelectedWorkRequest(WORK)
-
-        assertEquals(SelectedWorkAction.Select(WORK), action.await())
-    }
 
     @Test
-    fun `should emit only latest selected work when requests change quickly`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(1000) { processor.observe().first() }
+    fun `should emit only latest selected work when requests change quickly`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(1000) { processor.observe().first() }
+                }
+
+            processor.emitSelectedWorkRequest(WORK)
+            delay(150)
+            processor.emitSelectedWorkRequest(UPDATED_WORK)
+
+            assertEquals(SelectedWorkAction.Select(UPDATED_WORK), action.await())
         }
-
-        processor.emitSelectedWorkRequest(WORK)
-        delay(150)
-        processor.emitSelectedWorkRequest(UPDATED_WORK)
-
-        assertEquals(SelectedWorkAction.Select(UPDATED_WORK), action.await())
-    }
 
     @Test
-    fun `should emit clear immediately and cancel pending selection`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(500) { processor.observe().first() }
+    fun `should emit clear immediately and cancel pending selection`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(500) { processor.observe().first() }
+                }
+
+            processor.emitSelectedWorkRequest(WORK)
+            delay(150)
+            processor.emitSelectedWorkRequest(null)
+
+            assertEquals(SelectedWorkAction.Clear, action.await())
         }
-
-        processor.emitSelectedWorkRequest(WORK)
-        delay(150)
-        processor.emitSelectedWorkRequest(null)
-
-        assertEquals(SelectedWorkAction.Clear, action.await())
-    }
 
     @Test
-    fun `should not emit previous selection after clear`() = runBlocking {
-        val actions = mutableListOf<SelectedWorkAction>()
+    fun `should not emit previous selection after clear`() =
+        runBlocking {
+            val actions = mutableListOf<SelectedWorkAction>()
 
-        val collector = launch(start = CoroutineStart.UNDISPATCHED) {
-            processor.observe().collect(actions::add)
+            val collector =
+                launch(start = CoroutineStart.UNDISPATCHED) {
+                    processor.observe().collect(actions::add)
+                }
+
+            processor.emitSelectedWorkRequest(WORK)
+            delay(150)
+            processor.emitSelectedWorkRequest(null)
+            delay(400)
+
+            assertEquals(listOf(SelectedWorkAction.Clear), actions)
+            collector.cancel()
         }
-
-        processor.emitSelectedWorkRequest(WORK)
-        delay(150)
-        processor.emitSelectedWorkRequest(null)
-        delay(400)
-
-        assertEquals(listOf(SelectedWorkAction.Clear), actions)
-        collector.cancel()
-    }
 }

@@ -15,10 +15,9 @@
 package com.pimenta.bestv.workdetail.presentation.model
 
 import android.content.Intent
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 
 sealed interface WorkDetailsEffect {
-
-    data class OpenIntent(val intent: Intent) : WorkDetailsEffect
+    data class Navigate(
+        val intent: Intent,
+    ) : WorkDetailsEffect
 }

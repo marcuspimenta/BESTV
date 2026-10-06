@@ -23,34 +23,38 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
  * This is the single source of truth for the screen's state.
  */
 data class SearchState(
+    val isMobileDevice: Boolean = false,
     val query: String = "",
     val isSearching: Boolean = false,
-    val state: State = Empty
+    val state: State = Empty,
 ) {
     sealed interface State {
-
         data object Empty : State
+
         data object Error : State
+
         data class Loaded(
             val selectedWork: WorkViewModel? = null,
-            val contents: List<Content>
+            val contents: List<Content>,
         ) : State {
             val hasResults: Boolean
                 get() = contents.isNotEmpty()
         }
     }
 
-    sealed class Content(open val query: String) {
+    sealed class Content(
+        open val query: String,
+    ) {
         data class Movies(
             override val query: String,
             val movies: List<WorkViewModel>,
-            val page: PaginationState
+            val page: PaginationState,
         ) : Content(query)
 
         data class TvShows(
             override val query: String,
             val tvShows: List<WorkViewModel>,
-            val page: PaginationState
+            val page: PaginationState,
         ) : Content(query)
     }
 }

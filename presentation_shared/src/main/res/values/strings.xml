@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">BESTV</string>
 
-    <string name="movies">MOVIES</string>
-    <string name="tv_shows">TV SHOWS</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
     <string name="genres">Genres</string>
     <string name="movies_title">Movies</string>
     <string name="tv_shows_title">TV Shows</string>
@@ -11,6 +11,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="unknown">Unknown</string>
     <string name="untitled">Untitled</string>
+    <string name="back">Back</string>
 
     <string name="source_tmdb">TMDb</string>
     <string name="empty_line">\n</string>

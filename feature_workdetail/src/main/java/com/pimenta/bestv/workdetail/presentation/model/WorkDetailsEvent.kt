@@ -19,16 +19,35 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 
 sealed interface WorkDetailsEvent {
-
     data object LoadData : WorkDetailsEvent
-    data class ActionButtonClicked(val action: ActionButton) : WorkDetailsEvent
+
+    data class ActionButtonClicked(
+        val action: ActionButton,
+    ) : WorkDetailsEvent
+
     data object LoadMoreReviews : WorkDetailsEvent
+
     data object LoadMoreRecommendations : WorkDetailsEvent
+
     data object LoadMoreSimilar : WorkDetailsEvent
-    data class WorkClicked(val work: WorkViewModel) : WorkDetailsEvent
-    data class CastClicked(val cast: CastViewModel) : WorkDetailsEvent
-    data class VideoClicked(val video: VideoViewModel) : WorkDetailsEvent
-    data class ShowError(val error: ErrorType) : WorkDetailsEvent
+
+    data class WorkClicked(
+        val work: WorkViewModel,
+    ) : WorkDetailsEvent
+
+    data class CastClicked(
+        val cast: CastViewModel,
+    ) : WorkDetailsEvent
+
+    data class VideoClicked(
+        val video: VideoViewModel,
+    ) : WorkDetailsEvent
+
+    data class ShowError(
+        val error: ErrorType,
+    ) : WorkDetailsEvent
+
     data object DismissError : WorkDetailsEvent
+
     data object ClearScrollIndex : WorkDetailsEvent
 }

@@ -23,34 +23,41 @@ import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 
-fun clearSearch() = SearchState(query = "", isSearching = false, state = Empty)
+fun SearchState.clearSearch() =
+    copy(
+        query = "",
+        isSearching = false,
+        state = Empty,
+    )
 
 fun create(
     query: String,
     moviePage: PageViewModel<WorkViewModel>,
-    tvShowPage: PageViewModel<WorkViewModel>
-): List<Content> = buildList {
-    if (moviePage.results.isNotEmpty()) {
-        add(
-            Movies(
-                query = query,
-                movies = moviePage.results,
-                page = moviePage.toPaginationState()
+    tvShowPage: PageViewModel<WorkViewModel>,
+): List<Content> =
+    buildList {
+        if (moviePage.results.isNotEmpty()) {
+            add(
+                Movies(
+                    query = query,
+                    movies = moviePage.results,
+                    page = moviePage.toPaginationState(),
+                ),
             )
-        )
-    }
-    if (tvShowPage.results.isNotEmpty()) {
-        add(
-            TvShows(
-                query = query,
-                tvShows = tvShowPage.results,
-                page = tvShowPage.toPaginationState()
+        }
+        if (tvShowPage.results.isNotEmpty()) {
+            add(
+                TvShows(
+                    query = query,
+                    tvShows = tvShowPage.results,
+                    page = tvShowPage.toPaginationState(),
+                ),
             )
-        )
+        }
     }
-}
 
-private fun PageViewModel<WorkViewModel>.toPaginationState() = PaginationState(
-    currentPage = page,
-    totalPages = totalPages
-)
+private fun PageViewModel<WorkViewModel>.toPaginationState() =
+    PaginationState(
+        currentPage = page,
+        totalPages = totalPages,
+    )

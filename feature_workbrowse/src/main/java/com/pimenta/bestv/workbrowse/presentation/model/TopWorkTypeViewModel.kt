@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workbrowse.presentation.model
 
 import androidx.annotation.StringRes
+import com.pimenta.bestv.workbrowse.R
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.NOW_PLAYING_MOVIES
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS
@@ -23,12 +24,13 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.POPU
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.TOP_RATED_MOVIES
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.TOP_RATED_TV_SHOWS
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.UP_COMING_MOVIES
-import com.pimenta.bestv.workbrowse.R
 
 /**
  * Created by marcus on 24-10-2019.
  */
-enum class TopWorkTypeViewModel(@StringRes val resource: Int) {
+enum class TopWorkTypeViewModel(
+    @StringRes val resource: Int,
+) {
     FAVORITES_MOVIES(R.string.favorites),
     NOW_PLAYING_MOVIES(R.string.now_playing),
     POPULAR_MOVIES(R.string.popular),
@@ -37,19 +39,21 @@ enum class TopWorkTypeViewModel(@StringRes val resource: Int) {
     AIRING_TODAY_TV_SHOWS(R.string.airing_today),
     ON_THE_AIR_TV_SHOWS(R.string.on_the_air),
     POPULAR_TV_SHOWS(R.string.popular),
-    TOP_RATED_TV_SHOWS(R.string.top_rated);
+    TOP_RATED_TV_SHOWS(R.string.top_rated),
 }
 
-val topMoviesTypes: List<TopWorkTypeViewModel> = listOf(
-    NOW_PLAYING_MOVIES,
-    POPULAR_MOVIES,
-    TOP_RATED_MOVIES,
-    UP_COMING_MOVIES
-)
+val topMoviesTypes: List<TopWorkTypeViewModel> =
+    listOf(
+        NOW_PLAYING_MOVIES,
+        POPULAR_MOVIES,
+        TOP_RATED_MOVIES,
+        UP_COMING_MOVIES,
+    )
 
-val topTvShowTypes: List<TopWorkTypeViewModel> = listOf(
-    AIRING_TODAY_TV_SHOWS,
-    ON_THE_AIR_TV_SHOWS,
-    TOP_RATED_TV_SHOWS,
-    POPULAR_TV_SHOWS,
-)
+val topTvShowTypes: List<TopWorkTypeViewModel> =
+    listOf(
+        AIRING_TODAY_TV_SHOWS,
+        ON_THE_AIR_TV_SHOWS,
+        TOP_RATED_TV_SHOWS,
+        POPULAR_TV_SHOWS,
+    )

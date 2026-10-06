@@ -17,13 +17,14 @@ package com.pimenta.bestv.workdetail.presentation.viewmodel
 import android.content.Intent
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
-import java.util.Locale
 import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.firstOf
 import com.pimenta.bestv.presentation.extension.replaceFirst
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
@@ -35,7 +36,6 @@ import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
@@ -69,6 +69,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Lo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Locale
 
 /**
  * ViewModel for the Work Details screen following MVI architecture.
@@ -85,8 +86,10 @@ class WorkDetailsViewModel(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val castDetailsRoute: CastDetailsRoute,
-) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(WorkDetailsState(work, Loading)) {
-
+    private val deviceCapabilities: DeviceCapabilities,
+) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(
+    WorkDetailsState(work, Loading, isMobileDevice = deviceCapabilities.isMobileDevice),
+) {
     fun handleEvent(event: WorkDetailsEvent) {
         when (event) {
             is LoadData -> loadData()
@@ -113,63 +116,70 @@ class WorkDetailsViewModel(
 
                 updateState {
                     it.copy(
-                        state = Loaded(
-                            contents = listOfNotNull(
-                                Header(
-                                    actions = listOfNotNull(
-                                        SaveWork(result.isFavorite),
-                                        ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
-                                        ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
-                                        ScrollToRecommendedWorks.takeIf { result.recommended.results?.isNotEmpty() == true },
-                                        ScrollToSimilarWorks.takeIf { result.similar.results?.isNotEmpty() == true },
-                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true }
+                        state =
+                            Loaded(
+                                contents =
+                                    listOfNotNull(
+                                        Header(
+                                            actions =
+                                                listOfNotNull(
+                                                    SaveWork(result.isFavorite),
+                                                    ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
+                                                    ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
+                                                    ScrollToRecommendedWorks.takeIf { result.recommended.results?.isNotEmpty() == true },
+                                                    ScrollToSimilarWorks.takeIf { result.similar.results?.isNotEmpty() == true },
+                                                    ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
+                                                ),
+                                            watchProviders =
+                                                result.watchProviders?.let {
+                                                    it.toViewModel().takeIf { it.hasAnyProvider }
+                                                },
+                                        ).takeIf { it.actions.isNotEmpty() },
+                                        result.videos?.let {
+                                            Videos(it.map { video -> video.toViewModel() })
+                                                .takeIf { it.videos.isNotEmpty() }
+                                        },
+                                        result.casts?.let {
+                                            it.mapNotNull { cast -> cast.toViewModel() }.let { casts ->
+                                                Casts(casts).takeIf { casts.isNotEmpty() }
+                                            }
+                                        },
+                                        result.recommended.results?.let {
+                                            it.mapNotNull { work -> work.toViewModel() }.let { recos ->
+                                                RecommendedWorks(
+                                                    recommended = recos,
+                                                    page =
+                                                        PaginationState(
+                                                            currentPage = result.recommended.page,
+                                                            totalPages = result.recommended.totalPages,
+                                                        ),
+                                                ).takeIf { recos.isNotEmpty() }
+                                            }
+                                        },
+                                        result.similar.results?.let {
+                                            it.mapNotNull { work -> work.toViewModel() }.let { similar ->
+                                                SimilarWorks(
+                                                    similar = similar,
+                                                    page =
+                                                        PaginationState(
+                                                            currentPage = result.similar.page,
+                                                            totalPages = result.similar.totalPages,
+                                                        ),
+                                                ).takeIf { similar.isNotEmpty() }
+                                            }
+                                        },
+                                        result.reviews.results?.let {
+                                            Reviews(
+                                                reviews = it.map { work -> work.toViewModel() },
+                                                page =
+                                                    PaginationState(
+                                                        currentPage = result.reviews.page,
+                                                        totalPages = result.reviews.totalPages,
+                                                    ),
+                                            ).takeIf { it.reviews.isNotEmpty() }
+                                        },
                                     ),
-                                    watchProviders = result.watchProviders?.let {
-                                        it.toViewModel().takeIf { it.hasAnyProvider }
-                                    }
-                                ).takeIf { it.actions.isNotEmpty() },
-                                result.videos?.let {
-                                    Videos(it.map { video -> video.toViewModel() })
-                                        .takeIf { it.videos.isNotEmpty() }
-                                },
-                                result.casts?.let {
-                                    it.mapNotNull { cast -> cast.toViewModel() }.let { casts ->
-                                        Casts(casts).takeIf { casts.isNotEmpty() }
-                                    }
-                                },
-                                result.recommended.results?.let {
-                                    it.mapNotNull { work -> work.toViewModel() }.let { recos ->
-                                        RecommendedWorks(
-                                            recommended = recos,
-                                            page = PaginationState(
-                                                currentPage = result.recommended.page,
-                                                totalPages = result.recommended.totalPages
-                                            )
-                                        ).takeIf { recos.isNotEmpty() }
-                                    }
-                                },
-                                result.similar.results?.let {
-                                    it.mapNotNull { work -> work.toViewModel() }.let { similar ->
-                                        SimilarWorks(
-                                            similar = similar,
-                                            page = PaginationState(
-                                                currentPage = result.similar.page,
-                                                totalPages = result.similar.totalPages
-                                            )
-                                        ).takeIf { similar.isNotEmpty() }
-                                    }
-                                },
-                                result.reviews.results?.let {
-                                    Reviews(
-                                        reviews = it.map { work -> work.toViewModel() },
-                                        page = PaginationState(
-                                            currentPage = result.reviews.page,
-                                            totalPages = result.reviews.totalPages
-                                        )
-                                    ).takeIf { it.reviews.isNotEmpty() }
-                                }
-                            )
-                        )
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -187,10 +197,14 @@ class WorkDetailsViewModel(
             else -> {
                 updateState {
                     it.copy(
-                        state = (it.state as Loaded).copy(
-                            indexOfContentToScroll = it.state.contents
-                                .firstOf<Header>().actions.indexOf(actionButton)
-                        )
+                        state =
+                            (it.state as Loaded).copy(
+                                indexOfContentToScroll =
+                                    it.state.contents
+                                        .firstOf<Header>()
+                                        .actions
+                                        .indexOf(actionButton),
+                            ),
                     )
                 }
             }
@@ -200,8 +214,12 @@ class WorkDetailsViewModel(
     private fun toggleFavorite() {
         viewModelScope.launch {
             try {
-                val currentFavoriteState = (currentState.state as Loaded).contents
-                    .firstOf<Header>().actions.firstOf<SaveWork>()
+                val currentFavoriteState =
+                    (currentState.state as Loaded)
+                        .contents
+                        .firstOf<Header>()
+                        .actions
+                        .firstOf<SaveWork>()
                 val updatedWork = work.copy(isFavorite = currentFavoriteState.isFavorite)
 
                 setFavoriteUseCase(updatedWork)
@@ -209,15 +227,18 @@ class WorkDetailsViewModel(
                 val newFavoriteState = !currentFavoriteState.isFavorite
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<Header> {
-                                it.copy(
-                                    actions = it.actions.replaceFirst<SaveWork> {
-                                        it.copy(isFavorite = newFavoriteState)
-                                    }
-                                )
-                            }
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<Header> {
+                                        it.copy(
+                                            actions =
+                                                it.actions.replaceFirst<SaveWork> {
+                                                    it.copy(isFavorite = newFavoriteState)
+                                                },
+                                        )
+                                    },
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -225,9 +246,10 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            error = FavoriteError
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                error = FavoriteError,
+                            ),
                     )
                 }
             }
@@ -244,34 +266,40 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state = (currentState.state as Loaded).copy(
-                    contents = currentState.state.contents.replaceFirst<Reviews> {
-                        it.copy(page = it.page.copy(isLoadingMore = true))
-                    }
-                )
+                state =
+                    (currentState.state as Loaded).copy(
+                        contents =
+                            currentState.state.contents.replaceFirst<Reviews> {
+                                it.copy(page = it.page.copy(isLoadingMore = true))
+                            },
+                    ),
             )
         }
 
         viewModelScope.launch {
             try {
                 val nextPage = reviews.page.currentPage + 1
-                val pageResult = getReviewByWorkUseCase(work.type, work.id, nextPage)
-                    .toViewModel()
+                val pageResult =
+                    getReviewByWorkUseCase(work.type, work.id, nextPage)
+                        .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<Reviews> {
-                                it.copy(
-                                    reviews = it.reviews + pageResult.results.orEmpty(),
-                                    page = it.page.copy(
-                                        currentPage = pageResult.page,
-                                        totalPages = pageResult.totalPages,
-                                        isLoadingMore = false
-                                    )
-                                )
-                            }
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<Reviews> {
+                                        it.copy(
+                                            reviews = it.reviews + pageResult.results.orEmpty(),
+                                            page =
+                                                it.page.copy(
+                                                    currentPage = pageResult.page,
+                                                    totalPages = pageResult.totalPages,
+                                                    isLoadingMore = false,
+                                                ),
+                                        )
+                                    },
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -279,12 +307,14 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<Reviews> {
-                                it.copy(page = it.page.copy(isLoadingMore = false))
-                            },
-                            error = PaginationError
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<Reviews> {
+                                        it.copy(page = it.page.copy(isLoadingMore = false))
+                                    },
+                                error = PaginationError,
+                            ),
                     )
                 }
             }
@@ -301,34 +331,40 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state = (currentState.state as Loaded).copy(
-                    contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
-                        it.copy(page = it.page.copy(isLoadingMore = true))
-                    }
-                )
+                state =
+                    (currentState.state as Loaded).copy(
+                        contents =
+                            currentState.state.contents.replaceFirst<RecommendedWorks> {
+                                it.copy(page = it.page.copy(isLoadingMore = true))
+                            },
+                    ),
             )
         }
 
         viewModelScope.launch {
             try {
                 val nextPage = recommendedWorks.page.currentPage + 1
-                val pageResult = getRecommendationByWorkUseCase(work.type, work.id, nextPage)
-                    .toViewModel()
+                val pageResult =
+                    getRecommendationByWorkUseCase(work.type, work.id, nextPage)
+                        .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
-                                it.copy(
-                                    recommended = it.recommended + pageResult.results.orEmpty(),
-                                    page = it.page.copy(
-                                        currentPage = pageResult.page,
-                                        totalPages = pageResult.totalPages,
-                                        isLoadingMore = false
-                                    )
-                                )
-                            }
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<RecommendedWorks> {
+                                        it.copy(
+                                            recommended = it.recommended + pageResult.results.orEmpty(),
+                                            page =
+                                                it.page.copy(
+                                                    currentPage = pageResult.page,
+                                                    totalPages = pageResult.totalPages,
+                                                    isLoadingMore = false,
+                                                ),
+                                        )
+                                    },
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -336,12 +372,14 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
-                                it.copy(page = it.page.copy(isLoadingMore = false))
-                            },
-                            error = PaginationError
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<RecommendedWorks> {
+                                        it.copy(page = it.page.copy(isLoadingMore = false))
+                                    },
+                                error = PaginationError,
+                            ),
                     )
                 }
             }
@@ -358,34 +396,40 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state = (currentState.state as Loaded).copy(
-                    contents = currentState.state.contents.replaceFirst<SimilarWorks> {
-                        it.copy(page = it.page.copy(isLoadingMore = true))
-                    }
-                )
+                state =
+                    (currentState.state as Loaded).copy(
+                        contents =
+                            currentState.state.contents.replaceFirst<SimilarWorks> {
+                                it.copy(page = it.page.copy(isLoadingMore = true))
+                            },
+                    ),
             )
         }
 
         viewModelScope.launch {
             try {
                 val nextPage = similarWorks.page.currentPage + 1
-                val pageResult = getSimilarByWorkUseCase(work.type, work.id, nextPage)
-                    .toViewModel()
+                val pageResult =
+                    getSimilarByWorkUseCase(work.type, work.id, nextPage)
+                        .toViewModel()
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<SimilarWorks> {
-                                it.copy(
-                                    similar = it.similar + pageResult.results.orEmpty(),
-                                    page = it.page.copy(
-                                        currentPage = pageResult.page,
-                                        totalPages = pageResult.totalPages,
-                                        isLoadingMore = false
-                                    )
-                                )
-                            }
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<SimilarWorks> {
+                                        it.copy(
+                                            similar = it.similar + pageResult.results.orEmpty(),
+                                            page =
+                                                it.page.copy(
+                                                    currentPage = pageResult.page,
+                                                    totalPages = pageResult.totalPages,
+                                                    isLoadingMore = false,
+                                                ),
+                                        )
+                                    },
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -393,12 +437,14 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state = (currentState.state as Loaded).copy(
-                            contents = currentState.state.contents.replaceFirst<SimilarWorks> {
-                                it.copy(page = it.page.copy(isLoadingMore = false))
-                            },
-                            error = PaginationError
-                        )
+                        state =
+                            (currentState.state as Loaded).copy(
+                                contents =
+                                    currentState.state.contents.replaceFirst<SimilarWorks> {
+                                        it.copy(page = it.page.copy(isLoadingMore = false))
+                                    },
+                                error = PaginationError,
+                            ),
                     )
                 }
             }
@@ -407,18 +453,18 @@ class WorkDetailsViewModel(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(WorkDetailsEffect.OpenIntent(intent))
+        emitEffect(WorkDetailsEffect.Navigate(intent))
     }
 
     private fun handleCastClicked(cast: CastViewModel) {
         val intent = castDetailsRoute.buildCastDetailIntent(cast)
-        emitEffect(WorkDetailsEffect.OpenIntent(intent))
+        emitEffect(WorkDetailsEffect.Navigate(intent))
     }
 
     private fun handleVideoClicked(video: VideoViewModel) {
         video.youtubeUrl?.let {
             val intent = Intent(Intent.ACTION_VIEW, it.toUri())
-            emitEffect(WorkDetailsEffect.OpenIntent(intent))
+            emitEffect(WorkDetailsEffect.Navigate(intent))
         }
     }
 
@@ -426,7 +472,7 @@ class WorkDetailsViewModel(
         updateState { currentState ->
             val loadedState = currentState.state as? Loaded ?: return@updateState currentState
             currentState.copy(
-                state = loadedState.copy(error = error)
+                state = loadedState.copy(error = error),
             )
         }
     }
@@ -435,7 +481,7 @@ class WorkDetailsViewModel(
         updateState { currentState ->
             val loadedState = currentState.state as? Loaded ?: return@updateState currentState
             currentState.copy(
-                state = loadedState.copy(error = null)
+                state = loadedState.copy(error = null),
             )
         }
     }
@@ -443,9 +489,10 @@ class WorkDetailsViewModel(
     private fun clearScrollIndex() {
         updateState { currentState ->
             currentState.copy(
-                state = (currentState.state as Loaded).copy(
-                    indexOfContentToScroll = null
-                )
+                state =
+                    (currentState.state as Loaded).copy(
+                        indexOfContentToScroll = null,
+                    ),
             )
         }
     }

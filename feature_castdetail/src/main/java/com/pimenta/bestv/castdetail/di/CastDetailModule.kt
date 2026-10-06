@@ -28,34 +28,36 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-val castDetailModule = module {
-    // API
-    single { get<Retrofit>().create(CastTmdbApi::class.java) }
+val castDetailModule =
+    module {
+        // API
+        single { get<Retrofit>().create(CastTmdbApi::class.java) }
 
-    // DataSource
-    factory {
-        CastRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
-            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-            castTmdbApi = get()
-        )
+        // DataSource
+        factory {
+            CastRemoteDataSource(
+                tmdbApiKey = get(named("tmdbApiKey")),
+                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+                castTmdbApi = get(),
+            )
+        }
+
+        // Repository
+        factoryOf(::CastRepository)
+
+        // UseCases
+        factoryOf(::GetCastPersonalDetails)
+        factoryOf(::GetMovieCreditsByCastUseCase)
+        factoryOf(::GetTvShowCreditsByCastUseCase)
+        factoryOf(::GetCastDetailsUseCase)
+
+        // ViewModel with intent parameter
+        factory { (cast: CastViewModel) ->
+            CastDetailsViewModel(
+                cast = cast,
+                getCastDetailsUseCase = get(),
+                workDetailsRoute = get(),
+                deviceCapabilities = get(),
+            )
+        }
     }
-
-    // Repository
-    factoryOf(::CastRepository)
-
-    // UseCases
-    factoryOf(::GetCastPersonalDetails)
-    factoryOf(::GetMovieCreditsByCastUseCase)
-    factoryOf(::GetTvShowCreditsByCastUseCase)
-    factoryOf(::GetCastDetailsUseCase)
-
-    // ViewModel with intent parameter
-    factory { (cast: CastViewModel) ->
-        CastDetailsViewModel(
-            cast = cast,
-            getCastDetailsUseCase = get(),
-            workDetailsRoute = get()
-        )
-    }
-}

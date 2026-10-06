@@ -14,29 +14,34 @@
 
 package com.pimenta.bestv.application.di
 
+import com.pimenta.bestv.application.AndroidDeviceCapabilities
 import com.pimenta.bestv.castdetail.di.castDetailModule
 import com.pimenta.bestv.data.di.databaseModule
 import com.pimenta.bestv.data.di.networkModule
 import com.pimenta.bestv.presentation.di.presentationModule
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.recommendation.di.recommendationModule
 import com.pimenta.bestv.route.di.routeModule
 import com.pimenta.bestv.search.di.searchModule
 import com.pimenta.bestv.workbrowse.di.workBrowseModule
 import com.pimenta.bestv.workdetail.di.workDetailModule
 import org.koin.dsl.module
+import org.koin.android.ext.koin.androidContext
 
-val appModule = module {
-    includes(
-        // Shared modules
-        networkModule,
-        databaseModule,
-        presentationModule,
-        routeModule,
-        // Feature modules
-        castDetailModule,
-        recommendationModule,
-        searchModule,
-        workBrowseModule,
-        workDetailModule,
-    )
-}
+val appModule =
+    module {
+        single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
+        includes(
+            // Shared modules
+            networkModule,
+            databaseModule,
+            presentationModule,
+            routeModule,
+            // Feature modules
+            castDetailModule,
+            recommendationModule,
+            searchModule,
+            workBrowseModule,
+            workDetailModule,
+        )
+    }

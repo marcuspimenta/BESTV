@@ -20,7 +20,7 @@ package com.pimenta.bestv.presentation.model
 data class PaginationState(
     val currentPage: Int = 0,
     val totalPages: Int = 0,
-    val isLoadingMore: Boolean = false
+    val isLoadingMore: Boolean = false,
 ) {
     val canLoadMore: Boolean
         get() = currentPage in 1..<totalPages && !isLoadingMore

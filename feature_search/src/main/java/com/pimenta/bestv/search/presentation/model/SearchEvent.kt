@@ -21,16 +21,19 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
  * These are the events that the user can trigger.
  */
 sealed interface SearchEvent {
-
     /**
      * User changed the search query text
      */
-    data class SearchQueryChanged(val query: String) : SearchEvent
+    data class SearchQueryChanged(
+        val query: String,
+    ) : SearchEvent
 
     /**
      * User submitted the search query
      */
-    data class SearchQuerySubmitted(val query: String) : SearchEvent
+    data class SearchQuerySubmitted(
+        val query: String,
+    ) : SearchEvent
 
     /**
      * Clear search results
@@ -50,10 +53,14 @@ sealed interface SearchEvent {
     /**
      * User selected a work item (for backdrop loading)
      */
-    data class WorkItemSelected(val work: WorkViewModel?) : SearchEvent
+    data class WorkItemSelected(
+        val work: WorkViewModel?,
+    ) : SearchEvent
 
     /**
      * User clicked on a work item to view details
      */
-    data class WorkClicked(val work: WorkViewModel) : SearchEvent
+    data class WorkClicked(
+        val work: WorkViewModel,
+    ) : SearchEvent
 }

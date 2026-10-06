@@ -20,7 +20,7 @@ package com.pimenta.bestv.workdetail.presentation.model
  */
 data class WatchProvidersViewModel(
     val tmdbLink: String?,
-    val providers : List<WatchProviderViewModel>,
+    val providers: List<WatchProviderViewModel>,
 ) {
     val hasAnyProvider: Boolean
         get() = providers.isNotEmpty()
@@ -32,5 +32,5 @@ data class WatchProvidersViewModel(
 data class WatchProviderViewModel(
     val id: Int,
     val name: String,
-    val logoUrl: String?
+    val logoUrl: String?,
 )

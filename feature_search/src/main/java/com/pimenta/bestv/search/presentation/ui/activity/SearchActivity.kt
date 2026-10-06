@@ -18,8 +18,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.search.presentation.ui.compose.SearchScreen
+import com.pimenta.bestv.search.presentation.ui.compose.SearchWrapperScreen
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,19 +26,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by marcus on 12/07/18.
  */
 class SearchActivity : ComponentActivity() {
-
     private val viewModel: SearchViewModel by viewModel()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
-                SearchScreen(
-                    viewModel = viewModel,
-                    openIntent = { openIntent(it) },
-                )
-            }
+            SearchWrapperScreen(
+                viewModel = viewModel,
+                openIntent = ::openIntent,
+                onBack = ::finish,
+            )
         }
     }
 

@@ -17,6 +17,7 @@ package com.pimenta.bestv.workbrowse.presentation.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
@@ -40,11 +41,13 @@ import timber.log.Timber
  */
 class WorkBrowseViewModel(
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
-    //private val loadRecommendationUseCase: LoadRecommendationUseCase,
+    // private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
-) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(WorkBrowseState()) {
-
+    private val deviceCapabilities: DeviceCapabilities,
+) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(
+    WorkBrowseState(isMobileDevice = deviceCapabilities.isMobileDevice),
+) {
     init {
         handleLoadData()
     }
@@ -86,15 +89,18 @@ class WorkBrowseViewModel(
 
                 updateState {
                     it.copy(
-                        state = Loaded(
-                        workSelected = null,
-                        selectedSectionIndex = 1,
-                        sections = listOfNotNull(
-                            Search,
-                            Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
-                            TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
-                            Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() })
-                        )
+                        state =
+                            Loaded(
+                                workSelected = null,
+                                selectedSectionIndex = 1,
+                                sections =
+                                    listOfNotNull(
+                                        Search,
+                                        Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
+                                        TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
+                                        Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() },
+                                    ),
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -113,10 +119,11 @@ class WorkBrowseViewModel(
 
                 updateState {
                     it.copy(
-                        state = currentState.copy(
-                            selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
-                            sections = updatedSections
-                        )
+                        state =
+                            currentState.copy(
+                                selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
+                                sections = updatedSections,
+                            ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -127,7 +134,7 @@ class WorkBrowseViewModel(
 
     private fun updateSectionsWithFavorites(
         sections: List<WorkBrowseState.Section>,
-        favorites: List<ContentSection>
+        favorites: List<ContentSection>,
     ): List<WorkBrowseState.Section> {
         val hasFavorites = favorites.isNotEmpty()
         val favoritesIndex = sections.indexOfFirst { it is Favorites }
@@ -156,9 +163,10 @@ class WorkBrowseViewModel(
             else -> {
                 updateState {
                     it.copy(
-                        state = currentState.copy(
-                            selectedSectionIndex = selectedSectionIndex
-                        )
+                        state =
+                            currentState.copy(
+                                selectedSectionIndex = selectedSectionIndex,
+                            ),
                     )
                 }
             }

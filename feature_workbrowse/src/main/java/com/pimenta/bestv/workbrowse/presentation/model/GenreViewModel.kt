@@ -22,10 +22,10 @@ import java.io.Serializable
 data class GenreViewModel(
     val id: Int = 0,
     val name: String? = null,
-    val source: Source = Source.MOVIE
+    val source: Source = Source.MOVIE,
 ) : Serializable
 
 enum class Source {
     MOVIE,
-    TV_SHOW
+    TV_SHOW,
 }

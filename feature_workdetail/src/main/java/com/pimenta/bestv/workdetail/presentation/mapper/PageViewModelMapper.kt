@@ -23,15 +23,17 @@ import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
  * Created by marcus on 20-04-2020.
  */
 
-fun PageDomainModel<ReviewDomainModel>.toViewModel() = PageViewModel(
-    page = page,
-    totalPages = totalPages,
-    results = results?.map { it.toViewModel() }.orEmpty()
-)
+fun PageDomainModel<ReviewDomainModel>.toViewModel() =
+    PageViewModel(
+        page = page,
+        totalPages = totalPages,
+        results = results?.map { it.toViewModel() }.orEmpty(),
+    )
 
-fun ReviewDomainModel.toViewModel() = ReviewViewModel(
-    id = id,
-    author = author,
-    content = content,
-    url = url
-)
+fun ReviewDomainModel.toViewModel() =
+    ReviewViewModel(
+        id = id,
+        author = author,
+        content = content,
+        url = url,
+    )

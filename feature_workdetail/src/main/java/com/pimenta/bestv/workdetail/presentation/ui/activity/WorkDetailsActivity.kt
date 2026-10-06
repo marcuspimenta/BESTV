@@ -19,11 +19,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.route.workdetail.getWorkDetail
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
-import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsScreen
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsWrapperScreen
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -32,11 +31,10 @@ import org.koin.core.parameter.parametersOf
  * Created by marcus on 11-02-2018.
  */
 class WorkDetailsActivity : ComponentActivity() {
-
     private val viewModel: WorkDetailsViewModel by viewModel {
         parametersOf(
             intent.getWorkDetail()
-                ?: throw IllegalStateException("WorkViewModel not found in intent")
+                ?: throw IllegalStateException("WorkViewModel not found in intent"),
         )
     }
 
@@ -44,12 +42,11 @@ class WorkDetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
-                WorkDetailsScreen(
-                    viewModel = viewModel,
-                    openIntent = { openIntent(it) },
-                )
-            }
+            WorkDetailsWrapperScreen(
+                viewModel = viewModel,
+                openIntent = ::openIntent,
+                onBack = ::finish,
+            )
         }
     }
 

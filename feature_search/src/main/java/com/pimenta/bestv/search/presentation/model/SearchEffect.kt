@@ -21,6 +21,7 @@ import android.content.Intent
  * These are consumed once and don't persist in the state.
  */
 sealed interface SearchEffect {
-
-    data class OpenWorkDetails(val intent: Intent) : SearchEffect
+    data class Navigate(
+        val intent: Intent,
+    ) : SearchEffect
 }

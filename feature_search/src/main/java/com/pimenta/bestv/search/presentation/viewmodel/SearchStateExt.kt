@@ -24,90 +24,98 @@ import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
 
-fun SearchState.searchStarted(query: String) = copy(
-    query = query,
-    isSearching = true
-)
+fun SearchState.searchStarted(query: String) =
+    copy(
+        query = query,
+        isSearching = true,
+    )
 
-fun SearchState.searchLoaded(contents: List<Content>) = copy(
-    isSearching = false,
-    state = Loaded(contents = contents)
-)
+fun SearchState.searchLoaded(contents: List<Content>) =
+    copy(
+        isSearching = false,
+        state = Loaded(contents = contents),
+    )
 
-fun SearchState.searchFailed() = copy(
-    isSearching = false,
-    state = Error
-)
+fun SearchState.searchFailed() =
+    copy(
+        isSearching = false,
+        state = Error,
+    )
 
-fun SearchState.moviesPaginationStarted() = updateLoadedContent { content ->
-    if (content is Movies) {
-        content.copy(page = content.page.copy(isLoadingMore = true))
-    } else {
-        content
+fun SearchState.moviesPaginationStarted() =
+    updateLoadedContent { content ->
+        if (content is Movies) {
+            content.copy(page = content.page.copy(isLoadingMore = true))
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.moviesPaginationSucceeded(
-    moviePage: PageViewModel<WorkViewModel>
-) = updateLoadedContent { content ->
-    if (content is Movies) {
-        content.copy(
-            movies = content.movies + moviePage.results,
-            page = PaginationState(
-                currentPage = moviePage.page,
-                totalPages = moviePage.totalPages,
-                isLoadingMore = false
+fun SearchState.moviesPaginationSucceeded(moviePage: PageViewModel<WorkViewModel>) =
+    updateLoadedContent { content ->
+        if (content is Movies) {
+            content.copy(
+                movies = content.movies + moviePage.results,
+                page =
+                    PaginationState(
+                        currentPage = moviePage.page,
+                        totalPages = moviePage.totalPages,
+                        isLoadingMore = false,
+                    ),
             )
-        )
-    } else {
-        content
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.moviesPaginationFailed() = updateLoadedContent { content ->
-    if (content is Movies) {
-        content.copy(page = content.page.copy(isLoadingMore = false))
-    } else {
-        content
+fun SearchState.moviesPaginationFailed() =
+    updateLoadedContent { content ->
+        if (content is Movies) {
+            content.copy(page = content.page.copy(isLoadingMore = false))
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.tvShowsPaginationStarted() = updateLoadedContent { content ->
-    if (content is TvShows) {
-        content.copy(page = content.page.copy(isLoadingMore = true))
-    } else {
-        content
+fun SearchState.tvShowsPaginationStarted() =
+    updateLoadedContent { content ->
+        if (content is TvShows) {
+            content.copy(page = content.page.copy(isLoadingMore = true))
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.tvShowsPaginationSucceeded(
-    tvShowPage: PageViewModel<WorkViewModel>
-) = updateLoadedContent { content ->
-    if (content is TvShows) {
-        content.copy(
-            tvShows = content.tvShows + tvShowPage.results,
-            page = PaginationState(
-                currentPage = tvShowPage.page,
-                totalPages = tvShowPage.totalPages,
-                isLoadingMore = false
+fun SearchState.tvShowsPaginationSucceeded(tvShowPage: PageViewModel<WorkViewModel>) =
+    updateLoadedContent { content ->
+        if (content is TvShows) {
+            content.copy(
+                tvShows = content.tvShows + tvShowPage.results,
+                page =
+                    PaginationState(
+                        currentPage = tvShowPage.page,
+                        totalPages = tvShowPage.totalPages,
+                        isLoadingMore = false,
+                    ),
             )
-        )
-    } else {
-        content
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.tvShowsPaginationFailed() = updateLoadedContent { content ->
-    if (content is TvShows) {
-        content.copy(page = content.page.copy(isLoadingMore = false))
-    } else {
-        content
+fun SearchState.tvShowsPaginationFailed() =
+    updateLoadedContent { content ->
+        if (content is TvShows) {
+            content.copy(page = content.page.copy(isLoadingMore = false))
+        } else {
+            content
+        }
     }
-}
 
-fun SearchState.workSelected(work: WorkViewModel?) = updateLoadedState {
-    copy(selectedWork = work)
-}
+fun SearchState.workSelected(work: WorkViewModel?) =
+    updateLoadedState {
+        copy(selectedWork = work)
+    }
 
 private fun SearchState.updateLoadedState(transform: Loaded.() -> Loaded): SearchState {
     val loadedState = state as? Loaded ?: return this

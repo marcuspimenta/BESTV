@@ -34,7 +34,7 @@ fun LazyRowPagination(
     listState: LazyListState,
     isLoadingMore: Boolean,
     threshold: Int = 3,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
 ) {
     // Detect when we're near the end of the list
     val shouldLoadMore by remember {
@@ -44,8 +44,9 @@ fun LazyRowPagination(
 
             // Trigger load when the last visible item is within threshold items of the end
             lastVisibleItem != null &&
-            totalItems > 0 &&
-            lastVisibleItem.index >= totalItems - threshold && !isLoadingMore
+                totalItems > 0 &&
+                lastVisibleItem.index >= totalItems - threshold &&
+                !isLoadingMore
         }
     }
 

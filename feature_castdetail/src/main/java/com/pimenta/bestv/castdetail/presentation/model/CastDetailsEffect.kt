@@ -22,5 +22,7 @@ import android.content.Intent
  * Created by marcus on 21-10-2025.
  */
 sealed interface CastDetailsEffect {
-    data class OpenIntent(val intent: Intent, val shareTransition: Boolean) : CastDetailsEffect
+    data class Navigate(
+        val intent: Intent,
+    ) : CastDetailsEffect
 }

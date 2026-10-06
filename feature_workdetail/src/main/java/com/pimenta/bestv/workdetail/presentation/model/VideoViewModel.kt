@@ -22,5 +22,5 @@ data class VideoViewModel(
     var name: String? = null,
     var type: String? = null,
     var thumbnailUrl: String? = null,
-    var youtubeUrl: String? = null
+    var youtubeUrl: String? = null,
 )

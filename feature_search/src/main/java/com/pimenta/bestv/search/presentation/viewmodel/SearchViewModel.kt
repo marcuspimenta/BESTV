@@ -19,6 +19,7 @@ import com.pimenta.bestv.model.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -32,8 +33,8 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -48,9 +49,9 @@ class SearchViewModel(
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRequestProcessor: SearchRequestProcessor,
-    private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor
-) : BaseViewModel<SearchState, SearchEffect>(SearchState()) {
-
+    private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor,
+    private val deviceCapabilities: DeviceCapabilities,
+) : BaseViewModel<SearchState, SearchEffect>(SearchState(isMobileDevice = deviceCapabilities.isMobileDevice)) {
     init {
         observeSearchRequests()
         observeSelectedWorkRequests()
@@ -77,7 +78,7 @@ class SearchViewModel(
     }
 
     private fun handleClearSearch() {
-        updateState { clearSearch() }
+        updateState { state -> state.clearSearch() }
         emitSearchRequest("")
     }
 
@@ -93,7 +94,7 @@ class SearchViewModel(
             errorMessage = "Error while loading more movies",
             loadPage = { query, page -> searchMoviesByQueryUseCase(query, page).toViewModel() },
             onSuccess = SearchState::moviesPaginationSucceeded,
-            onFailure = SearchState::moviesPaginationFailed
+            onFailure = SearchState::moviesPaginationFailed,
         )
     }
 
@@ -109,7 +110,7 @@ class SearchViewModel(
             errorMessage = "Error while loading more TV shows",
             loadPage = { query, page -> searchTvShowsByQueryUseCase(query, page).toViewModel() },
             onSuccess = SearchState::tvShowsPaginationSucceeded,
-            onFailure = SearchState::tvShowsPaginationFailed
+            onFailure = SearchState::tvShowsPaginationFailed,
         )
     }
 
@@ -120,7 +121,7 @@ class SearchViewModel(
 
     private fun handleWorkClicked(work: WorkViewModel) {
         val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(SearchEffect.OpenWorkDetails(intent))
+        emitEffect(SearchEffect.Navigate(intent))
     }
 
     private fun loadMoreContent(
@@ -128,7 +129,7 @@ class SearchViewModel(
         errorMessage: String,
         loadPage: suspend (query: String, page: Int) -> PageViewModel<WorkViewModel>,
         onSuccess: (SearchState, PageViewModel<WorkViewModel>) -> SearchState,
-        onFailure: (SearchState) -> SearchState
+        onFailure: (SearchState) -> SearchState,
     ) {
         viewModelScope.launch {
             try {
@@ -143,10 +144,11 @@ class SearchViewModel(
 
     private fun observeSearchRequests() {
         viewModelScope.launch {
-            searchRequestProcessor.observe()
+            searchRequestProcessor
+                .observe()
                 .collectLatest { action ->
                     when (action) {
-                        is SearchAction.Clear -> updateState { clearSearch() }
+                        is SearchAction.Clear -> updateState { state -> state.clearSearch() }
                         is SearchAction.Search -> performSearch(action.query)
                     }
                 }
@@ -155,7 +157,8 @@ class SearchViewModel(
 
     private fun observeSelectedWorkRequests() {
         viewModelScope.launch {
-            selectedWorkRequestProcessor.observe()
+            selectedWorkRequestProcessor
+                .observe()
                 .collectLatest { action ->
                     if (currentState.state !is Loaded) return@collectLatest
                     when (action) {
@@ -194,13 +197,15 @@ class SearchViewModel(
         }
     }
 
-    private fun SearchState.moviesContent() = (state as? Loaded)
-        ?.contents
-        ?.filterIsInstance<Movies>()
-        ?.firstOrNull()
+    private fun SearchState.moviesContent() =
+        (state as? Loaded)
+            ?.contents
+            ?.filterIsInstance<Movies>()
+            ?.firstOrNull()
 
-    private fun SearchState.tvShowsContent() = (state as? Loaded)
-        ?.contents
-        ?.filterIsInstance<TvShows>()
-        ?.firstOrNull()
+    private fun SearchState.tvShowsContent() =
+        (state as? Loaded)
+            ?.contents
+            ?.filterIsInstance<TvShows>()
+            ?.firstOrNull()
 }

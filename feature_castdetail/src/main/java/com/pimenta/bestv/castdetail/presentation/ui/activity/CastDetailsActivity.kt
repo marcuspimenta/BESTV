@@ -18,8 +18,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.tv.material3.MaterialTheme
-import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
+import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsWrapperScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.route.castdetail.getCastDeepLink
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,11 +28,10 @@ import org.koin.core.parameter.parametersOf
  * Created by marcus on 04-04-2018.
  */
 class CastDetailsActivity : ComponentActivity() {
-
     private val viewModel: CastDetailsViewModel by viewModel {
         parametersOf(
             intent.getCastDeepLink()
-                ?: throw IllegalStateException("CastViewModel not found in intent")
+                ?: throw IllegalStateException("CastViewModel not found in intent"),
         )
     }
 
@@ -41,12 +39,11 @@ class CastDetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
-                CastDetailsScreen(
-                    viewModel = viewModel,
-                    openIntent = { openIntent(it) },
-                )
-            }
+            CastDetailsWrapperScreen(
+                viewModel = viewModel,
+                openIntent = ::openIntent,
+                onBack = ::finish,
+            )
         }
     }
 

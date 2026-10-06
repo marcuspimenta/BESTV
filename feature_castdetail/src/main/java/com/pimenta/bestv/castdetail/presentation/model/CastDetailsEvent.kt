@@ -23,5 +23,8 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
  */
 sealed interface CastDetailsEvent {
     object LoadData : CastDetailsEvent
-    data class WorkClicked(val work: WorkViewModel) : CastDetailsEvent
+
+    data class WorkClicked(
+        val work: WorkViewModel,
+    ) : CastDetailsEvent
 }

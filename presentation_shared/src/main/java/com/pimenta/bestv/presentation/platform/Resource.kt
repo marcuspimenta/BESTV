@@ -20,7 +20,10 @@ import androidx.annotation.StringRes
 /**
  * Created by marcus on 9-12-2019.
  */
-class Resource(private val application: Application) {
-
-    fun getStringResource(@StringRes resourceId: Int) = application.getString(resourceId)
+class Resource(
+    private val application: Application,
+) {
+    fun getStringResource(
+        @StringRes resourceId: Int,
+    ) = application.getString(resourceId)
 }

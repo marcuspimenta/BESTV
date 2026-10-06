@@ -28,7 +28,6 @@ import timber.log.Timber
  * Created by marcus on 07-02-2018.
  */
 class BesTVApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
         initKoin()
@@ -47,13 +46,15 @@ class BesTVApplication : Application() {
         if (BuildConfig.BUILD_TYPE == "debug") {
             Timber.plant(Timber.DebugTree())
             StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
+                StrictMode.ThreadPolicy
+                    .Builder()
                     .detectAll()
                     .penaltyLog()
                     .build(),
             )
             StrictMode.setVmPolicy(
-                StrictMode.VmPolicy.Builder()
+                StrictMode.VmPolicy
+                    .Builder()
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()

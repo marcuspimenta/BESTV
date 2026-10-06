@@ -1,0 +1,129 @@
+/*
+ * Copyright (C) 2018 Marcus Pimenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.pimenta.bestv.presentation.ui.compose.tv
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.tv.material3.Card
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.StandardCardContainer
+import androidx.tv.material3.Text
+import coil3.compose.SubcomposeAsyncImage
+import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.theme.BESTVTheme
+
+@Composable
+fun TVWorkCard(
+    work: WorkViewModel,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onFocusChanged: (Boolean) -> Unit = {},
+    includeWorkTitle: Boolean = true,
+) {
+    StandardCardContainer(
+        modifier = Modifier.width(BESTVTheme.scale.s1250),
+        imageCard = { interactionSource ->
+            Card(
+                onClick = onClick,
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .height(BESTVTheme.scale.s715)
+                        .onFocusChanged { focusState ->
+                            onFocusChanged(focusState.isFocused)
+                        },
+                interactionSource = interactionSource,
+            ) {
+                // Poster image
+                SubcomposeAsyncImage(
+                    model = work.backdropUrl,
+                    contentDescription = work.title,
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(BESTVTheme.scale.s240),
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    },
+                )
+            }
+        },
+        title = {
+            if (includeWorkTitle) {
+                Text(
+                    text = work.title,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = BESTVTheme.colors.white,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = BESTVTheme.scale.s090),
+                )
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun TVWorkCardPreview() {
+    MaterialTheme {
+        TVWorkCard(
+            work =
+                WorkViewModel(
+                    id = 1,
+                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                    originalTitle = "The Dark Knight",
+                    posterUrl = "",
+                    type = WorkType.MOVIE,
+                    source = "TMDB",
+                    originalLanguage = "",
+                    overview = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    voteAverage = 0f,
+                    isFavorite = false,
+                ),
+            onClick = {},
+        )
+    }
+}

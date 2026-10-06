@@ -27,26 +27,29 @@ import kotlinx.coroutines.flow.merge
 private const val BACKGROUND_UPDATE_DELAY = 300L
 
 class SelectedWorkRequestProcessor {
-
     private val selectedWorkRequests = MutableSharedFlow<WorkViewModel?>(replay = 1, extraBufferCapacity = 1)
 
     @OptIn(FlowPreview::class)
-    fun observe(): Flow<SelectedWorkAction> = merge(
-        selectedWorkRequests
-            .debounce(BACKGROUND_UPDATE_DELAY)
-            .filterNotNull()
-            .map { SelectedWorkAction.Select(it) },
-        selectedWorkRequests
-            .filter { it == null }
-            .map { SelectedWorkAction.Clear }
-    )
+    fun observe(): Flow<SelectedWorkAction> =
+        merge(
+            selectedWorkRequests
+                .debounce(BACKGROUND_UPDATE_DELAY)
+                .filterNotNull()
+                .map { SelectedWorkAction.Select(it) },
+            selectedWorkRequests
+                .filter { it == null }
+                .map { SelectedWorkAction.Clear },
+        )
 
     suspend fun emitSelectedWorkRequest(work: WorkViewModel?) {
         selectedWorkRequests.emit(work)
     }
 
     sealed interface SelectedWorkAction {
-        data class Select(val work: WorkViewModel) : SelectedWorkAction
+        data class Select(
+            val work: WorkViewModel,
+        ) : SelectedWorkAction
+
         data object Clear : SelectedWorkAction
     }
 }

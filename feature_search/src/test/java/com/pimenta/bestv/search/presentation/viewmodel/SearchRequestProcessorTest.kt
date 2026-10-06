@@ -30,60 +30,67 @@ private const val QUERY = "Batman"
 private const val UPDATED_QUERY = "Batman Begins"
 
 class SearchRequestProcessorTest {
-
     private val processor = SearchRequestProcessor()
 
     @Test
-    fun `should emit search action after debounce`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(1000) { processor.observe().first() }
+    fun `should emit search action after debounce`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(1000) { processor.observe().first() }
+                }
+
+            processor.emitSearchRequest(QUERY)
+
+            assertEquals(SearchAction.Search(QUERY), action.await())
         }
-
-        processor.emitSearchRequest(QUERY)
-
-        assertEquals(SearchAction.Search(QUERY), action.await())
-    }
 
     @Test
-    fun `should emit only latest search query when requests change quickly`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(1500) { processor.observe().first() }
+    fun `should emit only latest search query when requests change quickly`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(1500) { processor.observe().first() }
+                }
+
+            processor.emitSearchRequest(QUERY)
+            delay(250)
+            processor.emitSearchRequest(UPDATED_QUERY)
+
+            assertEquals(SearchAction.Search(UPDATED_QUERY), action.await())
         }
-
-        processor.emitSearchRequest(QUERY)
-        delay(250)
-        processor.emitSearchRequest(UPDATED_QUERY)
-
-        assertEquals(SearchAction.Search(UPDATED_QUERY), action.await())
-    }
 
     @Test
-    fun `should not emit duplicate search actions for same query`() = runBlocking {
-        val actions = mutableListOf<SearchAction>()
+    fun `should not emit duplicate search actions for same query`() =
+        runBlocking {
+            val actions = mutableListOf<SearchAction>()
 
-        val collector = launch(start = CoroutineStart.UNDISPATCHED) {
-            processor.observe().collect(actions::add)
+            val collector =
+                launch(start = CoroutineStart.UNDISPATCHED) {
+                    processor.observe().collect(actions::add)
+                }
+
+            processor.emitSearchRequest(QUERY)
+            delay(600)
+            processor.emitSearchRequest(QUERY)
+            delay(600)
+
+            assertEquals(listOf(SearchAction.Search(QUERY)), actions)
+            collector.cancel()
         }
-
-        processor.emitSearchRequest(QUERY)
-        delay(600)
-        processor.emitSearchRequest(QUERY)
-        delay(600)
-
-        assertEquals(listOf(SearchAction.Search(QUERY)), actions)
-        collector.cancel()
-    }
 
     @Test
-    fun `should emit clear immediately and cancel pending search`() = runBlocking {
-        val action = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(500) { processor.observe().first() }
+    fun `should emit clear immediately and cancel pending search`() =
+        runBlocking {
+            val action =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    withTimeout(500) { processor.observe().first() }
+                }
+
+            processor.emitSearchRequest(QUERY)
+            delay(250)
+            processor.emitSearchRequest("")
+
+            assertEquals(SearchAction.Clear, action.await())
         }
-
-        processor.emitSearchRequest(QUERY)
-        delay(250)
-        processor.emitSearchRequest("")
-
-        assertEquals(SearchAction.Clear, action.await())
-    }
 }

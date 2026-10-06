@@ -22,5 +22,8 @@ import android.content.Intent
  */
 sealed interface WorkBrowseEffect {
     data object CloseScreen : WorkBrowseEffect
-    data class Navigate(val intent: Intent) : WorkBrowseEffect
+
+    data class Navigate(
+        val intent: Intent,
+    ) : WorkBrowseEffect
 }
