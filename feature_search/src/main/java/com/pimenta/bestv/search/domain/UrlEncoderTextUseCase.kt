@@ -22,8 +22,6 @@ import java.net.URLEncoder
  */
 private const val enc = "UTF-8"
 
-class UrlEncoderTextUseCase() {
-
-    suspend operator fun invoke(text: String): String =
-        coroutineScope { URLEncoder.encode(text, enc) }
+class UrlEncoderTextUseCase {
+    suspend operator fun invoke(text: String): String = coroutineScope { URLEncoder.encode(text, enc) }
 }

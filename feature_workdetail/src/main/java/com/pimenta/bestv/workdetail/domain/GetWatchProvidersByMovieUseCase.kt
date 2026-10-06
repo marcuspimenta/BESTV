@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository
  * Use case to get watch providers for a movie.
  */
 class GetWatchProvidersByMovieUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(movieId: Int, countryCode: String) =
-        movieRepository.getWatchProvidersByMovie(movieId, countryCode)
+    suspend operator fun invoke(
+        movieId: Int,
+        countryCode: String,
+    ) = movieRepository.getWatchProvidersByMovie(movieId, countryCode)
 }

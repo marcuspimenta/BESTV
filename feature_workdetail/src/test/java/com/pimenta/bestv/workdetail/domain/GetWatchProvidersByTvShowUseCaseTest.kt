@@ -14,58 +14,62 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 private const val TV_SHOW_ID = 1
 private const val COUNTRY_CODE = "US"
-private val WATCH_PROVIDERS = WatchProvidersDomainModel(
-    tmdbLink = "https://www.themoviedb.org/tv/1/watch",
-    streaming = listOf(
-        WatchProviderDomainModel(
-            id = 1,
-            name = "Netflix",
-            logoPath = "/logo.jpg",
-            displayPriority = 1
-        )
-    ),
-    rent = emptyList(),
-    buy = emptyList()
-)
-
-class GetWatchProvidersByTvShowUseCaseTest {
-
-    private val tvShowRepository: TvShowRepository = mock()
-
-    private val useCase = GetWatchProvidersByTvShowUseCase(
-        tvShowRepository
+private val WATCH_PROVIDERS =
+    WatchProvidersDomainModel(
+        tmdbLink = "https://www.themoviedb.org/tv/1/watch",
+        streaming =
+            listOf(
+                WatchProviderDomainModel(
+                    id = 1,
+                    name = "Netflix",
+                    logoPath = "/logo.jpg",
+                    displayPriority = 1,
+                ),
+            ),
+        rent = emptyList(),
+        buy = emptyList(),
     )
 
-    @Test
-    fun `should return the right data when loading the watch providers`() = runTest {
-        whenever(tvShowRepository.getWatchProvidersByTvShow(TV_SHOW_ID, COUNTRY_CODE))
-            .thenReturn(WATCH_PROVIDERS)
+class GetWatchProvidersByTvShowUseCaseTest {
+    private val tvShowRepository: TvShowRepository = mock()
 
-        val result = useCase(TV_SHOW_ID, COUNTRY_CODE)
-
-        assertEquals(WATCH_PROVIDERS, result)
-    }
+    private val useCase =
+        GetWatchProvidersByTvShowUseCase(
+            tvShowRepository,
+        )
 
     @Test
-    fun `should return an error when some exception happens`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(tvShowRepository.getWatchProvidersByTvShow(TV_SHOW_ID, COUNTRY_CODE))
-            .thenThrow(exception)
+    fun `should return the right data when loading the watch providers`() =
+        runTest {
+            whenever(tvShowRepository.getWatchProvidersByTvShow(TV_SHOW_ID, COUNTRY_CODE))
+                .thenReturn(WATCH_PROVIDERS)
 
-        assertFailsWith<RuntimeException> {
-            useCase(TV_SHOW_ID, COUNTRY_CODE)
+            val result = useCase(TV_SHOW_ID, COUNTRY_CODE)
+
+            assertEquals(WATCH_PROVIDERS, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(tvShowRepository.getWatchProvidersByTvShow(TV_SHOW_ID, COUNTRY_CODE))
+                .thenThrow(exception)
+
+            assertFailsWith<RuntimeException> {
+                useCase(TV_SHOW_ID, COUNTRY_CODE)
+            }
+        }
 }

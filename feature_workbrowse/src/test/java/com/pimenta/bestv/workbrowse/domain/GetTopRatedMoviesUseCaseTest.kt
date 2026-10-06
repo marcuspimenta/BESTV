@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
@@ -23,44 +21,49 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 private const val PAGE = 1
-private val PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 10,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Top Rated Movie",
-            originalTitle = "Top Rated Movie",
-            type = WorkDomainModel.Type.MOVIE
-        )
+private val PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 10,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Top Rated Movie",
+                    originalTitle = "Top Rated Movie",
+                    type = WorkDomainModel.Type.MOVIE,
+                ),
+            ),
     )
-)
 
 class GetTopRatedMoviesUseCaseTest {
-
     private val movieRepository: MovieRepository = mock()
     private val useCase = GetTopRatedMoviesUseCase(movieRepository)
 
     @Test
-    fun `should return top rated movies from repository`() = runTest {
-        whenever(movieRepository.getTopRatedMovies(PAGE)).thenReturn(PAGE_DOMAIN_MODEL)
+    fun `should return top rated movies from repository`() =
+        runTest {
+            whenever(movieRepository.getTopRatedMovies(PAGE)).thenReturn(PAGE_DOMAIN_MODEL)
 
-        val result = useCase(PAGE)
+            val result = useCase(PAGE)
 
-        assertEquals(PAGE_DOMAIN_MODEL, result)
-    }
+            assertEquals(PAGE_DOMAIN_MODEL, result)
+        }
 
     @Test
-    fun `should throw exception when repository fails`() = runTest {
-        whenever(movieRepository.getTopRatedMovies(PAGE)).thenThrow(RuntimeException("Network error"))
+    fun `should throw exception when repository fails`() =
+        runTest {
+            whenever(movieRepository.getTopRatedMovies(PAGE)).thenThrow(RuntimeException("Network error"))
 
-        try {
-            useCase(PAGE)
-            fail("Expected RuntimeException")
-        } catch (e: RuntimeException) {
-            assertEquals("Network error", e.message)
+            try {
+                useCase(PAGE)
+                fail("Expected RuntimeException")
+            } catch (e: RuntimeException) {
+                assertEquals("Network error", e.message)
+            }
         }
-    }
 }

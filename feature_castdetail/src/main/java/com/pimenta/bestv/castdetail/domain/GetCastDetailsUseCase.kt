@@ -26,9 +26,8 @@ import kotlinx.coroutines.coroutineScope
 class GetCastDetailsUseCase(
     private val getCastPersonalDetails: GetCastPersonalDetails,
     private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase,
-    private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase
+    private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase,
 ) {
-
     suspend operator fun invoke(castId: Int): Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?> =
         coroutineScope {
             val castViewModel = async { getCastPersonalDetails(castId) }

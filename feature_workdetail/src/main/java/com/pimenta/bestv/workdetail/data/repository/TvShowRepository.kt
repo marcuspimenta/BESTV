@@ -29,14 +29,11 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchPro
 class TvShowRepository(
     private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
-    private val tvShowRemoteDataSource: TvShowRemoteDataSource
+    private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) {
+    suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
 
-    suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-        tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
-
-    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
+    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
 
     suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean {
         val tvShow = tvShowLocalDataSource.getById(tvShowDbModel)
@@ -51,20 +48,26 @@ class TvShowRepository(
             }
         }
 
-    suspend fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
-        tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
-            val source = resource.getStringResource(R.string.source_tmdb)
-            response.toDomainModel(source)
-        }
+    suspend fun getRecommendationByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
+        val source = resource.getStringResource(R.string.source_tmdb)
+        response.toDomainModel(source)
+    }
 
-    suspend fun getSimilarByTvShow(tvShowId: Int, page: Int) =
-        tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
-            val source = resource.getStringResource(R.string.source_tmdb)
-            response.toDomainModel(source)
-        }
+    suspend fun getSimilarByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
+        val source = resource.getStringResource(R.string.source_tmdb)
+        response.toDomainModel(source)
+    }
 
-    suspend fun getReviewByTvShow(tvShowId: Int, page: Int) =
-        tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page).toDomainModel()
+    suspend fun getReviewByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page).toDomainModel()
 
     suspend fun getVideosByTvShow(tvShowId: Int) =
         tvShowRemoteDataSource.getVideosByTvShow(tvShowId).let { response ->
@@ -73,6 +76,8 @@ class TvShowRepository(
             }
         }
 
-    suspend fun getWatchProvidersByTvShow(tvShowId: Int, countryCode: String) =
-        tvShowRemoteDataSource.getWatchProvidersByTvShow(tvShowId).watchProvidersToDomainModel(countryCode)
+    suspend fun getWatchProvidersByTvShow(
+        tvShowId: Int,
+        countryCode: String,
+    ) = tvShowRemoteDataSource.getWatchProvidersByTvShow(tvShowId).watchProvidersToDomainModel(countryCode)
 }

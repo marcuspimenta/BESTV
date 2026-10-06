@@ -23,15 +23,17 @@ import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
  * Created by marcus on 20-04-2020.
  */
 
-fun PageResponse<ReviewResponse>.toDomainModel() = PageDomainModel(
-    page = page,
-    totalPages = totalPages,
-    results = results?.map { it.toDomainModel() }
-)
+fun PageResponse<ReviewResponse>.toDomainModel() =
+    PageDomainModel(
+        page = page,
+        totalPages = totalPages,
+        results = results?.map { it.toDomainModel() },
+    )
 
-private fun ReviewResponse.toDomainModel() = ReviewDomainModel(
-    id = id,
-    author = author,
-    content = content,
-    url = url
-)
+private fun ReviewResponse.toDomainModel() =
+    ReviewDomainModel(
+        id = id,
+        author = author,
+        content = content,
+        url = url,
+    )

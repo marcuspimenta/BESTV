@@ -23,12 +23,11 @@ import retrofit2.http.Query
  * Created by marcus on 06/07/18.
  */
 interface SearchTvShowTmdbApi {
-
     @GET("search/tv")
     suspend fun searchTvShowsByQuery(
         @Query("api_key") apiKey: String,
         @Query("query") query: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 }

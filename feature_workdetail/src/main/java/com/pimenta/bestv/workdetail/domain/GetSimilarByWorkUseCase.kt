@@ -21,12 +21,14 @@ import com.pimenta.bestv.model.presentation.model.WorkType
  */
 class GetSimilarByWorkUseCase(
     private val getSimilarByMovieUseCase: GetSimilarByMovieUseCase,
-    private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase
+    private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase,
 ) {
-
-    suspend operator fun invoke(workType: WorkType, workId: Int, page: Int) =
-        when (workType) {
-            WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
-            WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
-        }
+    suspend operator fun invoke(
+        workType: WorkType,
+        workId: Int,
+        page: Int,
+    ) = when (workType) {
+        WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
+        WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
+    }
 }

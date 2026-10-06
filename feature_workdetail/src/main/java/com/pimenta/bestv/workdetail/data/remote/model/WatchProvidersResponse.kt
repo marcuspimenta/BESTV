@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class WatchProvidersResponse(
     @SerializedName("id") val id: Int = 0,
-    @SerializedName("results") val results: Map<String, CountryWatchProvidersResponse>? = null
+    @SerializedName("results") val results: Map<String, CountryWatchProvidersResponse>? = null,
 )
 
 /**
@@ -34,7 +34,7 @@ data class CountryWatchProvidersResponse(
     @SerializedName("rent") val rent: List<WatchProviderResponse>? = null,
     @SerializedName("buy") val buy: List<WatchProviderResponse>? = null,
     @SerializedName("ads") val ads: List<WatchProviderResponse>? = null,
-    @SerializedName("free") val free: List<WatchProviderResponse>? = null
+    @SerializedName("free") val free: List<WatchProviderResponse>? = null,
 )
 
 /**
@@ -44,5 +44,5 @@ data class WatchProviderResponse(
     @SerializedName("display_priority") val displayPriority: Int? = null,
     @SerializedName("logo_path") val logoPath: String? = null,
     @SerializedName("provider_id") val providerId: Int? = null,
-    @SerializedName("provider_name") val providerName: String? = null
+    @SerializedName("provider_name") val providerName: String? = null,
 )

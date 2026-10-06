@@ -14,8 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
@@ -23,95 +21,107 @@ import com.pimenta.bestv.workbrowse.presentation.model.Source
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRE = GenreViewModel(
-    id = 1,
-    source = Source.MOVIE
-)
-private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.MOVIE
-        )
+private val MOVIE_GENRE =
+    GenreViewModel(
+        id = 1,
+        source = Source.MOVIE,
     )
-)
-private val TV_SHOW_GENRE = GenreViewModel(
-    id = 1,
-    source = Source.TV_SHOW
-)
-private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.TV_SHOW
-        )
+private val MOVIE_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                    type = WorkDomainModel.Type.MOVIE,
+                ),
+            ),
     )
-)
+private val TV_SHOW_GENRE =
+    GenreViewModel(
+        id = 1,
+        source = Source.TV_SHOW,
+    )
+private val TV_SHOW_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                    type = WorkDomainModel.Type.TV_SHOW,
+                ),
+            ),
+    )
 
 class GetWorkByGenreUseCaseTest {
-
     private val getMovieByGenreUseCase: GetMovieByGenreUseCase = mock()
     private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase = mock()
-    private val useCase = GetWorkByGenreUseCase(
-        getMovieByGenreUseCase,
-        getTvShowByGenreUseCase
-    )
+    private val useCase =
+        GetWorkByGenreUseCase(
+            getMovieByGenreUseCase,
+            getTvShowByGenreUseCase,
+        )
 
     @Test
-    fun `should return the right data when loading a movie page`() = runTest {
-        whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-            .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
+    fun `should return the right data when loading a movie page`() =
+        runTest {
+            whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
+                .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
-        val result = useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
+            val result = useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
 
-        Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when loading a movie page`() = runTest {
-        whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
-            .thenThrow(RuntimeException())
-
-        try {
-            useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
-            Assert.fail("Expected exception")
-        } catch (e: RuntimeException) {
-            // Expected
+            Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
         }
-    }
 
     @Test
-    fun `should return the right data when loading a tv show page`() = runTest {
-        whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-            .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
+    fun `should return an error when some exception happens when loading a movie page`() =
+        runTest {
+            whenever(getMovieByGenreUseCase(MOVIE_GENRE.id, 1))
+                .thenThrow(RuntimeException())
 
-        val result = useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
-
-        Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when loading a tv show page`() = runTest {
-        whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
-            .thenThrow(RuntimeException())
-
-        try {
-            useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
-            Assert.fail("Expected exception")
-        } catch (e: RuntimeException) {
-            // Expected
+            try {
+                useCase(MOVIE_GENRE.id, MOVIE_GENRE.source, 1)
+                Assert.fail("Expected exception")
+            } catch (e: RuntimeException) {
+                // Expected
+            }
         }
-    }
+
+    @Test
+    fun `should return the right data when loading a tv show page`() =
+        runTest {
+            whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
+                .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
+
+            val result = useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
+
+            Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
+        }
+
+    @Test
+    fun `should return an error when some exception happens when loading a tv show page`() =
+        runTest {
+            whenever(getTvShowByGenreUseCase(TV_SHOW_GENRE.id, 1))
+                .thenThrow(RuntimeException())
+
+            try {
+                useCase(TV_SHOW_GENRE.id, TV_SHOW_GENRE.source, 1)
+                Assert.fail("Expected exception")
+            } catch (e: RuntimeException) {
+                // Expected
+            }
+        }
 }

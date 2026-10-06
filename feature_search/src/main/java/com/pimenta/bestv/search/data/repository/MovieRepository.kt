@@ -24,12 +24,13 @@ import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
  */
 class MovieRepository(
     private val resource: Resource,
-    private val movieRemoteDataSource: MovieRemoteDataSource
+    private val movieRemoteDataSource: MovieRemoteDataSource,
 ) {
-
-    suspend fun searchMoviesByQuery(query: String, page: Int) =
-        movieRemoteDataSource.searchMoviesByQuery(query, page).run {
-            val source = resource.getStringResource(R.string.source_tmdb)
-            toDomainModel(source)
-        }
+    suspend fun searchMoviesByQuery(
+        query: String,
+        page: Int,
+    ) = movieRemoteDataSource.searchMoviesByQuery(query, page).run {
+        val source = resource.getStringResource(R.string.source_tmdb)
+        toDomainModel(source)
+    }
 }

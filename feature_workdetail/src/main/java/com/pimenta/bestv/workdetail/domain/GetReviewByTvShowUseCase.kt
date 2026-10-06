@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  * Created by marcus on 20-04-2020.
  */
 class GetReviewByTvShowUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int, page: Int) =
-        tvShowRepository.getReviewByTvShow(workId, page)
+    suspend operator fun invoke(
+        workId: Int,
+        page: Int,
+    ) = tvShowRepository.getReviewByTvShow(workId, page)
 }

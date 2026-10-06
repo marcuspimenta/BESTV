@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  * Created by marcus on 23-10-2019.
  */
 class GetSimilarByTvShowUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int, page: Int) =
-        tvShowRepository.getSimilarByTvShow(workId, page)
+    suspend operator fun invoke(
+        workId: Int,
+        page: Int,
+    ) = tvShowRepository.getSimilarByTvShow(workId, page)
 }

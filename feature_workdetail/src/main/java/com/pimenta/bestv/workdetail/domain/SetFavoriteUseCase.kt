@@ -26,9 +26,8 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  */
 class SetFavoriteUseCase(
     private val movieRepository: MovieRepository,
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
     suspend operator fun invoke(workViewModel: WorkViewModel) {
         when (workViewModel.type) {
             WorkType.MOVIE -> {

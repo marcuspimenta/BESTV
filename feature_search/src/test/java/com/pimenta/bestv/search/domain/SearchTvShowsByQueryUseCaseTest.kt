@@ -14,53 +14,57 @@
 
 package com.pimenta.bestv.search.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.search.data.repository.TvShowRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 2019-08-28.
  */
 private const val QUERY = "Batman"
-private val WORK_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman"
-        )
+private val WORK_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                ),
+            ),
     )
-)
 
 class SearchTvShowsByQueryUseCaseTest {
-
     private val tvShowRepository: TvShowRepository = mock()
-    private val useCase = SearchTvShowsByQueryUseCase(
-        tvShowRepository
-    )
+    private val useCase =
+        SearchTvShowsByQueryUseCase(
+            tvShowRepository,
+        )
 
     @Test
-    fun `should return the right data when searching tv show by query`() = runTest {
-        whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1)).thenReturn(WORK_PAGE)
+    fun `should return the right data when searching tv show by query`() =
+        runTest {
+            whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1)).thenReturn(WORK_PAGE)
 
-        val result = useCase(QUERY, 1)
-        assertEquals(result, WORK_PAGE)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1)).thenThrow(RuntimeException())
-
-        assertFailsWith<RuntimeException> {
-            useCase(QUERY, 1)
+            val result = useCase(QUERY, 1)
+            assertEquals(result, WORK_PAGE)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(tvShowRepository.searchTvShowsByQuery(QUERY, 1)).thenThrow(RuntimeException())
+
+            assertFailsWith<RuntimeException> {
+                useCase(QUERY, 1)
+            }
+        }
 }

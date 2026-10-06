@@ -24,5 +24,5 @@ data class VideoResponse(
     @SerializedName("key") var key: String? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("site") var site: String? = null,
-    @SerializedName("type") var type: String? = null
+    @SerializedName("type") var type: String? = null,
 )

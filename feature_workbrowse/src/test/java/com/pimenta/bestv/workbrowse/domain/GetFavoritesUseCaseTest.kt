@@ -14,59 +14,63 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Created by marcus on 2019-08-23.
  */
-private val WORK_DOMAIN_MODEL = WorkDomainModel(
-    id = 1,
-    title = "Batman",
-    originalTitle = "Batman",
-    type = WorkDomainModel.Type.MOVIE
-)
-private val WORK_PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(WORK_DOMAIN_MODEL)
-)
+private val WORK_DOMAIN_MODEL =
+    WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        type = WorkDomainModel.Type.MOVIE,
+    )
+private val WORK_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results = listOf(WORK_DOMAIN_MODEL),
+    )
 
 class GetFavoritesUseCaseTest {
-
     private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase = mock()
     private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase = mock()
 
-    private val useCase = GetFavoritesUseCase(
-        getFavoriteMoviesUseCase,
-        getFavoriteTvShowsUseCase
-    )
+    private val useCase =
+        GetFavoritesUseCase(
+            getFavoriteMoviesUseCase,
+            getFavoriteTvShowsUseCase,
+        )
 
     @Test
-    fun `should return the right data when loading the favorites`() = runTest {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
-        whenever(getFavoriteTvShowsUseCase()).thenReturn(emptyList())
+    fun `should return the right data when loading the favorites`() =
+        runTest {
+            whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+            whenever(getFavoriteTvShowsUseCase()).thenReturn(emptyList())
 
-        val result = useCase()
+            val result = useCase()
 
-        Assert.assertEquals(WORK_PAGE_DOMAIN_MODEL, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
-        whenever(getFavoriteTvShowsUseCase()).thenThrow(RuntimeException())
-
-        try {
-            useCase()
-            Assert.fail("Expected exception")
-        } catch (e: RuntimeException) {
-            // Expected
+            Assert.assertEquals(WORK_PAGE_DOMAIN_MODEL, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(getFavoriteMoviesUseCase()).thenReturn(listOf(WORK_DOMAIN_MODEL))
+            whenever(getFavoriteTvShowsUseCase()).thenThrow(RuntimeException())
+
+            try {
+                useCase()
+                Assert.fail("Expected exception")
+            } catch (e: RuntimeException) {
+                // Expected
+            }
+        }
 }

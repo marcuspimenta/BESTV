@@ -26,9 +26,8 @@ import kotlinx.coroutines.coroutineScope
 class SearchWorksByQueryUseCase(
     private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
-    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
 ) {
-
     suspend operator fun invoke(query: String): Pair<PageDomainModel<WorkDomainModel>, PageDomainModel<WorkDomainModel>> =
         coroutineScope {
             val urlEncoder = async { urlEncoderTextUseCase(query) }.await()

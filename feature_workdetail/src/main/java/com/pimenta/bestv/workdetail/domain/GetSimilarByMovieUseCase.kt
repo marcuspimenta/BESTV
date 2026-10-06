@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository
  * Created by marcus on 23-10-2019.
  */
 class GetSimilarByMovieUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int, page: Int) =
-        movieRepository.getSimilarByMovie(workId, page)
+    suspend operator fun invoke(
+        workId: Int,
+        page: Int,
+    ) = movieRepository.getSimilarByMovie(workId, page)
 }

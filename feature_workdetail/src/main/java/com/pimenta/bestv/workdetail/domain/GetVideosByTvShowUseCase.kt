@@ -20,9 +20,7 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  * Created by marcus on 22-10-2019.
  */
 class GetVideosByTvShowUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int) =
-        tvShowRepository.getVideosByTvShow(workId)
+    suspend operator fun invoke(workId: Int) = tvShowRepository.getVideosByTvShow(workId)
 }

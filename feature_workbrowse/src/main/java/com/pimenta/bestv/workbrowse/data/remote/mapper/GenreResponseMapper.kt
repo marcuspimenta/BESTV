@@ -17,9 +17,11 @@ package com.pimenta.bestv.workbrowse.data.remote.mapper
 import com.pimenta.bestv.workbrowse.data.remote.model.GenreResponse
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 
-fun GenreResponse.toDomainModel() = GenreDomainModel(
-    id = id,
-    name = name,
-    source = GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
-        ?: GenreDomainModel.Source.TV_SHOW
-)
+fun GenreResponse.toDomainModel() =
+    GenreDomainModel(
+        id = id,
+        name = name,
+        source =
+            GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
+                ?: GenreDomainModel.Source.TV_SHOW,
+    )

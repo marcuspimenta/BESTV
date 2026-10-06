@@ -20,11 +20,10 @@ package com.pimenta.bestv.workbrowse.domain.model
 data class GenreDomainModel(
     val id: Int = 0,
     val name: String? = null,
-    val source: Source = Source.MOVIE
+    val source: Source = Source.MOVIE,
 ) {
-
     enum class Source {
         MOVIE,
-        TV_SHOW
+        TV_SHOW,
     }
 }

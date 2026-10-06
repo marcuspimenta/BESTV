@@ -14,48 +14,51 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
 import com.pimenta.bestv.model.domain.CastDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-05-2018.
  */
 private const val CAST_ID = 1
-private val CAST_DETAILED = CastDomainModel(
-    id = 1,
-    name = "Carlos",
-    character = "Batman",
-    birthday = "1990-07-13"
-)
-
-class GetCastPersonalDetailsTest {
-
-    private val castRepository: CastRepository = mock()
-
-    private val useCase = GetCastPersonalDetails(
-        castRepository
+private val CAST_DETAILED =
+    CastDomainModel(
+        id = 1,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13",
     )
 
+class GetCastPersonalDetailsTest {
+    private val castRepository: CastRepository = mock()
+
+    private val useCase =
+        GetCastPersonalDetails(
+            castRepository,
+        )
+
     @Test
-    fun `should return the right data when loading the cast personal details`() = runTest {
-        whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+    fun `should return the right data when loading the cast personal details`() =
+        runTest {
+            whenever(castRepository.getCastDetails(CAST_ID)).thenReturn(CAST_DETAILED)
 
-        val result = useCase(CAST_ID)
-        assertEquals(result, CAST_DETAILED)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(castRepository.getCastDetails(CAST_ID)).thenThrow(RuntimeException())
-
-        assertFailsWith<RuntimeException> {
-            useCase(CAST_ID)
+            val result = useCase(CAST_ID)
+            assertEquals(result, CAST_DETAILED)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(castRepository.getCastDetails(CAST_ID)).thenThrow(RuntimeException())
+
+            assertFailsWith<RuntimeException> {
+                useCase(CAST_ID)
+            }
+        }
 }

@@ -21,12 +21,14 @@ import com.pimenta.bestv.workbrowse.presentation.model.Source
  */
 class GetWorkByGenreUseCase(
     private val getMovieByGenreUseCase: GetMovieByGenreUseCase,
-    private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase
+    private val getTvShowByGenreUseCase: GetTvShowByGenreUseCase,
 ) {
-
-    suspend operator fun invoke(genreId: Int, genreSource: Source, page: Int) =
-        when (genreSource) {
-            Source.MOVIE -> getMovieByGenreUseCase(genreId, page)
-            Source.TV_SHOW -> getTvShowByGenreUseCase(genreId, page)
-        }
+    suspend operator fun invoke(
+        genreId: Int,
+        genreSource: Source,
+        page: Int,
+    ) = when (genreSource) {
+        Source.MOVIE -> getMovieByGenreUseCase(genreId, page)
+        Source.TV_SHOW -> getTvShowByGenreUseCase(genreId, page)
+    }
 }

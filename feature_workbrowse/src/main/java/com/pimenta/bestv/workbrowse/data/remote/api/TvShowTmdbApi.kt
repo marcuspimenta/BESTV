@@ -24,12 +24,11 @@ import retrofit2.http.Query
  * Created by marcus on 20-10-2019.
  */
 interface TvShowTmdbApi {
-
     @GET("tv/{tv_id}")
     suspend fun getTvShow(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Query("language") language: String,
     ): TvShowResponse
 
     @GET("discover/tv")
@@ -38,34 +37,34 @@ interface TvShowTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/airing_today")
     suspend fun getAiringTodayTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/on_the_air")
     suspend fun getOnTheAirTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/popular")
     suspend fun getPopularTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTvShows(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 }

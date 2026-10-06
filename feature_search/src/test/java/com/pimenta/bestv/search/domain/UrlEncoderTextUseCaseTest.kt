@@ -25,12 +25,12 @@ private const val TEXT = "Game of thrones"
 private const val TEXT_ENCODED = "Game+of+thrones"
 
 class UrlEncoderTextUseCaseTest {
-
     private val useCase = UrlEncoderTextUseCase()
 
     @Test
-    fun `should return the right data when encoding a text`() = runTest {
-        val result = useCase(TEXT)
-        assertEquals(result, TEXT_ENCODED)
-    }
+    fun `should return the right data when encoding a text`() =
+        runTest {
+            val result = useCase(TEXT)
+            assertEquals(result, TEXT_ENCODED)
+        }
 }

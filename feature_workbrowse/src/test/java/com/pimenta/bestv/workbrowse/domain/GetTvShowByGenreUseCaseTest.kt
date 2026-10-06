@@ -14,61 +14,65 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Created by marcus on 2019-10-21.
  */
 private const val GENRE_ID = 1
 private const val PAGE = 1
-private val TV_SHOW_PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.TV_SHOW
-        )
+private val TV_SHOW_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                    type = WorkDomainModel.Type.TV_SHOW,
+                ),
+            ),
     )
-)
 
 class GetTvShowByGenreUseCaseTest {
-
     private val tvShowRepository: TvShowRepository = mock()
 
-    private val useCase = GetTvShowByGenreUseCase(
-        tvShowRepository
-    )
+    private val useCase =
+        GetTvShowByGenreUseCase(
+            tvShowRepository,
+        )
 
     @Test
-    fun `should return the right data when loading the tv shows by genre`() = runTest {
-        whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-            .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
+    fun `should return the right data when loading the tv shows by genre`() =
+        runTest {
+            whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
+                .thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL)
 
-        val result = useCase(GENRE_ID, PAGE)
+            val result = useCase(GENRE_ID, PAGE)
 
-        Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
-            .thenThrow(RuntimeException())
-
-        try {
-            useCase(GENRE_ID, PAGE)
-            Assert.fail("Expected exception")
-        } catch (e: RuntimeException) {
-            // Expected
+            Assert.assertEquals(TV_SHOW_PAGE_DOMAIN_MODEL, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(tvShowRepository.getTvShowByGenre(GENRE_ID, PAGE))
+                .thenThrow(RuntimeException())
+
+            try {
+                useCase(GENRE_ID, PAGE)
+                Assert.fail("Expected exception")
+            } catch (e: RuntimeException) {
+                // Expected
+            }
+        }
 }

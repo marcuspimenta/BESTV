@@ -14,61 +14,65 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-05-2018.
  */
 private const val CAST_ID = 1
-private val CAST_DETAILED = CastDomainModel(
-    id = CAST_ID,
-    name = "Carlos",
-    character = "Batman",
-    birthday = "1990-07-13"
-)
-private val EXPECTED_RESULT = Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>(
-    CAST_DETAILED,
-    emptyList(),
-    emptyList()
-)
+private val CAST_DETAILED =
+    CastDomainModel(
+        id = CAST_ID,
+        name = "Carlos",
+        character = "Batman",
+        birthday = "1990-07-13",
+    )
+private val EXPECTED_RESULT =
+    Triple<CastDomainModel, List<WorkDomainModel>?, List<WorkDomainModel>?>(
+        CAST_DETAILED,
+        emptyList(),
+        emptyList(),
+    )
 
 class GetCastDetailsUseCaseTest {
-
     private val getCastPersonalDetails: GetCastPersonalDetails = mock()
     private val getMovieCreditsByCastUseCase: GetMovieCreditsByCastUseCase = mock()
     private val getTvShowCreditsByCastUseCase: GetTvShowCreditsByCastUseCase = mock()
 
-    private val useCase = GetCastDetailsUseCase(
-        getCastPersonalDetails,
-        getMovieCreditsByCastUseCase,
-        getTvShowCreditsByCastUseCase
-    )
+    private val useCase =
+        GetCastDetailsUseCase(
+            getCastPersonalDetails,
+            getMovieCreditsByCastUseCase,
+            getTvShowCreditsByCastUseCase,
+        )
 
     @Test
-    fun `should return the correct data when load the cast details`() = runTest {
-        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
-        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
-        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+    fun `should return the correct data when load the cast details`() =
+        runTest {
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
 
-        val result = useCase(CAST_ID)
-        assertEquals(result, EXPECTED_RESULT)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
-        whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
-        whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
-
-        assertFailsWith<RuntimeException> {
-            useCase(CAST_ID)
+            val result = useCase(CAST_ID)
+            assertEquals(result, EXPECTED_RESULT)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+
+            assertFailsWith<RuntimeException> {
+                useCase(CAST_ID)
+            }
+        }
 }

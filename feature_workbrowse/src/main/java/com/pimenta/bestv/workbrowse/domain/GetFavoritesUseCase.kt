@@ -24,20 +24,20 @@ import kotlinx.coroutines.coroutineScope
  */
 class GetFavoritesUseCase(
     private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
-    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase
+    private val getFavoriteTvShowsUseCase: GetFavoriteTvShowsUseCase,
 ) {
+    suspend operator fun invoke(): PageDomainModel<WorkDomainModel> =
+        coroutineScope {
+            val favoriteMoviesDeferred = async { getFavoriteMoviesUseCase() }
+            val favoriteTvShowsDeferred = async { getFavoriteTvShowsUseCase() }
 
-    suspend operator fun invoke(): PageDomainModel<WorkDomainModel> = coroutineScope {
-        val favoriteMoviesDeferred = async { getFavoriteMoviesUseCase() }
-        val favoriteTvShowsDeferred = async { getFavoriteTvShowsUseCase() }
+            val favoriteMovies = favoriteMoviesDeferred.await()
+            val favoriteTvShows = favoriteTvShowsDeferred.await()
 
-        val favoriteMovies = favoriteMoviesDeferred.await()
-        val favoriteTvShows = favoriteTvShowsDeferred.await()
-
-        PageDomainModel(
-            page = 1,
-            totalPages = 1,
-            results = favoriteMovies + favoriteTvShows
-        )
-    }
+            PageDomainModel(
+                page = 1,
+                totalPages = 1,
+                results = favoriteMovies + favoriteTvShows,
+            )
+        }
 }

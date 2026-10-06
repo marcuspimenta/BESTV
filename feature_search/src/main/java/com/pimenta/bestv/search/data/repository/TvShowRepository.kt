@@ -24,13 +24,15 @@ import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
  */
 class TvShowRepository(
     private val resource: Resource,
-    private val tvShowRemoteDataSource: TvShowRemoteDataSource
+    private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) {
-
-    suspend fun searchTvShowsByQuery(query: String, page: Int) =
-        tvShowRemoteDataSource.searchTvShowsByQuery(query, page)
-            .run {
-                val source = resource.getStringResource(R.string.source_tmdb)
-                toDomainModel(source)
-            }
+    suspend fun searchTvShowsByQuery(
+        query: String,
+        page: Int,
+    ) = tvShowRemoteDataSource
+        .searchTvShowsByQuery(query, page)
+        .run {
+            val source = resource.getStringResource(R.string.source_tmdb)
+            toDomainModel(source)
+        }
 }

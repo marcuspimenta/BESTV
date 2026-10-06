@@ -14,75 +14,80 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import kotlin.test.assertFailsWith
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-06-2018.
  */
 private const val WORK_ID = 1
-private val CAST_LIST = listOf(
-    CastDomainModel(
-        id = 1,
-        name = "Name",
-        character = "Character",
-        birthday = "Birthday",
-        deathDay = null,
-        biography = null
+private val CAST_LIST =
+    listOf(
+        CastDomainModel(
+            id = 1,
+            name = "Name",
+            character = "Character",
+            birthday = "Birthday",
+            deathDay = null,
+            biography = null,
+        ),
     )
-)
 
 class GetCastsUseCaseTest {
-
     private val getCastByMovieUseCase: GetCastByMovieUseCase = mock()
     private val getCastByTvShowUseCase: GetCastByTvShowUseCase = mock()
 
-    private val useCase = GetCastsUseCase(
-        getCastByMovieUseCase,
-        getCastByTvShowUseCase
-    )
+    private val useCase =
+        GetCastsUseCase(
+            getCastByMovieUseCase,
+            getCastByTvShowUseCase,
+        )
 
     @Test
-    fun `should return the right data when loading the casts by movie`() = runTest {
-        whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(CAST_LIST)
+    fun `should return the right data when loading the casts by movie`() =
+        runTest {
+            whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(CAST_LIST)
 
-        val result = useCase(WorkType.MOVIE, WORK_ID)
+            val result = useCase(WorkType.MOVIE, WORK_ID)
 
-        assertEquals(CAST_LIST, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when loading the casts by movie`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(getCastByMovieUseCase(WORK_ID)).thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(WorkType.MOVIE, WORK_ID)
+            assertEquals(CAST_LIST, result)
         }
-    }
 
     @Test
-    fun `should return the right data when loading the casts by tv show`() = runTest {
-        whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(CAST_LIST)
+    fun `should return an error when some exception happens when loading the casts by movie`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(getCastByMovieUseCase(WORK_ID)).thenThrow(exception)
 
-        val result = useCase(WorkType.TV_SHOW, WORK_ID)
-
-        assertEquals(CAST_LIST, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens when loading the casts by tv show`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(getCastByTvShowUseCase(WORK_ID)).thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(WorkType.TV_SHOW, WORK_ID)
+            assertFailsWith<RuntimeException> {
+                useCase(WorkType.MOVIE, WORK_ID)
+            }
         }
-    }
+
+    @Test
+    fun `should return the right data when loading the casts by tv show`() =
+        runTest {
+            whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(CAST_LIST)
+
+            val result = useCase(WorkType.TV_SHOW, WORK_ID)
+
+            assertEquals(CAST_LIST, result)
+        }
+
+    @Test
+    fun `should return an error when some exception happens when loading the casts by tv show`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(getCastByTvShowUseCase(WORK_ID)).thenThrow(exception)
+
+            assertFailsWith<RuntimeException> {
+                useCase(WorkType.TV_SHOW, WORK_ID)
+            }
+        }
 }

@@ -22,24 +22,26 @@ import com.pimenta.bestv.workdetail.data.remote.api.MovieDetailTmdbApi
 class MovieRemoteDataSource(
     private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
-    private val movieDetailTmdbApi: MovieDetailTmdbApi
+    private val movieDetailTmdbApi: MovieDetailTmdbApi,
 ) {
+    suspend fun getCastByMovie(movieId: Int) = movieDetailTmdbApi.getCastByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 
-    suspend fun getCastByMovie(movieId: Int) =
-        movieDetailTmdbApi.getCastByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getRecommendationByMovie(
+        movieId: Int,
+        page: Int,
+    ) = movieDetailTmdbApi.getRecommendationByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getRecommendationByMovie(movieId: Int, page: Int) =
-        movieDetailTmdbApi.getRecommendationByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getSimilarByMovie(
+        movieId: Int,
+        page: Int,
+    ) = movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getSimilarByMovie(movieId: Int, page: Int) =
-        movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getReviewByMovie(
+        movieId: Int,
+        page: Int,
+    ) = movieDetailTmdbApi.getReviewByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getReviewByMovie(movieId: Int, page: Int) =
-        movieDetailTmdbApi.getReviewByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getVideosByMovie(movieId: Int) = movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 
-    suspend fun getVideosByMovie(movieId: Int) =
-        movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
-
-    suspend fun getWatchProvidersByMovie(movieId: Int) =
-        movieDetailTmdbApi.getWatchProvidersByMovie(movieId, tmdbApiKey)
+    suspend fun getWatchProvidersByMovie(movieId: Int) = movieDetailTmdbApi.getWatchProvidersByMovie(movieId, tmdbApiKey)
 }

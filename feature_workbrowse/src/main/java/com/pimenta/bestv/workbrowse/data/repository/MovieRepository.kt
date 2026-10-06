@@ -28,19 +28,22 @@ import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
 class MovieRepository(
     private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
-    private val movieRemoteDataSource: MovieRemoteDataSource
+    private val movieRemoteDataSource: MovieRemoteDataSource,
 ) {
-
-    suspend fun getFavoriteMovies() = movieLocalDataSource.getMovies().mapNotNull { movieDbModel ->
-        movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
-            val source = resource.getStringResource(R.string.source_tmdb)
-            work.toDomainModel(source).apply {
-                isFavorite = true
+    suspend fun getFavoriteMovies() =
+        movieLocalDataSource.getMovies().mapNotNull { movieDbModel ->
+            movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
+                val source = resource.getStringResource(R.string.source_tmdb)
+                work.toDomainModel(source).apply {
+                    isFavorite = true
+                }
             }
         }
-    }
 
-    suspend fun getMoviesByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel> {
+    suspend fun getMoviesByGenre(
+        genreId: Int,
+        page: Int,
+    ): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return movieRemoteDataSource.getMoviesByGenre(genreId, page).toDomainModel(source)
     }

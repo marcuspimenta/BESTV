@@ -20,9 +20,10 @@ import com.pimenta.bestv.search.data.repository.TvShowRepository
  * Created by marcus on 23-08-2019.
  */
 class SearchTvShowsByQueryUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(query: String, page: Int) =
-        tvShowRepository.searchTvShowsByQuery(query, page)
+    suspend operator fun invoke(
+        query: String,
+        page: Int,
+    ) = tvShowRepository.searchTvShowsByQuery(query, page)
 }

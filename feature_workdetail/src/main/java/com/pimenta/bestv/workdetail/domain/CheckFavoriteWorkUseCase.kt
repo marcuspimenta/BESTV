@@ -24,9 +24,8 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
  */
 class CheckFavoriteWorkUseCase(
     private val checkFavoriteMovieUseCase: CheckFavoriteMovieUseCase,
-    private val checkFavoriteTvShowUseCase: CheckFavoriteTvShowUseCase
+    private val checkFavoriteTvShowUseCase: CheckFavoriteTvShowUseCase,
 ) {
-
     suspend operator fun invoke(workViewModel: WorkViewModel) =
         when (workViewModel.type) {
             WorkType.MOVIE -> checkFavoriteMovieUseCase(workViewModel.toMovieDbModel())

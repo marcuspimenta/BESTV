@@ -14,49 +14,52 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.castdetail.data.repository.CastRepository
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 24-05-2018.
  */
 private const val CAST_ID = 1
-private val MOVIE = WorkDomainModel(
-    id = 1,
-    title = "Batman",
-    originalTitle = "Batman"
-)
-
-class GetMovieCreditsByCastUseCaseTest {
-
-    private val castRepository: CastRepository = mock()
-
-    private val useCase = GetMovieCreditsByCastUseCase(
-        castRepository
+private val MOVIE =
+    WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
     )
 
-    @Test
-    fun `should return the right data when loading the movies by cast`() = runTest {
-        val castMovieList = listOf(MOVIE)
+class GetMovieCreditsByCastUseCaseTest {
+    private val castRepository: CastRepository = mock()
 
-        whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(castMovieList)
-
-        val result = useCase(CAST_ID)
-        assertEquals(result, castMovieList)
-    }
+    private val useCase =
+        GetMovieCreditsByCastUseCase(
+            castRepository,
+        )
 
     @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenThrow(RuntimeException())
+    fun `should return the right data when loading the movies by cast`() =
+        runTest {
+            val castMovieList = listOf(MOVIE)
 
-        assertFailsWith<RuntimeException> {
-            useCase(CAST_ID)
+            whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenReturn(castMovieList)
+
+            val result = useCase(CAST_ID)
+            assertEquals(result, castMovieList)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(castRepository.getMovieCreditsByCast(CAST_ID)).thenThrow(RuntimeException())
+
+            assertFailsWith<RuntimeException> {
+                useCase(CAST_ID)
+            }
+        }
 }

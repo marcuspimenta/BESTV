@@ -20,9 +20,7 @@ import com.pimenta.bestv.castdetail.data.repository.CastRepository
  * Created by marcus on 18-04-2019.
  */
 class GetTvShowCreditsByCastUseCase(
-    private val castRepository: CastRepository
+    private val castRepository: CastRepository,
 ) {
-
-    suspend operator fun invoke(castId: Int) =
-        castRepository.getTvShowCreditsByCast(castId)
+    suspend operator fun invoke(castId: Int) = castRepository.getTvShowCreditsByCast(castId)
 }

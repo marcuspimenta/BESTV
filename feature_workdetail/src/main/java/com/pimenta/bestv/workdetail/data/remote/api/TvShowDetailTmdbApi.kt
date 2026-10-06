@@ -28,12 +28,11 @@ import retrofit2.http.Query
  * Created by marcus on 20-10-2019.
  */
 interface TvShowDetailTmdbApi {
-
     @GET("tv/{tv_id}/credits")
     suspend fun getCastByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Query("language") language: String,
     ): CastListResponse
 
     @GET("tv/{tv_id}/recommendations")
@@ -41,7 +40,7 @@ interface TvShowDetailTmdbApi {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/{tv_id}/similar")
@@ -49,7 +48,7 @@ interface TvShowDetailTmdbApi {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/{tv_id}/reviews")
@@ -57,19 +56,19 @@ interface TvShowDetailTmdbApi {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<ReviewResponse>
 
     @GET("tv/{tv_id}/videos")
     suspend fun getVideosByTvShow(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Query("language") language: String,
     ): VideoListResponse
 
     @GET("tv/{tv_id}/watch/providers")
     suspend fun getWatchProvidersByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
     ): WatchProvidersResponse
 }

@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository
  * Created by marcus on 22-10-2019.
  */
 class GetRecommendationByMovieUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int, page: Int) =
-        movieRepository.getRecommendationByMovie(workId, page)
+    suspend operator fun invoke(
+        workId: Int,
+        page: Int,
+    ) = movieRepository.getRecommendationByMovie(workId, page)
 }

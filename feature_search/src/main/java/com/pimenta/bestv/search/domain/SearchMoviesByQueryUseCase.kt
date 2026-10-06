@@ -20,9 +20,10 @@ import com.pimenta.bestv.search.data.repository.MovieRepository
  * Created by marcus on 23-08-2019.
  */
 class SearchMoviesByQueryUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(query: String, page: Int) =
-        movieRepository.searchMoviesByQuery(query, page)
+    suspend operator fun invoke(
+        query: String,
+        page: Int,
+    ) = movieRepository.searchMoviesByQuery(query, page)
 }

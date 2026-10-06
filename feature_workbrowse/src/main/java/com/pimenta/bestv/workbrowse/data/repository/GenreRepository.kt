@@ -22,9 +22,8 @@ import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
  * Created by marcus on 20-10-2019.
  */
 class GenreRepository(
-    private val genreRemoteDataSource: GenreRemoteDataSource
+    private val genreRemoteDataSource: GenreRemoteDataSource,
 ) {
-
     suspend fun getMovieGenres(): List<GenreDomainModel>? {
         val response = genreRemoteDataSource.getMovieGenres()
         return response.genres?.map { genre -> genre.toDomainModel() }

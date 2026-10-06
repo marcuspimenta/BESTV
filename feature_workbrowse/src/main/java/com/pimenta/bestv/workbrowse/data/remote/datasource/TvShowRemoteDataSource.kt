@@ -24,9 +24,8 @@ import timber.log.Timber
 class TvShowRemoteDataSource(
     private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
-    private val tvShowTmdbApi: TvShowTmdbApi
+    private val tvShowTmdbApi: TvShowTmdbApi,
 ) {
-
     suspend fun getTvShow(tvId: Int): TvShowResponse? =
         try {
             tvShowTmdbApi.getTvShow(tvId, tmdbApiKey, tmdbFilterLanguage)
@@ -35,18 +34,16 @@ class TvShowRemoteDataSource(
             null
         }
 
-    suspend fun getTvShowByGenre(genreId: Int, page: Int) =
-        tvShowTmdbApi.getTvShowByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
+    suspend fun getTvShowByGenre(
+        genreId: Int,
+        page: Int,
+    ) = tvShowTmdbApi.getTvShowByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
-    suspend fun getAiringTodayTvShows(page: Int) =
-        tvShowTmdbApi.getAiringTodayTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getAiringTodayTvShows(page: Int) = tvShowTmdbApi.getAiringTodayTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getOnTheAirTvShows(page: Int) =
-        tvShowTmdbApi.getOnTheAirTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getOnTheAirTvShows(page: Int) = tvShowTmdbApi.getOnTheAirTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getPopularTvShows(page: Int) =
-        tvShowTmdbApi.getPopularTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getPopularTvShows(page: Int) = tvShowTmdbApi.getPopularTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getTopRatedTvShows(page: Int) =
-        tvShowTmdbApi.getTopRatedTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getTopRatedTvShows(page: Int) = tvShowTmdbApi.getTopRatedTvShows(tmdbApiKey, tmdbFilterLanguage, page)
 }

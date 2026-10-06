@@ -20,9 +20,10 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  * Use case to get watch providers for a TV show.
  */
 class GetWatchProvidersByTvShowUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(tvShowId: Int, countryCode: String) =
-        tvShowRepository.getWatchProvidersByTvShow(tvShowId, countryCode)
+    suspend operator fun invoke(
+        tvShowId: Int,
+        countryCode: String,
+    ) = tvShowRepository.getWatchProvidersByTvShow(tvShowId, countryCode)
 }

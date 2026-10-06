@@ -21,9 +21,7 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
  * Created by marcus on 23-04-2020.
  */
 class CheckFavoriteTvShowUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(tvShowDbModel: TvShowDbModel) =
-        tvShowRepository.isFavoriteTvShow(tvShowDbModel)
+    suspend operator fun invoke(tvShowDbModel: TvShowDbModel) = tvShowRepository.isFavoriteTvShow(tvShowDbModel)
 }

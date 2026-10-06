@@ -14,57 +14,61 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import kotlin.test.assertFailsWith
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-10-2019.
  */
 private const val MOVIE_ID = 1
-private val WORK_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Title"
-        )
+private val WORK_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Title",
+                ),
+            ),
     )
-)
 
 class GetSimilarByMovieUseCaseTest {
-
     private val movieRepository: MovieRepository = mock()
 
-    private val useCase = GetSimilarByMovieUseCase(
-        movieRepository
-    )
+    private val useCase =
+        GetSimilarByMovieUseCase(
+            movieRepository,
+        )
 
     @Test
-    fun `should return the right data when loading the similar works`() = runTest {
-        whenever(movieRepository.getSimilarByMovie(MOVIE_ID, 1))
-            .thenReturn(WORK_PAGE)
+    fun `should return the right data when loading the similar works`() =
+        runTest {
+            whenever(movieRepository.getSimilarByMovie(MOVIE_ID, 1))
+                .thenReturn(WORK_PAGE)
 
-        val result = useCase(MOVIE_ID, 1)
+            val result = useCase(MOVIE_ID, 1)
 
-        assertEquals(WORK_PAGE, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(movieRepository.getSimilarByMovie(MOVIE_ID, 1))
-            .thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(MOVIE_ID, 1)
+            assertEquals(WORK_PAGE, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(movieRepository.getSimilarByMovie(MOVIE_ID, 1))
+                .thenThrow(exception)
+
+            assertFailsWith<RuntimeException> {
+                useCase(MOVIE_ID, 1)
+            }
+        }
 }

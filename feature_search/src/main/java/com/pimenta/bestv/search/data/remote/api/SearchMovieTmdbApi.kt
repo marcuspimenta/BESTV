@@ -23,12 +23,11 @@ import retrofit2.http.Query
  * Created by marcus on 11-02-2018.
  */
 interface SearchMovieTmdbApi {
-
     @GET("search/movie")
     suspend fun searchMoviesByQuery(
         @Query("api_key") apiKey: String,
         @Query("query") query: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 }

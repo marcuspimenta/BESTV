@@ -31,7 +31,7 @@ fun WatchProvidersResponse.toDomainModel(countryCode: String): WatchProvidersDom
         tmdbLink = countryProviders.link,
         streaming = countryProviders.flatrate?.mapNotNull { it.toDomainModel() }.orEmpty(),
         rent = countryProviders.rent?.mapNotNull { it.toDomainModel() }.orEmpty(),
-        buy = countryProviders.buy?.mapNotNull { it.toDomainModel() }.orEmpty()
+        buy = countryProviders.buy?.mapNotNull { it.toDomainModel() }.orEmpty(),
     )
 }
 
@@ -47,6 +47,6 @@ fun WatchProviderResponse.toDomainModel(): WatchProviderDomainModel? {
         id = id,
         name = name,
         logoPath = logoPath,
-        displayPriority = displayPriority ?: Int.MAX_VALUE
+        displayPriority = displayPriority ?: Int.MAX_VALUE,
     )
 }

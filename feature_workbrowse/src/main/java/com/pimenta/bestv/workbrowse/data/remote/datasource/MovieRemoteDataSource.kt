@@ -24,9 +24,8 @@ import timber.log.Timber
 class MovieRemoteDataSource(
     private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
-    private val movieTmdbApi: MovieTmdbApi
+    private val movieTmdbApi: MovieTmdbApi,
 ) {
-
     suspend fun getMovie(movieId: Int): MovieResponse? =
         try {
             movieTmdbApi.getMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
@@ -35,18 +34,16 @@ class MovieRemoteDataSource(
             null
         }
 
-    suspend fun getMoviesByGenre(genreId: Int, page: Int) =
-        movieTmdbApi.getMoviesByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
+    suspend fun getMoviesByGenre(
+        genreId: Int,
+        page: Int,
+    ) = movieTmdbApi.getMoviesByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
 
-    suspend fun getNowPlayingMovies(page: Int) =
-        movieTmdbApi.getNowPlayingMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getNowPlayingMovies(page: Int) = movieTmdbApi.getNowPlayingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getPopularMovies(page: Int) =
-        movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getPopularMovies(page: Int) = movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getTopRatedMovies(page: Int) =
-        movieTmdbApi.getTopRatedMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getTopRatedMovies(page: Int) = movieTmdbApi.getTopRatedMovies(tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getUpComingMovies(page: Int) =
-        movieTmdbApi.getUpComingMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getUpComingMovies(page: Int) = movieTmdbApi.getUpComingMovies(tmdbApiKey, tmdbFilterLanguage, page)
 }

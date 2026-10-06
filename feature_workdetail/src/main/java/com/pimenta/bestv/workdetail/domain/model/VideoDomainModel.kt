@@ -22,5 +22,5 @@ data class VideoDomainModel(
     val key: String? = null,
     val name: String? = null,
     val site: String? = null,
-    val type: String? = null
+    val type: String? = null,
 )

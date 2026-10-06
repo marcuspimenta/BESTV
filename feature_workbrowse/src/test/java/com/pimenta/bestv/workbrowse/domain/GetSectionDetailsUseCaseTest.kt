@@ -14,10 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
@@ -28,115 +24,128 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
-private val WORK_DOMAIN_MODEL = WorkDomainModel(
-    id = 1,
-    title = "Batman",
-    originalTitle = "Batman",
-    originalLanguage = "en",
-    overview = "A superhero movie",
-    source = "tmdb",
-    backdropPath = "/backdrop.jpg",
-    posterPath = "/poster.jpg",
-    releaseDate = "2023-01-01",
-    type = WorkDomainModel.Type.MOVIE,
-    voteAverage = 8.0f
-)
+private val WORK_DOMAIN_MODEL =
+    WorkDomainModel(
+        id = 1,
+        title = "Batman",
+        originalTitle = "Batman",
+        originalLanguage = "en",
+        overview = "A superhero movie",
+        source = "tmdb",
+        backdropPath = "/backdrop.jpg",
+        posterPath = "/poster.jpg",
+        releaseDate = "2023-01-01",
+        type = WorkDomainModel.Type.MOVIE,
+        voteAverage = 8.0f,
+    )
 
-private val MOVIE_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 5,
-    results = listOf(WORK_DOMAIN_MODEL)
-)
+private val MOVIE_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 5,
+        results = listOf(WORK_DOMAIN_MODEL),
+    )
 
-private val TV_SHOW_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 3,
-    results = listOf(WORK_DOMAIN_MODEL.copy(id = 2, type = WorkDomainModel.Type.TV_SHOW))
-)
+private val TV_SHOW_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 3,
+        results = listOf(WORK_DOMAIN_MODEL.copy(id = 2, type = WorkDomainModel.Type.TV_SHOW)),
+    )
 
-private val FAVORITES_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(WORK_DOMAIN_MODEL.copy(id = 3, isFavorite = true))
-)
+private val FAVORITES_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results = listOf(WORK_DOMAIN_MODEL.copy(id = 3, isFavorite = true)),
+    )
 
 private val MOVIE_GENRE = GenreDomainModel(id = 28, name = "Action", source = GenreDomainModel.Source.MOVIE)
 private val TV_SHOW_GENRE = GenreDomainModel(id = 10759, name = "Action & Adventure", source = GenreDomainModel.Source.TV_SHOW)
 
 class GetSectionDetailsUseCaseTest {
-
     private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()
     private val getTvShowGenresUseCase: GetTvShowGenresUseCase = mock()
     private val getWorkByGenreUseCase: GetWorkByGenreUseCase = mock()
     private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
 
-    private val useCase = GetSectionDetailsUseCase(
-        getMovieGenresUseCase,
-        getTvShowGenresUseCase,
-        getWorkByGenreUseCase,
-        loadWorkByTypeUseCase
-    )
+    private val useCase =
+        GetSectionDetailsUseCase(
+            getMovieGenresUseCase,
+            getTvShowGenresUseCase,
+            getWorkByGenreUseCase,
+            loadWorkByTypeUseCase,
+        )
 
     @Test
-    fun `getAllSections should return movie, tv show and favorites sections`() = runTest {
-        // Setup movie types
-        whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(MOVIE_PAGE)
+    fun `getAllSections should return movie, tv show and favorites sections`() =
+        runTest {
+            // Setup movie types
+            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(MOVIE_PAGE)
 
-        // Setup genres
-        whenever(getMovieGenresUseCase()).thenReturn(listOf(MOVIE_GENRE))
-        whenever(getTvShowGenresUseCase()).thenReturn(listOf(TV_SHOW_GENRE))
-        whenever(getWorkByGenreUseCase(eq(MOVIE_GENRE.id), eq(Source.MOVIE), eq(1))).thenReturn(MOVIE_PAGE)
-        whenever(getWorkByGenreUseCase(eq(TV_SHOW_GENRE.id), eq(Source.TV_SHOW), eq(1))).thenReturn(TV_SHOW_PAGE)
+            // Setup genres
+            whenever(getMovieGenresUseCase()).thenReturn(listOf(MOVIE_GENRE))
+            whenever(getTvShowGenresUseCase()).thenReturn(listOf(TV_SHOW_GENRE))
+            whenever(getWorkByGenreUseCase(eq(MOVIE_GENRE.id), eq(Source.MOVIE), eq(1))).thenReturn(MOVIE_PAGE)
+            whenever(getWorkByGenreUseCase(eq(TV_SHOW_GENRE.id), eq(Source.TV_SHOW), eq(1))).thenReturn(TV_SHOW_PAGE)
 
-        val result = useCase.getAllSections()
+            val result = useCase.getAllSections()
 
-        assertTrue(result.movieSectionDetails.isNotEmpty())
-        assertTrue(result.tvSectionDetails.isNotEmpty())
-    }
-
-    @Test
-    fun `getAllSections should return empty lists when no data available`() = runTest {
-        val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
-
-        whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(emptyPage)
-        whenever(getMovieGenresUseCase()).thenReturn(emptyList())
-        whenever(getTvShowGenresUseCase()).thenReturn(emptyList())
-
-        val result = useCase.getAllSections()
-
-        assertTrue(result.movieSectionDetails.isEmpty())
-        assertTrue(result.tvSectionDetails.isEmpty())
-    }
-
-    @Test
-    fun `getFavoriteSections should return favorites when available`() = runTest {
-        whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(FAVORITES_PAGE)
-
-        val result = useCase.getFavoriteSections()
-
-        assertEquals(1, result.size)
-    }
-
-    @Test
-    fun `getFavoriteSections should return empty list when no favorites`() = runTest {
-        val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
-        whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(emptyPage)
-
-        val result = useCase.getFavoriteSections()
-
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `getAllSections should throw exception when loading fails`() = runTest {
-        whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenThrow(RuntimeException("Network error"))
-
-        try {
-            useCase.getAllSections()
-            fail("Expected RuntimeException")
-        } catch (e: RuntimeException) {
-            assertEquals("Network error", e.message)
+            assertTrue(result.movieSectionDetails.isNotEmpty())
+            assertTrue(result.tvSectionDetails.isNotEmpty())
         }
-    }
+
+    @Test
+    fun `getAllSections should return empty lists when no data available`() =
+        runTest {
+            val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
+
+            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(emptyPage)
+            whenever(getMovieGenresUseCase()).thenReturn(emptyList())
+            whenever(getTvShowGenresUseCase()).thenReturn(emptyList())
+
+            val result = useCase.getAllSections()
+
+            assertTrue(result.movieSectionDetails.isEmpty())
+            assertTrue(result.tvSectionDetails.isEmpty())
+        }
+
+    @Test
+    fun `getFavoriteSections should return favorites when available`() =
+        runTest {
+            whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(FAVORITES_PAGE)
+
+            val result = useCase.getFavoriteSections()
+
+            assertEquals(1, result.size)
+        }
+
+    @Test
+    fun `getFavoriteSections should return empty list when no favorites`() =
+        runTest {
+            val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
+            whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(emptyPage)
+
+            val result = useCase.getFavoriteSections()
+
+            assertTrue(result.isEmpty())
+        }
+
+    @Test
+    fun `getAllSections should throw exception when loading fails`() =
+        runTest {
+            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenThrow(RuntimeException("Network error"))
+
+            try {
+                useCase.getAllSections()
+                fail("Expected RuntimeException")
+            } catch (e: RuntimeException) {
+                assertEquals("Network error", e.message)
+            }
+        }
 }

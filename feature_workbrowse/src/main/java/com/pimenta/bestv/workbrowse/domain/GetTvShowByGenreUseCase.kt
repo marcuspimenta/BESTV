@@ -20,9 +20,10 @@ import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
  * Created by marcus on 2019-10-20.
  */
 class GetTvShowByGenreUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(genreId: Int, page: Int) =
-        tvShowRepository.getTvShowByGenre(genreId, page)
+    suspend operator fun invoke(
+        genreId: Int,
+        page: Int,
+    ) = tvShowRepository.getTvShowByGenre(genreId, page)
 }

@@ -20,9 +20,7 @@ import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
  * Created by marcus on 24-10-2019.
  */
 class GetPopularTvShowsUseCase(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowRepository,
 ) {
-
-    suspend operator fun invoke(page: Int) =
-        tvShowRepository.getPopularTvShows(page)
+    suspend operator fun invoke(page: Int) = tvShowRepository.getPopularTvShows(page)
 }

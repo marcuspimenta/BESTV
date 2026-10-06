@@ -14,52 +14,55 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Created by marcus on 2019-08-26.
  */
-private val MOVIE_GENRES_DOMAIN_MODEL = listOf(
-    GenreDomainModel(
-        id = 2,
-        name = "Action",
-        source = GenreDomainModel.Source.MOVIE
+private val MOVIE_GENRES_DOMAIN_MODEL =
+    listOf(
+        GenreDomainModel(
+            id = 2,
+            name = "Action",
+            source = GenreDomainModel.Source.MOVIE,
+        ),
     )
-)
 
 class GetMovieGenresUseCaseTest {
-
     private val genreRepository: GenreRepository = mock()
-    private val useCase = GetMovieGenresUseCase(
-        genreRepository
-    )
+    private val useCase =
+        GetMovieGenresUseCase(
+            genreRepository,
+        )
 
     @Test
-    fun `should return the right data when loading the movie genres`() = runTest {
-        whenever(genreRepository.getMovieGenres())
-            .thenReturn(MOVIE_GENRES_DOMAIN_MODEL)
+    fun `should return the right data when loading the movie genres`() =
+        runTest {
+            whenever(genreRepository.getMovieGenres())
+                .thenReturn(MOVIE_GENRES_DOMAIN_MODEL)
 
-        val result = useCase()
+            val result = useCase()
 
-        Assert.assertEquals(MOVIE_GENRES_DOMAIN_MODEL, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(genreRepository.getMovieGenres())
-            .thenThrow(RuntimeException())
-
-        try {
-            useCase()
-            Assert.fail("Expected exception")
-        } catch (e: RuntimeException) {
-            // Expected
+            Assert.assertEquals(MOVIE_GENRES_DOMAIN_MODEL, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(genreRepository.getMovieGenres())
+                .thenThrow(RuntimeException())
+
+            try {
+                useCase()
+                Assert.fail("Expected exception")
+            } catch (e: RuntimeException) {
+                // Expected
+            }
+        }
 }

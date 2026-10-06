@@ -28,9 +28,8 @@ import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSourc
 class TvShowRepository(
     private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
-    private val tvShowRemoteDataSource: TvShowRemoteDataSource
+    private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) {
-
     suspend fun getFavoriteTvShows() =
         tvShowLocalDataSource.getTvShows().mapNotNull { tvShowDbModel ->
             tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
@@ -41,7 +40,10 @@ class TvShowRepository(
             }
         }
 
-    suspend fun getTvShowByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel> {
+    suspend fun getTvShowByGenre(
+        genreId: Int,
+        page: Int,
+    ): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel(source)
     }

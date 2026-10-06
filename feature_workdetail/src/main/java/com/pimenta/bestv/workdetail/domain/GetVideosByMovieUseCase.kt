@@ -20,9 +20,7 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository
  * Created by marcus on 22-10-2019.
  */
 class GetVideosByMovieUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(workId: Int) =
-        movieRepository.getVideosByMovie(workId)
+    suspend operator fun invoke(workId: Int) = movieRepository.getVideosByMovie(workId)
 }

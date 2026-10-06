@@ -21,13 +21,12 @@ import com.google.gson.annotations.SerializedName
  */
 abstract class GenreResponse(
     @SerializedName("id") open var id: Int = 0,
-    @SerializedName("name") open var name: String? = null
+    @SerializedName("name") open var name: String? = null,
 ) {
-
     abstract val source: Source
 
     enum class Source {
         MOVIE,
-        TV_SHOW
+        TV_SHOW,
     }
 }

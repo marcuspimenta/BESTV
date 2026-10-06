@@ -22,7 +22,7 @@ data class WatchProvidersDomainModel(
     val tmdbLink: String?,
     val streaming: List<WatchProviderDomainModel>,
     val rent: List<WatchProviderDomainModel>,
-    val buy: List<WatchProviderDomainModel>
+    val buy: List<WatchProviderDomainModel>,
 ) {
     val hasAnyProvider: Boolean
         get() = streaming.isNotEmpty() || rent.isNotEmpty() || buy.isNotEmpty()
@@ -35,5 +35,5 @@ data class WatchProviderDomainModel(
     val id: Int,
     val name: String,
     val logoPath: String?,
-    val displayPriority: Int
+    val displayPriority: Int,
 )

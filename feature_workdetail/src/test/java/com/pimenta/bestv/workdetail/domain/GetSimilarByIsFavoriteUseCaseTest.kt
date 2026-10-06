@@ -14,80 +14,86 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import kotlin.test.assertFailsWith
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 23-06-2018.
  */
 private const val WORK_ID = 1
-private val WORK_PAGE = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Title"
-        )
+private val WORK_PAGE =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Title",
+                ),
+            ),
     )
-)
 
 class GetSimilarByWorkUseCaseTest {
-
     private val getSimilarByMovieUseCase: GetSimilarByMovieUseCase = mock()
     private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase = mock()
 
-    private val useCase = GetSimilarByWorkUseCase(
-        getSimilarByMovieUseCase,
-        getSimilarByTvShowUseCase
-    )
+    private val useCase =
+        GetSimilarByWorkUseCase(
+            getSimilarByMovieUseCase,
+            getSimilarByTvShowUseCase,
+        )
 
     @Test
-    fun `should return the right data when loading the similar works by movie`() = runTest {
-        whenever(getSimilarByMovieUseCase(WORK_ID, 1))
-            .thenReturn(WORK_PAGE)
+    fun `should return the right data when loading the similar works by movie`() =
+        runTest {
+            whenever(getSimilarByMovieUseCase(WORK_ID, 1))
+                .thenReturn(WORK_PAGE)
 
-        val result = useCase(WorkType.MOVIE, WORK_ID, 1)
+            val result = useCase(WorkType.MOVIE, WORK_ID, 1)
 
-        assertEquals(WORK_PAGE, result)
-    }
-
-    @Test
-    fun `should return an error when loading the similar works by movie and some exception happens`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(getSimilarByMovieUseCase(WORK_ID, 1))
-            .thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(WorkType.MOVIE, WORK_ID, 1)
+            assertEquals(WORK_PAGE, result)
         }
-    }
 
     @Test
-    fun `should return the right data when loading the similar works by tv show`() = runTest {
-        whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
-            .thenReturn(WORK_PAGE)
+    fun `should return an error when loading the similar works by movie and some exception happens`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(getSimilarByMovieUseCase(WORK_ID, 1))
+                .thenThrow(exception)
 
-        val result = useCase(WorkType.TV_SHOW, WORK_ID, 1)
-
-        assertEquals(WORK_PAGE, result)
-    }
-
-    @Test
-    fun `should return an error when loading the similar works by tv show and some exception happens`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
-            .thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(WorkType.TV_SHOW, WORK_ID, 1)
+            assertFailsWith<RuntimeException> {
+                useCase(WorkType.MOVIE, WORK_ID, 1)
+            }
         }
-    }
+
+    @Test
+    fun `should return the right data when loading the similar works by tv show`() =
+        runTest {
+            whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
+                .thenReturn(WORK_PAGE)
+
+            val result = useCase(WorkType.TV_SHOW, WORK_ID, 1)
+
+            assertEquals(WORK_PAGE, result)
+        }
+
+    @Test
+    fun `should return an error when loading the similar works by tv show and some exception happens`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(getSimilarByTvShowUseCase(WORK_ID, 1))
+                .thenThrow(exception)
+
+            assertFailsWith<RuntimeException> {
+                useCase(WorkType.TV_SHOW, WORK_ID, 1)
+            }
+        }
 }

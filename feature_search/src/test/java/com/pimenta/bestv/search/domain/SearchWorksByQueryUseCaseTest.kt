@@ -14,13 +14,13 @@
 
 package com.pimenta.bestv.search.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
 /**
@@ -28,63 +28,69 @@ import kotlin.test.assertFailsWith
  */
 private const val QUERY = "Batman"
 private const val QUERY_ENCODED = "Batman"
-private val MOVIE_PAGE_VIEW_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 10,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.MOVIE
-        )
+private val MOVIE_PAGE_VIEW_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 10,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                    type = WorkDomainModel.Type.MOVIE,
+                ),
+            ),
     )
-)
 
-private val TV_SHOW_PAGE_VIEW_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 10,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.TV_SHOW
-        )
+private val TV_SHOW_PAGE_VIEW_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 10,
+        results =
+            listOf(
+                WorkDomainModel(
+                    id = 1,
+                    title = "Batman",
+                    originalTitle = "Batman",
+                    type = WorkDomainModel.Type.TV_SHOW,
+                ),
+            ),
     )
-)
 
 class SearchWorksByQueryUseCaseTest {
-
     private val urlEncoderTextUseCase: UrlEncoderTextUseCase = mock()
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
-    private val useCase = SearchWorksByQueryUseCase(
-        urlEncoderTextUseCase,
-        searchMoviesByQueryUseCase,
-        searchTvShowsByQueryUseCase
-    )
+    private val useCase =
+        SearchWorksByQueryUseCase(
+            urlEncoderTextUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
+        )
 
     @Test
-    fun `should return the right data when searching works by query`() = runTest {
-        val expected = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
+    fun `should return the right data when searching works by query`() =
+        runTest {
+            val expected = MOVIE_PAGE_VIEW_MODEL to TV_SHOW_PAGE_VIEW_MODEL
 
-        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
-        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(MOVIE_PAGE_VIEW_MODEL)
-        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(TV_SHOW_PAGE_VIEW_MODEL)
+            whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+            whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(MOVIE_PAGE_VIEW_MODEL)
+            whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(TV_SHOW_PAGE_VIEW_MODEL)
 
-        val result = useCase(QUERY)
-        assertEquals(result, expected)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
-        whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
-        whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
-
-        assertFailsWith<RuntimeException> {
-            useCase(QUERY)
+            val result = useCase(QUERY)
+            assertEquals(result, expected)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+            whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
+            whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
+
+            assertFailsWith<RuntimeException> {
+                useCase(QUERY)
+            }
+        }
 }

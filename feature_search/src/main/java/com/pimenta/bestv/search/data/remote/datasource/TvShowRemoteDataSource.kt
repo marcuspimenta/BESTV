@@ -22,8 +22,10 @@ import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
 class TvShowRemoteDataSource(
     private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
-    private val searchTvShowTmdbApi: SearchTvShowTmdbApi
+    private val searchTvShowTmdbApi: SearchTvShowTmdbApi,
 ) {
-    suspend fun searchTvShowsByQuery(query: String, page: Int) =
-        searchTvShowTmdbApi.searchTvShowsByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
+    suspend fun searchTvShowsByQuery(
+        query: String,
+        page: Int,
+    ) = searchTvShowTmdbApi.searchTvShowsByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
 }

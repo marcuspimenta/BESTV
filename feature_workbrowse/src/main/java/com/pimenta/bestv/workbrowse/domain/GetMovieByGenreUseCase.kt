@@ -20,9 +20,10 @@ import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
  * Created by marcus on 2019-10-20.
  */
 class GetMovieByGenreUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(genreId: Int, page: Int) =
-        movieRepository.getMoviesByGenre(genreId, page)
+    suspend operator fun invoke(
+        genreId: Int,
+        page: Int,
+    ) = movieRepository.getMoviesByGenre(genreId, page)
 }

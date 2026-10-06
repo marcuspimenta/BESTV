@@ -14,50 +14,53 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import kotlin.test.assertFailsWith
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 
 /**
  * Created by marcus on 22-10-2018.
  */
 private const val MOVIE_ID = 1
-private val VIDEO_LIST = listOf(
-    VideoDomainModel(
-        id = "1",
-        name = "VideoResponse"
+private val VIDEO_LIST =
+    listOf(
+        VideoDomainModel(
+            id = "1",
+            name = "VideoResponse",
+        ),
     )
-)
 
 class GetVideosByMovieUseCaseTest {
-
     private val movieRepository: MovieRepository = mock()
 
-    private val useCase = GetVideosByMovieUseCase(
-        movieRepository
-    )
+    private val useCase =
+        GetVideosByMovieUseCase(
+            movieRepository,
+        )
 
     @Test
-    fun `should return the right data when loading the videos`() = runTest {
-        whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(VIDEO_LIST)
+    fun `should return the right data when loading the videos`() =
+        runTest {
+            whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenReturn(VIDEO_LIST)
 
-        val result = useCase(MOVIE_ID)
+            val result = useCase(MOVIE_ID)
 
-        assertEquals(VIDEO_LIST, result)
-    }
-
-    @Test
-    fun `should return an error when some exception happens`() = runTest {
-        val exception = RuntimeException("Test exception")
-        whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenThrow(exception)
-
-        assertFailsWith<RuntimeException> {
-            useCase(MOVIE_ID)
+            assertEquals(VIDEO_LIST, result)
         }
-    }
+
+    @Test
+    fun `should return an error when some exception happens`() =
+        runTest {
+            val exception = RuntimeException("Test exception")
+            whenever(movieRepository.getVideosByMovie(MOVIE_ID)).thenThrow(exception)
+
+            assertFailsWith<RuntimeException> {
+                useCase(MOVIE_ID)
+            }
+        }
 }

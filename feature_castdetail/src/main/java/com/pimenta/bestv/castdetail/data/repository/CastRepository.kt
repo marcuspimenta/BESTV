@@ -24,9 +24,8 @@ import com.pimenta.bestv.presentation.platform.Resource
  */
 class CastRepository(
     private val resource: Resource,
-    private val castRemoteDataSource: CastRemoteDataSource
+    private val castRemoteDataSource: CastRemoteDataSource,
 ) {
-
     suspend fun getCastDetails(castId: Int) =
         castRemoteDataSource.getCastDetails(castId).run {
             val source = resource.getStringResource(R.string.source_tmdb)

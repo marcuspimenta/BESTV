@@ -22,24 +22,26 @@ import com.pimenta.bestv.workdetail.data.remote.api.TvShowDetailTmdbApi
 class TvShowRemoteDataSource(
     private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
-    private val tvShowDetailTmdbApi: TvShowDetailTmdbApi
+    private val tvShowDetailTmdbApi: TvShowDetailTmdbApi,
 ) {
+    suspend fun getCastByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
-    suspend fun getCastByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getRecommendationByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getRecommendationByTvShow(tvShowId: Int, page: Int) =
-        tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getSimilarByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getSimilarByTvShow(tvShowId: Int, page: Int) =
-        tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getReviewByTvShow(
+        tvShowId: Int,
+        page: Int,
+    ) = tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getReviewByTvShow(tvShowId: Int, page: Int) =
-        tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getVideosByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
-    suspend fun getVideosByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
-
-    suspend fun getWatchProvidersByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
+    suspend fun getWatchProvidersByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
 }

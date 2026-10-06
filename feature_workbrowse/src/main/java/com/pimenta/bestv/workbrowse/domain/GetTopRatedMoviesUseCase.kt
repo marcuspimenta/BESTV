@@ -20,9 +20,7 @@ import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
  * Created by marcus on 24-10-2019.
  */
 class GetTopRatedMoviesUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke(page: Int) =
-        movieRepository.getTopRatedMovies(page)
+    suspend operator fun invoke(page: Int) = movieRepository.getTopRatedMovies(page)
 }

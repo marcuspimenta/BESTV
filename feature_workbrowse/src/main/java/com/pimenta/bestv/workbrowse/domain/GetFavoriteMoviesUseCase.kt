@@ -20,9 +20,7 @@ import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
  * Created by marcus on 13-10-2019.
  */
 class GetFavoriteMoviesUseCase(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) {
-
-    suspend operator fun invoke() =
-        movieRepository.getFavoriteMovies()
+    suspend operator fun invoke() = movieRepository.getFavoriteMovies()
 }

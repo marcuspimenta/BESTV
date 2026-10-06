@@ -24,12 +24,11 @@ import retrofit2.http.Query
  * Created by marcus on 20-10-2019.
  */
 interface MovieTmdbApi {
-
     @GET("movie/{movie_id}")
     suspend fun getMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Query("language") language: String,
     ): MovieResponse
 
     @GET("discover/movie")
@@ -38,34 +37,34 @@ interface MovieTmdbApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/now_playing")
     suspend fun getNowPlayingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/upcoming")
     suspend fun getUpComingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 }
