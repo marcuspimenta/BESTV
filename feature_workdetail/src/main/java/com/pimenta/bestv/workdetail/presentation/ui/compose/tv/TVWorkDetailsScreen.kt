@@ -129,14 +129,18 @@ private fun TVWorkDetailsContent(
         when (val currentState = state.state) {
             is Loading -> {
                 TVLoading(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 )
             }
 
             is Error -> {
                 TVErrorScreen(
                     onRetryClick = onRetryClicked,
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 )
             }
 
@@ -153,7 +157,9 @@ private fun TVWorkDetailsContent(
                     onLoadMoreSimilar = onLoadMoreSimilar,
                     onDismissError = onDismissError,
                     onClearScrollIndex = onClearScrollIndex,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
             }
         }
@@ -197,14 +203,18 @@ private fun TVLoadedWorkDetails(
                             work = work,
                             header = content,
                             actionClicked = actionClicked,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
 
                     is Casts ->
                         TVCastRow(
                             casts = content.casts,
                             onCastClick = onCastClick,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
 
                     is RecommendedWorks ->
@@ -214,7 +224,9 @@ private fun TVLoadedWorkDetails(
                             onWorkClick = onWorkClick,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreRecommendations,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
 
                     is Reviews ->
@@ -222,7 +234,9 @@ private fun TVLoadedWorkDetails(
                             reviews = content.reviews,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreReviews,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
 
                     is SimilarWorks ->
@@ -232,14 +246,18 @@ private fun TVLoadedWorkDetails(
                             onWorkClick = onWorkClick,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreSimilar,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
 
                     is Videos ->
                         TVVideoRow(
                             videos = content.videos,
                             onVideoClick = onVideoClick,
-                            modifier = Modifier.focusRequester(focusRequesters[index]),
+                            modifier =
+                                Modifier
+                                    .focusRequester(focusRequesters[index]),
                         )
                 }
             }
@@ -248,7 +266,9 @@ private fun TVLoadedWorkDetails(
         TVErrorBanner(
             errorMessage = loadedState.error?.message,
             onDismiss = onDismissError,
-            modifier = Modifier.align(Alignment.BottomCenter),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter),
         )
 
         LaunchedEffect(Unit) {

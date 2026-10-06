@@ -67,14 +67,18 @@ fun TVVideoRow(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240),
+            modifier =
+                Modifier
+                    .padding(horizontal = BESTVTheme.scale.s240),
         )
 
         // Videos list with start-aligned focus behavior
         TVStartAlignedLazyRow(
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier = Modifier.padding(top = BESTVTheme.scale.s090),
+            modifier =
+                Modifier
+                    .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = videos,
@@ -96,7 +100,9 @@ private fun TVVideoCard(
     modifier: Modifier = Modifier,
 ) {
     StandardCardContainer(
-        modifier = Modifier.width(BESTVTheme.scale.s1250),
+        modifier =
+            Modifier
+                .width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
@@ -107,7 +113,9 @@ private fun TVVideoCard(
                 interactionSource = interactionSource,
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 ) {
                     SubcomposeAsyncImage(
                         model = video.thumbnailUrl,
@@ -119,11 +127,15 @@ private fun TVVideoCard(
                         contentScale = ContentScale.Crop,
                         loading = {
                             Box(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize(),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 CircularProgressIndicator(
-                                    modifier = Modifier.size(BESTVTheme.scale.s240),
+                                    modifier =
+                                        Modifier
+                                            .size(BESTVTheme.scale.s240),
                                     color = MaterialTheme.colorScheme.primary,
                                 )
                             }

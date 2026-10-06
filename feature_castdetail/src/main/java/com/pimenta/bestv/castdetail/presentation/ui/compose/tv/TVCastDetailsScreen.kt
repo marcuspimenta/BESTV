@@ -89,7 +89,9 @@ private fun TVCastDetailsContent(
         when (state) {
             is CastDetailsState.Loading -> {
                 TVLoading(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 )
             }
 

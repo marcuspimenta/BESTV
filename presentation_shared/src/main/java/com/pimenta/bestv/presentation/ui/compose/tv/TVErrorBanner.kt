@@ -95,14 +95,22 @@ fun TVErrorBanner(
                     Text(
                         text = message,
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .weight(1f),
                     )
 
-                    Spacer(modifier = Modifier.width(BESTVTheme.scale.s080))
+                    Spacer(
+                        modifier =
+                            Modifier
+                                .width(BESTVTheme.scale.s080),
+                    )
 
                     Button(
                         onClick = onDismiss,
-                        modifier = Modifier.focusRequester(focusRequester),
+                        modifier =
+                            Modifier
+                                .focusRequester(focusRequester),
                     ) {
                         Text(text = stringResource(R.string.dismiss))
                     }

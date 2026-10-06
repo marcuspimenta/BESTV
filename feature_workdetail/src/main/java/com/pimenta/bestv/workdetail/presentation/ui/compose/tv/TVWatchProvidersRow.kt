@@ -46,7 +46,9 @@ fun TVWatchProvidersRow(
             text = stringResource(R.string.where_to_watch),
             style = MaterialTheme.typography.bodySmall,
             color = BESTVTheme.colors.secondaryText,
-            modifier = Modifier.padding(bottom = BESTVTheme.scale.s040),
+            modifier =
+                Modifier
+                    .padding(bottom = BESTVTheme.scale.s040),
         )
 
         TVProviderSection(

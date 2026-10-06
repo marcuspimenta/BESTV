@@ -64,3 +64,11 @@ subprojects {
 tasks.register('clean', Delete) {
     delete rootProject.layout.buildDir
 }
+
+tasks.register('formatKotlin') {
+    group = 'formatting'
+    description = 'Formats Kotlin source across all modules with ktlint.'
+    dependsOn subprojects.collect { subproject ->
+        subproject.tasks.matching { task -> task.name == 'ktlintFormat' }
+    }
+}

@@ -71,7 +71,8 @@ fun TVExpandableText(
                         focusedContainerColor = BESTVTheme.colors.focusSurface,
                     ),
                 modifier =
-                    Modifier.padding(
+                    Modifier
+                        .padding(
                         start = BESTVTheme.scale.s040,
                         top = BESTVTheme.scale.s040,
                     ),
@@ -81,7 +82,8 @@ fun TVExpandableText(
                     style = MaterialTheme.typography.labelLarge,
                     color = BESTVTheme.colors.white,
                     modifier =
-                        Modifier.padding(
+                        Modifier
+                            .padding(
                             horizontal = BESTVTheme.scale.s040,
                             vertical = BESTVTheme.scale.s020,
                         ),

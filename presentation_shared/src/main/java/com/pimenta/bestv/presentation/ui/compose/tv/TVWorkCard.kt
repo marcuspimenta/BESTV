@@ -49,7 +49,9 @@ fun TVWorkCard(
     includeWorkTitle: Boolean = true,
 ) {
     StandardCardContainer(
-        modifier = Modifier.width(BESTVTheme.scale.s1250),
+        modifier =
+            Modifier
+                .width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
@@ -73,11 +75,15 @@ fun TVWorkCard(
                     contentScale = ContentScale.Crop,
                     loading = {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier =
+                                Modifier
+                                    .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(BESTVTheme.scale.s240),
+                                modifier =
+                                    Modifier
+                                        .size(BESTVTheme.scale.s240),
                                 color = MaterialTheme.colorScheme.primary,
                             )
                         }

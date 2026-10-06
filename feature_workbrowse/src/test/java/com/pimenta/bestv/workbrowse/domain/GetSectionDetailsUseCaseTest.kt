@@ -66,7 +66,12 @@ private val FAVORITES_PAGE =
     )
 
 private val MOVIE_GENRE = GenreDomainModel(id = 28, name = "Action", source = GenreDomainModel.Source.MOVIE)
-private val TV_SHOW_GENRE = GenreDomainModel(id = 10759, name = "Action & Adventure", source = GenreDomainModel.Source.TV_SHOW)
+private val TV_SHOW_GENRE =
+    GenreDomainModel(
+        id = 10759,
+        name = "Action & Adventure",
+        source = GenreDomainModel.Source.TV_SHOW,
+    )
 
 class GetSectionDetailsUseCaseTest {
     private val getMovieGenresUseCase: GetMovieGenresUseCase = mock()

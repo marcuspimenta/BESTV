@@ -47,14 +47,18 @@ fun TVCastRow(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240),
+            modifier =
+                Modifier
+                    .padding(horizontal = BESTVTheme.scale.s240),
         )
 
         // Cast list with start-aligned focus behavior
         TVStartAlignedLazyRow(
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier = Modifier.padding(top = BESTVTheme.scale.s090),
+            modifier =
+                Modifier
+                    .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = casts,

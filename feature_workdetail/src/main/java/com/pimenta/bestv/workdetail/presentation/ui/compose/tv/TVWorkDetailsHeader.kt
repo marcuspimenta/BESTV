@@ -72,14 +72,18 @@ fun TVWorkDetailsHeader(
             TVActionButtonsRow(
                 actions = header.actions,
                 actionClicked = actionClicked,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s100),
+                modifier =
+                    Modifier
+                        .padding(top = BESTVTheme.scale.s100),
             )
 
             Text(
                 text = "${work.releaseDate} · ${work.voteAverage} · ${work.source}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.secondaryText,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s100),
+                modifier =
+                    Modifier
+                        .padding(top = BESTVTheme.scale.s100),
             )
 
             TVExpandableText(
@@ -93,7 +97,9 @@ fun TVWorkDetailsHeader(
             header.watchProviders?.let {
                 TVWatchProvidersRow(
                     watchProviders = it,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s090),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s090),
                 )
             }
         }

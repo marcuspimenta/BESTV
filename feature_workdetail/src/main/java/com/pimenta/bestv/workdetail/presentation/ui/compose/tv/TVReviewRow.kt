@@ -68,7 +68,8 @@ fun TVReviewRow(
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
             modifier =
-                Modifier.padding(
+                Modifier
+                    .padding(
                     horizontal = BESTVTheme.scale.s240,
                     vertical = BESTVTheme.scale.s040,
                 ),
@@ -79,7 +80,9 @@ fun TVReviewRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier = Modifier.padding(top = BESTVTheme.scale.s090),
+            modifier =
+                Modifier
+                    .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = reviews,
@@ -114,7 +117,9 @@ private fun TVReviewCard(
                     ),
             ) {
                 Column(
-                    modifier = Modifier.padding(BESTVTheme.scale.s080),
+                    modifier =
+                        Modifier
+                            .padding(BESTVTheme.scale.s080),
                     verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s040),
                 ) {
                     Text(

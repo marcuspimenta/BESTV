@@ -104,7 +104,9 @@ internal fun MobileBrowseBottomBar(
                             .background(BESTVTheme.colors.mobileNavigationSelectedSurface),
                 )
                 Row(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     destinations.forEach { destination ->
@@ -123,7 +125,9 @@ internal fun MobileBrowseBottomBar(
                                 painter = painterResource(destination.iconRes),
                                 contentDescription = stringResource(destination.titleRes),
                                 tint = BESTVTheme.colors.mobileNavigationContent,
-                                modifier = Modifier.size(BESTVTheme.scale.s100),
+                                modifier =
+                                    Modifier
+                                        .size(BESTVTheme.scale.s100),
                             )
                             Text(
                                 text = stringResource(destination.titleRes),

@@ -52,10 +52,16 @@ fun TVErrorScreen(
         Image(
             painter = painterResource(R.drawable.movie),
             contentDescription = null,
-            modifier = Modifier.size(BESTVTheme.scale.s600),
+            modifier =
+                Modifier
+                    .size(BESTVTheme.scale.s600),
         )
 
-        Spacer(modifier = Modifier.height(BESTVTheme.scale.s160))
+        Spacer(
+            modifier =
+                Modifier
+                    .height(BESTVTheme.scale.s160),
+        )
 
         // Error message
         Text(
@@ -63,10 +69,16 @@ fun TVErrorScreen(
             style = MaterialTheme.typography.bodyLarge,
             color = BESTVTheme.colors.white,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = BESTVTheme.scale.s240),
+            modifier =
+                Modifier
+                    .padding(horizontal = BESTVTheme.scale.s240),
         )
 
-        Spacer(modifier = Modifier.height(BESTVTheme.scale.s240))
+        Spacer(
+            modifier =
+                Modifier
+                    .height(BESTVTheme.scale.s240),
+        )
 
         // Retry button
         Button(

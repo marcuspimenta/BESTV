@@ -34,7 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pimenta.bestv.presentation.theme.BESTVTheme
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.CloseScreen
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
@@ -105,7 +104,9 @@ fun MobileBrowseScreen(
                         Image(
                             painter = painterResource(presentationR.drawable.bestv_mark),
                             contentDescription = stringResource(presentationR.string.app_name),
-                            modifier = Modifier.size(BESTVTheme.scale.s160),
+                            modifier =
+                                Modifier
+                                    .size(BESTVTheme.scale.s160),
                         )
                         Image(
                             painter = painterResource(presentationR.drawable.bestv_wordmark),
@@ -120,7 +121,9 @@ fun MobileBrowseScreen(
                             painter = painterResource(presentationR.drawable.search),
                             contentDescription = stringResource(workbrowseR.string.search),
                             tint = BESTVTheme.colors.white,
-                            modifier = Modifier.size(BESTVTheme.scale.s100),
+                            modifier =
+                                Modifier
+                                    .size(BESTVTheme.scale.s100),
                         )
                     }
                 }
@@ -140,7 +143,9 @@ fun MobileBrowseScreen(
                 onSplashAnimationFinished = {
                     viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
             )
 
             if (destinations.isNotEmpty()) {
@@ -153,7 +158,9 @@ fun MobileBrowseScreen(
                             viewModel.handleEvent(WorkBrowseEvent.SectionClicked(index))
                         }
                     },
-                    modifier = Modifier.align(Alignment.BottomCenter),
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter),
                 )
             }
         }

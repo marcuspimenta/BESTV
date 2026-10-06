@@ -72,7 +72,9 @@ fun TVWorksRow(
             style = titleStyle,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier = Modifier.padding(start = titleStartPadding),
+            modifier =
+                Modifier
+                    .padding(start = titleStartPadding),
         )
 
         // Horizontal scrolling row with start-aligned focus behavior
@@ -80,7 +82,9 @@ fun TVWorksRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = worksStartPadding),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier = Modifier.padding(top = BESTVTheme.scale.s090),
+            modifier =
+                Modifier
+                    .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = works,

@@ -54,7 +54,9 @@ fun TVCastCard(
                 AsyncImage(
                     model = cast.thumbnailUrl,
                     contentDescription = cast.name,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                     contentScale = ContentScale.Crop,
                 )
             }
@@ -68,7 +70,9 @@ fun TVCastCard(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s060),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s060),
                 )
             }
         },

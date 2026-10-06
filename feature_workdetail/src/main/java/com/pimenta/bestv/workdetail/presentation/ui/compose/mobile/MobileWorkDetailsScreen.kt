@@ -294,11 +294,17 @@ private fun MobileWorkDetailsList(
 
         content.error?.let { error ->
             item(key = "error") {
-                Card(modifier = Modifier.padding(BESTVTheme.scale.s080)) {
+                Card(
+                    modifier =
+                        Modifier
+                            .padding(BESTVTheme.scale.s080),
+                ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = error.message,
-                            modifier = Modifier.weight(1f).padding(BESTVTheme.scale.s080),
+                            modifier =
+                                Modifier
+                                    .weight(1f).padding(BESTVTheme.scale.s080),
                         )
                         IconButton(onClick = { onEvent(DismissError) }) {
                             Icon(Icons.Default.Close, contentDescription = null)
@@ -339,7 +345,9 @@ private fun MobileWorkHeader(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         AsyncImage(
@@ -353,7 +361,8 @@ private fun MobileWorkHeader(
         )
         Column(
             modifier =
-                Modifier.padding(
+                Modifier
+                    .padding(
                     start = BESTVTheme.scale.s080,
                     end = BESTVTheme.scale.s080,
                     bottom = BESTVTheme.scale.s080,
@@ -364,7 +373,8 @@ private fun MobileWorkHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 color = BESTVTheme.colors.white,
                 modifier =
-                    Modifier.onGloballyPositioned { coordinates ->
+                    Modifier
+                        .onGloballyPositioned { coordinates ->
                         onTitleBottomChanged(coordinates.boundsInRoot().bottom)
                     },
             )
@@ -378,13 +388,17 @@ private fun MobileWorkHeader(
                         .joinToString(" · "),
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.secondaryText,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s040),
+                modifier =
+                    Modifier
+                        .padding(top = BESTVTheme.scale.s040),
             )
             Text(
                 text = work.overview,
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.biographyText,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s080),
+                modifier =
+                    Modifier
+                        .padding(top = BESTVTheme.scale.s080),
             )
         }
     }
@@ -430,7 +444,12 @@ private fun MobileVideos(
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(videos, key = { it.id ?: it.hashCode() }) { video ->
-            Card(onClick = { onClick(video) }, modifier = Modifier.width(BESTVTheme.scale.s1000)) {
+            Card(
+                onClick = { onClick(video) },
+                modifier =
+                    Modifier
+                        .width(BESTVTheme.scale.s1000),
+            ) {
                 Box(
                     modifier =
                         Modifier
@@ -441,7 +460,9 @@ private fun MobileVideos(
                         model = video.thumbnailUrl,
                         contentDescription = stringResource(R.string.play_video),
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier =
+                            Modifier
+                                .fillMaxSize(),
                     )
                     Surface(
                         modifier =
@@ -481,7 +502,12 @@ private fun MobileCasts(
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(casts, key = { it.id }) { cast ->
-            Card(onClick = { onClick(cast) }, modifier = Modifier.width(BESTVTheme.scale.s500)) {
+            Card(
+                onClick = { onClick(cast) },
+                modifier =
+                    Modifier
+                        .width(BESTVTheme.scale.s500),
+            ) {
                 AsyncImage(
                     model = cast.thumbnailUrl,
                     contentDescription = cast.name,
@@ -513,8 +539,16 @@ private fun MobileReviews(
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(reviews, key = { it.id ?: it.hashCode() }) { review ->
-            Card(modifier = Modifier.width(BESTVTheme.scale.s1250)) {
-                Column(modifier = Modifier.padding(BESTVTheme.scale.s080)) {
+            Card(
+                modifier =
+                    Modifier
+                        .width(BESTVTheme.scale.s1250),
+            ) {
+                Column(
+                    modifier =
+                        Modifier
+                            .padding(BESTVTheme.scale.s080),
+                ) {
                     Text(review.author.orEmpty(), style = MaterialTheme.typography.titleMedium)
                     Text(
                         review.content.orEmpty(),

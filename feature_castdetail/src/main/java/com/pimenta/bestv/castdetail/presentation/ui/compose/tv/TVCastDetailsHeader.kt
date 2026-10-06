@@ -68,14 +68,18 @@ fun TVCastDetailsHeader(
                 text = stringResource(R.string.born, cast.birthday),
                 style = MaterialTheme.typography.bodyLarge,
                 color = BESTVTheme.colors.secondaryInfoText,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s060),
+                modifier =
+                    Modifier
+                        .padding(top = BESTVTheme.scale.s060),
             )
 
             if (cast.biography.isNotBlank()) {
                 TVExpandableText(
                     text = cast.biography,
                     color = BESTVTheme.colors.biographyText,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s060),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s060),
                 )
             }
         }

@@ -8,6 +8,7 @@
 package com.pimenta.bestv.presentation.ui.compose.mobile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,29 +36,33 @@ fun MobileWorkRow(
     if (works.isEmpty()) return
 
     val listState = rememberLazyListState()
-    MobileSectionTitle(title)
-    LazyRow(
-        state = listState,
-        contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s060),
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s030),
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        items(works, key = { it.id }) { work ->
-            MobileWorkCard(work, onClick = { onWorkClick(work) })
-        }
-        if (pagination?.isLoadingMore == true) {
-            item(key = "loading") {
-                MobileLoading(Modifier.padding(BESTVTheme.scale.s240))
+    Column(modifier = modifier.fillMaxWidth()) {
+        MobileSectionTitle(title)
+        LazyRow(
+            state = listState,
+            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s060),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s030),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
+        ) {
+            items(works, key = { it.id }) { work ->
+                MobileWorkCard(work, onClick = { onWorkClick(work) })
+            }
+            if (pagination?.isLoadingMore == true) {
+                item(key = "loading") {
+                    MobileLoading(Modifier.padding(BESTVTheme.scale.s240))
+                }
             }
         }
-    }
-    if (pagination != null) {
-        LazyRowPagination(
-            listState = listState,
-            isLoadingMore = pagination.isLoadingMore,
-            threshold = 3,
-            onLoadMore = { if (pagination.canLoadMore) onLoadMore() },
-        )
+        if (pagination != null) {
+            LazyRowPagination(
+                listState = listState,
+                isLoadingMore = pagination.isLoadingMore,
+                threshold = 3,
+                onLoadMore = { if (pagination.canLoadMore) onLoadMore() },
+            )
+        }
     }
 }
 

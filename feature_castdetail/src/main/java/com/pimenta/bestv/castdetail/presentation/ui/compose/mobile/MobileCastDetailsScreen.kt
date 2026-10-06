@@ -123,7 +123,9 @@ fun MobileCastDetailsScreen(
     ) { contentPadding ->
         MobileCastDetailsContent(
             state = state,
-            modifier = Modifier.fillMaxSize().padding(contentPadding),
+            modifier =
+                Modifier
+                    .fillMaxSize().padding(contentPadding),
             onEvent = viewModel::handleEvent,
             onViewportTopChanged = { viewportTop = it },
             onTitleBottomChanged = { castTitleBottom = it },
@@ -202,7 +204,9 @@ private fun MobileCastHeader(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier = Modifier.padding(BESTVTheme.scale.s080),
+        modifier =
+            Modifier
+                .padding(BESTVTheme.scale.s080),
         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         AsyncImage(
@@ -221,7 +225,8 @@ private fun MobileCastHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 color = BESTVTheme.colors.white,
                 modifier =
-                    Modifier.onGloballyPositioned { coordinates ->
+                    Modifier
+                        .onGloballyPositioned { coordinates ->
                         onTitleBottomChanged(coordinates.boundsInRoot().bottom)
                     },
             )
@@ -229,14 +234,18 @@ private fun MobileCastHeader(
                 Text(
                     stringResource(com.pimenta.bestv.castdetail.R.string.born, cast.birthday),
                     color = BESTVTheme.colors.secondaryInfoText,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s060),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s060),
                 )
             }
             if (cast.biography.isNotBlank()) {
                 Text(
                     cast.biography,
                     color = BESTVTheme.colors.biographyText,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s080),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s080),
                 )
             }
         }
@@ -302,7 +311,9 @@ private fun MobileCastDetailsContentPreview() {
                         ),
                     tvShows = emptyList(),
                 ),
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
             onEvent = {},
             onViewportTopChanged = {},
             onTitleBottomChanged = {},

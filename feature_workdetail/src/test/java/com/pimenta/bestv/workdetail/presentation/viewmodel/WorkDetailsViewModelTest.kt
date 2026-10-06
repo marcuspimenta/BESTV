@@ -231,7 +231,10 @@ class WorkDetailsViewModelTest {
             val reviews = loadedState.contents.filterIsInstance<WorkDetailsState.Content.Reviews>().firstOrNull()
             assertEquals(1, reviews?.reviews?.size)
 
-            val recommendedWorks = loadedState.contents.filterIsInstance<WorkDetailsState.Content.RecommendedWorks>().firstOrNull()
+            val recommendedWorks =
+                loadedState.contents
+                    .filterIsInstance<WorkDetailsState.Content.RecommendedWorks>()
+                    .firstOrNull()
             assertEquals(1, recommendedWorks?.recommended?.size)
 
             val similarWorks = loadedState.contents.filterIsInstance<WorkDetailsState.Content.SimilarWorks>().firstOrNull()

@@ -8,18 +8,24 @@
 package com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile
 
 import android.widget.VideoView
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -63,6 +69,8 @@ fun MobileBrowseContent(
             ) { MobileError(onRetry = onRetry) }
 
         is WorkBrowseState.State.Loaded -> {
+            var hasPlayedEntrance by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) { hasPlayedEntrance = true }
             AnimatedContent(
                 targetState = currentState.selectedSectionIndex,
                 modifier = modifier.fillMaxSize(),
@@ -72,19 +80,19 @@ fun MobileBrowseContent(
                             animationSpec = tween(durationMillis = 300),
                             initialOffsetX = { it },
                         ) togetherWith
-                            slideOutHorizontally(
-                                animationSpec = tween(durationMillis = 300),
-                                targetOffsetX = { -it },
-                            )
+                                slideOutHorizontally(
+                                    animationSpec = tween(durationMillis = 300),
+                                    targetOffsetX = { -it },
+                                )
                     } else {
                         slideInHorizontally(
                             animationSpec = tween(durationMillis = 300),
                             initialOffsetX = { -it },
                         ) togetherWith
-                            slideOutHorizontally(
-                                animationSpec = tween(durationMillis = 300),
-                                targetOffsetX = { it },
-                            )
+                                slideOutHorizontally(
+                                    animationSpec = tween(durationMillis = 300),
+                                    targetOffsetX = { it },
+                                )
                     }
                 },
                 label = "browseSectionTransition",
@@ -97,15 +105,21 @@ fun MobileBrowseContent(
                         is Favorites -> selected.content
                         else -> emptyList()
                     }
-                Column(modifier = Modifier.fillMaxSize()) {
-                    LazyColumn(
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                        contentPadding = PaddingValues(bottom = BESTVTheme.scale.s600),
-                    ) {
-                        items(sectionContent, key = { it.hashCode() }) { content ->
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = BESTVTheme.scale.s600),
+                ) {
+                    items(sectionContent, key = { it.hashCode() }) { content ->
+                        AnimatedVisibility(
+                            visible = hasPlayedEntrance,
+                            enter =
+                                slideInHorizontally(
+                                    initialOffsetX = { it },
+                                    animationSpec = tween(durationMillis = 450),
+                                ) + fadeIn(animationSpec = tween(durationMillis = 350)),
+                        ) {
                             MobileContentRow(content, onWorkClick)
                         }
                     }
@@ -132,7 +146,8 @@ private fun MobileLoadingSplashScreen(
     )
 }
 
-private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/raw/splash_animation"
+private const val SPLASH_ANIMATION_FILE =
+    "android.resource://com.pimenta.bestv/raw/splash_animation"
 
 @Composable
 private fun MobileContentRow(
@@ -188,7 +203,9 @@ private fun MobileBrowseContentPreview() {
             onWorkClick = {},
             onRetry = {},
             onSplashAnimationFinished = {},
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         )
     }
 }

@@ -145,14 +145,18 @@ private fun TVWorkBrowseContent(
             is Loading -> {
                 TVLoadingSplashScreen(
                     onSplashAnimationFinished = onSplashAnimationFinished,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
             }
 
             is Error -> {
                 TVErrorScreen(
                     onRetryClick = onRetryClicked,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
             }
 
@@ -165,7 +169,9 @@ private fun TVWorkBrowseContent(
                     onSectionClicked = onSectionClicked,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
             }
         }
@@ -271,7 +277,9 @@ private fun TVBrowseSections(
                                         tint = BESTVTheme.colors.white,
                                     )
                                 },
-                                modifier = Modifier.focusRequester(drawerItemFocusRequesters[index]),
+                                modifier =
+                                    Modifier
+                                        .focusRequester(drawerItemFocusRequesters[index]),
                                 content = {
                                     Text(
                                         text = stringResource(section.titleRes),
@@ -306,7 +314,9 @@ private fun TVBrowseSections(
                     workSelected = workSelected,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier =
+                        Modifier
+                            .focusRequester(focusRequester),
                 )
 
                 Box(
@@ -404,7 +414,9 @@ private fun TVSectionWorks(
         modifier = modifier.fillMaxSize(),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             Box(
                 modifier =
@@ -414,7 +426,9 @@ private fun TVSectionWorks(
             ) {
                 TVWorkSelectedHeader(
                     workSelected = workSelected,
-                    modifier = Modifier.align(BottomStart),
+                    modifier =
+                        Modifier
+                            .align(BottomStart),
                 )
             }
 
@@ -463,7 +477,9 @@ private fun TVWorkSelectedHeader(
                     text = "${work.releaseDate} · ${work.source}",
                     style = MaterialTheme.typography.labelSmall,
                     color = BESTVTheme.colors.secondaryText,
-                    modifier = Modifier.padding(top = BESTVTheme.scale.s040),
+                    modifier =
+                        Modifier
+                            .padding(top = BESTVTheme.scale.s040),
                 )
 
                 Text(
@@ -515,7 +531,8 @@ private fun TVSectionWorkList(
                 worksStartPadding = BESTVTheme.scale.s500,
                 onLoadMore = {},
                 modifier =
-                    Modifier.fadeAtTopEdge(
+                    Modifier
+                        .fadeAtTopEdge(
                         listState = listState,
                         itemIndex = index,
                         fadeThreshold = BESTVTheme.scale.s500,

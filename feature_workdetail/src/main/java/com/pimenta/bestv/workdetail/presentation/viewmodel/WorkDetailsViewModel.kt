@@ -126,8 +126,14 @@ class WorkDetailsViewModel(
                                                     SaveWork(result.isFavorite),
                                                     ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
                                                     ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
-                                                    ScrollToRecommendedWorks.takeIf { result.recommended.results?.isNotEmpty() == true },
-                                                    ScrollToSimilarWorks.takeIf { result.similar.results?.isNotEmpty() == true },
+                                                    ScrollToRecommendedWorks.takeIf {
+                                                        result.recommended.results?.isNotEmpty() ==
+                                                        true
+                                                    },
+                                                    ScrollToSimilarWorks.takeIf {
+                                                        result.similar.results?.isNotEmpty() ==
+                                                        true
+                                                    },
                                                     ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
                                                 ),
                                             watchProviders =

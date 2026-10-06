@@ -58,7 +58,9 @@ fun TVBackgroundScreen(
                 targetState = backdropUrl,
                 label = "background_transition",
                 animationSpec = tween(durationMillis = animationDuration),
-                modifier = Modifier.fillMaxSize(),
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
             ) { url ->
                 url?.let {
                     AsyncImage(

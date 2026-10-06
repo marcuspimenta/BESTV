@@ -121,7 +121,8 @@ class WorkBrowseViewModel(
                     it.copy(
                         state =
                             currentState.copy(
-                                selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
+                                selectedSectionIndex =
+                                    currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
                                 sections = updatedSections,
                             ),
                     )
@@ -140,7 +141,9 @@ class WorkBrowseViewModel(
         val favoritesIndex = sections.indexOfFirst { it is Favorites }
 
         return when {
-            hasFavorites && favoritesIndex >= 0 -> sections.toMutableList().apply { set(favoritesIndex, Favorites(favorites)) }
+            hasFavorites && favoritesIndex >= 0 -> sections.toMutableList().apply {
+                set(favoritesIndex, Favorites(favorites))
+            }
             hasFavorites -> sections + Favorites(favorites)
             favoritesIndex >= 0 -> sections.filterNot { it is Favorites }
             else -> sections
