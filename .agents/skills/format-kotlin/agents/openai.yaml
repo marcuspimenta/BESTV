@@ -1,0 +1,3 @@
+interface:
+  display_name: "Format Kotlin"
+  short_description: "Format Kotlin code"
