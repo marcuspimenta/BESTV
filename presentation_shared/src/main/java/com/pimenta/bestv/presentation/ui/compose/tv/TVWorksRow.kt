@@ -61,10 +61,9 @@ fun TVWorksRow(
     )
 
     Column(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(vertical = BESTVTheme.scale.s100),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = BESTVTheme.scale.s100),
     ) {
         // Section title
         Text(
@@ -72,9 +71,8 @@ fun TVWorksRow(
             style = titleStyle,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier =
-                Modifier
-                    .padding(start = titleStartPadding),
+            modifier = Modifier
+                .padding(start = titleStartPadding),
         )
 
         // Horizontal scrolling row with start-aligned focus behavior
@@ -82,9 +80,8 @@ fun TVWorksRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = worksStartPadding),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier =
-                Modifier
-                    .padding(top = BESTVTheme.scale.s090),
+            modifier = Modifier
+                .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = works,
@@ -111,37 +108,36 @@ private fun TVWorksRowPreview() {
     MaterialTheme {
         TVWorksRow(
             title = "Movies",
-            works =
-                listOf(
-                    WorkViewModel(
-                        id = 1,
-                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
-                        originalTitle = "The Dark Knight",
-                        posterUrl = "",
-                        type = WorkType.MOVIE,
-                        source = "TMDB",
-                        originalLanguage = "",
-                        overview = "",
-                        backdropUrl = "",
-                        releaseDate = "",
-                        voteAverage = 0f,
-                        isFavorite = false,
-                    ),
-                    WorkViewModel(
-                        id = 2,
-                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
-                        originalTitle = "The Dark Knight",
-                        posterUrl = "",
-                        type = WorkType.MOVIE,
-                        source = "TMDB",
-                        originalLanguage = "",
-                        overview = "",
-                        backdropUrl = "",
-                        releaseDate = "",
-                        voteAverage = 0f,
-                        isFavorite = false,
-                    ),
+            works = listOf(
+                WorkViewModel(
+                    id = 1,
+                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                    originalTitle = "The Dark Knight",
+                    posterUrl = "",
+                    type = WorkType.MOVIE,
+                    source = "TMDB",
+                    originalLanguage = "",
+                    overview = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    voteAverage = 0f,
+                    isFavorite = false,
                 ),
+                WorkViewModel(
+                    id = 2,
+                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                    originalTitle = "The Dark Knight",
+                    posterUrl = "",
+                    type = WorkType.MOVIE,
+                    source = "TMDB",
+                    originalLanguage = "",
+                    overview = "",
+                    backdropUrl = "",
+                    releaseDate = "",
+                    voteAverage = 0f,
+                    isFavorite = false,
+                ),
+            ),
             onWorkClick = {},
         )
     }

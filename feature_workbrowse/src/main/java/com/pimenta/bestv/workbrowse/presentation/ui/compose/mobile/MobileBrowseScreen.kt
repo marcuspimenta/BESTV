@@ -73,14 +73,13 @@ fun MobileBrowseScreen(
             val selected = loaded?.sections?.getOrNull(loaded.selectedSectionIndex)
             if (selected != null) {
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .statusBarsPadding()
-                            .padding(
-                                horizontal = BESTVTheme.scale.s080,
-                                vertical = BESTVTheme.scale.s060,
-                            ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(
+                            horizontal = BESTVTheme.scale.s080,
+                            vertical = BESTVTheme.scale.s060,
+                        ),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -91,16 +90,14 @@ fun MobileBrowseScreen(
                         Image(
                             painter = painterResource(presentationR.drawable.bestv_mark),
                             contentDescription = stringResource(presentationR.string.app_name),
-                            modifier =
-                                Modifier
-                                    .size(BESTVTheme.scale.s160),
+                            modifier = Modifier
+                                .size(BESTVTheme.scale.s160),
                         )
                         Image(
                             painter = painterResource(presentationR.drawable.bestv_wordmark),
                             contentDescription = stringResource(presentationR.string.app_name),
-                            modifier =
-                                Modifier
-                                    .size(width = BESTVTheme.scale.s400, height = BESTVTheme.scale.s160),
+                            modifier = Modifier
+                                .size(width = BESTVTheme.scale.s400, height = BESTVTheme.scale.s160),
                         )
                     }
                     IconButton(
@@ -112,9 +109,8 @@ fun MobileBrowseScreen(
                             painter = painterResource(presentationR.drawable.search),
                             contentDescription = stringResource(workbrowseR.string.search),
                             tint = BESTVTheme.colors.white,
-                            modifier =
-                                Modifier
-                                    .size(BESTVTheme.scale.s100),
+                            modifier = Modifier
+                                .size(BESTVTheme.scale.s100),
                         )
                     }
                 }
@@ -122,10 +118,9 @@ fun MobileBrowseScreen(
         },
     ) { contentPadding ->
         Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
         ) {
             MobileBrowseContent(
                 state = browseState,
@@ -134,9 +129,8 @@ fun MobileBrowseScreen(
                 onSplashAnimationFinished = {
                     viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)
                 },
-                modifier =
-                    Modifier
-                        .fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
             )
 
             if (sections.any { it !is Search }) {
@@ -149,9 +143,8 @@ fun MobileBrowseScreen(
                             viewModel.handleEvent(WorkBrowseEvent.SectionClicked(sectionIndex))
                         }
                     },
-                    modifier =
-                        Modifier
-                            .align(Alignment.BottomCenter),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter),
                 )
             }
         }

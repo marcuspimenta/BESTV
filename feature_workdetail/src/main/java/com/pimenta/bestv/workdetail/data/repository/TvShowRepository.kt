@@ -33,7 +33,8 @@ class TvShowRepository(
 ) {
     suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
 
-    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
+    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
+        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
 
     suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean {
         val tvShow = tvShowLocalDataSource.getById(tvShowDbModel)

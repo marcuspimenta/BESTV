@@ -94,9 +94,9 @@ fun MobileSearchScreen(
     ) { contentPadding ->
         MobileSearchContent(
             state = state,
-            modifier =
-                Modifier
-                    .fillMaxSize().padding(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
             onRetry = { viewModel.handleEvent(SearchQuerySubmitted(state.query)) },
             onWorkClick = { viewModel.handleEvent(WorkClicked(it)) },
             onLoadMoreMovies = { viewModel.handleEvent(LoadMoreMovies) },
@@ -114,36 +114,33 @@ private fun MobileSearchTopBar(
     onSearch: () -> Unit,
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = BESTVTheme.scale.s080,
-                    vertical = BESTVTheme.scale.s040,
-                ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = BESTVTheme.scale.s080,
+                vertical = BESTVTheme.scale.s040,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             onClick = onBack,
-            modifier =
-                Modifier
-                    .size(BESTVTheme.scale.s240),
+            modifier = Modifier
+                .size(BESTVTheme.scale.s240),
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(PresentationR.string.back),
                 tint = BESTVTheme.colors.white,
-                modifier =
-                    Modifier
-                        .size(BESTVTheme.scale.s120),
+                modifier = Modifier
+                    .size(BESTVTheme.scale.s120),
             )
         }
         TextField(
             value = query,
             onValueChange = onQueryChanged,
-            modifier =
-                Modifier
-                    .weight(1f).height(BESTVTheme.scale.s360),
+            modifier = Modifier
+                .weight(1f)
+                .height(BESTVTheme.scale.s360),
             placeholder = {
                 Text(
                     text = stringResource(R.string.search_placeholder),
@@ -165,16 +162,15 @@ private fun MobileSearchTopBar(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-            colors =
-                TextFieldDefaults.colors(
-                    focusedTextColor = BESTVTheme.colors.white,
-                    unfocusedTextColor = BESTVTheme.colors.white,
-                    cursorColor = BESTVTheme.colors.white,
-                    focusedContainerColor = BESTVTheme.colors.transparent,
-                    unfocusedContainerColor = BESTVTheme.colors.transparent,
-                    focusedIndicatorColor = BESTVTheme.colors.transparent,
-                    unfocusedIndicatorColor = BESTVTheme.colors.transparent,
-                ),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = BESTVTheme.colors.white,
+                unfocusedTextColor = BESTVTheme.colors.white,
+                cursorColor = BESTVTheme.colors.white,
+                focusedContainerColor = BESTVTheme.colors.transparent,
+                unfocusedContainerColor = BESTVTheme.colors.transparent,
+                focusedIndicatorColor = BESTVTheme.colors.transparent,
+                unfocusedIndicatorColor = BESTVTheme.colors.transparent,
+            ),
         )
     }
 }
@@ -194,17 +190,15 @@ private fun MobileSearchContent(
                 Text(
                     text = stringResource(R.string.search_placeholder),
                     color = BESTVTheme.colors.secondaryText,
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center),
                 )
 
             is Error ->
                 MobileError(
                     onRetry = onRetry,
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center),
                 )
 
             is SearchState.State.Loaded -> {
@@ -212,9 +206,8 @@ private fun MobileSearchContent(
                     Text(
                         text = stringResource(R.string.no_results),
                         color = BESTVTheme.colors.secondaryText,
-                        modifier =
-                            Modifier
-                                .padding(
+                        modifier = Modifier
+                            .padding(
                                 start = BESTVTheme.scale.s080,
                                 top = BESTVTheme.scale.s120,
                             ),
@@ -251,9 +244,8 @@ private fun MobileSearchContent(
 
         if (state.isSearching) {
             MobileLoading(
-                modifier =
-                    Modifier
-                        .align(Alignment.Center),
+                modifier = Modifier
+                    .align(Alignment.Center),
             )
         }
     }
@@ -279,9 +271,8 @@ private fun MobileSearchEmptyPreview() {
     BESTVTheme {
         MobileSearchContent(
             state = SearchState(),
-            modifier =
-                Modifier
-                    .fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             onRetry = {},
             onWorkClick = {},
             onLoadMoreMovies = {},

@@ -29,15 +29,14 @@ private val PAGE_DOMAIN_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 10,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Upcoming Movie",
-                    originalTitle = "Upcoming Movie",
-                    type = WorkDomainModel.Type.MOVIE,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Upcoming Movie",
+                originalTitle = "Upcoming Movie",
+                type = WorkDomainModel.Type.MOVIE,
             ),
+        ),
     )
 
 class GetUpComingMoviesUseCaseTest {

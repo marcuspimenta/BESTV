@@ -51,10 +51,8 @@ subprojects {
             }
         }
 
-        // Configure ktlint for Java 21 compatibility
         if (project.plugins.hasPlugin('org.jlleitschuh.gradle.ktlint')) {
             ktlint {
-                android = true
                 outputToConsole = true
             }
         }

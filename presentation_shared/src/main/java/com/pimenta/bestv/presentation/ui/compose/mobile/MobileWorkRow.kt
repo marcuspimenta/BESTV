@@ -42,9 +42,8 @@ fun MobileWorkRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s060),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s030),
-            modifier =
-                Modifier
-                    .fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
         ) {
             items(works, key = { it.id }) { work ->
                 MobileWorkCard(work, onClick = { onWorkClick(work) })
@@ -69,20 +68,19 @@ fun MobileWorkRow(
 @Preview(showBackground = true)
 @Composable
 private fun MobileWorkRowPreview() {
-    val previewWork =
-        WorkViewModel(
-            id = 1,
-            originalLanguage = "en",
-            overview = "A preview description.",
-            source = "Movie",
-            backdropUrl = "",
-            posterUrl = "",
-            title = "Preview Movie",
-            originalTitle = "Preview Movie",
-            releaseDate = "2025",
-            type = WorkType.MOVIE,
-            voteAverage = 8.0f,
-        )
+    val previewWork = WorkViewModel(
+        id = 1,
+        originalLanguage = "en",
+        overview = "A preview description.",
+        source = "Movie",
+        backdropUrl = "",
+        posterUrl = "",
+        title = "Preview Movie",
+        originalTitle = "Preview Movie",
+        releaseDate = "2025",
+        type = WorkType.MOVIE,
+        voteAverage = 8.0f,
+    )
     BESTVTheme {
         MobileWorkRow(
             title = "Popular",

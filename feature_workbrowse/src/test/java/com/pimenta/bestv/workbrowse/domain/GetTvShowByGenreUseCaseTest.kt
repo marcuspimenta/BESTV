@@ -32,15 +32,14 @@ private val TV_SHOW_PAGE_DOMAIN_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 1,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman",
-                    type = WorkDomainModel.Type.TV_SHOW,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.TV_SHOW,
             ),
+        ),
     )
 
 class GetTvShowByGenreUseCaseTest {

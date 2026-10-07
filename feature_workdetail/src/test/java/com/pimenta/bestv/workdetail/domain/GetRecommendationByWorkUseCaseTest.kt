@@ -33,14 +33,13 @@ private val WORK_PAGE_VIEW_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 1,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Title",
-                    type = Type.MOVIE,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Title",
+                type = Type.MOVIE,
             ),
+        ),
     )
 
 class GetRecommendationByWorkUseCaseTest {

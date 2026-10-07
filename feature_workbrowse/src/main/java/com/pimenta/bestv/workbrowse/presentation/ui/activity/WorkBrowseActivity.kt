@@ -18,10 +18,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseWrapperScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -29,7 +27,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class WorkBrowseActivity : ComponentActivity() {
     private val viewModel: WorkBrowseViewModel by viewModel()
-    private val searchRoute: SearchRoute by inject()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +35,6 @@ class WorkBrowseActivity : ComponentActivity() {
             WorkBrowseWrapperScreen(
                 viewModel = viewModel,
                 openIntent = ::openIntent,
-                openSearch = { startActivity(searchRoute.buildSearchIntent()) },
                 closeScreen = ::finish,
             )
         }

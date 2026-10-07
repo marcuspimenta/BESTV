@@ -81,17 +81,15 @@ private fun TVCastDetailsContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(BESTVTheme.colors.black),
+        modifier = modifier
+            .fillMaxSize()
+            .background(BESTVTheme.colors.black),
     ) {
         when (state) {
             is CastDetailsState.Loading -> {
                 TVLoading(
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center),
                 )
             }
 
@@ -104,11 +102,10 @@ private fun TVCastDetailsContent(
 
             is CastDetailsState.Loaded -> {
                 Column(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(bottom = BESTVTheme.scale.s240),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = BESTVTheme.scale.s240),
                 ) {
                     TVCastDetailsHeader(
                         cast = state.cast,
@@ -140,52 +137,49 @@ private fun TVCastDetailsContent(
 private fun TVCastDetailsScreenPreview() {
     MaterialTheme {
         TVCastDetailsContent(
-            state =
-                CastDetailsState.Loaded(
-                    cast =
-                        CastViewModel(
-                            id = 1,
-                            name = "Christian Bale",
-                            character = "Bruce Wayne / Batman",
-                            thumbnailUrl = "",
-                            source = "TMDB",
-                            birthday = "",
-                            deathDay = "",
-                            biography = "",
-                        ),
-                    movies =
-                        listOf(
-                            WorkViewModel(
-                                id = 1,
-                                title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
-                                originalTitle = "The Dark Knight",
-                                posterUrl = "",
-                                type = WorkType.MOVIE,
-                                source = "TMDB",
-                                originalLanguage = "",
-                                overview = "",
-                                backdropUrl = "",
-                                releaseDate = "",
-                                voteAverage = 0f,
-                                isFavorite = false,
-                            ),
-                            WorkViewModel(
-                                id = 2,
-                                title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
-                                originalTitle = "The Dark Knight",
-                                posterUrl = "",
-                                type = WorkType.MOVIE,
-                                source = "TMDB",
-                                originalLanguage = "",
-                                overview = "",
-                                backdropUrl = "",
-                                releaseDate = "",
-                                voteAverage = 0f,
-                                isFavorite = false,
-                            ),
-                        ),
-                    tvShows = emptyList(),
+            state = CastDetailsState.Loaded(
+                cast = CastViewModel(
+                    id = 1,
+                    name = "Christian Bale",
+                    character = "Bruce Wayne / Batman",
+                    thumbnailUrl = "",
+                    source = "TMDB",
+                    birthday = "",
+                    deathDay = "",
+                    biography = "",
                 ),
+                movies = listOf(
+                    WorkViewModel(
+                        id = 1,
+                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                        originalTitle = "The Dark Knight",
+                        posterUrl = "",
+                        type = WorkType.MOVIE,
+                        source = "TMDB",
+                        originalLanguage = "",
+                        overview = "",
+                        backdropUrl = "",
+                        releaseDate = "",
+                        voteAverage = 0f,
+                        isFavorite = false,
+                    ),
+                    WorkViewModel(
+                        id = 2,
+                        title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                        originalTitle = "The Dark Knight",
+                        posterUrl = "",
+                        type = WorkType.MOVIE,
+                        source = "TMDB",
+                        originalLanguage = "",
+                        overview = "",
+                        backdropUrl = "",
+                        releaseDate = "",
+                        voteAverage = 0f,
+                        isFavorite = false,
+                    ),
+                ),
+                tvShows = emptyList(),
+            ),
             onWorkClick = {},
             onRetryClicked = {},
         )

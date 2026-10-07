@@ -50,16 +50,14 @@ fun TVSlideInFromBottom(
 
     AnimatedVisibility(
         visible = isVisible.value,
-        enter =
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec =
-                    spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow,
-                        visibilityThreshold = IntOffset.VisibilityThreshold,
-                    ),
+        enter = slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntOffset.VisibilityThreshold,
             ),
+        ),
         modifier = modifier,
     ) {
         content()

@@ -80,45 +80,42 @@ fun MobileBrowseContent(
                             animationSpec = tween(durationMillis = 300),
                             initialOffsetX = { it },
                         ) togetherWith
-                                slideOutHorizontally(
-                                    animationSpec = tween(durationMillis = 300),
-                                    targetOffsetX = { -it },
-                                )
+                            slideOutHorizontally(
+                                animationSpec = tween(durationMillis = 300),
+                                targetOffsetX = { -it },
+                            )
                     } else {
                         slideInHorizontally(
                             animationSpec = tween(durationMillis = 300),
                             initialOffsetX = { -it },
                         ) togetherWith
-                                slideOutHorizontally(
-                                    animationSpec = tween(durationMillis = 300),
-                                    targetOffsetX = { it },
-                                )
+                            slideOutHorizontally(
+                                animationSpec = tween(durationMillis = 300),
+                                targetOffsetX = { it },
+                            )
                     }
                 },
                 label = "browseSectionTransition",
             ) { sectionIndex ->
                 val selected = currentState.sections.getOrNull(sectionIndex)
-                val sectionContent =
-                    when (selected) {
-                        is Movies -> selected.content
-                        is TvShows -> selected.content
-                        is Favorites -> selected.content
-                        else -> emptyList()
-                    }
+                val sectionContent = when (selected) {
+                    is Movies -> selected.content
+                    is TvShows -> selected.content
+                    is Favorites -> selected.content
+                    else -> emptyList()
+                }
                 LazyColumn(
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     contentPadding = PaddingValues(bottom = BESTVTheme.scale.s600),
                 ) {
                     items(sectionContent, key = { it.hashCode() }) { content ->
                         AnimatedVisibility(
                             visible = hasPlayedEntrance,
-                            enter =
-                                slideInHorizontally(
-                                    initialOffsetX = { it },
-                                    animationSpec = tween(durationMillis = 450),
-                                ) + fadeIn(animationSpec = tween(durationMillis = 350)),
+                            enter = slideInHorizontally(
+                                initialOffsetX = { it },
+                                animationSpec = tween(durationMillis = 450),
+                            ) + fadeIn(animationSpec = tween(durationMillis = 350)),
                         ) {
                             MobileContentRow(content, onWorkClick)
                         }
@@ -154,11 +151,10 @@ private fun MobileContentRow(
     content: ContentSection,
     onWorkClick: (WorkViewModel) -> Unit,
 ) {
-    val title =
-        when (content) {
-            is Genre -> content.genreViewModel.name.orEmpty()
-            is TopContent -> stringResource(content.type.resource)
-        }
+    val title = when (content) {
+        is Genre -> content.genreViewModel.name.orEmpty()
+        is TopContent -> stringResource(content.type.resource)
+    }
     MobileWorkRow(
         title = title,
         works = content.works,
@@ -169,43 +165,38 @@ private fun MobileContentRow(
 @Preview(showBackground = true)
 @Composable
 private fun MobileBrowseContentPreview() {
-    val previewWork =
-        WorkViewModel(
-            id = 1,
-            originalLanguage = "en",
-            overview = "A preview description for the mobile browse screen.",
-            source = "Movie",
-            backdropUrl = "",
-            posterUrl = "",
-            title = "Preview Movie",
-            originalTitle = "Preview Movie",
-            releaseDate = "2025",
-            type = WorkType.MOVIE,
-            voteAverage = 8.1f,
-        )
-    val section =
-        TopContent(
-            type = TopWorkTypeViewModel.NOW_PLAYING_MOVIES,
-            works = listOf(previewWork, previewWork.copy(id = 2, title = "Another Movie")),
-            page = PaginationState(),
-        )
+    val previewWork = WorkViewModel(
+        id = 1,
+        originalLanguage = "en",
+        overview = "A preview description for the mobile browse screen.",
+        source = "Movie",
+        backdropUrl = "",
+        posterUrl = "",
+        title = "Preview Movie",
+        originalTitle = "Preview Movie",
+        releaseDate = "2025",
+        type = WorkType.MOVIE,
+        voteAverage = 8.1f,
+    )
+    val section = TopContent(
+        type = TopWorkTypeViewModel.NOW_PLAYING_MOVIES,
+        works = listOf(previewWork, previewWork.copy(id = 2, title = "Another Movie")),
+        page = PaginationState(),
+    )
     BESTVTheme {
         MobileBrowseContent(
-            state =
-                WorkBrowseState(
-                    state =
-                        WorkBrowseState.State.Loaded(
-                            workSelected = null,
-                            selectedSectionIndex = 0,
-                            sections = listOf(Movies(content = listOf(section))),
-                        ),
+            state = WorkBrowseState(
+                state = WorkBrowseState.State.Loaded(
+                    workSelected = null,
+                    selectedSectionIndex = 0,
+                    sections = listOf(Movies(content = listOf(section))),
                 ),
+            ),
             onWorkClick = {},
             onRetry = {},
             onSplashAnimationFinished = {},
-            modifier =
-                Modifier
-                    .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
         )
     }
 }

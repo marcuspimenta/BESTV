@@ -21,7 +21,6 @@ fun GenreResponse.toDomainModel() =
     GenreDomainModel(
         id = id,
         name = name,
-        source =
-            GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
-                ?: GenreDomainModel.Source.TV_SHOW,
+        source = GenreDomainModel.Source.MOVIE.takeIf { source == GenreResponse.Source.MOVIE }
+            ?: GenreDomainModel.Source.TV_SHOW,
     )

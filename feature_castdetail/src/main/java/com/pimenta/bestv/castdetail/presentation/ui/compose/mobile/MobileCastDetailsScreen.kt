@@ -74,10 +74,9 @@ fun MobileCastDetailsScreen(
     val loaded = state as? CastDetailsState.Loaded
     var viewportTop by remember { mutableFloatStateOf(Float.NaN) }
     var castTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val showCollapsedTitle =
-        viewportTop.isFinite() &&
-            castTitleBottom.isFinite() &&
-            castTitleBottom <= viewportTop
+    val showCollapsedTitle = viewportTop.isFinite() &&
+        castTitleBottom.isFinite() &&
+        castTitleBottom <= viewportTop
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -95,10 +94,9 @@ fun MobileCastDetailsScreen(
         topBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding(),
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
@@ -123,9 +121,9 @@ fun MobileCastDetailsScreen(
     ) { contentPadding ->
         MobileCastDetailsContent(
             state = state,
-            modifier =
-                Modifier
-                    .fillMaxSize().padding(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
             onEvent = viewModel::handleEvent,
             onViewportTopChanged = { viewportTop = it },
             onTitleBottomChanged = { castTitleBottom = it },
@@ -174,11 +172,10 @@ private fun MobileCastDetailsLoadedContent(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier =
-            modifier
-                .onGloballyPositioned { coordinates ->
-                    onViewportTopChanged(coordinates.boundsInRoot().top)
-                }.verticalScroll(rememberScrollState()),
+        modifier = modifier
+            .onGloballyPositioned { coordinates ->
+                onViewportTopChanged(coordinates.boundsInRoot().top)
+            }.verticalScroll(rememberScrollState()),
     ) {
         MobileCastHeader(castDetails.cast, onTitleBottomChanged)
         if (castDetails.movies.isNotEmpty()) {
@@ -204,29 +201,26 @@ private fun MobileCastHeader(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier =
-            Modifier
-                .padding(BESTVTheme.scale.s080),
+        modifier = Modifier
+            .padding(BESTVTheme.scale.s080),
         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         AsyncImage(
             model = cast.thumbnailUrl,
             contentDescription = cast.name,
             contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .width(BESTVTheme.scale.s700)
-                    .height(BESTVTheme.scale.s1000)
-                    .clip(RoundedCornerShape(BESTVTheme.scale.s060)),
+            modifier = Modifier
+                .width(BESTVTheme.scale.s700)
+                .height(BESTVTheme.scale.s1000)
+                .clip(RoundedCornerShape(BESTVTheme.scale.s060)),
         )
         Column {
             Text(
                 cast.name,
                 style = MaterialTheme.typography.headlineMedium,
                 color = BESTVTheme.colors.white,
-                modifier =
-                    Modifier
-                        .onGloballyPositioned { coordinates ->
+                modifier = Modifier
+                    .onGloballyPositioned { coordinates ->
                         onTitleBottomChanged(coordinates.boundsInRoot().bottom)
                     },
             )
@@ -234,18 +228,16 @@ private fun MobileCastHeader(
                 Text(
                     stringResource(com.pimenta.bestv.castdetail.R.string.born, cast.birthday),
                     color = BESTVTheme.colors.secondaryInfoText,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s060),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s060),
                 )
             }
             if (cast.biography.isNotBlank()) {
                 Text(
                     cast.biography,
                     color = BESTVTheme.colors.biographyText,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s080),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s080),
                 )
             }
         }
@@ -257,19 +249,18 @@ private fun MobileCastHeader(
 private fun MobileCastHeaderPreview() {
     BESTVTheme {
         MobileCastHeader(
-            cast =
-                CastViewModel(
-                    id = 1,
-                    name = "Alex Morgan",
-                    character = "Lead actor",
-                    birthday = "1988-04-10",
-                    source = "TMDB",
-                    deathDay = "",
-                    biography =
-                        "An award-winning actor known for acclaimed dramatic roles and " +
-                            "independent films.",
-                    thumbnailUrl = "",
-                ),
+            cast = CastViewModel(
+                id = 1,
+                name = "Alex Morgan",
+                character = "Lead actor",
+                birthday = "1988-04-10",
+                source = "TMDB",
+                deathDay = "",
+                biography =
+                "An award-winning actor known for acclaimed dramatic roles and " +
+                    "independent films.",
+                thumbnailUrl = "",
+            ),
             onTitleBottomChanged = {},
         )
     }
@@ -280,40 +271,36 @@ private fun MobileCastHeaderPreview() {
 private fun MobileCastDetailsContentPreview() {
     BESTVTheme {
         MobileCastDetailsContent(
-            state =
-                CastDetailsState.Loaded(
-                    cast =
-                        CastViewModel(
-                            id = 1,
-                            name = "Alex Morgan",
-                            character = "Lead actor",
-                            birthday = "1988-04-10",
-                            source = "TMDB",
-                            deathDay = "",
-                            biography = "An award-winning actor known for acclaimed dramatic roles.",
-                            thumbnailUrl = "",
-                        ),
-                    movies =
-                        listOf(
-                            WorkViewModel(
-                                id = 1,
-                                originalLanguage = "en",
-                                overview = "A preview movie.",
-                                source = "Movie",
-                                backdropUrl = "",
-                                posterUrl = "",
-                                title = "Preview Movie",
-                                originalTitle = "Preview Movie",
-                                releaseDate = "2025",
-                                type = WorkType.MOVIE,
-                                voteAverage = 8.1f,
-                            ),
-                        ),
-                    tvShows = emptyList(),
+            state = CastDetailsState.Loaded(
+                cast = CastViewModel(
+                    id = 1,
+                    name = "Alex Morgan",
+                    character = "Lead actor",
+                    birthday = "1988-04-10",
+                    source = "TMDB",
+                    deathDay = "",
+                    biography = "An award-winning actor known for acclaimed dramatic roles.",
+                    thumbnailUrl = "",
                 ),
-            modifier =
-                Modifier
-                    .fillMaxSize(),
+                movies = listOf(
+                    WorkViewModel(
+                        id = 1,
+                        originalLanguage = "en",
+                        overview = "A preview movie.",
+                        source = "Movie",
+                        backdropUrl = "",
+                        posterUrl = "",
+                        title = "Preview Movie",
+                        originalTitle = "Preview Movie",
+                        releaseDate = "2025",
+                        type = WorkType.MOVIE,
+                        voteAverage = 8.1f,
+                    ),
+                ),
+                tvShows = emptyList(),
+            ),
+            modifier = Modifier
+                .fillMaxSize(),
             onEvent = {},
             onViewportTopChanged = {},
             onTitleBottomChanged = {},

@@ -58,14 +58,13 @@ fun TVSearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        modifier =
-                modifier
-                .statusBarsPadding()
-                .fillMaxWidth()
-                .padding(
-                    horizontal = BESTVTheme.scale.s240,
-                    vertical = BESTVTheme.scale.s120,
-                ).focusRequester(focusRequester),
+        modifier = modifier
+            .statusBarsPadding()
+            .fillMaxWidth()
+            .padding(
+                horizontal = BESTVTheme.scale.s240,
+                vertical = BESTVTheme.scale.s120,
+            ).focusRequester(focusRequester),
         placeholder = {
             Text(
                 text = placeholder,
@@ -93,23 +92,20 @@ fun TVSearchBar(
             }
         },
         singleLine = true,
-        keyboardOptions =
-            KeyboardOptions(
-                imeAction = ImeAction.Search,
-            ),
-        keyboardActions =
-            KeyboardActions(
-                onSearch = { onQuerySubmit(query) },
-            ),
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = BESTVTheme.colors.white,
-                unfocusedTextColor = BESTVTheme.colors.white,
-                cursorColor = BESTVTheme.colors.white,
-                focusedBorderColor = BESTVTheme.colors.searchFocusedBorder,
-                unfocusedBorderColor = BESTVTheme.colors.searchUnfocusedBorder,
-                focusedContainerColor = BESTVTheme.colors.searchFieldSurface,
-                unfocusedContainerColor = BESTVTheme.colors.searchFieldSurface,
-            ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { onQuerySubmit(query) },
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = BESTVTheme.colors.white,
+            unfocusedTextColor = BESTVTheme.colors.white,
+            cursorColor = BESTVTheme.colors.white,
+            focusedBorderColor = BESTVTheme.colors.searchFocusedBorder,
+            unfocusedBorderColor = BESTVTheme.colors.searchUnfocusedBorder,
+            focusedContainerColor = BESTVTheme.colors.searchFieldSurface,
+            unfocusedContainerColor = BESTVTheme.colors.searchFieldSurface,
+        ),
     )
 }

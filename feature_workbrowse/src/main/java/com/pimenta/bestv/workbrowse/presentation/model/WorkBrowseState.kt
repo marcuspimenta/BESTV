@@ -58,8 +58,6 @@ data class WorkBrowseState(
         data class Favorites(
             val content: List<ContentSection>,
         ) : Section(presentationR.drawable.favorite, workbrowseR.string.favorites)
-
-        data object About : Section(presentationR.drawable.info, workbrowseR.string.about)
     }
 }
 

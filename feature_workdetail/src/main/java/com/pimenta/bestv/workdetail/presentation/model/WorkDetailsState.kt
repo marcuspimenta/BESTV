@@ -115,7 +115,9 @@ sealed class ErrorType(
 
     data object FavoriteError : ErrorType("Could not save/unsave the work.")
 
-    data object PaginationError : ErrorType("Could not load more content of this row. Please check your internet connection")
+    data object PaginationError :
+        ErrorType("Could not load more content of this row. Please check your internet connection")
 
-    data object FailedToOpenYouTubeVideo : ErrorType("Failed to open the video. Check if you have YouTube installed and try again.")
+    data object FailedToOpenYouTubeVideo :
+        ErrorType("Failed to open the video. Check if you have YouTube installed and try again.")
 }

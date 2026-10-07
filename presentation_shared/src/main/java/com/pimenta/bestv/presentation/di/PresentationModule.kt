@@ -18,7 +18,6 @@ import com.pimenta.bestv.presentation.platform.Resource
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val presentationModule =
-    module {
-        singleOf(::Resource)
-    }
+val presentationModule = module {
+    singleOf(::Resource)
+}

@@ -199,16 +199,15 @@ class SearchViewModelTest {
             }
         }
 
-        viewModel =
-            SearchViewModel(
-                searchWorksByQueryUseCase,
-                searchMoviesByQueryUseCase,
-                searchTvShowsByQueryUseCase,
-                workDetailsRoute,
-                searchRequestProcessor,
-                selectedWorkRequestProcessor,
-                TvDeviceCapabilities,
-            )
+        viewModel = SearchViewModel(
+            searchWorksByQueryUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
+            workDetailsRoute,
+            searchRequestProcessor,
+            selectedWorkRequestProcessor,
+            TvDeviceCapabilities,
+        )
     }
 
     @After
@@ -326,8 +325,7 @@ class SearchViewModelTest {
             // State should have more tv shows
             val paginatedState = viewModel.state.value
             val loadedState = paginatedState.state as SearchState.State.Loaded
-            val tvShowsContent =
-                loadedState.contents.filterIsInstance<TvShows>().first()
+            val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().first()
             assertEquals(2, tvShowsContent.page.currentPage)
             assertTrue(tvShowsContent.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
         }

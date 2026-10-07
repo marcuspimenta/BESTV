@@ -112,10 +112,9 @@ fun MobileWorkDetailsScreen(
     val listState = rememberLazyListState()
     var listViewportTop by remember { mutableFloatStateOf(Float.NaN) }
     var headerTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val showCollapsedTitle =
-        listViewportTop.isFinite() &&
-            headerTitleBottom.isFinite() &&
-            headerTitleBottom <= listViewportTop
+    val showCollapsedTitle = listViewportTop.isFinite() &&
+        headerTitleBottom.isFinite() &&
+        headerTitleBottom <= listViewportTop
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -139,10 +138,9 @@ fun MobileWorkDetailsScreen(
         topBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding(),
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
@@ -186,10 +184,9 @@ private fun MobileWorkDetailsContent(
     onHeaderTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
     ) {
         when (val current = state.state) {
             is Loading ->
@@ -232,12 +229,11 @@ private fun MobileWorkDetailsList(
 ) {
     LazyColumn(
         state = listState,
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .onGloballyPositioned { coordinates ->
-                    onListViewportTopChanged(coordinates.boundsInRoot().top)
-                },
+        modifier = Modifier
+            .fillMaxSize()
+            .onGloballyPositioned { coordinates ->
+                onListViewportTopChanged(coordinates.boundsInRoot().top)
+            },
     ) {
         content.contents.forEach { section ->
             when (section) {
@@ -295,16 +291,15 @@ private fun MobileWorkDetailsList(
         content.error?.let { error ->
             item(key = "error") {
                 Card(
-                    modifier =
-                        Modifier
-                            .padding(BESTVTheme.scale.s080),
+                    modifier = Modifier
+                        .padding(BESTVTheme.scale.s080),
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = error.message,
-                            modifier =
-                                Modifier
-                                    .weight(1f).padding(BESTVTheme.scale.s080),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(BESTVTheme.scale.s080),
                         )
                         IconButton(onClick = { onEvent(DismissError) }) {
                             Icon(Icons.Default.Close, contentDescription = null)
@@ -323,15 +318,13 @@ private fun MobileWorkActions(
 ) {
     if (actions.isEmpty()) return
     LazyRow(
-        contentPadding =
-            PaddingValues(
-                horizontal = BESTVTheme.scale.s080,
-            ),
+        contentPadding = PaddingValues(
+            horizontal = BESTVTheme.scale.s080,
+        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-        modifier =
-            Modifier
-                .background(BESTVTheme.colors.black)
-                .padding(BESTVTheme.scale.s040),
+        modifier = Modifier
+            .background(BESTVTheme.colors.black)
+            .padding(BESTVTheme.scale.s040),
     ) {
         items(actions, key = { it.id }) { action ->
             Button(onClick = { onAction(action) }) { Text(action.title) }
@@ -345,24 +338,21 @@ private fun MobileWorkHeader(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         AsyncImage(
             model = work.backdropUrl,
             contentDescription = work.title,
             contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(BESTVTheme.scale.s1000),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(BESTVTheme.scale.s1000),
         )
         Column(
-            modifier =
-                Modifier
-                    .padding(
+            modifier = Modifier
+                .padding(
                     start = BESTVTheme.scale.s080,
                     end = BESTVTheme.scale.s080,
                     bottom = BESTVTheme.scale.s080,
@@ -372,33 +362,29 @@ private fun MobileWorkHeader(
                 text = work.title,
                 style = MaterialTheme.typography.headlineMedium,
                 color = BESTVTheme.colors.white,
-                modifier =
-                    Modifier
-                        .onGloballyPositioned { coordinates ->
+                modifier = Modifier
+                    .onGloballyPositioned { coordinates ->
                         onTitleBottomChanged(coordinates.boundsInRoot().bottom)
                     },
             )
             Text(
-                text =
-                    listOf(
-                        work.releaseDate,
-                        "★ ${work.voteAverage}",
-                        work.source,
-                    ).filter(String::isNotBlank)
-                        .joinToString(" · "),
+                text = listOf(
+                    work.releaseDate,
+                    "★ ${work.voteAverage}",
+                    work.source,
+                ).filter(String::isNotBlank)
+                    .joinToString(" · "),
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.secondaryText,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s040),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s040),
             )
             Text(
                 text = work.overview,
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.biographyText,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s080),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s080),
             )
         }
     }
@@ -410,10 +396,9 @@ private fun MobileProviders(providers: WatchProvidersViewModel) {
 
     MobileSectionTitle(stringResource(R.string.where_to_watch))
     LazyRow(
-        contentPadding =
-            PaddingValues(
-                horizontal = BESTVTheme.scale.s080,
-            ),
+        contentPadding = PaddingValues(
+            horizontal = BESTVTheme.scale.s080,
+        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
     ) {
         items(providers.providers, key = { it.id }) { provider ->
@@ -421,10 +406,9 @@ private fun MobileProviders(providers: WatchProvidersViewModel) {
                 model = provider.logoUrl,
                 contentDescription = provider.name,
                 contentScale = ContentScale.Crop,
-                modifier =
-                    Modifier
-                        .size(BESTVTheme.scale.s200)
-                        .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+                modifier = Modifier
+                    .size(BESTVTheme.scale.s200)
+                    .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
             )
         }
     }
@@ -437,38 +421,33 @@ private fun MobileVideos(
 ) {
     MobileSectionTitle(stringResource(R.string.videos))
     LazyRow(
-        contentPadding =
-            PaddingValues(
-                horizontal = BESTVTheme.scale.s080,
-            ),
+        contentPadding = PaddingValues(
+            horizontal = BESTVTheme.scale.s080,
+        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(videos, key = { it.id ?: it.hashCode() }) { video ->
             Card(
                 onClick = { onClick(video) },
-                modifier =
-                    Modifier
-                        .width(BESTVTheme.scale.s1000),
+                modifier = Modifier
+                    .width(BESTVTheme.scale.s1000),
             ) {
                 Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(BESTVTheme.scale.s600),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(BESTVTheme.scale.s600),
                 ) {
                     AsyncImage(
                         model = video.thumbnailUrl,
                         contentDescription = stringResource(R.string.play_video),
                         contentScale = ContentScale.Crop,
-                        modifier =
-                            Modifier
-                                .fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize(),
                     )
                     Surface(
-                        modifier =
-                            Modifier
-                                .align(Alignment.Center)
-                                .size(BESTVTheme.scale.s320),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(BESTVTheme.scale.s320),
                         shape = CircleShape,
                         color = BESTVTheme.colors.imageScrim,
                     ) {
@@ -476,10 +455,9 @@ private fun MobileVideos(
                             imageVector = Icons.Filled.PlayArrow,
                             contentDescription = stringResource(R.string.play_video),
                             tint = BESTVTheme.colors.white,
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .padding(BESTVTheme.scale.s060),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(BESTVTheme.scale.s060),
                         )
                     }
                 }
@@ -495,27 +473,24 @@ private fun MobileCasts(
 ) {
     MobileSectionTitle(stringResource(R.string.cast))
     LazyRow(
-        contentPadding =
-            PaddingValues(
-                horizontal = BESTVTheme.scale.s080,
-            ),
+        contentPadding = PaddingValues(
+            horizontal = BESTVTheme.scale.s080,
+        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(casts, key = { it.id }) { cast ->
             Card(
                 onClick = { onClick(cast) },
-                modifier =
-                    Modifier
-                        .width(BESTVTheme.scale.s500),
+                modifier = Modifier
+                    .width(BESTVTheme.scale.s500),
             ) {
                 AsyncImage(
                     model = cast.thumbnailUrl,
                     contentDescription = cast.name,
                     contentScale = ContentScale.Crop,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(BESTVTheme.scale.s750),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(BESTVTheme.scale.s750),
                 )
             }
         }
@@ -532,22 +507,19 @@ private fun MobileReviews(
     val listState = rememberLazyListState()
     LazyRow(
         state = listState,
-        contentPadding =
-            PaddingValues(
-                horizontal = BESTVTheme.scale.s080,
-            ),
+        contentPadding = PaddingValues(
+            horizontal = BESTVTheme.scale.s080,
+        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(reviews, key = { it.id ?: it.hashCode() }) { review ->
             Card(
-                modifier =
-                    Modifier
-                        .width(BESTVTheme.scale.s1250),
+                modifier = Modifier
+                    .width(BESTVTheme.scale.s1250),
             ) {
                 Column(
-                    modifier =
-                        Modifier
-                            .padding(BESTVTheme.scale.s080),
+                    modifier = Modifier
+                        .padding(BESTVTheme.scale.s080),
                 ) {
                     Text(review.author.orEmpty(), style = MaterialTheme.typography.titleMedium)
                     Text(
@@ -598,12 +570,11 @@ private fun MobileWorkHeaderPreview() {
 private fun MobileWorkActionsPreview() {
     BESTVTheme {
         MobileWorkActions(
-            actions =
-                listOf(
-                    ActionButton.SaveWork(isFavorite = false),
-                    ActionButton.ScrollToVideos,
-                    ActionButton.ScrollToCasts,
-                ),
+            actions = listOf(
+                ActionButton.SaveWork(isFavorite = false),
+                ActionButton.ScrollToVideos,
+                ActionButton.ScrollToCasts,
+            ),
             onAction = {},
         )
     }
@@ -616,19 +587,18 @@ private fun MobileProvidersPreview() {
         MobileProviders(
             WatchProvidersViewModel(
                 tmdbLink = null,
-                providers =
-                    listOf(
-                        com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
-                            1,
-                            "Stream",
-                            null,
-                        ),
-                        com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
-                            2,
-                            "Cinema",
-                            null,
-                        ),
+                providers = listOf(
+                    com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
+                        1,
+                        "Stream",
+                        null,
                     ),
+                    com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
+                        2,
+                        "Cinema",
+                        null,
+                    ),
+                ),
             ),
         )
     }
@@ -639,11 +609,10 @@ private fun MobileProvidersPreview() {
 private fun MobileVideosPreview() {
     BESTVTheme {
         MobileVideos(
-            videos =
-                listOf(
-                    VideoViewModel(id = "1", name = "Trailer"),
-                    VideoViewModel(id = "2", name = "Behind the scenes"),
-                ),
+            videos = listOf(
+                VideoViewModel(id = "1", name = "Trailer"),
+                VideoViewModel(id = "2", name = "Behind the scenes"),
+            ),
             onClick = {},
         )
     }
@@ -654,11 +623,10 @@ private fun MobileVideosPreview() {
 private fun MobileCastsPreview() {
     BESTVTheme {
         MobileCasts(
-            casts =
-                listOf(
-                    CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
-                    CastViewModel(2, "Sam Taylor", "Friend", "", "", "", "", ""),
-                ),
+            casts = listOf(
+                CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
+                CastViewModel(2, "Sam Taylor", "Friend", "", "", "", "", ""),
+            ),
             onClick = {},
         )
     }
@@ -669,20 +637,18 @@ private fun MobileCastsPreview() {
 private fun MobileReviewsPreview() {
     BESTVTheme {
         MobileReviews(
-            reviews =
-                listOf(
-                    ReviewViewModel(
-                        id = "1",
-                        author = "A. Reviewer",
-                        content =
-                            "A thoughtful review preview with enough text to demonstrate the " +
-                                "fixed eight line card content, truncation, and horizontal scrolling.",
-                    ),
-                    ReviewViewModel(id = "2", author = "B. Reviewer", content = "A second review."),
+            reviews = listOf(
+                ReviewViewModel(
+                    id = "1",
+                    author = "A. Reviewer",
+                    content =
+                    "A thoughtful review preview with enough text to demonstrate the " +
+                        "fixed eight line card content, truncation, and horizontal scrolling.",
                 ),
-            page =
-                com.pimenta.bestv.presentation.model
-                    .PaginationState(),
+                ReviewViewModel(id = "2", author = "B. Reviewer", content = "A second review."),
+            ),
+            page = com.pimenta.bestv.presentation.model
+                .PaginationState(),
             onLoadMore = {},
         )
     }
@@ -693,50 +659,42 @@ private fun MobileReviewsPreview() {
 private fun MobileWorkDetailsContentPreview() {
     BESTVTheme {
         MobileWorkDetailsContent(
-            state =
-                WorkDetailsState(
-                    work = mobilePreviewWork,
-                    state =
-                        Loaded(
-                            contents =
-                                listOf(
-                                    Header(
-                                        actions =
-                                            listOf(
-                                                ActionButton.SaveWork(isFavorite = false),
-                                                ActionButton.ScrollToVideos,
-                                            ),
-                                        watchProviders = null,
-                                    ),
-                                    Videos(videos = listOf(VideoViewModel(id = "trailer", name = "Trailer"))),
-                                    Casts(
-                                        casts =
-                                            listOf(
-                                                CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
-                                            ),
-                                    ),
-                                    RecommendedWorks(
-                                        recommended = listOf(mobilePreviewWork),
-                                        page =
-                                            com.pimenta.bestv.presentation.model
-                                                .PaginationState(),
-                                    ),
-                                    Reviews(
-                                        reviews =
-                                            listOf(
-                                                ReviewViewModel(
-                                                    id = "review",
-                                                    author = "A. Reviewer",
-                                                    content = "A sample review shown in a mobile work detail preview.",
-                                                ),
-                                            ),
-                                        page =
-                                            com.pimenta.bestv.presentation.model
-                                                .PaginationState(),
-                                    ),
-                                ),
+            state = WorkDetailsState(
+                work = mobilePreviewWork,
+                state = Loaded(
+                    contents = listOf(
+                        Header(
+                            actions = listOf(
+                                ActionButton.SaveWork(isFavorite = false),
+                                ActionButton.ScrollToVideos,
+                            ),
+                            watchProviders = null,
                         ),
+                        Videos(videos = listOf(VideoViewModel(id = "trailer", name = "Trailer"))),
+                        Casts(
+                            casts = listOf(
+                                CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
+                            ),
+                        ),
+                        RecommendedWorks(
+                            recommended = listOf(mobilePreviewWork),
+                            page = com.pimenta.bestv.presentation.model
+                                .PaginationState(),
+                        ),
+                        Reviews(
+                            reviews = listOf(
+                                ReviewViewModel(
+                                    id = "review",
+                                    author = "A. Reviewer",
+                                    content = "A sample review shown in a mobile work detail preview.",
+                                ),
+                            ),
+                            page = com.pimenta.bestv.presentation.model
+                                .PaginationState(),
+                        ),
+                    ),
                 ),
+            ),
             listState = rememberLazyListState(),
             contentPadding = PaddingValues(),
             onEvent = {},

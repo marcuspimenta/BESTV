@@ -56,12 +56,11 @@ fun SearchState.moviesPaginationSucceeded(moviePage: PageViewModel<WorkViewModel
         if (content is Movies) {
             content.copy(
                 movies = content.movies + moviePage.results,
-                page =
-                    PaginationState(
-                        currentPage = moviePage.page,
-                        totalPages = moviePage.totalPages,
-                        isLoadingMore = false,
-                    ),
+                page = PaginationState(
+                    currentPage = moviePage.page,
+                    totalPages = moviePage.totalPages,
+                    isLoadingMore = false,
+                ),
             )
         } else {
             content
@@ -91,12 +90,11 @@ fun SearchState.tvShowsPaginationSucceeded(tvShowPage: PageViewModel<WorkViewMod
         if (content is TvShows) {
             content.copy(
                 tvShows = content.tvShows + tvShowPage.results,
-                page =
-                    PaginationState(
-                        currentPage = tvShowPage.page,
-                        totalPages = tvShowPage.totalPages,
-                        isLoadingMore = false,
-                    ),
+                page = PaginationState(
+                    currentPage = tvShowPage.page,
+                    totalPages = tvShowPage.totalPages,
+                    isLoadingMore = false,
+                ),
             )
         } else {
             content

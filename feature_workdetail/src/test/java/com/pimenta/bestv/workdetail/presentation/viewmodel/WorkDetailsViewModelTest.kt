@@ -100,50 +100,47 @@ private val WORK_PAGE =
     PageDomainModel(
         page = 1,
         totalPages = 5,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 2,
-                    title = "Recommended Movie",
-                    originalTitle = "Recommended Movie",
-                    originalLanguage = "en",
-                    overview = "A recommended movie",
-                    source = "tmdb",
-                    backdropPath = "/backdrop.jpg",
-                    posterPath = "/poster.jpg",
-                    releaseDate = "2023-01-01",
-                    type = WorkDomainModel.Type.MOVIE,
-                    voteAverage = 7.5f,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 2,
+                title = "Recommended Movie",
+                originalTitle = "Recommended Movie",
+                originalLanguage = "en",
+                overview = "A recommended movie",
+                source = "tmdb",
+                backdropPath = "/backdrop.jpg",
+                posterPath = "/poster.jpg",
+                releaseDate = "2023-01-01",
+                type = WorkDomainModel.Type.MOVIE,
+                voteAverage = 7.5f,
             ),
+        ),
     )
 
 private val REVIEW_PAGE =
     PageDomainModel(
         page = 1,
         totalPages = 3,
-        results =
-            listOf(
-                ReviewDomainModel(
-                    id = "1",
-                    author = "Reviewer",
-                    content = "Great movie!",
-                ),
+        results = listOf(
+            ReviewDomainModel(
+                id = "1",
+                author = "Reviewer",
+                content = "Great movie!",
             ),
+        ),
     )
 
 private val WATCH_PROVIDERS =
     WatchProvidersDomainModel(
         tmdbLink = "https://www.themoviedb.org/movie/1/watch",
-        streaming =
-            listOf(
-                WatchProviderDomainModel(
-                    id = 1,
-                    name = "Netflix",
-                    logoPath = "/logo.jpg",
-                    displayPriority = 1,
-                ),
+        streaming = listOf(
+            WatchProviderDomainModel(
+                id = 1,
+                name = "Netflix",
+                logoPath = "/logo.jpg",
+                displayPriority = 1,
             ),
+        ),
         rent = emptyList(),
         buy = emptyList(),
     )
@@ -197,16 +194,15 @@ class WorkDetailsViewModelTest {
     @Test
     fun `loadData should update state with loaded data`() =
         runTest(testDispatcher) {
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = true,
-                    videos = VIDEO_LIST,
-                    casts = CAST_LIST,
-                    recommended = WORK_PAGE,
-                    similar = WORK_PAGE,
-                    reviews = REVIEW_PAGE,
-                    watchProviders = WATCH_PROVIDERS,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = true,
+                videos = VIDEO_LIST,
+                casts = CAST_LIST,
+                recommended = WORK_PAGE,
+                similar = WORK_PAGE,
+                reviews = REVIEW_PAGE,
+                watchProviders = WATCH_PROVIDERS,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
@@ -231,10 +227,9 @@ class WorkDetailsViewModelTest {
             val reviews = loadedState.contents.filterIsInstance<WorkDetailsState.Content.Reviews>().firstOrNull()
             assertEquals(1, reviews?.reviews?.size)
 
-            val recommendedWorks =
-                loadedState.contents
-                    .filterIsInstance<WorkDetailsState.Content.RecommendedWorks>()
-                    .firstOrNull()
+            val recommendedWorks = loadedState.contents
+                .filterIsInstance<WorkDetailsState.Content.RecommendedWorks>()
+                .firstOrNull()
             assertEquals(1, recommendedWorks?.recommended?.size)
 
             val similarWorks = loadedState.contents.filterIsInstance<WorkDetailsState.Content.SimilarWorks>().firstOrNull()
@@ -246,16 +241,15 @@ class WorkDetailsViewModelTest {
     @Test
     fun `loadData should show loading state`() =
         runTest(testDispatcher) {
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = PageDomainModel(1, 1, emptyList()),
-                    watchProviders = null,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = PageDomainModel(1, 1, emptyList()),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
@@ -288,16 +282,15 @@ class WorkDetailsViewModelTest {
     fun `toggleFavorite should update favorite state`() =
         runTest(testDispatcher) {
             // First load data to have a loaded state
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = PageDomainModel(1, 1, emptyList()),
-                    watchProviders = null,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = PageDomainModel(1, 1, emptyList()),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
             whenever(setFavoriteUseCase(any())).thenReturn(Unit)
@@ -325,20 +318,19 @@ class WorkDetailsViewModelTest {
     @Test
     fun `workClicked should emit OpenIntent effect`() =
         runTest(testDispatcher) {
-            val clickedWork =
-                WorkViewModel(
-                    id = 2,
-                    title = "Another Movie",
-                    originalTitle = "Another Movie",
-                    originalLanguage = "en",
-                    overview = "Another test movie",
-                    source = "tmdb",
-                    backdropUrl = "https://image.tmdb.org/t/p/original/backdrop2.jpg",
-                    posterUrl = "https://image.tmdb.org/t/p/original/poster2.jpg",
-                    releaseDate = "Feb 01, 2023",
-                    type = WorkType.MOVIE,
-                    voteAverage = 7.5f,
-                )
+            val clickedWork = WorkViewModel(
+                id = 2,
+                title = "Another Movie",
+                originalTitle = "Another Movie",
+                originalLanguage = "en",
+                overview = "Another test movie",
+                source = "tmdb",
+                backdropUrl = "https://image.tmdb.org/t/p/original/backdrop2.jpg",
+                posterUrl = "https://image.tmdb.org/t/p/original/poster2.jpg",
+                releaseDate = "Feb 01, 2023",
+                type = WorkType.MOVIE,
+                voteAverage = 7.5f,
+            )
             val intent = mock<Intent>()
             whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
 
@@ -355,17 +347,16 @@ class WorkDetailsViewModelTest {
     @Test
     fun `castClicked should emit OpenIntent effect`() =
         runTest(testDispatcher) {
-            val cast =
-                CastViewModel(
-                    id = 1,
-                    name = "Actor Name",
-                    character = "Character Name",
-                    birthday = "1990-01-01",
-                    source = "tmdb",
-                    deathDay = "",
-                    biography = "An actor biography",
-                    thumbnailUrl = "https://image.tmdb.org/t/p/original/photo.jpg",
-                )
+            val cast = CastViewModel(
+                id = 1,
+                name = "Actor Name",
+                character = "Character Name",
+                birthday = "1990-01-01",
+                source = "tmdb",
+                deathDay = "",
+                biography = "An actor biography",
+                thumbnailUrl = "https://image.tmdb.org/t/p/original/photo.jpg",
+            )
             val intent = mock<Intent>()
             whenever(castDetailsRoute.buildCastDetailIntent(cast)).thenReturn(intent)
 
@@ -382,12 +373,11 @@ class WorkDetailsViewModelTest {
     @Test
     fun `videoClicked should emit OpenIntent effect`() =
         runTest(testDispatcher) {
-            val video =
-                VideoViewModel(
-                    id = "1",
-                    type = "Trailer",
-                    youtubeUrl = "https://youtube.com/watch?v=123",
-                )
+            val video = VideoViewModel(
+                id = "1",
+                type = "Trailer",
+                youtubeUrl = "https://youtube.com/watch?v=123",
+            )
 
             viewModel.effects.test {
                 viewModel.handleEvent(WorkDetailsEvent.VideoClicked(video))
@@ -402,12 +392,11 @@ class WorkDetailsViewModelTest {
     @Test
     fun `videoClicked with null url should not emit effect`() =
         runTest(testDispatcher) {
-            val video =
-                VideoViewModel(
-                    id = "1",
-                    type = "Trailer",
-                    youtubeUrl = null,
-                )
+            val video = VideoViewModel(
+                id = "1",
+                type = "Trailer",
+                youtubeUrl = null,
+            )
 
             viewModel.effects.test {
                 viewModel.handleEvent(WorkDetailsEvent.VideoClicked(video))
@@ -422,30 +411,27 @@ class WorkDetailsViewModelTest {
     fun `loadMoreReviews should load more reviews when needed`() =
         runTest(testDispatcher) {
             // Setup initial state with one page of reviews
-            val initialDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = REVIEW_PAGE.copy(totalPages = 2),
-                    watchProviders = null,
-                )
+            val initialDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = REVIEW_PAGE.copy(totalPages = 2),
+                watchProviders = null,
+            )
 
-            val secondReviewPage =
-                PageDomainModel<ReviewDomainModel>(
-                    page = 2,
-                    totalPages = 2,
-                    results =
-                        listOf(
-                            ReviewDomainModel(
-                                id = "2",
-                                author = "Another Reviewer",
-                                content = "Also great!",
-                            ),
-                        ),
-                )
+            val secondReviewPage = PageDomainModel<ReviewDomainModel>(
+                page = 2,
+                totalPages = 2,
+                results = listOf(
+                    ReviewDomainModel(
+                        id = "2",
+                        author = "Another Reviewer",
+                        content = "Also great!",
+                    ),
+                ),
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
             whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
@@ -476,16 +462,15 @@ class WorkDetailsViewModelTest {
     fun `dismissError should clear favorite error from loaded state`() =
         runTest(testDispatcher) {
             // First load data to have a loaded state
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = PageDomainModel(1, 1, emptyList()),
-                    watchProviders = null,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = PageDomainModel(1, 1, emptyList()),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
             whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))
@@ -518,16 +503,15 @@ class WorkDetailsViewModelTest {
     fun `dismissError should clear pagination error from loaded state`() =
         runTest(testDispatcher) {
             // Setup initial state with reviews
-            val initialDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = REVIEW_PAGE.copy(totalPages = 2),
-                    watchProviders = null,
-                )
+            val initialDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = REVIEW_PAGE.copy(totalPages = 2),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
             whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
@@ -578,16 +562,15 @@ class WorkDetailsViewModelTest {
     fun `showError should set error when state is loaded`() =
         runTest(testDispatcher) {
             // First load data to have a loaded state
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = PageDomainModel(1, 1, emptyList()),
-                    watchProviders = null,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = PageDomainModel(1, 1, emptyList()),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
 
@@ -632,16 +615,15 @@ class WorkDetailsViewModelTest {
     fun `showError should replace existing error with new error`() =
         runTest(testDispatcher) {
             // Setup loaded state with an existing error
-            val workDetails =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = false,
-                    videos = emptyList(),
-                    casts = emptyList(),
-                    recommended = PageDomainModel(1, 1, emptyList()),
-                    similar = PageDomainModel(1, 1, emptyList()),
-                    reviews = PageDomainModel(1, 1, emptyList()),
-                    watchProviders = null,
-                )
+            val workDetails = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = PageDomainModel(1, 1, emptyList()),
+                similar = PageDomainModel(1, 1, emptyList()),
+                reviews = PageDomainModel(1, 1, emptyList()),
+                watchProviders = null,
+            )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
             whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))

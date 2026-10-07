@@ -32,30 +32,28 @@ private val MOVIE_PAGE_VIEW_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 10,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman",
-                    type = WorkDomainModel.Type.MOVIE,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.MOVIE,
             ),
+        ),
     )
 
 private val TV_SHOW_PAGE_VIEW_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 10,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman",
-                    type = WorkDomainModel.Type.TV_SHOW,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.TV_SHOW,
             ),
+        ),
     )
 
 class SearchWorksByQueryUseCaseTest {

@@ -38,11 +38,10 @@ fun MobileWorkCard(
             model = work.posterUrl,
             contentDescription = work.title,
             contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(BESTVTheme.scale.s850)
-                    .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(BESTVTheme.scale.s850)
+                .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
         )
     }
 }
@@ -52,20 +51,19 @@ fun MobileWorkCard(
 private fun MobileWorkCardPreview() {
     BESTVTheme {
         MobileWorkCard(
-            work =
-                WorkViewModel(
-                    id = 1,
-                    originalLanguage = "en",
-                    overview = "A preview description.",
-                    source = "Movie",
-                    backdropUrl = "",
-                    posterUrl = "",
-                    title = "Preview Movie",
-                    originalTitle = "Preview Movie",
-                    releaseDate = "2025",
-                    type = WorkType.MOVIE,
-                    voteAverage = 8.0f,
-                ),
+            work = WorkViewModel(
+                id = 1,
+                originalLanguage = "en",
+                overview = "A preview description.",
+                source = "Movie",
+                backdropUrl = "",
+                posterUrl = "",
+                title = "Preview Movie",
+                originalTitle = "Preview Movie",
+                releaseDate = "2025",
+                type = WorkType.MOVIE,
+                voteAverage = 8.0f,
+            ),
             onClick = {},
         )
     }

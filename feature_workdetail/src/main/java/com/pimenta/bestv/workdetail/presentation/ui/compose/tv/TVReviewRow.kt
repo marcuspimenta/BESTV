@@ -67,9 +67,8 @@ fun TVReviewRow(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier =
-                Modifier
-                    .padding(
+            modifier = Modifier
+                .padding(
                     horizontal = BESTVTheme.scale.s240,
                     vertical = BESTVTheme.scale.s040,
                 ),
@@ -80,9 +79,8 @@ fun TVReviewRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier =
-                Modifier
-                    .padding(top = BESTVTheme.scale.s090),
+            modifier = Modifier
+                .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = reviews,
@@ -106,20 +104,17 @@ private fun TVReviewCard(
         imageCard = { interactionSource ->
             Card(
                 onClick = {},
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(BESTVTheme.scale.s1000),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(BESTVTheme.scale.s1000),
                 interactionSource = interactionSource,
-                colors =
-                    CardDefaults.colors(
-                        containerColor = BESTVTheme.colors.reviewCardSurface,
-                    ),
+                colors = CardDefaults.colors(
+                    containerColor = BESTVTheme.colors.reviewCardSurface,
+                ),
             ) {
                 Column(
-                    modifier =
-                        Modifier
-                            .padding(BESTVTheme.scale.s080),
+                    modifier = Modifier
+                        .padding(BESTVTheme.scale.s080),
                     verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s040),
                 ) {
                     Text(
@@ -149,32 +144,31 @@ private fun TVReviewCard(
 private fun TVReviewRowPreview() {
     MaterialTheme {
         TVReviewRow(
-            reviews =
-                listOf(
-                    ReviewViewModel(
-                        id = "1",
-                        author = "John Doe",
-                        content =
-                            "This is an amazing movie with great acting and an incredible " +
-                                "storyline that keeps you engaged from start to finish. The " +
-                                "cinematography is stunning and the music perfectly complements " +
-                                "every scene.",
-                    ),
-                    ReviewViewModel(
-                        id = "2",
-                        author = "Jane Smith",
-                        content =
-                            "One of the best movies I've ever seen. The plot twists are " +
-                                "unexpected and the character development is superb.",
-                    ),
-                    ReviewViewModel(
-                        id = "3",
-                        author = "Bob Johnson",
-                        content =
-                            "A masterpiece of modern cinema. Every frame is carefully crafted " +
-                                "and the performances are outstanding.",
-                    ),
+            reviews = listOf(
+                ReviewViewModel(
+                    id = "1",
+                    author = "John Doe",
+                    content =
+                    "This is an amazing movie with great acting and an incredible " +
+                        "storyline that keeps you engaged from start to finish. The " +
+                        "cinematography is stunning and the music perfectly complements " +
+                        "every scene.",
                 ),
+                ReviewViewModel(
+                    id = "2",
+                    author = "Jane Smith",
+                    content =
+                    "One of the best movies I've ever seen. The plot twists are " +
+                        "unexpected and the character development is superb.",
+                ),
+                ReviewViewModel(
+                    id = "3",
+                    author = "Bob Johnson",
+                    content =
+                    "A masterpiece of modern cinema. Every frame is carefully crafted " +
+                        "and the performances are outstanding.",
+                ),
+            ),
             isLoadingMore = false,
         )
     }

@@ -30,9 +30,10 @@ private const val WORK_TAG = "RECOMMENDATION"
 class ScheduleRecommendationUseCaseTest {
 
     private val workerManager: WorkManager = mock()
-    private val useCase = ScheduleRecommendationUseCase(
-        workerManager
-    )
+    private val useCase =
+        ScheduleRecommendationUseCase(
+            workerManager
+        )
 
     @Test
     fun `should load the schedule to update the recommendations`() {

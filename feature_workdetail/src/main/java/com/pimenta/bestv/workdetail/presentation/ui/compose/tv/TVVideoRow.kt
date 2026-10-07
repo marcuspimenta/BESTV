@@ -67,18 +67,16 @@ fun TVVideoRow(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = BESTVTheme.colors.white,
-            modifier =
-                Modifier
-                    .padding(horizontal = BESTVTheme.scale.s240),
+            modifier = Modifier
+                .padding(horizontal = BESTVTheme.scale.s240),
         )
 
         // Videos list with start-aligned focus behavior
         TVStartAlignedLazyRow(
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s240),
             horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s120),
-            modifier =
-                Modifier
-                    .padding(top = BESTVTheme.scale.s090),
+            modifier = Modifier
+                .padding(top = BESTVTheme.scale.s090),
         ) {
             items(
                 items = videos,
@@ -100,42 +98,36 @@ private fun TVVideoCard(
     modifier: Modifier = Modifier,
 ) {
     StandardCardContainer(
-        modifier =
-            Modifier
-                .width(BESTVTheme.scale.s1250),
+        modifier = Modifier
+            .width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
-                modifier =
-                    modifier
-                        .fillMaxWidth()
-                        .height(BESTVTheme.scale.s715),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(BESTVTheme.scale.s715),
                 interactionSource = interactionSource,
             ) {
                 Box(
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                 ) {
                     SubcomposeAsyncImage(
                         model = video.thumbnailUrl,
                         contentDescription = video.name,
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                         contentScale = ContentScale.Crop,
                         loading = {
                             Box(
-                                modifier =
-                                    Modifier
-                                        .fillMaxSize(),
+                                modifier = Modifier
+                                    .fillMaxSize(),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 CircularProgressIndicator(
-                                    modifier =
-                                        Modifier
-                                            .size(BESTVTheme.scale.s240),
+                                    modifier = Modifier
+                                        .size(BESTVTheme.scale.s240),
                                     color = MaterialTheme.colorScheme.primary,
                                 )
                             }
@@ -143,10 +135,9 @@ private fun TVVideoCard(
                     )
 
                     Surface(
-                        modifier =
-                            Modifier
-                                .align(Alignment.Center)
-                                .size(BESTVTheme.scale.s320),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(BESTVTheme.scale.s320),
                         shape = CircleShape,
                         color = BESTVTheme.colors.imageScrim,
                     ) {
@@ -154,10 +145,9 @@ private fun TVVideoCard(
                             imageVector = Icons.Filled.PlayArrow,
                             contentDescription = stringResource(R.string.play_video),
                             tint = BESTVTheme.colors.white,
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .padding(BESTVTheme.scale.s060),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(BESTVTheme.scale.s060),
                         )
                     }
                 }
@@ -170,10 +160,9 @@ private fun TVVideoCard(
                 color = BESTVTheme.colors.white,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = BESTVTheme.scale.s090),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = BESTVTheme.scale.s090),
             )
         },
     )
@@ -184,27 +173,26 @@ private fun TVVideoCard(
 private fun TVVideoRowPreview() {
     MaterialTheme {
         TVVideoRow(
-            videos =
-                listOf(
-                    VideoViewModel(
-                        id = "1",
-                        name = "Official Trailer Official Trailer Official Trailer Official Trailer Official Trailer",
-                        thumbnailUrl = null,
-                        youtubeUrl = null,
-                    ),
-                    VideoViewModel(
-                        id = "2",
-                        name = "Behind the Scenes",
-                        thumbnailUrl = null,
-                        youtubeUrl = null,
-                    ),
-                    VideoViewModel(
-                        id = "3",
-                        name = "Interview with Director",
-                        thumbnailUrl = null,
-                        youtubeUrl = null,
-                    ),
+            videos = listOf(
+                VideoViewModel(
+                    id = "1",
+                    name = "Official Trailer Official Trailer Official Trailer Official Trailer Official Trailer",
+                    thumbnailUrl = null,
+                    youtubeUrl = null,
                 ),
+                VideoViewModel(
+                    id = "2",
+                    name = "Behind the Scenes",
+                    thumbnailUrl = null,
+                    youtubeUrl = null,
+                ),
+                VideoViewModel(
+                    id = "3",
+                    name = "Interview with Director",
+                    thumbnailUrl = null,
+                    youtubeUrl = null,
+                ),
+            ),
             onVideoClick = {},
         )
     }

@@ -47,10 +47,9 @@ class GetWorkDetailsUseCase(
             val recommendedDeferred = async { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
             val similarDeferred = async { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
             val reviewsDeferred = async { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-            val watchProvidersDeferred =
-                async {
-                    runCatching { getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode) }.getOrNull()
-                }
+            val watchProvidersDeferred = async {
+                runCatching { getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode) }.getOrNull()
+            }
 
             WorkDetailsDomainWrapper(
                 isFavorite = isFavoriteDeferred.await(),

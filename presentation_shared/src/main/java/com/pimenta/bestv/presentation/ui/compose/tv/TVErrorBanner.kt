@@ -71,46 +71,40 @@ fun TVErrorBanner(
 
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                colors =
-                    SurfaceDefaults.colors(
-                        containerColor = BESTVTheme.colors.errorBannerSurface,
-                        contentColor = BESTVTheme.colors.white,
+                colors = SurfaceDefaults.colors(
+                    containerColor = BESTVTheme.colors.errorBannerSurface,
+                    contentColor = BESTVTheme.colors.white,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = BESTVTheme.scale.s240,
+                        vertical = BESTVTheme.scale.s160,
                     ),
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = BESTVTheme.scale.s240,
-                            vertical = BESTVTheme.scale.s160,
-                        ),
             ) {
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(BESTVTheme.scale.s120),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(BESTVTheme.scale.s120),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = message,
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier =
-                            Modifier
-                                .weight(1f),
+                        modifier = Modifier
+                            .weight(1f),
                     )
 
                     Spacer(
-                        modifier =
-                            Modifier
-                                .width(BESTVTheme.scale.s080),
+                        modifier = Modifier
+                            .width(BESTVTheme.scale.s080),
                     )
 
                     Button(
                         onClick = onDismiss,
-                        modifier =
-                            Modifier
-                                .focusRequester(focusRequester),
+                        modifier = Modifier
+                            .focusRequester(focusRequester),
                     ) {
                         Text(text = stringResource(R.string.dismiss))
                     }

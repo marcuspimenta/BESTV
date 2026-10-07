@@ -39,10 +39,9 @@ fun TVCastDetailsHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(BESTVTheme.scale.s240),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(BESTVTheme.scale.s240),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.Top,
     ) {
@@ -52,10 +51,9 @@ fun TVCastDetailsHeader(
         )
 
         Column(
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(start = BESTVTheme.scale.s160),
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = BESTVTheme.scale.s160),
         ) {
             Text(
                 text = cast.name,
@@ -68,18 +66,16 @@ fun TVCastDetailsHeader(
                 text = stringResource(R.string.born, cast.birthday),
                 style = MaterialTheme.typography.bodyLarge,
                 color = BESTVTheme.colors.secondaryInfoText,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s060),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s060),
             )
 
             if (cast.biography.isNotBlank()) {
                 TVExpandableText(
                     text = cast.biography,
                     color = BESTVTheme.colors.biographyText,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s060),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s060),
                 )
             }
         }
@@ -91,20 +87,19 @@ fun TVCastDetailsHeader(
 private fun TVCastDetailsHeaderPreview() {
     MaterialTheme {
         TVCastDetailsHeader(
-            cast =
-                CastViewModel(
-                    id = 1,
-                    name = "Christian Bale",
-                    character = "",
-                    birthday = "January 30, 1974",
-                    deathDay = "",
-                    biography =
-                        "Christian Charles Philip Bale is an English actor. Known for his " +
-                            "versatility and physical transformations for his roles, he has been a " +
-                            "leading man in films of several genres.",
-                    thumbnailUrl = "",
-                    source = "TMDB",
-                ),
+            cast = CastViewModel(
+                id = 1,
+                name = "Christian Bale",
+                character = "",
+                birthday = "January 30, 1974",
+                deathDay = "",
+                biography =
+                "Christian Charles Philip Bale is an English actor. Known for his " +
+                    "versatility and physical transformations for his roles, he has been a " +
+                    "leading man in films of several genres.",
+                thumbnailUrl = "",
+                source = "TMDB",
+            ),
         )
     }
 }

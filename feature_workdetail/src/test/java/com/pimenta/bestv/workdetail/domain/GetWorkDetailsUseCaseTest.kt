@@ -81,15 +81,14 @@ private const val COUNTRY_CODE = "US"
 private val WATCH_PROVIDERS =
     WatchProvidersDomainModel(
         tmdbLink = "https://www.themoviedb.org/movie/1/watch",
-        streaming =
-            listOf(
-                WatchProviderDomainModel(
-                    id = 1,
-                    name = "Netflix",
-                    logoPath = "/logo.jpg",
-                    displayPriority = 1,
-                ),
+        streaming = listOf(
+            WatchProviderDomainModel(
+                id = 1,
+                name = "Netflix",
+                logoPath = "/logo.jpg",
+                displayPriority = 1,
             ),
+        ),
         rent = emptyList(),
         buy = emptyList(),
     )
@@ -133,16 +132,15 @@ class GetWorkDetailsUseCaseTest {
 
             val result = useCase(WORK, COUNTRY_CODE)
 
-            val expected =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = true,
-                    videos = VIDEO_LIST,
-                    casts = CAST_LIST,
-                    recommended = WORK_PAGE,
-                    similar = WORK_PAGE,
-                    reviews = REVIEW_PAGE,
-                    watchProviders = WATCH_PROVIDERS,
-                )
+            val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = true,
+                videos = VIDEO_LIST,
+                casts = CAST_LIST,
+                recommended = WORK_PAGE,
+                similar = WORK_PAGE,
+                reviews = REVIEW_PAGE,
+                watchProviders = WATCH_PROVIDERS,
+            )
             assertEquals(expected, result)
         }
 
@@ -193,16 +191,15 @@ class GetWorkDetailsUseCaseTest {
 
             val result = useCase(WORK, COUNTRY_CODE)
 
-            val expected =
-                GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
-                    isFavorite = true,
-                    videos = VIDEO_LIST,
-                    casts = CAST_LIST,
-                    recommended = WORK_PAGE,
-                    similar = WORK_PAGE,
-                    reviews = REVIEW_PAGE,
-                    watchProviders = null,
-                )
+            val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = true,
+                videos = VIDEO_LIST,
+                casts = CAST_LIST,
+                recommended = WORK_PAGE,
+                similar = WORK_PAGE,
+                reviews = REVIEW_PAGE,
+                watchProviders = null,
+            )
             assertEquals(expected, result)
         }
 }

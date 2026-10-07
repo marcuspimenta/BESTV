@@ -89,18 +89,16 @@ class WorkBrowseViewModel(
 
                 updateState {
                     it.copy(
-                        state =
-                            Loaded(
-                                workSelected = null,
-                                selectedSectionIndex = 1,
-                                sections =
-                                    listOfNotNull(
-                                        Search,
-                                        Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
-                                        TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
-                                        Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() },
-                                    ),
+                        state = Loaded(
+                            workSelected = null,
+                            selectedSectionIndex = 1,
+                            sections = listOfNotNull(
+                                Search,
+                                Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
+                                TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
+                                Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() },
                             ),
+                        ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -119,12 +117,12 @@ class WorkBrowseViewModel(
 
                 updateState {
                     it.copy(
-                        state =
-                            currentState.copy(
-                                selectedSectionIndex =
-                                    currentState.selectedSectionIndex.coerceAtMost(updatedSections.lastIndex),
-                                sections = updatedSections,
+                        state = currentState.copy(
+                            selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(
+                                updatedSections.lastIndex
                             ),
+                            sections = updatedSections,
+                        ),
                     )
                 }
             } catch (throwable: Throwable) {
@@ -141,9 +139,10 @@ class WorkBrowseViewModel(
         val favoritesIndex = sections.indexOfFirst { it is Favorites }
 
         return when {
-            hasFavorites && favoritesIndex >= 0 -> sections.toMutableList().apply {
-                set(favoritesIndex, Favorites(favorites))
-            }
+            hasFavorites && favoritesIndex >= 0 ->
+                sections.toMutableList().apply {
+                    set(favoritesIndex, Favorites(favorites))
+                }
             hasFavorites -> sections + Favorites(favorites)
             favoritesIndex >= 0 -> sections.filterNot { it is Favorites }
             else -> sections
@@ -166,10 +165,9 @@ class WorkBrowseViewModel(
             else -> {
                 updateState {
                     it.copy(
-                        state =
-                            currentState.copy(
-                                selectedSectionIndex = selectedSectionIndex,
-                            ),
+                        state = currentState.copy(
+                            selectedSectionIndex = selectedSectionIndex,
+                        ),
                     )
                 }
             }

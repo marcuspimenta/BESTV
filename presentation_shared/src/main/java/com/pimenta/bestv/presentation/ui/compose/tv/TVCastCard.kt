@@ -46,17 +46,15 @@ fun TVCastCard(
             Card(
                 onClick = onClick,
                 interactionSource = interactionSource,
-                modifier =
-                    Modifier
-                        .width(BESTVTheme.scale.s700)
-                        .height(BESTVTheme.scale.s850),
+                modifier = Modifier
+                    .width(BESTVTheme.scale.s700)
+                    .height(BESTVTheme.scale.s850),
             ) {
                 AsyncImage(
                     model = cast.thumbnailUrl,
                     contentDescription = cast.name,
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     contentScale = ContentScale.Crop,
                 )
             }
@@ -70,9 +68,8 @@ fun TVCastCard(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s060),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s060),
                 )
             }
         },
@@ -84,17 +81,16 @@ fun TVCastCard(
 private fun TVCastCardPreview() {
     MaterialTheme {
         TVCastCard(
-            cast =
-                CastViewModel(
-                    id = 1,
-                    name = "Christian Bale",
-                    character = "Bruce Wayne",
-                    birthday = "January 30, 1974",
-                    deathDay = "12 Nov 20",
-                    biography = "Christian Charles Philip Bale is an English actor.",
-                    thumbnailUrl = "",
-                    source = "TMDB",
-                ),
+            cast = CastViewModel(
+                id = 1,
+                name = "Christian Bale",
+                character = "Bruce Wayne",
+                birthday = "January 30, 1974",
+                deathDay = "12 Nov 20",
+                biography = "Christian Charles Philip Bale is an English actor.",
+                thumbnailUrl = "",
+                source = "TMDB",
+            ),
             onClick = {},
         )
     }

@@ -32,14 +32,13 @@ private val WORK_PAGE =
     PageDomainModel(
         page = 1,
         totalPages = 1,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Batman",
-                    originalTitle = "Batman",
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
             ),
+        ),
     )
 
 class SearchMoviesByQueryUseCaseTest {

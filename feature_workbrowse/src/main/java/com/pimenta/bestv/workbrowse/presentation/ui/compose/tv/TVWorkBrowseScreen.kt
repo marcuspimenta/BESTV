@@ -79,7 +79,6 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.About
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
@@ -145,18 +144,16 @@ private fun TVWorkBrowseContent(
             is Loading -> {
                 TVLoadingSplashScreen(
                     onSplashAnimationFinished = onSplashAnimationFinished,
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                 )
             }
 
             is Error -> {
                 TVErrorScreen(
                     onRetryClick = onRetryClicked,
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                 )
             }
 
@@ -169,9 +166,8 @@ private fun TVWorkBrowseContent(
                     onSectionClicked = onSectionClicked,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                 )
             }
         }
@@ -209,10 +205,9 @@ private fun TVBrowseSections(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val focusRequester = remember { FocusRequester() }
-    val drawerItemFocusRequesters =
-        remember(sections.size) {
-            List(sections.size) { FocusRequester() }
-        }
+    val drawerItemFocusRequesters = remember(sections.size) {
+        List(sections.size) { FocusRequester() }
+    }
 
     BackHandler {
         if (drawerState.currentValue == DrawerValue.Open) {
@@ -239,26 +234,24 @@ private fun TVBrowseSections(
             drawerState = drawerState,
             drawerContent = {
                 Box(
-                    modifier =
-                        Modifier
-                            .fillMaxHeight()
-                            .onPreviewKeyEvent { keyEvent ->
-                                if (keyEvent.type == KeyEventType.KeyDown &&
-                                    keyEvent.key == Key.DirectionRight &&
-                                    drawerState.currentValue == DrawerValue.Open
-                                ) {
-                                    scope.launch { drawerState.setValue(DrawerValue.Closed) }
-                                    true
-                                } else {
-                                    false
-                                }
-                            },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .onPreviewKeyEvent { keyEvent ->
+                            if (keyEvent.type == KeyEventType.KeyDown &&
+                                keyEvent.key == Key.DirectionRight &&
+                                drawerState.currentValue == DrawerValue.Open
+                            ) {
+                                scope.launch { drawerState.setValue(DrawerValue.Closed) }
+                                true
+                            } else {
+                                false
+                            }
+                        },
                 ) {
                     Column(
-                        modifier =
-                            Modifier
-                                .padding(BESTVTheme.scale.s060)
-                                .align(Alignment.Center),
+                        modifier = Modifier
+                            .padding(BESTVTheme.scale.s060)
+                            .align(Alignment.Center),
                         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
                     ) {
                         sections.forEachIndexed { index, section ->
@@ -277,9 +270,8 @@ private fun TVBrowseSections(
                                         tint = BESTVTheme.colors.white,
                                     )
                                 },
-                                modifier =
-                                    Modifier
-                                        .focusRequester(drawerItemFocusRequesters[index]),
+                                modifier = Modifier
+                                    .focusRequester(drawerItemFocusRequesters[index]),
                                 content = {
                                     Text(
                                         text = stringResource(section.titleRes),
@@ -296,16 +288,15 @@ private fun TVBrowseSections(
             modifier = modifier,
         ) {
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .onFocusChanged { focusState ->
-                            if (focusState.hasFocus && drawerState.currentValue == DrawerValue.Open) {
-                                scope.launch {
-                                    drawerState.setValue(DrawerValue.Closed)
-                                }
+                modifier = Modifier
+                    .fillMaxSize()
+                    .onFocusChanged { focusState ->
+                        if (focusState.hasFocus && drawerState.currentValue == DrawerValue.Open) {
+                            scope.launch {
+                                drawerState.setValue(DrawerValue.Closed)
                             }
-                        },
+                        }
+                    },
             ) {
                 TVSection(
                     drawerValue = drawerState.currentValue,
@@ -314,35 +305,30 @@ private fun TVBrowseSections(
                     workSelected = workSelected,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
-                    modifier =
-                        Modifier
-                            .focusRequester(focusRequester),
+                    modifier = Modifier
+                        .focusRequester(focusRequester),
                 )
 
                 Box(
-                    modifier =
-                        Modifier
-                            .fillMaxHeight()
-                            .width(BESTVTheme.scale.s400)
-                            .background(BESTVTheme.colors.drawerScrim)
-                            .align(Alignment.TopStart),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(BESTVTheme.scale.s400)
+                        .background(BESTVTheme.colors.drawerScrim)
+                        .align(Alignment.TopStart),
                 )
 
                 Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(BESTVTheme.scale.s250)
-                            .background(
-                                brush =
-                                    Brush.verticalGradient(
-                                        colors =
-                                            listOf(
-                                                BESTVTheme.colors.transparent,
-                                                BESTVTheme.colors.drawerScrim,
-                                            ),
-                                    ),
-                            ).align(BottomStart),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(BESTVTheme.scale.s250)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    BESTVTheme.colors.transparent,
+                                    BESTVTheme.colors.drawerScrim,
+                                ),
+                            ),
+                        ).align(BottomStart),
                 )
             }
         }
@@ -393,8 +379,6 @@ private fun TVSection(
                 onWorkClicked = onWorkClicked,
                 modifier = modifier,
             )
-
-        is About -> Unit
     }
 }
 
@@ -414,21 +398,18 @@ private fun TVSectionWorks(
         modifier = modifier.fillMaxSize(),
     ) {
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
         ) {
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(0.85f)
-                        .fillMaxHeight(0.45f),
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .fillMaxHeight(0.45f),
             ) {
                 TVWorkSelectedHeader(
                     workSelected = workSelected,
-                    modifier =
-                        Modifier
-                            .align(BottomStart),
+                    modifier = Modifier
+                        .align(BottomStart),
                 )
             }
 
@@ -437,10 +418,9 @@ private fun TVSectionWorks(
                 listState = listState,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             )
         }
 
@@ -477,9 +457,8 @@ private fun TVWorkSelectedHeader(
                     text = "${work.releaseDate} · ${work.source}",
                     style = MaterialTheme.typography.labelSmall,
                     color = BESTVTheme.colors.secondaryText,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s040),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s040),
                 )
 
                 Text(
@@ -489,10 +468,9 @@ private fun TVWorkSelectedHeader(
                     minLines = 3,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s040)
-                            .fillMaxWidth(0.6f),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s040)
+                        .fillMaxWidth(0.6f),
                 )
             }
         }
@@ -516,11 +494,10 @@ private fun TVSectionWorkList(
             key = { _, item -> item.hashCode() },
         ) { index, contentItem ->
             TVWorksRow(
-                title =
-                    when (contentItem) {
-                        is Genre -> contentItem.genreViewModel.name.orEmpty()
-                        is TopContent -> stringResource(contentItem.type.resource)
-                    },
+                title = when (contentItem) {
+                    is Genre -> contentItem.genreViewModel.name.orEmpty()
+                    is TopContent -> stringResource(contentItem.type.resource)
+                },
                 titleStyle = MaterialTheme.typography.labelLarge,
                 works = contentItem.works,
                 includeWorkTitle = false,
@@ -530,9 +507,8 @@ private fun TVSectionWorkList(
                 titleStartPadding = BESTVTheme.scale.s500,
                 worksStartPadding = BESTVTheme.scale.s500,
                 onLoadMore = {},
-                modifier =
-                    Modifier
-                        .fadeAtTopEdge(
+                modifier = Modifier
+                    .fadeAtTopEdge(
                         listState = listState,
                         itemIndex = index,
                         fadeThreshold = BESTVTheme.scale.s500,

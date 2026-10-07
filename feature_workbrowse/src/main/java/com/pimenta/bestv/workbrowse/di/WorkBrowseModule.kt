@@ -48,61 +48,60 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-val workBrowseModule =
-    module {
-        // APIs
-        single { get<Retrofit>().create(GenreTmdbApi::class.java) }
-        single { get<Retrofit>().create(MovieTmdbApi::class.java) }
-        single { get<Retrofit>().create(TvShowTmdbApi::class.java) }
+val workBrowseModule = module {
+    // APIs
+    single { get<Retrofit>().create(GenreTmdbApi::class.java) }
+    single { get<Retrofit>().create(MovieTmdbApi::class.java) }
+    single { get<Retrofit>().create(TvShowTmdbApi::class.java) }
 
-        // DataSources
-        factory {
-            GenreRemoteDataSource(
-                tmdbApiKey = get(named("tmdbApiKey")),
-                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-                genreTmdbApi = get(),
-            )
-        }
-        factory {
-            MovieRemoteDataSource(
-                tmdbApiKey = get(named("tmdbApiKey")),
-                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-                movieTmdbApi = get(),
-            )
-        }
-        factory {
-            TvShowRemoteDataSource(
-                tmdbApiKey = get(named("tmdbApiKey")),
-                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-                tvShowTmdbApi = get(),
-            )
-        }
-
-        // Repositories
-        factoryOf(::GenreRepository)
-        factoryOf(::MovieRepository)
-        factoryOf(::TvShowRepository)
-
-        // UseCases
-        factoryOf(::GetAiringTodayTvShowsUseCase)
-        factoryOf(::GetFavoriteMoviesUseCase)
-        factoryOf(::GetFavoriteTvShowsUseCase)
-        factoryOf(::GetFavoritesUseCase)
-        factoryOf(::GetMovieByGenreUseCase)
-        factoryOf(::GetMovieGenresUseCase)
-        factoryOf(::GetNowPlayingMoviesUseCase)
-        factoryOf(::GetOnTheAirTvShowsUseCase)
-        factoryOf(::GetPopularMoviesUseCase)
-        factoryOf(::GetPopularTvShowsUseCase)
-        factoryOf(::GetSectionDetailsUseCase)
-        factoryOf(::GetTopRatedMoviesUseCase)
-        factoryOf(::GetTopRatedTvShowsUseCase)
-        factoryOf(::GetTvShowByGenreUseCase)
-        factoryOf(::GetTvShowGenresUseCase)
-        factoryOf(::GetUpComingMoviesUseCase)
-        factoryOf(::GetWorkByGenreUseCase)
-        factoryOf(::LoadWorkByTypeUseCase)
-
-        // ViewModel
-        viewModelOf(::WorkBrowseViewModel)
+    // DataSources
+    factory {
+        GenreRemoteDataSource(
+            tmdbApiKey = get(named("tmdbApiKey")),
+            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+            genreTmdbApi = get(),
+        )
     }
+    factory {
+        MovieRemoteDataSource(
+            tmdbApiKey = get(named("tmdbApiKey")),
+            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+            movieTmdbApi = get(),
+        )
+    }
+    factory {
+        TvShowRemoteDataSource(
+            tmdbApiKey = get(named("tmdbApiKey")),
+            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+            tvShowTmdbApi = get(),
+        )
+    }
+
+    // Repositories
+    factoryOf(::GenreRepository)
+    factoryOf(::MovieRepository)
+    factoryOf(::TvShowRepository)
+
+    // UseCases
+    factoryOf(::GetAiringTodayTvShowsUseCase)
+    factoryOf(::GetFavoriteMoviesUseCase)
+    factoryOf(::GetFavoriteTvShowsUseCase)
+    factoryOf(::GetFavoritesUseCase)
+    factoryOf(::GetMovieByGenreUseCase)
+    factoryOf(::GetMovieGenresUseCase)
+    factoryOf(::GetNowPlayingMoviesUseCase)
+    factoryOf(::GetOnTheAirTvShowsUseCase)
+    factoryOf(::GetPopularMoviesUseCase)
+    factoryOf(::GetPopularTvShowsUseCase)
+    factoryOf(::GetSectionDetailsUseCase)
+    factoryOf(::GetTopRatedMoviesUseCase)
+    factoryOf(::GetTopRatedTvShowsUseCase)
+    factoryOf(::GetTvShowByGenreUseCase)
+    factoryOf(::GetTvShowGenresUseCase)
+    factoryOf(::GetUpComingMoviesUseCase)
+    factoryOf(::GetWorkByGenreUseCase)
+    factoryOf(::LoadWorkByTypeUseCase)
+
+    // ViewModel
+    viewModelOf(::WorkBrowseViewModel)
+}

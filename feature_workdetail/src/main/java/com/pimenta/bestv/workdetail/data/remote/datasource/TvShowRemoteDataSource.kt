@@ -24,7 +24,8 @@ class TvShowRemoteDataSource(
     private val tmdbFilterLanguage: String,
     private val tvShowDetailTmdbApi: TvShowDetailTmdbApi,
 ) {
-    suspend fun getCastByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getCastByTvShow(tvShowId: Int) =
+        tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
     suspend fun getRecommendationByTvShow(
         tvShowId: Int,
@@ -41,7 +42,9 @@ class TvShowRemoteDataSource(
         page: Int,
     ) = tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
 
-    suspend fun getVideosByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getVideosByTvShow(tvShowId: Int) =
+        tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
 
-    suspend fun getWatchProvidersByTvShow(tvShowId: Int) = tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
+    suspend fun getWatchProvidersByTvShow(tvShowId: Int) =
+        tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
 }

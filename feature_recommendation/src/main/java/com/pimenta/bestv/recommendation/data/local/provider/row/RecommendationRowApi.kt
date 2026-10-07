@@ -43,22 +43,26 @@ class RecommendationRowApi constructor(
 
         val imageLoader = ImageLoader(application)
 
-        works?.mapNotNull { work -> work.toViewModel() }
+        works
+            ?.mapNotNull { work -> work.toViewModel() }
             ?.forEach { workViewModel ->
-                val request = ImageRequest.Builder(application)
+                val request = ImageRequest
+                    .Builder(application)
                     .data(workViewModel.posterUrl)
                     .size(
                         application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_width),
                         application.resources.getDimensionPixelSize(presentationR.dimen.movie_card_height)
-                    )
-                    .build()
+                    ).build()
 
                 val result = imageLoader.execute(request)
-                val cardBitmap = (result as? SuccessResult)?.image
-                    ?.asDrawable(application.resources)
-                    ?.let { (it as? BitmapDrawable)?.bitmap }
+                val cardBitmap =
+                    (result as? SuccessResult)
+                        ?.image
+                        ?.asDrawable(application.resources)
+                        ?.let { (it as? BitmapDrawable)?.bitmap }
 
-                val contentRecommendation = ContentRecommendation.Builder()
+                val contentRecommendation = ContentRecommendation
+                    .Builder()
                     .setAutoDismiss(true)
                     .setIdTag(workViewModel.id.toString())
                     .setGroup(application.getString(presentationR.string.app_name))
@@ -75,9 +79,9 @@ class RecommendationRowApi constructor(
                             // recommendations end up with the same PendingIntent
                             action = workViewModel.id.toString()
                         },
-                        0, null
-                    )
-                    .build()
+                        0,
+                        null
+                    ).build()
 
                 notificationManager.notify(workViewModel.id, contentRecommendation.getNotificationObject(application))
             }

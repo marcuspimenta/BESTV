@@ -42,33 +42,29 @@ fun TVBackgroundScreen(
     contentScale: ContentScale = ContentScale.Crop,
 ) {
     Box(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(BESTVTheme.colors.black),
+        modifier = modifier
+            .fillMaxSize()
+            .background(BESTVTheme.colors.black),
     ) {
         Box(
-            modifier =
-                Modifier
-                    .width(BESTVTheme.scale.s3790)
-                    .height(BESTVTheme.scale.s2140)
-                    .align(Alignment.TopEnd),
+            modifier = Modifier
+                .width(BESTVTheme.scale.s3790)
+                .height(BESTVTheme.scale.s2140)
+                .align(Alignment.TopEnd),
         ) {
             Crossfade(
                 targetState = backdropUrl,
                 label = "background_transition",
                 animationSpec = tween(durationMillis = animationDuration),
-                modifier =
-                    Modifier
-                        .fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
             ) { url ->
                 url?.let {
                     AsyncImage(
                         model = it,
                         contentDescription = null,
-                        modifier =
-                            Modifier
-                                .aspectRatio(16f / 9f),
+                        modifier = Modifier
+                            .aspectRatio(16f / 9f),
                         contentScale = contentScale,
                     )
                 }
@@ -76,46 +72,39 @@ fun TVBackgroundScreen(
 
             // Left edge fade gradient
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(0.50f)
-                        .background(
-                            brush =
-                                Brush.horizontalGradient(
-                                    colors =
-                                        listOf(
-                                            BESTVTheme.colors.black,
-                                            BESTVTheme.colors.transparent,
-                                        ),
-                                ),
-                        ).align(Alignment.TopStart),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(0.50f)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                BESTVTheme.colors.black,
+                                BESTVTheme.colors.transparent,
+                            ),
+                        ),
+                    ).align(Alignment.TopStart),
             )
 
             // Bottom edge fade gradient
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.50f)
-                        .background(
-                            brush =
-                                Brush.verticalGradient(
-                                    colors =
-                                        listOf(
-                                            BESTVTheme.colors.transparent,
-                                            BESTVTheme.colors.black,
-                                        ),
-                                ),
-                        ).align(Alignment.BottomStart),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.50f)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                BESTVTheme.colors.transparent,
+                                BESTVTheme.colors.black,
+                            ),
+                        ),
+                    ).align(Alignment.BottomStart),
             )
         }
 
         Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(BESTVTheme.colors.imageScrim),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BESTVTheme.colors.imageScrim),
         )
     }
 }

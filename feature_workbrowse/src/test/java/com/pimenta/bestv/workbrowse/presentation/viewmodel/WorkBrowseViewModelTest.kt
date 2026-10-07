@@ -186,10 +186,9 @@ class WorkBrowseViewModelTest {
             viewModel = createViewModel()
 
             val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job =
-                launch {
-                    viewModel.effects.collect { collectedEffects.add(it) }
-                }
+            val job = launch {
+                viewModel.effects.collect { collectedEffects.add(it) }
+            }
 
             viewModel.handleEvent(WorkBrowseEvent.BackClicked)
             advanceUntilIdle()
@@ -214,10 +213,9 @@ class WorkBrowseViewModelTest {
             assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
 
             val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job =
-                launch {
-                    viewModel.effects.collect { collectedEffects.add(it) }
-                }
+            val job = launch {
+                viewModel.effects.collect { collectedEffects.add(it) }
+            }
 
             viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0))
             advanceUntilIdle()
@@ -280,10 +278,9 @@ class WorkBrowseViewModelTest {
             viewModel = createViewModel()
 
             val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job =
-                launch {
-                    viewModel.effects.collect { collectedEffects.add(it) }
-                }
+            val job = launch {
+                viewModel.effects.collect { collectedEffects.add(it) }
+            }
 
             viewModel.handleEvent(WorkBrowseEvent.WorkClicked(WORK))
             advanceUntilIdle()
@@ -309,14 +306,13 @@ class WorkBrowseViewModelTest {
             // Ensure state is Loaded
             assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
 
-            val newFavorites =
-                listOf(
-                    ContentSection.TopContent(
-                        type = TopWorkTypeViewModel.FAVORITES_MOVIES,
-                        works = listOf(WORK.copy(id = 10, isFavorite = true)),
-                        page = PaginationState(currentPage = 1, totalPages = 1),
-                    ),
-                )
+            val newFavorites = listOf(
+                ContentSection.TopContent(
+                    type = TopWorkTypeViewModel.FAVORITES_MOVIES,
+                    works = listOf(WORK.copy(id = 10, isFavorite = true)),
+                    page = PaginationState(currentPage = 1, totalPages = 1),
+                ),
+            )
             whenever(getSectionDetailsUseCase.getFavoriteSections()).thenReturn(newFavorites)
 
             viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)

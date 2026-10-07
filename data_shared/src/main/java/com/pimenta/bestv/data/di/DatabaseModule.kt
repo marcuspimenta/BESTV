@@ -25,7 +25,8 @@ private const val DB_NAME = "bestv.db"
 
 val databaseModule = module {
     single {
-        Room.databaseBuilder(androidApplication(), MediaDb::class.java, DB_NAME)
+        Room
+            .databaseBuilder(androidApplication(), MediaDb::class.java, DB_NAME)
             .build()
     }
 

@@ -29,15 +29,14 @@ private const val COUNTRY_CODE = "US"
 private val WATCH_PROVIDERS =
     WatchProvidersDomainModel(
         tmdbLink = "https://www.themoviedb.org/tv/1/watch",
-        streaming =
-            listOf(
-                WatchProviderDomainModel(
-                    id = 1,
-                    name = "Netflix",
-                    logoPath = "/logo.jpg",
-                    displayPriority = 1,
-                ),
+        streaming = listOf(
+            WatchProviderDomainModel(
+                id = 1,
+                name = "Netflix",
+                logoPath = "/logo.jpg",
+                displayPriority = 1,
             ),
+        ),
         rent = emptyList(),
         buy = emptyList(),
     )

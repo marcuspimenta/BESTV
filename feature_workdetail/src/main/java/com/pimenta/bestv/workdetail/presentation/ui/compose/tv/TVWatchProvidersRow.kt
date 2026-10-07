@@ -46,9 +46,8 @@ fun TVWatchProvidersRow(
             text = stringResource(R.string.where_to_watch),
             style = MaterialTheme.typography.bodySmall,
             color = BESTVTheme.colors.secondaryText,
-            modifier =
-                Modifier
-                    .padding(bottom = BESTVTheme.scale.s040),
+            modifier = Modifier
+                .padding(bottom = BESTVTheme.scale.s040),
         )
 
         TVProviderSection(
@@ -84,9 +83,8 @@ private fun TVProviderItem(
         model = provider.logoUrl,
         contentDescription = provider.name,
         contentScale = ContentScale.Crop,
-        modifier =
-            modifier
-                .size(BESTVTheme.scale.s240)
-                .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+        modifier = modifier
+            .size(BESTVTheme.scale.s240)
+            .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
     )
 }

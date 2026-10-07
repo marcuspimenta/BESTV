@@ -28,20 +28,19 @@ import com.pimenta.bestv.workdetail.di.workDetailModule
 import org.koin.dsl.module
 import org.koin.android.ext.koin.androidContext
 
-val appModule =
-    module {
-        single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
-        includes(
-            // Shared modules
-            networkModule,
-            databaseModule,
-            presentationModule,
-            routeModule,
-            // Feature modules
-            castDetailModule,
-            recommendationModule,
-            searchModule,
-            workBrowseModule,
-            workDetailModule,
-        )
-    }
+val appModule = module {
+    single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
+    includes(
+        // Shared modules
+        networkModule,
+        databaseModule,
+        presentationModule,
+        routeModule,
+        // Feature modules
+        castDetailModule,
+        recommendationModule,
+        searchModule,
+        workBrowseModule,
+        workDetailModule,
+    )
+}

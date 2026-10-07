@@ -50,69 +50,68 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-val workDetailModule =
-    module {
-        // APIs
-        single { get<Retrofit>().create(MovieDetailTmdbApi::class.java) }
-        single { get<Retrofit>().create(TvShowDetailTmdbApi::class.java) }
+val workDetailModule = module {
+    // APIs
+    single { get<Retrofit>().create(MovieDetailTmdbApi::class.java) }
+    single { get<Retrofit>().create(TvShowDetailTmdbApi::class.java) }
 
-        // DataSources
-        factory {
-            MovieRemoteDataSource(
-                tmdbApiKey = get(named("tmdbApiKey")),
-                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-                movieDetailTmdbApi = get(),
-            )
-        }
-        factory {
-            TvShowRemoteDataSource(
-                tmdbApiKey = get(named("tmdbApiKey")),
-                tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
-                tvShowDetailTmdbApi = get(),
-            )
-        }
-
-        // Repositories
-        factoryOf(::MovieRepository)
-        factoryOf(::TvShowRepository)
-
-        // UseCases
-        factoryOf(::CheckFavoriteMovieUseCase)
-        factoryOf(::CheckFavoriteTvShowUseCase)
-        factoryOf(::CheckFavoriteWorkUseCase)
-        factoryOf(::GetCastByMovieUseCase)
-        factoryOf(::GetCastByTvShowUseCase)
-        factoryOf(::GetCastsUseCase)
-        factoryOf(::GetRecommendationByMovieUseCase)
-        factoryOf(::GetRecommendationByTvShowUseCase)
-        factoryOf(::GetRecommendationByWorkUseCase)
-        factoryOf(::GetReviewByMovieUseCase)
-        factoryOf(::GetReviewByTvShowUseCase)
-        factoryOf(::GetReviewByWorkUseCase)
-        factoryOf(::GetSimilarByMovieUseCase)
-        factoryOf(::GetSimilarByTvShowUseCase)
-        factoryOf(::GetSimilarByWorkUseCase)
-        factoryOf(::GetVideosByMovieUseCase)
-        factoryOf(::GetVideosByTvShowUseCase)
-        factoryOf(::GetVideosUseCase)
-        factoryOf(::GetWatchProvidersByMovieUseCase)
-        factoryOf(::GetWatchProvidersByTvShowUseCase)
-        factoryOf(::GetWatchProvidersUseCase)
-        factoryOf(::GetWorkDetailsUseCase)
-        factoryOf(::SetFavoriteUseCase)
-
-        // ViewModel with intent parameter
-        factory { (work: WorkViewModel) ->
-            WorkDetailsViewModel(
-                work = work,
-                setFavoriteUseCase = get(),
-                getWorkDetailsUseCase = get(),
-                getReviewByWorkUseCase = get(),
-                getRecommendationByWorkUseCase = get(),
-                getSimilarByWorkUseCase = get(),
-                workDetailsRoute = get(),
-                castDetailsRoute = get(),
-                deviceCapabilities = get(),
-            )
-        }
+    // DataSources
+    factory {
+        MovieRemoteDataSource(
+            tmdbApiKey = get(named("tmdbApiKey")),
+            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+            movieDetailTmdbApi = get(),
+        )
     }
+    factory {
+        TvShowRemoteDataSource(
+            tmdbApiKey = get(named("tmdbApiKey")),
+            tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
+            tvShowDetailTmdbApi = get(),
+        )
+    }
+
+    // Repositories
+    factoryOf(::MovieRepository)
+    factoryOf(::TvShowRepository)
+
+    // UseCases
+    factoryOf(::CheckFavoriteMovieUseCase)
+    factoryOf(::CheckFavoriteTvShowUseCase)
+    factoryOf(::CheckFavoriteWorkUseCase)
+    factoryOf(::GetCastByMovieUseCase)
+    factoryOf(::GetCastByTvShowUseCase)
+    factoryOf(::GetCastsUseCase)
+    factoryOf(::GetRecommendationByMovieUseCase)
+    factoryOf(::GetRecommendationByTvShowUseCase)
+    factoryOf(::GetRecommendationByWorkUseCase)
+    factoryOf(::GetReviewByMovieUseCase)
+    factoryOf(::GetReviewByTvShowUseCase)
+    factoryOf(::GetReviewByWorkUseCase)
+    factoryOf(::GetSimilarByMovieUseCase)
+    factoryOf(::GetSimilarByTvShowUseCase)
+    factoryOf(::GetSimilarByWorkUseCase)
+    factoryOf(::GetVideosByMovieUseCase)
+    factoryOf(::GetVideosByTvShowUseCase)
+    factoryOf(::GetVideosUseCase)
+    factoryOf(::GetWatchProvidersByMovieUseCase)
+    factoryOf(::GetWatchProvidersByTvShowUseCase)
+    factoryOf(::GetWatchProvidersUseCase)
+    factoryOf(::GetWorkDetailsUseCase)
+    factoryOf(::SetFavoriteUseCase)
+
+    // ViewModel with intent parameter
+    factory { (work: WorkViewModel) ->
+        WorkDetailsViewModel(
+            work = work,
+            setFavoriteUseCase = get(),
+            getWorkDetailsUseCase = get(),
+            getReviewByWorkUseCase = get(),
+            getRecommendationByWorkUseCase = get(),
+            getSimilarByWorkUseCase = get(),
+            workDetailsRoute = get(),
+            castDetailsRoute = get(),
+            deviceCapabilities = get(),
+        )
+    }
+}

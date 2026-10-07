@@ -27,9 +27,10 @@ import org.junit.Test
 class BootPresenterTest {
 
     private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase = mock()
-    private val presenter = BootPresenter(
-        scheduleRecommendationUseCase
-    )
+    private val presenter =
+        BootPresenter(
+            scheduleRecommendationUseCase
+        )
 
     @Test
     fun `should load the schedule to update the recommendations`() {

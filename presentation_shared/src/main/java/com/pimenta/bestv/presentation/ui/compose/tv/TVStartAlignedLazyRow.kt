@@ -77,15 +77,13 @@ fun TVStartAlignedLazyRow(
     val layoutDirection = LocalLayoutDirection.current
 
     // Extract horizontal start padding for the BringIntoViewSpec
-    val startPaddingPx =
-        with(density) {
-            contentPadding.calculateLeftPadding(layoutDirection).toPx()
-        }
+    val startPaddingPx = with(density) {
+        contentPadding.calculateLeftPadding(layoutDirection).toPx()
+    }
 
-    val bringIntoViewSpec =
-        remember(startPaddingPx) {
-            StartAlignedBringIntoViewSpec(startPaddingPx)
-        }
+    val bringIntoViewSpec = remember(startPaddingPx) {
+        StartAlignedBringIntoViewSpec(startPaddingPx)
+    }
 
     CompositionLocalProvider(LocalBringIntoViewSpec provides bringIntoViewSpec) {
         LazyRow(

@@ -29,15 +29,14 @@ private val PAGE_DOMAIN_MODEL =
     PageDomainModel(
         page = 1,
         totalPages = 10,
-        results =
-            listOf(
-                WorkDomainModel(
-                    id = 1,
-                    title = "Airing Today TV Show",
-                    originalTitle = "Airing Today TV Show",
-                    type = WorkDomainModel.Type.TV_SHOW,
-                ),
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Airing Today TV Show",
+                originalTitle = "Airing Today TV Show",
+                type = WorkDomainModel.Type.TV_SHOW,
             ),
+        ),
     )
 
 class GetAiringTodayTvShowsUseCaseTest {

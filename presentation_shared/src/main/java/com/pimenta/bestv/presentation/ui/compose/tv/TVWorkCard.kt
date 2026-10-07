@@ -49,41 +49,36 @@ fun TVWorkCard(
     includeWorkTitle: Boolean = true,
 ) {
     StandardCardContainer(
-        modifier =
-            Modifier
-                .width(BESTVTheme.scale.s1250),
+        modifier = Modifier
+            .width(BESTVTheme.scale.s1250),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
-                modifier =
-                    modifier
-                        .fillMaxWidth()
-                        .height(BESTVTheme.scale.s715)
-                        .onFocusChanged { focusState ->
-                            onFocusChanged(focusState.isFocused)
-                        },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(BESTVTheme.scale.s715)
+                    .onFocusChanged { focusState ->
+                        onFocusChanged(focusState.isFocused)
+                    },
                 interactionSource = interactionSource,
             ) {
                 // Poster image
                 SubcomposeAsyncImage(
                     model = work.backdropUrl,
                     contentDescription = work.title,
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                     contentScale = ContentScale.Crop,
                     loading = {
                         Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             CircularProgressIndicator(
-                                modifier =
-                                    Modifier
-                                        .size(BESTVTheme.scale.s240),
+                                modifier = Modifier
+                                    .size(BESTVTheme.scale.s240),
                                 color = MaterialTheme.colorScheme.primary,
                             )
                         }
@@ -99,10 +94,9 @@ fun TVWorkCard(
                     color = BESTVTheme.colors.white,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = BESTVTheme.scale.s090),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = BESTVTheme.scale.s090),
                 )
             }
         },
@@ -114,21 +108,20 @@ fun TVWorkCard(
 private fun TVWorkCardPreview() {
     MaterialTheme {
         TVWorkCard(
-            work =
-                WorkViewModel(
-                    id = 1,
-                    title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
-                    originalTitle = "The Dark Knight",
-                    posterUrl = "",
-                    type = WorkType.MOVIE,
-                    source = "TMDB",
-                    originalLanguage = "",
-                    overview = "",
-                    backdropUrl = "",
-                    releaseDate = "",
-                    voteAverage = 0f,
-                    isFavorite = false,
-                ),
+            work = WorkViewModel(
+                id = 1,
+                title = "The Dark Knight The Dark Knight The Dark Knight The Dark Knight",
+                originalTitle = "The Dark Knight",
+                posterUrl = "",
+                type = WorkType.MOVIE,
+                source = "TMDB",
+                originalLanguage = "",
+                overview = "",
+                backdropUrl = "",
+                releaseDate = "",
+                voteAverage = 0f,
+                isFavorite = false,
+            ),
             onClick = {},
         )
     }

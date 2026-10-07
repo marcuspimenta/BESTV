@@ -47,22 +47,20 @@ class GetSectionDetailsUseCase(
             .TopContent(
                 type = this,
                 works = resultPage.results,
-                page =
-                    PaginationState(
-                        currentPage = resultPage.page,
-                        totalPages = resultPage.totalPages,
-                    ),
+                page = PaginationState(
+                    currentPage = resultPage.page,
+                    totalPages = resultPage.totalPages,
+                ),
             ).takeIf { resultPage.results.isNotEmpty() }
     }
 
     private suspend fun getWorksByGenres(source: Source) =
         coroutineScope {
             async {
-                val genres =
-                    when (source) {
-                        Source.MOVIE -> getMovieGenresUseCase()
-                        Source.TV_SHOW -> getTvShowGenresUseCase()
-                    }
+                val genres = when (source) {
+                    Source.MOVIE -> getMovieGenresUseCase()
+                    Source.TV_SHOW -> getTvShowGenresUseCase()
+                }
                 genres
                     ?.map { genre ->
                         async {
@@ -72,11 +70,10 @@ class GetSectionDetailsUseCase(
                                 .Genre(
                                     genreViewModel = genreViewModel,
                                     works = resultPage.results,
-                                    page =
-                                        PaginationState(
-                                            currentPage = resultPage.page,
-                                            totalPages = resultPage.totalPages,
-                                        ),
+                                    page = PaginationState(
+                                        currentPage = resultPage.page,
+                                        totalPages = resultPage.totalPages,
+                                    ),
                                 ).takeIf { resultPage.results.isNotEmpty() }
                         }
                     }?.awaitAll()

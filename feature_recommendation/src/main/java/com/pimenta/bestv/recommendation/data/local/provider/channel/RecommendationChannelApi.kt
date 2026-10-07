@@ -46,9 +46,11 @@ class RecommendationChannelApi constructor(
     override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
         val channelId = getChannelId()
 
-        works?.mapNotNull { work -> work.toViewModel() }
+        works
+            ?.mapNotNull { work -> work.toViewModel() }
             ?.forEach { workViewModel ->
-                val programBuilder = PreviewProgram.Builder()
+                val programBuilder = PreviewProgram
+                    .Builder()
                     .setChannelId(channelId)
                     .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
                     .setTitle(workViewModel.title)
@@ -57,7 +59,8 @@ class RecommendationChannelApi constructor(
                     .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
                     .setInternalProviderId(workViewModel.id.toString())
 
-                localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)
+                localSettings
+                    .getLongFromPersistence(workViewModel.id.toString(), 0L)
                     .takeUnless { workId -> workId == 0L }
                     ?.let {
                         application.contentResolver.update(
@@ -68,44 +71,48 @@ class RecommendationChannelApi constructor(
                         )
                     }
                     ?: run {
-                        application.contentResolver.insert(
-                            TvContractCompat.PreviewPrograms.CONTENT_URI,
-                            programBuilder.build().toContentValues()
-                        )?.let { programUri ->
-                            val programId = ContentUris.parseId(programUri)
-                            localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
-                        }
+                        application.contentResolver
+                            .insert(
+                                TvContractCompat.PreviewPrograms.CONTENT_URI,
+                                programBuilder.build().toContentValues()
+                            )?.let { programUri ->
+                                val programId = ContentUris.parseId(programUri)
+                                localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
+                            }
                     }
             }
     }
 
     private fun getChannelId() =
-        localSettings.getLongFromPersistence(CHANNEL_ID_KEY, 0L)
+        localSettings
+            .getLongFromPersistence(CHANNEL_ID_KEY, 0L)
             .takeUnless { it == 0L }
             ?: run {
-                val channelBuilder = Channel.Builder()
+                val channelBuilder = Channel
+                    .Builder()
                     .setType(TvContractCompat.Channels.TYPE_PREVIEW)
                     .setDisplayName(application.getString(recommendationR.string.popular))
                     .setAppLinkIntent(workBrowseRoute.buildWorkBrowseIntent())
 
-                application.contentResolver.insert(
-                    TvContractCompat.Channels.CONTENT_URI,
-                    channelBuilder.build().toContentValues()
-                )?.let {
-                    val channelId = ContentUris.parseId(it)
+                application.contentResolver
+                    .insert(
+                        TvContractCompat.Channels.CONTENT_URI,
+                        channelBuilder.build().toContentValues()
+                    )?.let {
+                        val channelId = ContentUris.parseId(it)
 
-                    TvContractCompat.requestChannelBrowsable(
-                        application,
+                        TvContractCompat.requestChannelBrowsable(
+                            application,
+                            channelId
+                        )
+                        ChannelLogoUtils.storeChannelLogo(
+                            application,
+                            channelId,
+                            BitmapFactory.decodeResource(application.resources, presentationR.drawable.app_icon)
+                        )
+
+                        localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
                         channelId
-                    )
-                    ChannelLogoUtils.storeChannelLogo(
-                        application,
-                        channelId,
-                        BitmapFactory.decodeResource(application.resources, presentationR.drawable.app_icon)
-                    )
-
-                    localSettings.applyLongToPersistence(CHANNEL_ID_KEY, channelId)
-                    channelId
-                } ?: 0
+                    } ?: 0
             }
 }

@@ -31,22 +31,25 @@ val networkModule = module {
     single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
     single {
-        OkHttpClient.Builder().apply {
-            if (BuildConfig.BUILD_TYPE == "debug") {
-                addInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BASIC
-                    }
-                )
-            }
-            readTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-            writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-            connectTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-        }.build()
+        OkHttpClient
+            .Builder()
+            .apply {
+                if (BuildConfig.BUILD_TYPE == "debug") {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BASIC
+                        }
+                    )
+                }
+                readTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
+                writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
+                connectTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
+            }.build()
     }
 
     single {
-        Retrofit.Builder()
+        Retrofit
+            .Builder()
             .baseUrl(BuildConfig.TMDB_BASE_URL)
             .client(get())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))

@@ -75,15 +75,13 @@ fun TVTopAlignedLazyColumn(
     val density = LocalDensity.current
 
     // Extract vertical top padding for the BringIntoViewSpec
-    val topPaddingPx =
-        with(density) {
-            contentPadding.calculateTopPadding().toPx()
-        }
+    val topPaddingPx = with(density) {
+        contentPadding.calculateTopPadding().toPx()
+    }
 
-    val bringIntoViewSpec =
-        remember(topPaddingPx) {
-            TopAlignedBringIntoViewSpec(topPaddingPx)
-        }
+    val bringIntoViewSpec = remember(topPaddingPx) {
+        TopAlignedBringIntoViewSpec(topPaddingPx)
+    }
 
     CompositionLocalProvider(LocalBringIntoViewSpec provides bringIntoViewSpec) {
         LazyColumn(

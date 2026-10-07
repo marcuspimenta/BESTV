@@ -25,10 +25,10 @@ fun WatchProvidersDomainModel.toViewModel() =
     WatchProvidersViewModel(
         tmdbLink = tmdbLink,
         providers =
-            (
-                streaming.map { it.toViewModel() } +
-                    rent.map { it.toViewModel() } +
-                    buy.map { it.toViewModel() }
+        (
+            streaming.map { it.toViewModel() } +
+                rent.map { it.toViewModel() } +
+                buy.map { it.toViewModel() }
             ).distinctBy { it.id },
     )
 

@@ -35,10 +35,9 @@ class SearchRequestProcessorTest {
     @Test
     fun `should emit search action after debounce`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(1000) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(1000) { processor.observe().first() }
+            }
 
             processor.emitSearchRequest(QUERY)
 
@@ -48,10 +47,9 @@ class SearchRequestProcessorTest {
     @Test
     fun `should emit only latest search query when requests change quickly`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(1500) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(1500) { processor.observe().first() }
+            }
 
             processor.emitSearchRequest(QUERY)
             delay(250)
@@ -65,10 +63,9 @@ class SearchRequestProcessorTest {
         runBlocking {
             val actions = mutableListOf<SearchAction>()
 
-            val collector =
-                launch(start = CoroutineStart.UNDISPATCHED) {
-                    processor.observe().collect(actions::add)
-                }
+            val collector = launch(start = CoroutineStart.UNDISPATCHED) {
+                processor.observe().collect(actions::add)
+            }
 
             processor.emitSearchRequest(QUERY)
             delay(600)
@@ -82,10 +79,9 @@ class SearchRequestProcessorTest {
     @Test
     fun `should emit clear immediately and cancel pending search`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(500) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(500) { processor.observe().first() }
+            }
 
             processor.emitSearchRequest(QUERY)
             delay(250)

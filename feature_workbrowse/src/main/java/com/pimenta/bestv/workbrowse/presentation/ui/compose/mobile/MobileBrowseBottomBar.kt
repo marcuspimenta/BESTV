@@ -49,76 +49,67 @@ internal fun MobileBrowseBottomBar(
 ) {
     val visibleSections = sections.filterNot { it is Search }
     Box(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .height(BESTVTheme.scale.s600),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(BESTVTheme.scale.s600),
     ) {
         Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors =
-                                listOf(
-                                    BESTVTheme.colors.transparent,
-                                    BESTVTheme.colors.mobileNavigationScrim,
-                                ),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            BESTVTheme.colors.transparent,
+                            BESTVTheme.colors.mobileNavigationScrim,
                         ),
                     ),
+                ),
         )
         Row(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(bottom = BESTVTheme.scale.s040),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = BESTVTheme.scale.s040),
             horizontalArrangement = Arrangement.Center,
         ) {
             BoxWithConstraints(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(0.60f)
-                        .height(BESTVTheme.scale.s320)
-                        .clip(RoundedCornerShape(percent = 50))
-                        .background(BESTVTheme.colors.mobileNavigationSurface)
-                        .padding(BESTVTheme.scale.s020),
+                modifier = Modifier
+                    .fillMaxWidth(0.60f)
+                    .height(BESTVTheme.scale.s320)
+                    .clip(RoundedCornerShape(percent = 50))
+                    .background(BESTVTheme.colors.mobileNavigationSurface)
+                    .padding(BESTVTheme.scale.s020),
             ) {
                 val itemWidth = maxWidth / visibleSections.size.coerceAtLeast(1)
-                val selectedIndex =
-                    visibleSections
-                        .indexOf(selectedSection)
-                        .coerceAtLeast(0)
+                val selectedIndex = visibleSections
+                    .indexOf(selectedSection)
+                    .coerceAtLeast(0)
                 val indicatorOffset by animateDpAsState(
                     targetValue = itemWidth * selectedIndex,
                     animationSpec = tween(durationMillis = 300),
                     label = "selectedNavigationBackground",
                 )
                 Box(
-                    modifier =
-                        Modifier
-                            .offset(x = indicatorOffset)
-                            .width(itemWidth)
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(percent = 50))
-                            .background(BESTVTheme.colors.mobileNavigationSelectedSurface),
+                    modifier = Modifier
+                        .offset(x = indicatorOffset)
+                        .width(itemWidth)
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(percent = 50))
+                        .background(BESTVTheme.colors.mobileNavigationSelectedSurface),
                 )
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     visibleSections.forEach { section ->
                         Column(
-                            modifier =
-                                Modifier
-                                    .weight(1f)
-                                    .fillMaxSize()
-                                    .clip(RoundedCornerShape(percent = 50))
-                                    .clickable { onSectionClick(section) }
-                                    .padding(vertical = BESTVTheme.scale.s030),
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(percent = 50))
+                                .clickable { onSectionClick(section) }
+                                .padding(vertical = BESTVTheme.scale.s030),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
@@ -126,9 +117,8 @@ internal fun MobileBrowseBottomBar(
                                 painter = painterResource(section.iconRes),
                                 contentDescription = stringResource(section.titleRes),
                                 tint = BESTVTheme.colors.mobileNavigationContent,
-                                modifier =
-                                    Modifier
-                                        .size(BESTVTheme.scale.s100),
+                                modifier = Modifier
+                                    .size(BESTVTheme.scale.s100),
                             )
                             Text(
                                 text = stringResource(section.titleRes),
@@ -149,12 +139,11 @@ internal fun MobileBrowseBottomBar(
 private fun MobileBrowseBottomBarPreview() {
     BESTVTheme {
         MobileBrowseBottomBar(
-            sections =
-                listOf(
-                    Section.Movies(emptyList()),
-                    Section.TvShows(emptyList()),
-                    Section.Favorites(emptyList()),
-                ),
+            sections = listOf(
+                Section.Movies(emptyList()),
+                Section.TvShows(emptyList()),
+                Section.Favorites(emptyList()),
+            ),
             selectedSection = Section.Movies(emptyList()),
             onSectionClick = {},
         )

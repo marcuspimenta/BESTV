@@ -50,15 +50,14 @@ fun TVWorkDetailsHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(
-                    start = BESTVTheme.scale.s240,
-                    top = BESTVTheme.scale.s240,
-                    end = BESTVTheme.scale.s240,
-                    bottom = BESTVTheme.scale.s060,
-                ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = BESTVTheme.scale.s240,
+                top = BESTVTheme.scale.s240,
+                end = BESTVTheme.scale.s240,
+                bottom = BESTVTheme.scale.s060,
+            ),
     ) {
         Column {
             Text(
@@ -72,34 +71,30 @@ fun TVWorkDetailsHeader(
             TVActionButtonsRow(
                 actions = header.actions,
                 actionClicked = actionClicked,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s100),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s100),
             )
 
             Text(
                 text = "${work.releaseDate} · ${work.voteAverage} · ${work.source}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = BESTVTheme.colors.secondaryText,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s100),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s100),
             )
 
             TVExpandableText(
                 text = work.overview,
-                modifier =
-                    Modifier
-                        .padding(top = BESTVTheme.scale.s090)
-                        .fillMaxWidth(0.6f),
+                modifier = Modifier
+                    .padding(top = BESTVTheme.scale.s090)
+                    .fillMaxWidth(0.6f),
             )
 
             header.watchProviders?.let {
                 TVWatchProvidersRow(
                     watchProviders = it,
-                    modifier =
-                        Modifier
-                            .padding(top = BESTVTheme.scale.s090),
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s090),
                 )
             }
         }
@@ -135,34 +130,31 @@ private fun TVActionButtonsRow(
 private fun TVWorkDetailsHeaderPreview() {
     MaterialTheme {
         TVWorkDetailsHeader(
-            work =
-                WorkViewModel(
-                    id = 1,
-                    overview = "Overview",
-                    title = "The Dark Knight",
-                    originalTitle = "The Dark Knight",
-                    type = WorkType.MOVIE,
-                    posterUrl = "",
-                    source = "TMDB",
-                    originalLanguage = "",
-                    backdropUrl = "",
-                    releaseDate = "",
-                    voteAverage = 0f,
-                    isFavorite = false,
+            work = WorkViewModel(
+                id = 1,
+                overview = "Overview",
+                title = "The Dark Knight",
+                originalTitle = "The Dark Knight",
+                type = WorkType.MOVIE,
+                posterUrl = "",
+                source = "TMDB",
+                originalLanguage = "",
+                backdropUrl = "",
+                releaseDate = "",
+                voteAverage = 0f,
+                isFavorite = false,
+            ),
+            header = Header(
+                actions = listOf(
+                    SaveWork(true),
+                    ScrollToVideos,
+                    ScrollToCasts,
+                    ScrollToRecommendedWorks,
+                    ScrollToSimilarWorks,
+                    ScrollToReviews,
                 ),
-            header =
-                Header(
-                    actions =
-                        listOf(
-                            SaveWork(true),
-                            ScrollToVideos,
-                            ScrollToCasts,
-                            ScrollToRecommendedWorks,
-                            ScrollToSimilarWorks,
-                            ScrollToReviews,
-                        ),
-                    watchProviders = null,
-                ),
+                watchProviders = null,
+            ),
             actionClicked = {},
         )
     }

@@ -50,10 +50,9 @@ class SelectedWorkRequestProcessorTest {
     @Test
     fun `should emit selected work after debounce`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(800) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(800) { processor.observe().first() }
+            }
 
             processor.emitSelectedWorkRequest(WORK)
 
@@ -63,10 +62,9 @@ class SelectedWorkRequestProcessorTest {
     @Test
     fun `should emit only latest selected work when requests change quickly`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(1000) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(1000) { processor.observe().first() }
+            }
 
             processor.emitSelectedWorkRequest(WORK)
             delay(150)
@@ -78,10 +76,9 @@ class SelectedWorkRequestProcessorTest {
     @Test
     fun `should emit clear immediately and cancel pending selection`() =
         runBlocking {
-            val action =
-                async(start = CoroutineStart.UNDISPATCHED) {
-                    withTimeout(500) { processor.observe().first() }
-                }
+            val action = async(start = CoroutineStart.UNDISPATCHED) {
+                withTimeout(500) { processor.observe().first() }
+            }
 
             processor.emitSelectedWorkRequest(WORK)
             delay(150)
@@ -95,10 +92,9 @@ class SelectedWorkRequestProcessorTest {
         runBlocking {
             val actions = mutableListOf<SelectedWorkAction>()
 
-            val collector =
-                launch(start = CoroutineStart.UNDISPATCHED) {
-                    processor.observe().collect(actions::add)
-                }
+            val collector = launch(start = CoroutineStart.UNDISPATCHED) {
+                processor.observe().collect(actions::add)
+            }
 
             processor.emitSelectedWorkRequest(WORK)
             delay(150)

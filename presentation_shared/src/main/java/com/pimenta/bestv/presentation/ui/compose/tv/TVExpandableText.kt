@@ -65,14 +65,12 @@ fun TVExpandableText(
         if (hasTextOverflow || isExpanded) {
             Surface(
                 onClick = { isExpanded = !isExpanded },
-                colors =
-                    ClickableSurfaceDefaults.colors(
-                        containerColor = BESTVTheme.colors.transparent,
-                        focusedContainerColor = BESTVTheme.colors.focusSurface,
-                    ),
-                modifier =
-                    Modifier
-                        .padding(
+                colors = ClickableSurfaceDefaults.colors(
+                    containerColor = BESTVTheme.colors.transparent,
+                    focusedContainerColor = BESTVTheme.colors.focusSurface,
+                ),
+                modifier = Modifier
+                    .padding(
                         start = BESTVTheme.scale.s040,
                         top = BESTVTheme.scale.s040,
                     ),
@@ -81,9 +79,8 @@ fun TVExpandableText(
                     text = stringResource(if (isExpanded) R.string.show_less else R.string.read_more),
                     style = MaterialTheme.typography.labelLarge,
                     color = BESTVTheme.colors.white,
-                    modifier =
-                        Modifier
-                            .padding(
+                    modifier = Modifier
+                        .padding(
                             horizontal = BESTVTheme.scale.s040,
                             vertical = BESTVTheme.scale.s020,
                         ),

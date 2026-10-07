@@ -42,21 +42,20 @@ fun Modifier.fadeAtTopEdge(
     val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
-    val alpha =
-        if (itemInfo != null) {
-            val itemTop = itemInfo.offset
+    val alpha = if (itemInfo != null) {
+        val itemTop = itemInfo.offset
 
-            when {
-                itemTop >= 0 -> 1f // Item is fully visible
-                itemTop > -fadeThresholdPx -> {
-                    // Item is leaving the top, fade out proportionally
-                    (fadeThresholdPx + itemTop) / fadeThresholdPx
-                }
-                else -> 0f // Item is completely off screen
+        when {
+            itemTop >= 0 -> 1f // Item is fully visible
+            itemTop > -fadeThresholdPx -> {
+                // Item is leaving the top, fade out proportionally
+                (fadeThresholdPx + itemTop) / fadeThresholdPx
             }
-        } else {
-            1f // Item not visible, default to fully opaque
+            else -> 0f // Item is completely off screen
         }
+    } else {
+        1f // Item not visible, default to fully opaque
+    }
 
     return this.graphicsLayer { this.alpha = alpha }
 }
@@ -81,22 +80,21 @@ fun Modifier.fadeAtBottomEdge(
     val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
-    val alpha =
-        if (itemInfo != null) {
-            val viewportHeight = listState.layoutInfo.viewportEndOffset
-            val itemBottom = itemInfo.offset + itemInfo.size
+    val alpha = if (itemInfo != null) {
+        val viewportHeight = listState.layoutInfo.viewportEndOffset
+        val itemBottom = itemInfo.offset + itemInfo.size
 
-            when {
-                itemBottom <= viewportHeight -> 1f // Item is fully visible
-                itemBottom < viewportHeight + fadeThresholdPx -> {
-                    // Item is leaving the bottom, fade out proportionally
-                    (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
-                }
-                else -> 0f // Item is completely off screen
+        when {
+            itemBottom <= viewportHeight -> 1f // Item is fully visible
+            itemBottom < viewportHeight + fadeThresholdPx -> {
+                // Item is leaving the bottom, fade out proportionally
+                (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
             }
-        } else {
-            1f // Item not visible, default to fully opaque
+            else -> 0f // Item is completely off screen
         }
+    } else {
+        1f // Item not visible, default to fully opaque
+    }
 
     return this.graphicsLayer { this.alpha = alpha }
 }
@@ -121,35 +119,32 @@ fun Modifier.fadeAtBothEdges(
     val fadeThresholdPx = with(LocalDensity.current) { fadeThreshold.toPx() }
     val itemInfo = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == itemIndex }
 
-    val alpha =
-        if (itemInfo != null) {
-            val itemTop = itemInfo.offset
-            val viewportHeight = listState.layoutInfo.viewportEndOffset
-            val itemBottom = itemInfo.offset + itemInfo.size
+    val alpha = if (itemInfo != null) {
+        val itemTop = itemInfo.offset
+        val viewportHeight = listState.layoutInfo.viewportEndOffset
+        val itemBottom = itemInfo.offset + itemInfo.size
 
-            // Calculate alpha for top edge
-            val topAlpha =
-                when {
-                    itemTop >= 0 -> 1f
-                    itemTop > -fadeThresholdPx -> (fadeThresholdPx + itemTop) / fadeThresholdPx
-                    else -> 0f
-                }
-
-            // Calculate alpha for bottom edge
-            val bottomAlpha =
-                when {
-                    itemBottom <= viewportHeight -> 1f
-                    itemBottom < viewportHeight + fadeThresholdPx -> {
-                        (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
-                    }
-                    else -> 0f
-                }
-
-            // Use the minimum of both alphas (most transparent)
-            minOf(topAlpha, bottomAlpha)
-        } else {
-            1f // Item not visible, default to fully opaque
+        // Calculate alpha for top edge
+        val topAlpha = when {
+            itemTop >= 0 -> 1f
+            itemTop > -fadeThresholdPx -> (fadeThresholdPx + itemTop) / fadeThresholdPx
+            else -> 0f
         }
+
+        // Calculate alpha for bottom edge
+        val bottomAlpha = when {
+            itemBottom <= viewportHeight -> 1f
+            itemBottom < viewportHeight + fadeThresholdPx -> {
+                (viewportHeight + fadeThresholdPx - itemBottom) / fadeThresholdPx
+            }
+            else -> 0f
+        }
+
+        // Use the minimum of both alphas (most transparent)
+        minOf(topAlpha, bottomAlpha)
+    } else {
+        1f // Item not visible, default to fully opaque
+    }
 
     return this.graphicsLayer { this.alpha = alpha }
 }

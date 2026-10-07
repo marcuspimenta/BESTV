@@ -25,12 +25,11 @@ fun MobileSectionTitle(
         text = title,
         style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
         color = BESTVTheme.colors.white,
-        modifier =
-            modifier.padding(
-                start = BESTVTheme.scale.s080,
-                top = BESTVTheme.scale.s120,
-                bottom = BESTVTheme.scale.s060,
-            ),
+        modifier = modifier.padding(
+            start = BESTVTheme.scale.s080,
+            top = BESTVTheme.scale.s120,
+            bottom = BESTVTheme.scale.s060,
+        ),
     )
 }
 

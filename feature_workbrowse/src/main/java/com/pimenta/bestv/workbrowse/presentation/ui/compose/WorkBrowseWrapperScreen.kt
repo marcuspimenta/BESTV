@@ -20,7 +20,6 @@ import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 fun WorkBrowseWrapperScreen(
     viewModel: WorkBrowseViewModel,
     openIntent: (Intent) -> Unit,
-    openSearch: () -> Unit,
     closeScreen: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -29,7 +28,6 @@ fun WorkBrowseWrapperScreen(
             MobileBrowseScreen(
                 viewModel = viewModel,
                 openIntent = openIntent,
-                openSearch = openSearch,
                 closeScreen = closeScreen,
             )
         } else {

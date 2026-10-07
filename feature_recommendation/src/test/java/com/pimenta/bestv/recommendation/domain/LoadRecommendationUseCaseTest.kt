@@ -28,27 +28,29 @@ import org.mockito.kotlin.whenever
 /**
  * Created by marcus on 2019-08-27.
  */
-private val MOVIE_PAGE_DOMAIN_MODEL = PageDomainModel(
-    page = 1,
-    totalPages = 1,
-    results = listOf(
-        WorkDomainModel(
-            id = 1,
-            title = "Batman",
-            originalTitle = "Batman",
-            type = WorkDomainModel.Type.MOVIE
+private val MOVIE_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 1,
+        results = listOf(
+            WorkDomainModel(
+                id = 1,
+                title = "Batman",
+                originalTitle = "Batman",
+                type = WorkDomainModel.Type.MOVIE
+            )
         )
     )
-)
 
 class LoadRecommendationUseCaseTest {
 
     private val movieRepository: MovieRepository = mock()
     private val recommendationRepository: RecommendationRepository = mock()
-    private val useCase = LoadRecommendationUseCase(
-        movieRepository,
-        recommendationRepository
-    )
+    private val useCase =
+        LoadRecommendationUseCase(
+            movieRepository,
+            recommendationRepository
+        )
 
     @Test
     fun `should return the right data when loading the recommendations`() = runTest {

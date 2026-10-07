@@ -120,10 +120,9 @@ class CastCardTest {
 
     @Test
     fun castCard_displaysLongName() {
-        val castWithLongName =
-            testCast.copy(
-                name = "A Very Long Actor Name That Should Be Truncated With Ellipsis",
-            )
+        val castWithLongName = testCast.copy(
+            name = "A Very Long Actor Name That Should Be Truncated With Ellipsis",
+        )
 
         composeTestRule.setContent {
             MaterialTheme {

@@ -94,17 +94,15 @@ fun TVSearchScreen(
                 onLoadMoreMovies = { viewModel.handleEvent(LoadMoreMovies) },
                 onLoadMoreTvShows = { viewModel.handleEvent(LoadMoreTvShows) },
                 onRetryClicked = { viewModel.handleEvent(SearchQuerySubmitted(state.query)) },
-                modifier =
-                    Modifier
-                        .weight(1f),
+                modifier = Modifier
+                    .weight(1f),
             )
         }
 
         if (state.isSearching) {
             TVLoading(
-                modifier =
-                    Modifier
-                        .align(Alignment.Center),
+                modifier = Modifier
+                    .align(Alignment.Center),
             )
         }
     }
@@ -126,18 +124,16 @@ private fun TVSearchContent(
         when (val currentState = state.state) {
             is Empty -> {
                 TVNoResultsView(
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopStart),
+                    modifier = Modifier
+                        .align(Alignment.TopStart),
                 )
             }
 
             is Error -> {
                 TVErrorScreen(
                     onRetryClick = onRetryClicked,
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center),
                 )
             }
 
@@ -149,15 +145,13 @@ private fun TVSearchContent(
                         onWorkSelected = onWorkSelected,
                         onLoadMoreMovies = onLoadMoreMovies,
                         onLoadMoreTvShows = onLoadMoreTvShows,
-                        modifier =
-                            Modifier
-                                .fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize(),
                     )
                 } else {
                     TVNoResultsView(
-                        modifier =
-                            Modifier
-                                .align(Alignment.TopStart),
+                        modifier = Modifier
+                            .align(Alignment.TopStart),
                     )
                 }
             }
@@ -213,10 +207,9 @@ private fun TVNoResultsView(modifier: Modifier = Modifier) {
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold,
         color = BESTVTheme.colors.white,
-        modifier =
-            modifier.padding(
-                start = BESTVTheme.scale.s240,
-                top = BESTVTheme.scale.s180,
-            ),
+        modifier = modifier.padding(
+            start = BESTVTheme.scale.s240,
+            top = BESTVTheme.scale.s180,
+        ),
     )
 }

@@ -204,20 +204,19 @@ class CastDetailsViewModelTest {
     @Test
     fun `workClicked should emit OpenIntent effect with transition`() =
         runTest(testDispatcher) {
-            val clickedWork =
-                WorkViewModel(
-                    id = 2,
-                    originalLanguage = "en",
-                    overview = "A movie overview",
-                    source = "tmdb",
-                    backdropUrl = "https://example.com/backdrop.jpg",
-                    posterUrl = "https://example.com/poster.jpg",
-                    title = "Another Movie",
-                    originalTitle = "Another Movie",
-                    releaseDate = "2023-01-01",
-                    type = WorkType.MOVIE,
-                    voteAverage = 7.5f,
-                )
+            val clickedWork = WorkViewModel(
+                id = 2,
+                originalLanguage = "en",
+                overview = "A movie overview",
+                source = "tmdb",
+                backdropUrl = "https://example.com/backdrop.jpg",
+                posterUrl = "https://example.com/poster.jpg",
+                title = "Another Movie",
+                originalTitle = "Another Movie",
+                releaseDate = "2023-01-01",
+                type = WorkType.MOVIE,
+                voteAverage = 7.5f,
+            )
             val intent = mock<Intent>()
             whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
 
