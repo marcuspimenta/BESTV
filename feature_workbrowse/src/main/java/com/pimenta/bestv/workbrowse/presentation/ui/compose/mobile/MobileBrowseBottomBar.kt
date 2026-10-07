@@ -37,16 +37,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pimenta.bestv.presentation.theme.BESTVTheme
-import com.pimenta.bestv.workbrowse.R
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
+import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 
 @Composable
 internal fun MobileBrowseBottomBar(
-    destinations: List<MobileDestination>,
-    selectedTab: String,
-    onDestinationClick: (MobileDestination) -> Unit,
+    sections: List<Section>,
+    selectedSection: Section?,
+    onSectionClick: (Section) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val visibleSections = sections.filterNot { it is Search }
     Box(
         modifier =
             modifier
@@ -84,10 +85,10 @@ internal fun MobileBrowseBottomBar(
                         .background(BESTVTheme.colors.mobileNavigationSurface)
                         .padding(BESTVTheme.scale.s020),
             ) {
-                val itemWidth = maxWidth / destinations.size.coerceAtLeast(1)
+                val itemWidth = maxWidth / visibleSections.size.coerceAtLeast(1)
                 val selectedIndex =
-                    destinations
-                        .indexOfFirst { it.key == selectedTab }
+                    visibleSections
+                        .indexOf(selectedSection)
                         .coerceAtLeast(0)
                 val indicatorOffset by animateDpAsState(
                     targetValue = itemWidth * selectedIndex,
@@ -109,28 +110,28 @@ internal fun MobileBrowseBottomBar(
                             .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    destinations.forEach { destination ->
+                    visibleSections.forEach { section ->
                         Column(
                             modifier =
                                 Modifier
                                     .weight(1f)
                                     .fillMaxSize()
                                     .clip(RoundedCornerShape(percent = 50))
-                                    .clickable { onDestinationClick(destination) }
+                                    .clickable { onSectionClick(section) }
                                     .padding(vertical = BESTVTheme.scale.s030),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Icon(
-                                painter = painterResource(destination.iconRes),
-                                contentDescription = stringResource(destination.titleRes),
+                                painter = painterResource(section.iconRes),
+                                contentDescription = stringResource(section.titleRes),
                                 tint = BESTVTheme.colors.mobileNavigationContent,
                                 modifier =
                                     Modifier
                                         .size(BESTVTheme.scale.s100),
                             )
                             Text(
-                                text = stringResource(destination.titleRes),
+                                text = stringResource(section.titleRes),
                                 color = BESTVTheme.colors.mobileNavigationContent,
                                 style = MaterialTheme.typography.labelMedium,
                                 maxLines = 1,
@@ -148,24 +149,14 @@ internal fun MobileBrowseBottomBar(
 private fun MobileBrowseBottomBarPreview() {
     BESTVTheme {
         MobileBrowseBottomBar(
-            destinations =
+            sections =
                 listOf(
-                    MobileDestination(
-                        "movies",
-                        PresentationR.string.movies_title,
-                        PresentationR.drawable.movie,
-                        0,
-                    ),
-                    MobileDestination(
-                        "tv",
-                        PresentationR.string.tv_shows_title,
-                        PresentationR.drawable.tv,
-                        1,
-                    ),
-                    MobileDestination("favorites", R.string.favorites, PresentationR.drawable.favorite, 2),
+                    Section.Movies(emptyList()),
+                    Section.TvShows(emptyList()),
+                    Section.Favorites(emptyList()),
                 ),
-            selectedTab = "movies",
-            onDestinationClick = {},
+            selectedSection = Section.Movies(emptyList()),
+            onSectionClick = {},
         )
     }
 }

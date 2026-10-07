@@ -23,10 +23,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,11 +34,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.CloseScr
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import kotlinx.coroutines.flow.collectLatest
 import com.pimenta.bestv.presentation.R as presentationR
@@ -52,11 +44,9 @@ import com.pimenta.bestv.workbrowse.R as workbrowseR
 fun MobileBrowseScreen(
     viewModel: WorkBrowseViewModel,
     openIntent: (Intent) -> Unit,
-    openSearch: () -> Unit,
     closeScreen: () -> Unit,
 ) {
     val browseState by viewModel.state.collectAsStateWithLifecycle()
-    var selectedTab by rememberSaveable { mutableStateOf("movies") }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -72,12 +62,9 @@ fun MobileBrowseScreen(
         onPauseOrDispose { }
     }
 
-    val destinations = remember(browseState) { mobileDestinations(browseState) }
-    LaunchedEffect(destinations, selectedTab) {
-        if (destinations.none { it.key == selectedTab }) {
-            selectedTab = destinations.firstOrNull { it.key != "search" }?.key ?: "movies"
-        }
-    }
+    val loadedState = browseState.state as? WorkBrowseState.State.Loaded
+    val sections = loadedState?.sections.orEmpty()
+    val selectedSection = loadedState?.let { sections.getOrNull(it.selectedSectionIndex) }
 
     Scaffold(
         containerColor = BESTVTheme.colors.black,
@@ -116,7 +103,11 @@ fun MobileBrowseScreen(
                                     .size(width = BESTVTheme.scale.s400, height = BESTVTheme.scale.s160),
                         )
                     }
-                    IconButton(onClick = openSearch) {
+                    IconButton(
+                        onClick = {
+                            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0))
+                        }
+                    ) {
                         Icon(
                             painter = painterResource(presentationR.drawable.search),
                             contentDescription = stringResource(workbrowseR.string.search),
@@ -148,14 +139,14 @@ fun MobileBrowseScreen(
                         .fillMaxSize(),
             )
 
-            if (destinations.isNotEmpty()) {
+            if (sections.any { it !is Search }) {
                 MobileBrowseBottomBar(
-                    destinations = destinations,
-                    selectedTab = selectedTab,
-                    onDestinationClick = { destination ->
-                        selectedTab = destination.key
-                        destination.sectionIndex?.let { index ->
-                            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(index))
+                    sections = sections,
+                    selectedSection = selectedSection,
+                    onSectionClick = { section ->
+                        val sectionIndex = sections.indexOf(section)
+                        if (sectionIndex >= 0) {
+                            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(sectionIndex))
                         }
                     },
                     modifier =
@@ -163,26 +154,6 @@ fun MobileBrowseScreen(
                             .align(Alignment.BottomCenter),
                 )
             }
-        }
-    }
-}
-
-internal data class MobileDestination(
-    val key: String,
-    val titleRes: Int,
-    val iconRes: Int,
-    val sectionIndex: Int?,
-)
-
-private fun mobileDestinations(state: WorkBrowseState): List<MobileDestination> {
-    val sections = (state.state as? WorkBrowseState.State.Loaded)?.sections.orEmpty()
-    return sections.mapIndexedNotNull { index, section ->
-        when (section) {
-            is Search -> null
-            is Movies -> MobileDestination("movies", section.titleRes, section.iconRes, index)
-            is TvShows -> MobileDestination("tv", section.titleRes, section.iconRes, index)
-            is Favorites -> MobileDestination("favorites", section.titleRes, section.iconRes, index)
-            is Section.About -> null
         }
     }
 }
