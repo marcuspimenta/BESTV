@@ -18,8 +18,11 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +61,7 @@ fun MobileBrowseContent(
     when (val currentState = state.state) {
         is WorkBrowseState.State.Loading ->
             MobileLoadingSplashScreen(
+                isAnimationFinished = currentState.isSplashAnimationFinished,
                 onAnimationFinished = onSplashAnimationFinished,
                 modifier = modifier.fillMaxSize(),
             )
@@ -128,19 +132,33 @@ fun MobileBrowseContent(
 
 @Composable
 private fun MobileLoadingSplashScreen(
+    isAnimationFinished: Boolean,
     onAnimationFinished: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            VideoView(context).apply {
-                setOnCompletionListener { onAnimationFinished() }
-                setVideoURI(SPLASH_ANIMATION_FILE.toUri())
-                start()
+    Box(modifier = modifier) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                VideoView(context).apply {
+                    setOnCompletionListener { onAnimationFinished() }
+                    setVideoURI(SPLASH_ANIMATION_FILE.toUri())
+                    start()
+                }
             }
-        },
-    )
+        )
+
+        if (isAnimationFinished) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = BESTVTheme.scale.s600)
+                    .size(BESTVTheme.scale.s160),
+                color = BESTVTheme.colors.white,
+                strokeWidth = BESTVTheme.scale.s015,
+            )
+        }
+    }
 }
 
 private const val SPLASH_ANIMATION_FILE =
