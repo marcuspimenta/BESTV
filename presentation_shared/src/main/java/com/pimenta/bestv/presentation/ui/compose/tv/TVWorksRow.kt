@@ -45,7 +45,6 @@ fun TVWorksRow(
     worksStartPadding: Dp = BESTVTheme.scale.s240,
     onWorkFocused: (WorkViewModel) -> Unit = {},
     isLoadingMore: Boolean = false,
-    includeWorkTitle: Boolean = true,
     onLoadMore: () -> Unit = {},
 ) {
     if (works.isEmpty()) return
@@ -89,7 +88,6 @@ fun TVWorksRow(
             ) { work ->
                 TVWorkCard(
                     work = work,
-                    includeWorkTitle = includeWorkTitle,
                     onClick = { onWorkClick(work) },
                     onFocusChanged = { focused ->
                         if (focused) {

@@ -33,10 +33,13 @@ import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
+import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel as metadataToViewModel
+import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel as crewDomainToViewModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
+import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
@@ -136,6 +139,10 @@ class WorkDetailsViewModel(
                                     watchProviders = result.watchProviders?.let {
                                         it.toViewModel().takeIf { it.hasAnyProvider }
                                     },
+                                    metadata = (result.metadata ?: WorkMetadataDomainModel())
+                                        .metadataToViewModel(Locale.getDefault(), work.originalLanguage)
+                                        .takeIf { it.hasContent },
+                                    crew = result.crew.orEmpty().map { it.crewDomainToViewModel() },
                                 ).takeIf { it.actions.isNotEmpty() },
                                 result.videos?.let {
                                     Videos(it.map { video -> video.toViewModel() })

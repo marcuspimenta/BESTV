@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -50,18 +51,20 @@ class GetCastByMovieUseCaseTest {
     @Test
     fun `should return the right data when loading the casts by movie`() =
         runTest {
-            whenever(movieRepository.getCastByMovie(WORK_ID)).thenReturn(CAST_LIST)
+            whenever(movieRepository.getCreditsByMovie(WORK_ID)).thenReturn(
+                WorkCreditsDomainModel(casts = CAST_LIST, crew = emptyList()),
+            )
 
             val result = useCase(WORK_ID)
 
-            assertEquals(CAST_LIST, result)
+            assertEquals(WorkCreditsDomainModel(casts = CAST_LIST, crew = emptyList()), result)
         }
 
     @Test
     fun `should return an error when some exception happens when loading the casts by movie`() =
         runTest {
             val exception = RuntimeException("Test exception")
-            whenever(movieRepository.getCastByMovie(WORK_ID)).thenThrow(exception)
+            whenever(movieRepository.getCreditsByMovie(WORK_ID)).thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
                 useCase(WORK_ID)

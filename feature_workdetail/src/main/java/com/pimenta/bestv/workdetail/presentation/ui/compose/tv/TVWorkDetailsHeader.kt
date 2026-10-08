@@ -33,6 +33,8 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.tv.TVExpandableText
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkMetadataDetails
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkCrewDetails
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
@@ -41,6 +43,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionBu
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToSimilarWorks
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToVideos
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
+import com.pimenta.bestv.workdetail.presentation.model.WorkMetadataViewModel
 
 @Composable
 fun TVWorkDetailsHeader(
@@ -59,7 +62,12 @@ fun TVWorkDetailsHeader(
                 bottom = BESTVTheme.scale.s060,
             ),
     ) {
-        Column {
+        val metadata = header.metadata?.takeIf { it.hasContent }
+
+        Column(
+            modifier = Modifier
+                .weight(if (metadata == null) 1f else 0.62f),
+        ) {
             Text(
                 text = work.title,
                 style = MaterialTheme.typography.displaySmall,
@@ -87,7 +95,12 @@ fun TVWorkDetailsHeader(
                 text = work.overview,
                 modifier = Modifier
                     .padding(top = BESTVTheme.scale.s090)
-                    .fillMaxWidth(0.6f),
+                    .fillMaxWidth(),
+            )
+
+            WorkCrewDetails(
+                crew = header.crew,
+                modifier = Modifier.padding(top = BESTVTheme.scale.s090),
             )
 
             header.watchProviders?.let {
@@ -97,6 +110,17 @@ fun TVWorkDetailsHeader(
                         .padding(top = BESTVTheme.scale.s090),
                 )
             }
+        }
+
+        metadata?.let {
+            WorkMetadataDetails(
+                metadata = it,
+                alignToEnd = true,
+                modifier = Modifier
+                    .weight(0.38f)
+                    .align(Alignment.CenterVertically)
+                    .padding(start = BESTVTheme.scale.s160),
+            )
         }
     }
 }
@@ -154,6 +178,13 @@ private fun TVWorkDetailsHeaderPreview() {
                     ScrollToReviews,
                 ),
                 watchProviders = null,
+                metadata = WorkMetadataViewModel(
+                    status = "Released",
+                    originalLanguage = "English",
+                    budget = "$225,000,000",
+                    revenue = "$2,505,477,000",
+                    keywords = listOf("hero", "secret identity", "sequel"),
+                ),
             ),
             actionClicked = {},
         )

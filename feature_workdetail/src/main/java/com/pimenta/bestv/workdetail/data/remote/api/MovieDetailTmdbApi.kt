@@ -28,6 +28,13 @@ import retrofit2.http.Query
  * Created by marcus on 20-10-2019.
  */
 interface MovieDetailTmdbApi {
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+    ): MovieResponse
+
     @GET("movie/{movie_id}/credits")
     suspend fun getCastByMovie(
         @Path("movie_id") movie_id: Int,

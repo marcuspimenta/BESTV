@@ -9,4 +9,9 @@
     <string name="failed_open_video">Failed to open the video. Check if you have YouTube installed and try again.</string>
     <string name="where_to_watch">Where to watch · Powered by JustWatch</string>
     <string name="play_video">Play video</string>
+    <string name="work_status">Status</string>
+    <string name="original_language">Original language</string>
+    <string name="budget">Budget</string>
+    <string name="revenue">Revenue</string>
+    <string name="keywords">Keywords</string>
 </resources>

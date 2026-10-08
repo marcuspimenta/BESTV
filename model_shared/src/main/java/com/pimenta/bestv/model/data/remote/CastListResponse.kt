@@ -21,5 +21,13 @@ import com.google.gson.annotations.SerializedName
  */
 data class CastListResponse(
     @SerializedName("id") var id: Int = 0,
-    @SerializedName("cast") var casts: List<CastResponse>? = null
+    @SerializedName("cast") var casts: List<CastResponse>? = null,
+    @SerializedName("crew") var crew: List<CrewResponse>? = null,
+)
+
+data class CrewResponse(
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("job") val job: String? = null,
+    @SerializedName("department") val department: String? = null,
 )

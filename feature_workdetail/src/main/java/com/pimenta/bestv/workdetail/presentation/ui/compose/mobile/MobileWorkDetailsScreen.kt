@@ -74,6 +74,8 @@ import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
+import com.pimenta.bestv.workdetail.presentation.model.WorkMetadataViewModel
+import com.pimenta.bestv.workdetail.presentation.model.CrewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.Navigate
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
@@ -97,6 +99,8 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Error
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkMetadataDetails
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkCrewDetails
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import com.pimenta.bestv.presentation.R as PresentationR
@@ -239,7 +243,7 @@ private fun MobileWorkDetailsList(
             when (section) {
                 is Header -> {
                     item(key = section.id) {
-                        MobileWorkHeader(work, onHeaderTitleBottomChanged)
+                        MobileWorkHeader(work, section.metadata, section.crew, onHeaderTitleBottomChanged)
                     }
                     stickyHeader(key = "work-actions") {
                         MobileWorkActions(section.actions) { onEvent(ActionButtonClicked(it)) }
@@ -335,6 +339,8 @@ private fun MobileWorkActions(
 @Composable
 private fun MobileWorkHeader(
     work: WorkViewModel,
+    metadata: WorkMetadataViewModel? = null,
+    crew: List<CrewViewModel> = emptyList(),
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
@@ -386,6 +392,19 @@ private fun MobileWorkHeader(
                 modifier = Modifier
                     .padding(top = BESTVTheme.scale.s080),
             )
+
+            WorkCrewDetails(
+                crew = crew,
+                modifier = Modifier.padding(top = BESTVTheme.scale.s080),
+            )
+
+            metadata?.takeIf { it.hasContent }?.let {
+                WorkMetadataDetails(
+                    metadata = it,
+                    modifier = Modifier
+                        .padding(top = BESTVTheme.scale.s120),
+                )
+            }
         }
     }
 }
@@ -561,7 +580,17 @@ private val mobilePreviewWork =
 @Composable
 private fun MobileWorkHeaderPreview() {
     BESTVTheme {
-        MobileWorkHeader(mobilePreviewWork, onTitleBottomChanged = {})
+        MobileWorkHeader(
+            mobilePreviewWork,
+            metadata = WorkMetadataViewModel(
+                status = "Released",
+                originalLanguage = "English",
+                budget = "$225,000,000",
+                revenue = "$2,505,477,000",
+                keywords = listOf("hero", "secret identity", "sequel"),
+            ),
+            onTitleBottomChanged = {},
+        )
     }
 }
 

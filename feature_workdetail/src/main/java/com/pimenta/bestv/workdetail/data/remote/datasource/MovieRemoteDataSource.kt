@@ -24,6 +24,9 @@ class MovieRemoteDataSource(
     private val tmdbFilterLanguage: String,
     private val movieDetailTmdbApi: MovieDetailTmdbApi,
 ) {
+    suspend fun getMovieDetails(movieId: Int) =
+        movieDetailTmdbApi.getMovieDetails(movieId, tmdbApiKey, tmdbFilterLanguage)
+
     suspend fun getCastByMovie(movieId: Int) = movieDetailTmdbApi.getCastByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
 
     suspend fun getRecommendationByMovie(

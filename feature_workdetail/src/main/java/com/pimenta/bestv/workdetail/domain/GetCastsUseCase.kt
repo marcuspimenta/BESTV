@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 
 /**
  * Created by marcus on 15-04-2019.
@@ -26,7 +27,7 @@ class GetCastsUseCase(
     suspend operator fun invoke(
         workType: WorkType,
         workId: Int,
-    ) = when (workType) {
+    ): WorkCreditsDomainModel = when (workType) {
         WorkType.MOVIE -> getCastByMovieUseCase(workId)
         WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)
     }

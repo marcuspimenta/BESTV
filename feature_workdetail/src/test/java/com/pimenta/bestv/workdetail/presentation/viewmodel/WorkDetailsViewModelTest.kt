@@ -34,6 +34,7 @@ import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
@@ -202,6 +203,11 @@ class WorkDetailsViewModelTest {
                 similar = WORK_PAGE,
                 reviews = REVIEW_PAGE,
                 watchProviders = WATCH_PROVIDERS,
+                metadata = WorkMetadataDomainModel(
+                    status = "Released",
+                    originalLanguage = "en",
+                    budget = 225000000L,
+                ),
             )
 
             whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
@@ -217,6 +223,8 @@ class WorkDetailsViewModelTest {
             val header = loadedState.contents.filterIsInstance<WorkDetailsState.Content.Header>().first()
             val saveWork = header.actions.filterIsInstance<WorkDetailsState.ActionButton.SaveWork>().first()
             assertTrue(saveWork.isFavorite)
+            assertEquals("Released", header.metadata?.status)
+            assertEquals("English", header.metadata?.originalLanguage)
 
             val videos = loadedState.contents.filterIsInstance<WorkDetailsState.Content.Videos>().firstOrNull()
             assertEquals(1, videos?.videos?.size)

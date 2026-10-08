@@ -500,7 +500,6 @@ private fun TVSectionWorkList(
                 },
                 titleStyle = MaterialTheme.typography.labelLarge,
                 works = contentItem.works,
-                includeWorkTitle = false,
                 onWorkClick = onWorkClicked,
                 onWorkFocused = onWorkSelected,
                 isLoadingMore = contentItem.page.isLoadingMore,

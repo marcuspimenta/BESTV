@@ -43,48 +43,31 @@ fun TVWorkCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
-    includeWorkTitle: Boolean = true,
 ) {
     StandardCardContainer(
-        modifier = Modifier
-            .width(BESTVTheme.scale.s1250),
+        modifier = modifier
+            .width(BESTVTheme.scale.s600)
+            .height(BESTVTheme.scale.s850),
         imageCard = { interactionSource ->
             Card(
                 onClick = onClick,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(BESTVTheme.scale.s715)
+                modifier = Modifier
+                    .fillMaxSize()
                     .onFocusChanged { focusState ->
                         onFocusChanged(focusState.isFocused)
                     },
                 interactionSource = interactionSource,
             ) {
                 AsyncImage(
-                    model = work.backdropCardUrl,
+                    model = work.posterUrl,
                     contentDescription = work.title,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                     contentScale = ContentScale.Crop,
                     placeholder = ColorPainter(BESTVTheme.colors.reviewCardSurface),
                     error = ColorPainter(BESTVTheme.colors.reviewCardSurface),
                 )
             }
         },
-        title = {
-            if (includeWorkTitle) {
-                Text(
-                    text = work.title,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = BESTVTheme.colors.white,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = BESTVTheme.scale.s090),
-                )
-            }
-        },
+        title = {},
     )
 }
 

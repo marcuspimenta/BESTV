@@ -22,6 +22,9 @@ import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchProvidersToDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toWorkMetadataDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 
 /**
  * Created by marcus on 20-10-2019.
@@ -31,6 +34,9 @@ class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
 ) {
+    suspend fun getWorkMetadata(movieId: Int) =
+        movieRemoteDataSource.getMovieDetails(movieId).toWorkMetadataDomainModel()
+
     suspend fun saveFavoriteMovie(movieDbModel: MovieDbModel) = movieLocalDataSource.saveFavoriteMovie(movieDbModel)
 
     suspend fun deleteFavoriteMovie(movieDbModel: MovieDbModel) = movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
@@ -40,12 +46,16 @@ class MovieRepository(
         return movie != null
     }
 
-    suspend fun getCastByMovie(movieId: Int) =
+    suspend fun getCreditsByMovie(movieId: Int) =
         movieRemoteDataSource.getCastByMovie(movieId).let { response ->
             val source = resource.getStringResource(R.string.source_tmdb)
-            response.casts?.map { cast ->
-                cast.toDomainModel(source)
-            }
+            WorkCreditsDomainModel(
+                casts = response.casts?.map { cast -> cast.toDomainModel(source) },
+                crew = response.crew.orEmpty()
+                    .mapNotNull { it.crewToDomainModel() }
+                    .filter { it.role in DISPLAYED_CREW_ROLES }
+                    .sortedBy { DISPLAYED_CREW_ROLES.indexOf(it.role) },
+            )
         }
 
     suspend fun getRecommendationByMovie(

@@ -23,6 +23,8 @@ import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -65,6 +67,7 @@ private val CAST_LIST =
             biography = null,
         ),
     )
+private val WORK_CREDITS = WorkCreditsDomainModel(casts = CAST_LIST, crew = emptyList())
 private val WORK_PAGE =
     PageDomainModel<WorkDomainModel>(
         page = 0,
@@ -101,6 +104,7 @@ class GetWorkDetailsUseCaseTest {
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase = mock()
     private val getWatchProvidersUseCase: GetWatchProvidersUseCase = mock()
+    private val getWorkMetadataUseCase: GetWorkMetadataUseCase = mock()
     private val useCase =
         GetWorkDetailsUseCase(
             checkFavoriteWorkUseCase,
@@ -110,6 +114,7 @@ class GetWorkDetailsUseCaseTest {
             getSimilarByWorkUseCase,
             getReviewByWorkUseCase,
             getWatchProvidersUseCase,
+            getWorkMetadataUseCase,
         )
 
     @Test
@@ -120,7 +125,7 @@ class GetWorkDetailsUseCaseTest {
             whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
                 .thenReturn(VIDEO_LIST)
             whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(CAST_LIST)
+                .thenReturn(WORK_CREDITS)
             whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
                 .thenReturn(WORK_PAGE)
             whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
@@ -129,6 +134,8 @@ class GetWorkDetailsUseCaseTest {
                 .thenReturn(REVIEW_PAGE)
             whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
+            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+                .thenReturn(WorkMetadataDomainModel(status = "Released"))
 
             val result = useCase(WORK, COUNTRY_CODE)
 
@@ -136,10 +143,12 @@ class GetWorkDetailsUseCaseTest {
                 isFavorite = true,
                 videos = VIDEO_LIST,
                 casts = CAST_LIST,
+                crew = emptyList(),
                 recommended = WORK_PAGE,
                 similar = WORK_PAGE,
                 reviews = REVIEW_PAGE,
                 watchProviders = WATCH_PROVIDERS,
+                metadata = WorkMetadataDomainModel(status = "Released"),
             )
             assertEquals(expected, result)
         }
@@ -179,7 +188,7 @@ class GetWorkDetailsUseCaseTest {
             whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
                 .thenReturn(VIDEO_LIST)
             whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
-                .thenReturn(CAST_LIST)
+                .thenReturn(WORK_CREDITS)
             whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
                 .thenReturn(WORK_PAGE)
             whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
@@ -188,6 +197,8 @@ class GetWorkDetailsUseCaseTest {
                 .thenReturn(REVIEW_PAGE)
             whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
                 .thenThrow(exception)
+            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+                .thenReturn(WorkMetadataDomainModel())
 
             val result = useCase(WORK, COUNTRY_CODE)
 
@@ -195,11 +206,33 @@ class GetWorkDetailsUseCaseTest {
                 isFavorite = true,
                 videos = VIDEO_LIST,
                 casts = CAST_LIST,
+                crew = emptyList(),
                 recommended = WORK_PAGE,
                 similar = WORK_PAGE,
                 reviews = REVIEW_PAGE,
                 watchProviders = null,
+                metadata = WorkMetadataDomainModel(),
             )
             assertEquals(expected, result)
+        }
+
+    @Test
+    fun `should continue loading when metadata request fails`() =
+        runTest {
+            whenever(checkFavoriteWorkUseCase(WORK)).thenReturn(true)
+            whenever(getVideosUseCase(WorkType.MOVIE, WORK.id)).thenReturn(VIDEO_LIST)
+            whenever(getCastsUseCase(WorkType.MOVIE, WORK.id)).thenReturn(WORK_CREDITS)
+            whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(WORK_PAGE)
+            whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(WORK_PAGE)
+            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(REVIEW_PAGE)
+            whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE)).thenReturn(WATCH_PROVIDERS)
+            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+                .thenThrow(RuntimeException("Metadata unavailable"))
+
+            val result = useCase(WORK, COUNTRY_CODE)
+
+            assertEquals(VIDEO_LIST, result.videos)
+            assertEquals(WATCH_PROVIDERS, result.watchProviders)
+            assertEquals(null, result.metadata)
         }
 }

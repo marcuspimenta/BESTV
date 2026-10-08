@@ -22,5 +22,5 @@ import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
 class GetCastByTvShowUseCase(
     private val tvShowRepository: TvShowRepository,
 ) {
-    suspend operator fun invoke(workId: Int) = tvShowRepository.getCastByTvShow(workId)
+    suspend operator fun invoke(workId: Int) = tvShowRepository.getCreditsByTvShow(workId)
 }

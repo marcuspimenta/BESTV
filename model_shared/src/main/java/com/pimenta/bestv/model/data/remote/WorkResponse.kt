@@ -22,6 +22,7 @@ import com.google.gson.annotations.SerializedName
 abstract class WorkResponse(
     @SerializedName("id") val id: Int = 0,
     @SerializedName("original_language") val originalLanguage: String? = null,
+    @SerializedName("status") val status: String? = null,
     @SerializedName("overview") val overview: String? = null,
     @SerializedName("backdrop_path") val backdropPath: String? = null,
     @SerializedName("poster_path") val posterPath: String? = null,

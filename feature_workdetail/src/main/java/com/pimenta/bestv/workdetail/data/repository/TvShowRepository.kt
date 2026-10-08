@@ -22,6 +22,9 @@ import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchProvidersToDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toWorkMetadataDomainModel
+import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 
 /**
  * Created by marcus on 20-10-2019.
@@ -31,6 +34,9 @@ class TvShowRepository(
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) {
+    suspend fun getWorkMetadata(tvShowId: Int) =
+        tvShowRemoteDataSource.getTvShowDetails(tvShowId).toWorkMetadataDomainModel()
+
     suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
 
     suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
@@ -41,12 +47,16 @@ class TvShowRepository(
         return tvShow != null
     }
 
-    suspend fun getCastByTvShow(tvShowId: Int) =
+    suspend fun getCreditsByTvShow(tvShowId: Int) =
         tvShowRemoteDataSource.getCastByTvShow(tvShowId).let { response ->
             val source = resource.getStringResource(R.string.source_tmdb)
-            response.casts?.map { cast ->
-                cast.toDomainModel(source)
-            }
+            WorkCreditsDomainModel(
+                casts = response.casts?.map { cast -> cast.toDomainModel(source) },
+                crew = response.crew.orEmpty()
+                    .mapNotNull { it.crewToDomainModel() }
+                    .filter { it.role in DISPLAYED_CREW_ROLES }
+                    .sortedBy { DISPLAYED_CREW_ROLES.indexOf(it.role) },
+            )
         }
 
     suspend fun getRecommendationByTvShow(

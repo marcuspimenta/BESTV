@@ -22,7 +22,10 @@ import com.google.gson.annotations.SerializedName
 data class MovieResponse(
     @SerializedName("title") override var title: String? = null,
     @SerializedName("original_title") override var originalTitle: String? = null,
-    @SerializedName("release_date") var releaseDateString: String? = null
+    @SerializedName("release_date") var releaseDateString: String? = null,
+    @SerializedName("budget") val budget: Long? = null,
+    @SerializedName("revenue") val revenue: Long? = null,
+    @SerializedName("keywords") val keywords: MovieKeywordsResponse? = null,
 ) : WorkResponse() {
 
     override var releaseDate: String?

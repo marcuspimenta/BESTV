@@ -22,5 +22,5 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository
 class GetCastByMovieUseCase(
     private val movieRepository: MovieRepository,
 ) {
-    suspend operator fun invoke(workId: Int) = movieRepository.getCastByMovie(workId)
+    suspend operator fun invoke(workId: Int) = movieRepository.getCreditsByMovie(workId)
 }

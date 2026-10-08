@@ -19,8 +19,11 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
+import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
+import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -35,6 +38,7 @@ class GetWorkDetailsUseCase(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val getReviewByWorkUseCase: GetReviewByWorkUseCase,
     private val getWatchProvidersUseCase: GetWatchProvidersUseCase,
+    private val getWorkMetadataUseCase: GetWorkMetadataUseCase,
 ) {
     suspend operator fun invoke(
         workViewModel: WorkViewModel,
@@ -43,22 +47,34 @@ class GetWorkDetailsUseCase(
         coroutineScope {
             val isFavoriteDeferred = async { checkFavoriteWorkUseCase(workViewModel) }
             val videosDeferred = async { getVideosUseCase(workViewModel.type, workViewModel.id) }
-            val castsDeferred = async { getCastsUseCase(workViewModel.type, workViewModel.id) }
+            val creditsDeferred = async { getCastsUseCase(workViewModel.type, workViewModel.id) }
             val recommendedDeferred = async { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
             val similarDeferred = async { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
             val reviewsDeferred = async { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
             val watchProvidersDeferred = async {
                 runCatching { getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode) }.getOrNull()
             }
+            val metadataDeferred = async {
+                try {
+                    getWorkMetadataUseCase(workViewModel.type, workViewModel.id)
+                } catch (cancellationException: CancellationException) {
+                    throw cancellationException
+                } catch (exception: Exception) {
+                    null
+                }
+            }
 
+            val credits = creditsDeferred.await()
             WorkDetailsDomainWrapper(
                 isFavorite = isFavoriteDeferred.await(),
                 videos = videosDeferred.await(),
-                casts = castsDeferred.await(),
+                casts = credits.casts,
+                crew = credits.crew,
                 recommended = recommendedDeferred.await(),
                 similar = similarDeferred.await(),
                 reviews = reviewsDeferred.await(),
                 watchProviders = watchProvidersDeferred.await(),
+                metadata = metadataDeferred.await(),
             )
         }
 
@@ -70,5 +86,7 @@ class GetWorkDetailsUseCase(
         val similar: PageDomainModel<WorkDomainModel>,
         val reviews: PageDomainModel<ReviewDomainModel>,
         val watchProviders: WatchProvidersDomainModel?,
+        val metadata: WorkMetadataDomainModel? = null,
+        val crew: List<CrewDomainModel>? = null,
     )
 }

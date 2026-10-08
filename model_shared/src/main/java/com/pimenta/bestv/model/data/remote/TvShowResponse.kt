@@ -22,7 +22,8 @@ import com.google.gson.annotations.SerializedName
 data class TvShowResponse(
     @SerializedName("name") override var title: String? = null,
     @SerializedName("original_name") override var originalTitle: String? = null,
-    @SerializedName("first_air_date") var firstAirDate: String? = null
+    @SerializedName("first_air_date") var firstAirDate: String? = null,
+    @SerializedName("keywords") val keywords: TvShowKeywordsResponse? = null,
 ) : WorkResponse() {
 
     override var releaseDate: String?

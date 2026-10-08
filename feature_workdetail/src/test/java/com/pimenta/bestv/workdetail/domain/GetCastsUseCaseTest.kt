@@ -16,6 +16,7 @@ package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -38,6 +39,7 @@ private val CAST_LIST =
             biography = null,
         ),
     )
+private val CREDITS = WorkCreditsDomainModel(casts = CAST_LIST, crew = emptyList())
 
 class GetCastsUseCaseTest {
     private val getCastByMovieUseCase: GetCastByMovieUseCase = mock()
@@ -52,11 +54,11 @@ class GetCastsUseCaseTest {
     @Test
     fun `should return the right data when loading the casts by movie`() =
         runTest {
-            whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(CAST_LIST)
+            whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(CREDITS)
 
             val result = useCase(WorkType.MOVIE, WORK_ID)
 
-            assertEquals(CAST_LIST, result)
+            assertEquals(CREDITS, result)
         }
 
     @Test
@@ -73,11 +75,11 @@ class GetCastsUseCaseTest {
     @Test
     fun `should return the right data when loading the casts by tv show`() =
         runTest {
-            whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(CAST_LIST)
+            whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(CREDITS)
 
             val result = useCase(WorkType.TV_SHOW, WORK_ID)
 
-            assertEquals(CAST_LIST, result)
+            assertEquals(CREDITS, result)
         }
 
     @Test

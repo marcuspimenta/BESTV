@@ -16,6 +16,7 @@ package com.pimenta.bestv.workdetail.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.workdetail.presentation.model.CrewViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.LoadingError
 
@@ -62,6 +63,8 @@ data class WorkDetailsState(
         data class Header(
             val actions: List<ActionButton>,
             val watchProviders: WatchProvidersViewModel?,
+            val metadata: WorkMetadataViewModel? = null,
+            val crew: List<CrewViewModel> = emptyList(),
         ) : Content(ID_HEADER)
 
         data class Videos(

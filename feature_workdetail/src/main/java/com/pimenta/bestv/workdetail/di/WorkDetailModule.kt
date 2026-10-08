@@ -43,6 +43,7 @@ import com.pimenta.bestv.workdetail.domain.GetWatchProvidersByMovieUseCase
 import com.pimenta.bestv.workdetail.domain.GetWatchProvidersByTvShowUseCase
 import com.pimenta.bestv.workdetail.domain.GetWatchProvidersUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
+import com.pimenta.bestv.workdetail.domain.GetWorkMetadataUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.core.module.dsl.factoryOf
@@ -98,6 +99,7 @@ val workDetailModule = module {
     factoryOf(::GetWatchProvidersByTvShowUseCase)
     factoryOf(::GetWatchProvidersUseCase)
     factoryOf(::GetWorkDetailsUseCase)
+    factoryOf(::GetWorkMetadataUseCase)
     factoryOf(::SetFavoriteUseCase)
 
     // ViewModel with intent parameter

@@ -47,7 +47,7 @@ fun TVCastCard(
                 onClick = onClick,
                 interactionSource = interactionSource,
                 modifier = Modifier
-                    .width(BESTVTheme.scale.s700)
+                    .width(BESTVTheme.scale.s600)
                     .height(BESTVTheme.scale.s850),
             ) {
                 AsyncImage(
