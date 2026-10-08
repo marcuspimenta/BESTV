@@ -18,17 +18,15 @@ The app has dedicated interfaces for both form factors: remote-friendly navigati
 
 The composite above pairs the TV and mobile experiences. Each platform adapts browsing and discovery to its screen and input method.
 
-### Demo
+### TV experience
 
 https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 
 ### Mobile experience
 
-<video src="https://raw.githubusercontent.com/marcuspimenta/BESTV/master/docs/mobile_experience.mp4" controls width="100%">
-  Your browser does not support the video tag.
+<video src="docs/mobile_experience.mp4" controls width="100%">
+  Your browser does not support the video tag. [Watch the mobile experience](docs/mobile_experience.mp4).
 </video>
-
-[Open the mobile experience video](https://raw.githubusercontent.com/marcuspimenta/BESTV/master/docs/mobile_experience.mp4)
 
 ## Features
 
