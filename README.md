@@ -9,21 +9,11 @@ The app has dedicated interfaces for both form factors: remote-friendly navigati
 
 ## TV and mobile showcase
 
+The composite bellow pairs the TV and mobile experiences. Each platform adapts browsing and discovery to its screen and input method.
+
 <p align="center">
   <img src="docs/screenshots/tv-mobile-showcase.png" alt="BESTV shown on an Android TV and a mobile phone" width="100%">
 </p>
-
-The composite above pairs the TV and mobile experiences. Each platform adapts browsing and discovery to its screen and input method.
-
-### TV experience
-
-https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
-
-### Mobile experience
-
-<video src="docs/mobile_experience.mp4" controls width="100%">
-  Your browser does not support the video tag. [Watch the mobile experience](docs/mobile_experience.mp4).
-</video>
 
 ## Features
 
