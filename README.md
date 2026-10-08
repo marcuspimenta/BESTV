@@ -1,98 +1,82 @@
 # BESTV
+
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-2.2.20-blue.svg)](https://kotlinlang.org)
 
-<img src="/app/src/main/res/drawable/app_icon.png"  align="left" hspace="20" height="150" width="150">
+<p align="center">
+  <img src="app/src/main/res/drawable/app_icon.png" alt="BESTV app icon" width="120">
+</p>
 
-Android TV App powered by [TMDb](https://www.themoviedb.org/)
+BESTV is a Kotlin app for discovering movies and TV shows on **Android TV and mobile devices**, powered by [TMDb](https://www.themoviedb.org/).
 
-It is a easy way to find the best TV content, the top movies, tv shows and more, all of that in your TV. The goal of the project is to be a guide line about Android TV, showcasing modern Android TV development using Jetpack Compose for TV. The project also uses the popular libraries and tools from the Android ecosystem with a focus on declarative UI and reactive programming.
+The app has dedicated interfaces for both form factors: remote-friendly navigation on TV and touch-first layouts on mobile. The platforms share the same data, domain, and navigation layers.
 
-<br />
+## TV and mobile showcase
+
+<p align="center">
+  <img src="docs/screenshots/tv-mobile-showcase.png" alt="BESTV shown on an Android TV and a mobile phone" width="100%">
+</p>
+
+The composite above pairs the TV and mobile experiences. Each platform adapts browsing and discovery to its screen and input method.
+
+### Demo
 
 https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 
-## Project
-- 100% [Kotlin](https://kotlinlang.org/)
-- Android TV with Jetpack Compose for TV
-- [MVI Architecture Pattern](MVI_ARCHITECTURE.md)
+## Features
+
+- Browse popular, top-rated, upcoming, and genre-based movies and TV shows.
+- Search movies and TV shows by title.
+- View work details, cast, videos, streaming providers, similar works, and recommendations.
+- View cast biographies and credits.
+- Save favorites.
+- Use a TV interface designed for remote control or mobile layouts designed for touch.
+
+## Technology
+
+- Kotlin
+- Jetpack Compose for TV and mobile
+- Android Architecture Components, including ViewModel and Room
+- Kotlin Coroutines and Flow
+- Retrofit for networking
+- Coil for image loading
+- Koin for dependency injection
+- Lottie for animations
+
+## Architecture
+
+BESTV uses modular Clean Architecture with MVI presentation state and events.
+
 - [Clean Architecture](CLEAN_ARCHITECTURE.md)
-- Android Architecture Components
-- [Dependency Injection with Koin](KOIN_DI.md)
-- Reactive Programming with Kotlin Coroutines and Flow
+- [MVI Architecture](MVI_ARCHITECTURE.md)
+- [Koin dependency injection](KOIN_DI.md)
 
-## Tech-stack
-This project uses the popular libraries and tools from the Android ecosystem.
-- Tech-stack
-    - [Kotlin](https://kotlinlang.org/)
-    - Android TV
-        - [Jetpack Compose for TV](https://developer.android.com/jetpack/compose/tv) declarative UI framework
-        - [Recommend TV content](https://developer.android.com/training/tv/discovery/recommendations)
-    - Android Architecture Components
-        - [ROOM](https://developer.android.com/topic/libraries/architecture/room) local data storage
-        - [Lifecycle-aware components](https://developer.android.com/topic/libraries/architecture/lifecycle)
-        - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) UI state management
-    - [Retrofit](https://square.github.io/retrofit/) networking
-    - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) asynchronous programming
-    - [Kotlin Flow](https://kotlinlang.org/docs/flow.html) reactive streams
-    - [Coil](https://coil-kt.github.io/coil/) image loading library for Compose
-    - [Lottie](http://airbnb.io/lottie) animation library
-    - [Koin](https://insert-koin.io/) dependency injection framework ([see documentation](KOIN_DI.md))
-- Architecture
-    - [MVI (Model-View-Intent)](MVI_ARCHITECTURE.md)
-    - [Clean Architecture](CLEAN_ARCHITECTURE.md)
-- Tests
-    - [Unit Tests](https://en.wikipedia.org/wiki/Unit_testing)
-    - [Mockito](https://github.com/mockito/mockito) 
-    - [Mockito-Kotlin](https://github.com/nhaarman/mockito-kotlin)
-- Gradle
-    - [Ktlint plugin](https://github.com/JLLeitschuh/ktlint-gradle)
+## Modules
 
-## API Documentation
-BESTV uses [the version 3 of The Movie Database (TMDb) API](https://developers.themoviedb.org/3/getting-started/introduction). You can find all the documentation about the requests and the responses responses there.
+The project is split into modules. The diagram shows their dependencies.
 
-## API Keys
-BESTV uses [The Movie DB](https://www.themoviedb.org/) API in order to fetch all the data, but is not endorsed or certified by TMDb.
-To be able to run this application you have to create an API KEY from The Movie DB and place it in your gradle file.
-<br>
-```
+<p align="center">
+  <img src="dependency_graph/dependency_graph.png" alt="BESTV module dependency graph">
+</p>
+
+## TMDb API
+
+BESTV uses [version 3 of the TMDb API](https://developers.themoviedb.org/3/getting-started/introduction). It is not endorsed or certified by TMDb.
+
+To run the app, create a TMDb API key and add it to the Gradle configuration:
+
+```groovy
 buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
 ```
 
-## Features
-<ul>
-<li>Show the top movies and tv shows</li>
-<li>Show the top movies and tv shows by genre</li>
-<li>Details about a work including the casts, the videos, the similar and recommended works</li>
-<li>Details about a cast including the credits</li>
-<li>Search the movies and the tv shows by title</li>
-</ul>
-
-## Recent Updates
-- ✅ Migrated from Leanback library to Jetpack Compose for TV
-- ✅ Adopted MVI (Model-View-Intent) architecture pattern
-- ✅ Replaced RxJava/RxAndroid with Kotlin Coroutines and Flow
-- ✅ Updated UI layer to use declarative Compose components
-- ✅ Migrated from Dagger to Koin for dependency injection
-
-## Modules
-The app is modularized. We can see the dependency graph with all the modules.
-<p align="center">
-  <img src="dependency_graph/dependency_graph.png">
-</p>
-
 ## References
-- [Jetpack Compose for TV](https://developer.android.com/jetpack/compose/tv)
-- [Compose for TV samples](https://github.com/android/tv-samples)
-- [Google Codelab TV Recommendations](https://github.com/googlecodelabs/tv-recommendations)
-- [MVI Architecture with Kotlin](https://proandroiddev.com/mvi-architecture-with-kotlin-flows-and-channels-d36820b2028d)
-- [Koin - The Kotlin Injection Framework](https://insert-koin.io/docs/quickstart/android/)
-- [Why you need Use Cases/Interactors](https://proandroiddev.com/why-you-need-use-cases-interactors-142e8a6fe576)
-- [Modularization - Lessons learned](https://jeroenmols.com/blog/2019/06/12/modularizationtips/)
-- [Gradle dependency management with Kotlin (buildSrc)](https://proandroiddev.com/gradle-dependency-management-with-kotlin-94eed4df9a28)
-- [Kotlin Coroutines and Flow](https://kotlinlang.org/docs/coroutines-guide.html)
 
-## Licence
-```
+- [Jetpack Compose for TV](https://developer.android.com/jetpack/compose/tv)
+- [Android TV recommendations](https://developer.android.com/training/tv/discovery/recommendations)
+- [Kotlin Coroutines guide](https://kotlinlang.org/docs/coroutines-guide.html)
+- [Koin documentation](https://insert-koin.io/docs/quickstart/android/)
+
+## License
+
 Copyright (c) 2018 Marcus Pimenta
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -106,4 +90,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
