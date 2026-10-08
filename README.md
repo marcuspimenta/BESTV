@@ -22,6 +22,12 @@ The composite above pairs the TV and mobile experiences. Each platform adapts br
 
 https://github.com/user-attachments/assets/1b5f0e90-494d-43ae-bc94-110370db3cf7
 
+### Mobile experience
+
+<video src="docs/mobile_experience.mp4" controls width="100%">
+  Your browser does not support the video tag. [Watch the mobile experience](docs/mobile_experience.mp4).
+</video>
+
 ## Features
 
 - Browse popular, top-rated, upcoming, and genre-based movies and TV shows.
