@@ -18,6 +18,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.work.WorkManager
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
 import com.pimenta.bestv.recommendation.data.local.provider.channel.RecommendationChannelApi
 import com.pimenta.bestv.recommendation.data.local.provider.row.RecommendationRowApi
@@ -38,6 +40,8 @@ import retrofit2.Retrofit
 private const val SHARED_PREFERENCES_NAME = "recommendation_preferences"
 
 val recommendationModule = module {
+    single<ImageLoader> { SingletonImageLoader.get(androidApplication()) }
+
     // API
     single { get<Retrofit>().create(MovieTmdbApi::class.java) }
 
@@ -79,7 +83,8 @@ val recommendationModule = module {
             RecommendationRowApi(
                 application = androidApplication(),
                 notificationManager = get(),
-                workDetailsRoute = get()
+                workDetailsRoute = get(),
+                imageLoader = get(),
             )
         }
     }

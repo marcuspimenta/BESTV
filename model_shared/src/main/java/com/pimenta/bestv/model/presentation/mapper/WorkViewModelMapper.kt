@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.model.presentation.mapper
 
-import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
@@ -51,8 +50,9 @@ fun WorkDomainModel.toViewModel(): WorkViewModel? {
         originalLanguage = originalLanguage,
         overview = overview,
         source = source,
-        backdropUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, backdropPath),
-        posterUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, posterPath),
+        backdropUrl = TmdbImageUrlBuilder.backdrop(backdropPath),
+        backdropCardUrl = TmdbImageUrlBuilder.backdropCard(backdropPath),
+        posterUrl = TmdbImageUrlBuilder.poster(posterPath),
         originalTitle = originalTitle,
         releaseDate = formattedReleaseDate,
         voteAverage = voteAverage,

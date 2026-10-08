@@ -34,6 +34,7 @@ data class WorkViewModel(
     val type: WorkType,
     val voteAverage: Float,
     val isFavorite: Boolean = false,
+    val backdropCardUrl: String = backdropUrl.replace("/w1280/", "/w780/"),
 ) : Parcelable
 
 enum class WorkType {

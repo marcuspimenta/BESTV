@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.model.presentation.mapper
 
-import com.pimenta.bestv.model.BuildConfig
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 
@@ -28,7 +27,7 @@ fun CastDomainModel.toViewModel(): CastViewModel? {
             source = source.orEmpty(),
             deathDay = deathDay.orEmpty(),
             biography = biography.orEmpty(),
-            thumbnailUrl = String.format(BuildConfig.TMDB_LOAD_IMAGE_BASE_URL, profilePath)
+            thumbnailUrl = TmdbImageUrlBuilder.profile(profilePath)
         )
     } else {
         null

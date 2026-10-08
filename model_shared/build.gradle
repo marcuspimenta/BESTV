@@ -7,7 +7,6 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        buildConfigField "String", "TMDB_LOAD_IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/original%s\""
         buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
         buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
     }
@@ -22,4 +21,7 @@ dependencies {
 
     // Gson
     implementation Libs.gson
+
+    // JUnit
+    testImplementation Libs.junit
 }

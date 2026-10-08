@@ -35,13 +35,12 @@ import com.pimenta.bestv.recommendation.R as recommendationR
 class RecommendationRowApi constructor(
     private val application: Application,
     private val notificationManager: NotificationManager,
-    private val workDetailsRoute: WorkDetailsRoute
+    private val workDetailsRoute: WorkDetailsRoute,
+    private val imageLoader: ImageLoader,
 ) : RecommendationProvider {
 
     override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
         notificationManager.cancelAll()
-
-        val imageLoader = ImageLoader(application)
 
         works
             ?.mapNotNull { work -> work.toViewModel() }

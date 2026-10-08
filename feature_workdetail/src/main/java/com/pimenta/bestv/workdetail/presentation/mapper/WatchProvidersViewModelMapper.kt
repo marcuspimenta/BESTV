@@ -14,12 +14,11 @@
 
 package com.pimenta.bestv.workdetail.presentation.mapper
 
+import com.pimenta.bestv.model.presentation.mapper.TmdbImageUrlBuilder
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
-
-private const val TMDB_LOGO_BASE_URL = "https://image.tmdb.org/t/p/w92%s"
 
 fun WatchProvidersDomainModel.toViewModel() =
     WatchProvidersViewModel(
@@ -36,5 +35,5 @@ fun WatchProviderDomainModel.toViewModel() =
     WatchProviderViewModel(
         id = id,
         name = name,
-        logoUrl = logoPath?.let { String.format(TMDB_LOGO_BASE_URL, it) },
+        logoUrl = logoPath?.let(TmdbImageUrlBuilder::providerLogo),
     )

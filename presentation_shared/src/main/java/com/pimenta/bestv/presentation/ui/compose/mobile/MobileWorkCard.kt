@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
@@ -37,6 +38,8 @@ fun MobileWorkCard(
         AsyncImage(
             model = work.posterUrl,
             contentDescription = work.title,
+            placeholder = ColorPainter(BESTVTheme.colors.reviewCardSurface),
+            error = ColorPainter(BESTVTheme.colors.reviewCardSurface),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()

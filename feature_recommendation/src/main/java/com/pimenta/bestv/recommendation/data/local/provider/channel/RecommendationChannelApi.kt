@@ -55,7 +55,7 @@ class RecommendationChannelApi constructor(
                     .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
                     .setTitle(workViewModel.title)
                     .setDescription(workViewModel.overview)
-                    .setPosterArtUri(Uri.parse(workViewModel.backdropUrl))
+                    .setPosterArtUri(Uri.parse(workViewModel.backdropCardUrl))
                     .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
                     .setInternalProviderId(workViewModel.id.toString())
 
