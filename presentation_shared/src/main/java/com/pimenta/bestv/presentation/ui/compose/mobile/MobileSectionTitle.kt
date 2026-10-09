@@ -12,22 +12,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun MobileSectionTitle(
     title: String,
     modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.titleLarge,
+    startPadding: Dp = BESTVTheme.scale.s080,
+    topPadding: Dp = BESTVTheme.scale.s120,
 ) {
     Text(
         text = title,
-        style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
+        style = style,
         color = BESTVTheme.colors.white,
         modifier = modifier.padding(
-            start = BESTVTheme.scale.s080,
-            top = BESTVTheme.scale.s120,
+            start = startPadding,
+            top = topPadding,
             bottom = BESTVTheme.scale.s060,
         ),
     )

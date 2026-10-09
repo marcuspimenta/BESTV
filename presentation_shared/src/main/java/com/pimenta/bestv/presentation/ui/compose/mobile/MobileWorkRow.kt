@@ -40,8 +40,8 @@ fun MobileWorkRow(
         MobileSectionTitle(title)
         LazyRow(
             state = listState,
-            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s060),
-            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s030),
+            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
             modifier = Modifier
                 .fillMaxWidth(),
         ) {

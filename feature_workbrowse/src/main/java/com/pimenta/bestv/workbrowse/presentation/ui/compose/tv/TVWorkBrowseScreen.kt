@@ -404,7 +404,7 @@ private fun TVSectionWorks(
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
-                    .fillMaxHeight(0.45f),
+                    .fillMaxHeight(0.40f),
             ) {
                 TVWorkSelectedHeader(
                     workSelected = workSelected,

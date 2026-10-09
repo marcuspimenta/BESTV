@@ -295,8 +295,11 @@ private fun TVWorkDetailsScreenPreview() {
                     isFavorite = false,
                 ),
                 state = Loaded(
+                    indexOfContentToScroll = null,
                     contents = emptyList(),
+                    error = null,
                 ),
+                isMobileDevice = false,
             ),
             actionClicked = {},
             onVideoClick = {},
@@ -333,9 +336,11 @@ private fun TVWorkDetailsScreenWithErrorPreview() {
                     isFavorite = false,
                 ),
                 state = Loaded(
+                    indexOfContentToScroll = null,
                     contents = emptyList(),
                     error = ErrorType.FavoriteError,
                 ),
+                isMobileDevice = false,
             ),
             actionClicked = {},
             onVideoClick = {},

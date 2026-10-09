@@ -120,22 +120,25 @@ class WorkDetailsViewModel(
                 updateState {
                     it.copy(
                         state = Loaded(
+                            indexOfContentToScroll = null,
                             contents = listOfNotNull(
                                 Header(
-                                    actions = listOfNotNull(
-                                        SaveWork(result.isFavorite),
-                                        ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
-                                        ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
-                                        ScrollToRecommendedWorks.takeIf {
-                                            result.recommended.results?.isNotEmpty() ==
-                                                true
-                                        },
-                                        ScrollToSimilarWorks.takeIf {
-                                            result.similar.results?.isNotEmpty() ==
-                                                true
-                                        },
-                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
-                                    ),
+                                    actions = if (deviceCapabilities.isMobileDevice) {
+                                        listOf(SaveWork(result.isFavorite))
+                                    } else {
+                                        listOfNotNull(
+                                            SaveWork(result.isFavorite),
+                                            ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
+                                            ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
+                                            ScrollToRecommendedWorks.takeIf {
+                                                result.recommended.results?.isNotEmpty() == true
+                                            },
+                                            ScrollToSimilarWorks.takeIf {
+                                                result.similar.results?.isNotEmpty() == true
+                                            },
+                                            ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
+                                        )
+                                    },
                                     watchProviders = result.watchProviders?.let {
                                         it.toViewModel().takeIf { it.hasAnyProvider }
                                     },
@@ -185,13 +188,14 @@ class WorkDetailsViewModel(
                                     ).takeIf { it.reviews.isNotEmpty() }
                                 },
                             ),
+                            error = null,
                         ),
                     )
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading work details")
                 updateState {
-                    it.copy(state = Error())
+                    it.copy(state = Error(ErrorType.LoadingError))
                 }
             }
         }

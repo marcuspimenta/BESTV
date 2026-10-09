@@ -13,12 +13,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,11 +35,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -74,13 +76,11 @@ import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
-import com.pimenta.bestv.workdetail.presentation.model.WorkMetadataViewModel
 import com.pimenta.bestv.workdetail.presentation.model.CrewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.Navigate
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ClearScrollIndex
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.DismissError
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreRecommendations
@@ -90,6 +90,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoCli
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Casts
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.RecommendedWorks
@@ -119,6 +120,13 @@ fun MobileWorkDetailsScreen(
     val showCollapsedTitle = listViewportTop.isFinite() &&
         headerTitleBottom.isFinite() &&
         headerTitleBottom <= listViewportTop
+    val saveAction = (state.state as? Loaded)
+        ?.contents
+        ?.filterIsInstance<Header>()
+        ?.firstOrNull()
+        ?.actions
+        ?.filterIsInstance<SaveWork>()
+        ?.firstOrNull()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -126,15 +134,6 @@ fun MobileWorkDetailsScreen(
         }
     }
     LaunchedEffect(Unit) { viewModel.handleEvent(LoadData) }
-    val loaded = state.state as? Loaded
-    LaunchedEffect(loaded?.indexOfContentToScroll) {
-        loaded?.indexOfContentToScroll?.let { index ->
-            listState.animateScrollToItem(
-                index.coerceAtMost((loaded.contents.size - 1).coerceAtLeast(0)),
-            )
-            viewModel.handleEvent(ClearScrollIndex)
-        }
-    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -163,6 +162,22 @@ fun MobileWorkDetailsScreen(
                         color = BESTVTheme.colors.white,
                         maxLines = 1,
                     )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                saveAction?.let { action ->
+                    IconButton(onClick = { viewModel.handleEvent(ActionButtonClicked(action)) }) {
+                        Icon(
+                            imageVector = if (action.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = stringResource(
+                                if (action.isFavorite) {
+                                    R.string.remove_favorites
+                                } else {
+                                    R.string.save_favorites
+                                },
+                            ),
+                            tint = BESTVTheme.colors.white,
+                        )
+                    }
                 }
             }
         },
@@ -231,6 +246,12 @@ private fun MobileWorkDetailsList(
     onListViewportTopChanged: (Float) -> Unit,
     onHeaderTitleBottomChanged: (Float) -> Unit,
 ) {
+    val hasMetadata = content.contents
+        .filterIsInstance<Header>()
+        .firstOrNull()
+        ?.metadata
+        ?.hasContent == true
+
     LazyColumn(
         state = listState,
         modifier = Modifier
@@ -239,19 +260,17 @@ private fun MobileWorkDetailsList(
                 onListViewportTopChanged(coordinates.boundsInRoot().top)
             },
     ) {
-        content.contents.forEach { section ->
+        content.contents.forEachIndexed { index, section ->
             when (section) {
-                is Header -> {
+                is Header ->
                     item(key = section.id) {
-                        MobileWorkHeader(work, section.metadata, section.crew, onHeaderTitleBottomChanged)
+                        MobileWorkHeader(
+                            work = work,
+                            crew = section.crew,
+                            providers = section.watchProviders,
+                            onTitleBottomChanged = onHeaderTitleBottomChanged,
+                        )
                     }
-                    stickyHeader(key = "work-actions") {
-                        MobileWorkActions(section.actions) { onEvent(ActionButtonClicked(it)) }
-                    }
-                    section.watchProviders?.let { providers ->
-                        item(key = "watch-providers") { MobileProviders(providers) }
-                    }
-                }
 
                 is Videos ->
                     item(key = section.id) {
@@ -290,6 +309,20 @@ private fun MobileWorkDetailsList(
                         MobileReviews(section.reviews, section.page) { onEvent(LoadMoreReviews) }
                     }
             }
+
+            if (index < content.contents.lastIndex || hasMetadata) {
+                item(key = "divider-${section.id}") {
+                    HorizontalDivider(
+                        color = BESTVTheme.colors.mobileNavigationSelectedSurface,
+                        thickness = BESTVTheme.scale.s005,
+                        modifier = Modifier.padding(
+                            start = BESTVTheme.scale.s080,
+                            end = BESTVTheme.scale.s080,
+                            top = BESTVTheme.scale.s120,
+                        ),
+                    )
+                }
+            }
         }
 
         content.error?.let { error ->
@@ -312,26 +345,17 @@ private fun MobileWorkDetailsList(
                 }
             }
         }
-    }
-}
 
-@Composable
-private fun MobileWorkActions(
-    actions: List<ActionButton>,
-    onAction: (ActionButton) -> Unit,
-) {
-    if (actions.isEmpty()) return
-    LazyRow(
-        contentPadding = PaddingValues(
-            horizontal = BESTVTheme.scale.s080,
-        ),
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-        modifier = Modifier
-            .background(BESTVTheme.colors.black)
-            .padding(BESTVTheme.scale.s040),
-    ) {
-        items(actions, key = { it.id }) { action ->
-            Button(onClick = { onAction(action) }) { Text(action.title) }
+        content.contents.filterIsInstance<Header>().firstOrNull()?.metadata?.takeIf { it.hasContent }?.let { metadata ->
+            item(key = "work-metadata") {
+                WorkMetadataDetails(
+                    metadata = metadata,
+                    modifier = Modifier.padding(
+                        horizontal = BESTVTheme.scale.s080,
+                        vertical = BESTVTheme.scale.s120,
+                    ),
+                )
+            }
         }
     }
 }
@@ -339,8 +363,8 @@ private fun MobileWorkActions(
 @Composable
 private fun MobileWorkHeader(
     work: WorkViewModel,
-    metadata: WorkMetadataViewModel? = null,
     crew: List<CrewViewModel> = emptyList(),
+    providers: WatchProvidersViewModel?,
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
@@ -398,13 +422,7 @@ private fun MobileWorkHeader(
                 modifier = Modifier.padding(top = BESTVTheme.scale.s080),
             )
 
-            metadata?.takeIf { it.hasContent }?.let {
-                WorkMetadataDetails(
-                    metadata = it,
-                    modifier = Modifier
-                        .padding(top = BESTVTheme.scale.s120),
-                )
-            }
+            providers?.let { MobileProviders(it) }
         }
     }
 }
@@ -413,11 +431,13 @@ private fun MobileWorkHeader(
 private fun MobileProviders(providers: WatchProvidersViewModel) {
     if (!providers.hasAnyProvider) return
 
-    MobileSectionTitle(stringResource(R.string.where_to_watch))
+    MobileSectionTitle(
+        title = stringResource(R.string.where_to_watch),
+        style = MaterialTheme.typography.titleSmall,
+        startPadding = BESTVTheme.scale.s000,
+        topPadding = BESTVTheme.scale.s080,
+    )
     LazyRow(
-        contentPadding = PaddingValues(
-            horizontal = BESTVTheme.scale.s080,
-        ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
     ) {
         items(providers.providers, key = { it.id }) { provider ->
@@ -526,9 +546,7 @@ private fun MobileReviews(
     val listState = rememberLazyListState()
     LazyRow(
         state = listState,
-        contentPadding = PaddingValues(
-            horizontal = BESTVTheme.scale.s080,
-        ),
+        contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
         items(reviews, key = { it.id ?: it.hashCode() }) { review ->
@@ -582,29 +600,12 @@ private fun MobileWorkHeaderPreview() {
     BESTVTheme {
         MobileWorkHeader(
             mobilePreviewWork,
-            metadata = WorkMetadataViewModel(
-                status = "Released",
-                originalLanguage = "English",
-                budget = "$225,000,000",
-                revenue = "$2,505,477,000",
-                keywords = listOf("hero", "secret identity", "sequel"),
+            crew = listOf(
+                CrewViewModel(id = 1, name = "Example Director", role = "Director"),
+                CrewViewModel(id = 2, name = "Example Writer", role = "Writer"),
             ),
+            providers = null,
             onTitleBottomChanged = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MobileWorkActionsPreview() {
-    BESTVTheme {
-        MobileWorkActions(
-            actions = listOf(
-                ActionButton.SaveWork(isFavorite = false),
-                ActionButton.ScrollToVideos,
-                ActionButton.ScrollToCasts,
-            ),
-            onAction = {},
         )
     }
 }
@@ -691,6 +692,7 @@ private fun MobileWorkDetailsContentPreview() {
             state = WorkDetailsState(
                 work = mobilePreviewWork,
                 state = Loaded(
+                    indexOfContentToScroll = null,
                     contents = listOf(
                         Header(
                             actions = listOf(
@@ -698,6 +700,8 @@ private fun MobileWorkDetailsContentPreview() {
                                 ActionButton.ScrollToVideos,
                             ),
                             watchProviders = null,
+                            metadata = null,
+                            crew = emptyList(),
                         ),
                         Videos(videos = listOf(VideoViewModel(id = "trailer", name = "Trailer"))),
                         Casts(
@@ -722,7 +726,9 @@ private fun MobileWorkDetailsContentPreview() {
                                 .PaginationState(),
                         ),
                     ),
+                    error = null,
                 ),
+                isMobileDevice = true,
             ),
             listState = rememberLazyListState(),
             contentPadding = PaddingValues(),

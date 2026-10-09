@@ -185,6 +185,7 @@ private fun TVWorkDetailsHeaderPreview() {
                     revenue = "$2,505,477,000",
                     keywords = listOf("hero", "secret identity", "sequel"),
                 ),
+                crew = emptyList(),
             ),
             actionClicked = {},
         )

@@ -51,7 +51,8 @@ class MovieRepository(
             val source = resource.getStringResource(R.string.source_tmdb)
             WorkCreditsDomainModel(
                 casts = response.casts?.map { cast -> cast.toDomainModel(source) },
-                crew = response.crew.orEmpty()
+                crew = response.crew
+                    .orEmpty()
                     .mapNotNull { it.crewToDomainModel() }
                     .filter { it.role in DISPLAYED_CREW_ROLES }
                     .sortedBy { DISPLAYED_CREW_ROLES.indexOf(it.role) },

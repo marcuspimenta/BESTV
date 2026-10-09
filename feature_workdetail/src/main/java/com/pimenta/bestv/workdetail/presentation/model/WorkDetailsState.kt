@@ -18,7 +18,6 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.presentation.model.CrewViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
-import com.pimenta.bestv.workdetail.presentation.model.ErrorType.LoadingError
 
 private const val ID_HEADER = 1
 private const val ID_VIDEOS = 2
@@ -41,19 +40,19 @@ private const val ID_ACTION_SCROLL_TO_REVIEWS = 6
 data class WorkDetailsState(
     val work: WorkViewModel,
     val state: State,
-    val isMobileDevice: Boolean = false,
+    val isMobileDevice: Boolean,
 ) {
     sealed interface State {
         data object Loading : State
 
         data class Error(
-            val error: ErrorType = LoadingError,
+            val error: ErrorType,
         ) : State
 
         data class Loaded(
-            val indexOfContentToScroll: Int? = null,
+            val indexOfContentToScroll: Int?,
             val contents: List<Content>,
-            val error: ErrorType? = null,
+            val error: ErrorType?,
         ) : State
     }
 
@@ -63,8 +62,8 @@ data class WorkDetailsState(
         data class Header(
             val actions: List<ActionButton>,
             val watchProviders: WatchProvidersViewModel?,
-            val metadata: WorkMetadataViewModel? = null,
-            val crew: List<CrewViewModel> = emptyList(),
+            val metadata: WorkMetadataViewModel?,
+            val crew: List<CrewViewModel>,
         ) : Content(ID_HEADER)
 
         data class Videos(
