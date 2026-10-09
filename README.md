@@ -43,14 +43,6 @@ BESTV uses modular Clean Architecture with MVI presentation state and events.
 - [MVI Architecture](MVI_ARCHITECTURE.md)
 - [Koin dependency injection](KOIN_DI.md)
 
-## Modules
-
-The project is split into modules. The diagram shows their dependencies.
-
-<p align="center">
-  <img src="dependency_graph/dependency_graph.png" alt="BESTV module dependency graph">
-</p>
-
 ## TMDb API
 
 BESTV uses [version 3 of the TMDb API](https://developers.themoviedb.org/3/getting-started/introduction). It is not endorsed or certified by TMDb.
