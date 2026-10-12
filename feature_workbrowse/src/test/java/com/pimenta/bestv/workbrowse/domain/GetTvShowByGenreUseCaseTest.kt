@@ -16,7 +16,7 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
+import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test

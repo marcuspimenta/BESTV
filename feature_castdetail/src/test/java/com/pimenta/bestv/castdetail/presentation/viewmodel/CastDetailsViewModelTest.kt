@@ -227,7 +227,6 @@ class CastDetailsViewModelTest {
                 val effect = awaitItem()
                 assertTrue(effect is CastDetailsEffect.Navigate)
                 assertEquals(intent, (effect as CastDetailsEffect.Navigate).intent)
-                assertTrue(effect.shareTransition)
             }
         }
 

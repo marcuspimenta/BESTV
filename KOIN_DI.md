@@ -4,7 +4,7 @@ This document describes the Koin dependency injection setup used in the BESTV pr
 
 ## Overview
 
-[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. This project uses Koin 4.0 with Android and Compose extensions to manage dependencies across all modules.
+[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. The current dependency pin is Koin 4.2.2 in `buildSrc/src/main/kotlin/Dependencies.kt`, with Android and Compose extensions used across the app.
 
 ## Project Structure
 
@@ -162,6 +162,10 @@ val searchModule = module {
     factoryOf(::MovieRepository)
     factoryOf(::TvShowRepository)
 
+    // Domain ports resolve to their concrete data implementations
+    factory<com.pimenta.bestv.search.domain.repository.MovieRepository> { get<com.pimenta.bestv.search.data.repository.MovieRepository>() }
+    factory<com.pimenta.bestv.search.domain.repository.TvShowRepository> { get<com.pimenta.bestv.search.data.repository.TvShowRepository>() }
+
     // UseCases - using factoryOf DSL
     factoryOf(::SearchMoviesByQueryUseCase)
     factoryOf(::SearchTvShowsByQueryUseCase)
@@ -171,6 +175,10 @@ val searchModule = module {
     viewModelOf(::SearchViewModel)
 }
 ```
+
+The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same binding pattern is used by Work Browse, Work Details, Cast Details, and Recommendation. Each affected feature has a smoke test that loads its production Koin module with test infrastructure dependencies and checks that the port resolves to the concrete implementation.
+
+Browse section loading follows the same layer direction: `GetSectionDetailsUseCase` returns domain category keys, genres, and pages; presentation maps them to `ContentSection`, resource-backed category labels, work and genre view models, and pagination state before `WorkBrowseViewModel` publishes screen state. Favorite refreshes pass through the same mapper.
 
 ## DSL Reference
 
@@ -302,19 +310,19 @@ factory {
 
 ### 3. Testing
 
-For unit tests, Koin provides test utilities:
+For a module smoke test, create an isolated Koin application with the production feature module and substitute infrastructure definitions, then resolve the domain port:
 
 ```kotlin
-class MyViewModelTest : KoinTest {
-
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        modules(testModule)
-    }
-
-    private val viewModel: MyViewModel by inject()
+val testApplication = koinApplication {
+    modules(searchModule, testInfrastructureModule)
 }
+
+val repository = testApplication.koin.get<com.pimenta.bestv.search.domain.repository.MovieRepository>()
+assertTrue(repository is com.pimenta.bestv.search.data.repository.MovieRepository)
+testApplication.close()
 ```
+
+The affected feature modules use this pattern with mocked local dependencies and a Retrofit instance pointed at a test base URL; they do not add a Koin test dependency.
 
 ### 4. Avoid
 

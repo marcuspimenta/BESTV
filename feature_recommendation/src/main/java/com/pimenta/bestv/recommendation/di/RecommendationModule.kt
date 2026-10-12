@@ -30,6 +30,8 @@ import com.pimenta.bestv.recommendation.data.repository.MovieRepository
 import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
 import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
+import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as MovieRepositoryPort
+import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository as RecommendationRepositoryPort
 import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.factoryOf
@@ -92,6 +94,8 @@ val recommendationModule = module {
     // Repositories
     factoryOf(::MovieRepository)
     factoryOf(::RecommendationRepository)
+    factory<MovieRepositoryPort> { get<MovieRepository>() }
+    factory<RecommendationRepositoryPort> { get<RecommendationRepository>() }
 
     // UseCases
     factoryOf(::LoadRecommendationUseCase)

@@ -21,6 +21,7 @@ import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
+import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModels
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
@@ -83,6 +84,9 @@ class WorkBrowseViewModel(
 
             try {
                 val sectionDetails = getSectionDetailsUseCase.getAllSections()
+                val movieSections = sectionDetails.movieSections.toViewModels()
+                val tvShowSections = sectionDetails.tvShowSections.toViewModels()
+                val favoriteSections = sectionDetails.favoriteSections.toViewModels()
 
                 // Wait for splash animation to finish reactively
                 state.first { (it.state as? Loading)?.isSplashAnimationFinished == true }
@@ -94,9 +98,9 @@ class WorkBrowseViewModel(
                             selectedSectionIndex = 1,
                             sections = listOfNotNull(
                                 Search,
-                                Movies(sectionDetails.movieSectionDetails).takeIf { it.content.isNotEmpty() },
-                                TvShows(sectionDetails.tvSectionDetails).takeIf { it.content.isNotEmpty() },
-                                Favorites(sectionDetails.favoriteSectionDetails).takeIf { it.content.isNotEmpty() },
+                                Movies(movieSections).takeIf { it.content.isNotEmpty() },
+                                TvShows(tvShowSections).takeIf { it.content.isNotEmpty() },
+                                Favorites(favoriteSections).takeIf { it.content.isNotEmpty() },
                             ),
                         ),
                     )
@@ -112,7 +116,7 @@ class WorkBrowseViewModel(
         val currentState = currentState.state as? Loaded ?: return
         viewModelScope.launch {
             try {
-                val favorites = getSectionDetailsUseCase.getFavoriteSections()
+                val favorites = getSectionDetailsUseCase.getFavoriteSections().toViewModels()
                 val updatedSections = updateSectionsWithFavorites(currentState.sections, favorites)
 
                 updateState {

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import com.pimenta.bestv.castdetail.data.repository.CastRepository
+import com.pimenta.bestv.castdetail.domain.repository.CastRepository
 
 /**
  * Created by marcus on 20-05-2019.

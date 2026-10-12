@@ -16,7 +16,7 @@ package com.pimenta.bestv.search.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.search.data.repository.TvShowRepository
+import com.pimenta.bestv.search.domain.repository.TvShowRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test

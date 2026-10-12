@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
+import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

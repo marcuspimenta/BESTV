@@ -41,6 +41,9 @@ import com.pimenta.bestv.workbrowse.domain.GetTvShowGenresUseCase
 import com.pimenta.bestv.workbrowse.domain.GetUpComingMoviesUseCase
 import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
 import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository as GenreRepositoryPort
+import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryPort
+import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryPort
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
@@ -81,6 +84,9 @@ val workBrowseModule = module {
     factoryOf(::GenreRepository)
     factoryOf(::MovieRepository)
     factoryOf(::TvShowRepository)
+    factory<GenreRepositoryPort> { get<GenreRepository>() }
+    factory<MovieRepositoryPort> { get<MovieRepository>() }
+    factory<TvShowRepositoryPort> { get<TvShowRepository>() }
 
     // UseCases
     factoryOf(::GetAiringTodayTvShowsUseCase)

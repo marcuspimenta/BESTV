@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 
 /**
  * Created by marcus on 23-08-2019.
@@ -32,16 +32,16 @@ class LoadWorkByTypeUseCase(
 ) {
     suspend operator fun invoke(
         page: Int,
-        topWorkTypeViewModel: TopWorkTypeViewModel,
-    ) = when (topWorkTypeViewModel) {
-        TopWorkTypeViewModel.FAVORITES_MOVIES -> getFavoritesUseCase()
-        TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
-        TopWorkTypeViewModel.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
-        TopWorkTypeViewModel.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
-        TopWorkTypeViewModel.UP_COMING_MOVIES -> getUpComingMoviesUseCase(page)
-        TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> getAiringTodayTvShowsUseCase(page)
-        TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
-        TopWorkTypeViewModel.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
-        TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
+        category: BrowseCategoryKey,
+    ) = when (category) {
+        BrowseCategoryKey.FAVORITES_MOVIES -> getFavoritesUseCase()
+        BrowseCategoryKey.NOW_PLAYING_MOVIES -> getNowPlayingMoviesUseCase(page)
+        BrowseCategoryKey.POPULAR_MOVIES -> getPopularMoviesUseCase(page)
+        BrowseCategoryKey.TOP_RATED_MOVIES -> getTopRatedMoviesUseCase(page)
+        BrowseCategoryKey.UP_COMING_MOVIES -> getUpComingMoviesUseCase(page)
+        BrowseCategoryKey.AIRING_TODAY_TV_SHOWS -> getAiringTodayTvShowsUseCase(page)
+        BrowseCategoryKey.ON_THE_AIR_TV_SHOWS -> getOnTheAirTvShowsUseCase(page)
+        BrowseCategoryKey.POPULAR_TV_SHOWS -> getPopularTvShowsUseCase(page)
+        BrowseCategoryKey.TOP_RATED_TV_SHOWS -> getTopRatedTvShowsUseCase(page)
     }
 }

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.domain
 
-import com.pimenta.bestv.search.data.repository.MovieRepository
+import com.pimenta.bestv.search.domain.repository.MovieRepository
 
 /**
  * Created by marcus on 23-08-2019.

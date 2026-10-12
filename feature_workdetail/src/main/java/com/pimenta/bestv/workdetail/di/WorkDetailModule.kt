@@ -45,6 +45,8 @@ import com.pimenta.bestv.workdetail.domain.GetWatchProvidersUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkDetailsUseCase
 import com.pimenta.bestv.workdetail.domain.GetWorkMetadataUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
+import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryPort
+import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryPort
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
@@ -75,6 +77,8 @@ val workDetailModule = module {
     // Repositories
     factoryOf(::MovieRepository)
     factoryOf(::TvShowRepository)
+    factory<MovieRepositoryPort> { get<MovieRepository>() }
+    factory<TvShowRepositoryPort> { get<TvShowRepository>() }
 
     // UseCases
     factoryOf(::CheckFavoriteMovieUseCase)

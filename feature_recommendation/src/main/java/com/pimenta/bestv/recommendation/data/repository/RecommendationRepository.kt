@@ -16,14 +16,15 @@ package com.pimenta.bestv.recommendation.data.repository
 
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
+import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository as RecommendationRepositoryContract
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class RecommendationRepository(
     private val recommendationProvider: RecommendationProvider
-) {
+) : RecommendationRepositoryContract {
 
-    suspend fun loadRecommendations(works: List<WorkDomainModel>?) =
+    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) =
         recommendationProvider.loadRecommendations(works)
 }

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.workdetail.data.repository.MovieRepository
+import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 
 /**
  * Use case to get watch providers for a movie.

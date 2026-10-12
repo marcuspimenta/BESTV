@@ -17,19 +17,20 @@ package com.pimenta.bestv.workbrowse.data.repository
 import com.pimenta.bestv.workbrowse.data.remote.datasource.GenreRemoteDataSource
 import com.pimenta.bestv.workbrowse.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
+import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository as GenreRepositoryContract
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class GenreRepository(
     private val genreRemoteDataSource: GenreRemoteDataSource,
-) {
-    suspend fun getMovieGenres(): List<GenreDomainModel>? {
+) : GenreRepositoryContract {
+    override suspend fun getMovieGenres(): List<GenreDomainModel>? {
         val response = genreRemoteDataSource.getMovieGenres()
         return response.genres?.map { genre -> genre.toDomainModel() }
     }
 
-    suspend fun getTvShowGenres(): List<GenreDomainModel>? {
+    override suspend fun getTvShowGenres(): List<GenreDomainModel>? {
         val response = genreRemoteDataSource.getTvShowGenres()
         return response.genres?.map { genre -> genre.toDomainModel() }
     }

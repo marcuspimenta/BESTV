@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.presentation.model.Source
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 
 /**
  * Created by marcus on 23-08-2019.
@@ -25,10 +25,10 @@ class GetWorkByGenreUseCase(
 ) {
     suspend operator fun invoke(
         genreId: Int,
-        genreSource: Source,
+        genreSource: GenreDomainModel.Source,
         page: Int,
     ) = when (genreSource) {
-        Source.MOVIE -> getMovieByGenreUseCase(genreId, page)
-        Source.TV_SHOW -> getTvShowByGenreUseCase(genreId, page)
+        GenreDomainModel.Source.MOVIE -> getMovieByGenreUseCase(genreId, page)
+        GenreDomainModel.Source.TV_SHOW -> getTvShowByGenreUseCase(genreId, page)
     }
 }

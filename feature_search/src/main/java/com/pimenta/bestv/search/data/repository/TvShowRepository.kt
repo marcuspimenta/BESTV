@@ -18,6 +18,7 @@ import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
+import com.pimenta.bestv.search.domain.repository.TvShowRepository as TvShowRepositoryContract
 
 /**
  * Created by marcus on 29-10-2019.
@@ -25,8 +26,8 @@ import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
 class TvShowRepository(
     private val resource: Resource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
-) {
-    suspend fun searchTvShowsByQuery(
+) : TvShowRepositoryContract {
+    override suspend fun searchTvShowsByQuery(
         query: String,
         page: Int,
     ) = tvShowRemoteDataSource

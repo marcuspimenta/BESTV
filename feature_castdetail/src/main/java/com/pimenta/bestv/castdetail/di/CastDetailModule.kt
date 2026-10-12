@@ -21,6 +21,7 @@ import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.domain.GetCastPersonalDetails
 import com.pimenta.bestv.castdetail.domain.GetMovieCreditsByCastUseCase
 import com.pimenta.bestv.castdetail.domain.GetTvShowCreditsByCastUseCase
+import com.pimenta.bestv.castdetail.domain.repository.CastRepository as CastRepositoryPort
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import org.koin.core.module.dsl.factoryOf
@@ -43,6 +44,7 @@ val castDetailModule = module {
 
     // Repository
     factoryOf(::CastRepository)
+    factory<CastRepositoryPort> { get<CastRepository>() }
 
     // UseCases
     factoryOf(::GetCastPersonalDetails)

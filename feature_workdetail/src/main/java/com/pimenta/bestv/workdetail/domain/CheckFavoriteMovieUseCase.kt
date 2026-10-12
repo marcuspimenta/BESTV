@@ -15,7 +15,7 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.data.local.MovieDbModel
-import com.pimenta.bestv.workdetail.data.repository.MovieRepository
+import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 
 /**
  * Created by marcus on 23-04-2020.

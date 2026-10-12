@@ -18,6 +18,7 @@ import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
+import com.pimenta.bestv.search.domain.repository.MovieRepository as MovieRepositoryContract
 
 /**
  * Created by marcus on 29-10-2019.
@@ -25,8 +26,8 @@ import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
 class MovieRepository(
     private val resource: Resource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-) {
-    suspend fun searchMoviesByQuery(
+) : MovieRepositoryContract {
+    override suspend fun searchMoviesByQuery(
         query: String,
         page: Int,
     ) = movieRemoteDataSource.searchMoviesByQuery(query, page).run {

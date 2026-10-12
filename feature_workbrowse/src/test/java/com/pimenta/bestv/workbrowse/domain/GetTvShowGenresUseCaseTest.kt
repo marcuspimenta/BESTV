@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
+import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert

@@ -17,12 +17,16 @@ package com.pimenta.bestv.workbrowse.presentation.viewmodel
 import android.content.Intent
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.SectionDetails
+import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
+import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
+import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
@@ -62,32 +66,43 @@ private val WORK =
         voteAverage = 8.0f,
     )
 
-private val MOVIE_CONTENT_SECTION =
-    ContentSection.TopContent(
-        type = TopWorkTypeViewModel.NOW_PLAYING_MOVIES,
-        works = listOf(WORK),
-        page = PaginationState(currentPage = 1, totalPages = 5),
+private fun domainWork(
+    id: Int,
+    type: WorkDomainModel.Type,
+    isFavorite: Boolean = false,
+) =
+    WorkDomainModel(
+        id = id,
+        title = "Test Movie",
+        originalTitle = "Test Movie",
+        originalLanguage = "en",
+        overview = "A test movie",
+        source = "tmdb",
+        backdropPath = "/backdrop.jpg",
+        posterPath = "/poster.jpg",
+        releaseDate = "2023-01-01",
+        type = type,
+        voteAverage = 8.0f,
+        isFavorite = isFavorite,
     )
 
-private val TV_SHOW_CONTENT_SECTION =
-    ContentSection.TopContent(
-        type = TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS,
-        works = listOf(WORK.copy(id = 2, type = WorkType.TV_SHOW)),
-        page = PaginationState(currentPage = 1, totalPages = 3),
-    )
-
-private val FAVORITES_CONTENT_SECTION =
-    ContentSection.TopContent(
-        type = TopWorkTypeViewModel.FAVORITES_MOVIES,
-        works = listOf(WORK.copy(id = 3, isFavorite = true)),
-        page = PaginationState(currentPage = 1, totalPages = 1),
+private fun domainSection(category: BrowseCategoryKey, work: WorkDomainModel, totalPages: Int) =
+    BrowseSectionDomainModel.TopContent(
+        category = category,
+        page = PageDomainModel(page = 1, totalPages = totalPages, results = listOf(work)),
     )
 
 private val SECTION_DETAILS =
-    SectionDetails(
-        movieSectionDetails = listOf(MOVIE_CONTENT_SECTION),
-        tvSectionDetails = listOf(TV_SHOW_CONTENT_SECTION),
-        favoriteSectionDetails = listOf(FAVORITES_CONTENT_SECTION),
+    BrowseSectionDetails(
+        movieSections = listOf(
+            domainSection(BrowseCategoryKey.NOW_PLAYING_MOVIES, domainWork(1, WorkDomainModel.Type.MOVIE), 5),
+        ),
+        tvShowSections = listOf(
+            domainSection(BrowseCategoryKey.AIRING_TODAY_TV_SHOWS, domainWork(2, WorkDomainModel.Type.TV_SHOW), 3),
+        ),
+        favoriteSections = listOf(
+            domainSection(BrowseCategoryKey.FAVORITES_MOVIES, domainWork(3, WorkDomainModel.Type.MOVIE, true), 1),
+        ),
     )
 
 /**
@@ -163,6 +178,16 @@ class WorkBrowseViewModelTest {
             assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.Movies })
             assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.TvShows })
             assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.Favorites })
+
+            val movieSection =
+                loadedState.sections
+                    .filterIsInstance<WorkBrowseState.Section.Movies>()
+                    .single()
+                    .content
+                    .single() as ContentSection.TopContent
+            assertEquals(TopWorkTypeViewModel.NOW_PLAYING_MOVIES, movieSection.type)
+            assertEquals(1, movieSection.works.single().id)
+            assertEquals(PaginationState(currentPage = 1, totalPages = 5), movieSection.page)
         }
 
     @Test
@@ -307,10 +332,10 @@ class WorkBrowseViewModelTest {
             assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
 
             val newFavorites = listOf(
-                ContentSection.TopContent(
-                    type = TopWorkTypeViewModel.FAVORITES_MOVIES,
-                    works = listOf(WORK.copy(id = 10, isFavorite = true)),
-                    page = PaginationState(currentPage = 1, totalPages = 1),
+                domainSection(
+                    BrowseCategoryKey.FAVORITES_MOVIES,
+                    domainWork(10, WorkDomainModel.Type.MOVIE, true),
+                    1,
                 ),
             )
             whenever(getSectionDetailsUseCase.getFavoriteSections()).thenReturn(newFavorites)
@@ -321,7 +346,11 @@ class WorkBrowseViewModelTest {
             val state = viewModel.state.value
             val loadedState = state.state as WorkBrowseState.State.Loaded
             val favoritesSection = loadedState.sections.filterIsInstance<WorkBrowseState.Section.Favorites>().firstOrNull()
-            assertEquals(newFavorites, favoritesSection?.content)
+            val favoriteContent = favoritesSection?.content?.single() as ContentSection.TopContent
+            assertEquals(TopWorkTypeViewModel.FAVORITES_MOVIES, favoriteContent.type)
+            assertEquals(10, favoriteContent.works.single().id)
+            assertTrue(favoriteContent.works.single().isFavorite)
+            assertEquals(PaginationState(currentPage = 1, totalPages = 1), favoriteContent.page)
         }
 
     @Test

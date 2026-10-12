@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
+import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 
 /**
  * Use case to get watch providers for a TV show.

@@ -82,11 +82,12 @@ private val MOVIE_VIEW_MODEL_LIST =
             originalLanguage = "en",
             overview = "A superhero movie",
             source = "tmdb",
-            backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
-            posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
+            backdropUrl = "https://image.tmdb.org/t/p/w1280/backdrop.jpg",
+            posterUrl = "https://image.tmdb.org/t/p/w500/poster.jpg",
             releaseDate = "Jan 01, 2023",
             type = WorkType.MOVIE,
             voteAverage = 8.0f,
+            backdropCardUrl = "https://image.tmdb.org/t/p/w780/backdrop.jpg",
         ),
     )
 
@@ -123,11 +124,12 @@ private val TV_SHOW_VIEW_MODEL_LIST =
             originalLanguage = "en",
             overview = "A superhero TV show",
             source = "tmdb",
-            backdropUrl = "https://image.tmdb.org/t/p/original/backdrop_tv.jpg",
-            posterUrl = "https://image.tmdb.org/t/p/original/poster_tv.jpg",
+            backdropUrl = "https://image.tmdb.org/t/p/w1280/backdrop_tv.jpg",
+            posterUrl = "https://image.tmdb.org/t/p/w500/poster_tv.jpg",
             releaseDate = "Feb 01, 2023",
             type = WorkType.TV_SHOW,
             voteAverage = 7.5f,
+            backdropCardUrl = "https://image.tmdb.org/t/p/w780/backdrop_tv.jpg",
         ),
     )
 

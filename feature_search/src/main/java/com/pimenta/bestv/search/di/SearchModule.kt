@@ -24,6 +24,8 @@ import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.UrlEncoderTextUseCase
+import com.pimenta.bestv.search.domain.repository.MovieRepository as MovieRepositoryPort
+import com.pimenta.bestv.search.domain.repository.TvShowRepository as TvShowRepositoryPort
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor
@@ -57,6 +59,8 @@ val searchModule = module {
     // Repositories
     factoryOf(::MovieRepository)
     factoryOf(::TvShowRepository)
+    factory<MovieRepositoryPort> { get<MovieRepository>() }
+    factory<TvShowRepositoryPort> { get<TvShowRepository>() }
 
     // UseCases
     factoryOf(::UrlEncoderTextUseCase)

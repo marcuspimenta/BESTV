@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.recommendation.domain
 
-import com.pimenta.bestv.recommendation.data.repository.MovieRepository
-import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
+import com.pimenta.bestv.recommendation.domain.repository.MovieRepository
+import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 
 private const val RECOMMENDATION_NUMBER = 5
 

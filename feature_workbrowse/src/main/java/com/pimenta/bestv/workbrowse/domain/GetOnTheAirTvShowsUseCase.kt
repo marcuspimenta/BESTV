@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
+import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository
 
 /**
  * Created by marcus on 24-10-2019.

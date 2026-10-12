@@ -1,24 +1,10 @@
-/*
- * Copyright (C) 2018 Marcus Pimenta
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
+import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
-import com.pimenta.bestv.workbrowse.presentation.model.Source
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -46,7 +32,7 @@ private val WORK_DOMAIN_MODEL =
 
 private val MOVIE_PAGE =
     PageDomainModel(
-        page = 1,
+        page = 2,
         totalPages = 5,
         results = listOf(WORK_DOMAIN_MODEL),
     )
@@ -88,69 +74,89 @@ class GetSectionDetailsUseCaseTest {
         )
 
     @Test
-    fun `getAllSections should return movie, tv show and favorites sections`() =
+    fun `getAllSections preserves category order and appends genres with their domain source`() =
         runTest {
-            // Setup movie types
-            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(MOVIE_PAGE)
-
-            // Setup genres
+            whenever(loadWorkByTypeUseCase(eq(1), any<BrowseCategoryKey>())).thenReturn(MOVIE_PAGE)
             whenever(getMovieGenresUseCase()).thenReturn(listOf(MOVIE_GENRE))
             whenever(getTvShowGenresUseCase()).thenReturn(listOf(TV_SHOW_GENRE))
-            whenever(getWorkByGenreUseCase(eq(MOVIE_GENRE.id), eq(Source.MOVIE), eq(1))).thenReturn(MOVIE_PAGE)
-            whenever(getWorkByGenreUseCase(eq(TV_SHOW_GENRE.id), eq(Source.TV_SHOW), eq(1))).thenReturn(TV_SHOW_PAGE)
+            whenever(getWorkByGenreUseCase(eq(MOVIE_GENRE.id), eq(GenreDomainModel.Source.MOVIE), eq(1)))
+                .thenReturn(MOVIE_PAGE)
+            whenever(getWorkByGenreUseCase(eq(TV_SHOW_GENRE.id), eq(GenreDomainModel.Source.TV_SHOW), eq(1)))
+                .thenReturn(TV_SHOW_PAGE)
 
             val result = useCase.getAllSections()
 
-            assertTrue(result.movieSectionDetails.isNotEmpty())
-            assertTrue(result.tvSectionDetails.isNotEmpty())
+            assertEquals(
+                listOf(
+                    BrowseCategoryKey.NOW_PLAYING_MOVIES,
+                    BrowseCategoryKey.POPULAR_MOVIES,
+                    BrowseCategoryKey.TOP_RATED_MOVIES,
+                    BrowseCategoryKey.UP_COMING_MOVIES,
+                ),
+                result.movieSections.take(4).map { (it as BrowseSectionDomainModel.TopContent).category },
+            )
+            assertEquals(MOVIE_GENRE, (result.movieSections.last() as BrowseSectionDomainModel.GenreContent).genre)
+            assertEquals(
+                listOf(
+                    BrowseCategoryKey.AIRING_TODAY_TV_SHOWS,
+                    BrowseCategoryKey.ON_THE_AIR_TV_SHOWS,
+                    BrowseCategoryKey.TOP_RATED_TV_SHOWS,
+                    BrowseCategoryKey.POPULAR_TV_SHOWS,
+                ),
+                result.tvShowSections.take(4).map { (it as BrowseSectionDomainModel.TopContent).category },
+            )
+            assertEquals(TV_SHOW_GENRE, (result.tvShowSections.last() as BrowseSectionDomainModel.GenreContent).genre)
+            assertEquals(
+                5,
+                result.movieSections
+                    .first()
+                    .page
+                    .totalPages,
+            )
         }
 
     @Test
-    fun `getAllSections should return empty lists when no data available`() =
+    fun `getAllSections filters empty top, genre, and favorite sections`() =
         runTest {
             val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
-
-            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenReturn(emptyPage)
-            whenever(getMovieGenresUseCase()).thenReturn(emptyList())
-            whenever(getTvShowGenresUseCase()).thenReturn(emptyList())
+            whenever(loadWorkByTypeUseCase(eq(1), any<BrowseCategoryKey>())).thenReturn(emptyPage)
+            whenever(getMovieGenresUseCase()).thenReturn(listOf(MOVIE_GENRE))
+            whenever(getTvShowGenresUseCase()).thenReturn(listOf(TV_SHOW_GENRE))
+            whenever(getWorkByGenreUseCase(eq(MOVIE_GENRE.id), eq(GenreDomainModel.Source.MOVIE), eq(1)))
+                .thenReturn(emptyPage)
+            whenever(getWorkByGenreUseCase(eq(TV_SHOW_GENRE.id), eq(GenreDomainModel.Source.TV_SHOW), eq(1)))
+                .thenReturn(emptyPage)
 
             val result = useCase.getAllSections()
 
-            assertTrue(result.movieSectionDetails.isEmpty())
-            assertTrue(result.tvSectionDetails.isEmpty())
+            assertTrue(result.movieSections.isEmpty())
+            assertTrue(result.tvShowSections.isEmpty())
+            assertTrue(result.favoriteSections.isEmpty())
         }
 
     @Test
-    fun `getFavoriteSections should return favorites when available`() =
+    fun `getFavoriteSections returns the favorites category and page`() =
         runTest {
-            whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(FAVORITES_PAGE)
+            whenever(loadWorkByTypeUseCase(eq(1), eq(BrowseCategoryKey.FAVORITES_MOVIES))).thenReturn(FAVORITES_PAGE)
 
             val result = useCase.getFavoriteSections()
 
             assertEquals(1, result.size)
+            val favorites = result.single() as BrowseSectionDomainModel.TopContent
+            assertEquals(BrowseCategoryKey.FAVORITES_MOVIES, favorites.category)
+            assertEquals(FAVORITES_PAGE, favorites.page)
         }
 
     @Test
-    fun `getFavoriteSections should return empty list when no favorites`() =
+    fun `getAllSections propagates loading failures`() =
         runTest {
-            val emptyPage = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 1, results = emptyList())
-            whenever(loadWorkByTypeUseCase(eq(1), eq(TopWorkTypeViewModel.FAVORITES_MOVIES))).thenReturn(emptyPage)
-
-            val result = useCase.getFavoriteSections()
-
-            assertTrue(result.isEmpty())
-        }
-
-    @Test
-    fun `getAllSections should throw exception when loading fails`() =
-        runTest {
-            whenever(loadWorkByTypeUseCase(eq(1), any<TopWorkTypeViewModel>())).thenThrow(RuntimeException("Network error"))
+            whenever(loadWorkByTypeUseCase(eq(1), any<BrowseCategoryKey>())).thenThrow(RuntimeException("Network error"))
 
             try {
                 useCase.getAllSections()
                 fail("Expected RuntimeException")
-            } catch (e: RuntimeException) {
-                assertEquals("Network error", e.message)
+            } catch (exception: RuntimeException) {
+                assertEquals("Network error", exception.message)
             }
         }
 }

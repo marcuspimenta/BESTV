@@ -55,6 +55,7 @@ The innermost layer containing business logic. This layer is independent of any 
 **Components:**
 - **Use Cases**: Single-responsibility classes that encapsulate business logic
 - **Domain Models**: Pure Kotlin data classes representing business entities
+- **Repository contracts**: Feature-owned interfaces that describe the data operations use cases need; implementations live in the data layer
 
 **Location:** `feature_*/src/main/java/.../domain/`
 
@@ -336,6 +337,8 @@ Use Cases encapsulate single business operations:
 
 ```kotlin
 // feature_search/.../domain/SearchMoviesByQueryUseCase.kt
+import com.pimenta.bestv.search.domain.repository.MovieRepository
+
 class SearchMoviesByQueryUseCase(
     private val movieRepository: MovieRepository
 ) {
@@ -362,6 +365,22 @@ class SearchWorksByQueryUseCase(
     }
 }
 ```
+
+## Repository Contracts and Implementations
+
+BESTV keeps each repository port in its feature's `domain/repository` package. The concrete implementation remains under `data/repository` and implements that port. For example, Search has `search.domain.repository.MovieRepository` and `search.data.repository.MovieRepository`; a use case only imports the former. This lets domain tests replace external I/O with a mock of the contract.
+
+The same pattern is applied to the current ports in Work Browse (movie, TV show, and genre), Work Details (movie and TV show), Search (movie and TV show), Cast Details (cast), and Recommendation (movie and recommendation). Koin explicitly binds each domain interface to the corresponding data repository; see [KOIN_DI.md](KOIN_DI.md).
+
+### Browse section mapping
+
+Browse's domain layer returns `BrowseSectionDetails`, whose sections contain a resource-free `BrowseCategoryKey`, `GenreDomainModel`, and `PageDomainModel<WorkDomainModel>`. `GenreDomainModel.Source` selects movie or TV genre retrieval. The domain use case preserves the screen's category order and omits sections with no results.
+
+`BrowseSectionViewModelMapper` in presentation converts those results to `ContentSection`, `WorkViewModel`, `GenreViewModel`, and `PaginationState`. It also maps category keys to `TopWorkTypeViewModel`, where Android string resource identifiers are kept. `WorkBrowseViewModel` applies this mapper to initial section data and to refreshed favorites before updating screen state. Keep Android resources and presentation models out of Browse domain code.
+
+### Current boundary notes
+
+These contracts describe the targeted repository boundaries in the current source. They do not mean every existing feature domain package is fully framework- or presentation-independent: for example, some Work Details use cases still consume shared presentation models. Treat such cases as separate cleanup work and check the actual imports before extending this pattern.
 
 ## Repositories
 

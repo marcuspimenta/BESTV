@@ -18,6 +18,7 @@ import com.pimenta.bestv.castdetail.data.remote.datasource.CastRemoteDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.castdetail.domain.repository.CastRepository as CastRepositoryContract
 
 /**
  * Created by marcus on 29-10-2019.
@@ -25,20 +26,20 @@ import com.pimenta.bestv.presentation.platform.Resource
 class CastRepository(
     private val resource: Resource,
     private val castRemoteDataSource: CastRemoteDataSource,
-) {
-    suspend fun getCastDetails(castId: Int) =
+) : CastRepositoryContract {
+    override suspend fun getCastDetails(castId: Int) =
         castRemoteDataSource.getCastDetails(castId).run {
             val source = resource.getStringResource(R.string.source_tmdb)
             toDomainModel(source)
         }
 
-    suspend fun getMovieCreditsByCast(castId: Int) =
+    override suspend fun getMovieCreditsByCast(castId: Int) =
         castRemoteDataSource.getMovieCreditsByCast(castId).run {
             val source = resource.getStringResource(R.string.source_tmdb)
             works?.map { work -> work.toDomainModel(source) }
         }
 
-    suspend fun getTvShowCreditsByCast(castId: Int) =
+    override suspend fun getTvShowCreditsByCast(castId: Int) =
         castRemoteDataSource.getTvShowCreditsByCast(castId).run {
             val source = resource.getStringResource(R.string.source_tmdb)
             works?.map { work -> work.toDomainModel(source) }

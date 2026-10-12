@@ -25,6 +25,7 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchPro
 import com.pimenta.bestv.workdetail.data.remote.mapper.toWorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
+import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryContract
 
 /**
  * Created by marcus on 20-10-2019.
@@ -33,21 +34,23 @@ class TvShowRepository(
     private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
-) {
-    suspend fun getWorkMetadata(tvShowId: Int) =
+) : TvShowRepositoryContract {
+    override suspend fun getWorkMetadata(tvShowId: Int) =
         tvShowRemoteDataSource.getTvShowDetails(tvShowId).toWorkMetadataDomainModel()
 
-    suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
+    override suspend fun saveFavoriteTvShow(
+        tvShowDbModel: TvShowDbModel,
+    ) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
 
-    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
+    override suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
         tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
 
-    suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean {
+    override suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean {
         val tvShow = tvShowLocalDataSource.getById(tvShowDbModel)
         return tvShow != null
     }
 
-    suspend fun getCreditsByTvShow(tvShowId: Int) =
+    override suspend fun getCreditsByTvShow(tvShowId: Int) =
         tvShowRemoteDataSource.getCastByTvShow(tvShowId).let { response ->
             val source = resource.getStringResource(R.string.source_tmdb)
             WorkCreditsDomainModel(
@@ -60,7 +63,7 @@ class TvShowRepository(
             )
         }
 
-    suspend fun getRecommendationByTvShow(
+    override suspend fun getRecommendationByTvShow(
         tvShowId: Int,
         page: Int,
     ) = tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
@@ -68,7 +71,7 @@ class TvShowRepository(
         response.toDomainModel(source)
     }
 
-    suspend fun getSimilarByTvShow(
+    override suspend fun getSimilarByTvShow(
         tvShowId: Int,
         page: Int,
     ) = tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
@@ -76,19 +79,19 @@ class TvShowRepository(
         response.toDomainModel(source)
     }
 
-    suspend fun getReviewByTvShow(
+    override suspend fun getReviewByTvShow(
         tvShowId: Int,
         page: Int,
     ) = tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page).toDomainModel()
 
-    suspend fun getVideosByTvShow(tvShowId: Int) =
+    override suspend fun getVideosByTvShow(tvShowId: Int) =
         tvShowRemoteDataSource.getVideosByTvShow(tvShowId).let { response ->
             response.videos?.map { video ->
                 video.toDomainModel()
             }
         }
 
-    suspend fun getWatchProvidersByTvShow(
+    override suspend fun getWatchProvidersByTvShow(
         tvShowId: Int,
         countryCode: String,
     ) = tvShowRemoteDataSource.getWatchProvidersByTvShow(tvShowId).watchProvidersToDomainModel(countryCode)

@@ -16,8 +16,7 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.workbrowse.presentation.model.GenreViewModel
-import com.pimenta.bestv.workbrowse.presentation.model.Source
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -28,9 +27,9 @@ import org.mockito.kotlin.whenever
  * Created by marcus on 2019-08-26.
  */
 private val MOVIE_GENRE =
-    GenreViewModel(
+    GenreDomainModel(
         id = 1,
-        source = Source.MOVIE,
+        source = GenreDomainModel.Source.MOVIE,
     )
 private val MOVIE_PAGE_DOMAIN_MODEL =
     PageDomainModel(
@@ -46,9 +45,9 @@ private val MOVIE_PAGE_DOMAIN_MODEL =
         ),
     )
 private val TV_SHOW_GENRE =
-    GenreViewModel(
+    GenreDomainModel(
         id = 1,
-        source = Source.TV_SHOW,
+        source = GenreDomainModel.Source.TV_SHOW,
     )
 private val TV_SHOW_PAGE_DOMAIN_MODEL =
     PageDomainModel(

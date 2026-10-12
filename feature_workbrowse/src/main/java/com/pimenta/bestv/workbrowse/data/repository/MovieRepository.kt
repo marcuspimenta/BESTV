@@ -21,6 +21,7 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
+import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryContract
 
 /**
  * Created by marcus on 20-10-2019.
@@ -29,8 +30,8 @@ class MovieRepository(
     private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-) {
-    suspend fun getFavoriteMovies() =
+) : MovieRepositoryContract {
+    override suspend fun getFavoriteMovies() =
         movieLocalDataSource.getMovies().mapNotNull { movieDbModel ->
             movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
                 val source = resource.getStringResource(R.string.source_tmdb)
@@ -40,7 +41,7 @@ class MovieRepository(
             }
         }
 
-    suspend fun getMoviesByGenre(
+    override suspend fun getMoviesByGenre(
         genreId: Int,
         page: Int,
     ): PageDomainModel<WorkDomainModel> {
@@ -48,22 +49,22 @@ class MovieRepository(
         return movieRemoteDataSource.getMoviesByGenre(genreId, page).toDomainModel(source)
     }
 
-    suspend fun getNowPlayingMovies(page: Int): PageDomainModel<WorkDomainModel> {
+    override suspend fun getNowPlayingMovies(page: Int): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return movieRemoteDataSource.getNowPlayingMovies(page).toDomainModel(source)
     }
 
-    suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> {
+    override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return movieRemoteDataSource.getPopularMovies(page).toDomainModel(source)
     }
 
-    suspend fun getTopRatedMovies(page: Int): PageDomainModel<WorkDomainModel> {
+    override suspend fun getTopRatedMovies(page: Int): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return movieRemoteDataSource.getTopRatedMovies(page).toDomainModel(source)
     }
 
-    suspend fun getUpComingMovies(page: Int): PageDomainModel<WorkDomainModel> {
+    override suspend fun getUpComingMovies(page: Int): PageDomainModel<WorkDomainModel> {
         val source = resource.getStringResource(R.string.source_tmdb)
         return movieRemoteDataSource.getUpComingMovies(page).toDomainModel(source)
     }

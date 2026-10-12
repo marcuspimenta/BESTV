@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.workdetail.data.repository.TvShowRepository
+import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import kotlinx.coroutines.test.runTest

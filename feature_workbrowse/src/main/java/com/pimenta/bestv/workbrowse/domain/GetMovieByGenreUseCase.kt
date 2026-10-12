@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
+import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository
 
 /**
  * Created by marcus on 2019-10-20.

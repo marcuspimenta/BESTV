@@ -16,7 +16,7 @@ package com.pimenta.bestv.workbrowse.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
+import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -69,7 +69,7 @@ class LoadWorkByTypeUseCaseTest {
             whenever(getNowPlayingMoviesUseCase(1))
                 .thenReturn(MOVIE_PAGE_DOMAIN_MODEL)
 
-            val result = useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+            val result = useCase(1, BrowseCategoryKey.NOW_PLAYING_MOVIES)
 
             Assert.assertEquals(MOVIE_PAGE_DOMAIN_MODEL, result)
         }
@@ -81,7 +81,7 @@ class LoadWorkByTypeUseCaseTest {
                 .thenThrow(RuntimeException())
 
             try {
-                useCase(1, TopWorkTypeViewModel.NOW_PLAYING_MOVIES)
+                useCase(1, BrowseCategoryKey.NOW_PLAYING_MOVIES)
                 Assert.fail("Expected exception")
             } catch (e: RuntimeException) {
                 // Expected
