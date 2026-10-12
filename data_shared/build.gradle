@@ -2,6 +2,26 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.android.legacy-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
+def tmdbApiKey = System.getenv('TMDB_API_KEY')
+if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
+    def localPropertiesFile = rootProject.file('local.properties')
+    if (localPropertiesFile.exists()) {
+        def localProperties = new Properties()
+        localPropertiesFile.withInputStream { localProperties.load(it) }
+        tmdbApiKey = localProperties.getProperty('TMDB_API_KEY')
+    }
+}
+
+if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
+    throw new GradleException('''
+        TMDB_API_KEY is required to build BESTV.
+        Set TMDB_API_KEY in the environment, or add TMDB_API_KEY=<your key> to the root local.properties file.
+        For CI, expose the TMDB_API_KEY secret as an environment variable for the Gradle build.
+    '''.stripIndent().trim())
+}
+
+def tmdbApiKeyLiteral = groovy.json.JsonOutput.toJson(tmdbApiKey.trim())
+
 android {
     namespace 'com.pimenta.bestv.data'
     buildFeatures {
@@ -13,10 +33,10 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
+            buildConfigField "String", "TMDB_API_KEY", tmdbApiKeyLiteral
         }
         release {
-            buildConfigField "String", "TMDB_API_KEY", "\"fb5ac484c71e11e6e0fe358946f07b9e\""
+            buildConfigField "String", "TMDB_API_KEY", tmdbApiKeyLiteral
         }
     }
 }

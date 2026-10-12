@@ -47,11 +47,15 @@ BESTV uses modular Clean Architecture with MVI presentation state and events.
 
 BESTV uses [version 3 of the TMDb API](https://developers.themoviedb.org/3/getting-started/introduction). It is not endorsed or certified by TMDb.
 
-To run the app, create a TMDb API key and add it to the Gradle configuration:
+To run the app, create a TMDb API key and keep it out of tracked files. For local builds, add it to the root `local.properties` file (which is ignored by Git):
 
-```groovy
-buildConfigField "String", "TMDB_API_KEY", "YOUR API KEY HERE"
+```properties
+TMDB_API_KEY=your_tmdb_api_key
 ```
+
+For CI builds, store the key in the CI secret manager and expose it to Gradle as the `TMDB_API_KEY` environment variable. The environment variable takes precedence over `local.properties`. Builds fail with setup instructions if no key is configured.
+
+The app sends this key directly to TMDb, so it can still be extracted from a distributed APK. Keeping it out of Git protects the repository, but a backend proxy is needed to keep the key out of client builds.
 
 ## References
 
