@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 buildscript {
     repositories {
         google()
@@ -7,12 +9,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:9.1.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.21"
-        classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.21"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:14.2.0"
-        classpath "io.github.ben-manes:gradle-versions-plugin:0.61.0"
-        classpath "com.android.legacy-kapt:com.android.legacy-kapt.gradle.plugin:9.1.1"
+        classpath libs.plugin.android.gradle
+        classpath libs.plugin.kotlin.gradle
+        classpath libs.plugin.compose.compiler.gradle
+        classpath libs.plugin.ktlint.gradle
+        classpath libs.plugin.gradle.versions
+        classpath libs.plugin.android.legacy.kapt
     }
 }
 
@@ -30,23 +32,23 @@ subprojects {
             apply plugin: 'kotlin-parcelize'
 
             android {
-                compileSdkVersion Config.compileSdk
+                compileSdkVersion libs.versions.compile.sdk.get()
 
                 defaultConfig {
-                    minSdkVersion Config.minSdk
-                    targetSdkVersion Config.targetSdk
+                    minSdkVersion libs.versions.min.sdk.get().toInteger()
+                    targetSdkVersion libs.versions.target.sdk.get().toInteger()
                 }
 
                 compileOptions {
-                    sourceCompatibility Config.javaVersion
-                    targetCompatibility Config.javaVersion
+                    sourceCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
+                    targetCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
                 }
 
             }
 
             kotlin {
                 compilerOptions {
-                    jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(Config.jvmTarget))
+                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
                 }
             }
         }

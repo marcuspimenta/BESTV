@@ -11,40 +11,40 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // AndroidX
-    implementation Libs.androidx_core
-    implementation Libs.androidx_recommendation
-    implementation Libs.androidx_tvprovider
-    implementation Libs.androidx_work
+    implementation libs.androidx.core
+    implementation libs.androidx.recommendation
+    implementation libs.androidx.tvprovider
+    implementation libs.androidx.work.runtime.ktx
 
     // Coil
-    implementation Libs.coil_compose
-    implementation Libs.coil_network_okhttp
+    implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
 
     // Coroutines
-    implementation Libs.kotlinx_coroutines_core
-    implementation Libs.kotlinx_coroutines_android
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
 
 
     // Koin
-    implementation Libs.koin_android
+    implementation libs.koin.android.runtime
 
     // Retrofit
-    implementation Libs.retrofit
+    implementation libs.retrofit.core
 
     // Timber
-    implementation Libs.timber
+    implementation libs.timber
 
     // JUnit
-    testImplementation Libs.junit
+    testImplementation libs.junit4
 
     // Coroutines Test
-    testImplementation Libs.kotlinx_coroutines_test
+    testImplementation libs.kotlinx.coroutines.test
 
     // Mockito
-    testImplementation Libs.mockito_inline
-    testImplementation Libs.mockito_core
-    testImplementation Libs.mockito_kotlin
+    testImplementation libs.mockito.inline
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
 }

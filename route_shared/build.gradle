@@ -9,9 +9,9 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // Koin
-    implementation Libs.koin_core
-    implementation Libs.koin_android
+    implementation libs.koin.core
+    implementation libs.koin.android.runtime
 }

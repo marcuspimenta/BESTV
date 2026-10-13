@@ -42,21 +42,21 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // AndroidX
-    implementation Libs.androidx_activity
-    implementation Libs.androidx_lifecycle
-    implementation Libs.androidx_work
+    implementation libs.androidx.activity.ktx
+    implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.work.runtime.ktx
 
     // Retrofit
-    implementation Libs.retrofit
+    implementation libs.retrofit.core
 
     // Koin
-    implementation Libs.koin_android
-    implementation Libs.koin_android_compose
-    implementation Libs.koin_workmanager
+    implementation libs.koin.android.runtime
+    implementation libs.koin.android.compose
+    implementation libs.koin.workmanager
 
     // Timber
-    implementation Libs.timber
+    implementation libs.timber
 }

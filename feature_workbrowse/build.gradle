@@ -23,46 +23,46 @@ dependencies {
     implementation project(':route_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // Compose for TV
-    implementation platform(Libs.compose_bom)
-    implementation Libs.compose_ui
-    implementation Libs.compose_ui_tooling_preview
-    implementation Libs.compose_foundation
-    implementation Libs.compose_material3
-    implementation Libs.androidx_tv_foundation
-    implementation Libs.androidx_tv_material
-    implementation Libs.androidx_activity_compose
-    implementation Libs.coil_compose
-    implementation Libs.coil_network_okhttp
-    debugImplementation Libs.compose_ui_tooling
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.core
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.foundation
+    implementation libs.compose.material3
+    implementation libs.androidx.tv.foundation
+    implementation libs.androidx.tv.material
+    implementation libs.androidx.activity.compose
+    implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
+    debugImplementation libs.compose.ui.tooling.runtime
 
 
     // Koin
-    implementation Libs.koin_android
-    implementation Libs.koin_android_compose
+    implementation libs.koin.android.runtime
+    implementation libs.koin.android.compose
 
     // Retrofit
-    implementation Libs.retrofit
+    implementation libs.retrofit.core
 
     // Gson
-    implementation Libs.gson
+    implementation libs.gson
 
     // Timber
-    implementation Libs.timber
+    implementation libs.timber
 
     // Lottie
-    implementation Libs.lottie_compose
+    implementation libs.lottie.compose
 
     // JUnit
-    testImplementation Libs.junit
+    testImplementation libs.junit4
 
     // Coroutines Test
-    testImplementation Libs.kotlinx_coroutines_test
+    testImplementation libs.kotlinx.coroutines.test
 
     // Mockito
-    testImplementation Libs.mockito_inline
-    testImplementation Libs.mockito_core
-    testImplementation Libs.mockito_kotlin
+    testImplementation libs.mockito.inline
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
 }

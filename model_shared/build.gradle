@@ -14,14 +14,14 @@ android {
 
 dependencies {
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // Room components
-    implementation Libs.androidx_room
+    implementation libs.androidx.room.runtime
 
     // Gson
-    implementation Libs.gson
+    implementation libs.gson
 
     // JUnit
-    testImplementation Libs.junit
+    testImplementation libs.junit4
 }

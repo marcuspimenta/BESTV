@@ -18,36 +18,36 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // Koin
-    implementation Libs.koin_core
-    implementation Libs.koin_android
+    implementation libs.koin.core
+    implementation libs.koin.android.runtime
 
     // AndroidX
-    implementation Libs.androidx_recommendation
-    implementation Libs.androidx_tvprovider
+    implementation libs.androidx.recommendation
+    implementation libs.androidx.tvprovider
 
     // Lottie
-    implementation Libs.lottie_compose
+    implementation libs.lottie.compose
 
     // Compose for TV
-    implementation platform(Libs.compose_bom)
-    implementation Libs.compose_ui
-    implementation Libs.compose_ui_tooling_preview
-    implementation Libs.compose_foundation
-    implementation Libs.compose_material3
-    implementation Libs.androidx_tv_foundation
-    implementation Libs.androidx_tv_material
-    implementation Libs.androidx_activity_compose
-    implementation Libs.androidx_lifecycle_runtime_ktx
-    implementation Libs.coil_compose
-    implementation Libs.coil_network_okhttp
-    debugImplementation Libs.compose_ui_tooling
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.core
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.foundation
+    implementation libs.compose.material3
+    implementation libs.androidx.tv.foundation
+    implementation libs.androidx.tv.material
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
+    debugImplementation libs.compose.ui.tooling.runtime
 
     // Compose UI Testing (instrumented tests)
-    androidTestImplementation platform(Libs.compose_bom)
-    androidTestImplementation Libs.compose_ui_test_junit4
-    androidTestImplementation Libs.androidx_test_ext_junit
-    debugImplementation Libs.compose_ui_test_manifest
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    debugImplementation libs.compose.ui.test.manifest
 }

@@ -45,25 +45,25 @@ dependencies {
     implementation project(':model_shared')
 
     // Kotlin
-    implementation Libs.kotlin
+    implementation libs.kotlin.stdlib
 
     // Koin
-    implementation Libs.koin_core
-    implementation Libs.koin_android
+    implementation libs.koin.core
+    implementation libs.koin.android.runtime
 
     // Room components
-    api Libs.androidx_room
-    kapt Libs.androidx_room_compiler
-    implementation Libs.androidx_room_ktx
+    api libs.androidx.room.runtime
+    kapt libs.androidx.room.compiler
+    implementation libs.androidx.room.ktx
 
     // Retrofit
-    implementation Libs.retrofit
-    implementation Libs.retrofit_converter_gson
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.gson
 
     // OkHttp
-    implementation Libs.okhttp
-    implementation Libs.logging_interceptor
+    implementation libs.okhttp.client
+    implementation libs.okhttp.logging.interceptor
 
     // Gson
-    implementation Libs.gson
+    implementation libs.gson
 }
