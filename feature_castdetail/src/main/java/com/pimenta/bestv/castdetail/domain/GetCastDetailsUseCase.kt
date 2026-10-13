@@ -17,7 +17,6 @@ package com.pimenta.bestv.castdetail.domain
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -33,7 +32,6 @@ class GetCastDetailsUseCase(
             val castViewModel = async { getCastPersonalDetails(castId) }
             val castMovieList = async { getMovieCreditsByCastUseCase(castId) }
             val castTvShowList = async { getTvShowCreditsByCastUseCase(castId) }
-            awaitAll(castViewModel, castMovieList, castTvShowList)
             Triple(castViewModel.await(), castMovieList.await(), castTvShowList.await())
         }
 }
