@@ -35,7 +35,7 @@ Read only the references relevant to the current task:
 - [Feature modularization and navigation](references/feature-modularization-and-navigation.md): splitting Gradle modules by capability and routing between feature Activities with shared deep-link contracts.
 - [Naming conventions](references/naming-conventions.md): naming modules, types, mappers, state/events/effects, composables, routes, DI modules, and tests while adapting to the active repository.
 - [Compose UI layer](references/compose-ui-layer.md): composable boundaries, screen structure, state collection, accessibility, adaptive layouts, previews, and UI tests.
-- [Dependency management](references/dependency-management.md): how to trace and add external libraries through `buildSrc`, Gradle version catalogs, plugin management, and module scopes.
+- [Dependency management](references/dependency-management.md): how to manage external dependency versions through the required Gradle version catalog, apply plugins, and choose module scopes.
 - [Dependency injection](references/dependency-injection.md): composition roots, feature registrations, object lifetimes, qualifiers, and DI smoke tests.
 - [ViewModel and UI state](references/viewmodel-ui-state.md): state shape, events, effects, Compose collection, asynchronous transitions, and cancellation.
 - [Testing strategy](references/testing-strategy.md): a behavior-focused test matrix for use cases, mappers, ViewModels, Compose, and DI.
