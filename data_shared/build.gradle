@@ -55,6 +55,8 @@ dependencies {
     // Room components
     api libs.androidx.room.runtime
     kapt libs.androidx.room.compiler
+    // Keep Room's metadata reader aligned with the Kotlin compiler version.
+    kapt libs.kotlin.metadata.jvm
     implementation libs.androidx.room.ktx
 
     // Retrofit
