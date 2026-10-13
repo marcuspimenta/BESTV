@@ -13,7 +13,6 @@ buildscript {
         classpath libs.plugin.kotlin.gradle
         classpath libs.plugin.compose.compiler.gradle
         classpath libs.plugin.ktlint.gradle
-        classpath libs.plugin.gradle.versions
         classpath libs.plugin.android.legacy.kapt
     }
 }
@@ -28,7 +27,6 @@ allprojects {
 subprojects {
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
-            apply plugin: 'io.github.ben-manes.versions'
             apply plugin: 'kotlin-parcelize'
 
             android {
