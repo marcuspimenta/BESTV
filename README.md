@@ -53,7 +53,7 @@ To run the app, create a TMDb API key and keep it out of tracked files. For loca
 TMDB_API_KEY=your_tmdb_api_key
 ```
 
-For CI builds, store the key in the CI secret manager and expose it to Gradle as the `TMDB_API_KEY` environment variable. The environment variable takes precedence over `local.properties`. Builds fail with setup instructions if no key is configured.
+For CI builds, store the key in the CI secret manager and expose it to Gradle as the `TMDB_API_KEY` environment variable. The environment variable takes precedence over `local.properties`. If no key is configured, Gradle logs a warning and builds with an empty key; TMDb requests from the app will not authenticate.
 
 The app sends this key directly to TMDb, so it can still be extracted from a distributed APK. Keeping it out of Git protects the repository, but a backend proxy is needed to keep the key out of client builds.
 

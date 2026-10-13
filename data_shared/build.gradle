@@ -13,11 +13,12 @@ if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
 }
 
 if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
-    throw new GradleException('''
-        TMDB_API_KEY is required to build BESTV.
+    logger.warn('''
+        TMDB_API_KEY is not set. BESTV will build, but TMDB API requests will not work.
         Set TMDB_API_KEY in the environment, or add TMDB_API_KEY=<your key> to the root local.properties file.
         For CI, expose the TMDB_API_KEY secret as an environment variable for the Gradle build.
     '''.stripIndent().trim())
+    tmdbApiKey = ''
 }
 
 def tmdbApiKeyLiteral = groovy.json.JsonOutput.toJson(tmdbApiKey.trim())
