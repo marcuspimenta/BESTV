@@ -33,6 +33,7 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -50,8 +51,12 @@ class SearchViewModel(
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRequestProcessor: SearchRequestProcessor,
     private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor,
-    private val deviceCapabilities: DeviceCapabilities,
+    deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<SearchState, SearchEffect>(SearchState(isMobileDevice = deviceCapabilities.isMobileDevice)) {
+
+    private var moviesPaginationJob: Job? = null
+    private var tvShowsPaginationJob: Job? = null
+
     init {
         observeSearchRequests()
         observeSelectedWorkRequests()
@@ -73,23 +78,26 @@ class SearchViewModel(
     }
 
     private fun handleSearchQuery(query: String) {
+        cancelPagination()
         updateState { currentState -> currentState.searchStarted(query) }
         emitSearchRequest(query)
     }
 
     private fun handleClearSearch() {
+        cancelPagination()
         updateState { state -> state.clearSearch() }
         emitSearchRequest("")
     }
 
     private fun loadMoreMovies() {
+        if (currentState.isSearching) return
         val moviesContent = currentState.moviesContent() ?: return
         if (!moviesContent.page.canLoadMore) {
             return
         }
 
         updateState { state -> state.moviesPaginationStarted() }
-        loadMoreContent(
+        moviesPaginationJob = loadMoreContent(
             nextPage = moviesContent.page.currentPage + 1,
             errorMessage = "Error while loading more movies",
             loadPage = { query, page -> searchMoviesByQueryUseCase(query, page).toViewModel() },
@@ -99,19 +107,26 @@ class SearchViewModel(
     }
 
     private fun loadMoreTvShows() {
+        if (currentState.isSearching) return
         val tvShowsContent = currentState.tvShowsContent() ?: return
         if (!tvShowsContent.page.canLoadMore) {
             return
         }
 
         updateState { state -> state.tvShowsPaginationStarted() }
-        loadMoreContent(
+        tvShowsPaginationJob = loadMoreContent(
             nextPage = tvShowsContent.page.currentPage + 1,
             errorMessage = "Error while loading more TV shows",
             loadPage = { query, page -> searchTvShowsByQueryUseCase(query, page).toViewModel() },
             onSuccess = SearchState::tvShowsPaginationSucceeded,
             onFailure = SearchState::tvShowsPaginationFailed,
         )
+    }
+
+    private fun cancelPagination() {
+        moviesPaginationJob?.cancel()
+        tvShowsPaginationJob?.cancel()
+        updateState { state -> state.moviesPaginationFailed().tvShowsPaginationFailed() }
     }
 
     private fun handleWorkItemSelected(work: WorkViewModel?) {
@@ -130,15 +145,13 @@ class SearchViewModel(
         loadPage: suspend (query: String, page: Int) -> PageViewModel<WorkViewModel>,
         onSuccess: (SearchState, PageViewModel<WorkViewModel>) -> SearchState,
         onFailure: (SearchState) -> SearchState,
-    ) {
-        viewModelScope.launch {
-            try {
-                val page = loadPage(currentState.query, nextPage)
-                updateState { state -> onSuccess(state, page) }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, errorMessage)
-                updateState { state -> onFailure(state) }
-            }
+    ) = viewModelScope.launch {
+        try {
+            val page = loadPage(currentState.query, nextPage)
+            updateState { state -> onSuccess(state, page) }
+        } catch (throwable: Throwable) {
+            Timber.e(throwable, errorMessage)
+            updateState { state -> onFailure(state) }
         }
     }
 

@@ -15,6 +15,7 @@
 package com.pimenta.bestv.search.presentation.viewmodel
 
 import android.content.Intent
+import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -32,13 +33,17 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -49,7 +54,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -214,6 +221,7 @@ class SearchViewModelTest {
 
     @After
     fun tearDown() {
+        viewModel.viewModelScope.cancel()
         Dispatchers.resetMain()
     }
 
@@ -330,6 +338,124 @@ class SearchViewModelTest {
             val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().first()
             assertEquals(2, tvShowsContent.page.currentPage)
             assertTrue(tvShowsContent.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
+        }
+
+    @Test
+    fun `should cancel pagination before a changed query is debounced`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQueryChanged("Superman"))
+        }
+
+    @Test
+    fun `should cancel pagination when a query is submitted`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQuerySubmitted("Superman"))
+        }
+
+    @Test
+    fun `should cancel pagination when the query becomes empty`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQueryChanged(""))
+        }
+
+    @Test
+    fun `should cancel pagination when search is cleared`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.ClearSearch)
+        }
+
+    private suspend fun TestScope.assertPaginationCancelled(event: SearchEvent) {
+        viewModel.viewModelScope.cancel()
+        viewModel = SearchViewModel(
+            searchWorksByQueryUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
+            workDetailsRoute,
+            SearchRequestProcessor(),
+            selectedWorkRequestProcessor,
+            TvDeviceCapabilities,
+        )
+        val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+        whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+        whenever(searchWorksByQueryUseCase("Superman")).thenReturn(initialResult)
+        viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+        advanceUntilIdle()
+
+        val moviePage = CompletableDeferred<PageDomainModel<WorkDomainModel>>()
+        val tvShowPage = CompletableDeferred<PageDomainModel<WorkDomainModel>>()
+        var moviesCancelled = false
+        var tvShowsCancelled = false
+        whenever(searchMoviesByQueryUseCase(QUERY, 2)).doSuspendableAnswer {
+            try {
+                moviePage.await()
+            } finally {
+                moviesCancelled = !moviePage.isCompleted
+            }
+        }
+        whenever(searchTvShowsByQueryUseCase(QUERY, 2)).doSuspendableAnswer {
+            try {
+                tvShowPage.await()
+            } finally {
+                tvShowsCancelled = !tvShowPage.isCompleted
+            }
+        }
+        viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+        viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+        runCurrent()
+        verify(searchMoviesByQueryUseCase)(QUERY, 2)
+        verify(searchTvShowsByQueryUseCase)(QUERY, 2)
+
+        viewModel.handleEvent(event)
+        runCurrent()
+
+        assertTrue(moviesCancelled)
+        assertTrue(tvShowsCancelled)
+        verify(searchWorksByQueryUseCase, never())("Superman")
+
+        advanceUntilIdle()
+        val stateAfterSearch = viewModel.state.value
+        moviePage.complete(MOVIE_PAGE_DOMAIN_MODEL.copy(page = 2))
+        tvShowPage.complete(TV_SHOW_PAGE_DOMAIN_MODEL.copy(page = 2))
+        advanceUntilIdle()
+        assertEquals(stateAfterSearch, viewModel.state.value)
+
+        if (event == SearchEvent.ClearSearch || event == SearchEvent.SearchQueryChanged("")) {
+            assertEquals("", stateAfterSearch.query)
+            assertTrue(stateAfterSearch.state is Empty)
+        } else {
+            assertEquals("Superman", stateAfterSearch.query)
+            val loadedState = stateAfterSearch.state as SearchState.State.Loaded
+            val movies = loadedState.contents.filterIsInstance<Movies>().first()
+            val tvShows = loadedState.contents.filterIsInstance<TvShows>().first()
+            assertEquals(MOVIE_VIEW_MODEL_LIST, movies.movies)
+            assertEquals(TV_SHOW_VIEW_MODEL_LIST, tvShows.tvShows)
+            assertFalse(movies.page.isLoadingMore)
+            assertFalse(tvShows.page.isLoadingMore)
+
+            whenever(searchMoviesByQueryUseCase("Superman", 2)).thenReturn(MOVIE_PAGE_DOMAIN_MODEL.copy(page = 2))
+            whenever(searchTvShowsByQueryUseCase("Superman", 2)).thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL.copy(page = 2))
+            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+            advanceUntilIdle()
+            verify(searchMoviesByQueryUseCase)("Superman", 2)
+            verify(searchTvShowsByQueryUseCase)("Superman", 2)
+        }
+    }
+
+    @Test
+    fun `should ignore pagination while a new search is pending`() =
+        runTest(testDispatcher) {
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL)
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged("Superman"))
+            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+            runCurrent()
+
+            verify(searchMoviesByQueryUseCase, never())(any(), any())
+            verify(searchTvShowsByQueryUseCase, never())(any(), any())
         }
 
     @Test
