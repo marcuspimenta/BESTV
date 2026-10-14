@@ -4,7 +4,8 @@ compile-sdk = "android-37.0"
 target-sdk = "36"
 java-version = "11"
 jvm-target = "11"
-android-gradle-plugin = "9.1.1"
+android-gradle-plugin = "9.4.1"
+netty = "4.1.136.Final"
 kotlin = "2.4.21"
 ktlint-gradle-plugin = "14.2.0"
 kotlinx-coroutines = "1.11.0"
@@ -39,6 +40,7 @@ plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 plugin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 plugin-ktlint-gradle = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint-gradle-plugin" }
 plugin-android-legacy-kapt = { module = "com.android.legacy-kapt:com.android.legacy-kapt.gradle.plugin", version.ref = "android-gradle-plugin" }
+netty-bom = { module = "io.netty:netty-bom", version.ref = "netty" }
 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-metadata-jvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlin" }

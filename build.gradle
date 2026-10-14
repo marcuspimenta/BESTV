@@ -25,6 +25,15 @@ allprojects {
 }
 
 subprojects {
+    configurations.configureEach { configuration ->
+        if (configuration.canBeResolved && configuration.name.startsWith('unified-test-platform-')) {
+            project.dependencies.add(
+                configuration.name,
+                project.dependencies.platform(rootProject.libs.netty.bom)
+            )
+        }
+    }
+
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             apply plugin: 'kotlin-parcelize'
