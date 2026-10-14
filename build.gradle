@@ -4,9 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        gradlePluginPortal()
     }
     dependencies {
         classpath libs.plugin.android.gradle
@@ -17,50 +15,49 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
+def configureAndroidProject = { project ->
+    project.apply plugin: 'kotlin-parcelize'
+
+    project.configure(project.extensions.getByName('android')) {
+        compileSdkVersion libs.versions.compile.sdk.get()
+
+        defaultConfig {
+            minSdkVersion libs.versions.min.sdk.get().toInteger()
+            targetSdkVersion libs.versions.target.sdk.get().toInteger()
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
+            targetCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
+        }
+    }
+
+    project.configure(project.extensions.getByName('kotlin')) {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
+        }
     }
 }
 
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            apply plugin: 'kotlin-parcelize'
-
-            android {
-                compileSdkVersion libs.versions.compile.sdk.get()
-
-                defaultConfig {
-                    minSdkVersion libs.versions.min.sdk.get().toInteger()
-                    targetSdkVersion libs.versions.target.sdk.get().toInteger()
-                }
-
-                compileOptions {
-                    sourceCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
-                    targetCompatibility JavaVersion.toVersion(libs.versions.java.version.get())
-                }
-
-            }
-
-            kotlin {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
-                }
-            }
-        }
-
-        if (project.plugins.hasPlugin('org.jlleitschuh.gradle.ktlint')) {
-            ktlint {
-                outputToConsole = true
-            }
+subprojects { project ->
+    project.pluginManager.withPlugin('com.android.application') {
+        configureAndroidProject(project)
+    }
+    project.pluginManager.withPlugin('com.android.library') {
+        configureAndroidProject(project)
+    }
+    project.pluginManager.withPlugin('org.jlleitschuh.gradle.ktlint') {
+        project.configure(project.extensions.getByName('ktlint')) {
+            outputToConsole = true
         }
     }
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.layout.buildDir
+    delete rootProject.layout.buildDirectory
+    dependsOn subprojects.collect { subproject ->
+        subproject.tasks.matching { task -> task.name == 'clean' }
+    }
 }
 
 tasks.register('formatKotlin') {
