@@ -44,8 +44,12 @@ Review what a singleton retains. A singleton should not capture an Activity, Vie
 
 Prefer constructor injection so dependencies and test seams remain visible. Avoid injecting a container into business classes or retrieving dependencies globally. For Android framework dependencies, use the DI framework's Android integration or a narrow wrapper rather than passing `Context` through domain APIs.
 
+When logic depends on device capabilities, locale/region, dispatchers, or time, use the narrow value/provider the project needs and bind the Android implementation at the composition root. Keep dynamic UI configuration out of process-wide cached values. For workers and receivers, verify framework creation and cold-start initialization as described in [background work and platform adapters](background-work-and-platform-adapters.md).
+
 ## Wiring verification
 
 For a feature with meaningful DI bindings, create an isolated container or component using the production feature registrations and substitute infrastructure dependencies with fakes/mocks or a harmless test configuration. Resolve the domain contract and verify it is backed by the intended implementation. This is a wiring smoke test; it does not prove repository behavior, endpoint correctness, or database mapping.
 
 When a graph cannot be instantiated without the real network or database, identify which provider leaks infrastructure setup and supply a test binding at that boundary. Do not add a test-only DI library unless the project's build and conventions warrant it.
+
+Test the changed graph path, not only repository ports. Resolve a parameterized screen state holder or worker through its supported creation mechanism when that wiring changes, supplying realistic runtime arguments and capability bindings. A port-resolution test does not prove every lazy definition can be constructed. Check app-level composition when shared registrations change, and close isolated containers in cleanup even if an assertion fails.

@@ -29,11 +29,15 @@ fun ItemsRoute(
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val currentOnOpenDetails by rememberUpdatedState(onOpenDetails)
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is ItemsEffect.OpenDetails -> onOpenDetails(effect.itemId)
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                when (effect) {
+                    is ItemsEffect.OpenDetails -> currentOnOpenDetails(effect.itemId)
+                }
             }
         }
     }
@@ -48,6 +52,8 @@ fun ItemsRoute(
 ```
 
 The exact effect mechanism and delivery guarantee depend on the ViewModel contract. Keep one-time navigation/snackbar/platform work outside the composable body so recomposition cannot repeat it. Do not place an effect in a reusable child when it can be handled at the screen boundary.
+
+`LaunchedEffect` is composition-scoped; it does not itself stop collection when the Activity is backgrounded. The example uses `repeatOnLifecycle(STARTED)`; choose the active state appropriate to the action and use APIs supported by the installed Lifecycle version. Use `collect` for actions that must finish in order; use `collectLatest` only when a new effect should cancel the previous handler. Keep changing callbacks current with effect keys or `rememberUpdatedState`. See [lifecycle-aware coroutines](https://developer.android.com/topic/libraries/architecture/coroutines) and [repeatOnLifecycle](https://developer.android.com/reference/androidx/lifecycle/RepeatOnLifecycleKt).
 
 ## Stateless screen content and component APIs
 
@@ -97,10 +103,13 @@ Do not perform side effects directly while composing. Use the correct effect API
 ## Lists, images, and rendering cost
 
 - Use lazy containers for large or unbounded collections. Supply stable keys for items so remembered state and animations remain associated with the same item when data changes.
+- Keys must remain stable when content changes and unique within their list. Avoid a data object's `hashCode()` or list index; combine source/type with ID for mixed collections and use semantic category/genre IDs for rows. When filtering or reordering sections, associate focus/scroll state with these identities rather than only the list size.
 - Keep paging decisions idempotent. A list can report proximity to its end, but the ViewModel/state holder should guard duplicate requests, stale page responses, and errors.
 - Use the project’s image-loading component for remote images. Define placeholder/error behavior, crop/aspect ratio, and useful image semantics; do not block composition while loading.
 - Keep expensive transformations out of frequently recomposed bodies. Hoist stable objects, use `remember` with correct keys where it avoids real repeated work, and use derived state for high-frequency reads only when it meaningfully reduces work.
 - Avoid premature optimization and unnecessary `remember`/`derivedStateOf`. First make state ownership and stable list identity correct, then profile when performance is a concern.
+
+Check captured inputs in remembered calculations and long-lived effects. A keyless `remember { derivedStateOf { ... } }` that captures a plain `isLoadingMore` parameter keeps its original value. Key the calculation on changing inputs or read current state, and make pagination react to page/item-count changes as well as proximity to the end. Test repeated appends, failures/retry, and replacement of the list while it remains near the end. See [Compose effect keys and updated values](https://developer.android.com/develop/ui/compose/side-effects).
 
 ## Theme, resources, and design consistency
 
@@ -119,6 +128,8 @@ When form factors have genuinely different interaction models (for example, remo
 For touch layouts, provide comfortable hit areas, clear hierarchy, scroll behavior, and sensible keyboard/IME actions. For keyboard or remote-driven layouts, implement and visibly communicate focus, deterministic initial focus, directional focus movement, selected states, and back behavior. Do not rely on hover or touch as the only way to discover or activate controls. If focus must move after a state change, request it from a lifecycle-aware effect rather than during composition.
 
 Focus callbacks can update which item is selected or which details are emphasized, but avoid starting expensive work for every focus movement. If focused-item changes trigger requests, deduplicate or debounce them and use latest-wins cancellation so rapid directional navigation does not leave stale content on screen.
+
+For an `AndroidView` or other embedded platform component, handle changing inputs/callbacks and release owned listeners or media resources when it leaves use. Tie playback to the intended lifecycle and provide an error/skip outcome for media used in loading transitions; a completion callback is not guaranteed to arrive.
 
 ## Accessibility and semantics
 

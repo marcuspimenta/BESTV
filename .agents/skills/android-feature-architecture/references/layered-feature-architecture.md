@@ -57,6 +57,8 @@ Keep remote API interfaces and local DAO access behind narrow data-source adapte
 
 Use a generic domain page type such as `Page<T>` when page metadata and results travel together. Convert that metadata to presentation pagination state at the UI boundary. If a mapper can reject incomplete source data, make that explicit in its result type or nullable return, then decide visibly whether the caller should filter, report, or provide a fallback. Use `mapNotNull` only when dropping invalid items is intentional and safe for that screen.
 
+Distinguish source normalization from product and display policy. Parsing a provider's role field belongs in data; choosing which crew roles a screen displays and in what order belongs in domain or presentation according to who owns that rule. Domain enums and identifiers should express stable concepts rather than reusing a presentation enum merely because it has matching values. For execution, failure, and write semantics, consult [data operations and persistence](data-operations-and-persistence.md).
+
 When a use case combines independent requests, use structured concurrency (`coroutineScope` with `async`/`awaitAll`) so the work is cancelled with its caller. Perform prerequisites first, start independent calls together, and await each result once. Define whether a failure should fail the whole operation or whether a particular result is optional; catch only the optional branch's expected failure and always preserve cancellation. Avoid wrapping a synchronous calculation in `async`, or immediately awaiting a single `async` call, because neither creates useful concurrency.
 
 ## Look for residual boundary leaks
@@ -86,6 +88,6 @@ Use cases can be small delegations when they provide a meaningful domain operati
 - Do use cases depend on domain contracts rather than concrete repositories?
 - Do repository signatures use domain types instead of transport/persistence/UI types?
 - Are response, persistence, domain, and presentation models kept distinct where their semantics differ?
-- Is the real Gradle dependency graph acyclic and narrower than necessary, with no accidental feature-to-feature coupling?
+- Is the real Gradle dependency graph acyclic and no broader than necessary, with no accidental feature-to-feature coupling?
 - Does each mapper live at the boundary it translates?
 - Are existing legacy exceptions documented as current behavior instead of presented as the intended pattern?

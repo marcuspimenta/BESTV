@@ -62,7 +62,7 @@ Use `api` only when a module intentionally exposes a dependency's types as part 
 - Did a new repository or transitive dependency enter the graph? Is it required?
 - Do targeted compilation/tests and dependency reports resolve the intended version?
 
-Automated update proposals and dependency reports can identify newer versions, but they do not prove compatibility or stability. Verify release status and compatibility from primary project documentation and release notes before changing version pins. BESTV uses weekly Dependabot updates for Gradle and GitHub Actions, with Gradle patch/minor updates grouped together. Security update PRs are separate and require the dependency graph, Dependabot alerts, and Dependabot security updates to be enabled in GitHub settings. The repository workflow submits the Gradle dependency graph on pushes to `master` and on manual dispatch.
+Automated update proposals and dependency reports can identify newer versions, but they do not prove compatibility or stability. Verify release status and compatibility from primary project documentation and release notes before changing version pins. BESTV configures weekly Dependabot checks for Gradle and GitHub Actions, with Gradle patch/minor updates grouped together. Verify dependency-graph submission workflows and GitHub security settings separately; a Dependabot configuration file alone does not establish that either is enabled.
 
 ## BESTV current dependency setup
 

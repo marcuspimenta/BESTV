@@ -14,6 +14,7 @@ Use this reference when deciding which tests give useful confidence for a featur
 | Compose/UI | Important loading, empty, error, and loaded rendering; callbacks dispatch the expected events; lifecycle/effect behavior where user-visible. Use instrumentation only when platform behavior needs it. |
 | DI wiring | A feature module/component resolves domain ports to intended implementations with infrastructure substituted. Treat this as a graph smoke test, not a data integration test. |
 | Cross-layer integration | Add focused tests where a change crosses Retrofit/Room, serialization, navigation, or platform boundaries and the risk warrants it. |
+| Persistence/platform work | Repeated and failed writes, upgrade migrations when schemas change, unique scheduling, worker retry/cancellation, stale provider IDs, and unsupported capabilities. |
 
 ## Keep tests meaningful
 
@@ -29,6 +30,17 @@ Use this reference when deciding which tests give useful confidence for a featur
 Follow the repository's source-set and package layout; a common arrangement mirrors production packages under `src/test` and uses a `*Test` class beside each behavior area. Prefer descriptive test names that state the outcome and condition. For suspending use cases and ViewModels, use `runTest` and the project's test dispatcher; advance virtual time or drain scheduled work deliberately rather than depending on wall-clock sleeps. Use a Flow assertion tool such as Turbine when the sequence of state/effect emissions is the behavior under test, and direct state assertions when only the final public state matters.
 
 For DI wiring, load the production feature module in an isolated container and provide harmless infrastructure definitions or test doubles at the outer boundary. Assert that the domain port resolves to the intended concrete adapter, then close the container. This verifies registration and construction only; it does not exercise network, database, or repository behavior.
+
+## Exercise interactions that isolated mocks hide
+
+Choose from these when the corresponding behavior changes:
+
+- Keep the real search/request processor with the ViewModel in at least one test of debounce, clear, or retry behavior. A mock that immediately emits every query bypasses deduplication and cannot reveal a suppressed retry of the same query.
+- Control request completion with deferred results or fakes: start a page request, change/clear the query, then complete or fail the old request. Assert that it cannot change the new results or busy state. Similarly, refresh favorites while changing the selected tab and verify that the selection survives.
+- Test cancellation separately from ordinary failure, including optional `runCatching` branches and workers. Confirm that cancellation propagates and is not rendered or scheduled as an ordinary error.
+- Use virtual time on one shared test scheduler for debounce and delayed selection. Keep collectors active long enough to assert that stale values do not arrive after clear; receiving the first clear event alone does not establish that. Clean up collectors and ViewModel scopes, and reset a replaced main dispatcher.
+- Exercise mixed item types with equal numeric IDs, overlapping pages, filtered-out sections, and changed loading inputs in list/focus tests. Assert the visible result and interaction, not the exact key string or private reducer structure.
+- Test stop/start or recreation when effect delivery or restoration changes. For HTTP parameters, serialization, database constraints, and provider URIs, test the real adapter boundary; tests that only verify mocked use-case calls cannot establish those contracts.
 
 ## Adapted feature checklist
 

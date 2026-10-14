@@ -23,6 +23,8 @@ If an action must survive process recreation or remain visible until acknowledge
 
 If the project has a shared base ViewModel, keep it limited to presentation mechanics such as exposing a read-only `StateFlow`, applying atomic state updates, and publishing effects. Keep feature transitions in the feature ViewModel. Document the effect stream's buffering and subscriber behavior; for example, a `Channel` exposed with `receiveAsFlow()` is a consuming stream, not a broadcast to every collector.
 
+Check the send side too: `trySend` can fail when a buffer is full or closed. Choose a deliberate loss/backpressure policy; a buffered channel does not guarantee exactly-once delivery across collector cancellation or process death. Use acknowledgement/state when losing the action would violate the product contract.
+
 ## Choose a state shape from screen behavior
 
 Use sealed variants for mutually exclusive whole-screen modes, such as `Loading`, initial `Error`, and `Loaded`. Use a data class around a sealed primary result when the screen also has independent values that remain meaningful across those modes.
@@ -62,19 +64,29 @@ Keep state limited to UI-ready immutable values. Do not put Android views, repos
 
 For screens with multiple independently loaded rows or sections, model the loaded content as a collection of typed section variants when their data and interactions differ. Keep each section's items and pagination/error status together, and update only the affected section when a page request completes. Keep cross-section values such as query, current selection, or selected tab at the screen-state level. Use stable section/item identifiers for lazy-list keys; list positions are not identity.
 
+Use semantic section IDs for selection and scroll targets when sections can be filtered or reordered; derive the current index from the rendered list and define a fallback when the target disappears. Keep visible actions consistent with sections after presentation mapping, which may remove otherwise non-empty domain results.
+
+Define restoration separately from ordinary recomposition. A ViewModel survives configuration changes, not process death; save small reconstruction inputs such as query, selected tab, or item ID through `SavedStateHandle` or the project's equivalent when required, then reload content. Choose one owner for initial loading and make repeated composition/resume events intentionally idempotent or refreshing. Cosmetic animation completion should have a failure/skip path so unavailable media or disabled animations cannot indefinitely block loaded content.
+
 ## Asynchronous transitions and cancellation
 
 Launch work in `viewModelScope`. For latest-wins work such as search-as-you-type, cancel/supersede previous requests with `collectLatest`, a managed `Job`, or an equivalent request-generation strategy. Ensure a stale completion cannot overwrite newer state. Guard duplicate pagination and events that no longer apply to the current screen mode.
 
 For text search, a query flow can trim or classify blank input, debounce non-empty queries, suppress duplicate values, and use `collectLatest` so older searches are cancelled when a newer query arrives. Handle clear/blank input immediately when that matches the UI contract. A dedicated request processor is useful when these rules are shared or non-trivial; a simple query field does not need an extra abstraction by default.
 
+Distinguish typing from explicit submit/retry: deduplicating query text must not suppress retrying the same failed query or leave a loading flag set when no request will run. Decide when an input change invalidates old work; placing debounce before `collectLatest` delays cancellation until the next debounced emission. Clear/reset should also invalidate pending selection and pagination work.
+
+Capture the request's query/filter, section, and generation before launching pagination. Apply success, failure, and loading-flag cleanup only if they still belong to that generation; an old request must not append to new results or clear a newer request's busy state. Advance from returned page metadata, handle pages whose mapped items are empty, and deduplicate overlapping pages by complete item identity when needed.
+
 Preserve cancellation. Catch expected exceptions at the right boundary, rethrow or separately handle `CancellationException`, and never turn coroutine cancellation into a visible screen failure by catching `Throwable` broadly. Define whether concurrent independent requests can update separate sections and use atomic transformations so one result does not erase another update.
+
+Derive updates from the current value passed to `update`, not a snapshot captured before a suspension. Keep the transformation pure: [`MutableStateFlow.update`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/update.html) may evaluate it more than once, so perform mapping that can fail, external calls, and effect emission outside it. Safely check the current state variant when late callbacks arrive during refresh or after a section disappears.
 
 Every asynchronous path should leave the screen renderable: success, empty, expected failure, retry, and cancellation should have intentional outcomes. Keep the existing content during refresh or partial failure when product behavior requires it.
 
 ## Compose integration
 
-Collect state lifecycle-aware, commonly with `collectAsStateWithLifecycle`. Collect effects from a lifecycle-aware effect handler such as `LaunchedEffect(viewModel)`, and dispatch UI callbacks as events. Keep navigation and platform callbacks at the presentation/platform boundary. Verify effect delivery behavior when the collector is stopped or recreated.
+Collect state lifecycle-aware, commonly with `collectAsStateWithLifecycle`. `LaunchedEffect` follows composition, not the host Activity's started/stopped state. When effects should be handled only while the screen is active, gate collection with `repeatOnLifecycle` at the intended active state inside the effect. Keep navigation and platform callbacks at the presentation boundary and verify delivery when collection stops or restarts. See the [Compose integration example](compose-ui-layer.md#responsibilities-and-composition-structure).
 
 ## ViewModel test targets
 
