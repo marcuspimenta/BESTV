@@ -16,6 +16,9 @@ dependencies {
     // Kotlin
     implementation libs.kotlin.stdlib
 
+    // Coroutines exposed by shared extensions
+    api libs.kotlinx.coroutines.core
+
     // Room components
     implementation libs.androidx.room.runtime
 

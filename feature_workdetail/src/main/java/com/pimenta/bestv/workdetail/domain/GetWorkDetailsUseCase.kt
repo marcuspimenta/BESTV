@@ -17,14 +17,13 @@ package com.pimenta.bestv.workdetail.domain
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.extension.loadOrNull
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -43,40 +42,33 @@ class GetWorkDetailsUseCase(
     suspend operator fun invoke(
         workViewModel: WorkViewModel,
         countryCode: String,
-    ): WorkDetailsDomainWrapper =
-        coroutineScope {
-            val isFavoriteDeferred = async { checkFavoriteWorkUseCase(workViewModel) }
-            val videosDeferred = async { getVideosUseCase(workViewModel.type, workViewModel.id) }
-            val creditsDeferred = async { getCastsUseCase(workViewModel.type, workViewModel.id) }
-            val recommendedDeferred = async { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-            val similarDeferred = async { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-            val reviewsDeferred = async { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-            val watchProvidersDeferred = async {
-                runCatching { getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode) }.getOrNull()
-            }
-            val metadataDeferred = async {
-                try {
-                    getWorkMetadataUseCase(workViewModel.type, workViewModel.id)
-                } catch (cancellationException: CancellationException) {
-                    throw cancellationException
-                } catch (exception: Exception) {
-                    null
-                }
-            }
-
-            val credits = creditsDeferred.await()
-            WorkDetailsDomainWrapper(
-                isFavorite = isFavoriteDeferred.await(),
-                videos = videosDeferred.await(),
-                casts = credits.casts,
-                crew = credits.crew,
-                recommended = recommendedDeferred.await(),
-                similar = similarDeferred.await(),
-                reviews = reviewsDeferred.await(),
-                watchProviders = watchProvidersDeferred.await(),
-                metadata = metadataDeferred.await(),
-            )
+    ) = coroutineScope {
+        val isFavoriteDeferred = loadOrNull { checkFavoriteWorkUseCase(workViewModel) }
+        val videosDeferred = loadOrNull { getVideosUseCase(workViewModel.type, workViewModel.id) }
+        val creditsDeferred = loadOrNull { getCastsUseCase(workViewModel.type, workViewModel.id) }
+        val recommendedDeferred = loadOrNull { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val similarDeferred = loadOrNull { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val reviewsDeferred = loadOrNull { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val watchProvidersDeferred = loadOrNull {
+            getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode)
         }
+        val metadataDeferred = loadOrNull { getWorkMetadataUseCase(workViewModel.type, workViewModel.id) }
+
+        val credits = creditsDeferred.await()
+        WorkDetailsDomainWrapper(
+            isFavorite = isFavoriteDeferred.await() ?: workViewModel.isFavorite,
+            videos = videosDeferred.await(),
+            casts = credits?.casts,
+            crew = credits?.crew,
+            recommended = recommendedDeferred.await() ?: emptyPage(),
+            similar = similarDeferred.await() ?: emptyPage(),
+            reviews = reviewsDeferred.await() ?: emptyPage(),
+            watchProviders = watchProvidersDeferred.await(),
+            metadata = metadataDeferred.await(),
+        )
+    }
+
+    private fun <T> emptyPage() = PageDomainModel<T>(page = 1, totalPages = 0, results = emptyList())
 
     data class WorkDetailsDomainWrapper(
         val isFavorite: Boolean,

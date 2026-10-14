@@ -25,9 +25,12 @@ import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
@@ -154,7 +157,7 @@ class GetWorkDetailsUseCaseTest {
         }
 
     @Test
-    fun `should return an error when some exception happens`() =
+    fun `should retain successful sections when credits and similar works fail`() =
         runTest {
             val exception = RuntimeException("Test exception")
 
@@ -173,9 +176,16 @@ class GetWorkDetailsUseCaseTest {
             whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
 
-            assertFailsWith<RuntimeException> {
-                useCase(WORK, COUNTRY_CODE)
-            }
+            val result = useCase(WORK, COUNTRY_CODE)
+
+            assertEquals(true, result.isFavorite)
+            assertEquals(VIDEO_LIST, result.videos)
+            assertEquals(null, result.casts)
+            assertEquals(null, result.crew)
+            assertEquals(WORK_PAGE, result.recommended)
+            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.similar)
+            assertEquals(REVIEW_PAGE, result.reviews)
+            assertEquals(WATCH_PROVIDERS, result.watchProviders)
         }
 
     @Test
@@ -215,6 +225,80 @@ class GetWorkDetailsUseCaseTest {
             )
             assertEquals(expected, result)
         }
+
+    @Test
+    fun `should retain successful sections when videos recommendations and reviews fail`() =
+        runTest {
+            stubSuccessfulRequests()
+            whenever(getVideosUseCase(WORK.type, WORK.id)).thenThrow(RuntimeException())
+            whenever(getRecommendationByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException())
+            whenever(getReviewByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException())
+            whenever(getCastsUseCase(WORK.type, WORK.id)).doSuspendableAnswer {
+                delay(100)
+                WORK_CREDITS
+            }
+
+            val result = useCase(WORK, COUNTRY_CODE)
+
+            assertEquals(null, result.videos)
+            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.recommended)
+            assertEquals(PageDomainModel<ReviewDomainModel>(1, 0, emptyList()), result.reviews)
+            assertEquals(CAST_LIST, result.casts)
+            assertEquals(WORK_PAGE, result.similar)
+            assertEquals(WATCH_PROVIDERS, result.watchProviders)
+            assertEquals(WorkMetadataDomainModel(), result.metadata)
+        }
+
+    @Test
+    fun `should retain known favorite status when favorite lookup fails`() =
+        runTest {
+            stubSuccessfulRequests()
+            val favoriteWork = WORK.copy(isFavorite = true)
+            whenever(checkFavoriteWorkUseCase(favoriteWork)).thenThrow(RuntimeException())
+
+            val result = useCase(favoriteWork, COUNTRY_CODE)
+
+            assertEquals(true, result.isFavorite)
+            assertEquals(VIDEO_LIST, result.videos)
+        }
+
+    @Test
+    fun `should propagate credits cancellation`() =
+        runTest {
+            stubSuccessfulRequests()
+            whenever(getCastsUseCase(WORK.type, WORK.id)).thenThrow(CancellationException())
+
+            assertFailsWith<CancellationException> { useCase(WORK, COUNTRY_CODE) }
+        }
+
+    @Test
+    fun `should propagate watch providers cancellation`() =
+        runTest {
+            stubSuccessfulRequests()
+            whenever(getWatchProvidersUseCase(WORK.type, WORK.id, COUNTRY_CODE)).thenThrow(CancellationException())
+
+            assertFailsWith<CancellationException> { useCase(WORK, COUNTRY_CODE) }
+        }
+
+    @Test
+    fun `should propagate metadata cancellation`() =
+        runTest {
+            stubSuccessfulRequests()
+            whenever(getWorkMetadataUseCase(WORK.type, WORK.id)).thenThrow(CancellationException())
+
+            assertFailsWith<CancellationException> { useCase(WORK, COUNTRY_CODE) }
+        }
+
+    private suspend fun stubSuccessfulRequests() {
+        whenever(checkFavoriteWorkUseCase(WORK)).thenReturn(true)
+        whenever(getVideosUseCase(WORK.type, WORK.id)).thenReturn(VIDEO_LIST)
+        whenever(getCastsUseCase(WORK.type, WORK.id)).thenReturn(WORK_CREDITS)
+        whenever(getRecommendationByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(WORK_PAGE)
+        whenever(getSimilarByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(WORK_PAGE)
+        whenever(getReviewByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(REVIEW_PAGE)
+        whenever(getWatchProvidersUseCase(WORK.type, WORK.id, COUNTRY_CODE)).thenReturn(WATCH_PROVIDERS)
+        whenever(getWorkMetadataUseCase(WORK.type, WORK.id)).thenReturn(WorkMetadataDomainModel())
+    }
 
     @Test
     fun `should continue loading when metadata request fails`() =
