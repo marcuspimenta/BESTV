@@ -14,7 +14,6 @@ buildscript {
         classpath libs.plugin.compose.compiler.gradle
         classpath libs.plugin.ktlint.gradle
         classpath libs.plugin.android.legacy.kapt
-        classpath libs.plugin.bouncycastle.bcpkix
     }
 }
 
@@ -26,15 +25,6 @@ allprojects {
 }
 
 subprojects {
-    configurations.configureEach { configuration ->
-        if (configuration.canBeResolved && configuration.name.startsWith('unified-test-platform-')) {
-            project.dependencies.add(
-                configuration.name,
-                project.dependencies.platform(rootProject.libs.netty.bom)
-            )
-        }
-    }
-
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             apply plugin: 'kotlin-parcelize'
