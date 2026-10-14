@@ -16,9 +16,12 @@ package com.pimenta.bestv.castdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
@@ -65,10 +68,68 @@ class GetCastDetailsUseCaseTest {
         }
 
     @Test
-    fun `should return an error when some exception happens`() =
+    fun `should retain tv credits when movie credits fail`() =
+        runTest {
+            val tvShows = listOf(WorkDomainModel(id = 2, title = "TV show", type = WorkDomainModel.Type.TV_SHOW))
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).doSuspendableAnswer {
+                delay(100)
+                tvShows
+            }
+
+            assertEquals(Triple(CAST_DETAILED, null, tvShows), useCase(CAST_ID))
+        }
+
+    @Test
+    fun `should retain movie credits when tv credits fail`() =
+        runTest {
+            val movies = listOf(WorkDomainModel(id = 1, title = "Movie", type = WorkDomainModel.Type.MOVIE))
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).doSuspendableAnswer {
+                delay(100)
+                movies
+            }
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+
+            assertEquals(Triple(CAST_DETAILED, movies, null), useCase(CAST_ID))
+        }
+
+    @Test
+    fun `should retain personal details when both credits requests fail`() =
         runTest {
             whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
             whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenThrow(RuntimeException())
+
+            assertEquals(Triple(CAST_DETAILED, null, null), useCase(CAST_ID))
+        }
+
+    @Test
+    fun `should propagate movie credits cancellation`() =
+        runTest {
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(CancellationException())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+
+            assertFailsWith<CancellationException> { useCase(CAST_ID) }
+        }
+
+    @Test
+    fun `should propagate tv credits cancellation`() =
+        runTest {
+            whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
+            whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenThrow(CancellationException())
+
+            assertFailsWith<CancellationException> { useCase(CAST_ID) }
+        }
+
+    @Test
+    fun `should return an error when personal details fail`() =
+        runTest {
+            whenever(getCastPersonalDetails(CAST_ID)).thenThrow(RuntimeException())
+            whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
             whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
 
             assertFailsWith<RuntimeException> {

@@ -16,7 +16,6 @@ package com.pimenta.bestv.search.domain
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -30,27 +29,13 @@ class SearchWorksByQueryUseCase(
 ) {
     suspend operator fun invoke(query: String) = coroutineScope {
         val encodedQuery = urlEncoderTextUseCase(query)
-        val movies = async { searchSafely { searchMoviesByQueryUseCase(encodedQuery, 1) } }
-        val tvShows = async { searchSafely { searchTvShowsByQueryUseCase(encodedQuery, 1) } }
+        val movies = async { runCatching { searchMoviesByQueryUseCase(encodedQuery, 1) } }
+        val tvShows = async { runCatching { searchTvShowsByQueryUseCase(encodedQuery, 1) } }
 
         val movieResult = movies.await()
         val tvShowResult = tvShows.await()
 
-        if (movieResult.isFailure && tvShowResult.isFailure) {
-            movieResult.getOrThrow()
-        }
-
         movieResult.getOrElse { emptyPage() } to tvShowResult.getOrElse { emptyPage() }
-    }
-
-    private suspend fun searchSafely(
-        search: suspend () -> PageDomainModel<WorkDomainModel>,
-    ) = try {
-        Result.success(search())
-    } catch (exception: CancellationException) {
-        throw exception
-    } catch (exception: Exception) {
-        Result.failure(exception)
     }
 
     private fun emptyPage() = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 0, results = emptyList())
