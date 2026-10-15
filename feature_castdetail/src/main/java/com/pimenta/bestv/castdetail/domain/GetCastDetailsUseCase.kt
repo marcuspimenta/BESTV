@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import com.pimenta.bestv.model.extension.loadOrNull
+import com.pimenta.bestv.model.extension.asyncCatching
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -28,8 +28,8 @@ class GetCastDetailsUseCase(
 ) {
     suspend operator fun invoke(castId: Int) = coroutineScope {
         val castViewModel = async { getCastPersonalDetails(castId) }
-        val castMovieList = loadOrNull { getMovieCreditsByCastUseCase(castId) }
-        val castTvShowList = loadOrNull { getTvShowCreditsByCastUseCase(castId) }
+        val castMovieList = asyncCatching { getMovieCreditsByCastUseCase(castId) }
+        val castTvShowList = asyncCatching { getTvShowCreditsByCastUseCase(castId) }
 
         Triple(castViewModel.await(), castMovieList.await(), castTvShowList.await())
     }
