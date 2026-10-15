@@ -352,19 +352,23 @@ class SearchMoviesByQueryUseCase(
 ```kotlin
 // feature_search/.../domain/SearchWorksByQueryUseCase.kt
 class SearchWorksByQueryUseCase(
-    private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
 ) {
     suspend operator fun invoke(query: String) = coroutineScope {
-        val urlEncoder = async { urlEncoderTextUseCase(query) }.await()
-        val movies = async { searchMoviesByQueryUseCase(urlEncoder, 1) }
-        val tvShows = async { searchTvShowsByQueryUseCase(urlEncoder, 1) }
-        awaitAll(movies, tvShows)
-        movies.await() to tvShows.await()
+        val movies = asyncCatching { searchMoviesByQueryUseCase(query, 1) }
+        val tvShows = asyncCatching { searchTvShowsByQueryUseCase(query, 1) }
+        val results = awaitAll(movies, tvShows)
+        if (results.all { it.isFailure }) {
+            results.first().getOrThrow()
+        }
+        val (movieResult, tvShowResult) = results
+        movieResult.getOrElse { emptyPage() } to tvShowResult.getOrElse { emptyPage() }
     }
 }
 ```
+
+Search queries stay unchanged through the use cases and repositories. Retrofit's `@Query` parameters handle URL encoding at the API boundary for both initial searches and pagination.
 
 ## Repository Contracts and Implementations
 

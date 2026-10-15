@@ -23,14 +23,12 @@ import kotlinx.coroutines.coroutineScope
  * Created by marcus on 20-05-2019.
  */
 class SearchWorksByQueryUseCase(
-    private val urlEncoderTextUseCase: UrlEncoderTextUseCase,
     private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
     private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase,
 ) {
     suspend operator fun invoke(query: String) = coroutineScope {
-        val encodedQuery = urlEncoderTextUseCase(query)
-        val movies = asyncCatching { searchMoviesByQueryUseCase(encodedQuery, 1) }
-        val tvShows = asyncCatching { searchTvShowsByQueryUseCase(encodedQuery, 1) }
+        val movies = asyncCatching { searchMoviesByQueryUseCase(query, 1) }
+        val tvShows = asyncCatching { searchTvShowsByQueryUseCase(query, 1) }
 
         val results = awaitAll(movies, tvShows)
         if (results.all { it.isFailure }) {

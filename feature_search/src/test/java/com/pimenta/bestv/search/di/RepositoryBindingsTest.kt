@@ -4,8 +4,10 @@ import android.app.Application
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.search.data.repository.MovieRepository as MovieRepositoryImpl
 import com.pimenta.bestv.search.data.repository.TvShowRepository as TvShowRepositoryImpl
+import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.repository.MovieRepository
 import com.pimenta.bestv.search.domain.repository.TvShowRepository
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.koin.core.qualifier.named
@@ -16,7 +18,7 @@ import retrofit2.Retrofit
 
 class RepositoryBindingsTest {
     @Test
-    fun `domain repository ports resolve to data implementations`() {
+    fun `search use case and domain repository ports resolve`() {
         val infrastructure =
             module {
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
@@ -28,6 +30,7 @@ class RepositoryBindingsTest {
 
         assertTrue(application.koin.get<MovieRepository>() is MovieRepositoryImpl)
         assertTrue(application.koin.get<TvShowRepository>() is TvShowRepositoryImpl)
+        assertNotNull(application.koin.get<SearchWorksByQueryUseCase>())
 
         application.close()
     }
