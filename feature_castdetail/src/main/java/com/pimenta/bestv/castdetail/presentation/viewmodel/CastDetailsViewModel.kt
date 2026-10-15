@@ -25,6 +25,7 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -68,6 +69,8 @@ class CastDetailsViewModel(
                         CastDetailsState.Error(deviceCapabilities.isMobileDevice)
                     }
                 }
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while getting the cast details")
                 updateState { CastDetailsState.Error(deviceCapabilities.isMobileDevice) }

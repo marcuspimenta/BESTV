@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import android.content.Intent
+import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.model.domain.PageDomainModel
@@ -32,8 +33,10 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -42,6 +45,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -188,6 +192,17 @@ class WorkBrowseViewModelTest {
             assertEquals(TopWorkTypeViewModel.NOW_PLAYING_MOVIES, movieSection.type)
             assertEquals(1, movieSection.works.single().id)
             assertEquals(PaginationState(currentPage = 1, totalPages = 5), movieSection.page)
+        }
+
+    @Test
+    fun `loadData should update state to Error when loading is cancelled`() =
+        runTest(testDispatcher) {
+            whenever(getSectionDetailsUseCase.getAllSections()).thenThrow(CancellationException())
+
+            viewModel = createViewModel()
+            advanceUntilIdle()
+
+            assertTrue(viewModel.state.value.state is WorkBrowseState.State.Error)
         }
 
     @Test
@@ -351,6 +366,27 @@ class WorkBrowseViewModelTest {
             assertEquals(10, favoriteContent.works.single().id)
             assertTrue(favoriteContent.works.single().isFavorite)
             assertEquals(PaginationState(currentPage = 1, totalPages = 1), favoriteContent.page)
+        }
+
+    @Test
+    fun `screenResumed should handle cancellation and preserve loaded sections`() =
+        runTest(testDispatcher) {
+            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+            viewModel = createViewModel()
+            advanceUntilIdle()
+            transitionToLoadedState()
+            advanceUntilIdle()
+            val loadedState = viewModel.state.value
+            whenever(getSectionDetailsUseCase.getFavoriteSections()).thenThrow(CancellationException())
+
+            viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
+            val refreshJob = viewModel.viewModelScope.coroutineContext.job.children
+                .single()
+            advanceUntilIdle()
+
+            assertTrue(refreshJob.isCompleted)
+            assertFalse(refreshJob.isCancelled)
+            assertEquals(loadedState, viewModel.state.value)
         }
 
     @Test

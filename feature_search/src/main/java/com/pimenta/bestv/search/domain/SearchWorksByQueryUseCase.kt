@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.search.domain
 
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import kotlinx.coroutines.async
+import com.pimenta.bestv.model.domain.emptyPage
+import com.pimenta.bestv.model.extension.asyncCatching
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -29,14 +29,15 @@ class SearchWorksByQueryUseCase(
 ) {
     suspend operator fun invoke(query: String) = coroutineScope {
         val encodedQuery = urlEncoderTextUseCase(query)
-        val movies = async { runCatching { searchMoviesByQueryUseCase(encodedQuery, 1) } }
-        val tvShows = async { runCatching { searchTvShowsByQueryUseCase(encodedQuery, 1) } }
+        val movies = asyncCatching { searchMoviesByQueryUseCase(encodedQuery, 1) }
+        val tvShows = asyncCatching { searchTvShowsByQueryUseCase(encodedQuery, 1) }
 
-        val movieResult = movies.await()
-        val tvShowResult = tvShows.await()
+        val results = awaitAll(movies, tvShows)
+        if (results.all { it.isFailure }) {
+            results.first().getOrThrow()
+        }
 
+        val (movieResult, tvShowResult) = results
         movieResult.getOrElse { emptyPage() } to tvShowResult.getOrElse { emptyPage() }
     }
-
-    private fun emptyPage() = PageDomainModel<WorkDomainModel>(page = 1, totalPages = 0, results = emptyList())
 }

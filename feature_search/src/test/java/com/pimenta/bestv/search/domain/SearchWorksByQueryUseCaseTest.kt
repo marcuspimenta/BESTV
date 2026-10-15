@@ -121,23 +121,73 @@ class SearchWorksByQueryUseCaseTest {
         }
 
     @Test
-    fun `should propagate movie search cancellation`() =
+    fun `should accept an empty successful movie search when tv shows fail`() =
+        runTest {
+            val emptyPage = PageDomainModel<WorkDomainModel>(1, 0, emptyList())
+            whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+            whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).thenReturn(emptyPage)
+            whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).thenThrow(RuntimeException("TV search failed"))
+
+            assertEquals(emptyPage to emptyPage, useCase(QUERY))
+        }
+
+    @Test
+    fun `should accept an empty successful tv show search when movies fail`() =
+        runTest {
+            val emptyPage = PageDomainModel<WorkDomainModel>(1, 0, emptyList())
+            whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+            whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).thenThrow(RuntimeException("Movie search failed"))
+            whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).thenReturn(emptyPage)
+
+            assertEquals(emptyPage to emptyPage, useCase(QUERY))
+        }
+
+    @Test
+    fun `should return tv shows when the movie search throws cancellation`() =
         runTest {
             whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
             whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).thenThrow(CancellationException())
             whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).thenReturn(TV_SHOW_PAGE_VIEW_MODEL)
 
-            assertFailsWith<CancellationException> { useCase(QUERY) }
+            val result = useCase(QUERY)
+
+            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.first)
+            assertEquals(TV_SHOW_PAGE_VIEW_MODEL, result.second)
         }
 
     @Test
-    fun `should propagate tv show search cancellation`() =
+    fun `should return movies when the tv show search throws cancellation`() =
         runTest {
             whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
             whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).thenReturn(MOVIE_PAGE_VIEW_MODEL)
             whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).thenThrow(CancellationException())
 
-            assertFailsWith<CancellationException> { useCase(QUERY) }
+            val result = useCase(QUERY)
+
+            assertEquals(MOVIE_PAGE_VIEW_MODEL, result.first)
+            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.second)
+        }
+
+    @Test
+    fun `should finish a pending movie search when the tv show search throws cancellation`() =
+        runTest {
+            val moviesStarted = CompletableDeferred<Unit>()
+            val exception = CancellationException("TV search cancelled")
+            whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
+            whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).doSuspendableAnswer {
+                moviesStarted.complete(Unit)
+                delay(100)
+                MOVIE_PAGE_VIEW_MODEL
+            }
+            whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).doSuspendableAnswer {
+                moviesStarted.await()
+                throw exception
+            }
+
+            val result = useCase(QUERY)
+
+            assertEquals(MOVIE_PAGE_VIEW_MODEL, result.first)
+            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.second)
         }
 
     @Test
@@ -175,14 +225,18 @@ class SearchWorksByQueryUseCaseTest {
         }
 
     @Test
-    fun `should return an error when both searches fail`() =
+    fun `should throw the movie error when both searches fail even if tv shows fail first`() =
         runTest {
+            val exception = IllegalStateException("Movie search failed")
             whenever(urlEncoderTextUseCase(QUERY)).thenReturn(QUERY_ENCODED)
-            whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
-            whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenThrow(RuntimeException())
-
-            assertFailsWith<RuntimeException> {
-                useCase(QUERY)
+            whenever(searchMoviesByQueryUseCase(QUERY_ENCODED, 1)).doSuspendableAnswer {
+                delay(100)
+                throw exception
             }
+            whenever(searchTvShowsByQueryUseCase(QUERY_ENCODED, 1)).thenThrow(RuntimeException("TV search failed"))
+
+            val thrown = assertFailsWith<IllegalStateException> { useCase(QUERY) }
+
+            assertEquals(exception.message, thrown.message)
         }
 }

@@ -15,6 +15,7 @@
 package com.pimenta.bestv.castdetail.presentation.viewmodel
 
 import android.content.Intent
+import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
@@ -27,8 +28,10 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.job
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -186,6 +189,20 @@ class CastDetailsViewModelTest {
                 val finalState = awaitItem()
                 assertTrue(finalState is CastDetailsState.Loaded)
             }
+        }
+
+    @Test
+    fun `loadData should propagate cancellation without displaying an error`() =
+        runTest(testDispatcher) {
+            whenever(getCastDetailsUseCase(CAST.id)).thenThrow(CancellationException())
+
+            viewModel.handleEvent(CastDetailsEvent.LoadData)
+            val loadingJob = viewModel.viewModelScope.coroutineContext.job.children
+                .single()
+            advanceUntilIdle()
+
+            assertTrue(loadingJob.isCancelled)
+            assertTrue(viewModel.state.value is CastDetailsState.Loading)
         }
 
     @Test

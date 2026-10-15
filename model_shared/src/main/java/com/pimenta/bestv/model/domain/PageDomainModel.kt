@@ -22,3 +22,5 @@ data class PageDomainModel<T>(
     var totalPages: Int,
     var results: List<T>? = null
 )
+
+fun <T> emptyPage() = PageDomainModel<T>(page = 1, totalPages = 0, results = emptyList())

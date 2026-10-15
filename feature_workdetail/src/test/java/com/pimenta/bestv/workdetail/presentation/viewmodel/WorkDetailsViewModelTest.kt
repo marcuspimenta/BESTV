@@ -15,6 +15,7 @@
 package com.pimenta.bestv.workdetail.presentation.viewmodel
 
 import android.content.Intent
+import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
@@ -40,8 +41,10 @@ import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.job
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -271,6 +274,20 @@ class WorkDetailsViewModelTest {
             // After loading completes, state should be Loaded
             val finalState = viewModel.state.value
             assertTrue(finalState.state is WorkDetailsState.State.Loaded)
+        }
+
+    @Test
+    fun `loadData should propagate cancellation without displaying an error`() =
+        runTest(testDispatcher) {
+            whenever(getWorkDetailsUseCase(any(), any())).thenThrow(CancellationException())
+
+            viewModel.handleEvent(WorkDetailsEvent.LoadData)
+            val loadingJob = viewModel.viewModelScope.coroutineContext.job.children
+                .single()
+            advanceUntilIdle()
+
+            assertTrue(loadingJob.isCancelled)
+            assertTrue(viewModel.state.value.state is WorkDetailsState.State.Loading)
         }
 
     @Test

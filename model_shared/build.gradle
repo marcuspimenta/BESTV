@@ -27,4 +27,7 @@ dependencies {
 
     // JUnit
     testImplementation libs.junit4
+
+    // Coroutines Test
+    testImplementation libs.kotlinx.coroutines.test
 }

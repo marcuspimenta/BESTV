@@ -70,6 +70,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Error
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
@@ -192,6 +193,8 @@ class WorkDetailsViewModel(
                         ),
                     )
                 }
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading work details")
                 updateState {

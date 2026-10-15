@@ -17,6 +17,7 @@ package com.pimenta.bestv.workdetail.domain
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.domain.emptyPage
 import com.pimenta.bestv.model.extension.asyncCatching
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
@@ -24,6 +25,8 @@ import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -39,6 +42,7 @@ class GetWorkDetailsUseCase(
     private val getWatchProvidersUseCase: GetWatchProvidersUseCase,
     private val getWorkMetadataUseCase: GetWorkMetadataUseCase,
 ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend operator fun invoke(
         workViewModel: WorkViewModel,
         countryCode: String,
@@ -54,21 +58,36 @@ class GetWorkDetailsUseCase(
         }
         val metadataDeferred = asyncCatching { getWorkMetadataUseCase(workViewModel.type, workViewModel.id) }
 
-        val credits = creditsDeferred.await()
+        val results = awaitAll(
+            isFavoriteDeferred,
+            videosDeferred,
+            creditsDeferred,
+            recommendedDeferred,
+            similarDeferred,
+            reviewsDeferred,
+            watchProvidersDeferred,
+            metadataDeferred,
+        )
+        // The local favorite lookup must not mask a complete remote failure.
+        val remoteResults = results.drop(1)
+        if (remoteResults.all { it.isFailure }) {
+            remoteResults.first().getOrThrow()
+        }
+
+        // awaitAll guarantees completion before reading the typed results.
+        val credits = creditsDeferred.getCompleted().getOrNull()
         WorkDetailsDomainWrapper(
-            isFavorite = isFavoriteDeferred.await() ?: workViewModel.isFavorite,
-            videos = videosDeferred.await(),
+            isFavorite = isFavoriteDeferred.getCompleted().getOrNull() ?: workViewModel.isFavorite,
+            videos = videosDeferred.getCompleted().getOrNull(),
             casts = credits?.casts,
             crew = credits?.crew,
-            recommended = recommendedDeferred.await() ?: emptyPage(),
-            similar = similarDeferred.await() ?: emptyPage(),
-            reviews = reviewsDeferred.await() ?: emptyPage(),
-            watchProviders = watchProvidersDeferred.await(),
-            metadata = metadataDeferred.await(),
+            recommended = recommendedDeferred.getCompleted().getOrElse { emptyPage() },
+            similar = similarDeferred.getCompleted().getOrElse { emptyPage() },
+            reviews = reviewsDeferred.getCompleted().getOrElse { emptyPage() },
+            watchProviders = watchProvidersDeferred.getCompleted().getOrNull(),
+            metadata = metadataDeferred.getCompleted().getOrNull(),
         )
     }
-
-    private fun <T> emptyPage() = PageDomainModel<T>(page = 1, totalPages = 0, results = emptyList())
 
     data class WorkDetailsDomainWrapper(
         val isFavorite: Boolean,
