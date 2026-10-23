@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
@@ -45,6 +46,7 @@ class WorkBrowseViewModel(
     // private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
+    private val resource: Resource,
     private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(
     WorkBrowseState(isMobileDevice = deviceCapabilities.isMobileDevice),
@@ -84,9 +86,9 @@ class WorkBrowseViewModel(
 
             try {
                 val sectionDetails = getSectionDetailsUseCase.getAllSections()
-                val movieSections = sectionDetails.movieSections.toViewModels()
-                val tvShowSections = sectionDetails.tvShowSections.toViewModels()
-                val favoriteSections = sectionDetails.favoriteSections.toViewModels()
+                val movieSections = sectionDetails.movieSections.toViewModels(resource)
+                val tvShowSections = sectionDetails.tvShowSections.toViewModels(resource)
+                val favoriteSections = sectionDetails.favoriteSections.toViewModels(resource)
 
                 // Wait for splash animation to finish reactively
                 state.first { (it.state as? Loading)?.isSplashAnimationFinished == true }
@@ -116,7 +118,7 @@ class WorkBrowseViewModel(
         val currentState = currentState.state as? Loaded ?: return
         viewModelScope.launch {
             try {
-                val favorites = getSectionDetailsUseCase.getFavoriteSections().toViewModels()
+                val favorites = getSectionDetailsUseCase.getFavoriteSections().toViewModels(resource)
                 val updatedSections = updateSectionsWithFavorites(currentState.sections, favorites)
 
                 updateState {

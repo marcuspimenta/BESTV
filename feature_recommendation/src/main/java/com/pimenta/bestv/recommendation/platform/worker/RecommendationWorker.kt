@@ -12,14 +12,18 @@
  * the License.
  */
 
-package com.pimenta.bestv.recommendation.presentation.worker
+package com.pimenta.bestv.recommendation.platform.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlinx.coroutines.CancellationException
+import retrofit2.HttpException
+import java.io.IOException
 
 /**
  * Created by marcus on 28-01-2020.
@@ -35,7 +39,16 @@ class RecommendationWorker(
         try {
             loadRecommendationUseCase()
             Result.success()
-        } catch (e: Exception) {
-            Result.failure()
+        } catch (exception: Exception) {
+            exception.toRecommendationResult()
         }
+}
+
+internal fun Exception.toRecommendationResult(): ListenableWorker.Result = when (this) {
+    is CancellationException -> throw this
+    is IOException -> ListenableWorker.Result.retry()
+    is HttpException -> if (code() == 429 ||
+        code() >= 500
+    ) ListenableWorker.Result.retry() else ListenableWorker.Result.failure()
+    else -> ListenableWorker.Result.failure()
 }

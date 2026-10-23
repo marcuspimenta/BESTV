@@ -14,10 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
-import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 
 /**
  * Created by marcus on 23-04-2020.
@@ -26,9 +23,9 @@ class CheckFavoriteWorkUseCase(
     private val checkFavoriteMovieUseCase: CheckFavoriteMovieUseCase,
     private val checkFavoriteTvShowUseCase: CheckFavoriteTvShowUseCase,
 ) {
-    suspend operator fun invoke(workViewModel: WorkViewModel) =
-        when (workViewModel.type) {
-            WorkType.MOVIE -> checkFavoriteMovieUseCase(workViewModel.toMovieDbModel())
-            WorkType.TV_SHOW -> checkFavoriteTvShowUseCase(workViewModel.toTvShowDbModel())
+    suspend operator fun invoke(workId: Int, workType: WorkDomainModel.Type) =
+        when (workType) {
+            WorkDomainModel.Type.MOVIE -> checkFavoriteMovieUseCase(workId)
+            WorkDomainModel.Type.TV_SHOW -> checkFavoriteTvShowUseCase(workId)
         }
 }

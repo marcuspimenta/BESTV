@@ -7,7 +7,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 
@@ -15,9 +15,9 @@ class GetWorkMetadataUseCase(
     private val movieRepository: MovieRepository,
     private val tvShowRepository: TvShowRepository,
 ) {
-    suspend operator fun invoke(workType: WorkType, workId: Int) =
+    suspend operator fun invoke(workType: WorkDomainModel.Type, workId: Int) =
         when (workType) {
-            WorkType.MOVIE -> movieRepository.getWorkMetadata(workId)
-            WorkType.TV_SHOW -> tvShowRepository.getWorkMetadata(workId)
+            WorkDomainModel.Type.MOVIE -> movieRepository.getWorkMetadata(workId)
+            WorkDomainModel.Type.TV_SHOW -> tvShowRepository.getWorkMetadata(workId)
         }
 }

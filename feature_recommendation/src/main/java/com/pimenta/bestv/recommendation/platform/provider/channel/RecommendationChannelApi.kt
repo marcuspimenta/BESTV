@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.recommendation.data.local.provider.channel
+package com.pimenta.bestv.recommendation.platform.provider.channel
 
 import android.app.Application
 import android.content.ContentUris
@@ -23,8 +23,9 @@ import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
+import com.pimenta.bestv.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
@@ -40,14 +41,16 @@ class RecommendationChannelApi constructor(
     private val application: Application,
     private val localSettings: LocalSettings,
     private val workDetailsRoute: WorkDetailsRoute,
-    private val workBrowseRoute: WorkBrowseRoute
-) : RecommendationProvider {
+    private val workBrowseRoute: WorkBrowseRoute,
+    private val resource: Resource,
+) : RecommendationRepository {
 
     override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
         val channelId = getChannelId()
+        if (channelId == 0L) return
 
         works
-            ?.mapNotNull { work -> work.toViewModel() }
+            ?.mapNotNull { work -> work.toViewModel(resource) }
             ?.forEach { workViewModel ->
                 val programBuilder = PreviewProgram
                     .Builder()
@@ -59,27 +62,25 @@ class RecommendationChannelApi constructor(
                     .setIntent(workDetailsRoute.buildWorkDetailIntent(workViewModel))
                     .setInternalProviderId(workViewModel.id.toString())
 
-                localSettings
-                    .getLongFromPersistence(workViewModel.id.toString(), 0L)
-                    .takeUnless { workId -> workId == 0L }
-                    ?.let {
-                        application.contentResolver.update(
-                            TvContractCompat.buildProgramUri(channelId),
-                            programBuilder.build().toContentValues(),
-                            null,
-                            null
-                        )
-                    }
-                    ?: run {
-                        application.contentResolver
-                            .insert(
-                                TvContractCompat.PreviewPrograms.CONTENT_URI,
-                                programBuilder.build().toContentValues()
-                            )?.let { programUri ->
-                                val programId = ContentUris.parseId(programUri)
-                                localSettings.applyLongToPersistence(workViewModel.id.toString(), programId)
-                            }
-                    }
+                val savedProgramId = localSettings.getLongFromPersistence(workViewModel.id.toString(), 0L)
+                val values = programBuilder.build().toContentValues()
+                val updated = savedProgramId != 0L &&
+                    application.contentResolver.update(
+                        ContentUris.withAppendedId(TvContractCompat.PreviewPrograms.CONTENT_URI, savedProgramId),
+                        values,
+                        null,
+                        null,
+                    ) > 0
+                if (!updated) {
+                    application.contentResolver
+                        .insert(TvContractCompat.PreviewPrograms.CONTENT_URI, values)
+                        ?.let { programUri ->
+                            localSettings.applyLongToPersistence(
+                                workViewModel.id.toString(),
+                                ContentUris.parseId(programUri),
+                            )
+                        }
+                }
             }
     }
 

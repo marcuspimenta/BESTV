@@ -17,8 +17,6 @@ package com.pimenta.bestv.workdetail.data.repository
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
-import com.pimenta.bestv.presentation.R
-import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchProvidersToDomainModel
@@ -31,31 +29,27 @@ import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRe
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository(
-    private val resource: Resource,
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
 ) : MovieRepositoryContract {
     override suspend fun getWorkMetadata(movieId: Int) =
         movieRemoteDataSource.getMovieDetails(movieId).toWorkMetadataDomainModel()
 
-    override suspend fun saveFavoriteMovie(
-        movieDbModel: MovieDbModel,
-    ) = movieLocalDataSource.saveFavoriteMovie(movieDbModel)
+    override suspend fun saveFavoriteMovie(movieId: Int) =
+        movieLocalDataSource.saveFavoriteMovie(MovieDbModel(movieId))
 
-    override suspend fun deleteFavoriteMovie(
-        movieDbModel: MovieDbModel,
-    ) = movieLocalDataSource.deleteFavoriteMovie(movieDbModel)
+    override suspend fun deleteFavoriteMovie(movieId: Int) =
+        movieLocalDataSource.deleteFavoriteMovie(MovieDbModel(movieId))
 
-    override suspend fun isFavoriteMove(movieDbModel: MovieDbModel): Boolean {
-        val movie = movieLocalDataSource.getById(movieDbModel)
+    override suspend fun isFavoriteMovie(movieId: Int): Boolean {
+        val movie = movieLocalDataSource.getById(MovieDbModel(movieId))
         return movie != null
     }
 
     override suspend fun getCreditsByMovie(movieId: Int) =
         movieRemoteDataSource.getCastByMovie(movieId).let { response ->
-            val source = resource.getStringResource(R.string.source_tmdb)
             WorkCreditsDomainModel(
-                casts = response.casts?.map { cast -> cast.toDomainModel(source) },
+                casts = response.casts?.map { cast -> cast.toDomainModel() },
                 crew = response.crew
                     .orEmpty()
                     .mapNotNull { it.crewToDomainModel() }
@@ -68,16 +62,14 @@ class MovieRepository(
         movieId: Int,
         page: Int,
     ) = movieRemoteDataSource.getRecommendationByMovie(movieId, page).let { response ->
-        val source = resource.getStringResource(R.string.source_tmdb)
-        response.toDomainModel(source)
+        response.toDomainModel()
     }
 
     override suspend fun getSimilarByMovie(
         movieId: Int,
         page: Int,
     ) = movieRemoteDataSource.getSimilarByMovie(movieId, page).let { response ->
-        val source = resource.getStringResource(R.string.source_tmdb)
-        response.toDomainModel(source)
+        response.toDomainModel()
     }
 
     override suspend fun getReviewByMovie(

@@ -14,10 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
-import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 
@@ -28,20 +25,20 @@ class SetFavoriteUseCase(
     private val movieRepository: MovieRepository,
     private val tvShowRepository: TvShowRepository,
 ) {
-    suspend operator fun invoke(workViewModel: WorkViewModel) {
-        when (workViewModel.type) {
-            WorkType.MOVIE -> {
-                if (workViewModel.isFavorite) {
-                    movieRepository.deleteFavoriteMovie(workViewModel.toMovieDbModel())
+    suspend operator fun invoke(workId: Int, workType: WorkDomainModel.Type, desiredFavoriteState: Boolean) {
+        when (workType) {
+            WorkDomainModel.Type.MOVIE -> {
+                if (desiredFavoriteState) {
+                    movieRepository.saveFavoriteMovie(workId)
                 } else {
-                    movieRepository.saveFavoriteMovie(workViewModel.toMovieDbModel())
+                    movieRepository.deleteFavoriteMovie(workId)
                 }
             }
-            WorkType.TV_SHOW -> {
-                if (workViewModel.isFavorite) {
-                    tvShowRepository.deleteFavoriteTvShow(workViewModel.toTvShowDbModel())
+            WorkDomainModel.Type.TV_SHOW -> {
+                if (desiredFavoriteState) {
+                    tvShowRepository.saveFavoriteTvShow(workId)
                 } else {
-                    tvShowRepository.saveFavoriteTvShow(workViewModel.toTvShowDbModel())
+                    tvShowRepository.deleteFavoriteTvShow(workId)
                 }
             }
         }

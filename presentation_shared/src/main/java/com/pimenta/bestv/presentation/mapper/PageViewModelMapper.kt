@@ -12,17 +12,15 @@
  * the License.
  */
 
-package com.pimenta.bestv.recommendation.presentation.presenter
+package com.pimenta.bestv.presentation.mapper
 
-import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
+import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.model.PageViewModel
+import com.pimenta.bestv.presentation.platform.Resource
 
-/**
- * Created by marcus on 06-03-2018.
- */
-class BootPresenter(
-    private val scheduleRecommendationUseCase: ScheduleRecommendationUseCase,
-) {
-    fun scheduleRecommendationUpdate() {
-        scheduleRecommendationUseCase()
-    }
-}
+fun PageDomainModel<WorkDomainModel>.toViewModel(resource: Resource) = PageViewModel(
+    page,
+    totalPages,
+    results?.mapNotNull { it.toViewModel(resource) }.orEmpty()
+)

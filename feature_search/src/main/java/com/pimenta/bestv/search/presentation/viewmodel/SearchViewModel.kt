@@ -15,7 +15,8 @@
 package com.pimenta.bestv.search.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
@@ -51,6 +52,7 @@ class SearchViewModel(
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRequestProcessor: SearchRequestProcessor,
     private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor,
+    private val resource: Resource,
     deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<SearchState, SearchEffect>(SearchState(isMobileDevice = deviceCapabilities.isMobileDevice)) {
 
@@ -100,7 +102,7 @@ class SearchViewModel(
         moviesPaginationJob = loadMoreContent(
             nextPage = moviesContent.page.currentPage + 1,
             errorMessage = "Error while loading more movies",
-            loadPage = { query, page -> searchMoviesByQueryUseCase(query, page).toViewModel() },
+            loadPage = { query, page -> searchMoviesByQueryUseCase(query, page).toViewModel(resource) },
             onSuccess = SearchState::moviesPaginationSucceeded,
             onFailure = SearchState::moviesPaginationFailed,
         )
@@ -117,7 +119,7 @@ class SearchViewModel(
         tvShowsPaginationJob = loadMoreContent(
             nextPage = tvShowsContent.page.currentPage + 1,
             errorMessage = "Error while loading more TV shows",
-            loadPage = { query, page -> searchTvShowsByQueryUseCase(query, page).toViewModel() },
+            loadPage = { query, page -> searchTvShowsByQueryUseCase(query, page).toViewModel(resource) },
             onSuccess = SearchState::tvShowsPaginationSucceeded,
             onFailure = SearchState::tvShowsPaginationFailed,
         )
@@ -197,8 +199,8 @@ class SearchViewModel(
     private suspend fun performSearch(query: String) {
         try {
             val result = searchWorksByQueryUseCase(query)
-            val moviePage = result.first.toViewModel()
-            val tvShowPage = result.second.toViewModel()
+            val moviePage = result.first.toViewModel(resource)
+            val tvShowPage = result.second.toViewModel(resource)
             val contents = create(query, moviePage, tvShowPage)
 
             updateState { state -> state.searchLoaded(contents) }

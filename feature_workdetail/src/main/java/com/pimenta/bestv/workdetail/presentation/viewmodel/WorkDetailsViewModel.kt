@@ -17,7 +17,7 @@ package com.pimenta.bestv.workdetail.presentation.viewmodel
 import android.content.Intent
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.extension.firstOf
@@ -25,6 +25,7 @@ import com.pimenta.bestv.presentation.extension.replaceFirst
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
@@ -35,6 +36,7 @@ import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel as metadataToViewModel
 import com.pimenta.bestv.workdetail.presentation.mapper.toViewModel as crewDomainToViewModel
+import com.pimenta.bestv.workdetail.presentation.mapper.toDomainType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FavoriteError
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.PaginationError
@@ -90,6 +92,7 @@ class WorkDetailsViewModel(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val castDetailsRoute: CastDetailsRoute,
+    private val resource: Resource,
     private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(
     WorkDetailsState(work, Loading, isMobileDevice = deviceCapabilities.isMobileDevice),
@@ -116,7 +119,7 @@ class WorkDetailsViewModel(
                 updateState { it.copy(state = Loading) }
 
                 val countryCode = Locale.getDefault().country.takeIf { it.isNotEmpty() } ?: "US"
-                val result = getWorkDetailsUseCase(work, countryCode)
+                val result = getWorkDetailsUseCase(work.id, work.type.toDomainType(), work.isFavorite, countryCode)
 
                 updateState {
                     it.copy(
@@ -153,12 +156,12 @@ class WorkDetailsViewModel(
                                         .takeIf { it.videos.isNotEmpty() }
                                 },
                                 result.casts?.let {
-                                    it.mapNotNull { cast -> cast.toViewModel() }.let { casts ->
+                                    it.mapNotNull { cast -> cast.toViewModel(resource) }.let { casts ->
                                         Casts(casts).takeIf { casts.isNotEmpty() }
                                     }
                                 },
                                 result.recommended.results?.let {
-                                    it.mapNotNull { work -> work.toViewModel() }.let { recos ->
+                                    it.mapNotNull { work -> work.toViewModel(resource) }.let { recos ->
                                         RecommendedWorks(
                                             recommended = recos,
                                             page = PaginationState(
@@ -169,7 +172,7 @@ class WorkDetailsViewModel(
                                     }
                                 },
                                 result.similar.results?.let {
-                                    it.mapNotNull { work -> work.toViewModel() }.let { similar ->
+                                    it.mapNotNull { work -> work.toViewModel(resource) }.let { similar ->
                                         SimilarWorks(
                                             similar = similar,
                                             page = PaginationState(
@@ -232,11 +235,8 @@ class WorkDetailsViewModel(
                         .firstOf<Header>()
                         .actions
                         .firstOf<SaveWork>()
-                val updatedWork = work.copy(isFavorite = currentFavoriteState.isFavorite)
-
-                setFavoriteUseCase(updatedWork)
-
                 val newFavoriteState = !currentFavoriteState.isFavorite
+                setFavoriteUseCase(work.id, work.type.toDomainType(), newFavoriteState)
                 updateState { currentState ->
                     currentState.copy(
                         state =
@@ -288,7 +288,7 @@ class WorkDetailsViewModel(
         viewModelScope.launch {
             try {
                 val nextPage = reviews.page.currentPage + 1
-                val pageResult = getReviewByWorkUseCase(work.type, work.id, nextPage)
+                val pageResult = getReviewByWorkUseCase(work.type.toDomainType(), work.id, nextPage)
                     .toViewModel()
 
                 updateState { currentState ->
@@ -348,8 +348,8 @@ class WorkDetailsViewModel(
         viewModelScope.launch {
             try {
                 val nextPage = recommendedWorks.page.currentPage + 1
-                val pageResult = getRecommendationByWorkUseCase(work.type, work.id, nextPage)
-                    .toViewModel()
+                val pageResult = getRecommendationByWorkUseCase(work.type.toDomainType(), work.id, nextPage)
+                    .toViewModel(resource)
 
                 updateState { currentState ->
                     currentState.copy(
@@ -408,8 +408,8 @@ class WorkDetailsViewModel(
         viewModelScope.launch {
             try {
                 val nextPage = similarWorks.page.currentPage + 1
-                val pageResult = getSimilarByWorkUseCase(work.type, work.id, nextPage)
-                    .toViewModel()
+                val pageResult = getSimilarByWorkUseCase(work.type.toDomainType(), work.id, nextPage)
+                    .toViewModel(resource)
 
                 updateState { currentState ->
                     currentState.copy(

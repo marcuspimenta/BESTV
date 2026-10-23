@@ -17,6 +17,7 @@ package com.pimenta.bestv.workdetail.presentation.viewmodel
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
@@ -24,6 +25,7 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
@@ -111,7 +113,7 @@ private val WORK_PAGE =
                 originalTitle = "Recommended Movie",
                 originalLanguage = "en",
                 overview = "A recommended movie",
-                source = "tmdb",
+                source = ContentSource.TMDB,
                 backdropPath = "/backdrop.jpg",
                 posterPath = "/poster.jpg",
                 releaseDate = "2023-01-01",
@@ -165,6 +167,7 @@ class WorkDetailsViewModelTest {
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val castDetailsRoute: CastDetailsRoute = mock()
+    private val resource: Resource = mock()
     private val viewModel =
         WorkDetailsViewModel(
             work = WORK,
@@ -175,12 +178,14 @@ class WorkDetailsViewModelTest {
             getSimilarByWorkUseCase = getSimilarByWorkUseCase,
             workDetailsRoute = workDetailsRoute,
             castDetailsRoute = castDetailsRoute,
+            resource = resource,
             deviceCapabilities = TvDeviceCapabilities,
         )
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        whenever(resource.getStringResource(any())).thenReturn("tmdb")
     }
 
     @After
@@ -213,7 +218,7 @@ class WorkDetailsViewModelTest {
                 ),
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()
@@ -262,7 +267,7 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
 
             // Initial state should be Loading
             val initialState = viewModel.state.value
@@ -279,7 +284,7 @@ class WorkDetailsViewModelTest {
     @Test
     fun `loadData should propagate cancellation without displaying an error`() =
         runTest(testDispatcher) {
-            whenever(getWorkDetailsUseCase(any(), any())).thenThrow(CancellationException())
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenThrow(CancellationException())
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             val loadingJob = viewModel.viewModelScope.coroutineContext.job.children
@@ -294,7 +299,7 @@ class WorkDetailsViewModelTest {
     fun `loadData should handle error`() =
         runTest(testDispatcher) {
             val exception = RuntimeException("Network error")
-            whenever(getWorkDetailsUseCase(any(), any())).thenThrow(exception)
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenThrow(exception)
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()
@@ -317,8 +322,8 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
-            whenever(setFavoriteUseCase(any())).thenReturn(Unit)
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
+            whenever(setFavoriteUseCase(any(), any(), any())).thenReturn(Unit)
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()
@@ -458,8 +463,8 @@ class WorkDetailsViewModelTest {
                 ),
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(initialDetails)
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK.id, 2))
                 .thenReturn(secondReviewPage)
 
             // Load initial data
@@ -497,8 +502,8 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
-            whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
+            whenever(setFavoriteUseCase(any(), any(), any())).thenThrow(RuntimeException("Failed to save"))
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()
@@ -538,8 +543,8 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(initialDetails)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 2))
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(initialDetails)
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK.id, 2))
                 .thenThrow(RuntimeException("Network error"))
 
             // Load initial data
@@ -597,7 +602,7 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()
@@ -650,8 +655,8 @@ class WorkDetailsViewModelTest {
                 watchProviders = null,
             )
 
-            whenever(getWorkDetailsUseCase(any(), any())).thenReturn(workDetails)
-            whenever(setFavoriteUseCase(any())).thenThrow(RuntimeException("Failed to save"))
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(workDetails)
+            whenever(setFavoriteUseCase(any(), any(), any())).thenThrow(RuntimeException("Failed to save"))
 
             viewModel.handleEvent(WorkDetailsEvent.LoadData)
             advanceUntilIdle()

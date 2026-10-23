@@ -15,7 +15,7 @@
 package com.pimenta.bestv.workdetail.domain
 
 import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -56,7 +56,7 @@ class GetCastsUseCaseTest {
         runTest {
             whenever(getCastByMovieUseCase(WORK_ID)).thenReturn(CREDITS)
 
-            val result = useCase(WorkType.MOVIE, WORK_ID)
+            val result = useCase(WorkDomainModel.Type.MOVIE, WORK_ID)
 
             assertEquals(CREDITS, result)
         }
@@ -68,7 +68,7 @@ class GetCastsUseCaseTest {
             whenever(getCastByMovieUseCase(WORK_ID)).thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.MOVIE, WORK_ID)
+                useCase(WorkDomainModel.Type.MOVIE, WORK_ID)
             }
         }
 
@@ -77,7 +77,7 @@ class GetCastsUseCaseTest {
         runTest {
             whenever(getCastByTvShowUseCase(WORK_ID)).thenReturn(CREDITS)
 
-            val result = useCase(WorkType.TV_SHOW, WORK_ID)
+            val result = useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID)
 
             assertEquals(CREDITS, result)
         }
@@ -89,7 +89,7 @@ class GetCastsUseCaseTest {
             whenever(getCastByTvShowUseCase(WORK_ID)).thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.TV_SHOW, WORK_ID)
+                useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID)
             }
         }
 }

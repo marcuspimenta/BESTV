@@ -20,19 +20,16 @@ import android.os.Build
 import androidx.work.WorkManager
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
-import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
-import com.pimenta.bestv.recommendation.data.local.provider.channel.RecommendationChannelApi
-import com.pimenta.bestv.recommendation.data.local.provider.row.RecommendationRowApi
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.recommendation.data.remote.api.MovieTmdbApi
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository
-import com.pimenta.bestv.recommendation.data.repository.RecommendationRepository
 import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
-import com.pimenta.bestv.recommendation.domain.ScheduleRecommendationUseCase
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository as RecommendationRepositoryPort
-import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
+import com.pimenta.bestv.recommendation.platform.provider.channel.RecommendationChannelApi
+import com.pimenta.bestv.recommendation.platform.provider.row.RecommendationRowApi
+import com.pimenta.bestv.recommendation.platform.scheduler.RecommendationScheduler
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
@@ -72,14 +69,15 @@ val recommendationModule = module {
         )
     }
 
-    // RecommendationProvider
-    single<RecommendationProvider> {
+    // Platform implementation of the domain recommendation port.
+    single<RecommendationRepositoryPort> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             RecommendationChannelApi(
                 application = androidApplication(),
                 localSettings = get(),
                 workDetailsRoute = get(),
-                workBrowseRoute = get()
+                workBrowseRoute = get(),
+                resource = get(),
             )
         } else {
             RecommendationRowApi(
@@ -87,20 +85,16 @@ val recommendationModule = module {
                 notificationManager = get(),
                 workDetailsRoute = get(),
                 imageLoader = get(),
+                resource = get(),
             )
         }
     }
 
     // Repositories
     factoryOf(::MovieRepository)
-    factoryOf(::RecommendationRepository)
     factory<MovieRepositoryPort> { get<MovieRepository>() }
-    factory<RecommendationRepositoryPort> { get<RecommendationRepository>() }
 
     // UseCases
     factoryOf(::LoadRecommendationUseCase)
-    factoryOf(::ScheduleRecommendationUseCase)
-
-    // Presenter
-    factoryOf(::BootPresenter)
+    factoryOf(::RecommendationScheduler)
 }

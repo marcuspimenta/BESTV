@@ -18,9 +18,11 @@ import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
@@ -52,6 +54,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -81,7 +84,7 @@ private fun domainWork(
         originalTitle = "Test Movie",
         originalLanguage = "en",
         overview = "A test movie",
-        source = "tmdb",
+        source = ContentSource.TMDB,
         backdropPath = "/backdrop.jpg",
         posterPath = "/poster.jpg",
         releaseDate = "2023-01-01",
@@ -119,12 +122,14 @@ class WorkBrowseViewModelTest {
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val searchRoute: SearchRoute = mock()
+    private val resource: Resource = mock()
 
     private lateinit var viewModel: WorkBrowseViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        whenever(resource.getStringResource(any())).thenReturn("tmdb")
     }
 
     @After
@@ -137,6 +142,7 @@ class WorkBrowseViewModelTest {
             getSectionDetailsUseCase = getSectionDetailsUseCase,
             workDetailsRoute = workDetailsRoute,
             searchRoute = searchRoute,
+            resource = resource,
             deviceCapabilities = TvDeviceCapabilities,
         )
 

@@ -16,16 +16,17 @@ package com.pimenta.bestv.model.data.mapper
 
 import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.model.data.remote.WorkResponse
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.WorkDomainModel
 
-fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
+fun WorkResponse.toDomainModel() = WorkDomainModel(
     id = id,
     title = title,
     originalTitle = originalTitle,
     releaseDate = releaseDate,
     originalLanguage = originalLanguage,
     overview = overview,
-    source = source,
+    source = ContentSource.TMDB,
     backdropPath = backdropPath,
     posterPath = posterPath,
     popularity = popularity,

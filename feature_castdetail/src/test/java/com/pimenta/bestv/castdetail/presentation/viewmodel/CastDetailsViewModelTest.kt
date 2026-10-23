@@ -21,12 +21,14 @@ import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +46,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -78,7 +81,7 @@ private val MOVIE_LIST =
             title = "Movie 1",
             originalLanguage = "en",
             overview = "Movie 1 overview",
-            source = "tmdb",
+            source = ContentSource.TMDB,
             backdropPath = "/backdrop1.jpg",
             posterPath = "/poster1.jpg",
             originalTitle = "Movie 1",
@@ -91,7 +94,7 @@ private val MOVIE_LIST =
             title = "Movie 2",
             originalLanguage = "en",
             overview = "Movie 2 overview",
-            source = "tmdb",
+            source = ContentSource.TMDB,
             backdropPath = "/backdrop2.jpg",
             posterPath = "/poster2.jpg",
             originalTitle = "Movie 2",
@@ -108,7 +111,7 @@ private val TV_SHOW_LIST =
             title = "TV Show 1",
             originalLanguage = "en",
             overview = "TV Show 1 overview",
-            source = "tmdb",
+            source = ContentSource.TMDB,
             backdropPath = "/backdrop3.jpg",
             posterPath = "/poster3.jpg",
             originalTitle = "TV Show 1",
@@ -129,17 +132,20 @@ class CastDetailsViewModelTest {
 
     private val getCastDetailsUseCase: GetCastDetailsUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
+    private val resource: Resource = mock()
     private val viewModel =
         CastDetailsViewModel(
             cast = CAST,
             getCastDetailsUseCase = getCastDetailsUseCase,
             workDetailsRoute = workDetailsRoute,
+            resource = resource,
             deviceCapabilities = TvDeviceCapabilities,
         )
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        whenever(resource.getStringResource(any())).thenReturn("tmdb")
     }
 
     @After

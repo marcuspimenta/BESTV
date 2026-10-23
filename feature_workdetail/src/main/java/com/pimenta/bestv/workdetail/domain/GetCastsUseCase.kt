@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 
 /**
@@ -25,10 +25,10 @@ class GetCastsUseCase(
     private val getCastByTvShowUseCase: GetCastByTvShowUseCase,
 ) {
     suspend operator fun invoke(
-        workType: WorkType,
+        workType: WorkDomainModel.Type,
         workId: Int,
     ): WorkCreditsDomainModel = when (workType) {
-        WorkType.MOVIE -> getCastByMovieUseCase(workId)
-        WorkType.TV_SHOW -> getCastByTvShowUseCase(workId)
+        WorkDomainModel.Type.MOVIE -> getCastByMovieUseCase(workId)
+        WorkDomainModel.Type.TV_SHOW -> getCastByTvShowUseCase(workId)
     }
 }

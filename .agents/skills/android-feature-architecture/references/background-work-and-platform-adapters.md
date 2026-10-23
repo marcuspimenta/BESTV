@@ -23,6 +23,6 @@ For TV channels/programs, distinguish channel IDs from program IDs and from app/
 
 Check product capability separately from OS API availability: a sufficiently new Android version does not imply a TV launcher/provider is available. Keep SDK/package-manager checks in platform adapters or the composition root; expose narrow capability values to consumers that need them. Do not turn a static device capability into a substitute for changing window-size or input-mode state in Compose.
 
-Map domain values to the platform's payload at this adapter boundary. Do not require a screen's Parcelable model simply to publish a background recommendation. Reuse a stable route contract and image/configuration helpers where appropriate without pulling screen rendering into a worker.
+Map domain values to the platform's payload at this adapter boundary. Prefer a stable route containing an item ID so publishing background content does not require a screen's Parcelable model. If an existing route contract requires a presentation payload, keep that conversion at the platform adapter edge, document it as route coupling, and avoid moving screen rendering into the worker. Migrate the route contract to an ID when that API can be changed safely.
 
 Verify repeated scheduling, worker construction after a cold start, success/retry/permanent failure/cancellation, repeated execution after a partial write, stale provider IDs, and unsupported devices when those behaviors change. Scheduler mocks verify invocation only; use a focused worker/provider test for execution behavior.

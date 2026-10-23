@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 
 /**
  * Polymorphic use case to get watch providers for a work (movie or TV show).
@@ -24,11 +24,11 @@ class GetWatchProvidersUseCase(
     private val getWatchProvidersByTvShowUseCase: GetWatchProvidersByTvShowUseCase,
 ) {
     suspend operator fun invoke(
-        workType: WorkType,
+        workType: WorkDomainModel.Type,
         workId: Int,
         countryCode: String,
     ) = when (workType) {
-        WorkType.MOVIE -> getWatchProvidersByMovieUseCase(workId, countryCode)
-        WorkType.TV_SHOW -> getWatchProvidersByTvShowUseCase(workId, countryCode)
+        WorkDomainModel.Type.MOVIE -> getWatchProvidersByMovieUseCase(workId, countryCode)
+        WorkDomainModel.Type.TV_SHOW -> getWatchProvidersByTvShowUseCase(workId, countryCode)
     }
 }

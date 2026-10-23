@@ -117,6 +117,7 @@ val workDetailModule = module {
             getSimilarByWorkUseCase = get(),
             workDetailsRoute = get(),
             castDetailsRoute = get(),
+            resource = get(),
             deviceCapabilities = get(),
         )
     }

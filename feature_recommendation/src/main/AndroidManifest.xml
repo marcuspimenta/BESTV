@@ -2,7 +2,7 @@
 
     <application>
         <receiver
-            android:name=".presentation.broadcast.BootBroadcastReceiver"
+            android:name=".platform.broadcast.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

@@ -24,7 +24,7 @@ data class WorkDomainModel(
     val releaseDate: String? = null,
     val originalLanguage: String? = null,
     val overview: String? = null,
-    val source: String? = null,
+    val source: ContentSource = ContentSource.TMDB,
     val backdropPath: String? = null,
     val posterPath: String? = null,
     val popularity: Float = 0f,

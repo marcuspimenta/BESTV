@@ -176,7 +176,7 @@ val searchModule = module {
 }
 ```
 
-The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same binding pattern is used by Work Browse, Work Details, Cast Details, and Recommendation. Each affected feature has a smoke test that loads its production Koin module with test infrastructure dependencies and checks that the port resolves to the concrete implementation.
+The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. Feature binding smoke tests resolve these ports with test infrastructure.
 
 Browse section loading follows the same layer direction: `GetSectionDetailsUseCase` returns domain category keys, genres, and pages; presentation maps them to `ContentSection`, resource-backed category labels, work and genre view models, and pagination state before `WorkBrowseViewModel` publishes screen state. Favorite refreshes pass through the same mapper.
 

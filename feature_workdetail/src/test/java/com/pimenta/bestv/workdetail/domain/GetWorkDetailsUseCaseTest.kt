@@ -17,8 +17,6 @@ package com.pimenta.bestv.workdetail.domain
 import com.pimenta.bestv.model.domain.CastDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
@@ -39,20 +37,9 @@ import kotlin.test.assertFailsWith
 /**
  * Created by marcus on 22-08-2019.
  */
-private val WORK =
-    WorkViewModel(
-        id = 1,
-        title = "Test Movie",
-        originalTitle = "Test Movie",
-        originalLanguage = "en",
-        overview = "A test movie",
-        source = "tmdb",
-        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
-        posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
-        releaseDate = "Jan 01, 2023",
-        type = WorkType.MOVIE,
-        voteAverage = 8.0f,
-    )
+private const val WORK_ID = 1
+private val WORK_TYPE = WorkDomainModel.Type.MOVIE
+private const val INITIAL_FAVORITE = false
 private val VIDEO_LIST =
     listOf(
         VideoDomainModel(
@@ -124,24 +111,24 @@ class GetWorkDetailsUseCaseTest {
     @Test
     fun `should return the right data when loading the work details`() =
         runTest {
-            whenever(checkFavoriteWorkUseCase(WORK))
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE))
                 .thenReturn(true)
-            whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getVideosUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(VIDEO_LIST)
-            whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getCastsUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(WORK_CREDITS)
-            whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getRecommendationByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(WORK_PAGE)
-            whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getSimilarByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(WORK_PAGE)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(REVIEW_PAGE)
-            whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            whenever(getWatchProvidersUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
-            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getWorkMetadataUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(WorkMetadataDomainModel(status = "Released"))
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
                 isFavorite = true,
@@ -162,22 +149,22 @@ class GetWorkDetailsUseCaseTest {
         runTest {
             val exception = RuntimeException("Test exception")
 
-            whenever(checkFavoriteWorkUseCase(WORK))
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE))
                 .thenReturn(true)
-            whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getVideosUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(VIDEO_LIST)
-            whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getCastsUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenThrow(exception)
-            whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getRecommendationByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(WORK_PAGE)
-            whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getSimilarByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenThrow(exception)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(REVIEW_PAGE)
-            whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            whenever(getWatchProvidersUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(true, result.isFavorite)
             assertEquals(VIDEO_LIST, result.videos)
@@ -194,24 +181,24 @@ class GetWorkDetailsUseCaseTest {
         runTest {
             val exception = RuntimeException("Watch providers error")
 
-            whenever(checkFavoriteWorkUseCase(WORK))
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE))
                 .thenReturn(true)
-            whenever(getVideosUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getVideosUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(VIDEO_LIST)
-            whenever(getCastsUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getCastsUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(WORK_CREDITS)
-            whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getRecommendationByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(WORK_PAGE)
-            whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getSimilarByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(WORK_PAGE)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1))
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1))
                 .thenReturn(REVIEW_PAGE)
-            whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE))
+            whenever(getWatchProvidersUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE))
                 .thenThrow(exception)
-            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+            whenever(getWorkMetadataUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenReturn(WorkMetadataDomainModel())
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             val expected = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
                 isFavorite = true,
@@ -231,15 +218,15 @@ class GetWorkDetailsUseCaseTest {
     fun `should retain successful sections when videos recommendations and reviews fail`() =
         runTest {
             stubSuccessfulRequests()
-            whenever(getVideosUseCase(WORK.type, WORK.id)).thenThrow(RuntimeException())
-            whenever(getRecommendationByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException())
-            whenever(getReviewByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException())
-            whenever(getCastsUseCase(WORK.type, WORK.id)).doSuspendableAnswer {
+            whenever(getVideosUseCase(WORK_TYPE, WORK_ID)).thenThrow(RuntimeException())
+            whenever(getRecommendationByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenThrow(RuntimeException())
+            whenever(getReviewByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenThrow(RuntimeException())
+            whenever(getCastsUseCase(WORK_TYPE, WORK_ID)).doSuspendableAnswer {
                 delay(100)
                 WORK_CREDITS
             }
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(null, result.videos)
             assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.recommended)
@@ -254,10 +241,10 @@ class GetWorkDetailsUseCaseTest {
     fun `should retain known favorite status when favorite lookup fails`() =
         runTest {
             stubSuccessfulRequests()
-            val favoriteWork = WORK.copy(isFavorite = true)
-            whenever(checkFavoriteWorkUseCase(favoriteWork)).thenThrow(RuntimeException())
+            val favoriteWork = true
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenThrow(RuntimeException())
 
-            val result = useCase(favoriteWork, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, favoriteWork, COUNTRY_CODE)
 
             assertEquals(true, result.isFavorite)
             assertEquals(VIDEO_LIST, result.videos)
@@ -268,9 +255,16 @@ class GetWorkDetailsUseCaseTest {
         runTest {
             val exception = IllegalStateException("Videos unavailable")
             stubFailedRequests(videosException = exception, videosDelayMillis = 100)
-            doReturn(true).whenever(checkFavoriteWorkUseCase).invoke(WORK)
+            doReturn(true).whenever(checkFavoriteWorkUseCase).invoke(WORK_ID, WORK_TYPE)
 
-            val thrown = assertFailsWith<IllegalStateException> { useCase(WORK, COUNTRY_CODE) }
+            val thrown = assertFailsWith<IllegalStateException> {
+                useCase(
+                    WORK_ID,
+                    WORK_TYPE,
+                    INITIAL_FAVORITE,
+                    COUNTRY_CODE
+                )
+            }
 
             assertEquals(exception.message, thrown.message)
         }
@@ -281,7 +275,14 @@ class GetWorkDetailsUseCaseTest {
             val exception = IllegalStateException("Videos unavailable")
             stubFailedRequests(videosException = exception)
 
-            val thrown = assertFailsWith<IllegalStateException> { useCase(WORK, COUNTRY_CODE) }
+            val thrown = assertFailsWith<IllegalStateException> {
+                useCase(
+                    WORK_ID,
+                    WORK_TYPE,
+                    INITIAL_FAVORITE,
+                    COUNTRY_CODE
+                )
+            }
 
             assertEquals(exception.message, thrown.message)
         }
@@ -290,27 +291,27 @@ class GetWorkDetailsUseCaseTest {
     fun `should load details when only videos succeed with an empty list`() =
         runTest {
             stubFailedRequests()
-            doReturn(emptyList<VideoDomainModel>()).whenever(getVideosUseCase).invoke(WORK.type, WORK.id)
+            doReturn(emptyList<VideoDomainModel>()).whenever(getVideosUseCase).invoke(WORK_TYPE, WORK_ID)
 
-            assertEquals(emptyList<VideoDomainModel>(), useCase(WORK, COUNTRY_CODE).videos)
+            assertEquals(emptyList<VideoDomainModel>(), useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).videos)
         }
 
     @Test
     fun `should load details when only videos succeed with null`() =
         runTest {
             stubFailedRequests()
-            doReturn(null).whenever(getVideosUseCase).invoke(WORK.type, WORK.id)
+            doReturn(null).whenever(getVideosUseCase).invoke(WORK_TYPE, WORK_ID)
 
-            assertEquals(null, useCase(WORK, COUNTRY_CODE).videos)
+            assertEquals(null, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).videos)
         }
 
     @Test
     fun `should load details when only credits succeed`() =
         runTest {
             stubFailedRequests()
-            doReturn(WORK_CREDITS).whenever(getCastsUseCase).invoke(WORK.type, WORK.id)
+            doReturn(WORK_CREDITS).whenever(getCastsUseCase).invoke(WORK_TYPE, WORK_ID)
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(CAST_LIST, result.casts)
             assertEquals(WORK_CREDITS.crew, result.crew)
@@ -320,45 +321,45 @@ class GetWorkDetailsUseCaseTest {
     fun `should load details when only recommendations succeed`() =
         runTest {
             stubFailedRequests()
-            doReturn(WORK_PAGE).whenever(getRecommendationByWorkUseCase).invoke(WORK.type, WORK.id, 1)
+            doReturn(WORK_PAGE).whenever(getRecommendationByWorkUseCase).invoke(WORK_TYPE, WORK_ID, 1)
 
-            assertEquals(WORK_PAGE, useCase(WORK, COUNTRY_CODE).recommended)
+            assertEquals(WORK_PAGE, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).recommended)
         }
 
     @Test
     fun `should load details when only similar works succeed`() =
         runTest {
             stubFailedRequests()
-            doReturn(WORK_PAGE).whenever(getSimilarByWorkUseCase).invoke(WORK.type, WORK.id, 1)
+            doReturn(WORK_PAGE).whenever(getSimilarByWorkUseCase).invoke(WORK_TYPE, WORK_ID, 1)
 
-            assertEquals(WORK_PAGE, useCase(WORK, COUNTRY_CODE).similar)
+            assertEquals(WORK_PAGE, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).similar)
         }
 
     @Test
     fun `should load details when only reviews succeed`() =
         runTest {
             stubFailedRequests()
-            doReturn(REVIEW_PAGE).whenever(getReviewByWorkUseCase).invoke(WORK.type, WORK.id, 1)
+            doReturn(REVIEW_PAGE).whenever(getReviewByWorkUseCase).invoke(WORK_TYPE, WORK_ID, 1)
 
-            assertEquals(REVIEW_PAGE, useCase(WORK, COUNTRY_CODE).reviews)
+            assertEquals(REVIEW_PAGE, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).reviews)
         }
 
     @Test
     fun `should load details when only watch providers succeed`() =
         runTest {
             stubFailedRequests()
-            doReturn(WATCH_PROVIDERS).whenever(getWatchProvidersUseCase).invoke(WORK.type, WORK.id, COUNTRY_CODE)
+            doReturn(WATCH_PROVIDERS).whenever(getWatchProvidersUseCase).invoke(WORK_TYPE, WORK_ID, COUNTRY_CODE)
 
-            assertEquals(WATCH_PROVIDERS, useCase(WORK, COUNTRY_CODE).watchProviders)
+            assertEquals(WATCH_PROVIDERS, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).watchProviders)
         }
 
     @Test
     fun `should load details when only watch providers succeed with null`() =
         runTest {
             stubFailedRequests()
-            doReturn(null).whenever(getWatchProvidersUseCase).invoke(WORK.type, WORK.id, COUNTRY_CODE)
+            doReturn(null).whenever(getWatchProvidersUseCase).invoke(WORK_TYPE, WORK_ID, COUNTRY_CODE)
 
-            assertEquals(null, useCase(WORK, COUNTRY_CODE).watchProviders)
+            assertEquals(null, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).watchProviders)
         }
 
     @Test
@@ -366,20 +367,20 @@ class GetWorkDetailsUseCaseTest {
         runTest {
             stubFailedRequests()
             val metadata = WorkMetadataDomainModel()
-            doReturn(metadata).whenever(getWorkMetadataUseCase).invoke(WORK.type, WORK.id)
+            doReturn(metadata).whenever(getWorkMetadataUseCase).invoke(WORK_TYPE, WORK_ID)
 
-            assertEquals(metadata, useCase(WORK, COUNTRY_CODE).metadata)
+            assertEquals(metadata, useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE).metadata)
         }
 
     @Test
     fun `should keep favorite status when the lookup throws cancellation`() =
         runTest {
             stubSuccessfulRequests()
-            whenever(checkFavoriteWorkUseCase(WORK)).thenThrow(CancellationException())
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenThrow(CancellationException())
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
-            assertEquals(WORK.isFavorite, result.isFavorite)
+            assertEquals(INITIAL_FAVORITE, result.isFavorite)
             assertEquals(VIDEO_LIST, result.videos)
         }
 
@@ -387,9 +388,9 @@ class GetWorkDetailsUseCaseTest {
     fun `should retain other details when credits throw cancellation`() =
         runTest {
             stubSuccessfulRequests()
-            whenever(getCastsUseCase(WORK.type, WORK.id)).thenThrow(CancellationException())
+            whenever(getCastsUseCase(WORK_TYPE, WORK_ID)).thenThrow(CancellationException())
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(null, result.casts)
             assertEquals(null, result.crew)
@@ -400,9 +401,9 @@ class GetWorkDetailsUseCaseTest {
     fun `should retain other details when watch providers throw cancellation`() =
         runTest {
             stubSuccessfulRequests()
-            whenever(getWatchProvidersUseCase(WORK.type, WORK.id, COUNTRY_CODE)).thenThrow(CancellationException())
+            whenever(getWatchProvidersUseCase(WORK_TYPE, WORK_ID, COUNTRY_CODE)).thenThrow(CancellationException())
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(null, result.watchProviders)
             assertEquals(VIDEO_LIST, result.videos)
@@ -412,9 +413,9 @@ class GetWorkDetailsUseCaseTest {
     fun `should retain other details when metadata throws cancellation`() =
         runTest {
             stubSuccessfulRequests()
-            whenever(getWorkMetadataUseCase(WORK.type, WORK.id)).thenThrow(CancellationException())
+            whenever(getWorkMetadataUseCase(WORK_TYPE, WORK_ID)).thenThrow(CancellationException())
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(null, result.metadata)
             assertEquals(VIDEO_LIST, result.videos)
@@ -424,46 +425,48 @@ class GetWorkDetailsUseCaseTest {
         videosException: RuntimeException = RuntimeException("Videos unavailable"),
         videosDelayMillis: Long = 0,
     ) {
-        whenever(checkFavoriteWorkUseCase(WORK)).thenThrow(RuntimeException("Favorites unavailable"))
-        whenever(getVideosUseCase(WORK.type, WORK.id)).doSuspendableAnswer {
+        whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenThrow(RuntimeException("Favorites unavailable"))
+        whenever(getVideosUseCase(WORK_TYPE, WORK_ID)).doSuspendableAnswer {
             delay(videosDelayMillis)
             throw videosException
         }
-        whenever(getCastsUseCase(WORK.type, WORK.id)).thenThrow(RuntimeException("Credits unavailable"))
-        whenever(getRecommendationByWorkUseCase(WORK.type, WORK.id, 1))
+        whenever(getCastsUseCase(WORK_TYPE, WORK_ID)).thenThrow(RuntimeException("Credits unavailable"))
+        whenever(getRecommendationByWorkUseCase(WORK_TYPE, WORK_ID, 1))
             .thenThrow(RuntimeException("Recommendations unavailable"))
-        whenever(getSimilarByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException("Similar works unavailable"))
-        whenever(getReviewByWorkUseCase(WORK.type, WORK.id, 1)).thenThrow(RuntimeException("Reviews unavailable"))
-        whenever(getWatchProvidersUseCase(WORK.type, WORK.id, COUNTRY_CODE))
+        whenever(getSimilarByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenThrow(RuntimeException("Similar works unavailable"))
+        whenever(getReviewByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenThrow(RuntimeException("Reviews unavailable"))
+        whenever(getWatchProvidersUseCase(WORK_TYPE, WORK_ID, COUNTRY_CODE))
             .thenThrow(RuntimeException("Watch providers unavailable"))
-        whenever(getWorkMetadataUseCase(WORK.type, WORK.id)).thenThrow(RuntimeException("Metadata unavailable"))
+        whenever(getWorkMetadataUseCase(WORK_TYPE, WORK_ID)).thenThrow(RuntimeException("Metadata unavailable"))
     }
 
     private suspend fun stubSuccessfulRequests() {
-        whenever(checkFavoriteWorkUseCase(WORK)).thenReturn(true)
-        whenever(getVideosUseCase(WORK.type, WORK.id)).thenReturn(VIDEO_LIST)
-        whenever(getCastsUseCase(WORK.type, WORK.id)).thenReturn(WORK_CREDITS)
-        whenever(getRecommendationByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(WORK_PAGE)
-        whenever(getSimilarByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(WORK_PAGE)
-        whenever(getReviewByWorkUseCase(WORK.type, WORK.id, 1)).thenReturn(REVIEW_PAGE)
-        whenever(getWatchProvidersUseCase(WORK.type, WORK.id, COUNTRY_CODE)).thenReturn(WATCH_PROVIDERS)
-        whenever(getWorkMetadataUseCase(WORK.type, WORK.id)).thenReturn(WorkMetadataDomainModel())
+        whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenReturn(true)
+        whenever(getVideosUseCase(WORK_TYPE, WORK_ID)).thenReturn(VIDEO_LIST)
+        whenever(getCastsUseCase(WORK_TYPE, WORK_ID)).thenReturn(WORK_CREDITS)
+        whenever(getRecommendationByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenReturn(WORK_PAGE)
+        whenever(getSimilarByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenReturn(WORK_PAGE)
+        whenever(getReviewByWorkUseCase(WORK_TYPE, WORK_ID, 1)).thenReturn(REVIEW_PAGE)
+        whenever(getWatchProvidersUseCase(WORK_TYPE, WORK_ID, COUNTRY_CODE)).thenReturn(WATCH_PROVIDERS)
+        whenever(getWorkMetadataUseCase(WORK_TYPE, WORK_ID)).thenReturn(WorkMetadataDomainModel())
     }
 
     @Test
     fun `should continue loading when metadata request fails`() =
         runTest {
-            whenever(checkFavoriteWorkUseCase(WORK)).thenReturn(true)
-            whenever(getVideosUseCase(WorkType.MOVIE, WORK.id)).thenReturn(VIDEO_LIST)
-            whenever(getCastsUseCase(WorkType.MOVIE, WORK.id)).thenReturn(WORK_CREDITS)
-            whenever(getRecommendationByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(WORK_PAGE)
-            whenever(getSimilarByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(WORK_PAGE)
-            whenever(getReviewByWorkUseCase(WorkType.MOVIE, WORK.id, 1)).thenReturn(REVIEW_PAGE)
-            whenever(getWatchProvidersUseCase(WorkType.MOVIE, WORK.id, COUNTRY_CODE)).thenReturn(WATCH_PROVIDERS)
-            whenever(getWorkMetadataUseCase(WorkType.MOVIE, WORK.id))
+            whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenReturn(true)
+            whenever(getVideosUseCase(WorkDomainModel.Type.MOVIE, WORK_ID)).thenReturn(VIDEO_LIST)
+            whenever(getCastsUseCase(WorkDomainModel.Type.MOVIE, WORK_ID)).thenReturn(WORK_CREDITS)
+            whenever(getRecommendationByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1)).thenReturn(WORK_PAGE)
+            whenever(getSimilarByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1)).thenReturn(WORK_PAGE)
+            whenever(getReviewByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1)).thenReturn(REVIEW_PAGE)
+            whenever(
+                getWatchProvidersUseCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE)
+            ).thenReturn(WATCH_PROVIDERS)
+            whenever(getWorkMetadataUseCase(WorkDomainModel.Type.MOVIE, WORK_ID))
                 .thenThrow(RuntimeException("Metadata unavailable"))
 
-            val result = useCase(WORK, COUNTRY_CODE)
+            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
 
             assertEquals(VIDEO_LIST, result.videos)
             assertEquals(WATCH_PROVIDERS, result.watchProviders)

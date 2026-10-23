@@ -14,10 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.mapper.toMovieDbModel
-import com.pimenta.bestv.model.presentation.mapper.toTvShowDbModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 import kotlinx.coroutines.test.runTest
@@ -25,101 +22,33 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.only
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-
-/**
- * Created by marcus on 2019-08-28.
- */
-private val MOVIE_VIEW_MODEL =
-    WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        originalLanguage = "en",
-        overview = "A superhero movie",
-        source = "tmdb",
-        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
-        posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
-        releaseDate = "Jan 01, 2023",
-        type = WorkType.MOVIE,
-        voteAverage = 8.0f,
-    )
-private val TV_SHOW_VIEW_MODEL =
-    WorkViewModel(
-        id = 1,
-        title = "Batman",
-        originalTitle = "Batman",
-        originalLanguage = "en",
-        overview = "A superhero TV show",
-        source = "tmdb",
-        backdropUrl = "https://image.tmdb.org/t/p/original/backdrop.jpg",
-        posterUrl = "https://image.tmdb.org/t/p/original/poster.jpg",
-        releaseDate = "Jan 01, 2023",
-        type = WorkType.TV_SHOW,
-        voteAverage = 8.0f,
-    )
 
 class SetFavoriteUseCaseTest {
     private val movieRepository: MovieRepository = mock()
     private val tvShowRepository: TvShowRepository = mock()
-
-    private val useCase =
-        SetFavoriteUseCase(
-            movieRepository,
-            tvShowRepository,
-        )
+    private val useCase = SetFavoriteUseCase(movieRepository, tvShowRepository)
 
     @Test
-    fun `should save a movie as favorite is it is not favorite`() =
-        runTest {
-            val dbModel = MOVIE_VIEW_MODEL.toMovieDbModel()
-
-            whenever(movieRepository.saveFavoriteMovie(dbModel))
-                .thenReturn(Unit)
-
-            useCase(MOVIE_VIEW_MODEL)
-
-            verify(movieRepository, only()).saveFavoriteMovie(dbModel)
-        }
+    fun `sets movie favorite to requested state`() = runTest {
+        useCase(1, WorkDomainModel.Type.MOVIE, true)
+        verify(movieRepository, only()).saveFavoriteMovie(1)
+    }
 
     @Test
-    fun `should delete a movie as favorite is it is favorite`() =
-        runTest {
-            val movieViewModel = MOVIE_VIEW_MODEL.copy(isFavorite = true)
-            val dbModel = movieViewModel.toMovieDbModel()
-
-            whenever(movieRepository.deleteFavoriteMovie(dbModel))
-                .thenReturn(Unit)
-
-            useCase(movieViewModel)
-
-            verify(movieRepository, only()).deleteFavoriteMovie(dbModel)
-        }
+    fun `clears movie favorite when requested`() = runTest {
+        useCase(1, WorkDomainModel.Type.MOVIE, false)
+        verify(movieRepository, only()).deleteFavoriteMovie(1)
+    }
 
     @Test
-    fun `should save a tv show as favorite is it is not favorite`() =
-        runTest {
-            val dbModel = TV_SHOW_VIEW_MODEL.toTvShowDbModel()
-
-            whenever(tvShowRepository.saveFavoriteTvShow(dbModel))
-                .thenReturn(Unit)
-
-            useCase(TV_SHOW_VIEW_MODEL)
-
-            verify(tvShowRepository, only()).saveFavoriteTvShow(dbModel)
-        }
+    fun `sets tv show favorite to requested state`() = runTest {
+        useCase(1, WorkDomainModel.Type.TV_SHOW, true)
+        verify(tvShowRepository, only()).saveFavoriteTvShow(1)
+    }
 
     @Test
-    fun `should delete a tv show as favorite is it is favorite`() =
-        runTest {
-            val tvShowViewModel = TV_SHOW_VIEW_MODEL.copy(isFavorite = true)
-            val dbModel = tvShowViewModel.toTvShowDbModel()
-
-            whenever(tvShowRepository.deleteFavoriteTvShow(dbModel))
-                .thenReturn(Unit)
-
-            useCase(tvShowViewModel)
-
-            verify(tvShowRepository, only()).deleteFavoriteTvShow(dbModel)
-        }
+    fun `clears tv show favorite when requested`() = runTest {
+        useCase(1, WorkDomainModel.Type.TV_SHOW, false)
+        verify(tvShowRepository, only()).deleteFavoriteTvShow(1)
+    }
 }

@@ -1,493 +1,167 @@
-# Clean Architecture
+# Clean Architecture in BESTV
 
-This document describes the Clean Architecture implementation used in the BESTV project.
+This guide describes the architecture implemented by the current BESTV packages. The project keeps its existing Gradle modules and organizes feature code into `presentation`, `domain`, `data`, `platform`, and `di` packages.
 
-## Overview
+![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
-Clean Architecture is a software design philosophy that separates the elements of a design into ring levels. The main rule of Clean Architecture is the Dependency Rule: source code dependencies can only point inwards. Nothing in an inner circle can know anything about something in an outer circle.
+## Dependency rule
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Presentation Layer                        │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │  Activities │  │  ViewModels │  │  Compose UI (Screens)   │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                         Domain Layer                             │
-│  ┌─────────────────────────┐  ┌───────────────────────────────┐ │
-│  │       Use Cases         │  │       Domain Models           │ │
-│  │  (Business Logic)       │  │   (Pure Kotlin classes)       │ │
-│  └─────────────────────────┘  └───────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                          Data Layer                              │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │ Repositories│  │ DataSources │  │    Data Models          │  │
-│  │             │  │ (Remote/    │  │ (Response/DbModel)      │  │
-│  │             │  │  Local)     │  │                         │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-```
+Source dependencies point inward toward domain policy:
 
-## Layer Responsibilities
+- **Presentation depends on domain.** ViewModels invoke use cases and map domain values into presentation state.
+- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Retrofit, Room, and `data_shared`.
+- **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, Room, Retrofit, WorkManager, or UI models.
+- **Platform adapters depend inward on domain contracts.** They wrap Android services and implement domain output ports where appropriate.
+- **Dependency injection is the composition edge.** App and feature Koin modules know the concrete types and connect interfaces to implementations.
 
-### Presentation Layer
+The dependency arrows describe compile-time references. At runtime, a use case calls a domain repository interface; the injected data or platform implementation performs the operation and returns domain values.
 
-The outermost layer responsible for UI and user interaction.
+## Feature package layout
 
-**Components:**
-- **Activities**: Entry points that host Compose screens
-- **ViewModels**: Manage UI state using MVI pattern ([see MVI documentation](MVI_ARCHITECTURE.md))
-- **Compose Screens**: Declarative UI components
-- **Presentation Models**: UI-specific data models (ViewModels like `WorkViewModel`, `CastViewModel`)
+Feature folders follow this shape; individual features include only the packages they need:
 
-**Location:** `feature_*/src/main/java/.../presentation/`
-
-### Domain Layer
-
-The innermost layer containing business logic. This layer is independent of any framework.
-
-**Components:**
-- **Use Cases**: Single-responsibility classes that encapsulate business logic
-- **Domain Models**: Pure Kotlin data classes representing business entities
-- **Repository contracts**: Feature-owned interfaces that describe the data operations use cases need; implementations live in the data layer
-
-**Location:** `feature_*/src/main/java/.../domain/`
-
-### Data Layer
-
-Responsible for data operations from various sources (network, database, cache).
-
-**Components:**
-- **Repositories**: Coordinate data from multiple sources
-- **Data Sources**: Abstract data retrieval (Remote/Local)
-- **Data Models**: Source-specific models (Response, DbModel)
-- **Mappers**: Transform data between layers
-
-**Location:** `feature_*/src/main/java/.../data/`
-
-## Project Structure
-
-### Feature Module Structure
-
-Each feature module follows a consistent structure:
-
-```
+```text
 feature_search/
-├── data/
-│   ├── remote/
-│   │   ├── api/
-│   │   │   └── SearchMovieTmdbApi.kt      # Retrofit API interface
-│   │   └── datasource/
-│   │       └── MovieRemoteDataSource.kt   # Remote data operations
-│   └── repository/
-│       └── MovieRepository.kt             # Data coordination
-├── domain/
-│   ├── SearchMoviesByQueryUseCase.kt      # Business logic
-│   ├── SearchTvShowsByQueryUseCase.kt
-│   └── SearchWorksByQueryUseCase.kt
 ├── presentation/
-│   ├── model/
-│   │   ├── SearchState.kt                 # UI State
-│   │   ├── SearchEvent.kt                 # User intents
-│   │   └── SearchEffect.kt                # Side effects
+│   ├── model/                 # Screen state, events, and effects
 │   ├── viewmodel/
-│   │   └── SearchViewModel.kt             # State management
-│   └── ui/
-│       ├── activity/
-│       │   └── SearchActivity.kt          # Entry point
-│       └── compose/
-│           └── SearchScreen.kt            # Composable UI
-└── di/
-    └── SearchModule.kt                    # Koin DI module
-```
-
-### Shared Modules
-
-```
-model_shared/
-├── data/
-│   ├── local/
-│   │   ├── MovieDbModel.kt               # Room entity
-│   │   └── TvShowDbModel.kt
-│   ├── remote/
-│   │   ├── MovieResponse.kt              # API response model
-│   │   ├── TvShowResponse.kt
-│   │   ├── WorkResponse.kt               # Base response
-│   │   └── PageResponse.kt
-│   └── mapper/
-│       ├── WorkResponseMapper.kt         # Response → Domain
-│       └── PageResponseMapper.kt
+│   └── ui/                    # Activities and Compose screens
 ├── domain/
-│   ├── WorkDomainModel.kt                # Domain entity
-│   ├── CastDomainModel.kt
-│   └── PageDomainModel.kt
-└── presentation/
-    ├── model/
-    │   ├── WorkViewModel.kt              # Presentation model
-    │   ├── CastViewModel.kt
-    │   └── PageViewModel.kt
-    └── mapper/
-        ├── WorkViewModelMapper.kt        # Domain → Presentation
-        └── CastViewModelMapper.kt
+│   ├── *UseCase.kt
+│   └── repository/            # Interfaces owned by domain
+├── data/
+│   ├── remote/api/
+│   ├── remote/datasource/
+│   └── repository/            # Implements domain interfaces
+└── di/                        # Koin composition for this feature
+```
+
+Recommendation also has a `platform/` package for its boot receiver, WorkManager worker and scheduler, and Android TV providers. Keep platform-specific implementations at this outer edge rather than in domain.
+
+## Shared packages and models
+
+BESTV currently keeps shared types in existing Gradle modules:
+
+```text
+model_shared/
+├── data/                      # API response and Room persistence models
+├── domain/                    # WorkDomainModel, CastDomainModel, PageDomainModel,
+│                              # ContentSource, and domain helpers
+└── presentation/model/        # WorkViewModel, CastViewModel, PageViewModel, WorkType
 
 data_shared/
-├── local/
-│   ├── database/
-│   │   └── MediaDb.kt                    # Room database
-│   ├── dao/
-│   │   ├── MovieDao.kt
-│   │   └── TvShowDao.kt
-│   └── datasource/
-│       ├── MovieLocalDataSource.kt
-│       └── TvShowLocalDataSource.kt
-└── di/
-    ├── NetworkModule.kt                  # Retrofit setup
-    └── DatabaseModule.kt                 # Room setup
+└── local/                     # Room database, DAOs, and local data sources
+
+presentation_shared/
+└── presentation/
+    ├── mapper/                # Shared domain-to-UI mappers
+    ├── platform/              # Resource and other presentation services
+    └── ui/                    # Shared Compose UI
 ```
 
-## Data Flow
+`model_shared` contains types from several layers because the project is not adding Gradle modules for this refactor. Imports still follow the package boundaries, and `verifyArchitecture` checks selected prohibited imports. This gives useful source-level protection, while Gradle does not enforce those subpackages as independent compile-time modules.
 
-### Search Example Flow
+## Mapping rules
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                           USER ACTION                                     │
-│                    User types "Batman" in search                          │
-└────────────────────────────────┬─────────────────────────────────────────┘
-                                 │
-                                 ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                         PRESENTATION LAYER                                │
-│                                                                          │
-│  SearchScreen.kt                    SearchViewModel.kt                   │
-│  ┌─────────────────┐               ┌─────────────────────────────────┐  │
-│  │ onQueryChange() │──Event───────▶│ handleEvent(SearchQueryChanged) │  │
-│  └─────────────────┘               │         │                       │  │
-│                                    │         ▼                       │  │
-│                                    │ searchWorksByQueryUseCase()     │  │
-│                                    └─────────────────────────────────┘  │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                           DOMAIN LAYER                                    │
-│                                                                          │
-│  SearchWorksByQueryUseCase.kt                                            │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │ suspend operator fun invoke(query: String) = coroutineScope {     │  │
-│  │     val movies = async { searchMoviesByQueryUseCase(query, 1) }   │  │
-│  │     val tvShows = async { searchTvShowsByQueryUseCase(query, 1) } │  │
-│  │     awaitAll(movies, tvShows)                                     │  │
-│  │ }                                                                 │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-│                          │                                               │
-│                          ▼                                               │
-│  SearchMoviesByQueryUseCase.kt                                          │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │ suspend operator fun invoke(query, page) =                        │  │
-│  │     movieRepository.searchMoviesByQuery(query, page)              │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                            DATA LAYER                                     │
-│                                                                          │
-│  MovieRepository.kt                                                      │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │ suspend fun searchMoviesByQuery(query, page) =                    │  │
-│  │     movieRemoteDataSource.searchMoviesByQuery(query, page)        │  │
-│  │         .toDomainModel(source)  // Mapper: Response → Domain      │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-│                          │                                               │
-│                          ▼                                               │
-│  MovieRemoteDataSource.kt                                               │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │ suspend fun searchMoviesByQuery(query, page) =                    │  │
-│  │     searchMovieTmdbApi.searchMoviesByQuery(apiKey, query, ...)    │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-│                          │                                               │
-│                          ▼                                               │
-│  SearchMovieTmdbApi.kt (Retrofit)                                       │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │ @GET("search/movie")                                              │  │
-│  │ suspend fun searchMoviesByQuery(...): PageResponse<MovieResponse> │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-                                     ▼
-                              TMDb REST API
-```
+### API and persistence models to domain
 
-## Model Types
-
-### Data Models
-
-**Remote (API Response)**
-```kotlin
-// model_shared/.../data/remote/MovieResponse.kt
-data class MovieResponse(
-    @SerializedName("title") override var title: String? = null,
-    @SerializedName("original_title") override var originalTitle: String? = null,
-    @SerializedName("release_date") var releaseDateString: String? = null
-) : WorkResponse()
-```
-
-**Local (Room Entity)**
-```kotlin
-// model_shared/.../data/local/MovieDbModel.kt
-@Entity(tableName = "movie")
-data class MovieDbModel(
-    @PrimaryKey val id: Int = 0
-)
-```
-
-### Domain Models
+Data mappers return resource-free domain values. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `presentation_shared`.
 
 ```kotlin
-// model_shared/.../domain/WorkDomainModel.kt
-data class WorkDomainModel(
-    val id: Int = 0,
-    val title: String? = null,
-    val originalTitle: String? = null,
-    val releaseDate: String? = null,
-    val overview: String? = null,
-    val type: Type = Type.MOVIE,
-    var isFavorite: Boolean = false
-) {
-    enum class Type { TV_SHOW, MOVIE }
-}
-```
-
-### Presentation Models
-
-```kotlin
-// model_shared/.../presentation/model/WorkViewModel.kt
-@Parcelize
-data class WorkViewModel(
-    val id: Int,
-    val title: String,
-    val overview: String,
-    val posterUrl: String,
-    val releaseDate: String,
-    val type: WorkType,
-    val isFavorite: Boolean = false,
-) : Parcelable
-```
-
-## Mappers
-
-Mappers transform data between layers using extension functions:
-
-### Response → Domain
-
-```kotlin
-// model_shared/.../data/mapper/WorkResponseMapper.kt
-fun WorkResponse.toDomainModel(source: String) = WorkDomainModel(
+// model_shared/data/mapper/WorkResponseMapper.kt
+fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
     id = id,
-    title = title,
-    originalTitle = originalTitle,
-    releaseDate = releaseDate,
-    overview = overview,
-    source = source,
-    type = WorkDomainModel.Type.TV_SHOW.takeIf { this is TvShowResponse }
-        ?: WorkDomainModel.Type.MOVIE
+    source = ContentSource.TMDB,
+    // Map API fields and determine the domain work type.
 )
 ```
 
-### Domain → Presentation
+Repository implementations call these mappers after fetching API responses. Local data sources encapsulate DAOs and Room entities.
+
+### Domain values to UI models
+
+Shared UI mappers live in `presentation_shared` and accept `Resource` when the mapping needs a localized label. The mapper resolves `ContentSource.TMDB` to the existing “TMDb” string. Feature-specific UI mappings stay in that feature's `presentation/mapper` package.
 
 ```kotlin
-// model_shared/.../presentation/mapper/WorkViewModelMapper.kt
-fun WorkDomainModel.toViewModel(): WorkViewModel? {
-    // Validate required fields
-    if (title == null || overview == null) return null
-
-    return WorkViewModel(
-        id = id,
-        title = title,
-        overview = overview,
-        posterUrl = String.format(BASE_URL, posterPath),
-        releaseDate = formatDate(releaseDate),
-        type = WorkType.TV_SHOW.takeIf { type == Type.TV_SHOW } ?: WorkType.MOVIE,
-        isFavorite = isFavorite,
-    )
-}
+// presentation_shared/presentation/mapper/WorkViewModelMapper.kt
+fun WorkDomainModel.toViewModel(resource: Resource): WorkViewModel?
 ```
 
-### Presentation → Local
+Do not put UI-to-Room mappers in presentation. For Work Details favorites, the domain operation receives a work ID, `WorkDomainModel.Type`, and desired favorite state. The data repository creates `MovieDbModel` or `TvShowDbModel` inside the data boundary.
 
-```kotlin
-// model_shared/.../presentation/mapper/WorkViewModelMapper.kt
-fun WorkViewModel.toMovieDbModel() = MovieDbModel(id = id)
-fun WorkViewModel.toTvShowDbModel() = TvShowDbModel(id = id)
+## Repository ports and dependency injection
+
+Each feature owns repository interfaces under `domain/repository`. Use cases depend on those interfaces, not on implementation classes. The feature's Koin module binds the port to the data implementation:
+
+```text
+feature_search/domain/repository/MovieRepository
+                 ▲
+                 │ implemented by
+feature_search/data/repository/MovieRepository
 ```
 
-## Use Cases
+Koin modules may import domain, data, presentation, and platform types because they compose the application. Keep these cross-package references in `di` rather than moving them into domain or presentation business code.
 
-Use Cases encapsulate single business operations:
+Most features bind their domain repository ports to repositories in `data`. Recommendation has two different ports:
 
-### Simple Use Case
+- Its movie input port is implemented in `data`.
+- Its recommendation output port is implemented directly by an Android TV provider in `platform`.
 
-```kotlin
-// feature_search/.../domain/SearchMoviesByQueryUseCase.kt
-import com.pimenta.bestv.search.domain.repository.MovieRepository
+The Work Details, Browse, Search, and Cast Details modules follow the regular domain-port-to-data-repository pattern. See [KOIN_DI.md](KOIN_DI.md) for module registration and binding details.
 
-class SearchMoviesByQueryUseCase(
-    private val movieRepository: MovieRepository
-) {
-    suspend operator fun invoke(query: String, page: Int) =
-        movieRepository.searchMoviesByQuery(query, page)
-}
+## Example request flow
+
+Search illustrates the runtime flow and the compile-time boundaries:
+
+```text
+Search Compose UI
+    → SearchViewModel
+    → Search use case
+    → domain MovieRepository interface
+    → data MovieRepository implementation
+    → remote data source / Retrofit API
+    → TMDb
+
+TMDb response
+    → data mapper
+    → WorkDomainModel / PageDomainModel
+    → SearchViewModel
+    → presentation_shared mapper + Resource
+    → UI state and screen
 ```
 
-### Composite Use Case
+The arrows in this request flow show calls and returned data. They do not mean that domain imports data: the use case calls an interface declared in domain, and Koin supplies the concrete implementation at runtime.
 
-```kotlin
-// feature_search/.../domain/SearchWorksByQueryUseCase.kt
-class SearchWorksByQueryUseCase(
-    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase,
-    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase
-) {
-    suspend operator fun invoke(query: String) = coroutineScope {
-        val movies = asyncCatching { searchMoviesByQueryUseCase(query, 1) }
-        val tvShows = asyncCatching { searchTvShowsByQueryUseCase(query, 1) }
-        val results = awaitAll(movies, tvShows)
-        if (results.all { it.isFailure }) {
-            results.first().getOrThrow()
-        }
-        val (movieResult, tvShowResult) = results
-        movieResult.getOrElse { emptyPage() } to tvShowResult.getOrElse { emptyPage() }
-    }
-}
+## Recommendation platform work
+
+The boot receiver calls `RecommendationScheduler` in `platform`. The scheduler enqueues a unique hourly periodic request with `ExistingPeriodicWorkPolicy.KEEP`, so repeated boot broadcasts retain an existing schedule. During migration it cancels requests carrying the legacy `RECOMMENDATION` tag; the new request does not use that tag.
+
+`RecommendationWorker` invokes the domain use case. It propagates coroutine cancellation, retries recoverable I/O errors and HTTP 429/5xx responses, and returns failure for other errors. The TV provider updates a saved preview program using its stored program ID and inserts a replacement when that ID is stale.
+
+## Architecture checks
+
+Run the root Gradle task:
+
+```shell
+./gradlew verifyArchitecture
 ```
 
-Search queries stay unchanged through the use cases and repositories. Retrofit's `@Query` parameters handle URL encoding at the API boundary for both initial searches and pagination.
+`:app:preBuild` depends on this task. It scans production Kotlin imports and currently rejects:
 
-## Repository Contracts and Implementations
+- Domain imports from data, presentation, Android/AndroidX, Retrofit, or Koin.
+- Data imports from presentation.
+- Persistence imports from `model_shared/presentation`.
+- Direct imports from another feature package.
 
-BESTV keeps each repository port in its feature's `domain/repository` package. The concrete implementation remains under `data/repository` and implements that port. For example, Search has `search.domain.repository.MovieRepository` and `search.data.repository.MovieRepository`; a use case only imports the former. This lets domain tests replace external I/O with a mock of the contract.
+Platform adapters and feature DI are allowed to form the composition edge. The check is a source import guard, not a substitute for Gradle module boundaries or code review; keep presentation free of data imports as well, even though a separate presentation-to-data rule is not currently enforced by this task.
 
-The same pattern is applied to the current ports in Work Browse (movie, TV show, and genre), Work Details (movie and TV show), Search (movie and TV show), Cast Details (cast), and Recommendation (movie and recommendation). Koin explicitly binds each domain interface to the corresponding data repository; see [KOIN_DI.md](KOIN_DI.md).
+## Practices for new code
 
-### Browse section mapping
-
-Browse's domain layer returns `BrowseSectionDetails`, whose sections contain a resource-free `BrowseCategoryKey`, `GenreDomainModel`, and `PageDomainModel<WorkDomainModel>`. `GenreDomainModel.Source` selects movie or TV genre retrieval. The domain use case preserves the screen's category order and omits sections with no results.
-
-`BrowseSectionViewModelMapper` in presentation converts those results to `ContentSection`, `WorkViewModel`, `GenreViewModel`, and `PaginationState`. It also maps category keys to `TopWorkTypeViewModel`, where Android string resource identifiers are kept. `WorkBrowseViewModel` applies this mapper to initial section data and to refreshed favorites before updating screen state. Keep Android resources and presentation models out of Browse domain code.
-
-### Current boundary notes
-
-These contracts describe the targeted repository boundaries in the current source. They do not mean every existing feature domain package is fully framework- or presentation-independent: for example, some Work Details use cases still consume shared presentation models. Treat such cases as separate cleanup work and check the actual imports before extending this pattern.
-
-## Repositories
-
-Repositories coordinate data from multiple sources:
-
-```kotlin
-// feature_search/.../data/repository/MovieRepository.kt
-class MovieRepository(
-    private val resource: Resource,
-    private val movieRemoteDataSource: MovieRemoteDataSource
-) {
-    suspend fun searchMoviesByQuery(query: String, page: Int) =
-        movieRemoteDataSource.searchMoviesByQuery(query, page).run {
-            val source = resource.getStringResource(R.string.source_tmdb)
-            toDomainModel(source)  // Transform to domain model
-        }
-}
-```
-
-## Data Sources
-
-### Remote Data Source
-
-```kotlin
-// feature_search/.../data/remote/datasource/MovieRemoteDataSource.kt
-class MovieRemoteDataSource(
-    private val tmdbApiKey: String,
-    private val tmdbFilterLanguage: String,
-    private val searchMovieTmdbApi: SearchMovieTmdbApi
-) {
-    suspend fun searchMoviesByQuery(query: String, page: Int) =
-        searchMovieTmdbApi.searchMoviesByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
-}
-```
-
-### Local Data Source
-
-```kotlin
-// data_shared/.../local/datasource/MovieLocalDataSource.kt
-class MovieLocalDataSource(
-    private val movieDao: MovieDao
-) {
-    suspend fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
-        movieDao.create(movieDbModel)
-
-    suspend fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
-        movieDao.delete(movieDbModel)
-
-    suspend fun getMovies() = movieDao.getAll()
-
-    suspend fun getById(movieDbModel: MovieDbModel) =
-        movieDao.getById(movieDbModel.id)
-}
-```
-
-## Best Practices
-
-### 1. Dependency Rule
-
-- Inner layers should not know about outer layers
-- Domain layer has no Android dependencies
-- Data layer depends only on Domain layer
-- Presentation layer can depend on both Domain and Data layers
-
-### 2. Use Cases
-
-- One use case per business operation
-- Use `operator fun invoke()` for clean syntax
-- Compose use cases for complex operations
-- Keep use cases focused and testable
-
-### 3. Mappers
-
-- Use extension functions for clean mapping
-- Place mappers in the target layer's package
-- Handle null safety in mappers
-- Validate data during transformation
-
-### 4. Repositories
-
-- Abstract data source implementation details
-- Coordinate between multiple data sources
-- Transform data to domain models
-- Handle caching strategies here
-
-### 5. Data Sources
-
-- One responsibility per data source
-- Remote: API calls only
-- Local: Database operations only
-- Keep framework-specific code here
-
-## Testing
-
-Each layer can be tested independently:
-
-- **Use Cases**: Unit tests with mocked repositories
-- **Repositories**: Unit tests with mocked data sources
-- **Data Sources**: Integration tests with mock servers/databases
-- **ViewModels**: Unit tests with mocked use cases and Turbine for Flow testing
-
-## References
-
-- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Android Clean Architecture Guide](https://developer.android.com/topic/architecture)
-- [Why you need Use Cases/Interactors](https://proandroiddev.com/why-you-need-use-cases-interactors-142e8a6fe576)
+- Define a domain repository interface when a use case needs an external capability; implement it in data or a platform adapter.
+- Keep domain models independent of API, database, Android resource, and UI types.
+- Map API and persistence types into domain in the outer data layer.
+- Map domain values into screen-specific models in presentation.
+- Express commands as requested outcomes where practical, such as setting a favorite state to `true` or `false`.
+- Keep framework scheduling, receivers, providers, and service APIs in platform adapters.
+- Wire implementations in Koin modules at the composition edge.
+- Add or update tests at the layer whose behavior changed, including repository bindings and adapter behavior where relevant.

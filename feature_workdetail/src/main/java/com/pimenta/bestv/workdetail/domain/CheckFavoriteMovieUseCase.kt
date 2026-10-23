@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 
 /**
@@ -23,5 +22,5 @@ import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 class CheckFavoriteMovieUseCase(
     private val movieRepository: MovieRepository,
 ) {
-    suspend operator fun invoke(movieDbModel: MovieDbModel) = movieRepository.isFavoriteMove(movieDbModel)
+    suspend operator fun invoke(movieId: Int) = movieRepository.isFavoriteMovie(movieId)
 }

@@ -18,8 +18,8 @@ import com.pimenta.bestv.model.data.remote.PageResponse
 import com.pimenta.bestv.model.data.remote.WorkResponse
 import com.pimenta.bestv.model.domain.PageDomainModel
 
-fun <T : WorkResponse> PageResponse<T>.toDomainModel(source: String) = PageDomainModel(
+fun <T : WorkResponse> PageResponse<T>.toDomainModel() = PageDomainModel(
     page = page,
     totalPages = totalPages,
-    results = results?.map { it.toDomainModel(source) }
+    results = results?.map { it.toDomainModel() }
 )

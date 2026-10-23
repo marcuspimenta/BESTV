@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import kotlinx.coroutines.test.runTest
@@ -57,7 +57,7 @@ class GetWatchProvidersUseCaseTest {
             whenever(getWatchProvidersByMovieUseCase(WORK_ID, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
 
-            val result = useCase(WorkType.MOVIE, WORK_ID, COUNTRY_CODE)
+            val result = useCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE)
 
             assertEquals(WATCH_PROVIDERS, result)
         }
@@ -70,7 +70,7 @@ class GetWatchProvidersUseCaseTest {
                 .thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.MOVIE, WORK_ID, COUNTRY_CODE)
+                useCase(WorkDomainModel.Type.MOVIE, WORK_ID, COUNTRY_CODE)
             }
         }
 
@@ -80,7 +80,7 @@ class GetWatchProvidersUseCaseTest {
             whenever(getWatchProvidersByTvShowUseCase(WORK_ID, COUNTRY_CODE))
                 .thenReturn(WATCH_PROVIDERS)
 
-            val result = useCase(WorkType.TV_SHOW, WORK_ID, COUNTRY_CODE)
+            val result = useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID, COUNTRY_CODE)
 
             assertEquals(WATCH_PROVIDERS, result)
         }
@@ -93,7 +93,7 @@ class GetWatchProvidersUseCaseTest {
                 .thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.TV_SHOW, WORK_ID, COUNTRY_CODE)
+                useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID, COUNTRY_CODE)
             }
         }
 }

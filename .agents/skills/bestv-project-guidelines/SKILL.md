@@ -20,9 +20,9 @@ Repository paths below are relative to the root. Read the relevant parts of [REA
 | `feature_search` | Search queries, results, and pagination. |
 | `feature_workdetail`, `feature_castdetail` | Work details/favorites and cast details/credits, respectively. |
 | `feature_recommendation` | TV home recommendations, boot handling, background work, and platform provider integration. |
-| `model_shared` | Shared response/database, domain, and presentation models plus mappers, separated by packages. This is not a domain-only module. |
+| `model_shared` | Shared API/persistence, domain, and presentation models plus data mappers, separated by packages. This is not a domain-only module; package boundaries are not independent Gradle boundaries. |
 | `data_shared` | Retrofit/OkHttp configuration and Room database, DAOs, and local data sources. |
-| `presentation_shared` | `BaseViewModel`, theme, TV/mobile components, image loading, pagination state, and presentation platform abstractions. |
+| `presentation_shared` | Shared domain-to-UI mappers, `Resource`, `BaseViewModel`, theme, TV/mobile components, image loading, pagination state, and presentation platform abstractions. |
 | `route_shared` | Activity intent builders, argument readers, deep-link contracts/resources, and route DI. |
 
 The app depends on the features and shared modules. Features depend on the shared modules they use; there are no direct feature-to-feature Gradle dependencies. `data_shared`, `presentation_shared`, and `route_shared` each depend on `model_shared`. Preserve this direction and route between features through shared contracts. Layers currently live in packages inside feature modules; a new operation does not require new Gradle modules.
@@ -34,21 +34,23 @@ Use packages under `com.pimenta.bestv.<feature>`:
 - `data/remote/api`, `data/remote/datasource`, `data/repository`, and feature-specific data models/mappers as needed.
 - `domain` for use cases, `domain/model` for feature-owned values, and `domain/repository` for repository interfaces.
 - `presentation/model`, `presentation/mapper`, `presentation/viewmodel`, and `presentation/ui/{activity,compose}`.
+- `platform` for Android workers, receivers, schedulers, and providers when a feature integrates with platform services.
 - `di` for the feature's Koin registrations.
 
-Keep the flow explicit: UI event → ViewModel → use case → domain repository interface → data implementation → data source. Map source models to domain values in data and domain values to renderable models in presentation. Use cases typically expose `suspend operator fun invoke(...)`; inject collaborators through constructors. Keep new domain contracts free of Android resources, UI models, Retrofit responses, and Room entities.
+Keep dependencies pointed inward: presentation uses domain; data implements domain-owned repository interfaces and may use infrastructure such as Retrofit, Room, and `data_shared`; domain imports neither presentation nor data. Koin in `di` is the composition edge. Keep the runtime flow explicit: UI event → ViewModel → use case → domain repository interface → injected data/platform implementation → source adapter. Map API/persistence models to domain values in data and domain values to renderable models in presentation. Shared work, cast, and page UI mappers are in `presentation_shared/presentation/mapper`; source mappers assign resource-free `ContentSource.TMDB`, and presentation resolves its “TMDb” label through `Resource`. Use cases typically expose `suspend operator fun invoke(...)`; inject collaborators through constructors. Keep domain contracts free of Android resources, UI models, Retrofit responses, and Room entities.
 
 Follow [SearchMoviesByQueryUseCase](../../../feature_search/src/main/java/com/pimenta/bestv/search/domain/SearchMoviesByQueryUseCase.kt) and its [domain repository](../../../feature_search/src/main/java/com/pimenta/bestv/search/domain/repository/MovieRepository.kt) for the interface boundary. For resource-free section models and presentation mapping, inspect [BrowseSectionViewModelMapper](../../../feature_workbrowse/src/main/java/com/pimenta/bestv/workbrowse/presentation/mapper/BrowseSectionViewModelMapper.kt) and its domain inputs.
 
 Keep raw search text unchanged through use cases and repositories; Retrofit `@Query` handles transport encoding. Room access goes through the local data sources/DAOs in `data_shared`. Preserve cancellation and define partial-failure, pagination, and repeated-write behavior where those operations change; consult [data operations and persistence](../android-feature-architecture/references/data-operations-and-persistence.md) for those cases.
 
-Existing exceptions need care: some Work Details use cases accept `WorkViewModel` and use UI-to-database mappers; some repositories resolve presentation resources; `ScheduleRecommendationUseCase` directly uses WorkManager. These are existing boundary leaks, not templates for new domain code. Avoid broad cleanup outside the task, and use domain values and outer-layer adapters for new boundaries. Read [background work and platform adapters](../android-feature-architecture/references/background-work-and-platform-adapters.md) when changing recommendations, workers, or receivers.
+Work Details favorite operations use an ID, `WorkDomainModel.Type`, and desired favorite state; data repositories create Room entities. Recommendation workers, the boot receiver, scheduler, and TV providers are under `feature_recommendation/platform`. The scheduler owns the unique hourly WorkManager request and legacy-tag cleanup. The recommendation provider implements the domain output port directly; its Koin binding is in the feature composition module. Read [background work and platform adapters](../android-feature-architecture/references/background-work-and-platform-adapters.md) when changing recommendations, workers, or receivers.
 
 ## Naming and Kotlin conventions
 
 - Modules use `feature_<capability>` and `<responsibility>_shared`; packages use lowercase feature names such as `workbrowse` and `workdetail`.
 - Keep the established suffixes: `*Response`, `*DbModel`, `*DomainModel`, `*RemoteDataSource`, `*LocalDataSource`, and `*UseCase`. TMDb Retrofit interfaces use `*TmdbApi`.
 - BESTV already uses `WorkViewModel`, `CastViewModel`, and `PageViewModel` for presentation data in `model_shared/.../presentation/model`. Screen state holders such as `SearchViewModel` live in feature `presentation/viewmodel` packages. Preserve this distinction and neighboring naming rather than mechanically renaming existing models to `UiModel`.
+- Shared work/cast/page UI mappers are in `presentation_shared/.../presentation/mapper`; keep `model_shared/presentation` for presentation model types and image URL helpers, not persistence conversion.
 - Domain interfaces and data implementations can share names such as `MovieRepository`; use explicit import aliases when both occur together, as the feature DI modules do.
 - Mappers are usually top-level extensions such as `toDomainModel()` and `toViewModel()`, grouped in `*Mapper.kt` files. Match the existing direction and package ownership.
 - Keep `<Feature>State`, `<Feature>Event`, and `<Feature>Effect` parallel. Use `<Feature>WrapperScreen`, `TV<Feature>Screen`, and `Mobile<Feature>Screen` where the feature has separate TV/mobile rendering. DI values use lower camel case, such as `searchModule`, in `SearchModule.kt`.
@@ -66,7 +68,7 @@ Use components and themes from `presentation_shared`. Preserve remote focus, sel
 
 Navigation uses routes in `route_shared`, not imports of another feature's Activity. [WorkDetailsRoute](../../../route_shared/src/main/java/com/pimenta/bestv/route/workdetail/WorkDetailsRoute.kt), for example, builds a package-scoped `ACTION_VIEW` intent for `bestv://workdetail/` with a parcelable argument. Keep the route URI, shared resources, argument builder/reader, and destination manifest filter consistent. Validate destination arguments and pass required ViewModel parameters through the existing Koin parameter mechanism.
 
-`BesTVApplication` starts Koin with [appModule](../../../app/src/main/java/com/pimenta/bestv/application/di/AppModule.kt), which includes the shared and feature modules. Extend the owning feature module and include any new module at this composition root. Follow [SearchModule](../../../feature_search/src/main/java/com/pimenta/bestv/search/di/SearchModule.kt): `single` for shared infrastructure/APIs, `factory`/`factoryOf` for repositories, data sources, and use cases, and `viewModel`/`viewModelOf` for lifecycle ViewModels. Bind each domain repository interface explicitly to its data implementation. Preserve qualifiers such as `tmdbApiKey` and `tmdbFilterLanguage`; constructor injection is the default outside platform entry points.
+`BesTVApplication` starts Koin with [appModule](../../../app/src/main/java/com/pimenta/bestv/application/di/AppModule.kt), which includes the shared and feature modules. Extend the owning feature module and include any new module at this composition root. Follow [SearchModule](../../../feature_search/src/main/java/com/pimenta/bestv/search/di/SearchModule.kt): `single` for shared infrastructure/APIs, `factory`/`factoryOf` for repositories, data sources, and use cases, and `viewModel`/`viewModelOf` for lifecycle ViewModels. Bind domain repository interfaces to their actual outer implementation: usually data repositories, and the Recommendation output port to its platform TV provider. Preserve qualifiers such as `tmdbApiKey` and `tmdbFilterLanguage`; constructor injection is the default outside platform entry points.
 
 ## Build and dependencies
 
@@ -85,6 +87,7 @@ Choose checks for the changed behavior and modules. Run commands from the reposi
 | Kotlin formatting | `./gradlew :feature_search:ktlintCheck`; the root `./gradlew formatKotlin` formats all modules when that scope is requested. |
 | Domain, mapper, ViewModel, or DI behavior | `./gradlew :feature_search:testDebugUnitTest`; add the other affected module tasks for shared changes. |
 | App integration, resources, manifests, or build setup | `./gradlew :app:assembleDebug` and, when relevant, `./gradlew :app:lintDebug`. |
+| Package dependency boundaries | `./gradlew verifyArchitecture`; `:app:preBuild` also runs this check. It guards domain imports, data-to-presentation imports, `model_shared/presentation` persistence imports, and direct feature-to-feature imports. |
 | Shared Compose instrumentation | `./gradlew :presentation_shared:connectedDebugAndroidTest` with an appropriate device/emulator. Exercise both TV and mobile when shared UI behavior changes. |
 | Documentation/skill-only edits | Check links and `git diff --check`; validate changed skills with the skill-creator validator when available. No Android build is needed solely for prose. |
 

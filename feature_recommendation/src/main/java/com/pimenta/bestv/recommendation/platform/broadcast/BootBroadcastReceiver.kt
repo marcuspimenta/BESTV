@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.pimenta.bestv.recommendation.presentation.broadcast
+package com.pimenta.bestv.recommendation.platform.broadcast
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.pimenta.bestv.recommendation.presentation.presenter.BootPresenter
+import com.pimenta.bestv.recommendation.platform.scheduler.RecommendationScheduler
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -27,13 +27,14 @@ import timber.log.Timber
  */
 class BootBroadcastReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val presenter: BootPresenter by inject()
+    private val scheduler: RecommendationScheduler by inject()
 
     override fun onReceive(
         context: Context,
         intent: Intent,
     ) {
+        if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
         Timber.d("Boot initiated")
-        presenter.scheduleRecommendationUpdate()
+        scheduler.schedule()
     }
 }

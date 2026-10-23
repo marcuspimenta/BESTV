@@ -17,8 +17,6 @@ package com.pimenta.bestv.recommendation.data.repository
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.presentation.R
-import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as MovieRepositoryContract
 
@@ -26,13 +24,11 @@ import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as Mov
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository(
-    private val resource: Resource,
     private val movieRemoteDataSource: MovieRemoteDataSource
 ) : MovieRepositoryContract {
 
     override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> {
         val response = movieRemoteDataSource.getPopularMovies(page)
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return response.toDomainModel(source)
+        return response.toDomainModel()
     }
 }

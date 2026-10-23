@@ -14,7 +14,9 @@ These are dependency and responsibility boundaries, not mandatory directory name
 
 ## Dependency rule and repository ports
 
-Dependencies should point toward stable inner contracts. A use case depends on the feature's domain repository interface, and a data-layer class implements that interface. The interface contains only operations the domain needs and uses domain types in its method signatures. It should not expose Retrofit responses, Room entities, UI models, Android `Context`, or data-source details.
+Dependencies should point toward stable inner contracts. Presentation depends on domain use cases and values; presentation should not depend directly on data implementations. Data depends inward on domain-owned repository interfaces and domain values, and a data-layer class implements each interface. Data may also use outward infrastructure such as Retrofit, Room, and platform APIs. Domain must not import presentation, data, or framework types.
+
+The compile-time arrow from data to a domain contract is intentional: the implementation imports the interface it implements. At runtime, a use case calls that interface and dependency injection supplies the data or platform implementation. The interface contains only operations the domain needs and uses domain types in its method signatures. It should not expose Retrofit responses, Room entities, UI models, Android `Context`, or data-source details.
 
 ```kotlin
 // Domain-owned contract
@@ -47,7 +49,7 @@ Keep a port feature-local when only that feature owns its behavior. Put a contra
 
 A feature commonly has packages for `data`, `domain`, `presentation`, and `di`. Their exact subpackages depend on the project; possible concerns include APIs, remote/local data sources, response models, repository implementations, domain use cases, UI models/mappers, ViewModels, and Compose screens. A directory is not evidence of a true architectural boundary: inspect imports and Gradle dependencies.
 
-Shared modules can hold infrastructure or genuinely shared types, but avoid mixing unrelated API, persistence, domain, and presentation models into one shared model package. Keep separate types where the distinction prevents framework or UI details from leaking across a boundary. Reuse should not erase ownership or force a feature to depend on unrelated UI or data code.
+Shared modules can hold infrastructure or genuinely shared types, but avoid mixing unrelated API, persistence, domain, and presentation models into one shared model package. If an existing project already has an aggregate shared module, document that it weakens Gradle-level enforcement, preserve package/import boundaries, and avoid widening its public API. Keep separate types where the distinction prevents framework or UI details from leaking across a boundary. Reuse should not erase ownership or force a feature to depend on unrelated UI or data code.
 
 ## Kotlin implementation conventions
 
@@ -63,7 +65,7 @@ When a use case combines independent requests, use structured concurrency (`coro
 
 ## Look for residual boundary leaks
 
-A repository interface does not make a feature independent if its method signatures or use cases still expose outer-layer types. Review imports and signatures for presentation models, Android framework or WorkManager types, Retrofit responses, and Room entities inside domain. Also check for data code importing presentation resources to create localized labels, or presentation mappers converting UI models into persistence entities. Treat these as existing debt, not conventions to repeat: use stable domain identifiers/value types, keep platform scheduling behind an outer-layer adapter or port, resolve localized text in presentation, and map persistence types at the data boundary.
+A repository interface does not make a feature independent if its method signatures or use cases still expose outer-layer types. Review imports and signatures for presentation models, Android framework or WorkManager types, Retrofit responses, and Room entities inside domain. Also check for data code importing presentation resources to create localized labels, or presentation mappers converting UI models into persistence entities. Treat any such occurrence as a boundary violation: use stable domain identifiers/value types, keep platform scheduling behind an outer-layer adapter or port, resolve localized text in presentation, and map persistence types at the data boundary.
 
 Likewise, a shared Gradle module may contain packages named `data`, `domain`, and `presentation` without enforcing those boundaries at compile time. Check the imports inside that module and its public API; package naming alone does not prevent a presentation mapper from depending on Room or an inner layer from depending on UI code.
 

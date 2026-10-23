@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.recommendation.data.local.provider.row
+package com.pimenta.bestv.recommendation.platform.provider.row
 
 import android.app.Application
 import android.app.NotificationManager
@@ -23,8 +23,9 @@ import coil3.asDrawable
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
-import com.pimenta.bestv.recommendation.data.local.provider.RecommendationProvider
+import com.pimenta.bestv.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
@@ -37,13 +38,14 @@ class RecommendationRowApi constructor(
     private val notificationManager: NotificationManager,
     private val workDetailsRoute: WorkDetailsRoute,
     private val imageLoader: ImageLoader,
-) : RecommendationProvider {
+    private val resource: Resource,
+) : RecommendationRepository {
 
     override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
         notificationManager.cancelAll()
 
         works
-            ?.mapNotNull { work -> work.toViewModel() }
+            ?.mapNotNull { work -> work.toViewModel(resource) }
             ?.forEach { workViewModel ->
                 val request = ImageRequest
                     .Builder(application)

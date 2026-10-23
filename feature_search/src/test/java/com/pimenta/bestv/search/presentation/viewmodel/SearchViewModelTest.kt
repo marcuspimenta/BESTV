@@ -16,11 +16,13 @@ package com.pimenta.bestv.search.presentation.viewmodel
 
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -106,7 +108,7 @@ private val MOVIE_DOMAIN_MODEL_LIST =
             originalTitle = "Batman",
             originalLanguage = "en",
             overview = "A superhero movie",
-            source = "tmdb",
+            source = ContentSource.TMDB,
             backdropPath = "/backdrop.jpg",
             posterPath = "/poster.jpg",
             releaseDate = "2023-01-01",
@@ -148,7 +150,7 @@ private val TV_SHOW_DOMAIN_MODEL_LIST =
             originalTitle = "Batman TV",
             originalLanguage = "en",
             overview = "A superhero TV show",
-            source = "tmdb",
+            source = ContentSource.TMDB,
             backdropPath = "/backdrop_tv.jpg",
             posterPath = "/poster_tv.jpg",
             releaseDate = "2023-02-01",
@@ -173,6 +175,7 @@ class SearchViewModelTest {
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val searchRequestProcessor: SearchRequestProcessor = mock()
     private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor = mock()
+    private val resource: Resource = mock()
     private val searchActions = MutableSharedFlow<SearchAction>(extraBufferCapacity = 1)
     private val selectedWorkActions = MutableSharedFlow<SelectedWorkAction>(extraBufferCapacity = 1)
 
@@ -181,6 +184,7 @@ class SearchViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        whenever(resource.getStringResource(any())).thenReturn("tmdb")
         whenever(searchRequestProcessor.observe()).thenReturn(searchActions)
         whenever(selectedWorkRequestProcessor.observe()).thenReturn(selectedWorkActions)
 
@@ -215,6 +219,7 @@ class SearchViewModelTest {
             workDetailsRoute,
             searchRequestProcessor,
             selectedWorkRequestProcessor,
+            resource,
             TvDeviceCapabilities,
         )
     }
@@ -373,6 +378,7 @@ class SearchViewModelTest {
             workDetailsRoute,
             SearchRequestProcessor(),
             selectedWorkRequestProcessor,
+            resource,
             TvDeviceCapabilities,
         )
         val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL

@@ -1,9 +1,11 @@
 package com.pimenta.bestv.workbrowse.presentation.mapper
 
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
@@ -13,6 +15,9 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 private fun browseWork(id: Int = 1) =
     WorkDomainModel(
@@ -21,7 +26,7 @@ private fun browseWork(id: Int = 1) =
         originalTitle = "Batman",
         originalLanguage = "en",
         overview = "A superhero movie",
-        source = "tmdb",
+        source = ContentSource.TMDB,
         backdropPath = "/backdrop.jpg",
         posterPath = "/poster.jpg",
         releaseDate = "2023-01-01",
@@ -35,6 +40,12 @@ private fun browsePage(
 ) = PageDomainModel(page = page, totalPages = totalPages, results = works)
 
 class BrowseSectionViewModelMapperTest {
+    private val resource: Resource = mock()
+
+    init {
+        whenever(resource.getStringResource(any())).thenReturn("tmdb")
+    }
+
     @Test
     fun `top section maps category works and pagination metadata`() {
         val domainSection =
@@ -43,12 +54,12 @@ class BrowseSectionViewModelMapperTest {
                     category = BrowseCategoryKey.POPULAR_MOVIES,
                     page = browsePage(page = 3, totalPages = 9),
                 )
-        val section = domainSection.toViewModel()
+        val section = domainSection.toViewModel(resource)
 
         assertEquals(
             ContentSection.TopContent(
                 type = TopWorkTypeViewModel.POPULAR_MOVIES,
-                works = listOf(browseWork().toViewModel()!!),
+                works = listOf(browseWork().toViewModel(resource)!!),
                 page = PaginationState(currentPage = 3, totalPages = 9),
             ),
             section,
@@ -61,9 +72,9 @@ class BrowseSectionViewModelMapperTest {
         val tvGenre = GenreDomainModel(id = 10759, name = "Adventure", source = GenreDomainModel.Source.TV_SHOW)
 
         val movieSection =
-            BrowseSectionDomainModel.GenreContent(movieGenre, browsePage()).toViewModel() as ContentSection.Genre
+            BrowseSectionDomainModel.GenreContent(movieGenre, browsePage()).toViewModel(resource) as ContentSection.Genre
         val tvSection =
-            BrowseSectionDomainModel.GenreContent(tvGenre, browsePage()).toViewModel() as ContentSection.Genre
+            BrowseSectionDomainModel.GenreContent(tvGenre, browsePage()).toViewModel(resource) as ContentSection.Genre
 
         assertEquals(Source.MOVIE, movieSection.genreViewModel.source)
         assertEquals(Source.TV_SHOW, tvSection.genreViewModel.source)
@@ -87,7 +98,7 @@ class BrowseSectionViewModelMapperTest {
                 ),
             )
 
-        val result = sections.toViewModels()
+        val result = sections.toViewModels(resource)
 
         assertEquals(2, result.size)
         assertEquals(

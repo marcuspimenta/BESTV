@@ -12,31 +12,28 @@
  * the License.
  */
 
-package com.pimenta.bestv.model.presentation.mapper
+package com.pimenta.bestv.presentation.mapper
 
-import com.pimenta.bestv.model.data.local.MovieDbModel
-import com.pimenta.bestv.model.data.local.TvShowDbModel
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.mapper.TmdbImageUrlBuilder
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.presentation.platform.Resource
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun WorkViewModel.toMovieDbModel() =
-    MovieDbModel(id = id)
-
-fun WorkViewModel.toTvShowDbModel() =
-    TvShowDbModel(id = id)
-
-fun WorkDomainModel.toViewModel(): WorkViewModel? {
-    if (title == null || originalLanguage == null || overview == null ||
-        source == null || backdropPath == null || posterPath == null ||
-        originalTitle == null || releaseDate == null
-    ) {
-        return null
-    }
-    val formattedReleaseDate = releaseDate
+fun WorkDomainModel.toViewModel(resource: Resource): WorkViewModel? {
+    val displayTitle = title ?: return null
+    val displayLanguage = originalLanguage ?: return null
+    val displayOverview = overview ?: return null
+    val displayBackdropPath = backdropPath ?: return null
+    val displayPosterPath = posterPath ?: return null
+    val displayOriginalTitle = originalTitle ?: return null
+    val displayReleaseDate = releaseDate ?: return null
+    val formattedReleaseDate = displayReleaseDate
         .takeUnless { it.isEmpty() || it.isBlank() }
         ?.let { releaseDate ->
             SimpleDateFormat("MMM dd, yyyy", Locale.US).format(
@@ -46,14 +43,16 @@ fun WorkDomainModel.toViewModel(): WorkViewModel? {
 
     return WorkViewModel(
         id = id,
-        title = title,
-        originalLanguage = originalLanguage,
-        overview = overview,
-        source = source,
-        backdropUrl = TmdbImageUrlBuilder.backdrop(backdropPath),
-        backdropCardUrl = TmdbImageUrlBuilder.backdropCard(backdropPath),
-        posterUrl = TmdbImageUrlBuilder.poster(posterPath),
-        originalTitle = originalTitle,
+        title = displayTitle,
+        originalLanguage = displayLanguage,
+        overview = displayOverview,
+        source = when (source) {
+            ContentSource.TMDB -> resource.getStringResource(R.string.source_tmdb)
+        },
+        backdropUrl = TmdbImageUrlBuilder.backdrop(displayBackdropPath),
+        backdropCardUrl = TmdbImageUrlBuilder.backdropCard(displayBackdropPath),
+        posterUrl = TmdbImageUrlBuilder.poster(displayPosterPath),
+        originalTitle = displayOriginalTitle,
         releaseDate = formattedReleaseDate,
         voteAverage = voteAverage,
         type = WorkType.TV_SHOW.takeIf { type == WorkDomainModel.Type.TV_SHOW } ?: WorkType.MOVIE,

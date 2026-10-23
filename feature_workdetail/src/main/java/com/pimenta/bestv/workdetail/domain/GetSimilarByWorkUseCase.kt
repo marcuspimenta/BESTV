@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.presentation.model.WorkType
+import com.pimenta.bestv.model.domain.WorkDomainModel
 
 /**
  * Created by marcus on 18-04-2019.
@@ -24,11 +24,11 @@ class GetSimilarByWorkUseCase(
     private val getSimilarByTvShowUseCase: GetSimilarByTvShowUseCase,
 ) {
     suspend operator fun invoke(
-        workType: WorkType,
+        workType: WorkDomainModel.Type,
         workId: Int,
         page: Int,
     ) = when (workType) {
-        WorkType.MOVIE -> getSimilarByMovieUseCase(workId, page)
-        WorkType.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
+        WorkDomainModel.Type.MOVIE -> getSimilarByMovieUseCase(workId, page)
+        WorkDomainModel.Type.TV_SHOW -> getSimilarByTvShowUseCase(workId, page)
     }
 }

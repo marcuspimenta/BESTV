@@ -19,7 +19,8 @@ import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
@@ -38,6 +39,7 @@ class CastDetailsViewModel(
     private val cast: CastViewModel,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
+    private val resource: Resource,
     private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<CastDetailsState, CastDetailsEffect>(
     CastDetailsState.Loading(deviceCapabilities.isMobileDevice),
@@ -57,12 +59,12 @@ class CastDetailsViewModel(
                 val (castDetails, movies, tvShows) = getCastDetailsUseCase(cast.id)
 
                 updateState {
-                    val cast = castDetails.toViewModel()
+                    val cast = castDetails.toViewModel(resource)
                     if (cast != null) {
                         CastDetailsState.Loaded(
                             cast = cast,
-                            movies = movies?.mapNotNull { movie -> movie.toViewModel() }.orEmpty(),
-                            tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel() }.orEmpty(),
+                            movies = movies?.mapNotNull { movie -> movie.toViewModel(resource) }.orEmpty(),
+                            tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel(resource) }.orEmpty(),
                             isMobileDevice = deviceCapabilities.isMobileDevice,
                         )
                     } else {

@@ -17,7 +17,6 @@ package com.pimenta.bestv.workdetail.domain
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel.Type
-import com.pimenta.bestv.model.presentation.model.WorkType
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -58,7 +57,7 @@ class GetRecommendationByWorkUseCaseTest {
             whenever(getRecommendationByMovieUseCase(WORK_ID, 1))
                 .thenReturn(WORK_PAGE_VIEW_MODEL)
 
-            val result = useCase(WorkType.MOVIE, WORK_ID, 1)
+            val result = useCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1)
 
             assertEquals(WORK_PAGE_VIEW_MODEL, result)
         }
@@ -71,7 +70,7 @@ class GetRecommendationByWorkUseCaseTest {
                 .thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.MOVIE, WORK_ID, 1)
+                useCase(WorkDomainModel.Type.MOVIE, WORK_ID, 1)
             }
         }
 
@@ -81,7 +80,7 @@ class GetRecommendationByWorkUseCaseTest {
             whenever(getRecommendationByTvShowUseCase(WORK_ID, 1))
                 .thenReturn(WORK_PAGE_VIEW_MODEL)
 
-            val result = useCase(WorkType.TV_SHOW, WORK_ID, 1)
+            val result = useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID, 1)
 
             assertEquals(WORK_PAGE_VIEW_MODEL, result)
         }
@@ -94,7 +93,7 @@ class GetRecommendationByWorkUseCaseTest {
                 .thenThrow(exception)
 
             assertFailsWith<RuntimeException> {
-                useCase(WorkType.TV_SHOW, WORK_ID, 1)
+                useCase(WorkDomainModel.Type.TV_SHOW, WORK_ID, 1)
             }
         }
 }

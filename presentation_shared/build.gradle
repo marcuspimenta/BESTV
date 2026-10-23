@@ -45,6 +45,11 @@ dependencies {
     implementation libs.coil.network.okhttp
     debugImplementation libs.compose.ui.tooling.runtime
 
+    testImplementation libs.junit4
+    testImplementation libs.mockito.inline
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+
     // Compose UI Testing (instrumented tests)
     androidTestImplementation platform(libs.compose.bom)
     androidTestImplementation libs.compose.ui.test.junit4

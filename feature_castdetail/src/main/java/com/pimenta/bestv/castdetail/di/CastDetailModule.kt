@@ -58,6 +58,7 @@ val castDetailModule = module {
             cast = cast,
             getCastDetailsUseCase = get(),
             workDetailsRoute = get(),
+            resource = get(),
             deviceCapabilities = get(),
         )
     }

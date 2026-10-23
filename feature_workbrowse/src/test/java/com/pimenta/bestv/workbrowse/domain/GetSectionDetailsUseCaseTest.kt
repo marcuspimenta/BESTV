@@ -1,5 +1,6 @@
 package com.pimenta.bestv.workbrowse.domain
 
+import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
@@ -26,7 +27,7 @@ private val WORK_DOMAIN_MODEL =
         originalTitle = "Batman",
         originalLanguage = "en",
         overview = "A superhero movie",
-        source = "tmdb",
+        source = ContentSource.TMDB,
         backdropPath = "/backdrop.jpg",
         posterPath = "/poster.jpg",
         releaseDate = "2023-01-01",

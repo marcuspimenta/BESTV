@@ -1,14 +1,15 @@
 package com.pimenta.bestv.workbrowse.presentation.mapper
 
-import com.pimenta.bestv.model.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 
-fun BrowseSectionDomainModel.toViewModel(): ContentSection? {
-    val pageViewModel = page.toViewModel()
+fun BrowseSectionDomainModel.toViewModel(resource: Resource): ContentSection? {
+    val pageViewModel = page.toViewModel(resource)
     if (pageViewModel.results.isEmpty()) return null
 
     val pagination =
@@ -33,7 +34,8 @@ fun BrowseSectionDomainModel.toViewModel(): ContentSection? {
     }
 }
 
-fun List<BrowseSectionDomainModel>.toViewModels(): List<ContentSection> = mapNotNull { it.toViewModel() }
+fun List<BrowseSectionDomainModel>.toViewModels(resource: Resource): List<ContentSection> =
+    mapNotNull { it.toViewModel(resource) }
 
 private fun BrowseCategoryKey.toViewModel(): TopWorkTypeViewModel =
     when (this) {

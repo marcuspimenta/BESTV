@@ -18,8 +18,6 @@ import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.presentation.R
-import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryContract
 
@@ -27,15 +25,13 @@ import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShow
  * Created by marcus on 20-10-2019.
  */
 class TvShowRepository(
-    private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) : TvShowRepositoryContract {
     override suspend fun getFavoriteTvShows() =
         tvShowLocalDataSource.getTvShows().mapNotNull { tvShowDbModel ->
             tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
-                val source = resource.getStringResource(R.string.source_tmdb)
-                work.toDomainModel(source).apply {
+                work.toDomainModel().apply {
                     isFavorite = true
                 }
             }
@@ -45,27 +41,22 @@ class TvShowRepository(
         genreId: Int,
         page: Int,
     ): PageDomainModel<WorkDomainModel> {
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel(source)
+        return tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel()
     }
 
     override suspend fun getAiringTodayTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel(source)
+        return tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel()
     }
 
     override suspend fun getOnTheAirTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel(source)
+        return tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel()
     }
 
     override suspend fun getPopularTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel(source)
+        return tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel()
     }
 
     override suspend fun getTopRatedTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        val source = resource.getStringResource(R.string.source_tmdb)
-        return tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel(source)
+        return tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel()
     }
 }

@@ -19,7 +19,6 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.domain.emptyPage
 import com.pimenta.bestv.model.extension.asyncCatching
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
@@ -44,19 +43,21 @@ class GetWorkDetailsUseCase(
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend operator fun invoke(
-        workViewModel: WorkViewModel,
+        workId: Int,
+        workType: WorkDomainModel.Type,
+        initialFavorite: Boolean,
         countryCode: String,
     ) = coroutineScope {
-        val isFavoriteDeferred = asyncCatching { checkFavoriteWorkUseCase(workViewModel) }
-        val videosDeferred = asyncCatching { getVideosUseCase(workViewModel.type, workViewModel.id) }
-        val creditsDeferred = asyncCatching { getCastsUseCase(workViewModel.type, workViewModel.id) }
-        val recommendedDeferred = asyncCatching { getRecommendationByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-        val similarDeferred = asyncCatching { getSimilarByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
-        val reviewsDeferred = asyncCatching { getReviewByWorkUseCase(workViewModel.type, workViewModel.id, 1) }
+        val isFavoriteDeferred = asyncCatching { checkFavoriteWorkUseCase(workId, workType) }
+        val videosDeferred = asyncCatching { getVideosUseCase(workType, workId) }
+        val creditsDeferred = asyncCatching { getCastsUseCase(workType, workId) }
+        val recommendedDeferred = asyncCatching { getRecommendationByWorkUseCase(workType, workId, 1) }
+        val similarDeferred = asyncCatching { getSimilarByWorkUseCase(workType, workId, 1) }
+        val reviewsDeferred = asyncCatching { getReviewByWorkUseCase(workType, workId, 1) }
         val watchProvidersDeferred = asyncCatching {
-            getWatchProvidersUseCase(workViewModel.type, workViewModel.id, countryCode)
+            getWatchProvidersUseCase(workType, workId, countryCode)
         }
-        val metadataDeferred = asyncCatching { getWorkMetadataUseCase(workViewModel.type, workViewModel.id) }
+        val metadataDeferred = asyncCatching { getWorkMetadataUseCase(workType, workId) }
 
         val results = awaitAll(
             isFavoriteDeferred,
@@ -77,7 +78,7 @@ class GetWorkDetailsUseCase(
         // awaitAll guarantees completion before reading the typed results.
         val credits = creditsDeferred.getCompleted().getOrNull()
         WorkDetailsDomainWrapper(
-            isFavorite = isFavoriteDeferred.getCompleted().getOrNull() ?: workViewModel.isFavorite,
+            isFavorite = isFavoriteDeferred.getCompleted().getOrNull() ?: initialFavorite,
             videos = videosDeferred.getCompleted().getOrNull(),
             casts = credits?.casts,
             crew = credits?.crew,

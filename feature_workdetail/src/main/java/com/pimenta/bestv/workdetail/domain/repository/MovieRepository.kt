@@ -1,6 +1,5 @@
 package com.pimenta.bestv.workdetail.domain.repository
 
-import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
@@ -12,11 +11,11 @@ import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 interface MovieRepository {
     suspend fun getWorkMetadata(movieId: Int): WorkMetadataDomainModel
 
-    suspend fun saveFavoriteMovie(movieDbModel: MovieDbModel)
+    suspend fun saveFavoriteMovie(movieId: Int)
 
-    suspend fun deleteFavoriteMovie(movieDbModel: MovieDbModel)
+    suspend fun deleteFavoriteMovie(movieId: Int)
 
-    suspend fun isFavoriteMove(movieDbModel: MovieDbModel): Boolean
+    suspend fun isFavoriteMovie(movieId: Int): Boolean
 
     suspend fun getCreditsByMovie(movieId: Int): WorkCreditsDomainModel
 

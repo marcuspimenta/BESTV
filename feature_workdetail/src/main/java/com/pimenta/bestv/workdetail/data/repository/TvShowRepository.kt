@@ -17,8 +17,6 @@ package com.pimenta.bestv.workdetail.data.repository
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
-import com.pimenta.bestv.presentation.R
-import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as watchProvidersToDomainModel
@@ -31,30 +29,27 @@ import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShow
  * Created by marcus on 20-10-2019.
  */
 class TvShowRepository(
-    private val resource: Resource,
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) : TvShowRepositoryContract {
     override suspend fun getWorkMetadata(tvShowId: Int) =
         tvShowRemoteDataSource.getTvShowDetails(tvShowId).toWorkMetadataDomainModel()
 
-    override suspend fun saveFavoriteTvShow(
-        tvShowDbModel: TvShowDbModel,
-    ) = tvShowLocalDataSource.saveFavoriteTvShow(tvShowDbModel)
+    override suspend fun saveFavoriteTvShow(tvShowId: Int) =
+        tvShowLocalDataSource.saveFavoriteTvShow(TvShowDbModel(tvShowId))
 
-    override suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowDbModel)
+    override suspend fun deleteFavoriteTvShow(tvShowId: Int) =
+        tvShowLocalDataSource.deleteFavoriteTvShow(TvShowDbModel(tvShowId))
 
-    override suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean {
-        val tvShow = tvShowLocalDataSource.getById(tvShowDbModel)
+    override suspend fun isFavoriteTvShow(tvShowId: Int): Boolean {
+        val tvShow = tvShowLocalDataSource.getById(TvShowDbModel(tvShowId))
         return tvShow != null
     }
 
     override suspend fun getCreditsByTvShow(tvShowId: Int) =
         tvShowRemoteDataSource.getCastByTvShow(tvShowId).let { response ->
-            val source = resource.getStringResource(R.string.source_tmdb)
             WorkCreditsDomainModel(
-                casts = response.casts?.map { cast -> cast.toDomainModel(source) },
+                casts = response.casts?.map { cast -> cast.toDomainModel() },
                 crew = response.crew
                     .orEmpty()
                     .mapNotNull { it.crewToDomainModel() }
@@ -67,16 +62,14 @@ class TvShowRepository(
         tvShowId: Int,
         page: Int,
     ) = tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
-        val source = resource.getStringResource(R.string.source_tmdb)
-        response.toDomainModel(source)
+        response.toDomainModel()
     }
 
     override suspend fun getSimilarByTvShow(
         tvShowId: Int,
         page: Int,
     ) = tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
-        val source = resource.getStringResource(R.string.source_tmdb)
-        response.toDomainModel(source)
+        response.toDomainModel()
     }
 
     override suspend fun getReviewByTvShow(

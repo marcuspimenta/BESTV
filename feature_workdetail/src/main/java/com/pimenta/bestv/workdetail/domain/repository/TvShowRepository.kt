@@ -1,6 +1,5 @@
 package com.pimenta.bestv.workdetail.domain.repository
 
-import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
@@ -12,11 +11,11 @@ import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 interface TvShowRepository {
     suspend fun getWorkMetadata(tvShowId: Int): WorkMetadataDomainModel
 
-    suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel)
+    suspend fun saveFavoriteTvShow(tvShowId: Int)
 
-    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel)
+    suspend fun deleteFavoriteTvShow(tvShowId: Int)
 
-    suspend fun isFavoriteTvShow(tvShowDbModel: TvShowDbModel): Boolean
+    suspend fun isFavoriteTvShow(tvShowId: Int): Boolean
 
     suspend fun getCreditsByTvShow(tvShowId: Int): WorkCreditsDomainModel
 

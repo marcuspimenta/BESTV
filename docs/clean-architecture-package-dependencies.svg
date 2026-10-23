@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="790" viewBox="0 0 1320 790" role="img" aria-labelledby="title desc">
+  <title id="title">Clean Architecture package dependencies</title>
+  <desc id="desc">Presentation and data depend inward on domain contracts. Domain depends on neither outer layer. Platform adapters and dependency injection connect framework services and implementations at the application edge.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#28364a"/></marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#2563eb"/></marker>
+    <style>
+      text { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #182230; }
+      .title { font-size: 30px; font-weight: 750; }
+      .subtitle { font-size: 15px; fill: #566477; }
+      .layer { font-size: 20px; font-weight: 700; }
+      .pkg { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+      .detail { font-size: 14px; fill: #364458; }
+      .note { font-size: 13px; fill: #536175; }
+      .dependency { font-size: 13px; font-weight: 650; fill: #25334a; }
+    </style>
+  </defs>
+  <rect width="1320" height="790" fill="#f7f9fc"/>
+  <text x="660" y="58" text-anchor="middle" class="title">Clean Architecture package dependencies</text>
+  <text x="660" y="86" text-anchor="middle" class="subtitle">Compile time dependencies point inward toward domain policy</text>
+
+  <!-- Domain center -->
+  <rect x="414" y="220" width="492" height="342" rx="22" fill="#e8f2ff" stroke="#356cb6" stroke-width="2.5"/>
+  <text x="660" y="260" text-anchor="middle" class="layer">DOMAIN · inner policy</text>
+  <rect x="470" y="285" width="380" height="85" rx="12" fill="#fff" stroke="#9bb9e2"/>
+  <text x="660" y="317" text-anchor="middle" class="pkg">feature_x/domain/usecase/</text>
+  <text x="660" y="342" text-anchor="middle" class="detail">Business rules and application actions</text>
+  <rect x="470" y="390" width="380" height="85" rx="12" fill="#fff" stroke="#9bb9e2"/>
+  <text x="660" y="422" text-anchor="middle" class="pkg">feature_x/domain/repository/</text>
+  <text x="660" y="447" text-anchor="middle" class="detail">Ports owned by domain</text>
+  <rect x="470" y="495" width="380" height="45" rx="10" fill="#fff" stroke="#9bb9e2"/>
+  <text x="660" y="523" text-anchor="middle" class="pkg">domain models · no Android / Room / UI</text>
+
+  <!-- Outer layers -->
+  <rect x="38" y="230" width="310" height="300" rx="18" fill="#fff4dd" stroke="#d39321" stroke-width="2"/>
+  <text x="193" y="270" text-anchor="middle" class="layer">PRESENTATION</text>
+  <text x="193" y="314" text-anchor="middle" class="pkg">feature_x/presentation/</text>
+  <text x="193" y="350" text-anchor="middle" class="detail">UI · ViewModels · UI state</text>
+  <text x="193" y="379" text-anchor="middle" class="detail">Presentation mappers</text>
+  <text x="193" y="430" text-anchor="middle" class="pkg">presentation_shared/mapper</text>
+  <text x="193" y="468" text-anchor="middle" class="note">Reads domain values and invokes</text>
+  <text x="193" y="489" text-anchor="middle" class="note">use cases; resolves UI resources</text>
+
+  <rect x="972" y="230" width="310" height="300" rx="18" fill="#e8f7ef" stroke="#329365" stroke-width="2"/>
+  <text x="1127" y="270" text-anchor="middle" class="layer">DATA</text>
+  <text x="1127" y="314" text-anchor="middle" class="pkg">feature_x/data/</text>
+  <text x="1127" y="350" text-anchor="middle" class="detail">Repository implementations</text>
+  <text x="1127" y="379" text-anchor="middle" class="detail">Remote / local data sources</text>
+  <text x="1127" y="430" text-anchor="middle" class="pkg">data_shared/ · Room / network</text>
+  <text x="1127" y="468" text-anchor="middle" class="note">Implements domain ports and maps</text>
+  <text x="1127" y="489" text-anchor="middle" class="note">storage / API models to domain</text>
+
+  <!-- Inward arrows -->
+  <path d="M348 359 C382 359 386 330 456 330" fill="none" stroke="#28364a" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="395" y="309" text-anchor="middle" class="dependency">calls</text>
+  <path d="M972 424 C940 424 940 432 864 432" fill="none" stroke="#28364a" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="922" y="403" text-anchor="middle" class="dependency">implements</text>
+
+  <!-- Composition edge -->
+  <rect x="130" y="620" width="1060" height="110" rx="18" fill="#eef0f4" stroke="#8a94a3" stroke-width="1.5"/>
+  <text x="660" y="657" text-anchor="middle" class="layer">APPLICATION EDGE · composition and platform adapters</text>
+  <text x="660" y="689" text-anchor="middle" class="pkg">app/di  ·  feature_x/di  ·  feature_x/platform/</text>
+  <text x="660" y="713" text-anchor="middle" class="note">Koin wires ports to adapters; platform code wraps WorkManager, TV APIs, Android resources, and framework services</text>
+  <path d="M193 530 C193 576 286 580 390 620" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrowBlue)"/>
+  <path d="M1127 530 C1127 576 1034 580 930 620" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrowBlue)"/>
+
+  <rect x="430" y="112" width="460" height="60" rx="12" fill="#fff" stroke="#d3dbe6"/>
+  <text x="660" y="137" text-anchor="middle" class="dependency">Allowed compile time edges</text>
+  <text x="660" y="158" text-anchor="middle" class="note">Presentation → Domain   ·   Data → Domain</text>
+  <text x="660" y="586" text-anchor="middle" class="note">Domain imports neither presentation nor data</text>
+</svg>

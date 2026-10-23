@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 
 /**
@@ -23,5 +22,5 @@ import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 class CheckFavoriteTvShowUseCase(
     private val tvShowRepository: TvShowRepository,
 ) {
-    suspend operator fun invoke(tvShowDbModel: TvShowDbModel) = tvShowRepository.isFavoriteTvShow(tvShowDbModel)
+    suspend operator fun invoke(tvShowId: Int) = tvShowRepository.isFavoriteTvShow(tvShowId)
 }
