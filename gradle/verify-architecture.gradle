@@ -1,0 +1,94 @@
+def featureNames = {
+    subprojects.findAll { it.name.startsWith('feature_') }
+        .collect { it.name.substring('feature_'.length()) }
+}
+
+def isDomainFile = { String relativePath ->
+    relativePath.contains('/domain/')
+}
+
+def isDataFile = { String relativePath ->
+    relativePath.contains('/data/')
+}
+
+def isSharedPresentationFile = { Project module, String relativePath ->
+    module.name == 'model_shared' && relativePath.contains('/presentation/')
+}
+
+def isPresentationImport = { String imported ->
+    imported.contains('.presentation.') || imported.startsWith('com.pimenta.bestv.presentation.')
+}
+
+def isDataImport = { String imported ->
+    imported.contains('.data.') || imported.startsWith('com.pimenta.bestv.data.')
+}
+
+def isPlatformOrFrameworkImport = { String imported ->
+    imported.startsWith('android.') || imported.startsWith('androidx.') ||
+        imported.startsWith('retrofit2.') || imported.startsWith('org.koin.')
+}
+
+def isForeignFeatureImport = { Project module, String imported, List<String> features ->
+    module.name.startsWith('feature_') && features.any { String feature ->
+        module.name != "feature_${feature}" && imported.startsWith("com.pimenta.bestv.${feature}.")
+    }
+}
+
+def violatesArchitecture = { Project module, String relativePath, String imported, List<String> features ->
+    def inDomain = isDomainFile(relativePath)
+    def inData = isDataFile(relativePath)
+    def inSharedPresentation = isSharedPresentationFile(module, relativePath)
+    def importsPresentation = isPresentationImport(imported)
+    def importsData = isDataImport(imported)
+
+    (inDomain && (importsPresentation || importsData || isPlatformOrFrameworkImport(imported))) ||
+        (inData && importsPresentation) ||
+        (inSharedPresentation && importsData) ||
+        isForeignFeatureImport(module, imported, features)
+}
+
+def importedPackage = { String line ->
+    def matcher = line =~ /^\s*import\s+([^\s]+)/
+    matcher.find() ? matcher.group(1) : null
+}
+
+def normalizedRelativePath = { File sourceFile, File sourceRoot ->
+    sourceFile.path.substring(sourceRoot.path.length()).replace('\\', '/')
+}
+
+def findViolations = {
+    def features = featureNames()
+    def violations = []
+
+    subprojects.each { Project module ->
+        def sourceRoot = module.file('src/main/java')
+        if (!sourceRoot.exists()) return
+
+        fileTree(sourceRoot).matching { include '**/*.kt' }.each { File sourceFile ->
+            def relativePath = normalizedRelativePath(sourceFile, sourceRoot)
+            sourceFile.eachLine { String line, int lineNumber ->
+                def imported = importedPackage(line)
+                if (imported && violatesArchitecture(module, relativePath, imported, features)) {
+                    violations << "${module.name}${relativePath}:${lineNumber}: ${line.trim()}"
+                }
+            }
+        }
+    }
+
+    violations
+}
+
+tasks.register('verifyArchitecture') {
+    group = 'verification'
+    description = 'Checks production Kotlin imports against feature layer boundaries.'
+    doLast {
+        def violations = findViolations()
+        if (violations) {
+            throw new GradleException("Architecture import violations:\n${violations.join('\n')}")
+        }
+    }
+}
+
+project(':app').tasks.matching { it.name == 'preBuild' }.configureEach {
+    dependsOn rootProject.tasks.named('verifyArchitecture')
+}

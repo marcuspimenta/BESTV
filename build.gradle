@@ -68,48 +68,4 @@ tasks.register('formatKotlin') {
     }
 }
 
-tasks.register('verifyArchitecture') {
-    group = 'verification'
-    description = 'Checks production Kotlin imports against feature layer boundaries.'
-    doLast {
-        def featureNames = subprojects.findAll { it.name.startsWith('feature_') }
-            .collect { it.name.substring('feature_'.length()) }
-        def violations = []
-        subprojects.each { module ->
-            def sourceRoot = module.file('src/main/java')
-            if (!sourceRoot.exists()) return
-            fileTree(sourceRoot).matching { include '**/*.kt' }.each { sourceFile ->
-                def relativePath = sourceFile.path.substring(sourceRoot.path.length()).replace('\\', '/')
-                def inDomain = relativePath.contains('/domain/')
-                def inData = relativePath.contains('/data/')
-                def inSharedPresentation = module.name == 'model_shared' && relativePath.contains('/presentation/')
-                sourceFile.eachLine { line, lineNumber ->
-                    def matcher = line =~ /^\s*import\s+([^\s]+)/
-                    if (!matcher.find()) return
-                    def imported = matcher.group(1)
-                    def isPresentation = imported.contains('.presentation.') ||
-                        imported.startsWith('com.pimenta.bestv.presentation.')
-                    def isData = imported.contains('.data.') || imported.startsWith('com.pimenta.bestv.data.')
-                    def foreignFeature = featureNames.any { feature ->
-                        module.name != "feature_${feature}" && imported.startsWith("com.pimenta.bestv.${feature}.")
-                    }
-                    if ((inDomain && (isPresentation || isData || imported.startsWith('android.') ||
-                        imported.startsWith('androidx.') || imported.startsWith('retrofit2.') ||
-                        imported.startsWith('org.koin.'))) ||
-                        (inData && isPresentation) ||
-                        (inSharedPresentation && isData) ||
-                        (module.name.startsWith('feature_') && foreignFeature)) {
-                        violations << "${module.name}${relativePath}:${lineNumber}: ${line.trim()}"
-                    }
-                }
-            }
-        }
-        if (!violations.isEmpty()) {
-            throw new GradleException("Architecture import violations:\n${violations.join('\n')}")
-        }
-    }
-}
-
-project(':app').tasks.matching { it.name == 'preBuild' }.configureEach {
-    dependsOn rootProject.tasks.named('verifyArchitecture')
-}
+apply from: rootProject.file('gradle/verify-architecture.gradle')
