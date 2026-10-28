@@ -18,6 +18,7 @@ import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 
 /**
  * Created by marcus on 20-04-2020.
@@ -27,13 +28,19 @@ fun PageDomainModel<ReviewDomainModel>.toViewModel() =
     PageViewModel(
         page = page,
         totalPages = totalPages,
-        results = results?.map { it.toViewModel() }.orEmpty(),
+        results = results
+            ?.mapIndexed { index, review ->
+                review.toViewModel(
+                    fallbackKey = "${LazyContentTypes.PAGE_KEY_PREFIX}$page:${LazyContentTypes.INDEX_KEY_PREFIX}$index",
+                )
+            }.orEmpty(),
     )
 
-fun ReviewDomainModel.toViewModel() =
+fun ReviewDomainModel.toViewModel(fallbackKey: String? = null) =
     ReviewViewModel(
         id = id,
         author = author,
         content = content,
         url = url,
+        fallbackKey = fallbackKey,
     )

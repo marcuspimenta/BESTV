@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
@@ -91,8 +92,9 @@ internal fun MobileBrowseBottomBar(
                 )
                 Box(
                     modifier = Modifier
-                        .offset(x = indicatorOffset)
-                        .width(itemWidth)
+                        .offset {
+                            IntOffset(x = indicatorOffset.roundToPx(), y = 0)
+                        }.width(itemWidth)
                         .fillMaxSize()
                         .clip(RoundedCornerShape(percent = 50))
                         .background(BESTVTheme.colors.mobileNavigationSelectedSurface),

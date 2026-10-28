@@ -16,6 +16,7 @@ package com.pimenta.bestv.workbrowse.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workbrowse.R as workbrowseR
@@ -76,4 +77,14 @@ sealed class ContentSection(
         override val works: List<WorkViewModel>,
         override val page: PaginationState,
     ) : ContentSection(works, page)
+}
+
+internal fun ContentSection.lazyListKey(): String = when (this) {
+    is ContentSection.Genre -> "${LazyContentTypes.GENRE_KEY_PREFIX}${genreViewModel.source.name}:${genreViewModel.id}"
+    is ContentSection.TopContent -> "${LazyContentTypes.TOP_KEY_PREFIX}${type.name}"
+}
+
+internal fun ContentSection.lazyContentType(): String = when (this) {
+    is ContentSection.Genre -> LazyContentTypes.GENRE
+    is ContentSection.TopContent -> LazyContentTypes.TOP_CONTENT
 }

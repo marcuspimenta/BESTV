@@ -47,6 +47,8 @@ import com.pimenta.bestv.search.presentation.model.SearchEvent.SearchQuerySubmit
 import com.pimenta.bestv.search.presentation.model.SearchEvent.WorkClicked
 import com.pimenta.bestv.search.presentation.model.SearchEvent.WorkItemSelected
 import com.pimenta.bestv.search.presentation.model.SearchState
+import com.pimenta.bestv.search.presentation.model.lazyContentType
+import com.pimenta.bestv.search.presentation.model.lazyListKey
 import com.pimenta.bestv.search.presentation.model.SearchState.Content
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
@@ -173,7 +175,8 @@ private fun TVSearchResultsContent(
     ) {
         itemsIndexed(
             items = contents,
-            key = { index, content -> "${content.query}_$index" },
+            key = { _, content -> content.lazyListKey() },
+            contentType = { _, content -> content.lazyContentType() },
         ) { index, content ->
             when (content) {
                 is Movies ->

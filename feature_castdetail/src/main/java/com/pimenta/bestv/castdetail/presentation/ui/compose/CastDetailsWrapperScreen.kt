@@ -9,8 +9,6 @@ package com.pimenta.bestv.castdetail.presentation.ui.compose
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pimenta.bestv.castdetail.presentation.ui.compose.mobile.MobileCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.ui.compose.tv.TVCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
@@ -22,9 +20,9 @@ fun CastDetailsWrapperScreen(
     openIntent: (Intent) -> Unit,
     onBack: () -> Unit,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val isMobileDevice = viewModel.state.value.isMobileDevice
     BESTVTheme {
-        if (state.isMobileDevice) {
+        if (isMobileDevice) {
             MobileCastDetailsScreen(
                 viewModel = viewModel,
                 openIntent = openIntent,

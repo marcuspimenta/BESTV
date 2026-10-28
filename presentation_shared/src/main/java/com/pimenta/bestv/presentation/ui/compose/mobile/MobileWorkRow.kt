@@ -23,6 +23,7 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 
 @Composable
 fun MobileWorkRow(
@@ -45,11 +46,11 @@ fun MobileWorkRow(
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
-            items(works, key = { it.id }) { work ->
+            items(works, key = { it.id }, contentType = { LazyContentTypes.WORK }) { work ->
                 MobileWorkCard(work, onClick = { onWorkClick(work) })
             }
             if (pagination?.isLoadingMore == true) {
-                item(key = "loading") {
+                item(key = LazyContentTypes.LOADING, contentType = LazyContentTypes.LOADING) {
                     MobileLoading(Modifier.padding(BESTVTheme.scale.s240))
                 }
             }

@@ -36,6 +36,7 @@ import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.tv.TVBackgroundScreen
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.tv.TVErrorBanner
 import com.pimenta.bestv.presentation.ui.compose.tv.TVErrorScreen
 import com.pimenta.bestv.presentation.ui.compose.tv.TVLoading
@@ -192,6 +193,7 @@ private fun TVLoadedWorkDetails(
             itemsIndexed(
                 items = loadedState.contents,
                 key = { _, content -> content.id },
+                contentType = { _, content -> content.lazyContentType() },
             ) { index, content ->
                 when (content) {
                     is Header ->
@@ -272,6 +274,15 @@ private fun TVLoadedWorkDetails(
             }
         }
     }
+}
+
+private fun WorkDetailsState.Content.lazyContentType(): String = when (this) {
+    is Header -> LazyContentTypes.HEADER
+    is Casts -> LazyContentTypes.CASTS
+    is RecommendedWorks -> LazyContentTypes.RECOMMENDED
+    is Reviews -> LazyContentTypes.REVIEWS
+    is SimilarWorks -> LazyContentTypes.SIMILAR
+    is Videos -> LazyContentTypes.VIDEOS
 }
 
 @Preview

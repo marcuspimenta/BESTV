@@ -35,6 +35,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
 import com.pimenta.bestv.presentation.ui.compose.tv.TVStartAlignedLazyRow
 import com.pimenta.bestv.workdetail.R
@@ -84,7 +85,8 @@ fun TVReviewRow(
         ) {
             items(
                 items = reviews,
-                key = { it.id ?: it.hashCode() },
+                key = { it.lazyListKey() },
+                contentType = { LazyContentTypes.REVIEW },
             ) { review ->
                 TVReviewCard(
                     review = review,

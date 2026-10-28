@@ -54,6 +54,8 @@ import com.pimenta.bestv.search.presentation.model.SearchEvent.SearchQueryChange
 import com.pimenta.bestv.search.presentation.model.SearchEvent.SearchQuerySubmitted
 import com.pimenta.bestv.search.presentation.model.SearchEvent.WorkClicked
 import com.pimenta.bestv.search.presentation.model.SearchState
+import com.pimenta.bestv.search.presentation.model.lazyContentType
+import com.pimenta.bestv.search.presentation.model.lazyListKey
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
 import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
@@ -216,7 +218,11 @@ private fun MobileSearchContent(
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
                     ) {
-                        items(result.contents, key = { it.query + it::class.simpleName }) { content ->
+                        items(
+                            items = result.contents,
+                            key = { content -> content.lazyListKey() },
+                            contentType = { content -> content.lazyContentType() },
+                        ) { content ->
                             when (content) {
                                 is Movies ->
                                     MobileWorkRow(

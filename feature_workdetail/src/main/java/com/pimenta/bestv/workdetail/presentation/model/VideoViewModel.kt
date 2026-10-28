@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.workdetail.presentation.model
 
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
+
 /**
  * Created by marcus on 12-04-2019.
  */
@@ -23,4 +25,11 @@ data class VideoViewModel(
     var type: String? = null,
     var thumbnailUrl: String? = null,
     var youtubeUrl: String? = null,
-)
+    val fallbackKey: String? = null,
+) {
+    fun lazyListKey(): String =
+        id?.let { "${LazyContentTypes.ID_KEY_PREFIX}$it" }
+            ?: youtubeUrl?.let { "${LazyContentTypes.URL_KEY_PREFIX}$it" }
+            ?: fallbackKey
+            ?: "${LazyContentTypes.VIDEO_KEY_PREFIX}${type.orEmpty()}:${name.orEmpty()}:${thumbnailUrl.orEmpty()}"
+}

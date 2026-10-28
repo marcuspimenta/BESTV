@@ -14,6 +14,8 @@
 
 package com.pimenta.bestv.workdetail.presentation.model
 
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
+
 /**
  * Created by marcus on 20-04-2020.
  */
@@ -22,4 +24,11 @@ data class ReviewViewModel(
     val author: String? = null,
     val content: String? = null,
     val url: String? = null,
-)
+    val fallbackKey: String? = null,
+) {
+    fun lazyListKey(): String =
+        id?.let { "${LazyContentTypes.ID_KEY_PREFIX}$it" }
+            ?: url?.let { "${LazyContentTypes.URL_KEY_PREFIX}$it" }
+            ?: fallbackKey
+            ?: "${LazyContentTypes.REVIEW_KEY_PREFIX}${author.orEmpty()}:${content.orEmpty()}"
+}

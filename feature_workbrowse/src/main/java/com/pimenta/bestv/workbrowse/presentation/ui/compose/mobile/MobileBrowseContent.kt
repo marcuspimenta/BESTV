@@ -49,6 +49,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
+import com.pimenta.bestv.workbrowse.presentation.model.lazyContentType
+import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
 
 @Composable
 fun MobileBrowseContent(
@@ -113,7 +115,11 @@ fun MobileBrowseContent(
                         .fillMaxSize(),
                     contentPadding = PaddingValues(bottom = BESTVTheme.scale.s600),
                 ) {
-                    items(sectionContent, key = { it.hashCode() }) { content ->
+                    items(
+                        items = sectionContent,
+                        key = { it.lazyListKey() },
+                        contentType = { it.lazyContentType() },
+                    ) { content ->
                         AnimatedVisibility(
                             visible = hasPlayedEntrance,
                             enter = slideInHorizontally(

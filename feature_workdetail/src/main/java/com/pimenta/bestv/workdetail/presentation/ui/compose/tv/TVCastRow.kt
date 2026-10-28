@@ -28,6 +28,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.tv.TVCastCard
 import com.pimenta.bestv.presentation.ui.compose.tv.TVStartAlignedLazyRow
 import com.pimenta.bestv.workdetail.R
@@ -61,6 +62,7 @@ fun TVCastRow(
             items(
                 items = casts,
                 key = { it.id },
+                contentType = { LazyContentTypes.CAST },
             ) { cast ->
                 TVCastCard(
                     cast = cast,

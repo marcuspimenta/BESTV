@@ -16,6 +16,7 @@ package com.pimenta.bestv.search.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 
 /**
@@ -57,4 +58,12 @@ data class SearchState(
             val page: PaginationState,
         ) : Content(query)
     }
+}
+
+internal fun SearchState.Content.lazyListKey(): String =
+    "$query:${lazyContentType()}"
+
+internal fun SearchState.Content.lazyContentType(): String = when (this) {
+    is SearchState.Content.Movies -> LazyContentTypes.SEARCH_MOVIES
+    is SearchState.Content.TvShows -> LazyContentTypes.SEARCH_TV_SHOWS
 }

@@ -47,6 +47,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -68,6 +69,7 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileLoading
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileSectionTitle
@@ -117,9 +119,20 @@ fun MobileWorkDetailsScreen(
     val listState = rememberLazyListState()
     var listViewportTop by remember { mutableFloatStateOf(Float.NaN) }
     var headerTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val showCollapsedTitle = listViewportTop.isFinite() &&
-        headerTitleBottom.isFinite() &&
-        headerTitleBottom <= listViewportTop
+    val collapseThreshold = if (listViewportTop.isFinite() && headerTitleBottom.isFinite()) {
+        (headerTitleBottom - listViewportTop).toInt().coerceAtLeast(0)
+    } else {
+        Int.MAX_VALUE
+    }
+    val showCollapsedTitle by remember(listState, collapseThreshold) {
+        derivedStateOf {
+            collapseThreshold != Int.MAX_VALUE &&
+                (
+                    listState.firstVisibleItemIndex > 0 ||
+                        listState.firstVisibleItemScrollOffset >= collapseThreshold
+                    )
+        }
+    }
     val saveAction = (state.state as? Loaded)
         ?.contents
         ?.filterIsInstance<Header>()
@@ -187,8 +200,8 @@ fun MobileWorkDetailsScreen(
             listState = listState,
             contentPadding = contentPadding,
             onEvent = viewModel::handleEvent,
-            onListViewportTopChanged = { listViewportTop = it },
-            onHeaderTitleBottomChanged = { headerTitleBottom = it },
+            onListViewportTopChanged = { if (!listViewportTop.isFinite()) listViewportTop = it },
+            onHeaderTitleBottomChanged = { if (!headerTitleBottom.isFinite()) headerTitleBottom = it },
         )
     }
 }
@@ -263,7 +276,7 @@ private fun MobileWorkDetailsList(
         content.contents.forEachIndexed { index, section ->
             when (section) {
                 is Header ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.HEADER) {
                         MobileWorkHeader(
                             work = work,
                             crew = section.crew,
@@ -273,17 +286,17 @@ private fun MobileWorkDetailsList(
                     }
 
                 is Videos ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.VIDEOS) {
                         MobileVideos(section.videos) { onEvent(VideoClicked(it)) }
                     }
 
                 is Casts ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.CASTS) {
                         MobileCasts(section.casts) { onEvent(CastClicked(it)) }
                     }
 
                 is RecommendedWorks ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.RECOMMENDED) {
                         MobileWorkRow(
                             title = stringResource(R.string.recommended),
                             works = section.recommended,
@@ -294,7 +307,7 @@ private fun MobileWorkDetailsList(
                     }
 
                 is SimilarWorks ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.SIMILAR) {
                         MobileWorkRow(
                             title = stringResource(R.string.similar),
                             works = section.similar,
@@ -305,13 +318,13 @@ private fun MobileWorkDetailsList(
                     }
 
                 is Reviews ->
-                    item(key = section.id) {
+                    item(key = section.id, contentType = LazyContentTypes.REVIEWS) {
                         MobileReviews(section.reviews, section.page) { onEvent(LoadMoreReviews) }
                     }
             }
 
             if (index < content.contents.lastIndex || hasMetadata) {
-                item(key = "divider-${section.id}") {
+                item(key = "divider-${section.id}", contentType = LazyContentTypes.DIVIDER) {
                     HorizontalDivider(
                         color = BESTVTheme.colors.mobileNavigationSelectedSurface,
                         thickness = BESTVTheme.scale.s005,
@@ -326,7 +339,7 @@ private fun MobileWorkDetailsList(
         }
 
         content.error?.let { error ->
-            item(key = "error") {
+            item(key = "error", contentType = LazyContentTypes.ERROR) {
                 Card(
                     modifier = Modifier
                         .padding(BESTVTheme.scale.s080),
@@ -347,7 +360,7 @@ private fun MobileWorkDetailsList(
         }
 
         content.contents.filterIsInstance<Header>().firstOrNull()?.metadata?.takeIf { it.hasContent }?.let { metadata ->
-            item(key = "work-metadata") {
+            item(key = "work-metadata", contentType = LazyContentTypes.METADATA) {
                 WorkMetadataDetails(
                     metadata = metadata,
                     modifier = Modifier.padding(
@@ -440,7 +453,7 @@ private fun MobileProviders(providers: WatchProvidersViewModel) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
     ) {
-        items(providers.providers, key = { it.id }) { provider ->
+        items(providers.providers, key = { it.id }, contentType = { LazyContentTypes.PROVIDER }) { provider ->
             AsyncImage(
                 model = provider.logoUrl,
                 contentDescription = provider.name,
@@ -465,7 +478,7 @@ private fun MobileVideos(
         ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
-        items(videos, key = { it.id ?: it.hashCode() }) { video ->
+        items(videos, key = { it.lazyListKey() }, contentType = { LazyContentTypes.VIDEO }) { video ->
             Card(
                 onClick = { onClick(video) },
                 modifier = Modifier
@@ -517,7 +530,7 @@ private fun MobileCasts(
         ),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
-        items(casts, key = { it.id }) { cast ->
+        items(casts, key = { it.id }, contentType = { LazyContentTypes.CAST }) { cast ->
             Card(
                 onClick = { onClick(cast) },
                 modifier = Modifier
@@ -549,7 +562,7 @@ private fun MobileReviews(
         contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
-        items(reviews, key = { it.id ?: it.hashCode() }) { review ->
+        items(reviews, key = { it.lazyListKey() }, contentType = { LazyContentTypes.REVIEW }) { review ->
             Card(
                 modifier = Modifier
                     .width(BESTVTheme.scale.s1250),

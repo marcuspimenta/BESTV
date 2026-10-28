@@ -30,6 +30,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
@@ -68,6 +69,7 @@ private fun TVProviderSection(
         items(
             items = providers,
             key = { it.id },
+            contentType = { LazyContentTypes.PROVIDER },
         ) { provider ->
             TVProviderItem(provider = provider)
         }

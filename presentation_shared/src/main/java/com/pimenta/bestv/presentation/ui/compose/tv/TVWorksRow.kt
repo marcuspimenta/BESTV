@@ -32,6 +32,7 @@ import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
 
 @Composable
@@ -85,6 +86,7 @@ fun TVWorksRow(
             items(
                 items = works,
                 key = { work -> work.id },
+                contentType = { LazyContentTypes.WORK },
             ) { work ->
                 TVWorkCard(
                     work = work,

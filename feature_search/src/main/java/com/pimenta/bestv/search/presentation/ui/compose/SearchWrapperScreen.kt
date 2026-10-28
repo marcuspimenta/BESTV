@@ -9,8 +9,6 @@ package com.pimenta.bestv.search.presentation.ui.compose
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.search.presentation.ui.compose.mobile.MobileSearchScreen
 import com.pimenta.bestv.search.presentation.ui.compose.tv.TVSearchScreen
@@ -22,9 +20,9 @@ fun SearchWrapperScreen(
     openIntent: (Intent) -> Unit,
     onBack: () -> Unit,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val isMobileDevice = viewModel.state.value.isMobileDevice
     BESTVTheme {
-        if (state.isMobileDevice) {
+        if (isMobileDevice) {
             MobileSearchScreen(
                 viewModel = viewModel,
                 openIntent = openIntent,

@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -72,11 +73,19 @@ fun MobileCastDetailsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val loaded = state as? CastDetailsState.Loaded
+    val scrollState = rememberScrollState()
     var viewportTop by remember { mutableFloatStateOf(Float.NaN) }
     var castTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val showCollapsedTitle = viewportTop.isFinite() &&
-        castTitleBottom.isFinite() &&
-        castTitleBottom <= viewportTop
+    val collapseThreshold = if (viewportTop.isFinite() && castTitleBottom.isFinite()) {
+        (castTitleBottom - viewportTop).toInt().coerceAtLeast(0)
+    } else {
+        Int.MAX_VALUE
+    }
+    val showCollapsedTitle by remember(scrollState, collapseThreshold) {
+        derivedStateOf {
+            collapseThreshold != Int.MAX_VALUE && scrollState.value >= collapseThreshold
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
@@ -121,12 +130,13 @@ fun MobileCastDetailsScreen(
     ) { contentPadding ->
         MobileCastDetailsContent(
             state = state,
+            scrollState = scrollState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
             onEvent = viewModel::handleEvent,
-            onViewportTopChanged = { viewportTop = it },
-            onTitleBottomChanged = { castTitleBottom = it },
+            onViewportTopChanged = { if (!viewportTop.isFinite()) viewportTop = it },
+            onTitleBottomChanged = { if (!castTitleBottom.isFinite()) castTitleBottom = it },
         )
     }
 }
@@ -134,6 +144,7 @@ fun MobileCastDetailsScreen(
 @Composable
 private fun MobileCastDetailsContent(
     state: CastDetailsState,
+    scrollState: androidx.compose.foundation.ScrollState,
     modifier: Modifier = Modifier,
     onEvent: (CastDetailsEvent) -> Unit,
     onViewportTopChanged: (Float) -> Unit,
@@ -155,6 +166,7 @@ private fun MobileCastDetailsContent(
         is CastDetailsState.Loaded ->
             MobileCastDetailsLoadedContent(
                 castDetails = state,
+                scrollState = scrollState,
                 modifier = modifier,
                 onEvent = onEvent,
                 onViewportTopChanged = onViewportTopChanged,
@@ -166,6 +178,7 @@ private fun MobileCastDetailsContent(
 @Composable
 private fun MobileCastDetailsLoadedContent(
     castDetails: CastDetailsState.Loaded,
+    scrollState: androidx.compose.foundation.ScrollState,
     modifier: Modifier,
     onEvent: (CastDetailsEvent) -> Unit,
     onViewportTopChanged: (Float) -> Unit,
@@ -175,7 +188,7 @@ private fun MobileCastDetailsLoadedContent(
         modifier = modifier
             .onGloballyPositioned { coordinates ->
                 onViewportTopChanged(coordinates.boundsInRoot().top)
-            }.verticalScroll(rememberScrollState()),
+            }.verticalScroll(scrollState),
     ) {
         MobileCastHeader(castDetails.cast, onTitleBottomChanged)
         if (castDetails.movies.isNotEmpty()) {
@@ -299,6 +312,7 @@ private fun MobileCastDetailsContentPreview() {
                 ),
                 tvShows = emptyList(),
             ),
+            scrollState = rememberScrollState(),
             modifier = Modifier
                 .fillMaxSize(),
             onEvent = {},

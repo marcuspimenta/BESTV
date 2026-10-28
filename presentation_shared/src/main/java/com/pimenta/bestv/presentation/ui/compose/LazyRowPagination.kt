@@ -37,16 +37,18 @@ fun LazyRowPagination(
     onLoadMore: () -> Unit,
 ) {
     // Detect when we're near the end of the list
-    val shouldLoadMore by remember {
+    val shouldLoadMore by remember(listState, isLoadingMore, threshold) {
         derivedStateOf {
             val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
             val totalItems = listState.layoutInfo.totalItemsCount
 
             // Trigger load when the last visible item is within threshold items of the end
-            lastVisibleItem != null &&
-                totalItems > 0 &&
-                lastVisibleItem.index >= totalItems - threshold &&
-                !isLoadingMore
+            isNearEnd(
+                lastVisibleItemIndex = lastVisibleItem?.index,
+                totalItems = totalItems,
+                isLoadingMore = isLoadingMore,
+                threshold = threshold,
+            )
         }
     }
 
@@ -57,3 +59,14 @@ fun LazyRowPagination(
         }
     }
 }
+
+internal fun isNearEnd(
+    lastVisibleItemIndex: Int?,
+    totalItems: Int,
+    isLoadingMore: Boolean,
+    threshold: Int,
+): Boolean =
+    lastVisibleItemIndex != null &&
+        totalItems > 0 &&
+        lastVisibleItemIndex >= totalItems - threshold &&
+        !isLoadingMore

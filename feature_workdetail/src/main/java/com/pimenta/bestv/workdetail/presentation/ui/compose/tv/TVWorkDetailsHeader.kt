@@ -139,6 +139,7 @@ private fun TVActionButtonsRow(
         items(
             items = actions,
             key = { it.id },
+            contentType = { action -> action::class.simpleName },
         ) { action ->
             Button(
                 onClick = { actionClicked(action) },

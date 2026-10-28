@@ -78,6 +78,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.CloseScr
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
+import com.pimenta.bestv.workbrowse.presentation.model.lazyContentType
+import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
@@ -491,7 +493,8 @@ private fun TVSectionWorkList(
     ) {
         itemsIndexed(
             items = content,
-            key = { _, item -> item.hashCode() },
+            key = { _, item -> item.lazyListKey() },
+            contentType = { _, item -> item.lazyContentType() },
         ) { index, contentItem ->
             TVWorksRow(
                 title = when (contentItem) {

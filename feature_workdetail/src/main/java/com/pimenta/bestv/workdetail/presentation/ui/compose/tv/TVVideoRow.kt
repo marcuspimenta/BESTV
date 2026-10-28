@@ -33,6 +33,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +49,10 @@ import androidx.tv.material3.Card
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Text
-import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.presentation.ui.compose.tv.TVStartAlignedLazyRow
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
@@ -80,7 +86,8 @@ fun TVVideoRow(
         ) {
             items(
                 items = videos,
-                key = { it.id ?: it.hashCode() },
+                key = { it.lazyListKey() },
+                contentType = { LazyContentTypes.VIDEO },
             ) { video ->
                 TVVideoCard(
                     video = video,
@@ -112,27 +119,29 @@ private fun TVVideoCard(
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    SubcomposeAsyncImage(
+                    var imageState by remember(video.lazyListKey()) {
+                        mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty)
+                    }
+                    AsyncImage(
                         model = video.thumbnailUrl,
                         contentDescription = video.name,
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
                         contentScale = ContentScale.Crop,
-                        loading = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .size(BESTVTheme.scale.s240),
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        },
+                        onState = { imageState = it },
                     )
+                    if (imageState is AsyncImagePainter.State.Loading) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(BESTVTheme.scale.s240),
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
 
                     Surface(
                         modifier = Modifier

@@ -56,6 +56,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowErro
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
+import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.ScrollToCasts
@@ -152,8 +153,13 @@ class WorkDetailsViewModel(
                                     crew = result.crew.orEmpty().map { it.crewDomainToViewModel() },
                                 ).takeIf { it.actions.isNotEmpty() },
                                 result.videos?.let {
-                                    Videos(it.map { video -> video.toViewModel() })
-                                        .takeIf { it.videos.isNotEmpty() }
+                                    Videos(
+                                        it.mapIndexed { index, video ->
+                                            video.toViewModel(
+                                                fallbackKey = "${LazyContentTypes.INDEX_KEY_PREFIX}$index",
+                                            )
+                                        },
+                                    ).takeIf { it.videos.isNotEmpty() }
                                 },
                                 result.casts?.let {
                                     it.mapNotNull { cast -> cast.toViewModel(resource) }.let { casts ->

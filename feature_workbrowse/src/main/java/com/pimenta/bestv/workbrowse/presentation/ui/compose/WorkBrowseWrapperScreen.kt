@@ -9,8 +9,6 @@ package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile.MobileBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.tv.TVWorkBrowseScreen
@@ -22,9 +20,9 @@ fun WorkBrowseWrapperScreen(
     openIntent: (Intent) -> Unit,
     closeScreen: () -> Unit,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val isMobileDevice = viewModel.state.value.isMobileDevice
     BESTVTheme {
-        if (state.isMobileDevice) {
+        if (isMobileDevice) {
             MobileBrowseScreen(
                 viewModel = viewModel,
                 openIntent = openIntent,
