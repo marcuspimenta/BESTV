@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workdetail.presentation.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.pimenta.bestv.model.domain.ContentSource
@@ -28,6 +27,8 @@ import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.route.CastDetailsDestination
+import com.pimenta.bestv.route.WorkDetailsDestination
 import com.pimenta.bestv.workdetail.domain.GetRecommendationByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetReviewByWorkUseCase
 import com.pimenta.bestv.workdetail.domain.GetSimilarByWorkUseCase
@@ -361,8 +362,8 @@ class WorkDetailsViewModelTest {
                 type = WorkType.MOVIE,
                 voteAverage = 7.5f,
             )
-            val intent = mock<Intent>()
-            whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
+            val destination = WorkDetailsDestination.create(clickedWork)
+            whenever(workDetailsRoute.buildWorkDetailsDestination(clickedWork)).thenReturn(destination)
 
             viewModel.effects.test {
                 viewModel.handleEvent(WorkDetailsEvent.WorkClicked(clickedWork))
@@ -370,7 +371,7 @@ class WorkDetailsViewModelTest {
 
                 val effect = awaitItem()
                 assertTrue(effect is WorkDetailsEffect.Navigate)
-                assertEquals(intent, (effect as WorkDetailsEffect.Navigate).intent)
+                assertEquals(destination, (effect as WorkDetailsEffect.Navigate).destination)
             }
         }
 
@@ -387,8 +388,8 @@ class WorkDetailsViewModelTest {
                 biography = "An actor biography",
                 thumbnailUrl = "https://image.tmdb.org/t/p/original/photo.jpg",
             )
-            val intent = mock<Intent>()
-            whenever(castDetailsRoute.buildCastDetailIntent(cast)).thenReturn(intent)
+            val destination = CastDetailsDestination.create(cast.id)
+            whenever(castDetailsRoute.buildCastDetailsDestination(cast.id)).thenReturn(destination)
 
             viewModel.effects.test {
                 viewModel.handleEvent(WorkDetailsEvent.CastClicked(cast))
@@ -396,7 +397,7 @@ class WorkDetailsViewModelTest {
 
                 val effect = awaitItem()
                 assertTrue(effect is WorkDetailsEffect.Navigate)
-                assertEquals(intent, (effect as WorkDetailsEffect.Navigate).intent)
+                assertEquals(destination, (effect as WorkDetailsEffect.Navigate).destination)
             }
         }
 
@@ -414,8 +415,7 @@ class WorkDetailsViewModelTest {
                 advanceUntilIdle()
 
                 val effect = awaitItem()
-                assertTrue(effect is WorkDetailsEffect.Navigate)
-                // Note: Intent.action and data require Robolectric, so we just verify it's OpenIntent
+                assertTrue(effect is WorkDetailsEffect.OpenExternalIntent)
             }
         }
 

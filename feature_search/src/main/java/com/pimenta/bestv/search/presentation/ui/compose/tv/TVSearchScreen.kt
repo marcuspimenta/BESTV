@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.search.presentation.ui.compose.tv
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -62,7 +62,7 @@ import com.pimenta.bestv.presentation.R as PresentationR
 @Composable
 fun TVSearchScreen(
     viewModel: SearchViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -70,7 +70,7 @@ fun TVSearchScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

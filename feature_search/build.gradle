@@ -17,6 +17,7 @@ android {
 }
 
 dependencies {
+    implementation libs.navigation3.runtime
     implementation project(':model_shared')
     implementation project(':presentation_shared')
     implementation project(':route_shared')

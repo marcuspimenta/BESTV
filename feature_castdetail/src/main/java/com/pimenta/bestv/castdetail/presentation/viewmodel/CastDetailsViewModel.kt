@@ -21,7 +21,6 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
@@ -36,7 +35,7 @@ import timber.log.Timber
  * Created by marcus on 21-10-2025.
  */
 class CastDetailsViewModel(
-    private val cast: CastViewModel,
+    private val castId: Int,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val resource: Resource,
@@ -56,7 +55,7 @@ class CastDetailsViewModel(
             try {
                 updateState { CastDetailsState.Loading(deviceCapabilities.isMobileDevice) }
 
-                val (castDetails, movies, tvShows) = getCastDetailsUseCase(cast.id)
+                val (castDetails, movies, tvShows) = getCastDetailsUseCase(castId)
 
                 updateState {
                     val cast = castDetails.toViewModel(resource)
@@ -81,7 +80,6 @@ class CastDetailsViewModel(
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
-        val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(CastDetailsEffect.Navigate(intent))
+        emitEffect(CastDetailsEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
 }

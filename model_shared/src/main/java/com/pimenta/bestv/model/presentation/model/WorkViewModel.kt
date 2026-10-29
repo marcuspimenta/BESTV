@@ -15,12 +15,14 @@
 package com.pimenta.bestv.model.presentation.model
 
 import android.os.Parcelable
+import kotlinx.serialization.Serializable
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by marcus on 18-04-2019.
  */
 @Parcelize
+@Serializable
 data class WorkViewModel(
     val id: Int,
     val originalLanguage: String,
@@ -37,6 +39,7 @@ data class WorkViewModel(
     val backdropCardUrl: String = backdropUrl.replace("/w1280/", "/w780/"),
 ) : Parcelable
 
+@Serializable
 enum class WorkType {
     TV_SHOW,
     MOVIE

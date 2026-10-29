@@ -1,17 +1,17 @@
-# Feature Modularization and Activity Navigation
+# Feature Modularization and Navigation 3
 
-Use this reference when splitting an Android app into feature Gradle modules, deciding what belongs in shared modules, or routing between feature-owned Activities.
+Use this reference when splitting Android features into Gradle modules or changing the navigation flow in BESTV. The app uses a single `NavigationActivity` as its Android entry point and Jetpack Navigation 3 for screen-to-screen navigation.
 
 ## Split by user capability
 
-Organize feature modules around cohesive user capabilities or product areas, not technical layer names alone. A feature module should own the code that changes together for that capability: its Activity or entry point, UI, ViewModel/state, domain operations, data implementation, and feature DI registration when those concerns are present.
+Organize feature modules around cohesive user capabilities or product areas, not technical layer names alone. A feature module owns the code that changes together for that capability: UI, ViewModel/state, domain operations, data implementation, feature navigation entry, and DI registration when those concerns are present.
 
 ```text
-:app                         app startup, application config, root DI composition
-:feature_<capability>        one cohesive user-facing capability
+:app                         startup, NavigationActivity, NavigationHost, root DI composition
+:feature_<capability>        capability UI, ViewModel, entry provider, and feature DI
+:route_shared                serializable destination keys, route contracts, entry-provider API
 :shared_data                 reusable network/database infrastructure
 :shared_ui                   reusable visual components and presentation utilities
-:navigation                  route contracts/builders and shared argument definitions
 :shared_domain_or_models     only stable concepts genuinely shared by features
 ```
 
@@ -19,51 +19,39 @@ This is a menu of responsibilities, not a required module list. A small feature 
 
 ### Dependency direction
 
-- The app module is the composition layer: it depends on the feature modules it launches and aggregates shared infrastructure/DI definitions.
-- A feature may depend on shared modules it actually uses, such as navigation contracts, shared UI, or infrastructure APIs.
+- The app module is the composition layer: it depends on the feature modules it launches and aggregates shared infrastructure and DI definitions.
+- A feature may depend on shared modules it actually uses, such as route contracts, shared UI, or infrastructure APIs.
 - A feature should not depend on the app module. Keep shared modules independent of feature implementations.
-- Avoid direct feature-to-feature dependencies. When one feature needs to open another, depend on a stable navigation contract or a higher-level app coordinator instead of importing the destination's Activity or ViewModel.
-- Keep the Gradle graph acyclic. Declare real edges in module build files and verify included modules in Gradle settings; do not assume package separation enforces module boundaries.
+- Avoid direct feature-to-feature dependencies. To open another feature, emit a shared `NavKey`; do not import its screen, ViewModel, or entry-builder function.
+- Keep the Gradle graph acyclic. Declare real edges in module build files and verify included modules in Gradle settings; package separation alone does not enforce module boundaries.
 
-Shared modules should have a clear owner and responsibility. Do not turn a shared model or utilities module into a dumping ground for unrelated feature behavior, API/Room types, domain entities, and UI models. Share a model only when consumers need the same stable meaning and doing so does not invert dependencies.
+## Navigation ownership and provider registration
 
-## Centralize route contracts
+`NavigationActivity` is the only screen-host Activity. It resolves an incoming Android `Intent` to an initial destination, defaults to `WorkBrowseDestination` for launcher startup, and supplies the injected `List<NavigationEntryProvider>` to `NavigationHost`. The host owns the Navigation 3 back stack, pushes typed keys for forward navigation, pops for Back, and exits the Activity when the root entry is reached.
 
-For Activity-based navigation, a shared navigation/route module can own route builders and the stable URI/argument contract, while each feature owns its Activity and its Android manifest declaration. This lets callers navigate without depending on the destination module's implementation.
+Keep responsibilities separated:
 
-The contract has several pieces that must agree:
+- `route_shared` owns serializable `NavKey` destination types, shared route/argument contracts, and the `NavigationEntryProvider` interface. It must not depend on feature presentation implementations.
+- Each feature owns its `NavigationEntryProvider` implementation and `EntryProviderScope` builder. The provider installs that feature's typed `entry<Destination>` and passes the host's `navigate` and `onBack` callbacks to the screen.
+- Each feature registers its provider as a `NavigationEntryProvider` in its own Koin module. The app aggregates providers with Koin `getAll<NavigationEntryProvider>()` and injects the resulting list into `NavigationActivity`.
+- `NavigationHost` installs the injected providers into one `entryProvider` block and applies Navigation 3 state/ViewModel entry decorators. Use navigation-entry scoping for destination ViewModels and unique entry identity when the same destination can be pushed more than once.
+- Keep the feature builder and screen local to their feature. Do not manually resolve providers from a global Koin instance in the host or recreate a parallel registry in the app.
 
-1. A route builder creates an `Intent` with the expected action and URI (scheme plus host/path) and sets arguments.
-2. The destination Activity's manifest declares an intent filter that matches that action and URI.
-3. The Activity reads and validates the incoming URI and arguments before initializing the feature screen.
-4. The app includes both the route module and destination feature so manifest merging and DI composition can resolve the Activity and route builder.
+Internal navigation uses typed keys, not Activity intents. For new destinations, prefer small stable identifiers and load feature state in the destination. Keep any existing payload-based contract only while compatibility requires it; changing it should be an explicit migration.
 
-Do not treat a helper that creates a URI as the whole deep-link registration. Inspect the manifest filter and merged manifest too. Keep route constants/argument keys centralized or otherwise generated from one source so callers and destination filters cannot silently drift.
-If route builders are provided through dependency injection, register them in the navigation module and include that module at the app composition root. The navigation module should expose route contracts without depending on feature Activity or ViewModel implementations.
+## Android entry points and deep links
 
-```kotlin
-import android.content.Intent
-import androidx.core.net.toUri
+Android intents remain appropriate at platform boundaries: launcher startup, custom-scheme links, notifications, recommendation `PendingIntent`s, and other system entry points. In BESTV, preserve the existing `bestv://` scheme and route hosts. The manifest directs these entry points to `NavigationActivity`; `Intent.toBestvDestination()` maps the incoming contract to the initial Navigation 3 key. Do not add one Activity per screen for internal navigation.
 
-class ItemDetailsRoute(private val packageName: String) {
-    fun create(itemId: String): Intent =
-        Intent(Intent.ACTION_VIEW, "sample-app://items/details".toUri())
-            .setPackage(packageName)
-            .putExtra(ARG_ITEM_ID, itemId)
-}
-```
+Treat incoming intent data and extras as untrusted. Validate required values while mapping to a destination and define recovery for absent or malformed input, such as falling back to Browse or showing a recoverable error. Preserve existing URI and Parcelable contracts unless the task explicitly changes them. For new public links, prefer stable IDs over passing an entire presentation model.
 
-The example shows an in-app custom-scheme route. For external web entry points, use the platform's supported verified App Links/deep-link configuration when appropriate, and validate all incoming values as untrusted input. Set `android:exported` according to whether other apps must be able to launch the Activity; do not expose an Activity merely to support internal routing. Apply authorization and input checks in the destination, not only in the caller's route builder.
+Do not treat a URI helper as the complete deep-link registration. Check that the manifest filter, scheme/host/path, argument parser, and route builder agree, and inspect the merged manifest when declarations come from multiple modules. Set `android:exported` according to whether external apps need to launch the host; apply authorization and input checks at the receiving boundary.
 
-Prefer stable identifiers and small primitive arguments over passing an entire screen/presentation model between Activities. Re-load or resolve the destination data from its ID. Pass a Parcelable object only when the contract intentionally requires a snapshot and its compatibility/lifecycle behavior is understood. Handle absent, malformed, stale, and unsupported arguments with a defined recovery path.
+## Preserve and verify navigation behavior
 
-If the project uses Compose Navigation or another navigation framework instead of separate Activities, apply the same boundary principles to typed destinations: keep route contracts stable, keep feature implementation details private, and validate arguments at the receiving screen.
-
-## Verify module and route behavior
-
-- Draw the direct Gradle project dependency graph and check for cycles or accidental feature coupling.
-- Confirm every target Activity is included by the app and its manifest filter matches the route URI/action.
-- Inspect the merged manifest for exported status, merged intent filters, and duplicated/conflicting declarations.
-- Test route construction (action, scheme/host/path, package, and arguments) and destination argument parsing.
-- Add Activity/instrumentation coverage when manifest dispatch or platform deep-link behavior is part of the change; unit-test route construction where possible.
-- Verify navigation works from each calling feature without introducing a dependency on destination UI or ViewModel classes.
+- Use `rememberNavBackStack` with serializable destination keys so the Navigation 3 stack can be saved and restored. Keep saveable-state and ViewModel-store entry decorators on `NavDisplay`; avoid Activity-scoped singleton ViewModels for screen state.
+- Give repeatable destinations distinct entry IDs when their route key includes per-entry state, so repeated detail/search screens do not collide and popping restores the prior entry's state.
+- Keep Back behavior consistent across system/mobile Back and TV remote Back. Check D-pad focus restoration and TV launcher startup when changing the host or transitions.
+- Run `:app:verifyNavigationEntries` when adding or changing destinations. The test resolves the production Koin provider list, installs providers into the entry registry, and checks expected destination keys, missing providers, and duplicate registrations. The app build and `check` tasks depend on this verification.
+- Test launcher startup and each custom URI route; test recommendation intents; test feature-to-feature pushes, repeated detail pushes, and Back at each stack depth. Verify recreation and state restoration after configuration change and process recreation where the platform test setup permits.
+- Verify there is no accidental feature-to-feature Gradle dependency and that the app composes every feature module containing a registered provider.

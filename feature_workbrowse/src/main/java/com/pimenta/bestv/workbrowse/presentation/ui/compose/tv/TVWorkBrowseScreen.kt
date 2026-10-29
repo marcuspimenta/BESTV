@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.compose.tv
 
-import android.content.Intent
 import android.widget.VideoView
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
@@ -57,6 +56,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
@@ -98,7 +98,7 @@ private const val SPLASH_ANIMATION_FILE = "android.resource://com.pimenta.bestv/
 fun TVWorkBrowseScreen(
     viewModel: WorkBrowseViewModel,
     closeScreen: () -> Unit,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -113,7 +113,7 @@ fun TVWorkBrowseScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is CloseScreen -> closeScreen()
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

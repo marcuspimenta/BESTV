@@ -14,27 +14,18 @@
 
 package com.pimenta.bestv.route.castdetail
 
-import android.app.Application
 import android.content.Intent
-import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.route.CastDetailsDestination
 import com.pimenta.bestv.route.parcelableExtra
 
 /**
  * Created by marcus on 25-11-2019.
  */
-private const val SCHEMA_URI = "bestv://castdetail/"
 private const val CAST = "CAST"
 
-class CastDetailsRoute(
-    private val application: Application,
-) {
-
-    fun buildCastDetailIntent(castViewModel: CastViewModel) =
-        Intent(Intent.ACTION_VIEW, SCHEMA_URI.toUri()).apply {
-            putExtra(CAST, castViewModel)
-            setPackage(application.packageName)
-        }
+class CastDetailsRoute {
+    fun buildCastDetailsDestination(castId: Int) = CastDetailsDestination.create(castId)
 }
 
 fun Intent.getCastDeepLink() = parcelableExtra<CastViewModel>(CAST)

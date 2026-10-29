@@ -10,6 +10,7 @@ buildscript {
         classpath libs.plugin.android.gradle
         classpath libs.plugin.kotlin.gradle
         classpath libs.plugin.compose.compiler.gradle
+        classpath libs.plugin.kotlin.serialization.gradle
         classpath libs.plugin.ktlint.gradle
         classpath libs.plugin.android.legacy.kapt
     }

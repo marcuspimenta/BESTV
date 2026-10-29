@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.search.presentation.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.domain.ContentSource
 import com.pimenta.bestv.model.domain.PageDomainModel
@@ -23,6 +22,7 @@ import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.route.WorkDetailsDestination
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -487,12 +487,14 @@ class SearchViewModelTest {
     @Test
     fun `should call route when work is clicked`() =
         runTest(testDispatcher) {
-            val intent = mock<Intent>()
-            whenever(workDetailsRoute.buildWorkDetailIntent(WORK_VIEW_MODEL)).thenReturn(intent)
+            whenever(workDetailsRoute.buildWorkDetailsDestination(WORK_VIEW_MODEL)).thenReturn(
+                WorkDetailsDestination.create(WORK_VIEW_MODEL),
+            )
 
             viewModel.handleEvent(SearchEvent.WorkClicked(WORK_VIEW_MODEL))
 
-            verify(workDetailsRoute).buildWorkDetailIntent(WORK_VIEW_MODEL)
+            verify(workDetailsRoute)
+                .buildWorkDetailsDestination(WORK_VIEW_MODEL)
         }
 
     @Test

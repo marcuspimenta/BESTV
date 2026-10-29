@@ -63,6 +63,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -111,7 +112,8 @@ import com.pimenta.bestv.presentation.R as PresentationR
 @Composable
 fun MobileWorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
+    openExternalIntent: (Intent) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -143,7 +145,12 @@ fun MobileWorkDetailsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
-            if (effect is Navigate) openIntent(effect.intent)
+            when (effect) {
+                is Navigate -> navigate(effect.destination)
+                is com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenExternalIntent -> {
+                    openExternalIntent(effect.intent)
+                }
+            }
         }
     }
     LaunchedEffect(Unit) { viewModel.handleEvent(LoadData) }

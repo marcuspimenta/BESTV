@@ -7,7 +7,6 @@
 
 package com.pimenta.bestv.search.presentation.ui.compose.mobile
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -41,6 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileLoading
@@ -67,7 +67,7 @@ import com.pimenta.bestv.presentation.R as PresentationR
 @Composable
 fun MobileSearchScreen(
     viewModel: SearchViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -76,7 +76,7 @@ fun MobileSearchScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

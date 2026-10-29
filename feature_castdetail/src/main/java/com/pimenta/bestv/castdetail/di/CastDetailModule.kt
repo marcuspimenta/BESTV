@@ -23,13 +23,18 @@ import com.pimenta.bestv.castdetail.domain.GetMovieCreditsByCastUseCase
 import com.pimenta.bestv.castdetail.domain.GetTvShowCreditsByCastUseCase
 import com.pimenta.bestv.castdetail.domain.repository.CastRepository as CastRepositoryPort
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import com.pimenta.bestv.model.presentation.model.CastViewModel
+import com.pimenta.bestv.castdetail.presentation.navigation.CastDetailsNavigationEntryProvider
+import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val castDetailModule = module {
+    single<NavigationEntryProvider>(named("castDetailsEntryProvider")) {
+        CastDetailsNavigationEntryProvider()
+    }
+
     // API
     single { get<Retrofit>().create(CastTmdbApi::class.java) }
 
@@ -52,10 +57,10 @@ val castDetailModule = module {
     factoryOf(::GetTvShowCreditsByCastUseCase)
     factoryOf(::GetCastDetailsUseCase)
 
-    // ViewModel with intent parameter
-    factory { (cast: CastViewModel) ->
+    // ViewModel with cast identifier parameter
+    factory { (castId: Int) ->
         CastDetailsViewModel(
-            cast = cast,
+            castId = castId,
             getCastDetailsUseCase = get(),
             workDetailsRoute = get(),
             resource = get(),

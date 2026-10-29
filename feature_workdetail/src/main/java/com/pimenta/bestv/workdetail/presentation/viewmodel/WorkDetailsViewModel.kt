@@ -453,19 +453,17 @@ class WorkDetailsViewModel(
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
-        val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(WorkDetailsEffect.Navigate(intent))
+        emitEffect(WorkDetailsEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
 
     private fun handleCastClicked(cast: CastViewModel) {
-        val intent = castDetailsRoute.buildCastDetailIntent(cast)
-        emitEffect(WorkDetailsEffect.Navigate(intent))
+        emitEffect(WorkDetailsEffect.Navigate(castDetailsRoute.buildCastDetailsDestination(cast.id)))
     }
 
     private fun handleVideoClicked(video: VideoViewModel) {
         video.youtubeUrl?.let {
             val intent = Intent(Intent.ACTION_VIEW, it.toUri())
-            emitEffect(WorkDetailsEffect.Navigate(intent))
+            emitEffect(WorkDetailsEffect.OpenExternalIntent(intent))
         }
     }
 

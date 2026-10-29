@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.model
 
-import android.content.Intent
+import androidx.navigation3.runtime.NavKey
 
 /**
  * Represents one-time side effects that should happen in the Work Browse screen.
@@ -24,6 +24,6 @@ sealed interface WorkBrowseEffect {
     data object CloseScreen : WorkBrowseEffect
 
     data class Navigate(
-        val intent: Intent,
+        val destination: NavKey,
     ) : WorkBrowseEffect
 }

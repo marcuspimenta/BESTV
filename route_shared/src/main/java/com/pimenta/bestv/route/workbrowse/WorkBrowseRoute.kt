@@ -17,11 +17,13 @@ package com.pimenta.bestv.route.workbrowse
 import android.app.Application
 import android.content.Intent
 import androidx.core.net.toUri
+import com.pimenta.bestv.route.BESTV_SCHEME
+import com.pimenta.bestv.route.WORK_BROWSE_HOST
 
 /**
  * Created by marcus on 2-12-2019.
  */
-private const val SCHEMA_URI = "bestv://workbrowse/"
+private const val SCHEMA_URI = "$BESTV_SCHEME://$WORK_BROWSE_HOST/"
 
 class WorkBrowseRoute(
     private val application: Application,

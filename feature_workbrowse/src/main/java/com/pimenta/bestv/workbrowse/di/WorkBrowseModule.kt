@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.di
 
+import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
 import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
 import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
@@ -44,6 +45,7 @@ import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository as GenreRepositoryPort
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryPort
+import com.pimenta.bestv.workbrowse.presentation.navigation.WorkBrowseNavigationEntryProvider
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
@@ -52,6 +54,10 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val workBrowseModule = module {
+    single<NavigationEntryProvider>(named("workBrowseEntryProvider")) {
+        WorkBrowseNavigationEntryProvider()
+    }
+
     // APIs
     single { get<Retrofit>().create(GenreTmdbApi::class.java) }
     single { get<Retrofit>().create(MovieTmdbApi::class.java) }

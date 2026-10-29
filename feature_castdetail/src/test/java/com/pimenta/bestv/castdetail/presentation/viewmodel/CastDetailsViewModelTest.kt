@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.castdetail.presentation.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.pimenta.bestv.castdetail.domain.GetCastDetailsUseCase
@@ -30,6 +29,7 @@ import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.route.WorkDetailsDestination
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -135,7 +135,7 @@ class CastDetailsViewModelTest {
     private val resource: Resource = mock()
     private val viewModel =
         CastDetailsViewModel(
-            cast = CAST,
+            castId = CAST.id,
             getCastDetailsUseCase = getCastDetailsUseCase,
             workDetailsRoute = workDetailsRoute,
             resource = resource,
@@ -240,8 +240,8 @@ class CastDetailsViewModelTest {
                 type = WorkType.MOVIE,
                 voteAverage = 7.5f,
             )
-            val intent = mock<Intent>()
-            whenever(workDetailsRoute.buildWorkDetailIntent(clickedWork)).thenReturn(intent)
+            val destination = WorkDetailsDestination.create(clickedWork)
+            whenever(workDetailsRoute.buildWorkDetailsDestination(clickedWork)).thenReturn(destination)
 
             viewModel.effects.test {
                 viewModel.handleEvent(CastDetailsEvent.WorkClicked(clickedWork))
@@ -249,7 +249,7 @@ class CastDetailsViewModelTest {
 
                 val effect = awaitItem()
                 assertTrue(effect is CastDetailsEffect.Navigate)
-                assertEquals(intent, (effect as CastDetailsEffect.Navigate).intent)
+                assertEquals(destination, (effect as CastDetailsEffect.Navigate).destination)
             }
         }
 

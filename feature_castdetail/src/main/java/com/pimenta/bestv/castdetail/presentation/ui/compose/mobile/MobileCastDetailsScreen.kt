@@ -7,7 +7,6 @@
 
 package com.pimenta.bestv.castdetail.presentation.ui.compose.mobile
 
-import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -49,6 +48,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.Navigate
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
@@ -67,7 +67,7 @@ import com.pimenta.bestv.presentation.R as PresentationR
 @Composable
 fun MobileCastDetailsScreen(
     viewModel: CastDetailsViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,7 +90,7 @@ fun MobileCastDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

@@ -18,6 +18,9 @@ compose-bom = "2026.09.00"
 androidx-tv-foundation = "1.0.0"
 androidx-tv-material = "1.1.0"
 androidx-activity = "1.13.0"
+androidx-navigation3 = "1.2.0"
+androidx-lifecycle-navigation3 = "2.12.0-alpha04"
+kotlinx-serialization = "1.11.0"
 coil = "3.6.3"
 retrofit = "3.0.0"
 okhttp = "5.5.0"
@@ -37,6 +40,7 @@ koin = "4.2.2"
 plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle-plugin" }
 plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+plugin-kotlin-serialization-gradle = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 plugin-ktlint-gradle = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint-gradle-plugin" }
 plugin-android-legacy-kapt = { module = "com.android.legacy-kapt:com.android.legacy-kapt.gradle.plugin", version.ref = "android-gradle-plugin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
@@ -69,6 +73,11 @@ androidx-tv-foundation = { module = "androidx.tv:tv-foundation", version.ref = "
 androidx-tv-material = { module = "androidx.tv:tv-material", version.ref = "androidx-tv-material" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidx-navigation3" }
+navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidx-navigation3" }
+lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle-navigation3" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 

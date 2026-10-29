@@ -18,17 +18,22 @@ import android.app.Application
 import android.content.Intent
 import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.route.BESTV_SCHEME
+import com.pimenta.bestv.route.WORK_DETAILS_HOST
 import com.pimenta.bestv.route.parcelableExtra
+import com.pimenta.bestv.route.WorkDetailsDestination
 
 /**
  * Created by marcus on 22-11-2019.
  */
-private const val SCHEMA_URI = "bestv://workdetail/"
+private const val SCHEMA_URI = "$BESTV_SCHEME://$WORK_DETAILS_HOST/"
 private const val WORK = "WORK"
 
 class WorkDetailsRoute(
     private val application: Application,
 ) {
+
+    fun buildWorkDetailsDestination(workViewModel: WorkViewModel) = WorkDetailsDestination.create(workViewModel)
 
     fun buildWorkDetailIntent(workViewModel: WorkViewModel) =
         Intent(Intent.ACTION_VIEW, SCHEMA_URI.toUri()).apply {

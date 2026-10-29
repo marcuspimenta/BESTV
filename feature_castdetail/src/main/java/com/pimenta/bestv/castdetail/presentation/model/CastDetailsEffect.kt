@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.castdetail.presentation.model
 
-import android.content.Intent
+import androidx.navigation3.runtime.NavKey
 
 /**
  * Represents side effects in the Cast Details screen
@@ -23,6 +23,6 @@ import android.content.Intent
  */
 sealed interface CastDetailsEffect {
     data class Navigate(
-        val intent: Intent,
+        val destination: NavKey,
     ) : CastDetailsEffect
 }

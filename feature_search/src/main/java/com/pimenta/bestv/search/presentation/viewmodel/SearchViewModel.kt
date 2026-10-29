@@ -137,8 +137,7 @@ class SearchViewModel(
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
-        val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(SearchEffect.Navigate(intent))
+        emitEffect(SearchEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
 
     private fun loadMoreContent(

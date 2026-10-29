@@ -1,8 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv'
+    buildFeatures {
+        compose true
+    }
     defaultConfig {
         applicationId "com.pimenta.bestv"
         versionCode 2
@@ -45,7 +49,13 @@ dependencies {
 
     // AndroidX
     implementation libs.androidx.activity.ktx
+    implementation libs.androidx.activity.compose
     implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.navigation3.runtime
+    implementation libs.navigation3.ui
+    implementation libs.lifecycle.viewmodel.navigation3
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.core
     implementation libs.androidx.work.runtime.ktx
 
     // Retrofit
@@ -58,4 +68,23 @@ dependencies {
 
     // Timber
     implementation libs.timber
+
+    // Tests
+    testImplementation libs.junit4
+}
+
+tasks.register('verifyNavigationEntries') {
+    group = 'verification'
+    description = 'Verifies that every navigation destination has a registered entry provider.'
+    dependsOn tasks.named('testDebugUnitTest')
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyNavigationEntries')
+}
+
+tasks.matching {
+    it.name in ['assembleDebug', 'assembleRelease', 'bundleDebug', 'bundleRelease']
+}.configureEach {
+    dependsOn tasks.named('verifyNavigationEntries')
 }

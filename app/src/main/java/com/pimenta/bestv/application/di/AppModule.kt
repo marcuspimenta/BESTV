@@ -22,6 +22,7 @@ import com.pimenta.bestv.presentation.di.presentationModule
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.recommendation.di.recommendationModule
 import com.pimenta.bestv.route.di.routeModule
+import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.search.di.searchModule
 import com.pimenta.bestv.workbrowse.di.workBrowseModule
 import com.pimenta.bestv.workdetail.di.workDetailModule
@@ -29,7 +30,10 @@ import org.koin.dsl.module
 import org.koin.android.ext.koin.androidContext
 
 val appModule = module {
+
     single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
+    single { getAll<NavigationEntryProvider>() }
+
     includes(
         // Shared modules
         networkModule,

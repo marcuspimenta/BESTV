@@ -7,32 +7,29 @@
 
 package com.pimenta.bestv.castdetail.presentation.ui.compose
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.castdetail.presentation.ui.compose.mobile.MobileCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.ui.compose.tv.TVCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import com.pimenta.bestv.presentation.theme.BESTVTheme
 
 @Composable
 fun CastDetailsWrapperScreen(
     viewModel: CastDetailsViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
 ) {
     val isMobileDevice = viewModel.state.value.isMobileDevice
-    BESTVTheme {
-        if (isMobileDevice) {
-            MobileCastDetailsScreen(
-                viewModel = viewModel,
-                openIntent = openIntent,
-                onBack = onBack,
-            )
-        } else {
-            TVCastDetailsScreen(
-                viewModel = viewModel,
-                openIntent = openIntent,
-            )
-        }
+    if (isMobileDevice) {
+        MobileCastDetailsScreen(
+            viewModel = viewModel,
+            navigate = navigate,
+            onBack = onBack,
+        )
+    } else {
+        TVCastDetailsScreen(
+            viewModel = viewModel,
+            navigate = navigate,
+        )
     }
 }

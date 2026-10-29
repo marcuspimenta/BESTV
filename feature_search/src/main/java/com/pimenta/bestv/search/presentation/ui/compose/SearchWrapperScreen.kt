@@ -7,9 +7,8 @@
 
 package com.pimenta.bestv.search.presentation.ui.compose
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
-import com.pimenta.bestv.presentation.theme.BESTVTheme
+import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.search.presentation.ui.compose.mobile.MobileSearchScreen
 import com.pimenta.bestv.search.presentation.ui.compose.tv.TVSearchScreen
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
@@ -17,22 +16,20 @@ import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 @Composable
 fun SearchWrapperScreen(
     viewModel: SearchViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
 ) {
     val isMobileDevice = viewModel.state.value.isMobileDevice
-    BESTVTheme {
-        if (isMobileDevice) {
-            MobileSearchScreen(
-                viewModel = viewModel,
-                openIntent = openIntent,
-                onBack = onBack,
-            )
-        } else {
-            TVSearchScreen(
-                viewModel = viewModel,
-                openIntent = openIntent,
-            )
-        }
+    if (isMobileDevice) {
+        MobileSearchScreen(
+            viewModel = viewModel,
+            navigate = navigate,
+            onBack = onBack,
+        )
+    } else {
+        TVSearchScreen(
+            viewModel = viewModel,
+            navigate = navigate,
+        )
     }
 }

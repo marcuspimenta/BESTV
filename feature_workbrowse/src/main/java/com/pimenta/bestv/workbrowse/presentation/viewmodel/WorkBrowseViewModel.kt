@@ -164,8 +164,7 @@ class WorkBrowseViewModel(
         val currentState = currentState.state as? Loaded ?: return
         when {
             selectedSectionIndex == 0 -> {
-                val intent = searchRoute.buildSearchIntent()
-                emitEffect(WorkBrowseEffect.Navigate(intent))
+                emitEffect(WorkBrowseEffect.Navigate(searchRoute.buildSearchDestination()))
             }
 
             else -> {
@@ -188,7 +187,6 @@ class WorkBrowseViewModel(
     }
 
     private fun handleWorkClicked(work: WorkViewModel) {
-        val intent = workDetailsRoute.buildWorkDetailIntent(work)
-        emitEffect(WorkBrowseEffect.Navigate(intent))
+        emitEffect(WorkBrowseEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
 }

@@ -27,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,7 +75,7 @@ fun MobileBrowseContent(
             ) { MobileError(onRetry = onRetry) }
 
         is WorkBrowseState.State.Loaded -> {
-            var hasPlayedEntrance by remember { mutableStateOf(false) }
+            var hasPlayedEntrance by rememberSaveable { mutableStateOf(false) }
             LaunchedEffect(Unit) { hasPlayedEntrance = true }
             AnimatedContent(
                 targetState = currentState.selectedSectionIndex,

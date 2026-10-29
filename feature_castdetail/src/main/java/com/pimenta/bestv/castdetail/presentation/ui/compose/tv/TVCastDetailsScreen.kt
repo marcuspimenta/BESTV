@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.castdetail.presentation.ui.compose.tv
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.Navigate
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
@@ -48,7 +48,7 @@ import com.pimenta.bestv.presentation.R as PresentationR
 @Composable
 fun TVCastDetailsScreen(
     viewModel: CastDetailsViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -56,7 +56,7 @@ fun TVCastDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.presentation.model
 
-import android.content.Intent
+import androidx.navigation3.runtime.NavKey
 
 /**
  * Represents one-time side effects that should happen in the Search screen.
@@ -22,6 +22,6 @@ import android.content.Intent
  */
 sealed interface SearchEffect {
     data class Navigate(
-        val intent: Intent,
+        val destination: NavKey,
     ) : SearchEffect
 }

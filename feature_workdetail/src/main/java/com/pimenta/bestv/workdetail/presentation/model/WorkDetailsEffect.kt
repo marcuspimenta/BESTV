@@ -15,9 +15,14 @@
 package com.pimenta.bestv.workdetail.presentation.model
 
 import android.content.Intent
+import androidx.navigation3.runtime.NavKey
 
 sealed interface WorkDetailsEffect {
     data class Navigate(
+        val destination: NavKey,
+    ) : WorkDetailsEffect
+
+    data class OpenExternalIntent(
         val intent: Intent,
     ) : WorkDetailsEffect
 }

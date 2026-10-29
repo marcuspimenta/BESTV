@@ -26,5 +26,54 @@
         android:logo="@drawable/app_banner"
         android:supportsRtl="true"
         android:theme="@style/Theme.BesTV">
+        <activity
+            android:name=".application.presentation.ui.activity.NavigationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="@string/host_workbrowse"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="@string/host_search"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="@string/host_workdetail"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name=".application.navigation.CastDetailsDeepLink"
+            android:exported="false"
+            android:targetActivity=".application.presentation.ui.activity.NavigationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="@string/host_castdetail"
+                    android:scheme="@string/schema" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

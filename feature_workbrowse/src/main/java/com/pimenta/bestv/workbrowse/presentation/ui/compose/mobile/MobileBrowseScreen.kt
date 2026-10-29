@@ -7,7 +7,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.CloseScreen
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
@@ -43,7 +43,7 @@ import com.pimenta.bestv.workbrowse.R as workbrowseR
 @Composable
 fun MobileBrowseScreen(
     viewModel: WorkBrowseViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     closeScreen: () -> Unit,
 ) {
     val browseState by viewModel.state.collectAsStateWithLifecycle()
@@ -52,7 +52,7 @@ fun MobileBrowseScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 CloseScreen -> closeScreen()
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
             }
         }
     }

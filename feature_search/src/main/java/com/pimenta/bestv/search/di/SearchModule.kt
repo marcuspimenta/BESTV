@@ -14,6 +14,7 @@
 
 package com.pimenta.bestv.search.di
 
+import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.search.data.remote.api.SearchMovieTmdbApi
 import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
@@ -25,9 +26,10 @@ import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.search.domain.repository.TvShowRepository as TvShowRepositoryPort
+import com.pimenta.bestv.search.presentation.navigation.SearchNavigationEntryProvider
 import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor
-import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor
+import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
@@ -35,6 +37,10 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val searchModule = module {
+    single<NavigationEntryProvider>(named("searchEntryProvider")) {
+        SearchNavigationEntryProvider()
+    }
+
     // APIs
     single { get<Retrofit>().create(SearchMovieTmdbApi::class.java) }
     single { get<Retrofit>().create(SearchTvShowTmdbApi::class.java) }

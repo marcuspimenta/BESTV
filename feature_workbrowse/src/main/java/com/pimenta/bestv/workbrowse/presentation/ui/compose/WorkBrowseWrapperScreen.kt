@@ -7,9 +7,8 @@
 
 package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
-import com.pimenta.bestv.presentation.theme.BESTVTheme
+import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile.MobileBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.tv.TVWorkBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
@@ -17,23 +16,21 @@ import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 @Composable
 fun WorkBrowseWrapperScreen(
     viewModel: WorkBrowseViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     closeScreen: () -> Unit,
 ) {
     val isMobileDevice = viewModel.state.value.isMobileDevice
-    BESTVTheme {
-        if (isMobileDevice) {
-            MobileBrowseScreen(
-                viewModel = viewModel,
-                openIntent = openIntent,
-                closeScreen = closeScreen,
-            )
-        } else {
-            TVWorkBrowseScreen(
-                viewModel = viewModel,
-                closeScreen = closeScreen,
-                openIntent = openIntent,
-            )
-        }
+    if (isMobileDevice) {
+        MobileBrowseScreen(
+            viewModel = viewModel,
+            navigate = navigate,
+            closeScreen = closeScreen,
+        )
+    } else {
+        TVWorkBrowseScreen(
+            viewModel = viewModel,
+            closeScreen = closeScreen,
+            navigate = navigate,
+        )
     }
 }

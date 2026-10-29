@@ -14,7 +14,6 @@
 
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -26,6 +25,8 @@ import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.route.SearchDestination
+import com.pimenta.bestv.route.WorkDetailsDestination
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
@@ -247,8 +248,8 @@ class WorkBrowseViewModelTest {
     fun `sectionClicked with index 0 should emit Navigate effect to search`() =
         runTest(testDispatcher) {
             whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            val searchIntent = mock<Intent>()
-            whenever(searchRoute.buildSearchIntent()).thenReturn(searchIntent)
+            val searchDestination = SearchDestination.create()
+            whenever(searchRoute.buildSearchDestination()).thenReturn(searchDestination)
 
             viewModel = createViewModel()
             advanceUntilIdle()
@@ -268,7 +269,7 @@ class WorkBrowseViewModelTest {
 
             val navigateEffect = collectedEffects.filterIsInstance<WorkBrowseEffect.Navigate>().firstOrNull()
             assertNotNull("Navigate effect should be emitted", navigateEffect)
-            assertEquals(searchIntent, navigateEffect?.intent)
+            assertEquals(searchDestination, navigateEffect?.destination)
             job.cancel()
         }
 
@@ -318,8 +319,8 @@ class WorkBrowseViewModelTest {
     fun `workClicked should emit Navigate effect to work details`() =
         runTest(testDispatcher) {
             whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            val workDetailsIntent = mock<Intent>()
-            whenever(workDetailsRoute.buildWorkDetailIntent(WORK)).thenReturn(workDetailsIntent)
+            val workDetailsDestination = WorkDetailsDestination.create(WORK)
+            whenever(workDetailsRoute.buildWorkDetailsDestination(WORK)).thenReturn(workDetailsDestination)
 
             viewModel = createViewModel()
 
@@ -333,10 +334,10 @@ class WorkBrowseViewModelTest {
 
             val navigateEffect = collectedEffects.filterIsInstance<WorkBrowseEffect.Navigate>().firstOrNull()
             assertNotNull("Navigate effect should be emitted", navigateEffect)
-            assertEquals(workDetailsIntent, navigateEffect?.intent)
+            assertEquals(workDetailsDestination, navigateEffect?.destination)
             job.cancel()
 
-            verify(workDetailsRoute).buildWorkDetailIntent(WORK)
+            verify(workDetailsRoute).buildWorkDetailsDestination(WORK)
         }
 
     @Test

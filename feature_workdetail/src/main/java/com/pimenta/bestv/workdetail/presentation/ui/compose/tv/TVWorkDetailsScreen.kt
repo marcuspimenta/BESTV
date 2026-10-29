@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
 import com.pimenta.bestv.model.presentation.model.CastViewModel
 import com.pimenta.bestv.model.presentation.model.WorkType
@@ -72,7 +73,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun TVWorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
+    openExternalIntent: (Intent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -80,7 +82,10 @@ fun TVWorkDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is Navigate -> openIntent(effect.intent)
+                is Navigate -> navigate(effect.destination)
+                is com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenExternalIntent -> {
+                    openExternalIntent(effect.intent)
+                }
             }
         }
     }

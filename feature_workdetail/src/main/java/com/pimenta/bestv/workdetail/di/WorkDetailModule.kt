@@ -47,6 +47,8 @@ import com.pimenta.bestv.workdetail.domain.GetWorkMetadataUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryPort
+import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.workdetail.presentation.navigation.WorkDetailsNavigationEntryProvider
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
@@ -54,6 +56,10 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val workDetailModule = module {
+    single<NavigationEntryProvider>(named("workDetailsEntryProvider")) {
+        WorkDetailsNavigationEntryProvider()
+    }
+
     // APIs
     single { get<Retrofit>().create(MovieDetailTmdbApi::class.java) }
     single { get<Retrofit>().create(TvShowDetailTmdbApi::class.java) }
