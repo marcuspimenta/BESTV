@@ -1,57 +1,49 @@
 # Feature Modularization and Navigation 3
 
-Use this reference when splitting Android features into Gradle modules or changing the navigation flow in BESTV. The app uses a single `NavigationActivity` as its Android entry point and Jetpack Navigation 3 for screen-to-screen navigation.
+Use this reference when deciding whether to split feature code into Gradle modules or when changing navigation in a project that already uses Jetpack Navigation 3. Navigation 3 and its APIs evolve; inspect the resolved library version and its current official documentation before applying a sample.
 
-## Split by user capability
+## Split by capability when it helps
 
-Organize feature modules around cohesive user capabilities or product areas, not technical layer names alone. A feature module owns the code that changes together for that capability: UI, ViewModel/state, domain operations, data implementation, feature navigation entry, and DI registration when those concerns are present.
+Organize modules around cohesive user capabilities or product areas when ownership, reuse, independent compilation, or dependency enforcement justifies the build and maintenance cost. A feature may keep its UI, state holder, domain operations, data implementation, navigation entry, and registration in packages inside one module. Do not create modules only to mirror architectural layer names.
+
+Possible responsibilities include:
 
 ```text
-:app                         startup, NavigationActivity, NavigationHost, root DI composition
-:feature_<capability>        capability UI, ViewModel, entry provider, and feature DI
-:route_shared                serializable destination keys, route contracts, entry-provider API
+:app                         startup and top-level composition
+:feature_<capability>        capability UI, state, operations, and registrations
+:shared_navigation           shared destination contracts, if features need them
 :shared_data                 reusable network/database infrastructure
 :shared_ui                   reusable visual components and presentation utilities
-:shared_domain_or_models     only stable concepts genuinely shared by features
+:shared_domain_or_models     stable concepts genuinely shared by features
 ```
 
-This is a menu of responsibilities, not a required module list. A small feature may keep `data`, `domain`, and `presentation` as packages inside one Gradle module. Split those layers into separate modules only when independent compilation, ownership, reuse, or dependency enforcement justifies the extra graph and build maintenance.
+This is an example, not a required module list. Avoid shared modules that become catch-alls. Check `settings.gradle[.kts]` and module build files for the actual dependency graph; package names alone do not establish Gradle boundaries.
 
-### Dependency direction
+When modules are used, keep the graph acyclic. The app or another deliberate composition layer can aggregate feature registrations. Shared modules should not depend on feature implementations. Avoid direct feature-to-feature dependencies when a small shared contract or navigation key can express the interaction.
 
-- The app module is the composition layer: it depends on the feature modules it launches and aggregates shared infrastructure and DI definitions.
-- A feature may depend on shared modules it actually uses, such as route contracts, shared UI, or infrastructure APIs.
-- A feature should not depend on the app module. Keep shared modules independent of feature implementations.
-- Avoid direct feature-to-feature dependencies. To open another feature, emit a shared `NavKey`; do not import its screen, ViewModel, or entry-builder function.
-- Keep the Gradle graph acyclic. Declare real edges in module build files and verify included modules in Gradle settings; package separation alone does not enforce module boundaries.
+## Keep navigation ownership clear
 
-## Navigation ownership and provider registration
+Navigation 3 models destinations as keys and renders them through `NavEntry` content. A project can define entries in one host or let feature modules contribute entry providers that the host composes. Use the approach that fits the existing module graph; provider registration is an option for modular ownership, not a requirement for every app.
 
-`NavigationActivity` is the only screen-host Activity. It resolves an incoming Android `Intent` to an initial destination, defaults to `WorkBrowseDestination` for launcher startup, and supplies the injected `List<NavigationEntryProvider>` to `NavigationHost`. The host owns the Navigation 3 back stack, pushes typed keys for forward navigation, pops for Back, and exits the Activity when the root entry is reached.
+Keep destination UI and entry construction close to the feature that owns them. Put shared keys or route contracts in a module that does not depend on feature UI only when multiple modules need those contracts. Do not add a navigation module solely to pass a key between two packages in one module.
 
-Keep responsibilities separated:
+Use a back stack appropriate to the product's navigation behavior. If the project needs a saveable Navigation 3 back stack, use serializable keys with the persistence API supported by its resolved Navigation 3 version. Prefer small stable identifiers over transporting whole UI or persistence models. Scope saveable UI state and ViewModels to navigation entries only as required, using the current Navigation 3 entry decorator APIs and lifecycle rules.
 
-- `route_shared` owns serializable `NavKey` destination types, shared route/argument contracts, and the `NavigationEntryProvider` interface. It must not depend on feature presentation implementations.
-- Each feature owns its `NavigationEntryProvider` implementation and `EntryProviderScope` builder. The provider installs that feature's typed `entry<Destination>` and passes the host's `navigate` and `onBack` callbacks to the screen.
-- Each feature registers its provider as a `NavigationEntryProvider` in its own Koin module. The app aggregates providers with Koin `getAll<NavigationEntryProvider>()` and injects the resulting list into `NavigationActivity`.
-- `NavigationHost` installs the injected providers into one `entryProvider` block and applies Navigation 3 state/ViewModel entry decorators. Use navigation-entry scoping for destination ViewModels and unique entry identity when the same destination can be pushed more than once.
-- Keep the feature builder and screen local to their feature. Do not manually resolve providers from a global Koin instance in the host or recreate a parallel registry in the app.
+Internal navigation should update the chosen navigation state. Keep Android `Intent`s at platform boundaries such as launcher startup, notifications, app links, or other external entry points. Validate incoming URI data and extras before converting them into an internal destination, and define a recovery behavior for invalid input. Preserve existing public URI and argument contracts unless the task includes a migration.
 
-Internal navigation uses typed keys, not Activity intents. For new destinations, prefer small stable identifiers and load feature state in the destination. Keep any existing payload-based contract only while compatibility requires it; changing it should be an explicit migration.
-
-## Android entry points and deep links
-
-Android intents remain appropriate at platform boundaries: launcher startup, custom-scheme links, notifications, recommendation `PendingIntent`s, and other system entry points. In BESTV, preserve the existing `bestv://` scheme and route hosts. The manifest directs these entry points to `NavigationActivity`; `Intent.toBestvDestination()` maps the incoming contract to the initial Navigation 3 key. Do not add one Activity per screen for internal navigation.
-
-Treat incoming intent data and extras as untrusted. Validate required values while mapping to a destination and define recovery for absent or malformed input, such as falling back to Browse or showing a recoverable error. Preserve existing URI and Parcelable contracts unless the task explicitly changes them. For new public links, prefer stable IDs over passing an entire presentation model.
-
-Do not treat a URI helper as the complete deep-link registration. Check that the manifest filter, scheme/host/path, argument parser, and route builder agree, and inspect the merged manifest when declarations come from multiple modules. Set `android:exported` according to whether external apps need to launch the host; apply authorization and input checks at the receiving boundary.
+See Android's [Navigation 3 basics](https://developer.android.com/guide/navigation/navigation-3/basics), [saveable back stack recipe](https://developer.android.com/guide/navigation/navigation-3/recipes/basicsaveable), and [entry decorators](https://developer.android.com/guide/navigation/navigation-3/naventrydecorators) for APIs and lifecycle behavior supported by the current library.
 
 ## Preserve and verify navigation behavior
 
-- Use `rememberNavBackStack` with serializable destination keys so the Navigation 3 stack can be saved and restored. Keep saveable-state and ViewModel-store entry decorators on `NavDisplay`; avoid Activity-scoped singleton ViewModels for screen state.
-- Give repeatable destinations distinct entry IDs when their route key includes per-entry state, so repeated detail/search screens do not collide and popping restores the prior entry's state.
-- Keep Back behavior consistent across system/mobile Back and TV remote Back. Check D-pad focus restoration and TV launcher startup when changing the host or transitions.
-- Run `:app:verifyNavigationEntries` when adding or changing destinations. The test resolves the production Koin provider list, installs providers into the entry registry, and checks expected destination keys, missing providers, and duplicate registrations. The app build and `check` tasks depend on this verification.
-- Test launcher startup and each custom URI route; test recommendation intents; test feature-to-feature pushes, repeated detail pushes, and Back at each stack depth. Verify recreation and state restoration after configuration change and process recreation where the platform test setup permits.
-- Verify there is no accidental feature-to-feature Gradle dependency and that the app composes every feature module containing a registered provider.
+Before changing navigation, trace how startup, external links, feature-to-feature transitions, Back, and state restoration work in the active app. Check manifest declarations and the merged manifest when entry points are contributed by multiple modules. Keep behavior consistent across the input modes and form factors the app supports.
+
+Choose verification from the changed behavior and the project's existing setup. Useful cases include:
+
+- Each registered key resolves to the intended entry, with missing or duplicate registrations handled deliberately.
+- Launcher and external-link inputs map to valid destinations; malformed or incomplete inputs have a recoverable outcome.
+- Forward navigation and Back work at each relevant stack depth, including repeated instances of destinations that carry per-entry state.
+- State restoration works across configuration change and process recreation when the product requires it.
+- Platform intents preserve their intended identity and data.
+- The Gradle graph remains acyclic and features do not gain accidental implementation dependencies on one another.
+
+Prefer the project's focused navigation checks and tests. Do not assume a task name or test mechanism from another repository.

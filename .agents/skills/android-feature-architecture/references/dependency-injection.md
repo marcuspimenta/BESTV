@@ -6,7 +6,7 @@ Use this reference when adding a feature to the DI graph, changing implementatio
 
 Keep framework object construction at an auditable composition root. The app-level root aggregates shared infrastructure and feature registrations. A feature module can group its API clients, data sources, repository implementations, domain use cases, and ViewModels, while shared modules register resources such as network clients, databases, or app-wide presentation services.
 
-The important invariant is that the domain contract is bound to a concrete implementation outside the domain. Use cases request the contract; they should not request a concrete data repository from the container or service-locate dependencies from inside business logic.
+When a project uses domain-owned ports or other inner-layer interfaces, bind each contract to a concrete implementation outside that layer. Business operations should depend on the contract rather than request concrete data repositories from a container or service-locate dependencies. Projects without that architecture can still use the same composition-root principle for the boundaries they choose to keep.
 
 Conceptually:
 
