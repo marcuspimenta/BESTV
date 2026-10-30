@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
@@ -33,6 +34,7 @@ fun MobileWorkRow(
     modifier: Modifier = Modifier,
     pagination: PaginationState? = null,
     onLoadMore: () -> Unit = {},
+    cardColor: Color = BESTVTheme.colors.mobileCardSurface,
 ) {
     if (works.isEmpty()) return
 
@@ -42,16 +44,22 @@ fun MobileWorkRow(
         LazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
-            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
+            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
             items(works, key = { it.id }, contentType = { LazyContentTypes.WORK }) { work ->
-                MobileWorkCard(work, onClick = { onWorkClick(work) })
+                MobileWorkCard(
+                    work,
+                    onClick = { onWorkClick(work) },
+                    containerColor = cardColor,
+                )
             }
             if (pagination?.isLoadingMore == true) {
                 item(key = LazyContentTypes.LOADING, contentType = LazyContentTypes.LOADING) {
-                    MobileLoading(Modifier.padding(BESTVTheme.scale.s240))
+                    MobileLoading(
+                        modifier = Modifier.padding(BESTVTheme.scale.s240),
+                    )
                 }
             }
         }

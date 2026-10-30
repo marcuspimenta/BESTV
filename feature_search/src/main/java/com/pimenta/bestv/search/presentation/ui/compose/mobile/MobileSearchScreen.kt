@@ -9,13 +9,14 @@ package com.pimenta.bestv.search.presentation.ui.compose.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -26,15 +27,20 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -82,7 +88,7 @@ fun MobileSearchScreen(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize().statusBarsPadding(),
+        modifier = modifier.fillMaxSize(),
         containerColor = BESTVTheme.colors.black,
         topBar = {
             MobileSearchTopBar(
@@ -98,7 +104,8 @@ fun MobileSearchScreen(
             state = state,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding),
+                .padding(contentPadding)
+                .imePadding(),
             onRetry = { viewModel.handleEvent(SearchQuerySubmitted(state.query)) },
             onWorkClick = { viewModel.handleEvent(WorkClicked(it)) },
             onLoadMoreMovies = { viewModel.handleEvent(LoadMoreMovies) },
@@ -108,6 +115,7 @@ fun MobileSearchScreen(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 private fun MobileSearchTopBar(
     query: String,
     onBack: () -> Unit,
@@ -115,66 +123,59 @@ private fun MobileSearchTopBar(
     onClear: () -> Unit,
     onSearch: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = BESTVTheme.scale.s080,
-                vertical = BESTVTheme.scale.s040,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier
-                .size(BESTVTheme.scale.s240),
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(PresentationR.string.back),
-                tint = BESTVTheme.colors.white,
-                modifier = Modifier
-                    .size(BESTVTheme.scale.s120),
-            )
-        }
-        TextField(
-            value = query,
-            onValueChange = onQueryChanged,
-            modifier = Modifier
-                .weight(1f)
-                .height(BESTVTheme.scale.s360),
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.search_placeholder),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(PresentationR.string.back),
+                    tint = BESTVTheme.colors.white,
                 )
-            },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = {
-                if (query.isNotEmpty()) {
-                    IconButton(onClick = onClear) {
-                        Icon(
-                            Icons.Default.Clear,
-                            contentDescription = stringResource(R.string.clear_search),
-                        )
+            }
+        },
+        title = {
+            TextField(
+                value = query,
+                onValueChange = onQueryChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(BESTVTheme.scale.s280)
+                    .clip(RoundedCornerShape(BESTVTheme.scale.mobileSearchFieldCornerRadius)),
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.search_placeholder),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = onClear) {
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = stringResource(R.string.clear_search),
+                            )
+                        }
                     }
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = BESTVTheme.colors.white,
-                unfocusedTextColor = BESTVTheme.colors.white,
-                cursorColor = BESTVTheme.colors.white,
-                focusedContainerColor = BESTVTheme.colors.transparent,
-                unfocusedContainerColor = BESTVTheme.colors.transparent,
-                focusedIndicatorColor = BESTVTheme.colors.transparent,
-                unfocusedIndicatorColor = BESTVTheme.colors.transparent,
-            ),
-        )
-    }
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = BESTVTheme.colors.white,
+                    unfocusedTextColor = BESTVTheme.colors.white,
+                    cursorColor = BESTVTheme.colors.white,
+                    focusedContainerColor = BESTVTheme.colors.mobileCardSurface,
+                    unfocusedContainerColor = BESTVTheme.colors.mobileCardSurface,
+                    focusedIndicatorColor = BESTVTheme.colors.transparent,
+                    unfocusedIndicatorColor = BESTVTheme.colors.transparent,
+                ),
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = BESTVTheme.colors.black),
+        windowInsets = TopAppBarDefaults.windowInsets,
+    )
 }
 
 @Composable
@@ -189,12 +190,22 @@ private fun MobileSearchContent(
     Box(modifier = modifier) {
         when (val result = state.state) {
             is Empty ->
-                Text(
-                    text = stringResource(R.string.search_placeholder),
-                    color = BESTVTheme.colors.secondaryText,
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                )
+                Column(
+                    modifier = Modifier.align(Alignment.Center).padding(BESTVTheme.scale.s240),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+                ) {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = null,
+                        tint = BESTVTheme.colors.secondaryText,
+                        modifier = Modifier.size(BESTVTheme.scale.s160),
+                    )
+                    Text(
+                        text = stringResource(R.string.search_placeholder),
+                        color = BESTVTheme.colors.secondaryText,
+                    )
+                }
 
             is Error ->
                 MobileError(
@@ -205,15 +216,23 @@ private fun MobileSearchContent(
 
             is SearchState.State.Loaded -> {
                 if (!result.hasResults) {
-                    Text(
-                        text = stringResource(R.string.no_results),
-                        color = BESTVTheme.colors.secondaryText,
-                        modifier = Modifier
-                            .padding(
-                                start = BESTVTheme.scale.s080,
-                                top = BESTVTheme.scale.s120,
-                            ),
-                    )
+                    Column(
+                        modifier = Modifier.align(Alignment.Center).padding(BESTVTheme.scale.s240),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+                    ) {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null,
+                            tint = BESTVTheme.colors.secondaryText,
+                            modifier = Modifier.size(BESTVTheme.scale.s160),
+                        )
+                        Text(
+                            text = stringResource(R.string.no_results),
+                            color = BESTVTheme.colors.secondaryText,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
                 } else {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
@@ -250,8 +269,7 @@ private fun MobileSearchContent(
 
         if (state.isSearching) {
             MobileLoading(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }

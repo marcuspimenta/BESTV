@@ -9,107 +9,60 @@ package com.pimenta.bestv.workdetail.presentation.ui.compose.mobile
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
-import coil3.compose.AsyncImage
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
-import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
-import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
-import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
-import com.pimenta.bestv.presentation.ui.compose.mobile.MobileLoading
-import com.pimenta.bestv.presentation.ui.compose.mobile.MobileSectionTitle
-import com.pimenta.bestv.presentation.ui.compose.mobile.MobileWorkRow
 import com.pimenta.bestv.workdetail.R
-import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
-import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
-import com.pimenta.bestv.workdetail.presentation.model.WatchProvidersViewModel
-import com.pimenta.bestv.workdetail.presentation.model.CrewViewModel
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.Navigate
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.CastClicked
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.DismissError
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreRecommendations
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreReviews
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadMoreSimilar
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.VideoClicked
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.WorkClicked
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Casts
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Header
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.RecommendedWorks
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Reviews
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.SimilarWorks
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.Videos
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Error
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
-import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loading
-import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkMetadataDetails
-import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkCrewDetails
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import com.pimenta.bestv.presentation.R as PresentationR
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun MobileWorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
     navigate: (NavKey) -> Unit,
@@ -119,12 +72,12 @@ fun MobileWorkDetailsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
-    var listViewportTop by remember { mutableFloatStateOf(Float.NaN) }
-    var headerTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val collapseThreshold = if (listViewportTop.isFinite() && headerTitleBottom.isFinite()) {
-        (headerTitleBottom - listViewportTop).toInt().coerceAtLeast(0)
-    } else {
-        Int.MAX_VALUE
+    val workId = state.work.id
+    var listViewportTop by remember(workId) { mutableFloatStateOf(Float.NaN) }
+    var headerTitleBottom by remember(workId) { mutableFloatStateOf(Float.NaN) }
+    // Keep the threshold with the back-stack entry; the header may be off-screen when it returns.
+    var collapseThreshold by rememberSaveable(workId) {
+        mutableIntStateOf(Int.MAX_VALUE)
     }
     val showCollapsedTitle by remember(listState, collapseThreshold) {
         derivedStateOf {
@@ -135,6 +88,19 @@ fun MobileWorkDetailsScreen(
                     )
         }
     }
+    var dominantBackdropColorArgb by rememberSaveable(state.work.backdropUrl) { mutableStateOf<Int?>(null) }
+    val currentBackdropUrl by rememberUpdatedState(state.work.backdropUrl)
+    val dominantBackdropColor = dominantBackdropColorArgb?.let { Color(it) }
+    val screenBackgroundColor = dominantBackdropColor?.toAppBarTint() ?: BESTVTheme.colors.black
+    val collapsedAppBarBackgroundColor = screenBackgroundColor.darkenSrgb(0.70f)
+    val appBarElevation by animateDpAsState(
+        targetValue = if (showCollapsedTitle) BESTVTheme.scale.s100 else BESTVTheme.scale.s000,
+        label = "workDetailsAppBarElevation",
+    )
+    val appBarBackgroundColor by animateColorAsState(
+        targetValue = if (showCollapsedTitle) collapsedAppBarBackgroundColor else BESTVTheme.colors.transparent,
+        label = "workDetailsAppBarBackground",
+    )
     val saveAction = (state.state as? Loaded)
         ?.contents
         ?.filterIsInstance<Header>()
@@ -157,604 +123,127 @@ fun MobileWorkDetailsScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = BESTVTheme.colors.black,
-        topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding(),
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(PresentationR.string.back),
-                    )
-                }
-                AnimatedVisibility(
-                    visible = showCollapsedTitle,
-                    enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-                ) {
-                    Text(
-                        text = state.work.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = BESTVTheme.colors.white,
-                        maxLines = 1,
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                saveAction?.let { action ->
-                    IconButton(onClick = { viewModel.handleEvent(ActionButtonClicked(action)) }) {
-                        Icon(
-                            imageVector = if (action.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = stringResource(
-                                if (action.isFavorite) {
-                                    R.string.remove_favorites
-                                } else {
-                                    R.string.save_favorites
-                                },
-                            ),
-                            tint = BESTVTheme.colors.white,
-                        )
-                    }
-                }
-            }
-        },
+        containerColor = screenBackgroundColor,
     ) { contentPadding ->
-        MobileWorkDetailsContent(
-            state = state,
-            listState = listState,
-            contentPadding = contentPadding,
-            onEvent = viewModel::handleEvent,
-            onListViewportTopChanged = { if (!listViewportTop.isFinite()) listViewportTop = it },
-            onHeaderTitleBottomChanged = { if (!headerTitleBottom.isFinite()) headerTitleBottom = it },
-        )
-    }
-}
-
-@Composable
-private fun MobileWorkDetailsContent(
-    state: WorkDetailsState,
-    listState: androidx.compose.foundation.lazy.LazyListState,
-    contentPadding: PaddingValues,
-    onEvent: (WorkDetailsEvent) -> Unit,
-    onListViewportTopChanged: (Float) -> Unit,
-    onHeaderTitleBottomChanged: (Float) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(contentPadding),
-    ) {
-        when (val current = state.state) {
-            is Loading ->
-                Box(
-                    Modifier.fillMaxWidth().weight(1f),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    MobileLoading()
-                }
-
-            is Error ->
-                Box(
-                    Modifier.fillMaxWidth().weight(1f),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    MobileError(onRetry = { onEvent(LoadData) })
-                }
-
-            is Loaded ->
-                MobileWorkDetailsList(
-                    work = state.work,
-                    content = current,
-                    listState = listState,
-                    onEvent = onEvent,
-                    onListViewportTopChanged = onListViewportTopChanged,
-                    onHeaderTitleBottomChanged = onHeaderTitleBottomChanged,
-                )
-        }
-    }
-}
-
-@Composable
-private fun MobileWorkDetailsList(
-    work: WorkViewModel,
-    content: Loaded,
-    listState: androidx.compose.foundation.lazy.LazyListState,
-    onEvent: (WorkDetailsEvent) -> Unit,
-    onListViewportTopChanged: (Float) -> Unit,
-    onHeaderTitleBottomChanged: (Float) -> Unit,
-) {
-    val hasMetadata = content.contents
-        .filterIsInstance<Header>()
-        .firstOrNull()
-        ?.metadata
-        ?.hasContent == true
-
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .onGloballyPositioned { coordinates ->
-                onListViewportTopChanged(coordinates.boundsInRoot().top)
-            },
-    ) {
-        content.contents.forEachIndexed { index, section ->
-            when (section) {
-                is Header ->
-                    item(key = section.id, contentType = LazyContentTypes.HEADER) {
-                        MobileWorkHeader(
-                            work = work,
-                            crew = section.crew,
-                            providers = section.watchProviders,
-                            onTitleBottomChanged = onHeaderTitleBottomChanged,
-                        )
-                    }
-
-                is Videos ->
-                    item(key = section.id, contentType = LazyContentTypes.VIDEOS) {
-                        MobileVideos(section.videos) { onEvent(VideoClicked(it)) }
-                    }
-
-                is Casts ->
-                    item(key = section.id, contentType = LazyContentTypes.CASTS) {
-                        MobileCasts(section.casts) { onEvent(CastClicked(it)) }
-                    }
-
-                is RecommendedWorks ->
-                    item(key = section.id, contentType = LazyContentTypes.RECOMMENDED) {
-                        MobileWorkRow(
-                            title = stringResource(R.string.recommended),
-                            works = section.recommended,
-                            onWorkClick = { onEvent(WorkClicked(it)) },
-                            pagination = section.page,
-                            onLoadMore = { onEvent(LoadMoreRecommendations) },
-                        )
-                    }
-
-                is SimilarWorks ->
-                    item(key = section.id, contentType = LazyContentTypes.SIMILAR) {
-                        MobileWorkRow(
-                            title = stringResource(R.string.similar),
-                            works = section.similar,
-                            onWorkClick = { onEvent(WorkClicked(it)) },
-                            pagination = section.page,
-                            onLoadMore = { onEvent(LoadMoreSimilar) },
-                        )
-                    }
-
-                is Reviews ->
-                    item(key = section.id, contentType = LazyContentTypes.REVIEWS) {
-                        MobileReviews(section.reviews, section.page) { onEvent(LoadMoreReviews) }
-                    }
-            }
-
-            if (index < content.contents.lastIndex || hasMetadata) {
-                item(key = "divider-${section.id}", contentType = LazyContentTypes.DIVIDER) {
-                    HorizontalDivider(
-                        color = BESTVTheme.colors.mobileNavigationSelectedSurface,
-                        thickness = BESTVTheme.scale.s005,
-                        modifier = Modifier.padding(
-                            start = BESTVTheme.scale.s080,
-                            end = BESTVTheme.scale.s080,
-                            top = BESTVTheme.scale.s120,
-                        ),
-                    )
-                }
-            }
-        }
-
-        content.error?.let { error ->
-            item(key = "error", contentType = LazyContentTypes.ERROR) {
-                Card(
-                    modifier = Modifier
-                        .padding(BESTVTheme.scale.s080),
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = error.message,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(BESTVTheme.scale.s080),
-                        )
-                        IconButton(onClick = { onEvent(DismissError) }) {
-                            Icon(Icons.Default.Close, contentDescription = null)
+        Box(modifier = Modifier.fillMaxSize()) {
+            MobileWorkDetailsContent(
+                state = state,
+                backgroundColor = screenBackgroundColor,
+                cardBackgroundColor = collapsedAppBarBackgroundColor,
+                listState = listState,
+                contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
+                onEvent = viewModel::handleEvent,
+                onListViewportTopChanged = {
+                    if (!listViewportTop.isFinite()) {
+                        listViewportTop = it
+                        if (
+                            headerTitleBottom.isFinite() &&
+                            collapseThreshold == Int.MAX_VALUE &&
+                            listState.firstVisibleItemIndex == 0
+                        ) {
+                            // Restored item bounds include the current offset; recover the zero-scroll threshold.
+                            val measuredThreshold =
+                                headerTitleBottom - it + listState.firstVisibleItemScrollOffset
+                            collapseThreshold = measuredThreshold.toInt().coerceAtLeast(0)
                         }
                     }
-                }
-            }
-        }
-
-        content.contents.filterIsInstance<Header>().firstOrNull()?.metadata?.takeIf { it.hasContent }?.let { metadata ->
-            item(key = "work-metadata", contentType = LazyContentTypes.METADATA) {
-                WorkMetadataDetails(
-                    metadata = metadata,
-                    modifier = Modifier.padding(
-                        horizontal = BESTVTheme.scale.s080,
-                        vertical = BESTVTheme.scale.s120,
-                    ),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MobileWorkHeader(
-    work: WorkViewModel,
-    crew: List<CrewViewModel> = emptyList(),
-    providers: WatchProvidersViewModel?,
-    onTitleBottomChanged: (Float) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
-    ) {
-        AsyncImage(
-            model = work.backdropUrl,
-            contentDescription = work.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(BESTVTheme.scale.s1000),
-        )
-        Column(
-            modifier = Modifier
-                .padding(
-                    start = BESTVTheme.scale.s080,
-                    end = BESTVTheme.scale.s080,
-                    bottom = BESTVTheme.scale.s080,
-                ),
-        ) {
-            Text(
-                text = work.title,
-                style = MaterialTheme.typography.headlineMedium,
-                color = BESTVTheme.colors.white,
-                modifier = Modifier
-                    .onGloballyPositioned { coordinates ->
-                        onTitleBottomChanged(coordinates.boundsInRoot().bottom)
-                    },
-            )
-            Text(
-                text = listOf(
-                    work.releaseDate,
-                    "★ ${work.voteAverage}",
-                    work.source,
-                ).filter(String::isNotBlank)
-                    .joinToString(" · "),
-                style = MaterialTheme.typography.bodyMedium,
-                color = BESTVTheme.colors.secondaryText,
-                modifier = Modifier
-                    .padding(top = BESTVTheme.scale.s040),
-            )
-            Text(
-                text = work.overview,
-                style = MaterialTheme.typography.bodyMedium,
-                color = BESTVTheme.colors.biographyText,
-                modifier = Modifier
-                    .padding(top = BESTVTheme.scale.s080),
-            )
-
-            WorkCrewDetails(
-                crew = crew,
-                modifier = Modifier.padding(top = BESTVTheme.scale.s080),
-            )
-
-            providers?.let { MobileProviders(it) }
-        }
-    }
-}
-
-@Composable
-private fun MobileProviders(providers: WatchProvidersViewModel) {
-    if (!providers.hasAnyProvider) return
-
-    MobileSectionTitle(
-        title = stringResource(R.string.where_to_watch),
-        style = MaterialTheme.typography.titleSmall,
-        startPadding = BESTVTheme.scale.s000,
-        topPadding = BESTVTheme.scale.s080,
-    )
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-    ) {
-        items(providers.providers, key = { it.id }, contentType = { LazyContentTypes.PROVIDER }) { provider ->
-            AsyncImage(
-                model = provider.logoUrl,
-                contentDescription = provider.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(BESTVTheme.scale.s200)
-                    .clip(RoundedCornerShape(BESTVTheme.scale.s040)),
-            )
-        }
-    }
-}
-
-@Composable
-private fun MobileVideos(
-    videos: List<VideoViewModel>,
-    onClick: (VideoViewModel) -> Unit,
-) {
-    MobileSectionTitle(stringResource(R.string.videos))
-    LazyRow(
-        contentPadding = PaddingValues(
-            horizontal = BESTVTheme.scale.s080,
-        ),
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
-    ) {
-        items(videos, key = { it.lazyListKey() }, contentType = { LazyContentTypes.VIDEO }) { video ->
-            Card(
-                onClick = { onClick(video) },
-                modifier = Modifier
-                    .width(BESTVTheme.scale.s1000),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(BESTVTheme.scale.s600),
-                ) {
-                    AsyncImage(
-                        model = video.thumbnailUrl,
-                        contentDescription = stringResource(R.string.play_video),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize(),
-                    )
-                    Surface(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(BESTVTheme.scale.s320),
-                        shape = CircleShape,
-                        color = BESTVTheme.colors.imageScrim,
+                },
+                onHeaderTitleBottomChanged = {
+                    if (
+                        !headerTitleBottom.isFinite() &&
+                        collapseThreshold == Int.MAX_VALUE &&
+                        listState.firstVisibleItemIndex == 0
                     ) {
+                        headerTitleBottom = it
+                        if (listViewportTop.isFinite()) {
+                            // Restored item bounds include the current offset; recover the zero-scroll threshold.
+                            val measuredThreshold =
+                                it - listViewportTop + listState.firstVisibleItemScrollOffset
+                            collapseThreshold = measuredThreshold.toInt().coerceAtLeast(0)
+                        }
+                    }
+                },
+                onBackdropColorChanged = { imageUrl, color ->
+                    if (imageUrl == currentBackdropUrl) dominantBackdropColorArgb = color.toArgb()
+                },
+            )
+            TopAppBar(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .shadow(elevation = appBarElevation),
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = stringResource(R.string.play_video),
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(PresentationR.string.back),
                             tint = BESTVTheme.colors.white,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(BESTVTheme.scale.s060),
                         )
                     }
-                }
-            }
+                },
+                title = {
+                    AnimatedVisibility(
+                        visible = showCollapsedTitle,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
+                        Text(
+                            text = state.work.title,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = BESTVTheme.colors.white,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                },
+                actions = {
+                    saveAction?.let { action ->
+                        IconButton(onClick = { viewModel.handleEvent(ActionButtonClicked(action)) }) {
+                            FavoriteIcon(action)
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = appBarBackgroundColor,
+                    titleContentColor = BESTVTheme.colors.white,
+                    navigationIconContentColor = BESTVTheme.colors.white,
+                    actionIconContentColor = BESTVTheme.colors.white,
+                ),
+                windowInsets = TopAppBarDefaults.windowInsets,
+            )
         }
     }
 }
 
 @Composable
-private fun MobileCasts(
-    casts: List<CastViewModel>,
-    onClick: (CastViewModel) -> Unit,
-) {
-    MobileSectionTitle(stringResource(R.string.cast))
-    LazyRow(
-        contentPadding = PaddingValues(
-            horizontal = BESTVTheme.scale.s080,
+private fun FavoriteIcon(action: SaveWork) {
+    Icon(
+        imageVector = if (action.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+        contentDescription = stringResource(
+            if (action.isFavorite) R.string.remove_favorites else R.string.save_favorites,
         ),
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
-    ) {
-        items(casts, key = { it.id }, contentType = { LazyContentTypes.CAST }) { cast ->
-            Card(
-                onClick = { onClick(cast) },
-                modifier = Modifier
-                    .width(BESTVTheme.scale.s500),
-            ) {
-                AsyncImage(
-                    model = cast.thumbnailUrl,
-                    contentDescription = cast.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(BESTVTheme.scale.s750),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MobileReviews(
-    reviews: List<ReviewViewModel>,
-    page: com.pimenta.bestv.presentation.model.PaginationState,
-    onLoadMore: () -> Unit,
-) {
-    MobileSectionTitle(stringResource(R.string.reviews))
-    val listState = rememberLazyListState()
-    LazyRow(
-        state = listState,
-        contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
-        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
-    ) {
-        items(reviews, key = { it.lazyListKey() }, contentType = { LazyContentTypes.REVIEW }) { review ->
-            Card(
-                modifier = Modifier
-                    .width(BESTVTheme.scale.s1250),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(BESTVTheme.scale.s080),
-                ) {
-                    Text(review.author.orEmpty(), style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        review.content.orEmpty(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = BESTVTheme.colors.reviewText,
-                        minLines = 8,
-                        maxLines = 8,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-        }
-    }
-    LazyRowPagination(
-        listState = listState,
-        isLoadingMore = page.isLoadingMore,
-        threshold = 3,
-        onLoadMore = { if (page.canLoadMore) onLoadMore() },
+        tint = BESTVTheme.colors.white,
     )
 }
 
-private val mobilePreviewWork =
-    WorkViewModel(
-        id = 1,
-        originalLanguage = "en",
-        overview = "An adventurous story about an unexpected journey across a changing world.",
-        source = "Movie",
-        backdropUrl = "",
-        posterUrl = "",
-        title = "Preview Work",
-        originalTitle = "Preview Work",
-        releaseDate = "2025",
-        type = WorkType.MOVIE,
-        voteAverage = 8.2f,
+private fun Color.toAppBarTint(): Color {
+    val maxChannel = maxOf(red, green, blue)
+    if (maxChannel <= 0f) return Color.Black
+
+    val scale = 0.38f / maxChannel
+    return copy(
+        red = (red * scale).coerceAtMost(0.38f),
+        green = (green * scale).coerceAtMost(0.38f),
+        blue = (blue * scale).coerceAtMost(0.38f),
+        alpha = 1f,
     )
-
-@Preview(showBackground = true)
-@Composable
-private fun MobileWorkHeaderPreview() {
-    BESTVTheme {
-        MobileWorkHeader(
-            mobilePreviewWork,
-            crew = listOf(
-                CrewViewModel(id = 1, name = "Example Director", role = "Director"),
-                CrewViewModel(id = 2, name = "Example Writer", role = "Writer"),
-            ),
-            providers = null,
-            onTitleBottomChanged = {},
-        )
-    }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun MobileProvidersPreview() {
-    BESTVTheme {
-        MobileProviders(
-            WatchProvidersViewModel(
-                tmdbLink = null,
-                providers = listOf(
-                    com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
-                        1,
-                        "Stream",
-                        null,
-                    ),
-                    com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel(
-                        2,
-                        "Cinema",
-                        null,
-                    ),
-                ),
-            ),
-        )
-    }
-}
+private fun Color.darkenSrgb(factor: Float): Color {
+    val argb = toArgb()
+    val alpha = (argb ushr 24) and 0xFF
+    val red = (((argb shr 16) and 0xFF) * factor).toInt()
+    val green = (((argb shr 8) and 0xFF) * factor).toInt()
+    val blue = ((argb and 0xFF) * factor).toInt()
 
-@Preview(showBackground = true)
-@Composable
-private fun MobileVideosPreview() {
-    BESTVTheme {
-        MobileVideos(
-            videos = listOf(
-                VideoViewModel(id = "1", name = "Trailer"),
-                VideoViewModel(id = "2", name = "Behind the scenes"),
-            ),
-            onClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MobileCastsPreview() {
-    BESTVTheme {
-        MobileCasts(
-            casts = listOf(
-                CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
-                CastViewModel(2, "Sam Taylor", "Friend", "", "", "", "", ""),
-            ),
-            onClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MobileReviewsPreview() {
-    BESTVTheme {
-        MobileReviews(
-            reviews = listOf(
-                ReviewViewModel(
-                    id = "1",
-                    author = "A. Reviewer",
-                    content =
-                    "A thoughtful review preview with enough text to demonstrate the " +
-                        "fixed eight line card content, truncation, and horizontal scrolling.",
-                ),
-                ReviewViewModel(id = "2", author = "B. Reviewer", content = "A second review."),
-            ),
-            page = com.pimenta.bestv.presentation.model
-                .PaginationState(),
-            onLoadMore = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MobileWorkDetailsContentPreview() {
-    BESTVTheme {
-        MobileWorkDetailsContent(
-            state = WorkDetailsState(
-                work = mobilePreviewWork,
-                state = Loaded(
-                    indexOfContentToScroll = null,
-                    contents = listOf(
-                        Header(
-                            actions = listOf(
-                                ActionButton.SaveWork(isFavorite = false),
-                                ActionButton.ScrollToVideos,
-                            ),
-                            watchProviders = null,
-                            metadata = null,
-                            crew = emptyList(),
-                        ),
-                        Videos(videos = listOf(VideoViewModel(id = "trailer", name = "Trailer"))),
-                        Casts(
-                            casts = listOf(
-                                CastViewModel(1, "Alex Morgan", "Lead", "", "", "", "", ""),
-                            ),
-                        ),
-                        RecommendedWorks(
-                            recommended = listOf(mobilePreviewWork),
-                            page = com.pimenta.bestv.presentation.model
-                                .PaginationState(),
-                        ),
-                        Reviews(
-                            reviews = listOf(
-                                ReviewViewModel(
-                                    id = "review",
-                                    author = "A. Reviewer",
-                                    content = "A sample review shown in a mobile work detail preview.",
-                                ),
-                            ),
-                            page = com.pimenta.bestv.presentation.model
-                                .PaginationState(),
-                        ),
-                    ),
-                    error = null,
-                ),
-                isMobileDevice = true,
-            ),
-            listState = rememberLazyListState(),
-            contentPadding = PaddingValues(),
-            onEvent = {},
-            onListViewportTopChanged = {},
-            onHeaderTitleBottomChanged = {},
-        )
-    }
+    return Color((alpha shl 24) or (red shl 16) or (green shl 8) or blue)
 }

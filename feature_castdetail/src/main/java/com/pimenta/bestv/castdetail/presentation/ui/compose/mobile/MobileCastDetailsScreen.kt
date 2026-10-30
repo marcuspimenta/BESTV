@@ -10,17 +10,13 @@ package com.pimenta.bestv.castdetail.presentation.ui.compose.mobile
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,19 +25,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -65,6 +67,7 @@ import kotlinx.coroutines.flow.collectLatest
 import com.pimenta.bestv.presentation.R as PresentationR
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun MobileCastDetailsScreen(
     viewModel: CastDetailsViewModel,
     navigate: (NavKey) -> Unit,
@@ -73,13 +76,12 @@ fun MobileCastDetailsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val loaded = state as? CastDetailsState.Loaded
+    val castId = loaded?.cast?.id
     val scrollState = rememberScrollState()
-    var viewportTop by remember { mutableFloatStateOf(Float.NaN) }
-    var castTitleBottom by remember { mutableFloatStateOf(Float.NaN) }
-    val collapseThreshold = if (viewportTop.isFinite() && castTitleBottom.isFinite()) {
-        (castTitleBottom - viewportTop).toInt().coerceAtLeast(0)
-    } else {
-        Int.MAX_VALUE
+    var viewportTop by remember(castId) { mutableFloatStateOf(Float.NaN) }
+    var castTitleBottom by remember(castId) { mutableFloatStateOf(Float.NaN) }
+    var collapseThreshold by rememberSaveable(castId) {
+        mutableIntStateOf(Int.MAX_VALUE)
     }
     val showCollapsedTitle by remember(scrollState, collapseThreshold) {
         derivedStateOf {
@@ -101,31 +103,32 @@ fun MobileCastDetailsScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = BESTVTheme.colors.black,
         topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding(),
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(PresentationR.string.back),
-                    )
-                }
-                AnimatedVisibility(
-                    visible = showCollapsedTitle,
-                    enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-                ) {
-                    Text(
-                        text = loaded?.cast?.name.orEmpty(),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = BESTVTheme.colors.white,
-                        maxLines = 1,
-                    )
-                }
-            }
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(PresentationR.string.back),
+                        )
+                    }
+                },
+                title = {
+                    AnimatedVisibility(
+                        visible = showCollapsedTitle,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
+                        Text(
+                            text = loaded?.cast?.name.orEmpty(),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = BESTVTheme.colors.white,
+                            maxLines = 1,
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = BESTVTheme.colors.black),
+                windowInsets = TopAppBarDefaults.windowInsets,
+            )
         },
     ) { contentPadding ->
         MobileCastDetailsContent(
@@ -135,8 +138,26 @@ fun MobileCastDetailsScreen(
                 .fillMaxSize()
                 .padding(contentPadding),
             onEvent = viewModel::handleEvent,
-            onViewportTopChanged = { if (!viewportTop.isFinite()) viewportTop = it },
-            onTitleBottomChanged = { if (!castTitleBottom.isFinite()) castTitleBottom = it },
+            onViewportTopChanged = {
+                if (!viewportTop.isFinite()) {
+                    viewportTop = it
+                    if (castTitleBottom.isFinite() && collapseThreshold == Int.MAX_VALUE) {
+                        // Restore the unscrolled position; measured bounds already include the saved offset.
+                        val measuredThreshold = castTitleBottom - it + scrollState.value
+                        collapseThreshold = measuredThreshold.toInt().coerceAtLeast(0)
+                    }
+                }
+            },
+            onTitleBottomChanged = {
+                if (!castTitleBottom.isFinite()) {
+                    castTitleBottom = it
+                    if (viewportTop.isFinite() && collapseThreshold == Int.MAX_VALUE) {
+                        // Restore the unscrolled position; measured bounds already include the saved offset.
+                        val measuredThreshold = it - viewportTop + scrollState.value
+                        collapseThreshold = measuredThreshold.toInt().coerceAtLeast(0)
+                    }
+                }
+            },
         )
     }
 }
@@ -161,7 +182,11 @@ private fun MobileCastDetailsContent(
             Box(
                 modifier = modifier,
                 contentAlignment = Alignment.Center,
-            ) { MobileError(onRetry = { onEvent(CastDetailsEvent.LoadData) }) }
+            ) {
+                MobileError(
+                    onRetry = { onEvent(CastDetailsEvent.LoadData) },
+                )
+            }
 
         is CastDetailsState.Loaded ->
             MobileCastDetailsLoadedContent(
@@ -214,45 +239,55 @@ private fun MobileCastHeader(
     onTitleBottomChanged: (Float) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .padding(BESTVTheme.scale.s080),
+        modifier = Modifier.padding(BESTVTheme.scale.s080),
         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
     ) {
-        AsyncImage(
-            model = cast.thumbnailUrl,
-            contentDescription = cast.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .width(BESTVTheme.scale.s700)
-                .height(BESTVTheme.scale.s1000)
-                .clip(RoundedCornerShape(BESTVTheme.scale.s060)),
-        )
-        Column {
-            Text(
-                cast.name,
-                style = MaterialTheme.typography.headlineMedium,
-                color = BESTVTheme.colors.white,
+        Row(horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080)) {
+            AsyncImage(
+                model = cast.thumbnailUrl,
+                contentDescription = null,
+                placeholder = ColorPainter(BESTVTheme.colors.mobileCardSurface),
+                error = ColorPainter(BESTVTheme.colors.mobileCardSurface),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .onGloballyPositioned { coordinates ->
+                    .width(BESTVTheme.scale.mobileCastPortraitWidth)
+                    .height(BESTVTheme.scale.mobileCastPortraitHeight)
+                    .clip(RoundedCornerShape(BESTVTheme.scale.mobileCardCornerRadius)),
+            )
+            Column(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+            ) {
+                Text(
+                    cast.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = BESTVTheme.colors.white,
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
                         onTitleBottomChanged(coordinates.boundsInRoot().bottom)
                     },
+                )
+                if (cast.character.isNotBlank()) {
+                    Text(
+                        cast.character,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = BESTVTheme.colors.secondaryInfoText,
+                    )
+                }
+                if (cast.birthday.isNotBlank()) {
+                    Text(
+                        stringResource(com.pimenta.bestv.castdetail.R.string.born, cast.birthday),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = BESTVTheme.colors.secondaryText,
+                    )
+                }
+            }
+        }
+        if (cast.biography.isNotBlank()) {
+            Text(
+                cast.biography,
+                style = MaterialTheme.typography.bodyLarge,
+                color = BESTVTheme.colors.biographyText,
             )
-            if (cast.birthday.isNotBlank()) {
-                Text(
-                    stringResource(com.pimenta.bestv.castdetail.R.string.born, cast.birthday),
-                    color = BESTVTheme.colors.secondaryInfoText,
-                    modifier = Modifier
-                        .padding(top = BESTVTheme.scale.s060),
-                )
-            }
-            if (cast.biography.isNotBlank()) {
-                Text(
-                    cast.biography,
-                    color = BESTVTheme.colors.biographyText,
-                    modifier = Modifier
-                        .padding(top = BESTVTheme.scale.s080),
-                )
-            }
         }
     }
 }

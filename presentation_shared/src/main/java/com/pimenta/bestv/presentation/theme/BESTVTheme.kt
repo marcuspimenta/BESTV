@@ -61,6 +61,14 @@ class Scale(
     val s2000: Dp = 400.dp,
     val s2140: Dp = 428.dp,
     val s3790: Dp = 758.dp,
+    val mobileCardCornerRadius: Dp = 14.dp,
+    val mobileBackdropHeight: Dp = 260.dp,
+    val mobileCastPortraitWidth: Dp = 128.dp,
+    val mobileCastPortraitHeight: Dp = 184.dp,
+    val mobileVideoCardWidth: Dp = 240.dp,
+    val mobileCastCardWidth: Dp = 112.dp,
+    val mobileSearchFieldCornerRadius: Dp = 28.dp,
+    val mobileErrorCornerRadius: Dp = 24.dp,
 )
 
 class Colors(
@@ -68,6 +76,8 @@ class Colors(
     val black: Color = Color.Black,
     val transparent: Color = Color.Transparent,
     val reviewCardSurface: Color = Color.DarkGray,
+    val mobileCardSurface: Color = Color(0xFF171717),
+    val mobileCardOutline: Color = Color.White.copy(alpha = 0.12f),
     val mobileNavigationSurface: Color = Color(0xE6262626),
     val mobileNavigationSelectedSurface: Color = Color(0xFF3A3A3A),
     val mobileNavigationContent: Color = Color(0xFFE6E6E6),
@@ -89,7 +99,6 @@ class Colors(
 object BESTVTheme {
     val scale = Scale()
     val colors = Colors()
-
     @Composable
     operator fun invoke(content: @Composable () -> Unit) {
         val typography = androidx.compose.material3.MaterialTheme.typography

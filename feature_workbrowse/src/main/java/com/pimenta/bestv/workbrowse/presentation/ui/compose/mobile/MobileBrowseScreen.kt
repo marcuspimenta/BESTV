@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.workbrowse.R as workbrowseR
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun MobileBrowseScreen(
     viewModel: WorkBrowseViewModel,
     navigate: (NavKey) -> Unit,
@@ -72,48 +74,45 @@ fun MobileBrowseScreen(
             val loaded = browseState.state as? WorkBrowseState.State.Loaded
             val selected = loaded?.sections?.getOrNull(loaded.selectedSectionIndex)
             if (selected != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(
-                            horizontal = BESTVTheme.scale.s080,
-                            vertical = BESTVTheme.scale.s060,
-                        ),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s020),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Image(
-                            painter = painterResource(presentationR.drawable.bestv_mark),
-                            contentDescription = stringResource(presentationR.string.app_name),
-                            modifier = Modifier
-                                .size(BESTVTheme.scale.s160),
-                        )
-                        Image(
-                            painter = painterResource(presentationR.drawable.bestv_wordmark),
-                            contentDescription = stringResource(presentationR.string.app_name),
-                            modifier = Modifier
-                                .size(width = BESTVTheme.scale.s400, height = BESTVTheme.scale.s160),
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0))
+                TopAppBar(
+                    title = {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s020),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Image(
+                                painter = painterResource(presentationR.drawable.bestv_mark),
+                                contentDescription = null,
+                                modifier = Modifier.size(BESTVTheme.scale.s120),
+                            )
+                            Image(
+                                painter = painterResource(presentationR.drawable.bestv_wordmark),
+                                contentDescription = stringResource(presentationR.string.app_name),
+                                modifier = Modifier.size(
+                                    width = BESTVTheme.scale.s300,
+                                    height = BESTVTheme.scale.s120,
+                                ),
+                            )
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(presentationR.drawable.search),
-                            contentDescription = stringResource(workbrowseR.string.search),
-                            tint = BESTVTheme.colors.white,
-                            modifier = Modifier
-                                .size(BESTVTheme.scale.s100),
-                        )
-                    }
-                }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = { viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0)) },
+                        ) {
+                            Icon(
+                                painter = painterResource(presentationR.drawable.search),
+                                contentDescription = stringResource(workbrowseR.string.search),
+                                tint = BESTVTheme.colors.white,
+                                modifier = Modifier.size(BESTVTheme.scale.s100),
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = BESTVTheme.colors.black,
+                        titleContentColor = BESTVTheme.colors.white,
+                    ),
+                    windowInsets = TopAppBarDefaults.windowInsets,
+                )
             }
         },
     ) { contentPadding ->
