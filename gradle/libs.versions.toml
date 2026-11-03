@@ -5,6 +5,7 @@ target-sdk = "36"
 java-version = "11"
 jvm-target = "11"
 android-gradle-plugin = "9.5.0"
+bouncycastle = "1.85"
 kotlin = "2.4.21"
 ktlint-gradle-plugin = "14.2.0"
 kotlinx-coroutines = "1.11.0"
@@ -38,6 +39,7 @@ koin = "4.2.2"
 
 [libraries]
 plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle-plugin" }
+plugin-bouncycastle-bom = { module = "org.bouncycastle:bc-jdk18on-bom", version.ref = "bouncycastle" }
 plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization-gradle = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
