@@ -41,4 +41,8 @@ sealed interface WorkBrowseEvent {
     data class WorkSelected(
         val work: WorkViewModel,
     ) : WorkBrowseEvent
+
+    data class LoadMore(
+        val section: ContentSection,
+    ) : WorkBrowseEvent
 }

@@ -52,6 +52,7 @@ import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.Navigate
+import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenExternalIntent
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ActionButtonClicked
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.LoadData
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.ActionButton.SaveWork
@@ -113,9 +114,7 @@ fun MobileWorkDetailsScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is Navigate -> navigate(effect.destination)
-                is com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenExternalIntent -> {
-                    openExternalIntent(effect.intent)
-                }
+                is OpenExternalIntent -> openExternalIntent(effect.intent)
             }
         }
     }

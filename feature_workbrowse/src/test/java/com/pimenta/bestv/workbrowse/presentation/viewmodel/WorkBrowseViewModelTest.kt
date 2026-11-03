@@ -28,10 +28,14 @@ import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.route.SearchDestination
 import com.pimenta.bestv.route.WorkDetailsDestination
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
+import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
+import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
@@ -56,6 +60,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -121,6 +126,8 @@ class WorkBrowseViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
 
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase = mock()
+    private val getWorkByGenreUseCase: GetWorkByGenreUseCase = mock()
+    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val searchRoute: SearchRoute = mock()
     private val resource: Resource = mock()
@@ -141,6 +148,8 @@ class WorkBrowseViewModelTest {
     private fun createViewModel(): WorkBrowseViewModel =
         WorkBrowseViewModel(
             getSectionDetailsUseCase = getSectionDetailsUseCase,
+            getWorkByGenreUseCase = getWorkByGenreUseCase,
+            loadWorkByTypeUseCase = loadWorkByTypeUseCase,
             workDetailsRoute = workDetailsRoute,
             searchRoute = searchRoute,
             resource = resource,
@@ -199,6 +208,103 @@ class WorkBrowseViewModelTest {
             assertEquals(TopWorkTypeViewModel.NOW_PLAYING_MOVIES, movieSection.type)
             assertEquals(1, movieSection.works.single().id)
             assertEquals(PaginationState(currentPage = 1, totalPages = 5), movieSection.page)
+        }
+
+    @Test
+    fun `loadMore should request the next page once and append its works`() =
+        runTest(testDispatcher) {
+            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+            whenever(loadWorkByTypeUseCase(2, BrowseCategoryKey.NOW_PLAYING_MOVIES)).thenReturn(
+                PageDomainModel(
+                    page = 2,
+                    totalPages = 5,
+                    results = listOf(
+                        domainWork(1, WorkDomainModel.Type.MOVIE),
+                        domainWork(4, WorkDomainModel.Type.MOVIE),
+                    ),
+                ),
+            )
+
+            viewModel = createViewModel()
+            advanceUntilIdle()
+            transitionToLoadedState()
+            advanceUntilIdle()
+
+            val section =
+                (viewModel.state.value.state as WorkBrowseState.State.Loaded)
+                    .sections
+                    .filterIsInstance<WorkBrowseState.Section.Movies>()
+                    .single()
+                    .content
+                    .single()
+            viewModel.handleEvent(WorkBrowseEvent.LoadMore(section))
+            viewModel.handleEvent(WorkBrowseEvent.LoadMore(section))
+            advanceUntilIdle()
+
+            val loadedState = viewModel.state.value.state as WorkBrowseState.State.Loaded
+            val updatedSection =
+                loadedState.sections
+                    .filterIsInstance<WorkBrowseState.Section.Movies>()
+                    .single()
+                    .content
+                    .single()
+            assertEquals(listOf(1, 4), updatedSection.works.map { it.id })
+            assertEquals(PaginationState(currentPage = 2, totalPages = 5), updatedSection.page)
+            verify(loadWorkByTypeUseCase, times(1))(2, BrowseCategoryKey.NOW_PLAYING_MOVIES)
+        }
+
+    @Test
+    fun `loadMore should request the next genre page`() =
+        runTest(testDispatcher) {
+            val movieGenre = GenreDomainModel(id = 28, name = "Action", source = GenreDomainModel.Source.MOVIE)
+            val sectionDetails = SECTION_DETAILS.copy(
+                movieSections = SECTION_DETAILS.movieSections +
+                    BrowseSectionDomainModel.GenreContent(
+                        genre = movieGenre,
+                        page = PageDomainModel(
+                            page = 1,
+                            totalPages = 2,
+                            results = listOf(domainWork(5, WorkDomainModel.Type.MOVIE)),
+                        ),
+                    ),
+            )
+            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(sectionDetails)
+            whenever(getWorkByGenreUseCase(28, GenreDomainModel.Source.MOVIE, 2)).thenReturn(
+                PageDomainModel(
+                    page = 2,
+                    totalPages = 2,
+                    results = listOf(domainWork(6, WorkDomainModel.Type.MOVIE)),
+                ),
+            )
+
+            viewModel = createViewModel()
+            advanceUntilIdle()
+            transitionToLoadedState()
+            advanceUntilIdle()
+
+            val genreSection =
+                (viewModel.state.value.state as WorkBrowseState.State.Loaded)
+                    .sections
+                    .filterIsInstance<WorkBrowseState.Section.Movies>()
+                    .single()
+                    .content
+                    .filterIsInstance<ContentSection.Genre>()
+                    .single()
+            assertEquals(Source.MOVIE, genreSection.genreViewModel.source)
+            viewModel.handleEvent(WorkBrowseEvent.LoadMore(genreSection))
+            advanceUntilIdle()
+
+            val loadedState = viewModel.state.value.state as WorkBrowseState.State.Loaded
+            val updatedGenreSection =
+                loadedState.sections
+                    .filterIsInstance<WorkBrowseState.Section.Movies>()
+                    .single()
+                    .content
+                    .filterIsInstance<ContentSection.Genre>()
+                    .single()
+            assertEquals(listOf(5, 6), updatedGenreSection.works.map { it.id })
+            assertEquals(PaginationState(currentPage = 2, totalPages = 2), updatedGenreSection.page)
+            verify(getWorkByGenreUseCase)(28, GenreDomainModel.Source.MOVIE, 2)
         }
 
     @Test

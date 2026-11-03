@@ -124,6 +124,7 @@ fun MobileBrowseScreen(
             MobileBrowseContent(
                 state = browseState,
                 onWorkClick = { viewModel.handleEvent(WorkBrowseEvent.WorkClicked(it)) },
+                onLoadMore = { viewModel.handleEvent(WorkBrowseEvent.LoadMore(it)) },
                 onRetry = { viewModel.handleEvent(WorkBrowseEvent.RetryLoad) },
                 onSplashAnimationFinished = {
                     viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)

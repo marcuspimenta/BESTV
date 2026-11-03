@@ -107,4 +107,17 @@ class BrowseSectionViewModelMapperTest {
         )
         assertTrue(result.all { it.works.isNotEmpty() })
     }
+
+    @Test
+    fun `section mapping removes duplicate work IDs from the same page`() {
+        val section =
+            BrowseSectionDomainModel.TopContent(
+                category = BrowseCategoryKey.POPULAR_MOVIES,
+                page = browsePage(works = listOf(browseWork(id = 7), browseWork(id = 7), browseWork(id = 8))),
+            )
+
+        val result = section.toViewModel(resource) as ContentSection.TopContent
+
+        assertEquals(listOf(7, 8), result.works.map { it.id })
+    }
 }

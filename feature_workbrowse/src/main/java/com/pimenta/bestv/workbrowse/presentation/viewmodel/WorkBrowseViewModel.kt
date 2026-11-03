@@ -15,15 +15,26 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.pimenta.bestv.model.presentation.model.PageViewModel
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.mapper.toViewModel
+import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
+import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
+import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModels
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
+import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.Genre
+import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.TopContent
+import com.pimenta.bestv.workbrowse.presentation.model.Source
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
@@ -34,6 +45,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.T
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
+import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -43,6 +56,8 @@ import timber.log.Timber
  */
 class WorkBrowseViewModel(
     private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
+    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
+    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
     // private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
@@ -65,6 +80,7 @@ class WorkBrowseViewModel(
             is WorkBrowseEvent.SectionClicked -> handleSectionClicked(event.sectionClickedIndex)
             is WorkBrowseEvent.WorkSelected -> handleWorkSelected(event.work)
             is WorkBrowseEvent.WorkClicked -> handleWorkClicked(event.work)
+            is WorkBrowseEvent.LoadMore -> handleLoadMore(event.section)
         }
     }
 
@@ -189,4 +205,127 @@ class WorkBrowseViewModel(
     private fun handleWorkClicked(work: WorkViewModel) {
         emitEffect(WorkBrowseEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
+
+    private fun handleLoadMore(section: ContentSection) {
+        val sectionKey = section.lazyListKey()
+        val currentSection = currentState.findContentSection(sectionKey) ?: return
+        if (!currentSection.page.canLoadMore) return
+
+        val nextPage = currentSection.page.currentPage + 1
+        updateState { state ->
+            state.updateContentSection(sectionKey) { content ->
+                content.withPage(content.page.copy(isLoadingMore = true))
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                val page = currentSection.loadPage(nextPage).toViewModel(resource)
+                updateState { state ->
+                    state.updateContentSection(sectionKey) { content ->
+                        if (content.page.currentPage == currentSection.page.currentPage) {
+                            content.appendPage(page)
+                        } else {
+                            content
+                        }
+                    }
+                }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, "Error while loading more browse works")
+                updateState { state ->
+                    state.updateContentSection(sectionKey) { content ->
+                        content.withPage(content.page.copy(isLoadingMore = false))
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun ContentSection.loadPage(page: Int) =
+        when (this) {
+            is TopContent -> loadWorkByTypeUseCase(page, type.toBrowseCategoryKey())
+            is Genre -> getWorkByGenreUseCase(
+                genreId = genreViewModel.id,
+                genreSource = when (genreViewModel.source) {
+                    Source.MOVIE -> GenreDomainModel.Source.MOVIE
+                    Source.TV_SHOW -> GenreDomainModel.Source.TV_SHOW
+                },
+                page = page,
+            )
+        }
+
+    private fun TopWorkTypeViewModel.toBrowseCategoryKey() =
+        when (this) {
+            TopWorkTypeViewModel.FAVORITES_MOVIES -> BrowseCategoryKey.FAVORITES_MOVIES
+            TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> BrowseCategoryKey.NOW_PLAYING_MOVIES
+            TopWorkTypeViewModel.POPULAR_MOVIES -> BrowseCategoryKey.POPULAR_MOVIES
+            TopWorkTypeViewModel.TOP_RATED_MOVIES -> BrowseCategoryKey.TOP_RATED_MOVIES
+            TopWorkTypeViewModel.UP_COMING_MOVIES -> BrowseCategoryKey.UP_COMING_MOVIES
+            TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> BrowseCategoryKey.AIRING_TODAY_TV_SHOWS
+            TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> BrowseCategoryKey.ON_THE_AIR_TV_SHOWS
+            TopWorkTypeViewModel.POPULAR_TV_SHOWS -> BrowseCategoryKey.POPULAR_TV_SHOWS
+            TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> BrowseCategoryKey.TOP_RATED_TV_SHOWS
+        }
+
+    private fun WorkBrowseState.findContentSection(sectionKey: String): ContentSection? {
+        val loadedState = state as? Loaded ?: return null
+        return loadedState.sections
+            .asSequence()
+            .flatMap { section -> section.contentSections().asSequence() }
+            .firstOrNull { it.lazyListKey() == sectionKey }
+    }
+
+    private fun WorkBrowseState.updateContentSection(
+        sectionKey: String,
+        transform: (ContentSection) -> ContentSection,
+    ): WorkBrowseState {
+        val loadedState = state as? Loaded ?: return this
+        return copy(
+            state = loadedState.copy(
+                sections = loadedState.sections.map { section ->
+                    when (section) {
+                        is Movies -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
+                        is TvShows -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
+                        is Favorites -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
+                        Search -> section
+                    }
+                },
+            ),
+        )
+    }
+
+    private fun List<ContentSection>.updateContentSection(
+        sectionKey: String,
+        transform: (ContentSection) -> ContentSection,
+    ) = map { content ->
+        if (content.lazyListKey() == sectionKey) transform(content) else content
+    }
+
+    private fun WorkBrowseState.Section.contentSections(): List<ContentSection> =
+        when (this) {
+            is Movies -> content
+            is TvShows -> content
+            is Favorites -> content
+            Search -> emptyList()
+        }
+
+    private fun ContentSection.withPage(page: PaginationState): ContentSection =
+        when (this) {
+            is TopContent -> copy(page = page)
+            is Genre -> copy(page = page)
+        }
+
+    private fun ContentSection.appendPage(page: PageViewModel<WorkViewModel>): ContentSection =
+        when (this) {
+            is TopContent -> copy(
+                works = (works + page.results).distinctBy { it.id },
+                page = PaginationState(currentPage = page.page, totalPages = page.totalPages),
+            )
+            is Genre -> copy(
+                works = (works + page.results).distinctBy { it.id },
+                page = PaginationState(currentPage = page.page, totalPages = page.totalPages),
+            )
+        }
 }

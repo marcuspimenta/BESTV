@@ -125,6 +125,7 @@ fun TVWorkBrowseScreen(
         onSectionClicked = { viewModel.handleEvent(WorkBrowseEvent.SectionClicked(it)) },
         onWorkSelected = { viewModel.handleEvent(WorkBrowseEvent.WorkSelected(it)) },
         onWorkClicked = { viewModel.handleEvent(WorkBrowseEvent.WorkClicked(it)) },
+        onLoadMore = { viewModel.handleEvent(WorkBrowseEvent.LoadMore(it)) },
         onRetryClicked = { viewModel.handleEvent(WorkBrowseEvent.RetryLoad) },
         modifier = modifier,
     )
@@ -138,6 +139,7 @@ private fun TVWorkBrowseContent(
     onSectionClicked: (Int) -> Unit,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     onRetryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -168,6 +170,7 @@ private fun TVWorkBrowseContent(
                     onSectionClicked = onSectionClicked,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
+                    onLoadMore = onLoadMore,
                     modifier = Modifier
                         .fillMaxSize(),
                 )
@@ -202,6 +205,7 @@ private fun TVBrowseSections(
     onWorkSelected: (WorkViewModel) -> Unit,
     onSectionClicked: (Int) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -307,6 +311,7 @@ private fun TVBrowseSections(
                     workSelected = workSelected,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
+                    onLoadMore = onLoadMore,
                     modifier = Modifier
                         .focusRequester(focusRequester),
                 )
@@ -345,6 +350,7 @@ private fun TVSection(
     workSelected: WorkViewModel?,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (section) {
@@ -357,6 +363,7 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
+                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
 
@@ -368,6 +375,7 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
+                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
 
@@ -379,6 +387,7 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
+                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
     }
@@ -392,6 +401,7 @@ private fun TVSectionWorks(
     content: List<ContentSection>,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -420,6 +430,7 @@ private fun TVSectionWorks(
                 listState = listState,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
+                onLoadMore = onLoadMore,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -485,6 +496,7 @@ private fun TVSectionWorkList(
     listState: LazyListState,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -508,7 +520,7 @@ private fun TVSectionWorkList(
                 isLoadingMore = contentItem.page.isLoadingMore,
                 titleStartPadding = BESTVTheme.scale.s500,
                 worksStartPadding = BESTVTheme.scale.s500,
-                onLoadMore = {},
+                onLoadMore = { onLoadMore(contentItem) },
                 modifier = Modifier
                     .fadeAtTopEdge(
                         listState = listState,

@@ -10,7 +10,8 @@ import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 
 fun BrowseSectionDomainModel.toViewModel(resource: Resource): ContentSection? {
     val pageViewModel = page.toViewModel(resource)
-    if (pageViewModel.results.isEmpty()) return null
+    val works = pageViewModel.results.distinctBy { it.id }
+    if (works.isEmpty()) return null
 
     val pagination =
         PaginationState(
@@ -22,13 +23,13 @@ fun BrowseSectionDomainModel.toViewModel(resource: Resource): ContentSection? {
         is BrowseSectionDomainModel.TopContent ->
             ContentSection.TopContent(
                 type = category.toViewModel(),
-                works = pageViewModel.results,
+                works = works,
                 page = pagination,
             )
         is BrowseSectionDomainModel.GenreContent ->
             ContentSection.Genre(
                 genreViewModel = genre.toViewModel(),
-                works = pageViewModel.results,
+                works = works,
                 page = pagination,
             )
     }

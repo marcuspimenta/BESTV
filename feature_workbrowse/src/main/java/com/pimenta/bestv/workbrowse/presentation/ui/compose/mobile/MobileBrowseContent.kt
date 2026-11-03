@@ -56,6 +56,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
 fun MobileBrowseContent(
     state: WorkBrowseState,
     onWorkClick: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
     onRetry: () -> Unit,
     onSplashAnimationFinished: () -> Unit,
     modifier: Modifier = Modifier,
@@ -127,7 +128,7 @@ fun MobileBrowseContent(
                                 animationSpec = tween(durationMillis = 450),
                             ) + fadeIn(animationSpec = tween(durationMillis = 350)),
                         ) {
-                            MobileContentRow(content, onWorkClick)
+                            MobileContentRow(content, onWorkClick, onLoadMore)
                         }
                     }
                 }
@@ -174,6 +175,7 @@ private const val SPLASH_ANIMATION_FILE =
 private fun MobileContentRow(
     content: ContentSection,
     onWorkClick: (WorkViewModel) -> Unit,
+    onLoadMore: (ContentSection) -> Unit,
 ) {
     val title = when (content) {
         is Genre -> content.genreViewModel.name.orEmpty()
@@ -183,6 +185,8 @@ private fun MobileContentRow(
         title = title,
         works = content.works,
         onWorkClick = onWorkClick,
+        pagination = content.page,
+        onLoadMore = { onLoadMore(content) },
     )
 }
 
@@ -217,6 +221,7 @@ private fun MobileBrowseContentPreview() {
                 ),
             ),
             onWorkClick = {},
+            onLoadMore = {},
             onRetry = {},
             onSplashAnimationFinished = {},
             modifier = Modifier
