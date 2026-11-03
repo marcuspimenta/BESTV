@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,6 +41,7 @@ fun TVCastCard(
     modifier: Modifier = Modifier,
     includeCastName: Boolean = true,
     onClick: () -> Unit = {},
+    initialFocusRequester: FocusRequester? = null,
 ) {
     StandardCardContainer(
         modifier = modifier.wrapContentSize(),
@@ -48,7 +51,8 @@ fun TVCastCard(
                 interactionSource = interactionSource,
                 modifier = Modifier
                     .width(BESTVTheme.scale.s600)
-                    .height(BESTVTheme.scale.s850),
+                    .height(BESTVTheme.scale.s850)
+                    .then(initialFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier),
             ) {
                 AsyncImage(
                     model = cast.thumbnailUrl,

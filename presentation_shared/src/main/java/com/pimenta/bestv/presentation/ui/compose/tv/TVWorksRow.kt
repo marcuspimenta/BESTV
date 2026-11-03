@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,9 +48,15 @@ fun TVWorksRow(
     onWorkFocused: (WorkViewModel) -> Unit = {},
     isLoadingMore: Boolean = false,
     onLoadMore: () -> Unit = {},
+    initialFocusRequester: FocusRequester? = null,
+    initialFocusWorkId: Int? = null,
+    requestInitialFocus: Boolean = false,
 ) {
     if (works.isEmpty()) return
 
+    val targetWorkId = initialFocusWorkId
+        ?.takeIf { id -> works.any { it.id == id } }
+        ?: works.first().id
     val listState = rememberLazyListState()
 
     // Monitor scroll position and trigger pagination when near the end
@@ -88,9 +95,12 @@ fun TVWorksRow(
                 key = { work -> work.id },
                 contentType = { LazyContentTypes.WORK },
             ) { work ->
+                val focusRequester = initialFocusRequester.takeIf { work.id == targetWorkId }
                 TVWorkCard(
                     work = work,
                     onClick = { onWorkClick(work) },
+                    initialFocusRequester = focusRequester,
+                    requestInitialFocus = requestInitialFocus && focusRequester != null,
                     onFocusChanged = { focused ->
                         if (focused) {
                             onWorkFocused(work)

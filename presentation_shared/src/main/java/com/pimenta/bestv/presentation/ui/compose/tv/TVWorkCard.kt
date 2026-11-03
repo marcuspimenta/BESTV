@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.painter.ColorPainter
@@ -37,7 +40,15 @@ fun TVWorkCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
+    initialFocusRequester: FocusRequester? = null,
+    requestInitialFocus: Boolean = false,
 ) {
+    LaunchedEffect(requestInitialFocus, initialFocusRequester) {
+        if (requestInitialFocus) {
+            initialFocusRequester?.requestFocus()
+        }
+    }
+
     StandardCardContainer(
         modifier = modifier
             .width(BESTVTheme.scale.s600)
@@ -47,6 +58,7 @@ fun TVWorkCard(
                 onClick = onClick,
                 modifier = Modifier
                     .fillMaxSize()
+                    .then(initialFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier)
                     .onFocusChanged { focusState ->
                         onFocusChanged(focusState.isFocused)
                     },

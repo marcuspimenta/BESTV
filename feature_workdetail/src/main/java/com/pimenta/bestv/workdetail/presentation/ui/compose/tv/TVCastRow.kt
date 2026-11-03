@@ -18,9 +18,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ fun TVCastRow(
     casts: List<CastViewModel>,
     onCastClick: (CastViewModel) -> Unit,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
     Column(
         modifier = modifier.padding(vertical = BESTVTheme.scale.s100),
@@ -59,14 +61,15 @@ fun TVCastRow(
             modifier = Modifier
                 .padding(top = BESTVTheme.scale.s090),
         ) {
-            items(
+            itemsIndexed(
                 items = casts,
-                key = { it.id },
-                contentType = { LazyContentTypes.CAST },
-            ) { cast ->
+                key = { _, cast -> cast.id },
+                contentType = { _, _ -> LazyContentTypes.CAST },
+            ) { index, cast ->
                 TVCastCard(
                     cast = cast,
                     onClick = { onCastClick(cast) },
+                    initialFocusRequester = initialFocusRequester.takeIf { index == 0 },
                 )
             }
         }

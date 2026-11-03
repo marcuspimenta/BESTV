@@ -20,10 +20,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.Button
@@ -51,6 +54,7 @@ fun TVWorkDetailsHeader(
     header: Header,
     actionClicked: (ActionButton) -> Unit,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
     Row(
         modifier = modifier
@@ -79,6 +83,7 @@ fun TVWorkDetailsHeader(
             TVActionButtonsRow(
                 actions = header.actions,
                 actionClicked = actionClicked,
+                initialFocusRequester = initialFocusRequester,
                 modifier = Modifier
                     .padding(top = BESTVTheme.scale.s100),
             )
@@ -130,19 +135,27 @@ private fun TVActionButtonsRow(
     actions: List<ActionButton>,
     actionClicked: (ActionButton) -> Unit,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .focusRestorer(),
     ) {
-        items(
+        itemsIndexed(
             items = actions,
-            key = { it.id },
-            contentType = { action -> action::class.simpleName },
-        ) { action ->
+            key = { _, action -> action.id },
+            contentType = { _, action -> action::class.simpleName },
+        ) { index, action ->
             Button(
                 onClick = { actionClicked(action) },
+                modifier = if (index == 0) {
+                    initialFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
+                } else {
+                    Modifier
+                },
             ) {
                 Text(text = action.title)
             }

@@ -24,10 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -170,7 +171,7 @@ private fun TVWorkDetailsContent(
 }
 
 @Composable
-private fun TVLoadedWorkDetails(
+internal fun TVLoadedWorkDetails(
     work: WorkViewModel,
     loadedState: Loaded,
     actionClicked: (ActionButton) -> Unit,
@@ -185,7 +186,8 @@ private fun TVLoadedWorkDetails(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    val focusRequesters = remember(loadedState.contents.size) {
+    val contentKeys = loadedState.contents.map { it.id }
+    val focusRequesters = remember(contentKeys) {
         loadedState.contents.map { FocusRequester() }
     }
 
@@ -194,6 +196,7 @@ private fun TVLoadedWorkDetails(
     ) {
         LazyColumn(
             state = listState,
+            modifier = Modifier.focusRestorer(),
         ) {
             itemsIndexed(
                 items = loadedState.contents,
@@ -206,16 +209,14 @@ private fun TVLoadedWorkDetails(
                             work = work,
                             header = content,
                             actionClicked = actionClicked,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
 
                     is Casts ->
                         TVCastRow(
                             casts = content.casts,
                             onCastClick = onCastClick,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
 
                     is RecommendedWorks ->
@@ -225,8 +226,7 @@ private fun TVLoadedWorkDetails(
                             onWorkClick = onWorkClick,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreRecommendations,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
 
                     is Reviews ->
@@ -234,8 +234,7 @@ private fun TVLoadedWorkDetails(
                             reviews = content.reviews,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreReviews,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
 
                     is SimilarWorks ->
@@ -245,16 +244,14 @@ private fun TVLoadedWorkDetails(
                             onWorkClick = onWorkClick,
                             isLoadingMore = content.page.isLoadingMore,
                             onLoadMore = onLoadMoreSimilar,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
 
                     is Videos ->
                         TVVideoRow(
                             videos = content.videos,
                             onVideoClick = onVideoClick,
-                            modifier = Modifier
-                                .focusRequester(focusRequesters[index]),
+                            initialFocusRequester = focusRequesters[index],
                         )
                 }
             }
@@ -268,12 +265,14 @@ private fun TVLoadedWorkDetails(
         )
 
         LaunchedEffect(Unit) {
+            withFrameNanos { }
             focusRequesters.getOrNull(0)?.requestFocus()
         }
 
         loadedState.indexOfContentToScroll?.let { targetIndex ->
             LaunchedEffect(targetIndex) {
                 listState.animateScrollToItem(targetIndex)
+                withFrameNanos { }
                 focusRequesters.getOrNull(targetIndex)?.requestFocus()
                 onClearScrollIndex()
             }

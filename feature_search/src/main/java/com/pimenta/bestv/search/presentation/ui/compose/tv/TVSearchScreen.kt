@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -80,7 +81,7 @@ fun TVSearchScreen(
     ) {
         TVBackgroundScreen(backdropUrl = (state.state as? Loaded)?.selectedWork?.backdropUrl)
 
-        Column(modifier = modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             TVSearchBar(
                 query = state.query,
                 placeholder = stringResource(R.string.search_placeholder),
@@ -171,7 +172,9 @@ private fun TVSearchResultsContent(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = BESTVTheme.scale.s080),
+        modifier = modifier
+            .focusRestorer()
+            .padding(top = BESTVTheme.scale.s080),
     ) {
         itemsIndexed(
             items = contents,

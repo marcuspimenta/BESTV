@@ -4,6 +4,10 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     namespace 'com.pimenta.bestv.workdetail'
+
+    defaultConfig {
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
     buildFeatures {
         compose true
     }
@@ -72,4 +76,10 @@ dependencies {
 
     // Robolectric
     testImplementation libs.robolectric
+
+    // Compose UI testing
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    debugImplementation libs.compose.ui.test.manifest
 }

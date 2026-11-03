@@ -24,7 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,6 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,6 +65,7 @@ fun TVVideoRow(
     videos: List<VideoViewModel>,
     onVideoClick: (VideoViewModel) -> Unit,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
     Column(
         modifier = modifier.padding(vertical = BESTVTheme.scale.s100),
@@ -84,14 +87,15 @@ fun TVVideoRow(
             modifier = Modifier
                 .padding(top = BESTVTheme.scale.s090),
         ) {
-            items(
+            itemsIndexed(
                 items = videos,
-                key = { it.lazyListKey() },
-                contentType = { LazyContentTypes.VIDEO },
-            ) { video ->
+                key = { _, video -> video.lazyListKey() },
+                contentType = { _, _ -> LazyContentTypes.VIDEO },
+            ) { index, video ->
                 TVVideoCard(
                     video = video,
                     onClick = { onVideoClick(video) },
+                    initialFocusRequester = initialFocusRequester.takeIf { index == 0 },
                 )
             }
         }
@@ -103,6 +107,7 @@ private fun TVVideoCard(
     video: VideoViewModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
     StandardCardContainer(
         modifier = Modifier
@@ -112,7 +117,8 @@ private fun TVVideoCard(
                 onClick = onClick,
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(BESTVTheme.scale.s715),
+                    .height(BESTVTheme.scale.s715)
+                    .then(initialFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier),
                 interactionSource = interactionSource,
             ) {
                 Box(

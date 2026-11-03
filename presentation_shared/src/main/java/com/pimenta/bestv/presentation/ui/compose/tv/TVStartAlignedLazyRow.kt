@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 
@@ -87,7 +88,7 @@ fun TVStartAlignedLazyRow(
 
     CompositionLocalProvider(LocalBringIntoViewSpec provides bringIntoViewSpec) {
         LazyRow(
-            modifier = modifier,
+            modifier = modifier.focusRestorer(),
             state = state,
             contentPadding = contentPadding,
             horizontalArrangement = horizontalArrangement,

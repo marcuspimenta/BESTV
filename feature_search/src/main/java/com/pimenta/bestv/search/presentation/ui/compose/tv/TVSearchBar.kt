@@ -33,6 +33,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,11 +53,12 @@ fun TVSearchBar(
     placeholder: String,
     modifier: Modifier = Modifier,
 ) {
-    val focusRequester = remember { FocusRequester() }
+    val searchFieldFocusRequester = remember { FocusRequester() }
+    val clearButtonFocusRequester = remember { FocusRequester() }
 
     // Request focus when the search bar is first displayed
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        searchFieldFocusRequester.requestFocus()
     }
 
     OutlinedTextField(
@@ -64,7 +70,15 @@ fun TVSearchBar(
             .padding(
                 horizontal = BESTVTheme.scale.s240,
                 vertical = BESTVTheme.scale.s120,
-            ).focusRequester(focusRequester),
+            ).focusRequester(searchFieldFocusRequester)
+            .onPreviewKeyEvent { event ->
+                if (query.isNotEmpty() && event.type == KeyEventType.KeyDown && event.key == Key.DirectionRight) {
+                    clearButtonFocusRequester.requestFocus()
+                    true
+                } else {
+                    false
+                }
+            },
         placeholder = {
             Text(
                 text = placeholder,
@@ -82,7 +96,22 @@ fun TVSearchBar(
         },
         trailingIcon = {
             if (query.isNotEmpty()) {
-                IconButton(onClick = onClear) {
+                IconButton(
+                    onClick = {
+                        onClear()
+                        searchFieldFocusRequester.requestFocus()
+                    },
+                    modifier = Modifier
+                        .focusRequester(clearButtonFocusRequester)
+                        .onPreviewKeyEvent { event ->
+                            if (event.type == KeyEventType.KeyDown && event.key == Key.DirectionLeft) {
+                                searchFieldFocusRequester.requestFocus()
+                                true
+                            } else {
+                                false
+                            }
+                        },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.clear_search),

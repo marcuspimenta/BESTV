@@ -5,6 +5,10 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 android {
     namespace 'com.pimenta.bestv.search'
 
+    defaultConfig {
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
     buildFeatures {
         compose true
     }
@@ -60,4 +64,10 @@ dependencies {
     // Coroutines test
     testImplementation libs.kotlinx.coroutines.test
     testImplementation libs.kotlin.test.junit
+
+    // Compose UI testing
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    debugImplementation libs.compose.ui.test.manifest
 }

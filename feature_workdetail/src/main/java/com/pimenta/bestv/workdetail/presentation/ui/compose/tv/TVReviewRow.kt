@@ -14,18 +14,28 @@
 
 package com.pimenta.bestv.workdetail.presentation.ui.compose.tv
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +58,7 @@ fun TVReviewRow(
     modifier: Modifier = Modifier,
     isLoadingMore: Boolean = false,
     onLoadMore: () -> Unit = {},
+    initialFocusRequester: FocusRequester? = null,
 ) {
     val listState = rememberLazyListState()
 
@@ -83,13 +94,14 @@ fun TVReviewRow(
             modifier = Modifier
                 .padding(top = BESTVTheme.scale.s090),
         ) {
-            items(
+            itemsIndexed(
                 items = reviews,
-                key = { it.lazyListKey() },
-                contentType = { LazyContentTypes.REVIEW },
-            ) { review ->
+                key = { _, review -> review.lazyListKey() },
+                contentType = { _, _ -> LazyContentTypes.REVIEW },
+            ) { index, review ->
                 TVReviewCard(
                     review = review,
+                    initialFocusRequester = initialFocusRequester.takeIf { index == 0 },
                 )
             }
         }
@@ -100,15 +112,27 @@ fun TVReviewRow(
 private fun TVReviewCard(
     review: ReviewViewModel,
     modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester? = null,
 ) {
+    val content = review.content.orEmpty()
+    var expanded by remember(review.id) { mutableStateOf(false) }
+    var hasOverflow by remember(review.id) { mutableStateOf(false) }
+    val expansionLabel = stringResource(
+        if (expanded) PresentationR.string.show_less else PresentationR.string.read_more,
+    )
+
     StandardCardContainer(
         modifier = modifier.width(BESTVTheme.scale.s2000),
         imageCard = { interactionSource ->
             Card(
-                onClick = {},
+                onClick = { if (hasOverflow) expanded = !expanded },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(BESTVTheme.scale.s1000),
+                    .heightIn(min = BESTVTheme.scale.s1000)
+                    .animateContentSize()
+                    .then(initialFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier)
+                    .focusProperties { canFocus = hasOverflow }
+                    .semantics { stateDescription = expansionLabel },
                 interactionSource = interactionSource,
                 colors = CardDefaults.colors(
                     containerColor = BESTVTheme.colors.reviewCardSurface,
@@ -127,13 +151,24 @@ private fun TVReviewCard(
                         overflow = TextOverflow.Ellipsis,
                     )
 
-                    // Review content (truncated)
                     Text(
-                        text = review.content ?: "",
+                        text = content,
                         style = MaterialTheme.typography.bodyMedium,
                         color = BESTVTheme.colors.reviewText,
+                        maxLines = if (expanded) 10 else 4,
                         overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { result ->
+                            if (!expanded) hasOverflow = result.hasVisualOverflow
+                        },
                     )
+
+                    if (hasOverflow) {
+                        Text(
+                            text = expansionLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = BESTVTheme.colors.white,
+                        )
+                    }
                 }
             }
         },

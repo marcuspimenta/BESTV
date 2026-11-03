@@ -19,6 +19,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,13 +36,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.key.Key
@@ -132,7 +137,7 @@ fun TVWorkBrowseScreen(
 }
 
 @Composable
-private fun TVWorkBrowseContent(
+internal fun TVWorkBrowseContent(
     state: WorkBrowseState,
     onBackClicked: () -> Unit,
     onSplashAnimationFinished: () -> Unit,
@@ -211,9 +216,13 @@ private fun TVBrowseSections(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val focusRequester = remember { FocusRequester() }
+    val sectionStateHolder = rememberSaveableStateHolder()
+    val initiallyFocusedSections = remember { mutableSetOf<String>() }
     val drawerItemFocusRequesters = remember(sections.size) {
         List(sections.size) { FocusRequester() }
     }
+    val selectedSection = sections[selectedSectionIndex]
+    var drawerWasOpen by remember { mutableStateOf(false) }
 
     BackHandler {
         if (drawerState.currentValue == DrawerValue.Open) {
@@ -225,7 +234,11 @@ private fun TVBrowseSections(
 
     LaunchedEffect(drawerState.currentValue) {
         if (drawerState.currentValue == DrawerValue.Open) {
+            drawerWasOpen = true
             drawerItemFocusRequesters.getOrNull(selectedSectionIndex)?.requestFocus()
+        } else if (drawerWasOpen) {
+            drawerWasOpen = false
+            focusRequester.requestFocus()
         }
     }
 
@@ -256,6 +269,8 @@ private fun TVBrowseSections(
                 ) {
                     Column(
                         modifier = Modifier
+                            .focusGroup()
+                            .focusRestorer()
                             .padding(BESTVTheme.scale.s060)
                             .align(Alignment.Center),
                         verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
@@ -296,6 +311,8 @@ private fun TVBrowseSections(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .focusGroup()
+                    .focusRestorer()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus && drawerState.currentValue == DrawerValue.Open) {
                             scope.launch {
@@ -304,17 +321,18 @@ private fun TVBrowseSections(
                         }
                     },
             ) {
-                TVSection(
-                    drawerValue = drawerState.currentValue,
-                    focusRequester = focusRequester,
-                    section = sections[selectedSectionIndex],
-                    workSelected = workSelected,
-                    onWorkSelected = onWorkSelected,
-                    onWorkClicked = onWorkClicked,
-                    onLoadMore = onLoadMore,
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
-                )
+                sectionStateHolder.SaveableStateProvider(selectedSection.saveableKey()) {
+                    TVSection(
+                        section = selectedSection,
+                        focusRequester = focusRequester,
+                        initiallyFocusedSections = initiallyFocusedSections,
+                        workSelected = workSelected,
+                        onWorkSelected = onWorkSelected,
+                        onWorkClicked = onWorkClicked,
+                        onLoadMore = onLoadMore,
+                        modifier = Modifier,
+                    )
+                }
 
                 Box(
                     modifier = Modifier
@@ -344,9 +362,9 @@ private fun TVBrowseSections(
 
 @Composable
 private fun TVSection(
-    drawerValue: DrawerValue,
-    focusRequester: FocusRequester,
     section: Section,
+    focusRequester: FocusRequester,
+    initiallyFocusedSections: MutableSet<String>,
     workSelected: WorkViewModel?,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
@@ -357,8 +375,9 @@ private fun TVSection(
         is Search -> Unit
         is Favorites ->
             TVSectionWorks(
-                drawerValue = drawerValue,
+                sectionKey = section.saveableKey(),
                 focusRequester = focusRequester,
+                initiallyFocusedSections = initiallyFocusedSections,
                 workSelected = workSelected,
                 content = section.content,
                 onWorkSelected = onWorkSelected,
@@ -369,8 +388,9 @@ private fun TVSection(
 
         is Movies ->
             TVSectionWorks(
-                drawerValue = drawerValue,
+                sectionKey = section.saveableKey(),
                 focusRequester = focusRequester,
+                initiallyFocusedSections = initiallyFocusedSections,
                 workSelected = workSelected,
                 content = section.content,
                 onWorkSelected = onWorkSelected,
@@ -381,8 +401,9 @@ private fun TVSection(
 
         is TvShows ->
             TVSectionWorks(
-                drawerValue = drawerValue,
+                sectionKey = section.saveableKey(),
                 focusRequester = focusRequester,
+                initiallyFocusedSections = initiallyFocusedSections,
                 workSelected = workSelected,
                 content = section.content,
                 onWorkSelected = onWorkSelected,
@@ -395,8 +416,9 @@ private fun TVSection(
 
 @Composable
 private fun TVSectionWorks(
-    drawerValue: DrawerValue,
+    sectionKey: String,
     focusRequester: FocusRequester,
+    initiallyFocusedSections: MutableSet<String>,
     workSelected: WorkViewModel?,
     content: List<ContentSection>,
     onWorkSelected: (WorkViewModel) -> Unit,
@@ -405,6 +427,8 @@ private fun TVSectionWorks(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
+    val shouldRequestInitialFocus = sectionKey !in initiallyFocusedSections
+    val hasWorks = content.any { it.works.isNotEmpty() }
 
     TVSlideInFromBottom(
         modifier = modifier.fillMaxSize(),
@@ -431,15 +455,18 @@ private fun TVSectionWorks(
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
                 onLoadMore = onLoadMore,
+                initialFocusRequester = focusRequester,
+                requestInitialFocus = shouldRequestInitialFocus,
+                focusTargetWorkId = workSelected?.id,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
             )
         }
 
-        LaunchedEffect(drawerValue) {
-            if (drawerValue == DrawerValue.Closed) {
-                focusRequester.requestFocus()
+        LaunchedEffect(sectionKey, hasWorks) {
+            if (hasWorks) {
+                initiallyFocusedSections.add(sectionKey)
             }
         }
     }
@@ -497,11 +524,16 @@ private fun TVSectionWorkList(
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
     onLoadMore: (ContentSection) -> Unit,
+    initialFocusRequester: FocusRequester,
+    requestInitialFocus: Boolean,
+    focusTargetWorkId: Int?,
     modifier: Modifier = Modifier,
 ) {
+    val firstContentIndex = content.indexOfFirst { it.works.isNotEmpty() }
+
     LazyColumn(
         state = listState,
-        modifier = modifier,
+        modifier = modifier.focusRestorer(),
     ) {
         itemsIndexed(
             items = content,
@@ -520,6 +552,9 @@ private fun TVSectionWorkList(
                 isLoadingMore = contentItem.page.isLoadingMore,
                 titleStartPadding = BESTVTheme.scale.s500,
                 worksStartPadding = BESTVTheme.scale.s500,
+                initialFocusRequester = initialFocusRequester.takeIf { index == firstContentIndex },
+                initialFocusWorkId = focusTargetWorkId.takeIf { id -> contentItem.works.any { it.id == id } },
+                requestInitialFocus = requestInitialFocus && index == firstContentIndex,
                 onLoadMore = { onLoadMore(contentItem) },
                 modifier = Modifier
                     .fadeAtTopEdge(
@@ -530,4 +565,11 @@ private fun TVSectionWorkList(
             )
         }
     }
+}
+
+private fun Section.saveableKey(): String = when (this) {
+    is Search -> "search"
+    is Favorites -> "favorites"
+    is Movies -> "movies"
+    is TvShows -> "tv-shows"
 }

@@ -15,6 +15,7 @@
 package com.pimenta.bestv.castdetail.presentation.ui.compose.tv
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,8 +25,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,12 +78,14 @@ fun TVCastDetailsScreen(
 }
 
 @Composable
-private fun TVCastDetailsContent(
+internal fun TVCastDetailsContent(
     state: CastDetailsState,
     onWorkClick: (WorkViewModel) -> Unit,
     onRetryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val firstWorkFocusRequester = remember { FocusRequester() }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -104,6 +110,8 @@ private fun TVCastDetailsContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .focusGroup()
+                        .focusRestorer()
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = BESTVTheme.scale.s240),
                 ) {
@@ -116,6 +124,8 @@ private fun TVCastDetailsContent(
                             title = stringResource(PresentationR.string.movies_title),
                             works = state.movies,
                             onWorkClick = onWorkClick,
+                            initialFocusRequester = firstWorkFocusRequester,
+                            requestInitialFocus = true,
                         )
                     }
 
@@ -124,6 +134,8 @@ private fun TVCastDetailsContent(
                             title = stringResource(PresentationR.string.tv_shows_title),
                             works = state.tvShows,
                             onWorkClick = onWorkClick,
+                            initialFocusRequester = firstWorkFocusRequester.takeIf { state.movies.isEmpty() },
+                            requestInitialFocus = state.movies.isEmpty(),
                         )
                     }
                 }
