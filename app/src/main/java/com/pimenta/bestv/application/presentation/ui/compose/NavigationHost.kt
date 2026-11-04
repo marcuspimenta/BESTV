@@ -25,7 +25,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 
-private const val SCREEN_TRANSITION_DURATION_MILLIS = 300
+private const val SCREEN_TRANSITION_DURATION_MILLIS = 400
 
 @Composable
 fun NavigationHost(
