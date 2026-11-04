@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.pimenta.bestv.application.presentation.ui.compose.NavigationHost
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.route.WorkBrowseDestination
 import com.pimenta.bestv.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.route.toBestvDestination
@@ -19,6 +20,7 @@ import org.koin.android.ext.android.inject
 class NavigationActivity : ComponentActivity() {
 
     private val navigationEntryProviders: List<NavigationEntryProvider> by inject()
+    private val deviceCapabilities: DeviceCapabilities by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,7 @@ class NavigationActivity : ComponentActivity() {
             NavigationHost(
                 initialDestination = initialDestination,
                 navigationEntryProviders = navigationEntryProviders,
+                isMobileDevice = deviceCapabilities.isMobileDevice,
                 onExit = { finish() },
             )
         }

@@ -9,6 +9,8 @@
 
 package com.pimenta.bestv.application.presentation.ui.compose
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -29,6 +31,7 @@ private const val SCREEN_TRANSITION_DURATION_MILLIS = 300
 fun NavigationHost(
     initialDestination: NavKey,
     navigationEntryProviders: List<NavigationEntryProvider>,
+    isMobileDevice: Boolean,
     onExit: () -> Unit,
 ) {
     BESTVTheme {
@@ -49,9 +52,15 @@ fun NavigationHost(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),
             ),
-            transitionSpec = { pushScreenTransition() },
-            popTransitionSpec = { popScreenTransition() },
-            predictivePopTransitionSpec = { popScreenTransition() },
+            transitionSpec = {
+                if (isMobileDevice) pushScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
+            popTransitionSpec = {
+                if (isMobileDevice) popScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
+            predictivePopTransitionSpec = {
+                if (isMobileDevice) popScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
             entryProvider = entryProvider {
                 navigationEntryProviders.forEach { provider ->
                     provider.install(this, navigate, onBack)
