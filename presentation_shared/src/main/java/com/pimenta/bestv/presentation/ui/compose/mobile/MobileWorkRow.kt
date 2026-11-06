@@ -8,6 +8,7 @@
 package com.pimenta.bestv.presentation.ui.compose.mobile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,25 +42,29 @@ fun MobileWorkRow(
     val listState = rememberLazyListState()
     Column(modifier = modifier.fillMaxWidth()) {
         MobileSectionTitle(title)
-        LazyRow(
-            state = listState,
-            contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
-            horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            items(works, key = { it.id }, contentType = { LazyContentTypes.WORK }) { work ->
-                MobileWorkCard(
-                    work,
-                    onClick = { onWorkClick(work) },
-                    containerColor = cardColor,
-                )
-            }
-            if (pagination?.isLoadingMore == true) {
-                item(key = LazyContentTypes.LOADING, contentType = LazyContentTypes.LOADING) {
-                    MobileLoading(
-                        modifier = Modifier.padding(BESTVTheme.scale.s240),
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+            val cardWidth = (maxWidth * MOBILE_CARD_WIDTH_FRACTION)
+                .coerceAtMost(BESTVTheme.scale.s600)
+            LazyRow(
+                state = listState,
+                contentPadding = PaddingValues(horizontal = BESTVTheme.scale.s080),
+                horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items(works, key = { it.id }, contentType = { LazyContentTypes.WORK }) { work ->
+                    MobileWorkCard(
+                        work,
+                        onClick = { onWorkClick(work) },
+                        containerColor = cardColor,
+                        cardWidth = cardWidth,
                     )
+                }
+                if (pagination?.isLoadingMore == true) {
+                    item(key = LazyContentTypes.LOADING, contentType = LazyContentTypes.LOADING) {
+                        MobileLoading(
+                            modifier = Modifier.padding(BESTVTheme.scale.s240),
+                        )
+                    }
                 }
             }
         }
@@ -73,6 +78,8 @@ fun MobileWorkRow(
         }
     }
 }
+
+private const val MOBILE_CARD_WIDTH_FRACTION = 0.26f
 
 @Preview(showBackground = true)
 @Composable
@@ -93,7 +100,12 @@ private fun MobileWorkRowPreview() {
     BESTVTheme {
         MobileWorkRow(
             title = "Popular",
-            works = listOf(previewWork, previewWork.copy(id = 2, title = "Next Movie")),
+            works = listOf(
+                previewWork,
+                previewWork.copy(id = 2, title = "Next Movie"),
+                previewWork.copy(id = 3, title = "Another Movie"),
+                previewWork.copy(id = 4, title = "Fourth Movie"),
+            ),
             onWorkClick = {},
         )
     }
