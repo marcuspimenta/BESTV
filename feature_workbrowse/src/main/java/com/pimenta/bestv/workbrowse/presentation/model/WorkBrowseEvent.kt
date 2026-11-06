@@ -24,8 +24,6 @@ sealed interface WorkBrowseEvent {
 
     data object LoadData : WorkBrowseEvent
 
-    data object ScreenResumed : WorkBrowseEvent
-
     data object RetryLoad : WorkBrowseEvent
 
     data object SplashAnimationFinished : WorkBrowseEvent
@@ -40,9 +38,5 @@ sealed interface WorkBrowseEvent {
 
     data class WorkSelected(
         val work: WorkViewModel,
-    ) : WorkBrowseEvent
-
-    data class LoadMore(
-        val section: ContentSection,
     ) : WorkBrowseEvent
 }

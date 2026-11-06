@@ -20,12 +20,12 @@ Repository paths below are relative to the root. Read the relevant parts of [REA
 | `feature_search` | Search queries, results, and pagination. |
 | `feature_workdetail`, `feature_castdetail` | Work details/favorites and cast details/credits, respectively. |
 | `feature_recommendation` | TV home recommendations, boot handling, background work, and platform provider integration. |
-| `model_shared` | Shared API/persistence, domain, and presentation models plus data mappers, separated by packages. This is not a domain-only module; package boundaries are not independent Gradle boundaries. |
-| `data_shared` | Retrofit/OkHttp configuration and Room database, DAOs, and local data sources. |
+| `model_shared` | Shared API response, domain, and presentation models plus API data mappers, separated by packages. This is not a domain-only module; package boundaries are not independent Gradle boundaries. |
+| `data_shared` | Retrofit/OkHttp configuration and Room database, DAOs, and Room entities under `data/local/model`. |
 | `presentation_shared` | Shared domain-to-UI mappers, `Resource`, `BaseViewModel`, theme, TV/mobile components, image loading, pagination state, and presentation platform abstractions. |
 | `route_shared` | Activity intent builders, argument readers, deep-link contracts/resources, and route DI. |
 
-The app depends on the features and shared modules. Features depend on the shared modules they use; there are no direct feature-to-feature Gradle dependencies. `data_shared`, `presentation_shared`, and `route_shared` each depend on `model_shared`. Preserve this direction and route between features through shared contracts. Layers currently live in packages inside feature modules; a new operation does not require new Gradle modules.
+The app depends on the features and shared modules. Features depend on the shared modules they use; there are no direct feature-to-feature Gradle dependencies. `presentation_shared` and `route_shared` depend on `model_shared`; `data_shared` owns its Room entities and no longer depends on `model_shared`. Preserve this direction and route between features through shared contracts. Layers currently live in packages inside feature modules; a new operation does not require new Gradle modules.
 
 ## Layers and data flow
 
@@ -41,7 +41,7 @@ Keep dependencies pointed inward: presentation uses domain; data implements doma
 
 Follow [SearchMoviesByQueryUseCase](../../../feature_search/src/main/java/com/pimenta/bestv/search/domain/SearchMoviesByQueryUseCase.kt) and its [domain repository](../../../feature_search/src/main/java/com/pimenta/bestv/search/domain/repository/MovieRepository.kt) for the interface boundary. For resource-free section models and presentation mapping, inspect [BrowseSectionViewModelMapper](../../../feature_workbrowse/src/main/java/com/pimenta/bestv/workbrowse/presentation/mapper/BrowseSectionViewModelMapper.kt) and its domain inputs.
 
-Keep raw search text unchanged through use cases and repositories; Retrofit `@Query` handles transport encoding. Room access goes through the local data sources/DAOs in `data_shared`. Preserve cancellation and define partial-failure, pagination, and repeated-write behavior where those operations change; consult [data operations and persistence](../android-feature-architecture/references/data-operations-and-persistence.md) for those cases.
+Keep raw search text unchanged through use cases and repositories; Retrofit `@Query` handles transport encoding. Room entities and DAOs belong to `data_shared`; feature-specific Room adapters belong in `feature/data/local/datasource`, with entity mappings in `feature/data/local/mapper`. Preserve cancellation and define partial-failure, pagination, and repeated-write behavior where those operations change; consult [data operations and persistence](../android-feature-architecture/references/data-operations-and-persistence.md) for those cases.
 
 Work Details favorite operations use an ID, `WorkDomainModel.Type`, and desired favorite state; data repositories create Room entities. Recommendation workers, the boot receiver, scheduler, and TV providers are under `feature_recommendation/platform`. The scheduler owns the unique hourly WorkManager request and legacy-tag cleanup. The recommendation provider implements the domain output port directly; its Koin binding is in the feature composition module. Read [background work and platform adapters](../android-feature-architecture/references/background-work-and-platform-adapters.md) when changing recommendations, workers, or receivers.
 

@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
@@ -57,11 +56,6 @@ fun MobileBrowseScreen(
                 is Navigate -> navigate(effect.destination)
             }
         }
-    }
-
-    LifecycleResumeEffect(Unit) {
-        viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
-        onPauseOrDispose { }
     }
 
     val loadedState = browseState.state as? WorkBrowseState.State.Loaded
@@ -124,7 +118,6 @@ fun MobileBrowseScreen(
             MobileBrowseContent(
                 state = browseState,
                 onWorkClick = { viewModel.handleEvent(WorkBrowseEvent.WorkClicked(it)) },
-                onLoadMore = { viewModel.handleEvent(WorkBrowseEvent.LoadMore(it)) },
                 onRetry = { viewModel.handleEvent(WorkBrowseEvent.RetryLoad) },
                 onSplashAnimationFinished = {
                     viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)

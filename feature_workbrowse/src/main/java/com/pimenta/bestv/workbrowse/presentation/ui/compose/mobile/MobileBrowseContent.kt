@@ -37,7 +37,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileWorkRow
@@ -56,7 +55,6 @@ import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
 fun MobileBrowseContent(
     state: WorkBrowseState,
     onWorkClick: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     onRetry: () -> Unit,
     onSplashAnimationFinished: () -> Unit,
     modifier: Modifier = Modifier,
@@ -128,7 +126,7 @@ fun MobileBrowseContent(
                                 animationSpec = tween(durationMillis = 450),
                             ) + fadeIn(animationSpec = tween(durationMillis = 350)),
                         ) {
-                            MobileContentRow(content, onWorkClick, onLoadMore)
+                            MobileContentRow(content, onWorkClick)
                         }
                     }
                 }
@@ -175,7 +173,6 @@ private const val SPLASH_ANIMATION_FILE =
 private fun MobileContentRow(
     content: ContentSection,
     onWorkClick: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
 ) {
     val title = when (content) {
         is Genre -> content.genreViewModel.name.orEmpty()
@@ -185,8 +182,6 @@ private fun MobileContentRow(
         title = title,
         works = content.works,
         onWorkClick = onWorkClick,
-        pagination = content.page,
-        onLoadMore = { onLoadMore(content) },
     )
 }
 
@@ -209,7 +204,6 @@ private fun MobileBrowseContentPreview() {
     val section = TopContent(
         type = TopWorkTypeViewModel.NOW_PLAYING_MOVIES,
         works = listOf(previewWork, previewWork.copy(id = 2, title = "Another Movie")),
-        page = PaginationState(),
     )
     BESTVTheme {
         MobileBrowseContent(
@@ -221,7 +215,6 @@ private fun MobileBrowseContentPreview() {
                 ),
             ),
             onWorkClick = {},
-            onLoadMore = {},
             onRetry = {},
             onSplashAnimationFinished = {},
             modifier = Modifier

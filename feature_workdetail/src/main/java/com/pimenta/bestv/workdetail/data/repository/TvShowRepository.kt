@@ -15,7 +15,6 @@
 package com.pimenta.bestv.workdetail.data.repository
 
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
-import com.pimenta.bestv.model.data.local.TvShowDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
@@ -24,6 +23,7 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toWorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryContract
+import com.pimenta.bestv.workdetail.data.local.mapper.toTvShowDbModel
 
 /**
  * Created by marcus on 20-10-2019.
@@ -32,18 +32,22 @@ class TvShowRepository(
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) : TvShowRepositoryContract {
+
     override suspend fun getWorkMetadata(tvShowId: Int) =
-        tvShowRemoteDataSource.getTvShowDetails(tvShowId).toWorkMetadataDomainModel()
+        tvShowRemoteDataSource.getTvShowDetails(tvShowId).let { response ->
+            tvShowLocalDataSource.saveCachedWork(response.toDomainModel().toTvShowDbModel())
+            response.toWorkMetadataDomainModel()
+        }
 
     override suspend fun saveFavoriteTvShow(tvShowId: Int) =
-        tvShowLocalDataSource.saveFavoriteTvShow(TvShowDbModel(tvShowId))
+        tvShowLocalDataSource.saveFavoriteTvShow(tvShowId)
 
     override suspend fun deleteFavoriteTvShow(tvShowId: Int) =
-        tvShowLocalDataSource.deleteFavoriteTvShow(TvShowDbModel(tvShowId))
+        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowId)
 
     override suspend fun isFavoriteTvShow(tvShowId: Int): Boolean {
-        val tvShow = tvShowLocalDataSource.getById(TvShowDbModel(tvShowId))
-        return tvShow != null
+        val tvShow = tvShowLocalDataSource.getById(tvShowId)
+        return tvShow?.isFavorite == true
     }
 
     override suspend fun getCreditsByTvShow(tvShowId: Int) =

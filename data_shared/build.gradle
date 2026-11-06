@@ -43,8 +43,6 @@ android {
 }
 
 dependencies {
-    implementation project(':model_shared')
-
     // Kotlin
     implementation libs.kotlin.stdlib
 
@@ -69,4 +67,9 @@ dependencies {
 
     // Gson
     implementation libs.gson
+
+    // Tests
+    testImplementation libs.junit4
+    testImplementation libs.robolectric
+    testImplementation libs.okhttp.mockwebserver
 }

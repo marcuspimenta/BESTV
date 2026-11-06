@@ -44,13 +44,20 @@ BESTV currently keeps shared types in existing Gradle modules:
 
 ```text
 model_shared/
-├── data/                      # API response and Room persistence models
+├── data/                      # API response models and shared API data mappers
 ├── domain/                    # WorkDomainModel, CastDomainModel, PageDomainModel,
 │                              # ContentSource, and domain helpers
 └── presentation/model/        # WorkViewModel, CastViewModel, PageViewModel, WorkType
 
 data_shared/
-└── local/                     # Room database, DAOs, and local data sources
+└── data/local/
+    ├── database/              # Room database and migrations
+    ├── dao/                   # Room DAOs
+    └── model/                 # Room entities (*DbModel)
+
+feature_<capability>/data/local/
+├── datasource/                # Feature-specific local data source adapters
+└── mapper/                    # Room entity to domain mapping
 
 presentation_shared/
 └── presentation/
@@ -59,13 +66,13 @@ presentation_shared/
     └── ui/                    # Shared Compose UI
 ```
 
-`model_shared` contains types from several layers because the project is not adding Gradle modules for this refactor. Imports still follow the package boundaries, and `verifyArchitecture` checks selected prohibited imports. This gives useful source-level protection, while Gradle does not enforce those subpackages as independent compile-time modules.
+`model_shared` contains types from several layers because the project is not adding Gradle modules for every layer. Room entities and database infrastructure belong in `data_shared`; feature-specific local data source adapters and their mappers stay with the feature. Imports still follow package boundaries, and `verifyArchitecture` checks selected prohibited imports. This gives useful source-level protection, while Gradle does not enforce those subpackages as independent compile-time modules.
 
 ## Mapping rules
 
 ### API and persistence models to domain
 
-Data mappers return resource-free domain values. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `presentation_shared`.
+Data mappers return resource-free domain values. Keep API response mappers with the remote data package (or shared API mapping in `model_shared/data/mapper`) and Room entity mappers in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `presentation_shared`.
 
 ```kotlin
 // model_shared/data/mapper/WorkResponseMapper.kt
@@ -76,7 +83,7 @@ fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
 )
 ```
 
-Repository implementations call these mappers after fetching API responses. Local data sources encapsulate DAOs and Room entities.
+Repository implementations call API mappers after fetching responses. Feature local data sources use DAOs from `data_shared` and local mappers to convert Room entities into domain values. Keep Room entities under `data_shared/data/local/model`, close to the Room database and DAOs.
 
 ### Domain values to UI models
 

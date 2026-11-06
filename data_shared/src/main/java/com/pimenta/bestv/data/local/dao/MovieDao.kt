@@ -15,11 +15,12 @@
 package com.pimenta.bestv.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.pimenta.bestv.model.data.local.MovieDbModel
+import androidx.room.Transaction
+import com.pimenta.bestv.data.local.model.MovieDbModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by marcus on 15-04-2018.
@@ -27,18 +28,35 @@ import com.pimenta.bestv.model.data.local.MovieDbModel
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM movie")
-    suspend fun getAll(): List<MovieDbModel>
+    @Query("SELECT * FROM movie WHERE isFavorite = 1")
+    fun observeFavorites(): Flow<List<MovieDbModel>>
 
     @Query("SELECT * FROM movie WHERE id = :id")
     suspend fun getById(id: Int): MovieDbModel?
 
-    @Insert
-    suspend fun create(model: MovieDbModel)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIfAbsent(model: MovieDbModel)
 
-    @Update
-    suspend fun update(model: MovieDbModel)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrReplace(model: MovieDbModel)
 
-    @Delete
-    suspend fun delete(model: MovieDbModel)
+    @Query("UPDATE movie SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun updateFavorite(id: Int, isFavorite: Boolean)
+
+    @Transaction
+    suspend fun create(id: Int) {
+        insertIfAbsent(MovieDbModel.favoritePlaceholder(id))
+        updateFavorite(id, true)
+    }
+
+    @Transaction
+    suspend fun delete(id: Int) {
+        updateFavorite(id, false)
+    }
+
+    @Transaction
+    suspend fun saveCachedWork(model: MovieDbModel) {
+        val isFavorite = getById(model.id)?.isFavorite ?: model.isFavorite
+        insertOrReplace(model.copy(isFavorite = isFavorite))
+    }
 }

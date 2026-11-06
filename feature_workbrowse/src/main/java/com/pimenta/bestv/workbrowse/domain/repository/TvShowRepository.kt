@@ -2,9 +2,10 @@ package com.pimenta.bestv.workbrowse.domain.repository
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import kotlinx.coroutines.flow.Flow
 
 interface TvShowRepository {
-    suspend fun getFavoriteTvShows(): List<WorkDomainModel>
+    fun observeFavoriteTvShows(): Flow<List<WorkDomainModel>>
 
     suspend fun getTvShowByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel>
 

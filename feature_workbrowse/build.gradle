@@ -26,6 +26,7 @@ dependencies {
     implementation project(':data_shared')
     implementation project(':presentation_shared')
     implementation project(':route_shared')
+    implementation libs.androidx.room.ktx
 
     // Kotlin
     implementation libs.kotlin.stdlib
@@ -62,6 +63,7 @@ dependencies {
 
     // JUnit
     testImplementation libs.junit4
+    testImplementation libs.robolectric
 
     // Coroutines Test
     testImplementation libs.kotlinx.coroutines.test

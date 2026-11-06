@@ -15,7 +15,7 @@
 package com.pimenta.bestv.data.local.datasource
 
 import com.pimenta.bestv.data.local.dao.MovieDao
-import com.pimenta.bestv.model.data.local.MovieDbModel
+import com.pimenta.bestv.data.local.model.MovieDbModel
 
 /**
  * Created by marcus on 21-11-2019.
@@ -24,15 +24,15 @@ class MovieLocalDataSource(
     private val movieDao: MovieDao
 ) {
 
-    suspend fun saveFavoriteMovie(movieDbModel: MovieDbModel) =
-        movieDao.create(movieDbModel)
+    suspend fun saveFavoriteMovie(movieId: Int) =
+        movieDao.create(movieId)
 
-    suspend fun deleteFavoriteMovie(movieDbModel: MovieDbModel) =
-        movieDao.delete(movieDbModel)
+    suspend fun deleteFavoriteMovie(movieId: Int) =
+        movieDao.delete(movieId)
 
-    suspend fun getMovies() =
-        movieDao.getAll()
+    suspend fun getById(movieId: Int) =
+        movieDao.getById(movieId)
 
-    suspend fun getById(movieDbModel: MovieDbModel) =
-        movieDao.getById(movieDbModel.id)
+    suspend fun saveCachedWork(movieDbModel: MovieDbModel) =
+        movieDao.saveCachedWork(movieDbModel)
 }

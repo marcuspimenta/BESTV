@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.workbrowse.data.repository
 
-import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryContract
 
@@ -28,14 +28,8 @@ class TvShowRepository(
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
 ) : TvShowRepositoryContract {
-    override suspend fun getFavoriteTvShows() =
-        tvShowLocalDataSource.getTvShows().mapNotNull { tvShowDbModel ->
-            tvShowRemoteDataSource.getTvShow(tvShowDbModel.id)?.let { work ->
-                work.toDomainModel().apply {
-                    isFavorite = true
-                }
-            }
-        }
+
+    override fun observeFavoriteTvShows() = tvShowLocalDataSource.observeFavoriteTvShows()
 
     override suspend fun getTvShowByGenre(
         genreId: Int,

@@ -15,7 +15,6 @@
 package com.pimenta.bestv.workdetail.data.repository
 
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
-import com.pimenta.bestv.model.data.local.MovieDbModel
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel
@@ -24,6 +23,7 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toWorkMetadataDomainModel
 import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryContract
+import com.pimenta.bestv.workdetail.data.local.mapper.toMovieDbModel
 
 /**
  * Created by marcus on 20-10-2019.
@@ -32,18 +32,21 @@ class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
 ) : MovieRepositoryContract {
-    override suspend fun getWorkMetadata(movieId: Int) =
-        movieRemoteDataSource.getMovieDetails(movieId).toWorkMetadataDomainModel()
+
+    override suspend fun getWorkMetadata(movieId: Int) = movieRemoteDataSource.getMovieDetails(movieId).let { response ->
+        movieLocalDataSource.saveCachedWork(response.toDomainModel().toMovieDbModel())
+        response.toWorkMetadataDomainModel()
+    }
 
     override suspend fun saveFavoriteMovie(movieId: Int) =
-        movieLocalDataSource.saveFavoriteMovie(MovieDbModel(movieId))
+        movieLocalDataSource.saveFavoriteMovie(movieId)
 
     override suspend fun deleteFavoriteMovie(movieId: Int) =
-        movieLocalDataSource.deleteFavoriteMovie(MovieDbModel(movieId))
+        movieLocalDataSource.deleteFavoriteMovie(movieId)
 
     override suspend fun isFavoriteMovie(movieId: Int): Boolean {
-        val movie = movieLocalDataSource.getById(MovieDbModel(movieId))
-        return movie != null
+        val movie = movieLocalDataSource.getById(movieId)
+        return movie?.isFavorite == true
     }
 
     override suspend fun getCreditsByMovie(movieId: Int) =

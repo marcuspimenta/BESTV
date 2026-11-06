@@ -48,6 +48,7 @@ fun TVWorksRow(
     onWorkFocused: (WorkViewModel) -> Unit = {},
     isLoadingMore: Boolean = false,
     onLoadMore: () -> Unit = {},
+    paginationEnabled: Boolean = true,
     initialFocusRequester: FocusRequester? = null,
     initialFocusWorkId: Int? = null,
     requestInitialFocus: Boolean = false,
@@ -60,12 +61,14 @@ fun TVWorksRow(
     val listState = rememberLazyListState()
 
     // Monitor scroll position and trigger pagination when near the end
-    LazyRowPagination(
-        listState = listState,
-        isLoadingMore = isLoadingMore,
-        threshold = 3,
-        onLoadMore = onLoadMore,
-    )
+    if (paginationEnabled) {
+        LazyRowPagination(
+            listState = listState,
+            isLoadingMore = isLoadingMore,
+            threshold = 3,
+            onLoadMore = onLoadMore,
+        )
+    }
 
     Column(
         modifier = modifier

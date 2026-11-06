@@ -18,8 +18,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.pimenta.bestv.data.local.dao.MovieDao
 import com.pimenta.bestv.data.local.dao.TvShowDao
-import com.pimenta.bestv.model.data.local.MovieDbModel
-import com.pimenta.bestv.model.data.local.TvShowDbModel
+import com.pimenta.bestv.data.local.model.MovieDbModel
+import com.pimenta.bestv.data.local.model.TvShowDbModel
 
 /**
  * Created by marcus on 05-03-2018.
@@ -27,9 +27,9 @@ import com.pimenta.bestv.model.data.local.TvShowDbModel
 @Database(
     entities = [
         MovieDbModel::class,
-        TvShowDbModel::class
+        TvShowDbModel::class,
     ],
-    version = 1,
+    version = 7,
     exportSchema = false
 )
 abstract class MediaDb : RoomDatabase() {

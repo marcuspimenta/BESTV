@@ -15,11 +15,12 @@
 package com.pimenta.bestv.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.pimenta.bestv.model.data.local.TvShowDbModel
+import androidx.room.Transaction
+import com.pimenta.bestv.data.local.model.TvShowDbModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by marcus on 10/07/18.
@@ -27,18 +28,35 @@ import com.pimenta.bestv.model.data.local.TvShowDbModel
 @Dao
 interface TvShowDao {
 
-    @Query("SELECT * FROM tv_show")
-    suspend fun getAll(): List<TvShowDbModel>
+    @Query("SELECT * FROM tv_show WHERE isFavorite = 1")
+    fun observeFavorites(): Flow<List<TvShowDbModel>>
 
     @Query("SELECT * FROM tv_show WHERE id = :id")
     suspend fun getById(id: Int): TvShowDbModel?
 
-    @Insert
-    suspend fun create(model: TvShowDbModel)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIfAbsent(model: TvShowDbModel)
 
-    @Update
-    suspend fun update(model: TvShowDbModel)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrReplace(model: TvShowDbModel)
 
-    @Delete
-    suspend fun delete(model: TvShowDbModel)
+    @Query("UPDATE tv_show SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun updateFavorite(id: Int, isFavorite: Boolean)
+
+    @Transaction
+    suspend fun create(id: Int) {
+        insertIfAbsent(TvShowDbModel.favoritePlaceholder(id))
+        updateFavorite(id, true)
+    }
+
+    @Transaction
+    suspend fun delete(id: Int) {
+        updateFavorite(id, false)
+    }
+
+    @Transaction
+    suspend fun saveCachedWork(model: TvShowDbModel) {
+        val isFavorite = getById(model.id)?.isFavorite ?: model.isFavorite
+        insertOrReplace(model.copy(isFavorite = isFavorite))
+    }
 }

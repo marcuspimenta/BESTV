@@ -1,7 +1,6 @@
 package com.pimenta.bestv.workbrowse.presentation.mapper
 
 import com.pimenta.bestv.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
@@ -9,28 +8,19 @@ import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 
 fun BrowseSectionDomainModel.toViewModel(resource: Resource): ContentSection? {
-    val pageViewModel = page.toViewModel(resource)
-    val works = pageViewModel.results.distinctBy { it.id }
+    val works = works.mapNotNull { it.toViewModel(resource) }.distinctBy { it.id }
     if (works.isEmpty()) return null
-
-    val pagination =
-        PaginationState(
-            currentPage = pageViewModel.page,
-            totalPages = pageViewModel.totalPages,
-        )
 
     return when (this) {
         is BrowseSectionDomainModel.TopContent ->
             ContentSection.TopContent(
                 type = category.toViewModel(),
                 works = works,
-                page = pagination,
             )
         is BrowseSectionDomainModel.GenreContent ->
             ContentSection.Genre(
                 genreViewModel = genre.toViewModel(),
                 works = works,
-                page = pagination,
             )
     }
 }

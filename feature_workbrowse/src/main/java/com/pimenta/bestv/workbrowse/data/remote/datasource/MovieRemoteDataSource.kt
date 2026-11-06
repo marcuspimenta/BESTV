@@ -14,9 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.data.remote.datasource
 
-import com.pimenta.bestv.model.data.remote.MovieResponse
 import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
-import timber.log.Timber
 
 /**
  * Created by marcus on 20-10-2019.
@@ -26,14 +24,6 @@ class MovieRemoteDataSource(
     private val tmdbFilterLanguage: String,
     private val movieTmdbApi: MovieTmdbApi,
 ) {
-    suspend fun getMovie(movieId: Int): MovieResponse? =
-        try {
-            movieTmdbApi.getMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
-        } catch (e: Exception) {
-            Timber.e(e, "Error while getting a movie")
-            null
-        }
-
     suspend fun getMoviesByGenre(
         genreId: Int,
         page: Int,

@@ -43,8 +43,7 @@ val networkModule = module {
                     File(androidApplication().cacheDir, HTTP_CACHE_DIRECTORY),
                     HTTP_CACHE_SIZE_BYTES
                 )
-            )
-            .apply {
+            ).apply {
                 if (BuildConfig.BUILD_TYPE == "debug") {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {

@@ -2,9 +2,10 @@ package com.pimenta.bestv.workbrowse.domain.repository
 
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    suspend fun getFavoriteMovies(): List<WorkDomainModel>
+    fun observeFavoriteMovies(): Flow<List<WorkDomainModel>>
 
     suspend fun getMoviesByGenre(genreId: Int, page: Int): PageDomainModel<WorkDomainModel>
 

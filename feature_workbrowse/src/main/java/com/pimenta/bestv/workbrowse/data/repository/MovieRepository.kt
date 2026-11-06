@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.workbrowse.data.repository
 
-import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.model.domain.PageDomainModel
 import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.workbrowse.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryContract
 
@@ -28,14 +28,8 @@ class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
 ) : MovieRepositoryContract {
-    override suspend fun getFavoriteMovies() =
-        movieLocalDataSource.getMovies().mapNotNull { movieDbModel ->
-            movieRemoteDataSource.getMovie(movieDbModel.id)?.let { work ->
-                work.toDomainModel().apply {
-                    isFavorite = true
-                }
-            }
-        }
+
+    override fun observeFavoriteMovies() = movieLocalDataSource.observeFavoriteMovies()
 
     override suspend fun getMoviesByGenre(
         genreId: Int,

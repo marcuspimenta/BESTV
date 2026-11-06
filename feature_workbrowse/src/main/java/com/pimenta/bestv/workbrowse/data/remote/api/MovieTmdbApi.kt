@@ -17,20 +17,12 @@ package com.pimenta.bestv.workbrowse.data.remote.api
 import com.pimenta.bestv.model.data.remote.MovieResponse
 import com.pimenta.bestv.model.data.remote.PageResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
  * Created by marcus on 20-10-2019.
  */
 interface MovieTmdbApi {
-    @GET("movie/{movie_id}")
-    suspend fun getMovie(
-        @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-    ): MovieResponse
-
     @GET("discover/movie")
     suspend fun getMoviesByGenre(
         @Query("with_genres") genreId: Int,

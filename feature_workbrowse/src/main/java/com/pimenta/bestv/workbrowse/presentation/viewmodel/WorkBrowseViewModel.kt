@@ -15,25 +15,21 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pimenta.bestv.model.presentation.model.PageViewModel
+import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.presenter.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.route.search.SearchRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
-import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
-import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
-import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
+import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
+import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
+import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
 import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModels
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
-import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.Genre
-import com.pimenta.bestv.workbrowse.presentation.model.ContentSection.TopContent
-import com.pimenta.bestv.workbrowse.presentation.model.Source
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
@@ -45,9 +41,12 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.T
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
-import com.pimenta.bestv.workbrowse.presentation.model.lazyListKey
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -55,9 +54,8 @@ import timber.log.Timber
  * ViewModel for the Work Browse screen.
  */
 class WorkBrowseViewModel(
-    private val getSectionDetailsUseCase: GetSectionDetailsUseCase,
-    private val getWorkByGenreUseCase: GetWorkByGenreUseCase,
-    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase,
+    private val getBrowseDataUseCase: GetBrowseDataUseCase,
+    private val observeFavoritesUseCase: ObserveFavoritesUseCase,
     // private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val workDetailsRoute: WorkDetailsRoute,
     private val searchRoute: SearchRoute,
@@ -67,6 +65,7 @@ class WorkBrowseViewModel(
     WorkBrowseState(isMobileDevice = deviceCapabilities.isMobileDevice),
 ) {
     init {
+        observeFavorites()
         handleLoadData()
     }
 
@@ -74,13 +73,11 @@ class WorkBrowseViewModel(
         when (event) {
             is WorkBrowseEvent.BackClicked -> handleBackClicked()
             is WorkBrowseEvent.LoadData -> handleLoadData()
-            is WorkBrowseEvent.ScreenResumed -> handleScreenResumed()
             is WorkBrowseEvent.RetryLoad -> handleLoadData()
             is WorkBrowseEvent.SplashAnimationFinished -> handleSplashAnimationFinished()
             is WorkBrowseEvent.SectionClicked -> handleSectionClicked(event.sectionClickedIndex)
             is WorkBrowseEvent.WorkSelected -> handleWorkSelected(event.work)
             is WorkBrowseEvent.WorkClicked -> handleWorkClicked(event.work)
-            is WorkBrowseEvent.LoadMore -> handleLoadMore(event.section)
         }
     }
 
@@ -96,79 +93,116 @@ class WorkBrowseViewModel(
 
     private fun handleBackClicked() = emitEffect(WorkBrowseEffect.CloseScreen)
 
-    private fun handleLoadData() {
+    private fun observeFavorites() {
+        val favorites = flow { emitAll(observeFavoritesUseCase()) }
+            .onStart { emit(emptyList()) }
+            .catch { throwable ->
+                if (throwable is CancellationException) throw throwable
+                Timber.e(throwable, "Error while observing favorite data")
+                emit(emptyList())
+            }
+
         viewModelScope.launch {
-            updateState { it.copy(state = Loading(false)) }
-
             try {
-                val sectionDetails = getSectionDetailsUseCase.getAllSections()
-                val movieSections = sectionDetails.movieSections.toViewModels(resource)
-                val tvShowSections = sectionDetails.tvShowSections.toViewModels(resource)
-                val favoriteSections = sectionDetails.favoriteSections.toViewModels(resource)
-
-                // Wait for splash animation to finish reactively
-                state.first { (it.state as? Loading)?.isSplashAnimationFinished == true }
-
-                updateState {
-                    it.copy(
-                        state = Loaded(
-                            workSelected = null,
-                            selectedSectionIndex = 1,
-                            sections = listOfNotNull(
-                                Search,
-                                Movies(movieSections).takeIf { it.content.isNotEmpty() },
-                                TvShows(tvShowSections).takeIf { it.content.isNotEmpty() },
-                                Favorites(favoriteSections).takeIf { it.content.isNotEmpty() },
-                            ),
-                        ),
-                    )
+                favorites.collect { works ->
+                    val favoriteWorks = works.mapNotNull { it.toViewModel(resource) }
+                    updateLoadedFavorites(favoriteWorks)
                 }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, "Error while observing favorite data")
+            }
+        }
+    }
+
+    private fun handleLoadData() {
+        if (currentState.state !is Loaded) {
+            updateState { current ->
+                val splashAnimationFinished = (current.state as? Loading)?.isSplashAnimationFinished ?: false
+                current.copy(state = Loading(splashAnimationFinished))
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                displayBrowseSections(getBrowseDataUseCase(), currentState.latestFavorites)
+            } catch (cancellation: CancellationException) {
+                throw cancellation
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Error while loading browse data")
-                updateState { it.copy(state = Error) }
+                if (currentState.state !is Loaded) updateState { it.copy(state = Error) }
             }
         }
     }
 
-    private fun handleScreenResumed() {
-        val currentState = currentState.state as? Loaded ?: return
-        viewModelScope.launch {
-            try {
-                val favorites = getSectionDetailsUseCase.getFavoriteSections().toViewModels(resource)
-                val updatedSections = updateSectionsWithFavorites(currentState.sections, favorites)
+    private fun displayBrowseSections(
+        sectionsDetails: BrowseSectionDetails,
+        favorites: List<WorkViewModel>,
+    ) {
+        val favoriteIds = favorites.mapTo(mutableSetOf()) { it.type to it.id }
+        val movieSections = sectionsDetails.movieSections.withFavoriteFlags(favoriteIds)
+        val tvShowSections = sectionsDetails.tvShowSections.withFavoriteFlags(favoriteIds)
+        val favoriteSections = favorites.toFavoriteSections()
 
-                updateState {
-                    it.copy(
-                        state = currentState.copy(
-                            selectedSectionIndex = currentState.selectedSectionIndex.coerceAtMost(
-                                updatedSections.lastIndex
-                            ),
-                            sections = updatedSections,
-                        ),
-                    )
-                }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while checking favorites")
-            }
+        updateState { current ->
+            val previous = current.state as? Loaded
+            val movieViewModels = movieSections.toViewModels(resource)
+            val tvShowViewModels = tvShowSections.toViewModels(resource)
+            val sections = listOfNotNull(
+                Search,
+                Movies(movieViewModels).takeIf { it.content.isNotEmpty() },
+                TvShows(tvShowViewModels).takeIf { it.content.isNotEmpty() },
+                Favorites(favoriteSections).takeIf { it.content.isNotEmpty() },
+            )
+            val selectedSectionIndex = previous?.selectedSectionIndex ?: 1
+
+            current.copy(
+                state = Loaded(
+                    workSelected = previous?.workSelected,
+                    selectedSectionIndex = selectedSectionIndex.coerceAtMost(sections.lastIndex),
+                    sections = sections,
+                ),
+            )
         }
     }
 
-    private fun updateSectionsWithFavorites(
-        sections: List<WorkBrowseState.Section>,
-        favorites: List<ContentSection>,
-    ): List<WorkBrowseState.Section> {
-        val hasFavorites = favorites.isNotEmpty()
-        val favoritesIndex = sections.indexOfFirst { it is Favorites }
+    private fun updateLoadedFavorites(favorites: List<WorkViewModel>) {
+        val favoriteIds = favorites.mapTo(mutableSetOf()) { it.type to it.id }
+        val favoriteSections = favorites.toFavoriteSections()
 
-        return when {
-            hasFavorites && favoritesIndex >= 0 ->
-                sections.toMutableList().apply {
-                    set(favoritesIndex, Favorites(favorites))
-                }
-            hasFavorites -> sections + Favorites(favorites)
-            favoritesIndex >= 0 -> sections.filterNot { it is Favorites }
-            else -> sections
+        updateState { current ->
+            val loaded = current.state as? Loaded
+            val updatedState = loaded?.let { state ->
+                val sections =
+                    state.sections.mapNotNull { section ->
+                        when (section) {
+                            is Movies -> section.copy(content = section.content.withFavoriteFlagsInPresentation(favoriteIds))
+                            is TvShows -> section.copy(content = section.content.withFavoriteFlagsInPresentation(favoriteIds))
+                            is Favorites -> null
+                            Search -> Search
+                        }
+                    } + listOfNotNull(Favorites(favoriteSections).takeIf { favoriteSections.isNotEmpty() })
+
+                state.copy(
+                    selectedSectionIndex = state.selectedSectionIndex.coerceAtMost(sections.lastIndex),
+                    sections = sections,
+                )
+            } ?: current.state
+
+            current.copy(latestFavorites = favorites, state = updatedState)
         }
+    }
+
+    private fun List<WorkViewModel>.toFavoriteSections(): List<ContentSection> {
+        if (isEmpty()) return emptyList()
+
+        return listOf(
+            ContentSection.TopContent(
+                type = TopWorkTypeViewModel.FAVORITES_MOVIES,
+                works = map { it.copy(isFavorite = true) },
+            ),
+        )
     }
 
     private fun handleSplashAnimationFinished() {
@@ -206,126 +240,39 @@ class WorkBrowseViewModel(
         emitEffect(WorkBrowseEffect.Navigate(workDetailsRoute.buildWorkDetailsDestination(work)))
     }
 
-    private fun handleLoadMore(section: ContentSection) {
-        val sectionKey = section.lazyListKey()
-        val currentSection = currentState.findContentSection(sectionKey) ?: return
-        if (!currentSection.page.canLoadMore) return
-
-        val nextPage = currentSection.page.currentPage + 1
-        updateState { state ->
-            state.updateContentSection(sectionKey) { content ->
-                content.withPage(content.page.copy(isLoadingMore = true))
-            }
-        }
-
-        viewModelScope.launch {
-            try {
-                val page = currentSection.loadPage(nextPage).toViewModel(resource)
-                updateState { state ->
-                    state.updateContentSection(sectionKey) { content ->
-                        if (content.page.currentPage == currentSection.page.currentPage) {
-                            content.appendPage(page)
-                        } else {
-                            content
-                        }
-                    }
-                }
-            } catch (cancellation: CancellationException) {
-                throw cancellation
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more browse works")
-                updateState { state ->
-                    state.updateContentSection(sectionKey) { content ->
-                        content.withPage(content.page.copy(isLoadingMore = false))
-                    }
-                }
-            }
+    private fun List<BrowseSectionDomainModel>.withFavoriteFlags(
+        favoriteIds: Set<Pair<WorkType, Int>>,
+    ) = map { section ->
+        when (section) {
+            is BrowseSectionDomainModel.TopContent -> section.copy(works = section.works.withFavoriteStatus(favoriteIds))
+            is BrowseSectionDomainModel.GenreContent -> section.copy(works = section.works.withFavoriteStatus(favoriteIds))
         }
     }
 
-    private suspend fun ContentSection.loadPage(page: Int) =
-        when (this) {
-            is TopContent -> loadWorkByTypeUseCase(page, type.toBrowseCategoryKey())
-            is Genre -> getWorkByGenreUseCase(
-                genreId = genreViewModel.id,
-                genreSource = when (genreViewModel.source) {
-                    Source.MOVIE -> GenreDomainModel.Source.MOVIE
-                    Source.TV_SHOW -> GenreDomainModel.Source.TV_SHOW
-                },
-                page = page,
-            )
-        }
-
-    private fun TopWorkTypeViewModel.toBrowseCategoryKey() =
-        when (this) {
-            TopWorkTypeViewModel.FAVORITES_MOVIES -> BrowseCategoryKey.FAVORITES_MOVIES
-            TopWorkTypeViewModel.NOW_PLAYING_MOVIES -> BrowseCategoryKey.NOW_PLAYING_MOVIES
-            TopWorkTypeViewModel.POPULAR_MOVIES -> BrowseCategoryKey.POPULAR_MOVIES
-            TopWorkTypeViewModel.TOP_RATED_MOVIES -> BrowseCategoryKey.TOP_RATED_MOVIES
-            TopWorkTypeViewModel.UP_COMING_MOVIES -> BrowseCategoryKey.UP_COMING_MOVIES
-            TopWorkTypeViewModel.AIRING_TODAY_TV_SHOWS -> BrowseCategoryKey.AIRING_TODAY_TV_SHOWS
-            TopWorkTypeViewModel.ON_THE_AIR_TV_SHOWS -> BrowseCategoryKey.ON_THE_AIR_TV_SHOWS
-            TopWorkTypeViewModel.POPULAR_TV_SHOWS -> BrowseCategoryKey.POPULAR_TV_SHOWS
-            TopWorkTypeViewModel.TOP_RATED_TV_SHOWS -> BrowseCategoryKey.TOP_RATED_TV_SHOWS
-        }
-
-    private fun WorkBrowseState.findContentSection(sectionKey: String): ContentSection? {
-        val loadedState = state as? Loaded ?: return null
-        return loadedState.sections
-            .asSequence()
-            .flatMap { section -> section.contentSections().asSequence() }
-            .firstOrNull { it.lazyListKey() == sectionKey }
+    private fun List<WorkDomainModel>.withFavoriteStatus(
+        favoriteIds: Set<Pair<WorkType, Int>>,
+    ) = map { work ->
+        work.copy(isFavorite = (work.type.toWorkType() to work.id) in favoriteIds)
     }
 
-    private fun WorkBrowseState.updateContentSection(
-        sectionKey: String,
-        transform: (ContentSection) -> ContentSection,
-    ): WorkBrowseState {
-        val loadedState = state as? Loaded ?: return this
-        return copy(
-            state = loadedState.copy(
-                sections = loadedState.sections.map { section ->
-                    when (section) {
-                        is Movies -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
-                        is TvShows -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
-                        is Favorites -> section.copy(content = section.content.updateContentSection(sectionKey, transform))
-                        Search -> section
-                    }
-                },
-            ),
-        )
+    private fun List<ContentSection>.withFavoriteFlagsInPresentation(
+        favoriteIds: Set<Pair<WorkType, Int>>,
+    ) = map { section ->
+        when (section) {
+            is ContentSection.TopContent -> section.copy(works = section.works.withFavoriteWorkFlags(favoriteIds))
+            is ContentSection.Genre -> section.copy(works = section.works.withFavoriteWorkFlags(favoriteIds))
+        }
     }
 
-    private fun List<ContentSection>.updateContentSection(
-        sectionKey: String,
-        transform: (ContentSection) -> ContentSection,
-    ) = map { content ->
-        if (content.lazyListKey() == sectionKey) transform(content) else content
+    private fun List<WorkViewModel>.withFavoriteWorkFlags(
+        favoriteIds: Set<Pair<WorkType, Int>>,
+    ) = map { work ->
+        work.copy(isFavorite = (work.type to work.id) in favoriteIds)
     }
 
-    private fun WorkBrowseState.Section.contentSections(): List<ContentSection> =
+    private fun WorkDomainModel.Type.toWorkType() =
         when (this) {
-            is Movies -> content
-            is TvShows -> content
-            is Favorites -> content
-            Search -> emptyList()
-        }
-
-    private fun ContentSection.withPage(page: PaginationState): ContentSection =
-        when (this) {
-            is TopContent -> copy(page = page)
-            is Genre -> copy(page = page)
-        }
-
-    private fun ContentSection.appendPage(page: PageViewModel<WorkViewModel>): ContentSection =
-        when (this) {
-            is TopContent -> copy(
-                works = (works + page.results).distinctBy { it.id },
-                page = PaginationState(currentPage = page.page, totalPages = page.totalPages),
-            )
-            is Genre -> copy(
-                works = (works + page.results).distinctBy { it.id },
-                page = PaginationState(currentPage = page.page, totalPages = page.totalPages),
-            )
+            WorkDomainModel.Type.MOVIE -> WorkType.MOVIE
+            WorkDomainModel.Type.TV_SHOW -> WorkType.TV_SHOW
         }
 }

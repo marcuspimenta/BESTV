@@ -15,6 +15,8 @@
 package com.pimenta.bestv.workbrowse.di
 
 import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.workbrowse.data.local.datasource.MovieLocalDataSource
+import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
 import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
 import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
@@ -24,24 +26,8 @@ import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSourc
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.data.repository.MovieRepository
 import com.pimenta.bestv.workbrowse.data.repository.TvShowRepository
-import com.pimenta.bestv.workbrowse.domain.GetAiringTodayTvShowsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetFavoriteMoviesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetFavoriteTvShowsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetFavoritesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetMovieByGenreUseCase
-import com.pimenta.bestv.workbrowse.domain.GetMovieGenresUseCase
-import com.pimenta.bestv.workbrowse.domain.GetNowPlayingMoviesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetOnTheAirTvShowsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetPopularMoviesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetPopularTvShowsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetTopRatedMoviesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetTopRatedTvShowsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetTvShowByGenreUseCase
-import com.pimenta.bestv.workbrowse.domain.GetTvShowGenresUseCase
-import com.pimenta.bestv.workbrowse.domain.GetUpComingMoviesUseCase
-import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
-import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
+import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
 import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository as GenreRepositoryPort
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryPort
@@ -86,6 +72,18 @@ val workBrowseModule = module {
         )
     }
 
+    // Local favorite data sources
+    single {
+        MovieLocalDataSource(
+            movieDao = get(),
+        )
+    }
+    single {
+        TvShowLocalDataSource(
+            tvShowDao = get(),
+        )
+    }
+
     // Repositories
     factoryOf(::GenreRepository)
     factoryOf(::MovieRepository)
@@ -95,24 +93,8 @@ val workBrowseModule = module {
     factory<TvShowRepositoryPort> { get<TvShowRepository>() }
 
     // UseCases
-    factoryOf(::GetAiringTodayTvShowsUseCase)
-    factoryOf(::GetFavoriteMoviesUseCase)
-    factoryOf(::GetFavoriteTvShowsUseCase)
-    factoryOf(::GetFavoritesUseCase)
-    factoryOf(::GetMovieByGenreUseCase)
-    factoryOf(::GetMovieGenresUseCase)
-    factoryOf(::GetNowPlayingMoviesUseCase)
-    factoryOf(::GetOnTheAirTvShowsUseCase)
-    factoryOf(::GetPopularMoviesUseCase)
-    factoryOf(::GetPopularTvShowsUseCase)
-    factoryOf(::GetSectionDetailsUseCase)
-    factoryOf(::GetTopRatedMoviesUseCase)
-    factoryOf(::GetTopRatedTvShowsUseCase)
-    factoryOf(::GetTvShowByGenreUseCase)
-    factoryOf(::GetTvShowGenresUseCase)
-    factoryOf(::GetUpComingMoviesUseCase)
-    factoryOf(::GetWorkByGenreUseCase)
-    factoryOf(::LoadWorkByTypeUseCase)
+    factoryOf(::GetBrowseDataUseCase)
+    factoryOf(::ObserveFavoritesUseCase)
 
     // ViewModel
     viewModelOf(::WorkBrowseViewModel)

@@ -15,7 +15,6 @@
 package com.pimenta.bestv.workbrowse.presentation.model
 
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
 import com.pimenta.bestv.presentation.R as presentationR
@@ -26,6 +25,7 @@ import com.pimenta.bestv.workbrowse.R as workbrowseR
  */
 data class WorkBrowseState(
     val isMobileDevice: Boolean = false,
+    val latestFavorites: List<WorkViewModel> = emptyList(),
     val state: State = Loading(false),
 ) {
     sealed interface State {
@@ -64,19 +64,16 @@ data class WorkBrowseState(
 
 sealed class ContentSection(
     open val works: List<WorkViewModel>,
-    open val page: PaginationState,
 ) {
     data class TopContent(
         val type: TopWorkTypeViewModel,
         override val works: List<WorkViewModel>,
-        override val page: PaginationState,
-    ) : ContentSection(works, page)
+    ) : ContentSection(works)
 
     data class Genre(
         val genreViewModel: GenreViewModel,
         override val works: List<WorkViewModel>,
-        override val page: PaginationState,
-    ) : ContentSection(works, page)
+    ) : ContentSection(works)
 }
 
 internal fun ContentSection.lazyListKey(): String = when (this) {

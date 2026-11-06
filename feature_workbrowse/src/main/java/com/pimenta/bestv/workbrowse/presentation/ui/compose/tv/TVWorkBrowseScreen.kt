@@ -59,7 +59,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.DrawerValue
@@ -108,12 +107,6 @@ fun TVWorkBrowseScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LifecycleResumeEffect(Unit) {
-        viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
-        // Nothing to do onPause
-        onPauseOrDispose { }
-    }
-
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
@@ -130,7 +123,6 @@ fun TVWorkBrowseScreen(
         onSectionClicked = { viewModel.handleEvent(WorkBrowseEvent.SectionClicked(it)) },
         onWorkSelected = { viewModel.handleEvent(WorkBrowseEvent.WorkSelected(it)) },
         onWorkClicked = { viewModel.handleEvent(WorkBrowseEvent.WorkClicked(it)) },
-        onLoadMore = { viewModel.handleEvent(WorkBrowseEvent.LoadMore(it)) },
         onRetryClicked = { viewModel.handleEvent(WorkBrowseEvent.RetryLoad) },
         modifier = modifier,
     )
@@ -144,7 +136,6 @@ internal fun TVWorkBrowseContent(
     onSectionClicked: (Int) -> Unit,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     onRetryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -175,7 +166,6 @@ internal fun TVWorkBrowseContent(
                     onSectionClicked = onSectionClicked,
                     onWorkSelected = onWorkSelected,
                     onWorkClicked = onWorkClicked,
-                    onLoadMore = onLoadMore,
                     modifier = Modifier
                         .fillMaxSize(),
                 )
@@ -210,7 +200,6 @@ private fun TVBrowseSections(
     onWorkSelected: (WorkViewModel) -> Unit,
     onSectionClicked: (Int) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -329,7 +318,6 @@ private fun TVBrowseSections(
                         workSelected = workSelected,
                         onWorkSelected = onWorkSelected,
                         onWorkClicked = onWorkClicked,
-                        onLoadMore = onLoadMore,
                         modifier = Modifier,
                     )
                 }
@@ -368,7 +356,6 @@ private fun TVSection(
     workSelected: WorkViewModel?,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (section) {
@@ -382,7 +369,6 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
-                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
 
@@ -395,7 +381,6 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
-                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
 
@@ -408,7 +393,6 @@ private fun TVSection(
                 content = section.content,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
-                onLoadMore = onLoadMore,
                 modifier = modifier,
             )
     }
@@ -423,7 +407,6 @@ private fun TVSectionWorks(
     content: List<ContentSection>,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -454,7 +437,6 @@ private fun TVSectionWorks(
                 listState = listState,
                 onWorkSelected = onWorkSelected,
                 onWorkClicked = onWorkClicked,
-                onLoadMore = onLoadMore,
                 initialFocusRequester = focusRequester,
                 requestInitialFocus = shouldRequestInitialFocus,
                 focusTargetWorkId = workSelected?.id,
@@ -523,7 +505,6 @@ private fun TVSectionWorkList(
     listState: LazyListState,
     onWorkSelected: (WorkViewModel) -> Unit,
     onWorkClicked: (WorkViewModel) -> Unit,
-    onLoadMore: (ContentSection) -> Unit,
     initialFocusRequester: FocusRequester,
     requestInitialFocus: Boolean,
     focusTargetWorkId: Int?,
@@ -549,13 +530,12 @@ private fun TVSectionWorkList(
                 works = contentItem.works,
                 onWorkClick = onWorkClicked,
                 onWorkFocused = onWorkSelected,
-                isLoadingMore = contentItem.page.isLoadingMore,
+                paginationEnabled = false,
                 titleStartPadding = BESTVTheme.scale.s500,
                 worksStartPadding = BESTVTheme.scale.s500,
                 initialFocusRequester = initialFocusRequester.takeIf { index == firstContentIndex },
                 initialFocusWorkId = focusTargetWorkId.takeIf { id -> contentItem.works.any { it.id == id } },
                 requestInitialFocus = requestInitialFocus && index == firstContentIndex,
-                onLoadMore = { onLoadMore(contentItem) },
                 modifier = Modifier
                     .fadeAtTopEdge(
                         listState = listState,

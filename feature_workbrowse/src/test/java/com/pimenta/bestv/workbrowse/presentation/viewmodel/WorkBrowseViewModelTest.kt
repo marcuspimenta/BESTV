@@ -1,67 +1,50 @@
-/*
- * Copyright (C) 2018 Marcus Pimenta
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
-import androidx.lifecycle.viewModelScope
+import com.pimenta.bestv.model.domain.ContentSource
+import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.model.presentation.model.WorkType
 import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.model.domain.ContentSource
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
-import com.pimenta.bestv.route.search.SearchRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.route.SearchDestination
 import com.pimenta.bestv.route.WorkDetailsDestination
-import com.pimenta.bestv.workbrowse.domain.GetSectionDetailsUseCase
-import com.pimenta.bestv.workbrowse.domain.GetWorkByGenreUseCase
-import com.pimenta.bestv.workbrowse.domain.LoadWorkByTypeUseCase
+import com.pimenta.bestv.route.search.SearchRoute
+import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
+import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
-import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
-import com.pimenta.bestv.workbrowse.presentation.model.Source
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
+import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.job
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 private val WORK =
@@ -86,10 +69,10 @@ private fun domainWork(
 ) =
     WorkDomainModel(
         id = id,
-        title = "Test Movie",
-        originalTitle = "Test Movie",
+        title = "Test Work $id",
+        originalTitle = "Test Work $id",
         originalLanguage = "en",
-        overview = "A test movie",
+        overview = "A test work",
         source = ContentSource.TMDB,
         backdropPath = "/backdrop.jpg",
         posterPath = "/poster.jpg",
@@ -99,44 +82,41 @@ private fun domainWork(
         isFavorite = isFavorite,
     )
 
-private fun domainSection(category: BrowseCategoryKey, work: WorkDomainModel, totalPages: Int) =
-    BrowseSectionDomainModel.TopContent(
-        category = category,
-        page = PageDomainModel(page = 1, totalPages = totalPages, results = listOf(work)),
-    )
+private fun domainSection(category: BrowseCategoryKey, work: WorkDomainModel) =
+    BrowseSectionDomainModel.TopContent(category = category, works = listOf(work))
 
-private val SECTION_DETAILS =
+private val BROWSE_SECTIONS =
     BrowseSectionDetails(
         movieSections = listOf(
-            domainSection(BrowseCategoryKey.NOW_PLAYING_MOVIES, domainWork(1, WorkDomainModel.Type.MOVIE), 5),
+            domainSection(BrowseCategoryKey.NOW_PLAYING_MOVIES, domainWork(1, WorkDomainModel.Type.MOVIE)),
         ),
         tvShowSections = listOf(
-            domainSection(BrowseCategoryKey.AIRING_TODAY_TV_SHOWS, domainWork(2, WorkDomainModel.Type.TV_SHOW), 3),
-        ),
-        favoriteSections = listOf(
-            domainSection(BrowseCategoryKey.FAVORITES_MOVIES, domainWork(3, WorkDomainModel.Type.MOVIE, true), 1),
+            domainSection(BrowseCategoryKey.AIRING_TODAY_TV_SHOWS, domainWork(2, WorkDomainModel.Type.TV_SHOW)),
         ),
     )
 
-/**
- * Unit tests for WorkBrowseViewModel following MVI architecture with Coroutines
- */
+private typealias WorkBrowseViewModelStateLoaded = WorkBrowseState.State.Loaded
+private typealias WorkBrowseViewModelStateError = WorkBrowseState.State.Error
+private typealias WorkBrowseViewModelStateLoading = WorkBrowseState.State.Loading
+private typealias WorkBrowseViewModelSectionMovies = WorkBrowseState.Section.Movies
+private typealias WorkBrowseViewModelSectionFavorites = WorkBrowseState.Section.Favorites
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class WorkBrowseViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
-
-    private val getSectionDetailsUseCase: GetSectionDetailsUseCase = mock()
-    private val getWorkByGenreUseCase: GetWorkByGenreUseCase = mock()
-    private val loadWorkByTypeUseCase: LoadWorkByTypeUseCase = mock()
+    private val getBrowseDataUseCase: GetBrowseDataUseCase = mock()
+    private val observeFavoritesUseCase: ObserveFavoritesUseCase = mock()
+    private val observedFavorites = MutableStateFlow<List<WorkDomainModel>>(emptyList())
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val searchRoute: SearchRoute = mock()
     private val resource: Resource = mock()
-
     private lateinit var viewModel: WorkBrowseViewModel
 
     @Before
-    fun setUp() {
+    fun setUp() = runTest(testDispatcher) {
         Dispatchers.setMain(testDispatcher)
+        whenever(getBrowseDataUseCase()).thenReturn(BROWSE_SECTIONS)
+        whenever(observeFavoritesUseCase()).thenReturn(observedFavorites)
         whenever(resource.getStringResource(any())).thenReturn("tmdb")
     }
 
@@ -145,434 +125,287 @@ class WorkBrowseViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createViewModel(): WorkBrowseViewModel =
+    private fun createViewModel() =
         WorkBrowseViewModel(
-            getSectionDetailsUseCase = getSectionDetailsUseCase,
-            getWorkByGenreUseCase = getWorkByGenreUseCase,
-            loadWorkByTypeUseCase = loadWorkByTypeUseCase,
+            getBrowseDataUseCase = getBrowseDataUseCase,
+            observeFavoritesUseCase = observeFavoritesUseCase,
             workDetailsRoute = workDetailsRoute,
             searchRoute = searchRoute,
             resource = resource,
             deviceCapabilities = TvDeviceCapabilities,
         )
 
-    /**
-     * Helper to transition ViewModel to Loaded state
-     */
-    private suspend fun transitionToLoadedState() {
+    private suspend fun TestScope.transitionToLoadedState() {
         viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)
-        // Let the coroutines complete
+        advanceUntilIdle()
     }
 
     @Test
-    fun `initial state should be Loading`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+    fun `initial state is Loading`() = runTest(testDispatcher) {
+        viewModel = createViewModel()
 
-            viewModel = createViewModel()
-
-            val initialState = viewModel.state.value
-            assertTrue(initialState.state is WorkBrowseState.State.Loading)
-        }
+        assertTrue(viewModel.state.value.state is WorkBrowseState.State.Loading)
+    }
 
     @Test
-    fun `loadData should update state to Loaded after splash animation finishes`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+    fun `network sections display when loaded and favorites come from Room`() = runTest(testDispatcher) {
+        observedFavorites.value = listOf(domainWork(1, WorkDomainModel.Type.MOVIE, true))
+        viewModel = createViewModel()
+        advanceUntilIdle()
 
-            viewModel = createViewModel()
-
-            // First, let the init coroutine start and reach the wait point
-            advanceUntilIdle()
-
-            // Signal splash animation finished
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            assertTrue("State should be Loaded but was ${state.state}", state.state is WorkBrowseState.State.Loaded)
-
-            val loadedState = state.state as WorkBrowseState.State.Loaded
-            assertEquals(1, loadedState.selectedSectionIndex)
-            assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.Search })
-            assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.Movies })
-            assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.TvShows })
-            assertTrue(loadedState.sections.any { it is WorkBrowseState.Section.Favorites })
-
-            val movieSection =
-                loadedState.sections
-                    .filterIsInstance<WorkBrowseState.Section.Movies>()
-                    .single()
-                    .content
-                    .single() as ContentSection.TopContent
-            assertEquals(TopWorkTypeViewModel.NOW_PLAYING_MOVIES, movieSection.type)
-            assertEquals(1, movieSection.works.single().id)
-            assertEquals(PaginationState(currentPage = 1, totalPages = 5), movieSection.page)
-        }
-
-    @Test
-    fun `loadMore should request the next page once and append its works`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            whenever(loadWorkByTypeUseCase(2, BrowseCategoryKey.NOW_PLAYING_MOVIES)).thenReturn(
-                PageDomainModel(
-                    page = 2,
-                    totalPages = 5,
-                    results = listOf(
-                        domainWork(1, WorkDomainModel.Type.MOVIE),
-                        domainWork(4, WorkDomainModel.Type.MOVIE),
-                    ),
-                ),
-            )
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            val section =
-                (viewModel.state.value.state as WorkBrowseState.State.Loaded)
-                    .sections
-                    .filterIsInstance<WorkBrowseState.Section.Movies>()
-                    .single()
-                    .content
-                    .single()
-            viewModel.handleEvent(WorkBrowseEvent.LoadMore(section))
-            viewModel.handleEvent(WorkBrowseEvent.LoadMore(section))
-            advanceUntilIdle()
-
-            val loadedState = viewModel.state.value.state as WorkBrowseState.State.Loaded
-            val updatedSection =
-                loadedState.sections
-                    .filterIsInstance<WorkBrowseState.Section.Movies>()
-                    .single()
-                    .content
-                    .single()
-            assertEquals(listOf(1, 4), updatedSection.works.map { it.id })
-            assertEquals(PaginationState(currentPage = 2, totalPages = 5), updatedSection.page)
-            verify(loadWorkByTypeUseCase, times(1))(2, BrowseCategoryKey.NOW_PLAYING_MOVIES)
-        }
-
-    @Test
-    fun `loadMore should request the next genre page`() =
-        runTest(testDispatcher) {
-            val movieGenre = GenreDomainModel(id = 28, name = "Action", source = GenreDomainModel.Source.MOVIE)
-            val sectionDetails = SECTION_DETAILS.copy(
-                movieSections = SECTION_DETAILS.movieSections +
-                    BrowseSectionDomainModel.GenreContent(
-                        genre = movieGenre,
-                        page = PageDomainModel(
-                            page = 1,
-                            totalPages = 2,
-                            results = listOf(domainWork(5, WorkDomainModel.Type.MOVIE)),
-                        ),
-                    ),
-            )
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(sectionDetails)
-            whenever(getWorkByGenreUseCase(28, GenreDomainModel.Source.MOVIE, 2)).thenReturn(
-                PageDomainModel(
-                    page = 2,
-                    totalPages = 2,
-                    results = listOf(domainWork(6, WorkDomainModel.Type.MOVIE)),
-                ),
-            )
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            val genreSection =
-                (viewModel.state.value.state as WorkBrowseState.State.Loaded)
-                    .sections
-                    .filterIsInstance<WorkBrowseState.Section.Movies>()
-                    .single()
-                    .content
-                    .filterIsInstance<ContentSection.Genre>()
-                    .single()
-            assertEquals(Source.MOVIE, genreSection.genreViewModel.source)
-            viewModel.handleEvent(WorkBrowseEvent.LoadMore(genreSection))
-            advanceUntilIdle()
-
-            val loadedState = viewModel.state.value.state as WorkBrowseState.State.Loaded
-            val updatedGenreSection =
-                loadedState.sections
-                    .filterIsInstance<WorkBrowseState.Section.Movies>()
-                    .single()
-                    .content
-                    .filterIsInstance<ContentSection.Genre>()
-                    .single()
-            assertEquals(listOf(5, 6), updatedGenreSection.works.map { it.id })
-            assertEquals(PaginationState(currentPage = 2, totalPages = 2), updatedGenreSection.page)
-            verify(getWorkByGenreUseCase)(28, GenreDomainModel.Source.MOVIE, 2)
-        }
-
-    @Test
-    fun `loadData should update state to Error when loading is cancelled`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenThrow(CancellationException())
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-
-            assertTrue(viewModel.state.value.state is WorkBrowseState.State.Error)
-        }
-
-    @Test
-    fun `loadData should update state to Error when exception occurs`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenThrow(RuntimeException("Network error"))
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-
-            // The error should happen before waiting for splash animation
-            val state = viewModel.state.value
-            assertTrue("State should be Error but was ${state.state}", state.state is WorkBrowseState.State.Error)
-        }
-
-    @Test
-    fun `backClicked should emit CloseScreen effect`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-
-            viewModel = createViewModel()
-
-            val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job = launch {
-                viewModel.effects.collect { collectedEffects.add(it) }
-            }
-
-            viewModel.handleEvent(WorkBrowseEvent.BackClicked)
-            advanceUntilIdle()
-
-            assertTrue(collectedEffects.any { it is WorkBrowseEffect.CloseScreen })
-            job.cancel()
-        }
-
-    @Test
-    fun `sectionClicked with index 0 should emit Navigate effect to search`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            val searchDestination = SearchDestination.create()
-            whenever(searchRoute.buildSearchDestination()).thenReturn(searchDestination)
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            // Ensure state is Loaded before testing
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-
-            val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job = launch {
-                viewModel.effects.collect { collectedEffects.add(it) }
-            }
-
-            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0))
-            advanceUntilIdle()
-
-            val navigateEffect = collectedEffects.filterIsInstance<WorkBrowseEffect.Navigate>().firstOrNull()
-            assertNotNull("Navigate effect should be emitted", navigateEffect)
-            assertEquals(searchDestination, navigateEffect?.destination)
-            job.cancel()
-        }
-
-    @Test
-    fun `sectionClicked with non-zero index should update selectedSectionIndex`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            // Ensure state is Loaded
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-
-            viewModel.handleEvent(WorkBrowseEvent.SectionClicked(2))
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            val loadedState = state.state as WorkBrowseState.State.Loaded
-            assertEquals(2, loadedState.selectedSectionIndex)
-        }
-
-    @Test
-    fun `workSelected should update workSelected in state`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            // Ensure state is Loaded
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-
-            viewModel.handleEvent(WorkBrowseEvent.WorkSelected(WORK))
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            val loadedState = state.state as WorkBrowseState.State.Loaded
-            assertEquals(WORK, loadedState.workSelected)
-        }
-
-    @Test
-    fun `workClicked should emit Navigate effect to work details`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            val workDetailsDestination = WorkDetailsDestination.create(WORK)
-            whenever(workDetailsRoute.buildWorkDetailsDestination(WORK)).thenReturn(workDetailsDestination)
-
-            viewModel = createViewModel()
-
-            val collectedEffects = mutableListOf<WorkBrowseEffect>()
-            val job = launch {
-                viewModel.effects.collect { collectedEffects.add(it) }
-            }
-
-            viewModel.handleEvent(WorkBrowseEvent.WorkClicked(WORK))
-            advanceUntilIdle()
-
-            val navigateEffect = collectedEffects.filterIsInstance<WorkBrowseEffect.Navigate>().firstOrNull()
-            assertNotNull("Navigate effect should be emitted", navigateEffect)
-            assertEquals(workDetailsDestination, navigateEffect?.destination)
-            job.cancel()
-
-            verify(workDetailsRoute).buildWorkDetailsDestination(WORK)
-        }
-
-    @Test
-    fun `screenResumed should update favorites section`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            // Ensure state is Loaded
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-
-            val newFavorites = listOf(
-                domainSection(
-                    BrowseCategoryKey.FAVORITES_MOVIES,
-                    domainWork(10, WorkDomainModel.Type.MOVIE, true),
-                    1,
-                ),
-            )
-            whenever(getSectionDetailsUseCase.getFavoriteSections()).thenReturn(newFavorites)
-
-            viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            val loadedState = state.state as WorkBrowseState.State.Loaded
-            val favoritesSection = loadedState.sections.filterIsInstance<WorkBrowseState.Section.Favorites>().firstOrNull()
-            val favoriteContent = favoritesSection?.content?.single() as ContentSection.TopContent
-            assertEquals(TopWorkTypeViewModel.FAVORITES_MOVIES, favoriteContent.type)
-            assertEquals(10, favoriteContent.works.single().id)
-            assertTrue(favoriteContent.works.single().isFavorite)
-            assertEquals(PaginationState(currentPage = 1, totalPages = 1), favoriteContent.page)
-        }
-
-    @Test
-    fun `screenResumed should handle cancellation and preserve loaded sections`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-            val loadedState = viewModel.state.value
-            whenever(getSectionDetailsUseCase.getFavoriteSections()).thenThrow(CancellationException())
-
-            viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
-            val refreshJob = viewModel.viewModelScope.coroutineContext.job.children
+        val loaded = viewModel.state.value.state as WorkBrowseState.State.Loaded
+        assertEquals(1, loaded.selectedSectionIndex)
+        assertTrue(loaded.sections.any { it is WorkBrowseState.Section.Search })
+        val movieSection = loaded.sections
+            .filterIsInstance<WorkBrowseState.Section.Movies>()
+            .single()
+            .content
+            .single()
+            as ContentSection.TopContent
+        assertEquals(TopWorkTypeViewModel.NOW_PLAYING_MOVIES, movieSection.type)
+        assertTrue(movieSection.works.single().isFavorite)
+        val favorites = loaded.sections.filterIsInstance<WorkBrowseState.Section.Favorites>().single()
+        assertEquals(
+            listOf(1),
+            favorites.content
                 .single()
-            advanceUntilIdle()
-
-            assertTrue(refreshJob.isCompleted)
-            assertFalse(refreshJob.isCancelled)
-            assertEquals(loadedState, viewModel.state.value)
-        }
+                .works
+                .map { it.id }
+        )
+    }
 
     @Test
-    fun `screenResumed should remove favorites section when no favorites exist`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+    fun `empty successful response displays Search without waiting for splash completion`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase()).thenReturn(BrowseSectionDetails(emptyList(), emptyList()))
+        viewModel = createViewModel()
+        advanceUntilIdle()
 
-            viewModel = createViewModel()
-            advanceUntilIdle()
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            // Ensure state is Loaded
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-
-            // Return empty favorites
-            whenever(getSectionDetailsUseCase.getFavoriteSections()).thenReturn(emptyList())
-
-            viewModel.handleEvent(WorkBrowseEvent.ScreenResumed)
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            val loadedState = state.state as WorkBrowseState.State.Loaded
-            val favoritesSection = loadedState.sections.filterIsInstance<WorkBrowseState.Section.Favorites>().firstOrNull()
-            assertNull("Favorites section should be removed", favoritesSection)
-        }
+        val loaded = viewModel.state.value.state as WorkBrowseViewModelStateLoaded
+        assertEquals(listOf(WorkBrowseState.Section.Search), loaded.sections)
+    }
 
     @Test
-    fun `retryLoad should reload data`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections())
-                .thenThrow(RuntimeException("First call fails"))
-                .thenReturn(SECTION_DETAILS)
+    fun `browse content loads even when favorites flow never emits`() = runTest(testDispatcher) {
+        whenever(observeFavoritesUseCase()).thenReturn(emptyFlow())
+        viewModel = createViewModel()
 
-            viewModel = createViewModel()
-            advanceUntilIdle()
+        advanceUntilIdle()
 
-            // First load should fail
-            assertTrue("State should be Error", viewModel.state.value.state is WorkBrowseState.State.Error)
-
-            // Retry
-            viewModel.handleEvent(WorkBrowseEvent.RetryLoad)
-            advanceUntilIdle()
-
-            // Now signal splash animation finished
-            transitionToLoadedState()
-            advanceUntilIdle()
-
-            assertTrue("State should be Loaded after retry", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-        }
+        assertTrue(viewModel.state.value.state is WorkBrowseViewModelStateLoaded)
+    }
 
     @Test
-    fun `splashAnimationFinished should transition to Loaded state when data is ready`() =
-        runTest(testDispatcher) {
-            whenever(getSectionDetailsUseCase.getAllSections()).thenReturn(SECTION_DETAILS)
+    fun `browse content loads when favorites observation fails`() = runTest(testDispatcher) {
+        whenever(observeFavoritesUseCase()).thenReturn(
+            flow { throw IllegalStateException("Room favorites unavailable") },
+        )
+        viewModel = createViewModel()
 
-            viewModel = createViewModel()
+        advanceUntilIdle()
 
-            // Before splash animation finishes - state should still be Loading
-            val initialState = viewModel.state.value.state
-            assertTrue("Initial state should be Loading", initialState is WorkBrowseState.State.Loading)
-            assertEquals(false, (initialState as WorkBrowseState.State.Loading).isSplashAnimationFinished)
+        assertTrue(viewModel.state.value.state is WorkBrowseViewModelStateLoaded)
+    }
 
-            // Let the data loading start
-            advanceUntilIdle()
+    @Test
+    fun `empty failed response displays Error`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase()).thenThrow(RuntimeException("Network unavailable"))
+        viewModel = createViewModel()
+        advanceUntilIdle()
 
-            // Now signal splash animation finished
-            viewModel.handleEvent(WorkBrowseEvent.SplashAnimationFinished)
+        assertTrue(viewModel.state.value.state is WorkBrowseState.State.Error)
+    }
 
-            // After splash animation signal and data loads, state should transition to Loaded
-            advanceUntilIdle()
+    @Test
+    fun `partial network response displays its successful sections`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase()).thenReturn(BROWSE_SECTIONS.copy(tvShowSections = emptyList()))
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
 
-            // After splash animation finishes and data loads, state should transition to Loaded
-            assertTrue("State should be Loaded", viewModel.state.value.state is WorkBrowseState.State.Loaded)
-        }
+        val loaded = viewModel.state.value.state as WorkBrowseState.State.Loaded
+        assertEquals(1, loaded.sections.filterIsInstance<WorkBrowseState.Section.Movies>().size)
+        assertTrue(loaded.sections.none { it is WorkBrowseState.Section.TvShows })
+    }
+
+    @Test
+    fun `current network results remain visible when an explicit refresh fails`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase())
+            .thenReturn(BROWSE_SECTIONS)
+            .thenThrow(RuntimeException("Network unavailable"))
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
+        viewModel.handleEvent(WorkBrowseEvent.LoadData)
+        advanceUntilIdle()
+
+        val loaded = viewModel.state.value.state as WorkBrowseViewModelStateLoaded
+        val movie = loaded.sections.filterIsInstance<WorkBrowseViewModelSectionMovies>().single()
+        assertEquals(
+            1,
+            movie.content
+                .single()
+                .works
+                .single()
+                .id
+        )
+    }
+
+    @Test
+    fun `Room favorite emissions add and remove the favorites section`() = runTest(testDispatcher) {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
+
+        observedFavorites.value = listOf(
+            domainWork(1, WorkDomainModel.Type.MOVIE, true),
+            domainWork(3, WorkDomainModel.Type.TV_SHOW, true),
+        )
+        advanceUntilIdle()
+        val loaded = viewModel.state.value.state as WorkBrowseViewModelStateLoaded
+        val favorites = loaded.sections.filterIsInstance<WorkBrowseViewModelSectionFavorites>().single()
+        assertEquals(
+            listOf(1, 3),
+            favorites.content
+                .single()
+                .works
+                .map { it.id }
+        )
+        val movie = loaded.sections.filterIsInstance<WorkBrowseViewModelSectionMovies>().single()
+        assertTrue(
+            movie.content
+                .single()
+                .works
+                .single()
+                .isFavorite
+        )
+
+        observedFavorites.value = emptyList()
+        advanceUntilIdle()
+        val updated = viewModel.state.value.state as WorkBrowseViewModelStateLoaded
+        assertTrue(updated.sections.none { it is WorkBrowseViewModelSectionFavorites })
+        val updatedMovie = updated.sections.filterIsInstance<WorkBrowseViewModelSectionMovies>().single()
+        assertEquals(
+            false,
+            updatedMovie.content
+                .single()
+                .works
+                .single()
+                .isFavorite
+        )
+    }
+
+    @Test
+    fun `favorite observer cancellation is propagated`() = runTest(testDispatcher) {
+        val refreshFinished = CompletableDeferred<BrowseSectionDetails>()
+        var observerJob: Job? = null
+        whenever(observeFavoritesUseCase()).thenReturn(
+            flow {
+                observerJob = currentCoroutineContext()[Job]
+                throw CancellationException()
+            },
+        )
+        whenever(getBrowseDataUseCase()).doSuspendableAnswer { refreshFinished.await() }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertTrue(observerJob?.isCancelled == true)
+        refreshFinished.complete(BROWSE_SECTIONS)
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun `refresh cancellation leaves initial loading state`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase()).thenThrow(CancellationException())
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.state is WorkBrowseViewModelStateLoading)
+    }
+
+    @Test
+    fun `retry after initial failure loads sections`() = runTest(testDispatcher) {
+        whenever(getBrowseDataUseCase())
+            .thenThrow(RuntimeException("First request fails"))
+            .thenReturn(BROWSE_SECTIONS)
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        assertTrue(viewModel.state.value.state is WorkBrowseViewModelStateError)
+
+        viewModel.handleEvent(WorkBrowseEvent.RetryLoad)
+        advanceUntilIdle()
+        transitionToLoadedState()
+
+        assertTrue(viewModel.state.value.state is WorkBrowseViewModelStateLoaded)
+    }
+
+    @Test
+    fun `backClicked emits CloseScreen effect`() = runTest(testDispatcher) {
+        viewModel = createViewModel()
+        val effects = mutableListOf<WorkBrowseEffect>()
+        val job = launch { viewModel.effects.collect { effects.add(it) } }
+
+        viewModel.handleEvent(WorkBrowseEvent.BackClicked)
+        advanceUntilIdle()
+
+        assertTrue(effects.any { it is WorkBrowseEffect.CloseScreen })
+        job.cancel()
+    }
+
+    @Test
+    fun `selecting Search emits navigation effect`() = runTest(testDispatcher) {
+        val destination = SearchDestination.create()
+        whenever(searchRoute.buildSearchDestination()).thenReturn(destination)
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
+        val effects = mutableListOf<WorkBrowseEffect>()
+        val job = launch { viewModel.effects.collect { effects.add(it) } }
+
+        viewModel.handleEvent(WorkBrowseEvent.SectionClicked(0))
+        advanceUntilIdle()
+
+        assertEquals(destination, effects.filterIsInstance<WorkBrowseEffect.Navigate>().single().destination)
+        job.cancel()
+    }
+
+    @Test
+    fun `selecting a non Search section updates selection`() = runTest(testDispatcher) {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
+
+        viewModel.handleEvent(WorkBrowseEvent.SectionClicked(2))
+        advanceUntilIdle()
+
+        assertEquals(2, (viewModel.state.value.state as WorkBrowseViewModelStateLoaded).selectedSectionIndex)
+    }
+
+    @Test
+    fun `workSelected updates selected work`() = runTest(testDispatcher) {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        transitionToLoadedState()
+
+        viewModel.handleEvent(WorkBrowseEvent.WorkSelected(WORK))
+        advanceUntilIdle()
+
+        assertEquals(WORK, (viewModel.state.value.state as WorkBrowseViewModelStateLoaded).workSelected)
+    }
+
+    @Test
+    fun `workClicked emits work details navigation`() = runTest(testDispatcher) {
+        val destination = WorkDetailsDestination.create(WORK)
+        whenever(workDetailsRoute.buildWorkDetailsDestination(WORK)).thenReturn(destination)
+        viewModel = createViewModel()
+        val effects = mutableListOf<WorkBrowseEffect>()
+        val job = launch { viewModel.effects.collect { effects.add(it) } }
+
+        viewModel.handleEvent(WorkBrowseEvent.WorkClicked(WORK))
+        advanceUntilIdle()
+
+        assertNotNull(effects.filterIsInstance<WorkBrowseEffect.Navigate>().single())
+        assertEquals(destination, effects.filterIsInstance<WorkBrowseEffect.Navigate>().single().destination)
+        job.cancel()
+    }
 }

@@ -15,7 +15,7 @@
 package com.pimenta.bestv.data.local.datasource
 
 import com.pimenta.bestv.data.local.dao.TvShowDao
-import com.pimenta.bestv.model.data.local.TvShowDbModel
+import com.pimenta.bestv.data.local.model.TvShowDbModel
 
 /**
  * Created by marcus on 21-11-2019.
@@ -24,15 +24,15 @@ class TvShowLocalDataSource(
     private val tvShowDao: TvShowDao
 ) {
 
-    suspend fun saveFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-        tvShowDao.create(tvShowDbModel)
+    suspend fun saveFavoriteTvShow(tvShowId: Int) =
+        tvShowDao.create(tvShowId)
 
-    suspend fun deleteFavoriteTvShow(tvShowDbModel: TvShowDbModel) =
-        tvShowDao.delete(tvShowDbModel)
+    suspend fun deleteFavoriteTvShow(tvShowId: Int) =
+        tvShowDao.delete(tvShowId)
 
-    suspend fun getTvShows() =
-        tvShowDao.getAll()
+    suspend fun getById(tvShowId: Int) =
+        tvShowDao.getById(tvShowId)
 
-    suspend fun getById(tvShowDbModel: TvShowDbModel) =
-        tvShowDao.getById(tvShowDbModel.id)
+    suspend fun saveCachedWork(tvShowDbModel: TvShowDbModel) =
+        tvShowDao.saveCachedWork(tvShowDbModel)
 }
