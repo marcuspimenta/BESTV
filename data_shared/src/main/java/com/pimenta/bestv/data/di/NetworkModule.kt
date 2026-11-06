@@ -47,6 +47,8 @@ val networkModule = module {
                 if (BuildConfig.BUILD_TYPE == "debug") {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
+                            redactQueryParams("api_key")
+                            redactHeader("Authorization")
                             level = HttpLoggingInterceptor.Level.BASIC
                         }
                     )
