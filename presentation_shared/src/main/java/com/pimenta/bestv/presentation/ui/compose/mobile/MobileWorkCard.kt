@@ -69,6 +69,18 @@ fun MobileWorkCard(
                 modifier = Modifier.padding(BESTVTheme.scale.s040),
                 verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s015),
             ) {
+                val releaseDateLabel = work.releaseDate
+                    .takeIf { it.isNotBlank() }
+                    ?.let { releaseDate ->
+                        val releaseMonth = releaseDate.substringBefore(' ')
+                        val releaseYear = releaseDate.substringAfterLast(' ')
+                        if (releaseMonth == releaseYear) {
+                            releaseDate
+                        } else {
+                            "$releaseMonth $releaseYear"
+                        }
+                    }
+
                 Text(
                     text = work.title,
                     style = MaterialTheme.typography.labelLarge,
@@ -77,9 +89,9 @@ fun MobileWorkCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s030)) {
-                    if (work.releaseDate.isNotBlank()) {
+                    if (releaseDateLabel != null) {
                         Text(
-                            text = work.releaseDate.take(4),
+                            text = releaseDateLabel,
                             style = MaterialTheme.typography.labelSmall,
                             color = BESTVTheme.colors.secondaryText,
                             maxLines = 1,
