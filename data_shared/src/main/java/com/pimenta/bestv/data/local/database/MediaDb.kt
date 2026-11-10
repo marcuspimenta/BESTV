@@ -29,7 +29,7 @@ import com.pimenta.bestv.data.local.model.TvShowDbModel
         MovieDbModel::class,
         TvShowDbModel::class,
     ],
-    version = 7,
+    version = 1,
     exportSchema = false
 )
 abstract class MediaDb : RoomDatabase() {
