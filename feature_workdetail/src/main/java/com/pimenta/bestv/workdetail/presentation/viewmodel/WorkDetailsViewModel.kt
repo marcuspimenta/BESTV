@@ -115,6 +115,8 @@ class WorkDetailsViewModel(
     }
 
     private fun loadData() {
+        if (currentState.state !is Loading) return
+
         viewModelScope.launch {
             try {
                 updateState { it.copy(state = Loading) }
@@ -220,12 +222,12 @@ class WorkDetailsViewModel(
                 updateState {
                     it.copy(
                         state =
-                        (it.state as Loaded).copy(
-                            indexOfContentToScroll = it.state.contents
-                                .firstOf<Header>()
-                                .actions
-                                .indexOf(actionButton),
-                        ),
+                            (it.state as Loaded).copy(
+                                indexOfContentToScroll = it.state.contents
+                                    .firstOf<Header>()
+                                    .actions
+                                    .indexOf(actionButton),
+                            ),
                     )
                 }
             }
@@ -235,18 +237,16 @@ class WorkDetailsViewModel(
     private fun toggleFavorite() {
         viewModelScope.launch {
             try {
-                val currentFavoriteState =
-                    (currentState.state as Loaded)
-                        .contents
-                        .firstOf<Header>()
-                        .actions
-                        .firstOf<SaveWork>()
+                val currentFavoriteState = (currentState.state as Loaded)
+                    .contents
+                    .firstOf<Header>()
+                    .actions
+                    .firstOf<SaveWork>()
                 val newFavoriteState = !currentFavoriteState.isFavorite
                 setFavoriteUseCase(work.id, work.type.toDomainType(), newFavoriteState)
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<Header> {
                                 it.copy(
                                     actions = it.actions.replaceFirst<SaveWork> {
@@ -262,8 +262,7 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             error = FavoriteError,
                         ),
                     )
@@ -282,8 +281,7 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state =
-                (currentState.state as Loaded).copy(
+                state = (currentState.state as Loaded).copy(
                     contents = currentState.state.contents.replaceFirst<Reviews> {
                         it.copy(page = it.page.copy(isLoadingMore = true))
                     },
@@ -299,11 +297,10 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<Reviews> {
                                 it.copy(
-                                    reviews = it.reviews + pageResult.results.orEmpty(),
+                                    reviews = it.reviews + pageResult.results,
                                     page = it.page.copy(
                                         currentPage = pageResult.page,
                                         totalPages = pageResult.totalPages,
@@ -319,8 +316,7 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<Reviews> {
                                 it.copy(page = it.page.copy(isLoadingMore = false))
                             },
@@ -342,8 +338,7 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state =
-                (currentState.state as Loaded).copy(
+                state = (currentState.state as Loaded).copy(
                     contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
                         it.copy(page = it.page.copy(isLoadingMore = true))
                     },
@@ -359,11 +354,10 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
                                 it.copy(
-                                    recommended = it.recommended + pageResult.results.orEmpty(),
+                                    recommended = it.recommended + pageResult.results,
                                     page = it.page.copy(
                                         currentPage = pageResult.page,
                                         totalPages = pageResult.totalPages,
@@ -379,8 +373,7 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<RecommendedWorks> {
                                 it.copy(page = it.page.copy(isLoadingMore = false))
                             },
@@ -402,8 +395,7 @@ class WorkDetailsViewModel(
 
         updateState { currentState ->
             currentState.copy(
-                state =
-                (currentState.state as Loaded).copy(
+                state = (currentState.state as Loaded).copy(
                     contents = currentState.state.contents.replaceFirst<SimilarWorks> {
                         it.copy(page = it.page.copy(isLoadingMore = true))
                     },
@@ -419,11 +411,10 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<SimilarWorks> {
                                 it.copy(
-                                    similar = it.similar + pageResult.results.orEmpty(),
+                                    similar = it.similar + pageResult.results,
                                     page = it.page.copy(
                                         currentPage = pageResult.page,
                                         totalPages = pageResult.totalPages,
@@ -439,8 +430,7 @@ class WorkDetailsViewModel(
 
                 updateState { currentState ->
                     currentState.copy(
-                        state =
-                        (currentState.state as Loaded).copy(
+                        state = (currentState.state as Loaded).copy(
                             contents = currentState.state.contents.replaceFirst<SimilarWorks> {
                                 it.copy(page = it.page.copy(isLoadingMore = false))
                             },
@@ -488,8 +478,7 @@ class WorkDetailsViewModel(
     private fun clearScrollIndex() {
         updateState { currentState ->
             currentState.copy(
-                state =
-                (currentState.state as Loaded).copy(
+                state = (currentState.state as Loaded).copy(
                     indexOfContentToScroll = null,
                 ),
             )
