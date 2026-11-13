@@ -85,6 +85,8 @@ class RecommendationChannelApi constructor(
                         }
                 }
             }
+
+        Unit
     }
 
     private fun getChannelId() =

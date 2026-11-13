@@ -89,5 +89,7 @@ class RecommendationRowApi constructor(
 
                 notificationManager.notify(workViewModel.id, contentRecommendation.getNotificationObject(application))
             }
+
+        Unit
     }
 }
