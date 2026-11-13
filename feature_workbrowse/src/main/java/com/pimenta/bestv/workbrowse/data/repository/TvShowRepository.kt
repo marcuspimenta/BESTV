@@ -20,6 +20,9 @@ import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryContract
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
@@ -27,30 +30,31 @@ import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShow
 class TvShowRepository(
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : TvShowRepositoryContract {
 
-    override fun observeFavoriteTvShows() = tvShowLocalDataSource.observeFavoriteTvShows()
+    override fun observeFavoriteTvShows() = tvShowLocalDataSource.observeFavoriteTvShows().flowOn(ioDispatcher)
 
     override suspend fun getTvShowByGenre(
         genreId: Int,
         page: Int,
-    ): PageDomainModel<WorkDomainModel> {
-        return tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel()
+    ): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel()
     }
 
-    override suspend fun getAiringTodayTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        return tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel()
+    override suspend fun getAiringTodayTvShows(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel()
     }
 
-    override suspend fun getOnTheAirTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        return tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel()
+    override suspend fun getOnTheAirTvShows(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel()
     }
 
-    override suspend fun getPopularTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        return tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel()
+    override suspend fun getPopularTvShows(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel()
     }
 
-    override suspend fun getTopRatedTvShows(page: Int): PageDomainModel<WorkDomainModel> {
-        return tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel()
+    override suspend fun getTopRatedTvShows(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel()
     }
 }

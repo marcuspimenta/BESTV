@@ -78,6 +78,7 @@ val recommendationModule = module {
                 workDetailsRoute = get(),
                 workBrowseRoute = get(),
                 resource = get(),
+                ioDispatcher = get(),
             )
         } else {
             RecommendationRowApi(
@@ -86,6 +87,7 @@ val recommendationModule = module {
                 workDetailsRoute = get(),
                 imageLoader = get(),
                 resource = get(),
+                ioDispatcher = get(),
             )
         }
     }

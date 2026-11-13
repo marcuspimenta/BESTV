@@ -6,6 +6,7 @@ import com.pimenta.bestv.workbrowse.data.remote.model.MovieGenreResponse
 import com.pimenta.bestv.workbrowse.data.remote.model.TvShowGenreListResponse
 import com.pimenta.bestv.workbrowse.data.remote.model.TvShowGenreResponse
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -13,11 +14,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class GenreRepositoryTest {
+    private val testDispatcher = StandardTestDispatcher()
     private val remoteDataSource: GenreRemoteDataSource = mock()
-    private val repository = GenreRepository(remoteDataSource)
+    private val repository = GenreRepository(remoteDataSource, testDispatcher)
 
     @Test
-    fun `getMovieGenres maps the remote response`() = runTest {
+    fun `getMovieGenres maps the remote response`() = runTest(testDispatcher) {
         whenever(remoteDataSource.getMovieGenres()).thenReturn(
             MovieGenreListResponse().apply { genres = listOf(MovieGenreResponse(28, "Action")) },
         )
@@ -29,7 +31,7 @@ class GenreRepositoryTest {
     }
 
     @Test
-    fun `getTvShowGenres maps the remote response`() = runTest {
+    fun `getTvShowGenres maps the remote response`() = runTest(testDispatcher) {
         whenever(remoteDataSource.getTvShowGenres()).thenReturn(
             TvShowGenreListResponse().apply { genres = listOf(TvShowGenreResponse(10759, "Action & Adventure")) },
         )

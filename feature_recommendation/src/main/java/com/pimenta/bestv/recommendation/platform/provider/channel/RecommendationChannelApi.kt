@@ -31,6 +31,8 @@ import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 23-04-2019.
@@ -43,11 +45,12 @@ class RecommendationChannelApi constructor(
     private val workDetailsRoute: WorkDetailsRoute,
     private val workBrowseRoute: WorkBrowseRoute,
     private val resource: Resource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : RecommendationRepository {
 
-    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
+    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) = withContext(ioDispatcher) {
         val channelId = getChannelId()
-        if (channelId == 0L) return
+        if (channelId == 0L) return@withContext
 
         works
             ?.mapNotNull { work -> work.toViewModel(resource) }

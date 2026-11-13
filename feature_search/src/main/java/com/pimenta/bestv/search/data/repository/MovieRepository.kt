@@ -17,17 +17,22 @@ package com.pimenta.bestv.search.data.repository
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.search.domain.repository.MovieRepository as MovieRepositoryContract
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class MovieRepository(
     private val movieRemoteDataSource: MovieRemoteDataSource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepositoryContract {
     override suspend fun searchMoviesByQuery(
         query: String,
         page: Int,
-    ) = movieRemoteDataSource.searchMoviesByQuery(query, page).run {
-        toDomainModel()
+    ) = withContext(ioDispatcher) {
+        movieRemoteDataSource.searchMoviesByQuery(query, page).run {
+            toDomainModel()
+        }
     }
 }

@@ -29,6 +29,8 @@ import com.pimenta.bestv.recommendation.domain.repository.RecommendationReposito
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.presentation.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 23-04-2019.
@@ -39,9 +41,10 @@ class RecommendationRowApi constructor(
     private val workDetailsRoute: WorkDetailsRoute,
     private val imageLoader: ImageLoader,
     private val resource: Resource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : RecommendationRepository {
 
-    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) {
+    override suspend fun loadRecommendations(works: List<WorkDomainModel>?) = withContext(ioDispatcher) {
         notificationManager.cancelAll()
 
         works

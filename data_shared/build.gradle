@@ -45,6 +45,7 @@ android {
 dependencies {
     // Kotlin
     implementation libs.kotlin.stdlib
+    implementation libs.kotlinx.coroutines.core
 
     // Koin
     implementation libs.koin.core

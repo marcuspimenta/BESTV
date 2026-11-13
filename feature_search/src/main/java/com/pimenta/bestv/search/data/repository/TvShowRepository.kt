@@ -17,19 +17,24 @@ package com.pimenta.bestv.search.data.repository
 import com.pimenta.bestv.model.data.mapper.toDomainModel
 import com.pimenta.bestv.search.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.search.domain.repository.TvShowRepository as TvShowRepositoryContract
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class TvShowRepository(
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : TvShowRepositoryContract {
     override suspend fun searchTvShowsByQuery(
         query: String,
         page: Int,
-    ) = tvShowRemoteDataSource
-        .searchTvShowsByQuery(query, page)
-        .run {
-            toDomainModel()
-        }
+    ) = withContext(ioDispatcher) {
+        tvShowRemoteDataSource
+            .searchTvShowsByQuery(query, page)
+            .run {
+                toDomainModel()
+            }
+    }
 }

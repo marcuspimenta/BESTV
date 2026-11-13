@@ -5,6 +5,7 @@ import com.pimenta.bestv.model.data.remote.TvShowResponse
 import com.pimenta.bestv.model.domain.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -15,12 +16,13 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class TvShowRepositoryTest {
+    private val testDispatcher = StandardTestDispatcher()
     private val tvShowLocalDataSource: TvShowLocalDataSource = mock()
     private val remoteDataSource: TvShowRemoteDataSource = mock()
-    private val repository = TvShowRepository(tvShowLocalDataSource, remoteDataSource)
+    private val repository = TvShowRepository(tvShowLocalDataSource, remoteDataSource, testDispatcher)
 
     @Test
-    fun `category result is mapped from the remote source without catalog persistence`() = runTest {
+    fun `category result is mapped from the remote source without catalog persistence`() = runTest(testDispatcher) {
         whenever(remoteDataSource.getPopularTvShows(1)).thenReturn(
             PageResponse(page = 1, totalPages = 4, results = emptyList()),
         )
@@ -33,7 +35,7 @@ class TvShowRepositoryTest {
     }
 
     @Test
-    fun `genre result is mapped and returned`() = runTest {
+    fun `genre result is mapped and returned`() = runTest(testDispatcher) {
         whenever(remoteDataSource.getTvShowByGenre(10759, 1)).thenReturn(
             PageResponse(page = 1, totalPages = 1, results = listOf(TvShowResponse(title = "Show"))),
         )
@@ -45,7 +47,7 @@ class TvShowRepositoryTest {
     }
 
     @Test
-    fun `favorite changes are observed from the local data source`() = runTest {
+    fun `favorite changes are observed from the local data source`() = runTest(testDispatcher) {
         val favorites = listOf(WorkDomainModel(id = 5, type = WorkDomainModel.Type.TV_SHOW, isFavorite = true))
         whenever(tvShowLocalDataSource.observeFavoriteTvShows()).thenReturn(flowOf(favorites))
 

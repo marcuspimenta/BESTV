@@ -24,6 +24,8 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDo
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryContract
 import com.pimenta.bestv.workdetail.data.local.mapper.toTvShowDbModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
@@ -31,26 +33,30 @@ import com.pimenta.bestv.workdetail.data.local.mapper.toTvShowDbModel
 class TvShowRepository(
     private val tvShowLocalDataSource: TvShowLocalDataSource,
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : TvShowRepositoryContract {
 
-    override suspend fun getWorkMetadata(tvShowId: Int) =
+    override suspend fun getWorkMetadata(tvShowId: Int) = withContext(ioDispatcher) {
         tvShowRemoteDataSource.getTvShowDetails(tvShowId).let { response ->
             tvShowLocalDataSource.saveCachedWork(response.toDomainModel().toTvShowDbModel())
             response.toWorkMetadataDomainModel()
         }
-
-    override suspend fun saveFavoriteTvShow(tvShowId: Int) =
-        tvShowLocalDataSource.saveFavoriteTvShow(tvShowId)
-
-    override suspend fun deleteFavoriteTvShow(tvShowId: Int) =
-        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowId)
-
-    override suspend fun isFavoriteTvShow(tvShowId: Int): Boolean {
-        val tvShow = tvShowLocalDataSource.getById(tvShowId)
-        return tvShow?.isFavorite == true
     }
 
-    override suspend fun getCreditsByTvShow(tvShowId: Int) =
+    override suspend fun saveFavoriteTvShow(tvShowId: Int) = withContext(ioDispatcher) {
+        tvShowLocalDataSource.saveFavoriteTvShow(tvShowId)
+    }
+
+    override suspend fun deleteFavoriteTvShow(tvShowId: Int) = withContext(ioDispatcher) {
+        tvShowLocalDataSource.deleteFavoriteTvShow(tvShowId)
+    }
+
+    override suspend fun isFavoriteTvShow(tvShowId: Int): Boolean = withContext(ioDispatcher) {
+        val tvShow = tvShowLocalDataSource.getById(tvShowId)
+        tvShow?.isFavorite == true
+    }
+
+    override suspend fun getCreditsByTvShow(tvShowId: Int) = withContext(ioDispatcher) {
         tvShowRemoteDataSource.getCastByTvShow(tvShowId).let { response ->
             WorkCreditsDomainModel(
                 casts = response.casts?.map { cast -> cast.toDomainModel() },
@@ -61,35 +67,45 @@ class TvShowRepository(
                     .sortedBy { DISPLAYED_CREW_ROLES.indexOf(it.role) },
             )
         }
+    }
 
     override suspend fun getRecommendationByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
-        response.toDomainModel()
+    ) = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getRecommendationByTvShow(tvShowId, page).let { response ->
+            response.toDomainModel()
+        }
     }
 
     override suspend fun getSimilarByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
-        response.toDomainModel()
+    ) = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getSimilarByTvShow(tvShowId, page).let { response ->
+            response.toDomainModel()
+        }
     }
 
     override suspend fun getReviewByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page).toDomainModel()
+    ) = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getReviewByTvShow(tvShowId, page).toDomainModel()
+    }
 
-    override suspend fun getVideosByTvShow(tvShowId: Int) =
+    override suspend fun getVideosByTvShow(tvShowId: Int) = withContext(ioDispatcher) {
         tvShowRemoteDataSource.getVideosByTvShow(tvShowId).let { response ->
             response.videos?.map { video ->
                 video.toDomainModel()
             }
         }
+    }
 
     override suspend fun getWatchProvidersByTvShow(
         tvShowId: Int,
         countryCode: String,
-    ) = tvShowRemoteDataSource.getWatchProvidersByTvShow(tvShowId).watchProvidersToDomainModel(countryCode)
+    ) = withContext(ioDispatcher) {
+        tvShowRemoteDataSource.getWatchProvidersByTvShow(tvShowId).watchProvidersToDomainModel(countryCode)
+    }
 }

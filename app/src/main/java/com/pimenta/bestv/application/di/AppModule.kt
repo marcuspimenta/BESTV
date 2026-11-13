@@ -16,6 +16,7 @@ package com.pimenta.bestv.application.di
 
 import com.pimenta.bestv.application.AndroidDeviceCapabilities
 import com.pimenta.bestv.castdetail.di.castDetailModule
+import com.pimenta.bestv.data.di.dispatcherModule
 import com.pimenta.bestv.data.di.databaseModule
 import com.pimenta.bestv.data.di.networkModule
 import com.pimenta.bestv.presentation.di.presentationModule
@@ -38,6 +39,7 @@ val appModule = module {
         // Shared modules
         networkModule,
         databaseModule,
+        dispatcherModule,
         presentationModule,
         routeModule,
         // Feature modules

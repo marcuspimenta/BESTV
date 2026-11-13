@@ -4,6 +4,8 @@ import android.app.Application
 import com.pimenta.bestv.castdetail.data.repository.CastRepository as CastRepositoryImpl
 import com.pimenta.bestv.castdetail.domain.repository.CastRepository
 import com.pimenta.bestv.presentation.platform.Resource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.koin.core.qualifier.named
@@ -17,6 +19,7 @@ class RepositoryBindingsTest {
     fun `domain repository port resolves to data implementation`() {
         val infrastructure =
             module {
+                single<CoroutineDispatcher> { Dispatchers.IO }
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
                 single(named("tmdbApiKey")) { "test-key" }
                 single(named("tmdbFilterLanguage")) { "en-US" }

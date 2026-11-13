@@ -8,6 +8,8 @@ import com.pimenta.bestv.workdetail.data.repository.MovieRepository as MovieRepo
 import com.pimenta.bestv.workdetail.data.repository.TvShowRepository as TvShowRepositoryImpl
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.koin.core.qualifier.named
@@ -21,6 +23,7 @@ class RepositoryBindingsTest {
     fun `domain repository ports resolve to data implementations`() {
         val infrastructure =
             module {
+                single<CoroutineDispatcher> { Dispatchers.IO }
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
                 single(named("tmdbApiKey")) { "test-key" }
                 single(named("tmdbFilterLanguage")) { "en-US" }

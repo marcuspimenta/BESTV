@@ -8,6 +8,8 @@ import com.pimenta.bestv.recommendation.domain.repository.RecommendationReposito
 import com.pimenta.bestv.recommendation.platform.provider.channel.RecommendationChannelApi
 import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,6 +30,7 @@ class RepositoryBindingsTest {
     fun `domain repository ports resolve to data implementations`() {
         val infrastructure =
             module {
+                single<CoroutineDispatcher> { Dispatchers.IO }
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
                 single(named("tmdbApiKey")) { "test-key" }
                 single(named("tmdbFilterLanguage")) { "en-US" }

@@ -7,6 +7,8 @@ import com.pimenta.bestv.search.data.repository.TvShowRepository as TvShowReposi
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
 import com.pimenta.bestv.search.domain.repository.MovieRepository
 import com.pimenta.bestv.search.domain.repository.TvShowRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -21,6 +23,7 @@ class RepositoryBindingsTest {
     fun `search use case and domain repository ports resolve`() {
         val infrastructure =
             module {
+                single<CoroutineDispatcher> { Dispatchers.IO }
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
                 single(named("tmdbApiKey")) { "test-key" }
                 single(named("tmdbFilterLanguage")) { "en-US" }

@@ -24,6 +24,8 @@ import com.pimenta.bestv.workdetail.data.remote.mapper.toDomainModel as crewToDo
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryContract
 import com.pimenta.bestv.workdetail.data.local.mapper.toMovieDbModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
@@ -31,25 +33,30 @@ import com.pimenta.bestv.workdetail.data.local.mapper.toMovieDbModel
 class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepositoryContract {
 
-    override suspend fun getWorkMetadata(movieId: Int) = movieRemoteDataSource.getMovieDetails(movieId).let { response ->
-        movieLocalDataSource.saveCachedWork(response.toDomainModel().toMovieDbModel())
-        response.toWorkMetadataDomainModel()
+    override suspend fun getWorkMetadata(movieId: Int) = withContext(ioDispatcher) {
+        movieRemoteDataSource.getMovieDetails(movieId).let { response ->
+            movieLocalDataSource.saveCachedWork(response.toDomainModel().toMovieDbModel())
+            response.toWorkMetadataDomainModel()
+        }
     }
 
-    override suspend fun saveFavoriteMovie(movieId: Int) =
+    override suspend fun saveFavoriteMovie(movieId: Int) = withContext(ioDispatcher) {
         movieLocalDataSource.saveFavoriteMovie(movieId)
-
-    override suspend fun deleteFavoriteMovie(movieId: Int) =
-        movieLocalDataSource.deleteFavoriteMovie(movieId)
-
-    override suspend fun isFavoriteMovie(movieId: Int): Boolean {
-        val movie = movieLocalDataSource.getById(movieId)
-        return movie?.isFavorite == true
     }
 
-    override suspend fun getCreditsByMovie(movieId: Int) =
+    override suspend fun deleteFavoriteMovie(movieId: Int) = withContext(ioDispatcher) {
+        movieLocalDataSource.deleteFavoriteMovie(movieId)
+    }
+
+    override suspend fun isFavoriteMovie(movieId: Int): Boolean = withContext(ioDispatcher) {
+        val movie = movieLocalDataSource.getById(movieId)
+        movie?.isFavorite == true
+    }
+
+    override suspend fun getCreditsByMovie(movieId: Int) = withContext(ioDispatcher) {
         movieRemoteDataSource.getCastByMovie(movieId).let { response ->
             WorkCreditsDomainModel(
                 casts = response.casts?.map { cast -> cast.toDomainModel() },
@@ -60,35 +67,41 @@ class MovieRepository(
                     .sortedBy { DISPLAYED_CREW_ROLES.indexOf(it.role) },
             )
         }
+    }
 
     override suspend fun getRecommendationByMovie(
         movieId: Int,
         page: Int,
-    ) = movieRemoteDataSource.getRecommendationByMovie(movieId, page).let { response ->
-        response.toDomainModel()
+    ) = withContext(ioDispatcher) {
+        movieRemoteDataSource.getRecommendationByMovie(movieId, page).toDomainModel()
     }
 
     override suspend fun getSimilarByMovie(
         movieId: Int,
         page: Int,
-    ) = movieRemoteDataSource.getSimilarByMovie(movieId, page).let { response ->
-        response.toDomainModel()
+    ) = withContext(ioDispatcher) {
+        movieRemoteDataSource.getSimilarByMovie(movieId, page).toDomainModel()
     }
 
     override suspend fun getReviewByMovie(
         movieId: Int,
         page: Int,
-    ) = movieRemoteDataSource.getReviewByMovie(movieId, page).toDomainModel()
+    ) = withContext(ioDispatcher) {
+        movieRemoteDataSource.getReviewByMovie(movieId, page).toDomainModel()
+    }
 
-    override suspend fun getVideosByMovie(movieId: Int) =
+    override suspend fun getVideosByMovie(movieId: Int) = withContext(ioDispatcher) {
         movieRemoteDataSource.getVideosByMovie(movieId).let { response ->
             response.videos?.map { video ->
                 video.toDomainModel()
             }
         }
+    }
 
     override suspend fun getWatchProvidersByMovie(
         movieId: Int,
         countryCode: String,
-    ) = movieRemoteDataSource.getWatchProvidersByMovie(movieId).watchProvidersToDomainModel(countryCode)
+    ) = withContext(ioDispatcher) {
+        movieRemoteDataSource.getWatchProvidersByMovie(movieId).watchProvidersToDomainModel(countryCode)
+    }
 }
