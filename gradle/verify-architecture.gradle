@@ -12,7 +12,7 @@ def isDataFile = { String relativePath ->
 }
 
 def isSharedPresentationFile = { Project module, String relativePath ->
-    module.name == 'model_shared' && relativePath.contains('/presentation/')
+    module.name == 'common' && relativePath.contains('/model/presentation/')
 }
 
 def isPresentationImport = { String imported ->

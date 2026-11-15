@@ -12,9 +12,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.pimenta.bestv.application.presentation.ui.compose.NavigationHost
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
-import com.pimenta.bestv.route.WorkBrowseDestination
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
-import com.pimenta.bestv.route.toBestvDestination
+import com.pimenta.bestv.presentation.route.WorkBrowseDestination
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.toBestvDestination
 import org.koin.android.ext.android.inject
 
 class NavigationActivity : ComponentActivity() {

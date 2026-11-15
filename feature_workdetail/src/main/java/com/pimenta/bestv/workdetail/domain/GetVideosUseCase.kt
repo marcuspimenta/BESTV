@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 
 /**
  * Created by marcus on 15-04-2019.

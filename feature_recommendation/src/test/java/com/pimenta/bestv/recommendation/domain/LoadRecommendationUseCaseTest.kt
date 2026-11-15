@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.recommendation.domain
 
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository
 import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 import kotlinx.coroutines.test.runTest

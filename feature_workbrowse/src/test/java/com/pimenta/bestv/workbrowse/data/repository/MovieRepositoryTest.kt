@@ -1,8 +1,8 @@
 package com.pimenta.bestv.workbrowse.data.repository
 
-import com.pimenta.bestv.model.data.remote.MovieResponse
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.data.model.remote.MovieResponse
+import com.pimenta.bestv.data.model.remote.PageResponse
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
 import kotlinx.coroutines.test.StandardTestDispatcher

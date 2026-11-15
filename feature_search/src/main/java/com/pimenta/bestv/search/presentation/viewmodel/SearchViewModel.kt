@@ -17,11 +17,11 @@ package com.pimenta.bestv.search.presentation.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.model.presentation.model.PageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.presentation.model.PageViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase

@@ -19,11 +19,11 @@ import com.pimenta.bestv.castdetail.di.castDetailModule
 import com.pimenta.bestv.data.di.dispatcherModule
 import com.pimenta.bestv.data.di.databaseModule
 import com.pimenta.bestv.data.di.networkModule
-import com.pimenta.bestv.presentation.di.presentationModule
+import com.pimenta.bestv.di.presentationModule
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.recommendation.di.recommendationModule
-import com.pimenta.bestv.route.di.routeModule
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.di.routeModule
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.search.di.searchModule
 import com.pimenta.bestv.workbrowse.di.workBrowseModule
 import com.pimenta.bestv.workdetail.di.workDetailModule

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.presentation.viewmodel
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

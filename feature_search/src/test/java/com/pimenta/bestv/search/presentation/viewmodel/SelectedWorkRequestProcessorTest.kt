@@ -13,13 +13,12 @@
 
 package com.pimenta.bestv.search.presentation.viewmodel
 
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

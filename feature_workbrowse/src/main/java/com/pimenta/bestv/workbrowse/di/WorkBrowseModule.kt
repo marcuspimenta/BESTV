@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.di
 
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.workbrowse.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi

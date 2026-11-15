@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.presentation.model
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 
 /**
  * Represents user intents/actions in the Search screen.

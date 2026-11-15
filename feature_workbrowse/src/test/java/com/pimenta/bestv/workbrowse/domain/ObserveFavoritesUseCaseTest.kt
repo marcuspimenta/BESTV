@@ -1,6 +1,6 @@
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository
 import kotlinx.coroutines.flow.MutableStateFlow

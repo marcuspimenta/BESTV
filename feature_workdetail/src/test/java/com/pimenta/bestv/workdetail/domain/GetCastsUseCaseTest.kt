@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.CastDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

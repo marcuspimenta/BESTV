@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.presentation.model
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty

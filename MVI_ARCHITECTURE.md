@@ -36,7 +36,7 @@ MVI is a unidirectional data flow architecture pattern that provides predictable
 ### 1. BaseViewModel
 
 The foundation of the MVI implementation is the `BaseViewModel` class located at:
-`presentation_shared/src/main/java/com/pimenta/bestv/presentation/presenter/BaseViewModel.kt`
+`viewmodel`
 
 ```kotlin
 abstract class BaseViewModel<ViewState, ViewEffect>(initialState: ViewState) : ViewModel() {
@@ -376,7 +376,7 @@ The following features in the project implement the MVI pattern:
 A reusable state component for handling pagination:
 
 ```kotlin
-// presentation_shared/src/main/java/com/pimenta/bestv/presentation/model/PaginationState.kt
+// common/src/main/java/com/pimenta/bestv/presentation/model/PaginationState.kt
 data class PaginationState(
     val currentPage: Int = 0,
     val totalPages: Int = 0,

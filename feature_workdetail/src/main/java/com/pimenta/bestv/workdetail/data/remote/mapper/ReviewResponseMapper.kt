@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workdetail.data.remote.mapper
 
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.domain.PageDomainModel
+import com.pimenta.bestv.data.model.remote.PageResponse
+import com.pimenta.bestv.domain.model.PageDomainModel
 import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 

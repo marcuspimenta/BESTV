@@ -13,18 +13,10 @@ app/
 └── di/
     └── AppModule.kt          # Root module that includes all other modules
 
-data_shared/
-└── di/
-    ├── NetworkModule.kt      # Retrofit, OkHttp, API configuration
-    └── DatabaseModule.kt     # Room database setup
-
-presentation_shared/
-└── di/
-    └── PresentationModule.kt # Shared presentation utilities
-
-route_shared/
-└── di/
-    └── RouteModule.kt        # Navigation routes
+common/src/main/java/com/pimenta/bestv/
+├── data/di/                  # NetworkModule, DatabaseModule, DispatcherModule
+├── presentation/di/          # PresentationModule
+└── route/di/                 # RouteModule
 
 feature_*/
 └── di/
@@ -84,7 +76,7 @@ val appModule = module {
 Provides Retrofit, OkHttp, and API configuration:
 
 ```kotlin
-// data_shared/src/main/java/.../di/NetworkModule.kt
+// common/src/main/java/com/pimenta/bestv/data/di/NetworkModule.kt
 val networkModule = module {
     // Named qualifiers for configuration values
     single(named("tmdbApiKey")) { BuildConfig.TMDB_API_KEY }
@@ -120,7 +112,7 @@ val networkModule = module {
 Provides Room database and DAOs:
 
 ```kotlin
-// data_shared/src/main/java/.../di/DatabaseModule.kt
+// common/src/main/java/com/pimenta/bestv/data/di/DatabaseModule.kt
 val databaseModule = module {
     // Room database as singleton
     single {

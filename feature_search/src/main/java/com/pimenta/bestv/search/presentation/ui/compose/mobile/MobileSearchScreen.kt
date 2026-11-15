@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileLoading
@@ -68,7 +69,7 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import kotlinx.coroutines.flow.collectLatest
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.common.R as PresentationR
 
 @Composable
 fun MobileSearchScreen(
@@ -183,7 +184,7 @@ private fun MobileSearchContent(
     state: SearchState,
     modifier: Modifier = Modifier,
     onRetry: () -> Unit,
-    onWorkClick: (com.pimenta.bestv.model.presentation.model.WorkViewModel) -> Unit,
+    onWorkClick: (WorkViewModel) -> Unit,
     onLoadMoreMovies: () -> Unit,
     onLoadMoreTvShows: () -> Unit,
 ) {

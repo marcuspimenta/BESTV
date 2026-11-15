@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.tv.TVBackgroundScreen
 import com.pimenta.bestv.presentation.ui.compose.tv.TVErrorScreen
@@ -58,7 +58,7 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import kotlinx.coroutines.flow.collectLatest
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.common.R as PresentationR
 
 @Composable
 fun TVSearchScreen(

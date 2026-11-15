@@ -1,6 +1,6 @@
 package com.pimenta.bestv.workbrowse.domain.model
 
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 
 sealed interface BrowseSectionDomainModel {
     val works: List<WorkDomainModel>

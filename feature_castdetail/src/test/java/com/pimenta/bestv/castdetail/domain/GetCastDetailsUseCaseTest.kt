@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.CastDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest

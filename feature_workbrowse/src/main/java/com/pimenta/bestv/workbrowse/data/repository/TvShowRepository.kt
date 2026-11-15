@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.workbrowse.data.repository
 
-import com.pimenta.bestv.model.data.mapper.toDomainModel
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.data.model.mapper.toDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
 import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryContract

@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.di
 
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.search.data.remote.api.SearchMovieTmdbApi
 import com.pimenta.bestv.search.data.remote.api.SearchTvShowTmdbApi
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource

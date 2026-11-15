@@ -7,11 +7,11 @@
 
 package com.pimenta.bestv.workdetail.data.remote.mapper
 
-import com.pimenta.bestv.model.data.remote.KeywordResponse
-import com.pimenta.bestv.model.data.remote.MovieKeywordsResponse
-import com.pimenta.bestv.model.data.remote.MovieResponse
-import com.pimenta.bestv.model.data.remote.TvShowKeywordsResponse
-import com.pimenta.bestv.model.data.remote.TvShowResponse
+import com.pimenta.bestv.data.model.remote.KeywordResponse
+import com.pimenta.bestv.data.model.remote.MovieKeywordsResponse
+import com.pimenta.bestv.data.model.remote.MovieResponse
+import com.pimenta.bestv.data.model.remote.TvShowKeywordsResponse
+import com.pimenta.bestv.data.model.remote.TvShowResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

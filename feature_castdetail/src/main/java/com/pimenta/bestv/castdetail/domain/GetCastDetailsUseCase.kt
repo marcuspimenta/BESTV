@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.castdetail.domain
 
-import com.pimenta.bestv.model.extension.asyncCatching
+import com.pimenta.bestv.domain.extension.asyncCatching
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

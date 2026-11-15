@@ -9,8 +9,8 @@ package com.pimenta.bestv.workbrowse.presentation.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
-import com.pimenta.bestv.route.WorkBrowseDestination
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.WorkBrowseDestination
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseWrapperScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import org.koin.compose.viewmodel.koinViewModel

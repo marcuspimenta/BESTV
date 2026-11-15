@@ -50,7 +50,7 @@ import com.pimenta.bestv.presentation.ui.compose.LazyRowPagination
 import com.pimenta.bestv.presentation.ui.compose.tv.TVStartAlignedLazyRow
 import com.pimenta.bestv.workdetail.R
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.common.R as PresentationR
 
 @Composable
 fun TVReviewRow(

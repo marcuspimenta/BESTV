@@ -1,8 +1,8 @@
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.model.domain.ContentSource
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.ContentSource
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel

@@ -14,11 +14,11 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.domain.emptyPage
-import com.pimenta.bestv.model.extension.asyncCatching
+import com.pimenta.bestv.domain.model.CastDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.domain.model.emptyPage
+import com.pimenta.bestv.domain.extension.asyncCatching
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel

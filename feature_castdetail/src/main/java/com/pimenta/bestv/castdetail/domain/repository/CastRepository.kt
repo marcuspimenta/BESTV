@@ -1,7 +1,7 @@
 package com.pimenta.bestv.castdetail.domain.repository
 
-import com.pimenta.bestv.model.domain.CastDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.CastDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 
 interface CastRepository {
     suspend fun getCastDetails(castId: Int): CastDomainModel

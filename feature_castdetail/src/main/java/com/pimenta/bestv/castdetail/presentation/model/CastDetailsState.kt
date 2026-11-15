@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.castdetail.presentation.model
 
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.CastViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 
 /**
  * Represents the state of the Cast Details screen

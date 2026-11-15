@@ -56,15 +56,15 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.Navigat
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import com.pimenta.bestv.model.presentation.model.CastViewModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.CastViewModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileError
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileLoading
 import com.pimenta.bestv.presentation.ui.compose.mobile.MobileWorkRow
 import kotlinx.coroutines.flow.collectLatest
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.common.R as PresentationR
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

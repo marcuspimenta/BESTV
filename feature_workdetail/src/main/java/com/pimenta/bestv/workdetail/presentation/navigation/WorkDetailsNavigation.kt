@@ -11,8 +11,8 @@ import android.content.ActivityNotFoundException
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
-import com.pimenta.bestv.route.WorkDetailsDestination
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
 import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsWrapperScreen

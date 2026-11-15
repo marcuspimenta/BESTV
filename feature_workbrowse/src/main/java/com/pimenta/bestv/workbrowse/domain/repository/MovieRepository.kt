@@ -1,7 +1,7 @@
 package com.pimenta.bestv.workbrowse.domain.repository
 
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {

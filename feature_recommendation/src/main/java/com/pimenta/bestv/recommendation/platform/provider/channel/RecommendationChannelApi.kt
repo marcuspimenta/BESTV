@@ -22,14 +22,14 @@ import androidx.tvprovider.media.tv.Channel
 import androidx.tvprovider.media.tv.ChannelLogoUtils
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
-import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.presentation.route.workbrowse.WorkBrowseRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.common.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

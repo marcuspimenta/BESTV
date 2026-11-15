@@ -1,15 +1,15 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
-import com.pimenta.bestv.model.domain.ContentSource
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.domain.model.ContentSource
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
-import com.pimenta.bestv.route.SearchDestination
-import com.pimenta.bestv.route.WorkDetailsDestination
-import com.pimenta.bestv.route.search.SearchRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.route.SearchDestination
+import com.pimenta.bestv.presentation.route.WorkDetailsDestination
+import com.pimenta.bestv.presentation.route.search.SearchRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
 import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey

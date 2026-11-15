@@ -1,0 +1,124 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.android.legacy-kapt'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+
+def tmdbApiKey = System.getenv('TMDB_API_KEY')
+if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
+    def localPropertiesFile = rootProject.file('local.properties')
+    if (localPropertiesFile.exists()) {
+        def localProperties = new Properties()
+        localPropertiesFile.withInputStream { localProperties.load(it) }
+        tmdbApiKey = localProperties.getProperty('TMDB_API_KEY')
+    }
+}
+
+if (tmdbApiKey == null || tmdbApiKey.trim().isEmpty()) {
+    logger.warn('''
+        TMDB_API_KEY is not set. BESTV will build, but TMDB API requests will not work.
+        Set TMDB_API_KEY in the environment, or add TMDB_API_KEY=<your key> to the root local.properties file.
+        For CI, expose the TMDB_API_KEY secret as an environment variable for the Gradle build.
+    '''.stripIndent().trim())
+    tmdbApiKey = ''
+}
+
+def tmdbApiKeyLiteral = groovy.json.JsonOutput.toJson(tmdbApiKey.trim())
+
+android {
+    namespace 'com.pimenta.bestv.common'
+
+    buildFeatures {
+        buildConfig = true
+        compose true
+    }
+
+    defaultConfig {
+        buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
+        buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
+        buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
+        buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
+        buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "TMDB_API_KEY", tmdbApiKeyLiteral
+        }
+        release {
+            buildConfigField "String", "TMDB_API_KEY", tmdbApiKeyLiteral
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            jvmArgs '-Dnet.bytebuddy.experimental=true'
+        }
+    }
+}
+
+dependencies {
+    // Kotlin and coroutines
+    implementation libs.kotlin.stdlib
+    api libs.kotlinx.coroutines.core
+
+    // Serialization
+    implementation libs.kotlinx.serialization.core
+
+    // Koin
+    implementation libs.koin.core
+    implementation libs.koin.android.runtime
+
+    // Room
+    api libs.androidx.room.runtime
+    implementation libs.androidx.room.ktx
+    kapt libs.androidx.room.compiler
+    // Keep Room's metadata reader aligned with the Kotlin compiler version.
+    kapt libs.kotlin.metadata.jvm
+
+    // Networking
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.gson
+    implementation libs.okhttp.client
+    implementation libs.okhttp.logging.interceptor
+    implementation libs.gson
+
+    // Android platform integrations
+    implementation libs.androidx.recommendation
+    implementation libs.androidx.tvprovider
+
+    // Compose, image loading, and animation
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.core
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.foundation
+    implementation libs.compose.material3
+    implementation libs.androidx.tv.foundation
+    implementation libs.androidx.tv.material
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
+    implementation libs.lottie.compose
+    debugImplementation libs.compose.ui.tooling.runtime
+
+    // Navigation contracts exposed to consuming features
+    api libs.navigation3.runtime
+
+    // Unit tests
+    testImplementation libs.junit4
+    testImplementation libs.robolectric
+    testImplementation libs.okhttp.mockwebserver
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.kotlinx.serialization.json
+    testImplementation libs.mockito.inline
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+
+    // Compose UI instrumentation tests
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    debugImplementation libs.compose.ui.test.manifest
+}

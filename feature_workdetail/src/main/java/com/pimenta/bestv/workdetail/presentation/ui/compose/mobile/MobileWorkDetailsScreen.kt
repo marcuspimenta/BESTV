@@ -60,7 +60,7 @@ import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.Content.
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsState.State.Loaded
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import kotlinx.coroutines.flow.collectLatest
-import com.pimenta.bestv.presentation.R as PresentationR
+import com.pimenta.bestv.common.R as PresentationR
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

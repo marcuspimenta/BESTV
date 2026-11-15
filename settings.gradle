@@ -7,11 +7,8 @@ dependencyResolutionManagement {
 }
 
 include ':app'
-include ':model_shared'
-include ':data_shared'
-include ':route_shared'
+include ':common'
 include ':feature_workdetail'
-include ':presentation_shared'
 include ':feature_castdetail'
 include ':feature_search'
 include ':feature_recommendation'

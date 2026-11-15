@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

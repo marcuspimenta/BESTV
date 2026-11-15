@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workbrowse.presentation.model
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 
 /**
  * Represents events that can occur in the Work Browse screen.

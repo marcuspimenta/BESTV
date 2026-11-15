@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.search.presentation.viewmodel
 
-import com.pimenta.bestv.model.presentation.model.PageViewModel
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.PageViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.search.presentation.model.SearchState
 import com.pimenta.bestv.search.presentation.model.SearchState.Content

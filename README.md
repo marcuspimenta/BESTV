@@ -1,6 +1,6 @@
 <h1 align="center">
-  <img src="presentation_shared/src/main/res/drawable/bestv_mark.png" alt="" height="52" align="middle">
-  <img src="presentation_shared/src/main/res/drawable/bestv_wordmark.png" alt="BESTV" height="40" align="middle">
+  <img src="common/src/main/res/drawable/bestv_mark.png" alt="" height="52" align="middle">
+  <img src="common/src/main/res/drawable/bestv_wordmark.png" alt="BESTV" height="40" align="middle">
 </h1>
 
 BESTV is a Kotlin app for discovering movies and TV shows on **Android TV and mobile devices**, powered by [TMDb](https://www.themoviedb.org/).

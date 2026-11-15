@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workdetail.presentation.mapper
 
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.presentation.model.PageViewModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.presentation.model.PageViewModel
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.ReviewViewModel
 import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes

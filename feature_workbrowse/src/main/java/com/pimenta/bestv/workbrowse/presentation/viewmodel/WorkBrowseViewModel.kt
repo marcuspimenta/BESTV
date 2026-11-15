@@ -15,15 +15,15 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
-import com.pimenta.bestv.presentation.presenter.BaseViewModel
+import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.route.search.SearchRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.route.search.SearchRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
 import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
@@ -43,7 +43,6 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loa
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart

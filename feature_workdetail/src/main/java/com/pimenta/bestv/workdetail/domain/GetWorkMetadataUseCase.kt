@@ -7,7 +7,7 @@
 
 package com.pimenta.bestv.workdetail.domain
 
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository
 

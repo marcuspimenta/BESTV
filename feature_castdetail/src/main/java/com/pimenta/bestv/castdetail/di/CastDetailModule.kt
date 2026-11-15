@@ -24,7 +24,7 @@ import com.pimenta.bestv.castdetail.domain.GetTvShowCreditsByCastUseCase
 import com.pimenta.bestv.castdetail.domain.repository.CastRepository as CastRepositoryPort
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
 import com.pimenta.bestv.castdetail.presentation.navigation.CastDetailsNavigationEntryProvider
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

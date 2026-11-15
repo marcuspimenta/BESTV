@@ -23,7 +23,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.pimenta.bestv.presentation.theme.BESTVTheme
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 
 private const val SCREEN_TRANSITION_DURATION_MILLIS = 400
 

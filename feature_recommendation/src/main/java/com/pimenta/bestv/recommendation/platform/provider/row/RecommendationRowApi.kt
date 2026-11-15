@@ -22,12 +22,12 @@ import coil3.ImageLoader
 import coil3.asDrawable
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
-import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.common.R as presentationR
 import com.pimenta.bestv.recommendation.R as recommendationR
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

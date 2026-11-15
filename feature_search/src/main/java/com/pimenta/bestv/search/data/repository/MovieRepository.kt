@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.search.data.repository
 
-import com.pimenta.bestv.model.data.mapper.toDomainModel
+import com.pimenta.bestv.data.model.mapper.toDomainModel
 import com.pimenta.bestv.search.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.search.domain.repository.MovieRepository as MovieRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher

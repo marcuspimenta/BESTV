@@ -9,10 +9,10 @@ package com.pimenta.bestv.castdetail.presentation.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsWrapperScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
-import com.pimenta.bestv.route.CastDetailsDestination
+import com.pimenta.bestv.presentation.route.CastDetailsDestination
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 

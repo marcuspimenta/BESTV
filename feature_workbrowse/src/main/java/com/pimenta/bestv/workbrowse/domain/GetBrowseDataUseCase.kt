@@ -1,8 +1,8 @@
 package com.pimenta.bestv.workbrowse.domain
 
-import com.pimenta.bestv.model.extension.asyncCatching
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.extension.asyncCatching
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey.AIRING_TODAY_TV_SHOWS
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey.FAVORITES_MOVIES

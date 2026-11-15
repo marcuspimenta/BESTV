@@ -37,7 +37,7 @@ import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
 import kotlinx.coroutines.flow.collectLatest
-import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.common.R as presentationR
 import com.pimenta.bestv.workbrowse.R as workbrowseR
 
 @Composable

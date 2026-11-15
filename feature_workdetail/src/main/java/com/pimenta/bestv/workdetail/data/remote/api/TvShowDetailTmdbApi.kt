@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.workdetail.data.remote.api
 
-import com.pimenta.bestv.model.data.remote.CastListResponse
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.data.remote.TvShowResponse
+import com.pimenta.bestv.data.model.remote.CastListResponse
+import com.pimenta.bestv.data.model.remote.PageResponse
+import com.pimenta.bestv.data.model.remote.TvShowResponse
 import com.pimenta.bestv.workdetail.data.remote.model.ReviewResponse
 import com.pimenta.bestv.workdetail.data.remote.model.VideoListResponse
 import com.pimenta.bestv.workdetail.data.remote.model.WatchProvidersResponse

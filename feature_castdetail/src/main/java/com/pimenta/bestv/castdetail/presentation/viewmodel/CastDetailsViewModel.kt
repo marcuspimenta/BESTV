@@ -21,10 +21,10 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
-import com.pimenta.bestv.presentation.presenter.BaseViewModel
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import timber.log.Timber

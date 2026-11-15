@@ -7,8 +7,8 @@
 
 package com.pimenta.bestv.workdetail.data.remote.mapper
 
-import com.pimenta.bestv.model.data.remote.MovieResponse
-import com.pimenta.bestv.model.data.remote.TvShowResponse
+import com.pimenta.bestv.data.model.remote.MovieResponse
+import com.pimenta.bestv.data.model.remote.TvShowResponse
 import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 
 fun MovieResponse.toWorkMetadataDomainModel() =

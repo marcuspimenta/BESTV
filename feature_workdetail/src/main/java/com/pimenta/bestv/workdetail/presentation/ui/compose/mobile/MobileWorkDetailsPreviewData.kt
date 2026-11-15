@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.workdetail.presentation.ui.compose.mobile
 
-import com.pimenta.bestv.model.presentation.model.WorkType
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
 
 internal val mobilePreviewWork =
     WorkViewModel(

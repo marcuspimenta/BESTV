@@ -2,7 +2,7 @@ package com.pimenta.bestv.workbrowse.data.local.datasource
 
 import com.pimenta.bestv.data.local.dao.TvShowDao
 import com.pimenta.bestv.data.local.model.TvShowDbModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

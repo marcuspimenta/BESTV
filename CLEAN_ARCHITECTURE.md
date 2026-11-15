@@ -1,6 +1,6 @@
 # Clean Architecture in BESTV
 
-This guide describes the architecture implemented by the current BESTV packages. The project keeps its existing Gradle modules and organizes feature code into `presentation`, `domain`, `data`, `platform`, and `di` packages.
+This guide describes the architecture implemented by the current BESTV packages. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. Shared packages live in the single `common` Gradle module.
 
 ![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
@@ -9,7 +9,7 @@ This guide describes the architecture implemented by the current BESTV packages.
 Source dependencies point inward toward domain policy:
 
 - **Presentation depends on domain.** ViewModels invoke use cases and map domain values into presentation state.
-- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Retrofit, Room, and `data_shared`.
+- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Retrofit, Room, and `common/data`.
 - **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, Room, Retrofit, WorkManager, or UI models.
 - **Platform adapters depend inward on domain contracts.** They wrap Android services and implement domain output ports where appropriate.
 - **Dependency injection is the composition edge.** App and feature Koin modules know the concrete types and connect interfaces to implementations.
@@ -40,42 +40,34 @@ Recommendation also has a `platform/` package for its boot receiver, WorkManager
 
 ## Shared packages and models
 
-BESTV currently keeps shared types in existing Gradle modules:
+BESTV keeps shared types and infrastructure in one Gradle module. Existing Kotlin package names remain grouped by responsibility under `com.pimenta.bestv`:
 
 ```text
-model_shared/
-├── data/                      # API response models and shared API data mappers
-├── domain/                    # WorkDomainModel, CastDomainModel, PageDomainModel,
-│                              # ContentSource, and domain helpers
-└── presentation/model/        # WorkViewModel, CastViewModel, PageViewModel, WorkType
-
-data_shared/
-└── data/local/
-    ├── database/              # Room database and migrations
-    ├── dao/                   # Room DAOs
-    └── model/                 # Room entities (*DbModel)
+common/src/main/java/com/pimenta/bestv/
+├── data/                      # Network, Room, DAOs, entities, and shared data adapters
+├── model/
+│   ├── data/                  # API response models and shared API data mappers
+│   ├── domain/                # WorkDomainModel, CastDomainModel, PageDomainModel,
+│   │                          # ContentSource, and domain helpers
+│   └── presentation/model/    # WorkViewModel, CastViewModel, PageViewModel, WorkType
+├── presentation/              # Shared UI mappers, platform helpers, and Compose UI
+└── route/                     # Deep links, navigation keys, and route DI
 
 feature_<capability>/data/local/
 ├── datasource/                # Feature-specific local data source adapters
 └── mapper/                    # Room entity to domain mapping
-
-presentation_shared/
-└── presentation/
-    ├── mapper/                # Shared domain-to-UI mappers
-    ├── platform/              # Resource and other presentation services
-    └── ui/                    # Shared Compose UI
 ```
 
-`model_shared` contains types from several layers because the project is not adding Gradle modules for every layer. Room entities and database infrastructure belong in `data_shared`; feature-specific local data source adapters and their mappers stay with the feature. Imports still follow package boundaries, and `verifyArchitecture` checks selected prohibited imports. This gives useful source-level protection, while Gradle does not enforce those subpackages as independent compile-time modules.
+The `common` module has one generated resource namespace (`com.pimenta.bestv.common.R`) and BuildConfig (`com.pimenta.bestv.common.BuildConfig`). The source packages above remain distinct, but package boundaries are not independent Gradle boundaries. Imports still follow package boundaries, and `verifyArchitecture` checks selected prohibited imports. Room entities and database infrastructure live under `common/data`; feature-specific local data source adapters and their mappers stay with the feature.
 
 ## Mapping rules
 
 ### API and persistence models to domain
 
-Data mappers return resource-free domain values. Keep API response mappers with the remote data package (or shared API mapping in `model_shared/data/mapper`) and Room entity mappers in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `presentation_shared`.
+Data mappers return resource-free domain values. Keep API response mappers with the remote data package (or shared API mapping in `common/model/data/mapper`) and Room entity mappers in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `common/presentation`.
 
 ```kotlin
-// model_shared/data/mapper/WorkResponseMapper.kt
+// common/src/main/java/com/pimenta/bestv/model/data/mapper/WorkResponseMapper.kt
 fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
     id = id,
     source = ContentSource.TMDB,
@@ -83,14 +75,14 @@ fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
 )
 ```
 
-Repository implementations call API mappers after fetching responses. Feature local data sources use DAOs from `data_shared` and local mappers to convert Room entities into domain values. Keep Room entities under `data_shared/data/local/model`, close to the Room database and DAOs.
+Repository implementations call API mappers after fetching responses. Feature local data sources use DAOs from `common/data` and local mappers to convert Room entities into domain values. Keep Room entities under `common/src/main/java/com/pimenta/bestv/data/local/model`, close to the Room database and DAOs.
 
 ### Domain values to UI models
 
-Shared UI mappers live in `presentation_shared` and accept `Resource` when the mapping needs a localized label. The mapper resolves `ContentSource.TMDB` to the existing “TMDb” string. Feature-specific UI mappings stay in that feature's `presentation/mapper` package.
+Shared UI mappers live in `common/presentation/mapper` and accept `Resource` when the mapping needs a localized label. The mapper resolves `ContentSource.TMDB` to the existing “TMDb” string. Feature-specific UI mappings stay in that feature's `presentation/mapper` package.
 
 ```kotlin
-// presentation_shared/presentation/mapper/WorkViewModelMapper.kt
+// common/src/main/java/com/pimenta/bestv/presentation/mapper/WorkViewModelMapper.kt
 fun WorkDomainModel.toViewModel(resource: Resource): WorkViewModel?
 ```
 
@@ -133,7 +125,7 @@ TMDb response
     → data mapper
     → WorkDomainModel / PageDomainModel
     → SearchViewModel
-    → presentation_shared mapper + Resource
+    → common/presentation mapper + Resource
     → UI state and screen
 ```
 
@@ -157,7 +149,7 @@ Run the root Gradle task:
 
 - Domain imports from data, presentation, Android/AndroidX, Retrofit, or Koin.
 - Data imports from presentation.
-- Persistence imports from `model_shared/presentation`.
+- Persistence imports from `common/model/presentation`.
 - Direct imports from another feature package.
 
 Platform adapters and feature DI are allowed to form the composition edge. The check is a source import guard, not a substitute for Gradle module boundaries or code review; keep presentation free of data imports as well, even though a separate presentation-to-data rule is not currently enforced by this task.

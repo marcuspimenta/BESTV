@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.mapper
 
-import com.pimenta.bestv.model.BuildConfig
+import com.pimenta.bestv.common.BuildConfig
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.VideoViewModel
 

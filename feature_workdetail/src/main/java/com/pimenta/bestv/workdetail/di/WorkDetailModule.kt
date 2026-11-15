@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.di
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.workdetail.data.remote.api.MovieDetailTmdbApi
 import com.pimenta.bestv.workdetail.data.remote.api.TvShowDetailTmdbApi
 import com.pimenta.bestv.workdetail.data.remote.datasource.MovieRemoteDataSource
@@ -47,7 +47,7 @@ import com.pimenta.bestv.workdetail.domain.GetWorkMetadataUseCase
 import com.pimenta.bestv.workdetail.domain.SetFavoriteUseCase
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryPort
 import com.pimenta.bestv.workdetail.domain.repository.TvShowRepository as TvShowRepositoryPort
-import com.pimenta.bestv.route.navigation.NavigationEntryProvider
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import com.pimenta.bestv.workdetail.presentation.navigation.WorkDetailsNavigationEntryProvider
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.core.module.dsl.factoryOf

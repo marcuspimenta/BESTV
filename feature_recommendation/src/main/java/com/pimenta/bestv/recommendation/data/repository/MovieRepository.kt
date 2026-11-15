@@ -14,9 +14,9 @@
 
 package com.pimenta.bestv.recommendation.data.repository
 
-import com.pimenta.bestv.model.data.mapper.toDomainModel
-import com.pimenta.bestv.model.domain.PageDomainModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.data.model.mapper.toDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as MovieRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher

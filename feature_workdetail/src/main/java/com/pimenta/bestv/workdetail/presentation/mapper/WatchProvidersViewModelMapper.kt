@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.workdetail.presentation.mapper
 
-import com.pimenta.bestv.model.presentation.mapper.TmdbImageUrlBuilder
+import com.pimenta.bestv.presentation.mapper.TmdbImageUrlBuilder
 import com.pimenta.bestv.workdetail.domain.model.WatchProviderDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import com.pimenta.bestv.workdetail.presentation.model.WatchProviderViewModel

@@ -1,7 +1,7 @@
 package com.pimenta.bestv.workbrowse.presentation.mapper
 
-import com.pimenta.bestv.model.domain.ContentSource
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.ContentSource
+import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.domain.model.BrowseCategoryKey

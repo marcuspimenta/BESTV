@@ -2,7 +2,7 @@ package com.pimenta.bestv.workdetail.data.local.mapper
 
 import com.pimenta.bestv.data.local.model.MovieDbModel
 import com.pimenta.bestv.data.local.model.TvShowDbModel
-import com.pimenta.bestv.model.domain.WorkDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
 
 internal fun WorkDomainModel.toMovieDbModel() =
     MovieDbModel(

@@ -37,7 +37,7 @@
   <text x="193" y="314" text-anchor="middle" class="pkg">feature_x/presentation/</text>
   <text x="193" y="350" text-anchor="middle" class="detail">UI · ViewModels · UI state</text>
   <text x="193" y="379" text-anchor="middle" class="detail">Presentation mappers</text>
-  <text x="193" y="430" text-anchor="middle" class="pkg">presentation_shared/mapper</text>
+  <text x="193" y="430" text-anchor="middle" class="pkg">common/presentation/mapper</text>
   <text x="193" y="468" text-anchor="middle" class="note">Reads domain values and invokes</text>
   <text x="193" y="489" text-anchor="middle" class="note">use cases; resolves UI resources</text>
 
@@ -46,7 +46,7 @@
   <text x="1127" y="314" text-anchor="middle" class="pkg">feature_x/data/</text>
   <text x="1127" y="350" text-anchor="middle" class="detail">Repository implementations</text>
   <text x="1127" y="379" text-anchor="middle" class="detail">Remote / local data sources</text>
-  <text x="1127" y="430" text-anchor="middle" class="pkg">data_shared/ · Room / network</text>
+  <text x="1127" y="430" text-anchor="middle" class="pkg">common/data/ · Room / network</text>
   <text x="1127" y="468" text-anchor="middle" class="note">Implements domain ports and maps</text>
   <text x="1127" y="489" text-anchor="middle" class="note">storage / API models to domain</text>
 

@@ -6,12 +6,12 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Intent
 import androidx.tvprovider.media.tv.TvContractCompat
-import com.pimenta.bestv.model.domain.WorkDomainModel
-import com.pimenta.bestv.presentation.R
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.common.R
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
-import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.route.workbrowse.WorkBrowseRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith

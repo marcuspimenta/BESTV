@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.search.domain
 
-import com.pimenta.bestv.model.domain.emptyPage
-import com.pimenta.bestv.model.extension.asyncCatching
+import com.pimenta.bestv.domain.model.emptyPage
+import com.pimenta.bestv.domain.extension.asyncCatching
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 

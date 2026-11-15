@@ -6,9 +6,7 @@ android {
 }
 
 dependencies {
-    implementation project(':model_shared')
-    implementation project(':presentation_shared')
-    implementation project(':route_shared')
+    implementation project(':common')
 
     // Kotlin
     implementation libs.kotlin.stdlib

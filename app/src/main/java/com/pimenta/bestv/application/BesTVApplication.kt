@@ -17,7 +17,7 @@ package com.pimenta.bestv.application
 import android.app.Application
 import android.os.StrictMode
 import com.pimenta.bestv.application.di.appModule
-import com.pimenta.bestv.data.BuildConfig
+import com.pimenta.bestv.common.BuildConfig
 import com.pimenta.bestv.presentation.image.configureBESTVImageLoader
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

@@ -14,10 +14,10 @@
 
 package com.pimenta.bestv.workbrowse.presentation.model
 
-import com.pimenta.bestv.model.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.ui.compose.LazyContentTypes
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
-import com.pimenta.bestv.presentation.R as presentationR
+import com.pimenta.bestv.common.R as presentationR
 import com.pimenta.bestv.workbrowse.R as workbrowseR
 
 /**

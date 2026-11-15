@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="schema">bestv</string>
-
-    <string name="host_workdetail">workdetail</string>
-    <string name="host_castdetail">castdetail</string>
-    <string name="host_search">search</string>
-    <string name="host_workbrowse">workbrowse</string>
-</resources>

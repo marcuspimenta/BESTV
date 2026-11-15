@@ -21,13 +21,10 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
     implementation libs.kotlinx.coroutines.core
 
     implementation libs.navigation3.runtime
-    implementation project(':model_shared')
-    implementation project(':data_shared')
-    implementation project(':presentation_shared')
-    implementation project(':route_shared')
     implementation libs.androidx.room.ktx
 
     // Kotlin

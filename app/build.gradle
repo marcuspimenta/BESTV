@@ -34,15 +34,12 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
     implementation project(':feature_workdetail')
     implementation project(':feature_castdetail')
     implementation project(':feature_search')
     implementation project(':feature_recommendation')
     implementation project(':feature_workbrowse')
-    implementation project(':model_shared')
-    implementation project(':data_shared')
-    implementation project(':presentation_shared')
-    implementation project(':route_shared')
 
     // Kotlin
     implementation libs.kotlin.stdlib

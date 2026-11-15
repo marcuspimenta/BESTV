@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.search.data.remote.api
 
-import com.pimenta.bestv.model.data.remote.PageResponse
-import com.pimenta.bestv.model.data.remote.TvShowResponse
+import com.pimenta.bestv.data.model.remote.PageResponse
+import com.pimenta.bestv.data.model.remote.TvShowResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -6,8 +6,8 @@ import com.pimenta.bestv.recommendation.data.repository.MovieRepository as Movie
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository
 import com.pimenta.bestv.recommendation.domain.repository.RecommendationRepository
 import com.pimenta.bestv.recommendation.platform.provider.channel.RecommendationChannelApi
-import com.pimenta.bestv.route.workbrowse.WorkBrowseRoute
-import com.pimenta.bestv.route.workdetail.WorkDetailsRoute
+import com.pimenta.bestv.presentation.route.workbrowse.WorkBrowseRoute
+import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertTrue

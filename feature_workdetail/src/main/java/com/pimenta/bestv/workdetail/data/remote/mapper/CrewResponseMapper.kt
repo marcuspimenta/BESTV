@@ -1,6 +1,6 @@
 package com.pimenta.bestv.workdetail.data.remote.mapper
 
-import com.pimenta.bestv.model.data.remote.CrewResponse
+import com.pimenta.bestv.data.model.remote.CrewResponse
 import com.pimenta.bestv.workdetail.domain.model.CrewDomainModel
 
 fun CrewResponse.toDomainModel(): CrewDomainModel? {
