@@ -11,8 +11,8 @@ def isDataFile = { String relativePath ->
     relativePath.contains('/data/')
 }
 
-def isSharedPresentationFile = { Project module, String relativePath ->
-    module.name == 'common' && relativePath.contains('/model/presentation/')
+def isPresentationFile = { String relativePath ->
+    relativePath.contains('/presentation/')
 }
 
 def isPresentationImport = { String imported ->
@@ -37,13 +37,13 @@ def isForeignFeatureImport = { Project module, String imported, List<String> fea
 def violatesArchitecture = { Project module, String relativePath, String imported, List<String> features ->
     def inDomain = isDomainFile(relativePath)
     def inData = isDataFile(relativePath)
-    def inSharedPresentation = isSharedPresentationFile(module, relativePath)
+    def inPresentation = isPresentationFile(relativePath)
     def importsPresentation = isPresentationImport(imported)
     def importsData = isDataImport(imported)
 
     (inDomain && (importsPresentation || importsData || isPlatformOrFrameworkImport(imported))) ||
         (inData && importsPresentation) ||
-        (inSharedPresentation && importsData) ||
+        (inPresentation && importsData) ||
         isForeignFeatureImport(module, imported, features)
 }
 

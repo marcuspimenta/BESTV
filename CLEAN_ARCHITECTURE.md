@@ -44,14 +44,16 @@ BESTV keeps shared types and infrastructure in one Gradle module. Existing Kotli
 
 ```text
 common/src/main/java/com/pimenta/bestv/
-├── data/                      # Network, Room, DAOs, entities, and shared data adapters
-├── model/
-│   ├── data/                  # API response models and shared API data mappers
-│   ├── domain/                # WorkDomainModel, CastDomainModel, PageDomainModel,
-│   │                          # ContentSource, and domain helpers
-│   └── presentation/model/    # WorkViewModel, CastViewModel, PageViewModel, WorkType
-├── presentation/              # Shared UI mappers, platform helpers, and Compose UI
-└── route/                     # Deep links, navigation keys, and route DI
+├── data/                      # Network, Room, API models, and data mappers
+├── domain/                    # Domain models and coroutine helpers
+├── di/                        # Shared presentation DI
+└── presentation/
+    ├── mapper/                # Shared domain-to-UI mappers and image URL helpers
+    ├── model/                 # WorkViewModel, CastViewModel, PageViewModel, WorkType
+    ├── platform/              # Resource and device capability abstractions
+    ├── route/                 # Deep links, navigation keys, and route DI
+    ├── ui/                    # Shared Compose UI
+    └── viewmodel/             # BaseViewModel
 
 feature_<capability>/data/local/
 ├── datasource/                # Feature-specific local data source adapters
@@ -64,10 +66,10 @@ The `common` module has one generated resource namespace (`com.pimenta.bestv.com
 
 ### API and persistence models to domain
 
-Data mappers return resource-free domain values. Keep API response mappers with the remote data package (or shared API mapping in `common/model/data/mapper`) and Room entity mappers in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `common/presentation`.
+Data mappers return resource-free domain values. Keep API response models and shared API mappers under `common/data/model`; Room entity mappers stay in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `common/presentation`.
 
 ```kotlin
-// common/src/main/java/com/pimenta/bestv/model/data/mapper/WorkResponseMapper.kt
+// common/src/main/java/com/pimenta/bestv/data/model/mapper/WorkResponseMapper.kt
 fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
     id = id,
     source = ContentSource.TMDB,
@@ -149,10 +151,10 @@ Run the root Gradle task:
 
 - Domain imports from data, presentation, Android/AndroidX, Retrofit, or Koin.
 - Data imports from presentation.
-- Persistence imports from `common/model/presentation`.
+- Data imports from common presentation packages and presentation imports from data.
 - Direct imports from another feature package.
 
-Platform adapters and feature DI are allowed to form the composition edge. The check is a source import guard, not a substitute for Gradle module boundaries or code review; keep presentation free of data imports as well, even though a separate presentation-to-data rule is not currently enforced by this task.
+Platform adapters and feature DI are allowed to form the composition edge. The check is a source import guard, not a substitute for Gradle module boundaries or code review.
 
 ## Practices for new code
 
