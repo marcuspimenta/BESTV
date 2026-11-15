@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.data.di
+package com.pimenta.bestv.di
 
 import com.google.gson.GsonBuilder
 import com.pimenta.bestv.common.BuildConfig

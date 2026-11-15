@@ -16,9 +16,9 @@ package com.pimenta.bestv.application.di
 
 import com.pimenta.bestv.application.AndroidDeviceCapabilities
 import com.pimenta.bestv.castdetail.di.castDetailModule
-import com.pimenta.bestv.data.di.dispatcherModule
-import com.pimenta.bestv.data.di.databaseModule
-import com.pimenta.bestv.data.di.networkModule
+import com.pimenta.bestv.di.dispatcherModule
+import com.pimenta.bestv.di.databaseModule
+import com.pimenta.bestv.di.networkModule
 import com.pimenta.bestv.di.presentationModule
 import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.recommendation.di.recommendationModule
