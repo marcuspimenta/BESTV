@@ -63,7 +63,6 @@ val recommendationModule = module {
     // DataSource
     factory {
         MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             movieTmdbApi = get()
         )

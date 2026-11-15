@@ -48,14 +48,12 @@ val searchModule = module {
     // DataSources
     factory {
         MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             searchMovieTmdbApi = get(),
         )
     }
     factory {
         TvShowRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             searchTvShowTmdbApi = get(),
         )

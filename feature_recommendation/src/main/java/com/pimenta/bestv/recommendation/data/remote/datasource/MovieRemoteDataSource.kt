@@ -20,11 +20,10 @@ import com.pimenta.bestv.recommendation.data.remote.api.MovieTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class MovieRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val movieTmdbApi: MovieTmdbApi
 ) {
 
     suspend fun getPopularMovies(page: Int) =
-        movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
+        movieTmdbApi.getPopularMovies(tmdbFilterLanguage, page)
 }

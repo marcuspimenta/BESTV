@@ -32,7 +32,6 @@ class RepositoryBindingsTest {
             module {
                 single<CoroutineDispatcher> { Dispatchers.IO }
                 single { Retrofit.Builder().baseUrl("https://example.test/").build() }
-                single(named("tmdbApiKey")) { "test-key" }
                 single(named("tmdbFilterLanguage")) { "en-US" }
                 single { Resource(mock<Application>()) }
                 single<WorkDetailsRoute> { mock() }

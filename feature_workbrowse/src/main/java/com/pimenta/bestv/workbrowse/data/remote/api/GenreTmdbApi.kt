@@ -25,13 +25,11 @@ import retrofit2.http.Query
 interface GenreTmdbApi {
     @GET("genre/movie/list")
     suspend fun getMovieGenres(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): MovieGenreListResponse
 
     @GET("genre/tv/list")
     suspend fun getTvShowGenres(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): TvShowGenreListResponse
 }

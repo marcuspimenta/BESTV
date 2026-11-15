@@ -25,7 +25,6 @@ import retrofit2.http.Query
 interface SearchMovieTmdbApi {
     @GET("search/movie")
     suspend fun searchMoviesByQuery(
-        @Query("api_key") apiKey: String,
         @Query("query") query: String,
         @Query("language") language: String,
         @Query("page") page: Int,

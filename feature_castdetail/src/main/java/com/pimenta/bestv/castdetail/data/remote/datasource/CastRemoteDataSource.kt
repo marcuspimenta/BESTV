@@ -20,13 +20,12 @@ import com.pimenta.bestv.castdetail.data.remote.api.CastTmdbApi
  * Created by marcus on 29-10-2019.
  */
 class CastRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val castTmdbApi: CastTmdbApi,
 ) {
-    suspend fun getCastDetails(castId: Int) = castTmdbApi.getCastDetails(castId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getCastDetails(castId: Int) = castTmdbApi.getCastDetails(castId, tmdbFilterLanguage)
 
-    suspend fun getMovieCreditsByCast(castId: Int) = castTmdbApi.getMovieCredits(castId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getMovieCreditsByCast(castId: Int) = castTmdbApi.getMovieCredits(castId, tmdbFilterLanguage)
 
-    suspend fun getTvShowCreditsByCast(castId: Int) = castTmdbApi.getTvShowCredits(castId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getTvShowCreditsByCast(castId: Int) = castTmdbApi.getTvShowCredits(castId, tmdbFilterLanguage)
 }

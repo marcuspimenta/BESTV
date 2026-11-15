@@ -20,12 +20,11 @@ import com.pimenta.bestv.search.data.remote.api.SearchMovieTmdbApi
  * Created by marcus on 29-10-2019.
  */
 class MovieRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val searchMovieTmdbApi: SearchMovieTmdbApi,
 ) {
     suspend fun searchMoviesByQuery(
         query: String,
         page: Int,
-    ) = searchMovieTmdbApi.searchMoviesByQuery(tmdbApiKey, query, tmdbFilterLanguage, page)
+    ) = searchMovieTmdbApi.searchMoviesByQuery(query, tmdbFilterLanguage, page)
 }

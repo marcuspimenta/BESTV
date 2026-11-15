@@ -41,7 +41,6 @@ val castDetailModule = module {
     // DataSource
     factory {
         CastRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             castTmdbApi = get(),
         )

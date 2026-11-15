@@ -52,21 +52,18 @@ val workBrowseModule = module {
     // DataSources
     factory {
         GenreRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             genreTmdbApi = get(),
         )
     }
     factory {
         MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             movieTmdbApi = get(),
         )
     }
     factory {
         TvShowRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             tvShowTmdbApi = get(),
         )

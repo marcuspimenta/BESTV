@@ -67,14 +67,12 @@ val workDetailModule = module {
     // DataSources
     factory {
         MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             movieDetailTmdbApi = get(),
         )
     }
     factory {
         TvShowRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             tvShowDetailTmdbApi = get(),
         )

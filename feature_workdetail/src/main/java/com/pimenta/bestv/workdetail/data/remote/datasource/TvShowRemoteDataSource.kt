@@ -20,34 +20,33 @@ import com.pimenta.bestv.workdetail.data.remote.api.TvShowDetailTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class TvShowRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val tvShowDetailTmdbApi: TvShowDetailTmdbApi,
 ) {
     suspend fun getTvShowDetails(tvShowId: Int) =
-        tvShowDetailTmdbApi.getTvShowDetails(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+        tvShowDetailTmdbApi.getTvShowDetails(tvShowId, tmdbFilterLanguage)
 
     suspend fun getCastByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+        tvShowDetailTmdbApi.getCastByTvShow(tvShowId, tmdbFilterLanguage)
 
     suspend fun getRecommendationByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = tvShowDetailTmdbApi.getRecommendationByTvShow(tvShowId, tmdbFilterLanguage, page)
 
     suspend fun getSimilarByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = tvShowDetailTmdbApi.getSimilarByTvShow(tvShowId, tmdbFilterLanguage, page)
 
     suspend fun getReviewByTvShow(
         tvShowId: Int,
         page: Int,
-    ) = tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = tvShowDetailTmdbApi.getReviewByTvShow(tvShowId, tmdbFilterLanguage, page)
 
     suspend fun getVideosByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbApiKey, tmdbFilterLanguage)
+        tvShowDetailTmdbApi.getVideosByTvShow(tvShowId, tmdbFilterLanguage)
 
     suspend fun getWatchProvidersByTvShow(tvShowId: Int) =
-        tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId, tmdbApiKey)
+        tvShowDetailTmdbApi.getWatchProvidersByTvShow(tvShowId)
 }

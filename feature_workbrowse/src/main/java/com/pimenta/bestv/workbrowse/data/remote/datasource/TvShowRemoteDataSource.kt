@@ -20,20 +20,19 @@ import com.pimenta.bestv.workbrowse.data.remote.api.TvShowTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class TvShowRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val tvShowTmdbApi: TvShowTmdbApi,
 ) {
     suspend fun getTvShowByGenre(
         genreId: Int,
         page: Int,
-    ) = tvShowTmdbApi.getTvShowByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
+    ) = tvShowTmdbApi.getTvShowByGenre(genreId, tmdbFilterLanguage, false, page)
 
-    suspend fun getAiringTodayTvShows(page: Int) = tvShowTmdbApi.getAiringTodayTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getAiringTodayTvShows(page: Int) = tvShowTmdbApi.getAiringTodayTvShows(tmdbFilterLanguage, page)
 
-    suspend fun getOnTheAirTvShows(page: Int) = tvShowTmdbApi.getOnTheAirTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getOnTheAirTvShows(page: Int) = tvShowTmdbApi.getOnTheAirTvShows(tmdbFilterLanguage, page)
 
-    suspend fun getPopularTvShows(page: Int) = tvShowTmdbApi.getPopularTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getPopularTvShows(page: Int) = tvShowTmdbApi.getPopularTvShows(tmdbFilterLanguage, page)
 
-    suspend fun getTopRatedTvShows(page: Int) = tvShowTmdbApi.getTopRatedTvShows(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getTopRatedTvShows(page: Int) = tvShowTmdbApi.getTopRatedTvShows(tmdbFilterLanguage, page)
 }

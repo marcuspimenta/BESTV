@@ -20,11 +20,10 @@ import com.pimenta.bestv.workbrowse.data.remote.api.GenreTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class GenreRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val genreTmdbApi: GenreTmdbApi,
 ) {
-    suspend fun getMovieGenres() = genreTmdbApi.getMovieGenres(tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getMovieGenres() = genreTmdbApi.getMovieGenres(tmdbFilterLanguage)
 
-    suspend fun getTvShowGenres() = genreTmdbApi.getTvShowGenres(tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getTvShowGenres() = genreTmdbApi.getTvShowGenres(tmdbFilterLanguage)
 }

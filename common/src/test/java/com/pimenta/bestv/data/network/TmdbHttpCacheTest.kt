@@ -24,7 +24,7 @@ class TmdbHttpCacheTest {
         val client = OkHttpClient.Builder().cache(cache).build()
         val request = Request
             .Builder()
-            .url(server.url("/3/movie/popular?api_key=test-key&language=en-US"))
+            .url(server.url("/3/movie/popular?language=en-US"))
             .build()
         server.enqueue(
             MockResponse
@@ -59,7 +59,7 @@ class TmdbHttpCacheTest {
         val client = OkHttpClient.Builder().cache(cache).build()
         val request = Request
             .Builder()
-            .url(server.url("/3/genre/movie/list?api_key=test-key&language=en-US"))
+            .url(server.url("/3/genre/movie/list?language=en-US"))
             .build()
         server.enqueue(
             MockResponse

@@ -31,21 +31,18 @@ interface MovieDetailTmdbApi {
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): MovieResponse
 
     @GET("movie/{movie_id}/credits")
     suspend fun getCastByMovie(
         @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): CastListResponse
 
     @GET("movie/{movie_id}/recommendations")
     suspend fun getRecommendationByMovie(
         @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>
@@ -53,7 +50,6 @@ interface MovieDetailTmdbApi {
     @GET("movie/{movie_id}/similar")
     suspend fun getSimilarByMovie(
         @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>
@@ -61,7 +57,6 @@ interface MovieDetailTmdbApi {
     @GET("movie/{movie_id}/reviews")
     suspend fun getReviewByMovie(
         @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<ReviewResponse>
@@ -69,13 +64,11 @@ interface MovieDetailTmdbApi {
     @GET("movie/{movie_id}/videos")
     suspend fun getVideosByMovie(
         @Path("movie_id") movie_id: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): VideoListResponse
 
     @GET("movie/{movie_id}/watch/providers")
     suspend fun getWatchProvidersByMovie(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String,
     ): WatchProvidersResponse
 }

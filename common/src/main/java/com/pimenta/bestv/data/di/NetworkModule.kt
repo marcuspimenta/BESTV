@@ -32,7 +32,6 @@ private const val HTTP_CACHE_SIZE_BYTES = 20L * 1024 * 1024
 private const val HTTP_CACHE_DIRECTORY = "tmdb-http-cache"
 
 val networkModule = module {
-    single(named("tmdbApiKey")) { BuildConfig.TMDB_API_KEY }
     single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
     single {
@@ -44,10 +43,18 @@ val networkModule = module {
                     HTTP_CACHE_SIZE_BYTES
                 )
             ).apply {
+                if (BuildConfig.TMDB_ACCESS_TOKEN.isNotBlank()) {
+                    addInterceptor { chain ->
+                        val authenticatedRequest = chain.request()
+                            .newBuilder()
+                            .header("Authorization", "Bearer ${BuildConfig.TMDB_ACCESS_TOKEN}")
+                            .build()
+                        chain.proceed(authenticatedRequest)
+                    }
+                }
                 if (BuildConfig.BUILD_TYPE == "debug") {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            redactQueryParams("api_key")
                             redactHeader("Authorization")
                             level = HttpLoggingInterceptor.Level.BASIC
                         }

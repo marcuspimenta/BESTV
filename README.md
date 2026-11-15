@@ -47,15 +47,17 @@ BESTV uses modular Clean Architecture with MVI presentation state and events.
 
 BESTV uses [version 3 of the TMDb API](https://developers.themoviedb.org/3/getting-started/introduction). It is not endorsed or certified by TMDb.
 
-To run the app, create a TMDb API key and keep it out of tracked files. For local builds, add it to the root `local.properties` file (which is ignored by Git):
+To run the app, configure a TMDb read access token and keep it out of tracked files. For local builds, add it to the root `local.properties` file (which is ignored by Git):
 
 ```properties
-TMDB_API_KEY=your_tmdb_api_key
+TMDB_ACCESS_TOKEN=your_tmdb_access_token
 ```
 
-For CI builds, store the key in the CI secret manager and expose it to Gradle as the `TMDB_API_KEY` environment variable. The environment variable takes precedence over `local.properties`. If no key is configured, Gradle logs a warning and builds with an empty key; TMDb requests from the app will not authenticate.
+For CI builds, store the token in the CI secret manager and expose it to Gradle as the `TMDB_ACCESS_TOKEN` environment variable. The environment variable takes precedence over `local.properties`. If the token is not configured, Gradle logs a warning and builds without TMDb authentication.
 
-The app sends this key directly to TMDb, so it can still be extracted from a distributed APK. Keeping it out of Git protects the repository, but a backend proxy is needed to keep the key out of client builds.
+The shared OkHttp client sends `TMDB_ACCESS_TOKEN` on TMDb requests as `Authorization: Bearer <token>`.
+
+The app includes configured TMDb credentials in its client build, so they can still be extracted from a distributed APK. Keeping them out of Git protects the repository, but a backend proxy is needed to keep them out of client builds.
 
 ## References
 

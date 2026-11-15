@@ -26,7 +26,6 @@ interface MovieTmdbApi {
     @GET("discover/movie")
     suspend fun getMoviesByGenre(
         @Query("with_genres") genreId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
         @Query("page") page: Int,
@@ -34,28 +33,24 @@ interface MovieTmdbApi {
 
     @GET("movie/now_playing")
     suspend fun getNowPlayingMovies(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>
 
     @GET("movie/upcoming")
     suspend fun getUpComingMovies(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<MovieResponse>

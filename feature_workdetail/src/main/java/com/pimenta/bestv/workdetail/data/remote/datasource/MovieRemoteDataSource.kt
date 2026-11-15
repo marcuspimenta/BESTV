@@ -20,32 +20,31 @@ import com.pimenta.bestv.workdetail.data.remote.api.MovieDetailTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class MovieRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val movieDetailTmdbApi: MovieDetailTmdbApi,
 ) {
     suspend fun getMovieDetails(movieId: Int) =
-        movieDetailTmdbApi.getMovieDetails(movieId, tmdbApiKey, tmdbFilterLanguage)
+        movieDetailTmdbApi.getMovieDetails(movieId, tmdbFilterLanguage)
 
-    suspend fun getCastByMovie(movieId: Int) = movieDetailTmdbApi.getCastByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
+    suspend fun getCastByMovie(movieId: Int) = movieDetailTmdbApi.getCastByMovie(movieId, tmdbFilterLanguage)
 
     suspend fun getRecommendationByMovie(
         movieId: Int,
         page: Int,
-    ) = movieDetailTmdbApi.getRecommendationByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = movieDetailTmdbApi.getRecommendationByMovie(movieId, tmdbFilterLanguage, page)
 
     suspend fun getSimilarByMovie(
         movieId: Int,
         page: Int,
-    ) = movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = movieDetailTmdbApi.getSimilarByMovie(movieId, tmdbFilterLanguage, page)
 
     suspend fun getReviewByMovie(
         movieId: Int,
         page: Int,
-    ) = movieDetailTmdbApi.getReviewByMovie(movieId, tmdbApiKey, tmdbFilterLanguage, page)
+    ) = movieDetailTmdbApi.getReviewByMovie(movieId, tmdbFilterLanguage, page)
 
     suspend fun getVideosByMovie(movieId: Int) =
-        movieDetailTmdbApi.getVideosByMovie(movieId, tmdbApiKey, tmdbFilterLanguage)
+        movieDetailTmdbApi.getVideosByMovie(movieId, tmdbFilterLanguage)
 
-    suspend fun getWatchProvidersByMovie(movieId: Int) = movieDetailTmdbApi.getWatchProvidersByMovie(movieId, tmdbApiKey)
+    suspend fun getWatchProvidersByMovie(movieId: Int) = movieDetailTmdbApi.getWatchProvidersByMovie(movieId)
 }

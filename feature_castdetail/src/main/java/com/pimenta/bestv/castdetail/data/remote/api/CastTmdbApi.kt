@@ -29,21 +29,18 @@ interface CastTmdbApi {
     @GET("person/{person_id}")
     suspend fun getCastDetails(
         @Path("person_id") personId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): CastResponse
 
     @GET("person/{person_id}/movie_credits")
     suspend fun getMovieCredits(
         @Path("person_id") personId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): CastWorkListResponse<MovieResponse>
 
     @GET("person/{person_id}/tv_credits")
     suspend fun getTvShowCredits(
         @Path("person_id") personId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): CastWorkListResponse<TvShowResponse>
 }

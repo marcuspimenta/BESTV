@@ -26,7 +26,6 @@ interface TvShowTmdbApi {
     @GET("discover/tv")
     suspend fun getTvShowByGenre(
         @Query("with_genres") genreId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("include_adult") includeAdult: Boolean,
         @Query("page") page: Int,
@@ -34,28 +33,24 @@ interface TvShowTmdbApi {
 
     @GET("tv/airing_today")
     suspend fun getAiringTodayTvShows(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/on_the_air")
     suspend fun getOnTheAirTvShows(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/popular")
     suspend fun getPopularTvShows(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTvShows(
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>

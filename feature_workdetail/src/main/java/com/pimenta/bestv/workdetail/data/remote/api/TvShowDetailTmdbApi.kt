@@ -31,21 +31,18 @@ interface TvShowDetailTmdbApi {
     @GET("tv/{tv_id}")
     suspend fun getTvShowDetails(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): TvShowResponse
 
     @GET("tv/{tv_id}/credits")
     suspend fun getCastByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): CastListResponse
 
     @GET("tv/{tv_id}/recommendations")
     suspend fun getRecommendationByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
@@ -53,7 +50,6 @@ interface TvShowDetailTmdbApi {
     @GET("tv/{tv_id}/similar")
     suspend fun getSimilarByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<TvShowResponse>
@@ -61,7 +57,6 @@ interface TvShowDetailTmdbApi {
     @GET("tv/{tv_id}/reviews")
     suspend fun getReviewByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int,
     ): PageResponse<ReviewResponse>
@@ -69,13 +64,11 @@ interface TvShowDetailTmdbApi {
     @GET("tv/{tv_id}/videos")
     suspend fun getVideosByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
         @Query("language") language: String,
     ): VideoListResponse
 
     @GET("tv/{tv_id}/watch/providers")
     suspend fun getWatchProvidersByTvShow(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
     ): WatchProvidersResponse
 }

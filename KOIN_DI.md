@@ -79,14 +79,23 @@ Provides Retrofit, OkHttp, and API configuration:
 // common/src/main/java/com/pimenta/bestv/data/di/NetworkModule.kt
 val networkModule = module {
     // Named qualifiers for configuration values
-    single(named("tmdbApiKey")) { BuildConfig.TMDB_API_KEY }
     single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
     // OkHttp client as singleton
     single {
         OkHttpClient.Builder().apply {
+            if (BuildConfig.TMDB_ACCESS_TOKEN.isNotBlank()) {
+                addInterceptor { chain ->
+                    val request = chain.request()
+                        .newBuilder()
+                        .header("Authorization", "Bearer ${BuildConfig.TMDB_ACCESS_TOKEN}")
+                        .build()
+                    chain.proceed(request)
+                }
+            }
             if (BuildConfig.BUILD_TYPE == "debug") {
                 addInterceptor(HttpLoggingInterceptor().apply {
+                    redactHeader("Authorization")
                     level = HttpLoggingInterceptor.Level.BASIC
                 })
             }
@@ -144,7 +153,6 @@ val searchModule = module {
     // DataSources - factory with named parameters
     factory {
         MovieRemoteDataSource(
-            tmdbApiKey = get(named("tmdbApiKey")),
             tmdbFilterLanguage = get(named("tmdbFilterLanguage")),
             searchMovieTmdbApi = get()
         )
@@ -206,13 +214,11 @@ Use `named()` to distinguish between multiple instances of the same type:
 
 ```kotlin
 // Definition
-single(named("tmdbApiKey")) { BuildConfig.TMDB_API_KEY }
 single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
 // Injection
 factory {
     MyDataSource(
-        apiKey = get(named("tmdbApiKey")),
         language = get(named("tmdbFilterLanguage"))
     )
 }

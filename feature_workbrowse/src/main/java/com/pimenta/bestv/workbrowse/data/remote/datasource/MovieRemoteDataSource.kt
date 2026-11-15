@@ -20,20 +20,19 @@ import com.pimenta.bestv.workbrowse.data.remote.api.MovieTmdbApi
  * Created by marcus on 20-10-2019.
  */
 class MovieRemoteDataSource(
-    private val tmdbApiKey: String,
     private val tmdbFilterLanguage: String,
     private val movieTmdbApi: MovieTmdbApi,
 ) {
     suspend fun getMoviesByGenre(
         genreId: Int,
         page: Int,
-    ) = movieTmdbApi.getMoviesByGenre(genreId, tmdbApiKey, tmdbFilterLanguage, false, page)
+    ) = movieTmdbApi.getMoviesByGenre(genreId, tmdbFilterLanguage, false, page)
 
-    suspend fun getNowPlayingMovies(page: Int) = movieTmdbApi.getNowPlayingMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getNowPlayingMovies(page: Int) = movieTmdbApi.getNowPlayingMovies(tmdbFilterLanguage, page)
 
-    suspend fun getPopularMovies(page: Int) = movieTmdbApi.getPopularMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getPopularMovies(page: Int) = movieTmdbApi.getPopularMovies(tmdbFilterLanguage, page)
 
-    suspend fun getTopRatedMovies(page: Int) = movieTmdbApi.getTopRatedMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getTopRatedMovies(page: Int) = movieTmdbApi.getTopRatedMovies(tmdbFilterLanguage, page)
 
-    suspend fun getUpComingMovies(page: Int) = movieTmdbApi.getUpComingMovies(tmdbApiKey, tmdbFilterLanguage, page)
+    suspend fun getUpComingMovies(page: Int) = movieTmdbApi.getUpComingMovies(tmdbFilterLanguage, page)
 }
