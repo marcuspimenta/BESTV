@@ -15,8 +15,6 @@
 package com.pimenta.bestv.di
 
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.pimenta.bestv.data.local.database.MediaDb
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
@@ -25,16 +23,10 @@ import org.koin.dsl.module
 
 private const val DB_NAME = "bestv.db"
 
-// Versions 1 and 7 use the same Room entities, so this only updates Room's version marker.
-private val MIGRATION_7_1 = object : Migration(7, 1) {
-    override fun migrate(db: SupportSQLiteDatabase) = Unit
-}
-
 val databaseModule = module {
     single {
         Room
             .databaseBuilder(androidApplication(), MediaDb::class.java, DB_NAME)
-            .addMigrations(MIGRATION_7_1)
             .build()
     }
 
