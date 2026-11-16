@@ -22,7 +22,6 @@ import com.pimenta.bestv.workbrowse.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository as MovieRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
@@ -30,7 +29,7 @@ import kotlinx.coroutines.withContext
 class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher,
+    override val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepositoryContract {
 
     override fun observeFavoriteMovies() = movieLocalDataSource.observeFavoriteMovies().flowOn(ioDispatcher)
@@ -38,23 +37,23 @@ class MovieRepository(
     override suspend fun getMoviesByGenre(
         genreId: Int,
         page: Int,
-    ): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    ): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         movieRemoteDataSource.getMoviesByGenre(genreId, page).toDomainModel()
     }
 
-    override suspend fun getNowPlayingMovies(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    override suspend fun getNowPlayingMovies(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         movieRemoteDataSource.getNowPlayingMovies(page).toDomainModel()
     }
 
-    override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         movieRemoteDataSource.getPopularMovies(page).toDomainModel()
     }
 
-    override suspend fun getTopRatedMovies(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    override suspend fun getTopRatedMovies(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         movieRemoteDataSource.getTopRatedMovies(page).toDomainModel()
     }
 
-    override suspend fun getUpComingMovies(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    override suspend fun getUpComingMovies(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         movieRemoteDataSource.getUpComingMovies(page).toDomainModel()
     }
 }

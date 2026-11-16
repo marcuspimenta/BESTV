@@ -20,17 +20,16 @@ import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository as MovieRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
  */
 class MovieRepository(
     private val movieRemoteDataSource: MovieRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher,
+    override val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepositoryContract {
 
-    override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> = withContext(ioDispatcher) {
+    override suspend fun getPopularMovies(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
         val response = movieRemoteDataSource.getPopularMovies(page)
         response.toDomainModel()
     }

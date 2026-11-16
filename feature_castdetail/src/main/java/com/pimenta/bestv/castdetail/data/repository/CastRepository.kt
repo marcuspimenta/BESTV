@@ -18,30 +18,24 @@ import com.pimenta.bestv.castdetail.data.remote.datasource.CastRemoteDataSource
 import com.pimenta.bestv.data.model.mapper.toDomainModel
 import com.pimenta.bestv.castdetail.domain.repository.CastRepository as CastRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 29-10-2019.
  */
 class CastRepository(
     private val castRemoteDataSource: CastRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher,
+    override val ioDispatcher: CoroutineDispatcher,
 ) : CastRepositoryContract {
-    override suspend fun getCastDetails(castId: Int) = withContext(ioDispatcher) {
-        castRemoteDataSource.getCastDetails(castId).run {
-            toDomainModel()
-        }
+
+    override suspend fun getCastDetails(castId: Int) = withIoDispatcher {
+        castRemoteDataSource.getCastDetails(castId).toDomainModel()
     }
 
-    override suspend fun getMovieCreditsByCast(castId: Int) = withContext(ioDispatcher) {
-        castRemoteDataSource.getMovieCreditsByCast(castId).run {
-            works?.map { work -> work.toDomainModel() }
-        }
+    override suspend fun getMovieCreditsByCast(castId: Int) = withIoDispatcher {
+        castRemoteDataSource.getMovieCreditsByCast(castId).works?.map { work -> work.toDomainModel() }
     }
 
-    override suspend fun getTvShowCreditsByCast(castId: Int) = withContext(ioDispatcher) {
-        castRemoteDataSource.getTvShowCreditsByCast(castId).run {
-            works?.map { work -> work.toDomainModel() }
-        }
+    override suspend fun getTvShowCreditsByCast(castId: Int) = withIoDispatcher {
+        castRemoteDataSource.getTvShowCreditsByCast(castId).works?.map { work -> work.toDomainModel() }
     }
 }

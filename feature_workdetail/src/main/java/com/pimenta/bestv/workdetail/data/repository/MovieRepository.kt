@@ -25,7 +25,6 @@ import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.repository.MovieRepository as MovieRepositoryContract
 import com.pimenta.bestv.workdetail.data.local.mapper.toMovieDbModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 
 /**
  * Created by marcus on 20-10-2019.
@@ -33,30 +32,30 @@ import kotlinx.coroutines.withContext
 class MovieRepository(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher,
+    override val ioDispatcher: CoroutineDispatcher,
 ) : MovieRepositoryContract {
 
-    override suspend fun getWorkMetadata(movieId: Int) = withContext(ioDispatcher) {
+    override suspend fun getWorkMetadata(movieId: Int) = withIoDispatcher {
         movieRemoteDataSource.getMovieDetails(movieId).let { response ->
             movieLocalDataSource.saveCachedWork(response.toDomainModel().toMovieDbModel())
             response.toWorkMetadataDomainModel()
         }
     }
 
-    override suspend fun saveFavoriteMovie(movieId: Int) = withContext(ioDispatcher) {
+    override suspend fun saveFavoriteMovie(movieId: Int) = withIoDispatcher {
         movieLocalDataSource.saveFavoriteMovie(movieId)
     }
 
-    override suspend fun deleteFavoriteMovie(movieId: Int) = withContext(ioDispatcher) {
+    override suspend fun deleteFavoriteMovie(movieId: Int) = withIoDispatcher {
         movieLocalDataSource.deleteFavoriteMovie(movieId)
     }
 
-    override suspend fun isFavoriteMovie(movieId: Int): Boolean = withContext(ioDispatcher) {
+    override suspend fun isFavoriteMovie(movieId: Int): Boolean = withIoDispatcher {
         val movie = movieLocalDataSource.getById(movieId)
         movie?.isFavorite == true
     }
 
-    override suspend fun getCreditsByMovie(movieId: Int) = withContext(ioDispatcher) {
+    override suspend fun getCreditsByMovie(movieId: Int) = withIoDispatcher {
         movieRemoteDataSource.getCastByMovie(movieId).let { response ->
             WorkCreditsDomainModel(
                 casts = response.casts?.map { cast -> cast.toDomainModel() },
@@ -72,25 +71,25 @@ class MovieRepository(
     override suspend fun getRecommendationByMovie(
         movieId: Int,
         page: Int,
-    ) = withContext(ioDispatcher) {
+    ) = withIoDispatcher {
         movieRemoteDataSource.getRecommendationByMovie(movieId, page).toDomainModel()
     }
 
     override suspend fun getSimilarByMovie(
         movieId: Int,
         page: Int,
-    ) = withContext(ioDispatcher) {
+    ) = withIoDispatcher {
         movieRemoteDataSource.getSimilarByMovie(movieId, page).toDomainModel()
     }
 
     override suspend fun getReviewByMovie(
         movieId: Int,
         page: Int,
-    ) = withContext(ioDispatcher) {
+    ) = withIoDispatcher {
         movieRemoteDataSource.getReviewByMovie(movieId, page).toDomainModel()
     }
 
-    override suspend fun getVideosByMovie(movieId: Int) = withContext(ioDispatcher) {
+    override suspend fun getVideosByMovie(movieId: Int) = withIoDispatcher {
         movieRemoteDataSource.getVideosByMovie(movieId).let { response ->
             response.videos?.map { video ->
                 video.toDomainModel()
@@ -101,7 +100,7 @@ class MovieRepository(
     override suspend fun getWatchProvidersByMovie(
         movieId: Int,
         countryCode: String,
-    ) = withContext(ioDispatcher) {
+    ) = withIoDispatcher {
         movieRemoteDataSource.getWatchProvidersByMovie(movieId).watchProvidersToDomainModel(countryCode)
     }
 }

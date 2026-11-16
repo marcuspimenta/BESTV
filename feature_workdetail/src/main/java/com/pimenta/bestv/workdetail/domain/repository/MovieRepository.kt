@@ -2,13 +2,14 @@ package com.pimenta.bestv.workdetail.domain.repository
 
 import com.pimenta.bestv.domain.model.PageDomainModel
 import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.domain.repository.BaseRepository
 import com.pimenta.bestv.workdetail.domain.model.ReviewDomainModel
 import com.pimenta.bestv.workdetail.domain.model.VideoDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WatchProvidersDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkCreditsDomainModel
 import com.pimenta.bestv.workdetail.domain.model.WorkMetadataDomainModel
 
-interface MovieRepository {
+interface MovieRepository : BaseRepository {
     suspend fun getWorkMetadata(movieId: Int): WorkMetadataDomainModel
 
     suspend fun saveFavoriteMovie(movieId: Int)
