@@ -22,7 +22,6 @@ import com.pimenta.bestv.workbrowse.domain.model.tvShowBrowseCategories
 import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository
 import com.pimenta.bestv.workbrowse.domain.repository.MovieRepository
 import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
@@ -38,7 +37,6 @@ class GetBrowseDataUseCase(
         val tvShowGenreSections = asyncCatching { refreshGenres(Source.TV_SHOW) }
 
         val results = awaitAll(movieTopSections, movieGenreSections, tvShowTopSections, tvShowGenreSections)
-        results.throwIfCancelled()
         if (results.all { it.isFailure }) results.first().getOrThrow()
 
         BrowseSectionDetails(
@@ -99,13 +97,8 @@ class GetBrowseDataUseCase(
         }
 
     private fun <T> List<Result<T>>.successfulValuesOrThrow(): List<T> {
-        throwIfCancelled()
         if (isNotEmpty() && all { it.isFailure }) first().getOrThrow()
         return mapNotNull { it.getOrNull() }
-    }
-
-    private fun <T> List<Result<T>>.throwIfCancelled() {
-        firstNotNullOfOrNull { it.exceptionOrNull() as? CancellationException }?.let { throw it }
     }
 
     private companion object {

@@ -106,23 +106,23 @@ class GetCastDetailsUseCaseTest {
         }
 
     @Test
-    fun `should retain personal details and tv credits when movie credits throw cancellation`() =
+    fun `should propagate cancellation from movie credits`() =
         runTest {
             whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
             whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenThrow(CancellationException())
             whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
 
-            assertEquals(Triple(CAST_DETAILED, null, emptyList<WorkDomainModel>()), useCase(CAST_ID))
+            assertFailsWith<CancellationException> { useCase(CAST_ID) }
         }
 
     @Test
-    fun `should retain personal details and movie credits when tv credits throw cancellation`() =
+    fun `should propagate cancellation from tv credits`() =
         runTest {
             whenever(getCastPersonalDetails(CAST_ID)).thenReturn(CAST_DETAILED)
             whenever(getMovieCreditsByCastUseCase(CAST_ID)).thenReturn(emptyList())
             whenever(getTvShowCreditsByCastUseCase(CAST_ID)).thenThrow(CancellationException())
 
-            assertEquals(Triple(CAST_DETAILED, emptyList<WorkDomainModel>(), null), useCase(CAST_ID))
+            assertFailsWith<CancellationException> { useCase(CAST_ID) }
         }
 
     @Test

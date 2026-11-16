@@ -6,7 +6,6 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
@@ -39,15 +38,15 @@ class CoroutineScopeExtensionTest {
     }
 
     @Test
-    fun `should capture a thrown cancellation exception as a failure`() = runTest {
+    fun `should propagate a thrown cancellation exception`() = runTest {
         val exception = CancellationException("Request cancelled")
         val request = asyncCatching<String> { throw exception }
 
-        val result = request.await()
+        val thrown = runCatching { request.await() }.exceptionOrNull()
 
-        assertTrue(result.isFailure)
-        assertSame(exception, result.exceptionOrNull())
-        assertFalse(request.isCancelled)
+        assertTrue(thrown is CancellationException)
+        assertEquals(exception.message, thrown?.message)
+        assertTrue(request.isCancelled)
     }
 
     @Test

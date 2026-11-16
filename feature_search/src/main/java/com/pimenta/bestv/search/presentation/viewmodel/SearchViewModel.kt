@@ -203,11 +203,11 @@ class SearchViewModel(
             val contents = create(query, moviePage, tvShowPage)
 
             updateState { state -> state.searchLoaded(contents) }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (throwable: Throwable) {
-            if (throwable !is CancellationException) {
-                Timber.e(throwable, "Error while searching by query")
-                updateState { state -> state.searchFailed() }
-            }
+            Timber.e(throwable, "Error while searching by query")
+            updateState { state -> state.searchFailed() }
         }
     }
 

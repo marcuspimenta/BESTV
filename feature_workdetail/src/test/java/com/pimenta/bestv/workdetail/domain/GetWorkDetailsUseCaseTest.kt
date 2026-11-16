@@ -373,52 +373,47 @@ class GetWorkDetailsUseCaseTest {
         }
 
     @Test
-    fun `should keep favorite status when the lookup throws cancellation`() =
+    fun `should propagate cancellation from the favorite lookup`() =
         runTest {
             stubSuccessfulRequests()
             whenever(checkFavoriteWorkUseCase(WORK_ID, WORK_TYPE)).thenThrow(CancellationException())
 
-            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
-
-            assertEquals(INITIAL_FAVORITE, result.isFavorite)
-            assertEquals(VIDEO_LIST, result.videos)
+            assertFailsWith<CancellationException> {
+                useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
+            }
         }
 
     @Test
-    fun `should retain other details when credits throw cancellation`() =
+    fun `should propagate cancellation from credits`() =
         runTest {
             stubSuccessfulRequests()
             whenever(getCastsUseCase(WORK_TYPE, WORK_ID)).thenThrow(CancellationException())
 
-            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
-
-            assertEquals(null, result.casts)
-            assertEquals(null, result.crew)
-            assertEquals(VIDEO_LIST, result.videos)
+            assertFailsWith<CancellationException> {
+                useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
+            }
         }
 
     @Test
-    fun `should retain other details when watch providers throw cancellation`() =
+    fun `should propagate cancellation from watch providers`() =
         runTest {
             stubSuccessfulRequests()
             whenever(getWatchProvidersUseCase(WORK_TYPE, WORK_ID, COUNTRY_CODE)).thenThrow(CancellationException())
 
-            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
-
-            assertEquals(null, result.watchProviders)
-            assertEquals(VIDEO_LIST, result.videos)
+            assertFailsWith<CancellationException> {
+                useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
+            }
         }
 
     @Test
-    fun `should retain other details when metadata throws cancellation`() =
+    fun `should propagate cancellation from metadata`() =
         runTest {
             stubSuccessfulRequests()
             whenever(getWorkMetadataUseCase(WORK_TYPE, WORK_ID)).thenThrow(CancellationException())
 
-            val result = useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
-
-            assertEquals(null, result.metadata)
-            assertEquals(VIDEO_LIST, result.videos)
+            assertFailsWith<CancellationException> {
+                useCase(WORK_ID, WORK_TYPE, INITIAL_FAVORITE, COUNTRY_CODE)
+            }
         }
 
     private suspend fun stubFailedRequests(

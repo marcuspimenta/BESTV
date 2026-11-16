@@ -135,48 +135,48 @@ class SearchWorksByQueryUseCaseTest {
         }
 
     @Test
-    fun `should return tv shows when the movie search throws cancellation`() =
+    fun `should propagate cancellation from the movie search`() =
         runTest {
             whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenThrow(CancellationException())
             whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenReturn(TV_SHOW_PAGE_VIEW_MODEL)
 
-            val result = useCase(QUERY)
-
-            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.first)
-            assertEquals(TV_SHOW_PAGE_VIEW_MODEL, result.second)
+            assertFailsWith<CancellationException> { useCase(QUERY) }
         }
 
     @Test
-    fun `should return movies when the tv show search throws cancellation`() =
+    fun `should propagate cancellation from the tv show search`() =
         runTest {
             whenever(searchMoviesByQueryUseCase(QUERY, 1)).thenReturn(MOVIE_PAGE_VIEW_MODEL)
             whenever(searchTvShowsByQueryUseCase(QUERY, 1)).thenThrow(CancellationException())
 
-            val result = useCase(QUERY)
-
-            assertEquals(MOVIE_PAGE_VIEW_MODEL, result.first)
-            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.second)
+            assertFailsWith<CancellationException> { useCase(QUERY) }
         }
 
     @Test
-    fun `should finish a pending movie search when the tv show search throws cancellation`() =
+    fun `should cancel pending searches when the tv show search throws cancellation`() =
         runTest {
             val moviesStarted = CompletableDeferred<Unit>()
             val exception = CancellationException("TV search cancelled")
+            var moviesCancelled = false
             whenever(searchMoviesByQueryUseCase(QUERY, 1)).doSuspendableAnswer {
                 moviesStarted.complete(Unit)
-                delay(100)
-                MOVIE_PAGE_VIEW_MODEL
+                try {
+                    delay(100)
+                    MOVIE_PAGE_VIEW_MODEL
+                } finally {
+                    moviesCancelled = true
+                }
             }
             whenever(searchTvShowsByQueryUseCase(QUERY, 1)).doSuspendableAnswer {
                 moviesStarted.await()
                 throw exception
             }
 
-            val result = useCase(QUERY)
+            val thrown = runCatching { useCase(QUERY) }.exceptionOrNull()
 
-            assertEquals(MOVIE_PAGE_VIEW_MODEL, result.first)
-            assertEquals(PageDomainModel<WorkDomainModel>(1, 0, emptyList()), result.second)
+            assertTrue(thrown is CancellationException)
+            assertEquals(exception.message, thrown?.message)
+            assertTrue(moviesCancelled)
         }
 
     @Test
