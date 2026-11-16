@@ -84,8 +84,10 @@ class WorkBrowseViewModel(
         viewModelScope.launch {
             try {
                 loadRecommendationUseCase()
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading the recommendations")
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading the recommendations")
             }
         }
     }*/
@@ -96,9 +98,14 @@ class WorkBrowseViewModel(
         val favorites = flow { emitAll(observeFavoritesUseCase()) }
             .onStart { emit(emptyList()) }
             .catch { throwable ->
-                if (throwable is CancellationException) throw throwable
-                Timber.e(throwable, "Error while observing favorite data")
-                emit(emptyList())
+                when (throwable) {
+                    is CancellationException -> throw throwable
+                    is Exception -> {
+                        Timber.e(throwable, "Error while observing favorite data")
+                        emit(emptyList())
+                    }
+                    else -> throw throwable
+                }
             }
 
         viewModelScope.launch {
@@ -109,8 +116,8 @@ class WorkBrowseViewModel(
                 }
             } catch (cancellation: CancellationException) {
                 throw cancellation
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while observing favorite data")
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while observing favorite data")
             }
         }
     }
@@ -128,8 +135,8 @@ class WorkBrowseViewModel(
                 displayBrowseSections(getBrowseDataUseCase(), currentState.latestFavorites)
             } catch (cancellation: CancellationException) {
                 throw cancellation
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading browse data")
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading browse data")
                 if (currentState.state !is Loaded) updateState { it.copy(state = Error) }
             }
         }

@@ -150,8 +150,10 @@ class SearchViewModel(
         try {
             val page = loadPage(currentState.query, nextPage)
             updateState { state -> onSuccess(state, page) }
-        } catch (throwable: Throwable) {
-            Timber.e(throwable, errorMessage)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (exception: Exception) {
+            Timber.e(exception, errorMessage)
             updateState { state -> onFailure(state) }
         }
     }
@@ -205,8 +207,8 @@ class SearchViewModel(
             updateState { state -> state.searchLoaded(contents) }
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (throwable: Throwable) {
-            Timber.e(throwable, "Error while searching by query")
+        } catch (exception: Exception) {
+            Timber.e(exception, "Error while searching by query")
             updateState { state -> state.searchFailed() }
         }
     }

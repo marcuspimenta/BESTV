@@ -206,8 +206,8 @@ class WorkDetailsViewModel(
                 }
             } catch (exception: CancellationException) {
                 throw exception
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading work details")
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading work details")
                 updateState {
                     it.copy(state = Error(ErrorType.LoadingError))
                 }
@@ -257,8 +257,10 @@ class WorkDetailsViewModel(
                         ),
                     )
                 }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while toggling favorite")
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while toggling favorite")
 
                 updateState { currentState ->
                     currentState.copy(
@@ -311,8 +313,10 @@ class WorkDetailsViewModel(
                         ),
                     )
                 }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more reviews")
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading more reviews")
 
                 updateState { currentState ->
                     currentState.copy(
@@ -368,8 +372,10 @@ class WorkDetailsViewModel(
                         ),
                     )
                 }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more recommendations")
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading more recommendations")
 
                 updateState { currentState ->
                     currentState.copy(
@@ -425,8 +431,10 @@ class WorkDetailsViewModel(
                         ),
                     )
                 }
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while loading more similar works")
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while loading more similar works")
 
                 updateState { currentState ->
                     currentState.copy(

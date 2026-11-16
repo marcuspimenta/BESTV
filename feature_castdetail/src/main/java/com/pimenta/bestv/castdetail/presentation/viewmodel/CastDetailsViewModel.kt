@@ -72,8 +72,8 @@ class CastDetailsViewModel(
                 }
             } catch (exception: CancellationException) {
                 throw exception
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Error while getting the cast details")
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while getting the cast details")
                 updateState { CastDetailsState.Error(deviceCapabilities.isMobileDevice) }
             }
         }
