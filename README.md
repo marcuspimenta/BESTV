@@ -28,7 +28,7 @@ The composite bellow pairs the TV and mobile experiences. Each platform adapts b
 
 - Kotlin
 - Jetpack Compose for TV and mobile
-- Android Architecture Components, including ViewModel and Room
+- Android Architecture Components, including ViewModel, plus SQLDelight local storage shared through KMP
 - Kotlin Coroutines and Flow
 - Ktor Client for network requests
 - Coil for image loading

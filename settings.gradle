@@ -8,6 +8,7 @@ dependencyResolutionManagement {
 
 include ':app'
 include ':common'
+include ':data_shared'
 include ':feature_workdetail'
 include ':feature_castdetail'
 include ':feature_search'

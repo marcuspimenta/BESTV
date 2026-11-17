@@ -94,26 +94,24 @@ val networkModule = module {
 
 ### Database Module
 
-Provides Room database and DAOs:
+Provides the Android SQLDelight driver, generated database, and shared local data sources:
 
 ```kotlin
 // common/src/main/java/com/pimenta/bestv/data/di/DatabaseModule.kt
 val databaseModule = module {
-    // Room database as singleton
+    // Android driver opens the existing database file.
     single {
-        Room.databaseBuilder(androidApplication(), MediaDb::class.java, "bestv.db")
-            .build()
+        val driver = AndroidSqliteDriver(MediaDatabase.Schema, androidApplication(), "bestv.db")
+        MediaDatabase(driver)
     }
 
-    // DAOs as singletons
-    single { get<MediaDb>().movieDao() }
-    single { get<MediaDb>().tvShowDao() }
-
-    // Local data sources
+    // Shared SQLDelight local data sources
     single { MovieLocalDataSource(get()) }
     single { TvShowLocalDataSource(get()) }
 }
 ```
+
+The SQLDelight schema and query implementations live in `data_shared/src/commonMain`. The Android driver uses the same `bestv.db` filename and version-1 `movie` and `tv_show` table layouts as the former Room database, preserving existing favorite and cached-work rows.
 
 ### Feature Module Example
 
@@ -154,7 +152,7 @@ val searchModule = module {
 
 The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. Feature binding smoke tests resolve these ports with test infrastructure.
 
-`GetBrowseDataUseCase` loads the Browse catalog from the network. Favorite sections are observed separately through `ObserveFavoritesUseCase`, which combines the movie and TV favorite flows backed by Room.
+`GetBrowseDataUseCase` loads the Browse catalog from the network. Favorite sections are observed separately through `ObserveFavoritesUseCase`, which combines the movie and TV favorite flows backed by SQLDelight.
 
 ## DSL Reference
 

@@ -148,7 +148,7 @@ class WorkBrowseViewModelTest {
     }
 
     @Test
-    fun `network sections display when loaded and favorites come from Room`() = runTest(testDispatcher) {
+    fun `network sections display when loaded and favorites come from the local database`() = runTest(testDispatcher) {
         observedFavorites.value = listOf(domainWork(1, WorkDomainModel.Type.MOVIE, true))
         viewModel = createViewModel()
         advanceUntilIdle()
@@ -197,7 +197,7 @@ class WorkBrowseViewModelTest {
     @Test
     fun `browse content loads when favorites observation fails`() = runTest(testDispatcher) {
         whenever(observeFavoritesUseCase()).thenReturn(
-            flow { throw IllegalStateException("Room favorites unavailable") },
+            flow { throw IllegalStateException("Local database favorites unavailable") },
         )
         viewModel = createViewModel()
 
@@ -251,7 +251,7 @@ class WorkBrowseViewModelTest {
     }
 
     @Test
-    fun `Room favorite emissions add and remove the favorites section`() = runTest(testDispatcher) {
+    fun `favorite database emissions add and remove the favorites section`() = runTest(testDispatcher) {
         viewModel = createViewModel()
         advanceUntilIdle()
         transitionToLoadedState()

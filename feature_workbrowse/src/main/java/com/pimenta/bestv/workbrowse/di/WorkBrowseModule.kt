@@ -71,12 +71,12 @@ val workBrowseModule = module {
     // Local favorite data sources
     single {
         MovieLocalDataSource(
-            movieDao = get(),
+            localDataSource = get(),
         )
     }
     single {
         TvShowLocalDataSource(
-            tvShowDao = get(),
+            localDataSource = get(),
         )
     }
 

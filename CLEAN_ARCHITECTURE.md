@@ -1,6 +1,6 @@
 # Clean Architecture in BESTV
 
-This guide describes the architecture implemented by the current BESTV packages. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. Shared Android code, shared TMDb response DTOs, and Ktor client configuration live in `common`; each feature owns its typed TMDb API client.
+This guide describes the architecture implemented by the current BESTV packages. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. Shared Android code, shared TMDb response DTOs, and Ktor client configuration live in `common`; the KMP `data_shared` module owns the SQLDelight schema and portable local data sources. Each feature owns its typed TMDb API client.
 
 ![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
@@ -9,8 +9,8 @@ This guide describes the architecture implemented by the current BESTV packages.
 Source dependencies point inward toward domain policy:
 
 - **Presentation depends on domain.** ViewModels invoke use cases and map domain values into presentation state.
-- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Ktor, Room, and `common/data`.
-- **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, Room, Ktor, WorkManager, or UI models.
+- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Ktor, SQLDelight, and shared data models.
+- **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, SQLDelight, Ktor, WorkManager, or UI models.
 - **Platform adapters depend inward on domain contracts.** They wrap Android services and implement domain output ports where appropriate.
 - **Dependency injection is the composition edge.** App and feature Koin modules know the concrete types and connect interfaces to implementations.
 
@@ -40,11 +40,11 @@ Recommendation also has a `platform/` package for its boot receiver, WorkManager
 
 ## Shared packages and models
 
-BESTV keeps shared types and infrastructure in one Gradle module. Existing Kotlin package names remain grouped by responsibility under `com.pimenta.bestv`:
+BESTV separates portable local persistence from Android-specific shared infrastructure. Existing Kotlin package names remain grouped by responsibility under `com.pimenta.bestv`:
 
 ```text
 common/src/main/java/com/pimenta/bestv/
-├── data/                      # Network, Room, API models, and data mappers
+├── data/                      # Network, API models, and data mappers
 ├── domain/                    # Domain models and coroutine helpers
 ├── di/                        # Shared presentation DI
 └── presentation/
@@ -55,18 +55,21 @@ common/src/main/java/com/pimenta/bestv/
     ├── ui/                    # Shared Compose UI
     └── viewmodel/             # BaseViewModel
 
+data_shared/src/commonMain/
+├── sqldelight/                 # Portable SQLite schema and typed queries
+└── kotlin/.../data/local/      # Portable persistence models and data sources
+
 feature_<capability>/data/local/
-├── datasource/                # Feature-specific local data source adapters
-└── mapper/                    # Room entity to domain mapping
+└── mapper/                    # Persistence model to domain mapping
 ```
 
-The `common` module has one generated resource namespace (`com.pimenta.bestv.common.R`) and BuildConfig (`com.pimenta.bestv.common.BuildConfig`). It owns shared serializable TMDb response DTOs and the Android Ktor client configuration with the OkHttp engine. Typed endpoint clients and feature-specific response models stay in their feature's `data/remote` package. The `common` module also supplies Android composition and Room infrastructure; feature-specific local data source adapters and their mappers stay with the feature.
+The `common` module has one generated resource namespace (`com.pimenta.bestv.common.R`) and BuildConfig (`com.pimenta.bestv.common.BuildConfig`). It owns shared serializable TMDb response DTOs, the Android Ktor client configuration with the OkHttp engine, and Android composition. Typed endpoint clients and feature-specific response models stay in their feature's `data/remote` package. The KMP `data_shared` module owns SQLDelight-generated query APIs, portable persistence models, and local database operations; Android creates the SQLDelight driver in `common`'s database DI module.
 
 ## Mapping rules
 
 ### API and persistence models to domain
 
-Data mappers return resource-free domain values. Keep API response models and shared API mappers under `common/data/model`; Room entity mappers stay in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `common/presentation`.
+Data mappers return resource-free domain values. Keep API response models and shared API mappers under `common/data/model`; persistence model mappers stay in the feature's `data/local/mapper`. For work and cast values, the data mapper assigns `ContentSource.TMDB`; it does not read Android strings or import `common/presentation`.
 
 ```kotlin
 // common/src/main/java/com/pimenta/bestv/data/model/mapper/WorkResponseMapper.kt
@@ -77,7 +80,7 @@ fun WorkResponse.toDomainModel(): WorkDomainModel = WorkDomainModel(
 )
 ```
 
-Repository implementations call API mappers after fetching responses. Feature local data sources use DAOs from `common/data` and local mappers to convert Room entities into domain values. Keep Room entities under `common/src/main/java/com/pimenta/bestv/data/local/model`, close to the Room database and DAOs.
+Repository implementations call API mappers after fetching responses. Feature repositories use shared SQLDelight local data sources and feature mappers to convert persistence models into domain values. Keep the SQLite schema, generated queries, persistence models, and shared local data sources in `data_shared`; keep domain mapping with the feature that owns the domain type.
 
 ### Domain values to UI models
 
@@ -88,7 +91,7 @@ Shared UI mappers live in `common/presentation/mapper` and accept `Resource` whe
 fun WorkDomainModel.toViewModel(resource: Resource): WorkViewModel?
 ```
 
-Do not put UI-to-Room mappers in presentation. For Work Details favorites, the domain operation receives a work ID, `WorkDomainModel.Type`, and desired favorite state. The data repository creates `MovieDbModel` or `TvShowDbModel` inside the data boundary.
+Do not put UI-to-database mappers in presentation. For Work Details favorites, the domain operation receives a work ID, `WorkDomainModel.Type`, and desired favorite state. The data repository creates a `MovieDbModel` or `TvShowDbModel` inside the data boundary.
 
 ## Repository ports and dependency injection
 

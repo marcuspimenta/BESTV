@@ -14,8 +14,8 @@
 
 package com.pimenta.bestv.di
 
-import androidx.room.Room
-import com.pimenta.bestv.data.local.database.MediaDb
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import com.pimenta.bestv.data.local.database.MediaDatabase
 import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource
 import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource
 import org.koin.android.ext.koin.androidApplication
@@ -25,14 +25,10 @@ private const val DB_NAME = "bestv.db"
 
 val databaseModule = module {
     single {
-        Room
-            .databaseBuilder(androidApplication(), MediaDb::class.java, DB_NAME)
-            .build()
+        // Keep the existing filename and version-1 tables so saved favorites and cache rows remain available.
+        val driver = AndroidSqliteDriver(MediaDatabase.Schema, androidApplication(), DB_NAME)
+        MediaDatabase(driver)
     }
-
-    single { get<MediaDb>().movieDao() }
-
-    single { get<MediaDb>().tvShowDao() }
 
     single { MovieLocalDataSource(get()) }
 

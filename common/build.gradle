@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.android.legacy-kapt'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
@@ -61,6 +60,10 @@ android {
 }
 
 dependencies {
+    // Multiplatform SQLDelight schema and database models.
+    api project(':data_shared')
+    implementation libs.sqldelight.android.driver
+
     // Shared Ktor client configuration and wire models used by feature modules.
     implementation libs.ktor.client.core
     implementation libs.ktor.client.content.negotiation
@@ -78,13 +81,6 @@ dependencies {
     // Koin
     implementation libs.koin.core
     implementation libs.koin.android.runtime
-
-    // Room
-    api libs.androidx.room.runtime
-    implementation libs.androidx.room.ktx
-    kapt libs.androidx.room.compiler
-    // Keep Room's metadata reader aligned with the Kotlin compiler version.
-    kapt libs.kotlin.metadata.jvm
 
     // Networking
 

@@ -1,0 +1,93 @@
+CREATE TABLE tv_show (
+    id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT,
+    originalTitle TEXT,
+    releaseDate TEXT,
+    originalLanguage TEXT,
+    overview TEXT,
+    source TEXT NOT NULL,
+    backdropPath TEXT,
+    posterPath TEXT,
+    popularity REAL NOT NULL,
+    voteAverage REAL NOT NULL,
+    voteCount REAL NOT NULL,
+    isAdult INTEGER NOT NULL,
+    isFavorite INTEGER NOT NULL
+);
+
+observeFavorites:
+SELECT * FROM tv_show WHERE isFavorite = 1;
+
+selectById:
+SELECT * FROM tv_show WHERE id = :id;
+
+insertIfAbsent:
+INSERT OR IGNORE INTO tv_show (
+    id,
+    title,
+    originalTitle,
+    releaseDate,
+    originalLanguage,
+    overview,
+    source,
+    backdropPath,
+    posterPath,
+    popularity,
+    voteAverage,
+    voteCount,
+    isAdult,
+    isFavorite
+)
+VALUES (
+    :id,
+    :title,
+    :originalTitle,
+    :releaseDate,
+    :originalLanguage,
+    :overview,
+    :source,
+    :backdropPath,
+    :posterPath,
+    :popularity,
+    :voteAverage,
+    :voteCount,
+    :isAdult,
+    :isFavorite
+);
+
+insertOrReplace:
+INSERT OR REPLACE INTO tv_show (
+    id,
+    title,
+    originalTitle,
+    releaseDate,
+    originalLanguage,
+    overview,
+    source,
+    backdropPath,
+    posterPath,
+    popularity,
+    voteAverage,
+    voteCount,
+    isAdult,
+    isFavorite
+)
+VALUES (
+    :id,
+    :title,
+    :originalTitle,
+    :releaseDate,
+    :originalLanguage,
+    :overview,
+    :source,
+    :backdropPath,
+    :posterPath,
+    :popularity,
+    :voteAverage,
+    :voteCount,
+    :isAdult,
+    :isFavorite
+);
+
+updateFavorite:
+UPDATE tv_show SET isFavorite = :isFavorite WHERE id = :id;

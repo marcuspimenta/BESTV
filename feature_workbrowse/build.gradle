@@ -27,7 +27,6 @@ dependencies {
     implementation libs.kotlinx.coroutines.core
 
     implementation libs.navigation3.runtime
-    implementation libs.androidx.room.ktx
 
     // Kotlin
     implementation libs.kotlin.stdlib

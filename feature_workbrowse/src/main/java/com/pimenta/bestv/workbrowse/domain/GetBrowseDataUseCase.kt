@@ -87,7 +87,7 @@ class GetBrowseDataUseCase(
             ON_THE_AIR_TV_SHOWS -> tvShowRepository.getOnTheAirTvShows(FIRST_PAGE)
             POPULAR_TV_SHOWS -> tvShowRepository.getPopularTvShows(FIRST_PAGE)
             TOP_RATED_TV_SHOWS -> tvShowRepository.getTopRatedTvShows(FIRST_PAGE)
-            FAVORITES_MOVIES -> error("Favorites are observed separately from Room.")
+            FAVORITES_MOVIES -> error("Favorites are observed separately from the local database.")
         }
 
     private suspend fun loadWorksByGenre(genre: GenreDomainModel): PageDomainModel<WorkDomainModel> =

@@ -1,6 +1,6 @@
 package com.pimenta.bestv.workbrowse.data.local.datasource
 
-import com.pimenta.bestv.data.local.dao.TvShowDao
+import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource as SqlDelightTvShowLocalDataSource
 import com.pimenta.bestv.data.local.model.TvShowDbModel
 import com.pimenta.bestv.domain.model.WorkDomainModel
 import kotlinx.coroutines.flow.first
@@ -12,12 +12,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class TvShowLocalDataSourceTest {
-    private val tvShowDao: TvShowDao = mock()
-    private val dataSource = TvShowLocalDataSource(tvShowDao)
+    private val sqlDelightDataSource: SqlDelightTvShowLocalDataSource = mock()
+    private val dataSource = TvShowLocalDataSource(sqlDelightDataSource)
 
     @Test
-    fun `observeFavoriteTvShows maps only favorite TvShowDao rows`() = runTest {
-        whenever(tvShowDao.observeFavorites()).thenReturn(
+    fun `observeFavoriteTvShows maps only favorite database rows`() = runTest {
+        whenever(sqlDelightDataSource.observeFavorites()).thenReturn(
             flowOf(listOf(tvShow(id = 22, title = "Favorite show", isFavorite = true))),
         )
 

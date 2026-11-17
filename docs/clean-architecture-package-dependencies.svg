@@ -29,7 +29,7 @@
   <text x="660" y="422" text-anchor="middle" class="pkg">feature_x/domain/repository/</text>
   <text x="660" y="447" text-anchor="middle" class="detail">Ports owned by domain</text>
   <rect x="470" y="495" width="380" height="45" rx="10" fill="#fff" stroke="#9bb9e2"/>
-  <text x="660" y="523" text-anchor="middle" class="pkg">domain models · no Android / Room / UI</text>
+  <text x="660" y="523" text-anchor="middle" class="pkg">domain models · no Android / SQLDelight / UI</text>
 
   <!-- Outer layers -->
   <rect x="38" y="230" width="310" height="300" rx="18" fill="#fff4dd" stroke="#d39321" stroke-width="2"/>
@@ -46,7 +46,7 @@
   <text x="1127" y="314" text-anchor="middle" class="pkg">feature_x/data/</text>
   <text x="1127" y="350" text-anchor="middle" class="detail">Repository implementations</text>
   <text x="1127" y="379" text-anchor="middle" class="detail">Remote / local data sources</text>
-  <text x="1127" y="430" text-anchor="middle" class="pkg">common/data/ · Room / network</text>
+  <text x="1127" y="430" text-anchor="middle" class="pkg">shared data · SQLDelight / network</text>
   <text x="1127" y="468" text-anchor="middle" class="note">Implements domain ports and maps</text>
   <text x="1127" y="489" text-anchor="middle" class="note">storage / API models to domain</text>
 

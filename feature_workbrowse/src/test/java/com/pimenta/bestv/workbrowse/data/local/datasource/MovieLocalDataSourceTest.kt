@@ -1,6 +1,6 @@
 package com.pimenta.bestv.workbrowse.data.local.datasource
 
-import com.pimenta.bestv.data.local.dao.MovieDao
+import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource as SqlDelightMovieLocalDataSource
 import com.pimenta.bestv.data.local.model.MovieDbModel
 import com.pimenta.bestv.domain.model.WorkDomainModel
 import kotlinx.coroutines.flow.first
@@ -12,12 +12,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class MovieLocalDataSourceTest {
-    private val movieDao: MovieDao = mock()
-    private val dataSource = MovieLocalDataSource(movieDao)
+    private val sqlDelightDataSource: SqlDelightMovieLocalDataSource = mock()
+    private val dataSource = MovieLocalDataSource(sqlDelightDataSource)
 
     @Test
-    fun `observeFavoriteMovies maps only favorite MovieDao rows`() = runTest {
-        whenever(movieDao.observeFavorites()).thenReturn(
+    fun `observeFavoriteMovies maps only favorite database rows`() = runTest {
+        whenever(sqlDelightDataSource.observeFavorites()).thenReturn(
             flowOf(listOf(movie(id = 10, title = "Favorite movie", isFavorite = true))),
         )
 

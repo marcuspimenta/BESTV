@@ -2,8 +2,8 @@ package com.pimenta.bestv.workbrowse.di
 
 import android.app.Application
 import io.ktor.client.HttpClient
-import com.pimenta.bestv.data.local.dao.MovieDao
-import com.pimenta.bestv.data.local.dao.TvShowDao
+import com.pimenta.bestv.data.local.datasource.MovieLocalDataSource as SqlDelightMovieLocalDataSource
+import com.pimenta.bestv.data.local.datasource.TvShowLocalDataSource as SqlDelightTvShowLocalDataSource
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.workbrowse.data.repository.GenreRepository as GenreRepositoryImpl
 import com.pimenta.bestv.workbrowse.data.repository.MovieRepository as MovieRepositoryImpl
@@ -31,8 +31,8 @@ class RepositoryBindingsTest {
                 single { mock<HttpClient>() }
                 single(named("tmdbFilterLanguage")) { "en-US" }
                 single { Resource(mock<Application>()) }
-                single { mock<MovieDao>() }
-                single { mock<TvShowDao>() }
+                single { mock<SqlDelightMovieLocalDataSource>() }
+                single { mock<SqlDelightTvShowLocalDataSource>() }
             }
         val application = koinApplication { modules(workBrowseModule, infrastructure) }
 
