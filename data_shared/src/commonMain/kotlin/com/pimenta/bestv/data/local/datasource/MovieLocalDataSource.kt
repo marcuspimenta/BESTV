@@ -4,20 +4,21 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.pimenta.bestv.data.local.database.MediaDatabase
 import com.pimenta.bestv.data.local.model.MovieDbModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class MovieLocalDataSource(
     private val database: MediaDatabase,
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val queries get() = database.movieQueries
 
     fun observeFavorites(): Flow<List<MovieDbModel>> =
         queries.observeFavorites()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { movies ->
                 movies.map { movie ->
                     MovieDbModel(
@@ -39,7 +40,7 @@ class MovieLocalDataSource(
                 }
             }
 
-    suspend fun getById(movieId: Int): MovieDbModel? = withContext(Dispatchers.IO) {
+    suspend fun getById(movieId: Int): MovieDbModel? = withContext(ioDispatcher) {
         queries.selectById(id = movieId.toLong()).executeAsOneOrNull()?.let { movie ->
             MovieDbModel(
                 id = movie.id.toInt(),
@@ -60,7 +61,7 @@ class MovieLocalDataSource(
         }
     }
 
-    suspend fun saveFavoriteMovie(movieId: Int) = withContext(Dispatchers.IO) {
+    suspend fun saveFavoriteMovie(movieId: Int) = withContext(ioDispatcher) {
         val model = MovieDbModel.favoritePlaceholder(movieId)
         queries.transaction {
             insertIfAbsent(model)
@@ -69,12 +70,12 @@ class MovieLocalDataSource(
     }
 
     suspend fun deleteFavoriteMovie(movieId: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.updateFavorite(isFavorite = 0L, id = movieId.toLong())
         }
     }
 
-    suspend fun saveCachedWork(model: MovieDbModel) = withContext(Dispatchers.IO) {
+    suspend fun saveCachedWork(model: MovieDbModel) = withContext(ioDispatcher) {
         queries.transaction {
             val isFavorite = queries.selectById(id = model.id.toLong())
                 .executeAsOneOrNull()

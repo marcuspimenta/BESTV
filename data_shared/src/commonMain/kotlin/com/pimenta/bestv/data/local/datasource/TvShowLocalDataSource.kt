@@ -4,20 +4,21 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.pimenta.bestv.data.local.database.MediaDatabase
 import com.pimenta.bestv.data.local.model.TvShowDbModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class TvShowLocalDataSource(
     private val database: MediaDatabase,
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val queries get() = database.tvShowQueries
 
     fun observeFavorites(): Flow<List<TvShowDbModel>> =
         queries.observeFavorites()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { tvShows ->
                 tvShows.map { tvShow ->
                     TvShowDbModel(
@@ -39,7 +40,7 @@ class TvShowLocalDataSource(
                 }
             }
 
-    suspend fun getById(tvShowId: Int): TvShowDbModel? = withContext(Dispatchers.IO) {
+    suspend fun getById(tvShowId: Int): TvShowDbModel? = withContext(ioDispatcher) {
         queries.selectById(id = tvShowId.toLong()).executeAsOneOrNull()?.let { tvShow ->
             TvShowDbModel(
                 id = tvShow.id.toInt(),
@@ -60,7 +61,7 @@ class TvShowLocalDataSource(
         }
     }
 
-    suspend fun saveFavoriteTvShow(tvShowId: Int) = withContext(Dispatchers.IO) {
+    suspend fun saveFavoriteTvShow(tvShowId: Int) = withContext(ioDispatcher) {
         val model = TvShowDbModel.favoritePlaceholder(tvShowId)
         queries.transaction {
             insertIfAbsent(model)
@@ -69,12 +70,12 @@ class TvShowLocalDataSource(
     }
 
     suspend fun deleteFavoriteTvShow(tvShowId: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.updateFavorite(isFavorite = 0L, id = tvShowId.toLong())
         }
     }
 
-    suspend fun saveCachedWork(model: TvShowDbModel) = withContext(Dispatchers.IO) {
+    suspend fun saveCachedWork(model: TvShowDbModel) = withContext(ioDispatcher) {
         queries.transaction {
             val isFavorite = queries.selectById(id = model.id.toLong())
                 .executeAsOneOrNull()

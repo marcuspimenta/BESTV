@@ -30,7 +30,7 @@ val databaseModule = module {
         MediaDatabase(driver)
     }
 
-    single { MovieLocalDataSource(get()) }
+    single { MovieLocalDataSource(database = get(), ioDispatcher = get()) }
 
-    single { TvShowLocalDataSource(get()) }
+    single { TvShowLocalDataSource(database = get(), ioDispatcher = get()) }
 }
