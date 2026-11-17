@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
@@ -22,6 +23,7 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation libs.ktor.client.core
     implementation libs.kotlinx.coroutines.core
 
     implementation libs.navigation3.runtime
@@ -48,12 +50,6 @@ dependencies {
     implementation libs.koin.android.runtime
     implementation libs.koin.android.compose
 
-    // Retrofit
-    implementation libs.retrofit.core
-
-    // Gson
-    implementation libs.gson
-
     // Timber
     implementation libs.timber
 
@@ -62,7 +58,10 @@ dependencies {
 
     // JUnit
     testImplementation libs.junit4
+    testImplementation libs.kotlin.test.junit
     testImplementation libs.robolectric
+    testImplementation libs.ktor.client.mock
+    testImplementation libs.okhttp.mockwebserver
 
     // Coroutines Test
     testImplementation libs.kotlinx.coroutines.test

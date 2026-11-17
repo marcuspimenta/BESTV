@@ -53,7 +53,6 @@ import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val workDetailModule = module {
     single<NavigationEntryProvider>(named("workDetailsEntryProvider")) {
@@ -61,8 +60,8 @@ val workDetailModule = module {
     }
 
     // APIs
-    single { get<Retrofit>().create(MovieDetailTmdbApi::class.java) }
-    single { get<Retrofit>().create(TvShowDetailTmdbApi::class.java) }
+    single { MovieDetailTmdbApi(get()) }
+    single { TvShowDetailTmdbApi(get()) }
 
     // DataSources
     factory {

@@ -12,6 +12,7 @@ import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.data.local.sharedpreferences.LocalSettings
 import com.pimenta.bestv.presentation.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +34,14 @@ class RecommendationChannelApiTest {
     private val workDetailsRoute: WorkDetailsRoute = mock()
     private val workBrowseRoute: WorkBrowseRoute = mock()
     private val resource = Resource(application)
-    private val provider = RecommendationChannelApi(application, settings, workDetailsRoute, workBrowseRoute, resource)
+    private val provider = RecommendationChannelApi(
+        application,
+        settings,
+        workDetailsRoute,
+        workBrowseRoute,
+        resource,
+        Dispatchers.Unconfined,
+    )
     private val work = WorkDomainModel(
         id = 42,
         title = "Movie",

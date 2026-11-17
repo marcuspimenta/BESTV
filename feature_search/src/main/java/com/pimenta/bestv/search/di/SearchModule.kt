@@ -34,7 +34,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val searchModule = module {
     single<NavigationEntryProvider>(named("searchEntryProvider")) {
@@ -42,8 +41,8 @@ val searchModule = module {
     }
 
     // APIs
-    single { get<Retrofit>().create(SearchMovieTmdbApi::class.java) }
-    single { get<Retrofit>().create(SearchTvShowTmdbApi::class.java) }
+    single { SearchMovieTmdbApi(get()) }
+    single { SearchTvShowTmdbApi(get()) }
 
     // DataSources
     factory {

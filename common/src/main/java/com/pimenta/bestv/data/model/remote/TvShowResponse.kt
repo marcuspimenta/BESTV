@@ -14,16 +14,18 @@
 
 package com.pimenta.bestv.data.model.remote
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by marcus on 06/07/18.
  */
+@Serializable
 data class TvShowResponse(
-    @SerializedName("name") override var title: String? = null,
-    @SerializedName("original_name") override var originalTitle: String? = null,
-    @SerializedName("first_air_date") var firstAirDate: String? = null,
-    @SerializedName("keywords") val keywords: TvShowKeywordsResponse? = null,
+    @SerialName("name") override var title: String? = null,
+    @SerialName("original_name") override var originalTitle: String? = null,
+    @SerialName("first_air_date") var firstAirDate: String? = null,
+    @SerialName("keywords") val keywords: TvShowKeywordsResponse? = null,
 ) : WorkResponse() {
 
     override var releaseDate: String?

@@ -34,7 +34,6 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 private const val SHARED_PREFERENCES_NAME = "recommendation_preferences"
 
@@ -42,7 +41,7 @@ val recommendationModule = module {
     single<ImageLoader> { SingletonImageLoader.get(androidApplication()) }
 
     // API
-    single { get<Retrofit>().create(MovieTmdbApi::class.java) }
+    single { MovieTmdbApi(get()) }
 
     // SharedPreferences
     single {

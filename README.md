@@ -30,7 +30,7 @@ The composite bellow pairs the TV and mobile experiences. Each platform adapts b
 - Jetpack Compose for TV and mobile
 - Android Architecture Components, including ViewModel and Room
 - Kotlin Coroutines and Flow
-- Retrofit for networking
+- Ktor Client for network requests
 - Coil for image loading
 - Koin for dependency injection
 - Lottie for animations
@@ -42,6 +42,8 @@ BESTV uses modular Clean Architecture with MVI presentation state and events.
 - [Clean Architecture](CLEAN_ARCHITECTURE.md)
 - [MVI Architecture](MVI_ARCHITECTURE.md)
 - [Koin dependency injection](KOIN_DI.md)
+
+Each feature owns its typed Ktor TMDb API client in its data layer. `common` provides shared TMDb response DTOs and the Android Ktor client configuration, including the cached OkHttp engine. KMP and CMP migration remains planned work; the networking layer does not yet define iOS source sets.
 
 ## TMDb API
 
@@ -55,7 +57,7 @@ TMDB_ACCESS_TOKEN=your_tmdb_access_token
 
 For CI builds, store the token in the CI secret manager and expose it to Gradle as the `TMDB_ACCESS_TOKEN` environment variable. The environment variable takes precedence over `local.properties`. If the token is not configured, Gradle logs a warning and builds without TMDb authentication.
 
-The shared OkHttp client sends `TMDB_ACCESS_TOKEN` on TMDb requests as `Authorization: Bearer <token>`.
+The Ktor client sends `TMDB_ACCESS_TOKEN` on TMDb requests as `Authorization: Bearer <token>`. Android uses the OkHttp engine for its 20 MiB disk cache.
 
 The app includes configured TMDb credentials in its client build, so they can still be extracted from a distributed APK. Keeping them out of Git protects the repository, but a backend proxy is needed to keep them out of client builds.
 

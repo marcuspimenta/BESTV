@@ -25,7 +25,7 @@ def isDataImport = { String imported ->
 
 def isPlatformOrFrameworkImport = { String imported ->
     imported.startsWith('android.') || imported.startsWith('androidx.') ||
-        imported.startsWith('retrofit2.') || imported.startsWith('org.koin.')
+        imported.startsWith('io.ktor.') || imported.startsWith('org.koin.')
 }
 
 def isForeignFeatureImport = { Project module, String imported, List<String> features ->

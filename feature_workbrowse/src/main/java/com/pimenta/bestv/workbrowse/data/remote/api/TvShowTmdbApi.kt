@@ -1,57 +1,45 @@
-/*
- * Copyright (C) 2018 Marcus Pimenta
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.pimenta.bestv.workbrowse.data.remote.api
 
 import com.pimenta.bestv.data.model.remote.PageResponse
 import com.pimenta.bestv.data.model.remote.TvShowResponse
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.pimenta.bestv.network.data.remote.getTmdb
+import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 
-/**
- * Created by marcus on 20-10-2019.
- */
-interface TvShowTmdbApi {
-    @GET("discover/tv")
+class TvShowTmdbApi(private val client: HttpClient) {
     suspend fun getTvShowByGenre(
-        @Query("with_genres") genreId: Int,
-        @Query("language") language: String,
-        @Query("include_adult") includeAdult: Boolean,
-        @Query("page") page: Int,
-    ): PageResponse<TvShowResponse>
+        genreId: Int,
+        language: String,
+        includeAdult: Boolean,
+        page: Int,
+    ): PageResponse<TvShowResponse> = client.getTmdb("discover/tv") {
+        parameter("with_genres", genreId)
+        parameter("language", language)
+        parameter("include_adult", includeAdult)
+        parameter("page", page)
+    }
 
-    @GET("tv/airing_today")
-    suspend fun getAiringTodayTvShows(
-        @Query("language") language: String,
-        @Query("page") page: Int,
-    ): PageResponse<TvShowResponse>
+    suspend fun getAiringTodayTvShows(language: String, page: Int): PageResponse<TvShowResponse> =
+        client.getTmdb("tv/airing_today") {
+            parameter("language", language)
+            parameter("page", page)
+        }
 
-    @GET("tv/on_the_air")
-    suspend fun getOnTheAirTvShows(
-        @Query("language") language: String,
-        @Query("page") page: Int,
-    ): PageResponse<TvShowResponse>
+    suspend fun getOnTheAirTvShows(language: String, page: Int): PageResponse<TvShowResponse> =
+        client.getTmdb("tv/on_the_air") {
+            parameter("language", language)
+            parameter("page", page)
+        }
 
-    @GET("tv/popular")
-    suspend fun getPopularTvShows(
-        @Query("language") language: String,
-        @Query("page") page: Int,
-    ): PageResponse<TvShowResponse>
+    suspend fun getPopularTvShows(language: String, page: Int): PageResponse<TvShowResponse> =
+        client.getTmdb("tv/popular") {
+            parameter("language", language)
+            parameter("page", page)
+        }
 
-    @GET("tv/top_rated")
-    suspend fun getTopRatedTvShows(
-        @Query("language") language: String,
-        @Query("page") page: Int,
-    ): PageResponse<TvShowResponse>
+    suspend fun getTopRatedTvShows(language: String, page: Int): PageResponse<TvShowResponse> =
+        client.getTmdb("tv/top_rated") {
+            parameter("language", language)
+            parameter("page", page)
+        }
 }

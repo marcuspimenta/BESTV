@@ -14,64 +14,27 @@
 
 package com.pimenta.bestv.di
 
-import com.google.gson.GsonBuilder
 import com.pimenta.bestv.common.BuildConfig
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import com.pimenta.bestv.network.createAndroidTmdbHttpClient
+import com.pimenta.bestv.network.data.remote.TmdbHttpClientConfig
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.util.concurrent.TimeUnit
 
-private const val TIME_OUT_SEC = 60L
-private const val HTTP_CACHE_SIZE_BYTES = 20L * 1024 * 1024
 private const val HTTP_CACHE_DIRECTORY = "tmdb-http-cache"
 
 val networkModule = module {
     single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
 
     single {
-        OkHttpClient
-            .Builder()
-            .cache(
-                Cache(
-                    File(androidApplication().cacheDir, HTTP_CACHE_DIRECTORY),
-                    HTTP_CACHE_SIZE_BYTES
-                )
-            ).apply {
-                if (BuildConfig.TMDB_ACCESS_TOKEN.isNotBlank()) {
-                    addInterceptor { chain ->
-                        val authenticatedRequest = chain.request()
-                            .newBuilder()
-                            .header("Authorization", "Bearer ${BuildConfig.TMDB_ACCESS_TOKEN}")
-                            .build()
-                        chain.proceed(authenticatedRequest)
-                    }
-                }
-                if (BuildConfig.BUILD_TYPE == "debug") {
-                    addInterceptor(
-                        HttpLoggingInterceptor().apply {
-                            redactHeader("Authorization")
-                            level = HttpLoggingInterceptor.Level.BASIC
-                        }
-                    )
-                }
-                readTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-                writeTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-                connectTimeout(TIME_OUT_SEC, TimeUnit.SECONDS)
-            }.build()
-    }
-
-    single {
-        Retrofit
-            .Builder()
-            .baseUrl(BuildConfig.TMDB_BASE_URL)
-            .client(get())
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
+        createAndroidTmdbHttpClient(
+            config = TmdbHttpClientConfig(
+                baseUrl = BuildConfig.TMDB_BASE_URL,
+                accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
+                debugLogging = BuildConfig.BUILD_TYPE == "debug",
+            ),
+            cacheDirectory = File(androidApplication().cacheDir, HTTP_CACHE_DIRECTORY),
+        )
     }
 }

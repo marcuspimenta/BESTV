@@ -7,17 +7,21 @@
 
 package com.pimenta.bestv.data.model.remote
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class KeywordResponse(
-    @SerializedName("id") val id: Int = 0,
-    @SerializedName("name") val name: String? = null,
+    @SerialName("id") val id: Int = 0,
+    @SerialName("name") val name: String? = null,
 )
 
+@Serializable
 data class MovieKeywordsResponse(
-    @SerializedName("keywords") val keywords: List<KeywordResponse>? = null,
+    @SerialName("keywords") val keywords: List<KeywordResponse>? = null,
 )
 
+@Serializable
 data class TvShowKeywordsResponse(
-    @SerializedName("results") val results: List<KeywordResponse>? = null,
+    @SerialName("results") val results: List<KeywordResponse>? = null,
 )

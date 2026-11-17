@@ -14,20 +14,23 @@
 
 package com.pimenta.bestv.data.model.remote
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by marcus on 15-02-2018.
  */
+@Serializable
 data class CastListResponse(
-    @SerializedName("id") var id: Int = 0,
-    @SerializedName("cast") var casts: List<CastResponse>? = null,
-    @SerializedName("crew") var crew: List<CrewResponse>? = null,
+    @SerialName("id") var id: Int = 0,
+    @SerialName("cast") var casts: List<CastResponse>? = null,
+    @SerialName("crew") var crew: List<CrewResponse>? = null,
 )
 
+@Serializable
 data class CrewResponse(
-    @SerializedName("id") val id: Int = 0,
-    @SerializedName("name") val name: String? = null,
-    @SerializedName("job") val job: String? = null,
-    @SerializedName("department") val department: String? = null,
+    @SerialName("id") val id: Int = 0,
+    @SerialName("name") val name: String? = null,
+    @SerialName("job") val job: String? = null,
+    @SerialName("department") val department: String? = null,
 )

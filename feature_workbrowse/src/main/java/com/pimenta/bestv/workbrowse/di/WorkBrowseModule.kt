@@ -37,7 +37,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val workBrowseModule = module {
     single<NavigationEntryProvider>(named("workBrowseEntryProvider")) {
@@ -45,9 +44,9 @@ val workBrowseModule = module {
     }
 
     // APIs
-    single { get<Retrofit>().create(GenreTmdbApi::class.java) }
-    single { get<Retrofit>().create(MovieTmdbApi::class.java) }
-    single { get<Retrofit>().create(TvShowTmdbApi::class.java) }
+    single { GenreTmdbApi(get()) }
+    single { MovieTmdbApi(get()) }
+    single { TvShowTmdbApi(get()) }
 
     // DataSources
     factory {

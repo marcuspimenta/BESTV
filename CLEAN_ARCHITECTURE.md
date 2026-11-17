@@ -1,6 +1,6 @@
 # Clean Architecture in BESTV
 
-This guide describes the architecture implemented by the current BESTV packages. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. Shared packages live in the single `common` Gradle module.
+This guide describes the architecture implemented by the current BESTV packages. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. Shared Android code, shared TMDb response DTOs, and Ktor client configuration live in `common`; each feature owns its typed TMDb API client.
 
 ![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
@@ -9,8 +9,8 @@ This guide describes the architecture implemented by the current BESTV packages.
 Source dependencies point inward toward domain policy:
 
 - **Presentation depends on domain.** ViewModels invoke use cases and map domain values into presentation state.
-- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Retrofit, Room, and `common/data`.
-- **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, Room, Retrofit, WorkManager, or UI models.
+- **Data depends on domain contracts.** Repository implementations implement interfaces owned by domain and return domain values. Data code also uses its outward details, such as Ktor, Room, and `common/data`.
+- **Domain depends on neither presentation nor data.** It owns use cases, domain models, and repository interfaces. It does not import Android, Room, Ktor, WorkManager, or UI models.
 - **Platform adapters depend inward on domain contracts.** They wrap Android services and implement domain output ports where appropriate.
 - **Dependency injection is the composition edge.** App and feature Koin modules know the concrete types and connect interfaces to implementations.
 
@@ -60,7 +60,7 @@ feature_<capability>/data/local/
 └── mapper/                    # Room entity to domain mapping
 ```
 
-The `common` module has one generated resource namespace (`com.pimenta.bestv.common.R`) and BuildConfig (`com.pimenta.bestv.common.BuildConfig`). The source packages above remain distinct, but package boundaries are not independent Gradle boundaries. Imports still follow package boundaries, and `verifyArchitecture` checks selected prohibited imports. Room entities and database infrastructure live under `common/data`; feature-specific local data source adapters and their mappers stay with the feature.
+The `common` module has one generated resource namespace (`com.pimenta.bestv.common.R`) and BuildConfig (`com.pimenta.bestv.common.BuildConfig`). It owns shared serializable TMDb response DTOs and the Android Ktor client configuration with the OkHttp engine. Typed endpoint clients and feature-specific response models stay in their feature's `data/remote` package. The `common` module also supplies Android composition and Room infrastructure; feature-specific local data source adapters and their mappers stay with the feature.
 
 ## Mapping rules
 
@@ -120,7 +120,7 @@ Search Compose UI
     → Search use case
     → domain MovieRepository interface
     → data MovieRepository implementation
-    → remote data source / Retrofit API
+    → remote data source / Ktor API client
     → TMDb
 
 TMDb response
@@ -149,7 +149,7 @@ Run the root Gradle task:
 
 `:app:preBuild` depends on this task. It scans production Kotlin imports and currently rejects:
 
-- Domain imports from data, presentation, Android/AndroidX, Retrofit, or Koin.
+- Domain imports from data, presentation, Android/AndroidX, Ktor, or Koin.
 - Data imports from presentation.
 - Data imports from common presentation packages and presentation imports from data.
 - Direct imports from another feature package.

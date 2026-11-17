@@ -17,6 +17,7 @@ package com.pimenta.bestv.workbrowse.data.repository
 import com.pimenta.bestv.workbrowse.data.remote.datasource.GenreRemoteDataSource
 import com.pimenta.bestv.workbrowse.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel
+import com.pimenta.bestv.workbrowse.domain.model.GenreDomainModel.Source
 import com.pimenta.bestv.workbrowse.domain.repository.GenreRepository as GenreRepositoryContract
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -29,13 +30,13 @@ class GenreRepository(
 ) : GenreRepositoryContract {
     override suspend fun getMovieGenres(): List<GenreDomainModel> = withIoDispatcher {
         val response = genreRemoteDataSource.getMovieGenres()
-        val genres = response.genres.orEmpty().map { genre -> genre.toDomainModel() }
+        val genres = response.genres.orEmpty().map { genre -> genre.toDomainModel(Source.MOVIE) }
         genres
     }
 
     override suspend fun getTvShowGenres(): List<GenreDomainModel> = withIoDispatcher {
         val response = genreRemoteDataSource.getTvShowGenres()
-        val genres = response.genres.orEmpty().map { genre -> genre.toDomainModel() }
+        val genres = response.genres.orEmpty().map { genre -> genre.toDomainModel(Source.TV_SHOW) }
         genres
     }
 }

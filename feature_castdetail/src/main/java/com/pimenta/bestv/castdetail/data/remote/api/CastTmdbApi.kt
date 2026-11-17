@@ -1,46 +1,26 @@
-/*
- * Copyright (C) 2018 Marcus Pimenta
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.pimenta.bestv.castdetail.data.remote.api
 
 import com.pimenta.bestv.data.model.remote.CastResponse
 import com.pimenta.bestv.data.model.remote.CastWorkListResponse
 import com.pimenta.bestv.data.model.remote.MovieResponse
 import com.pimenta.bestv.data.model.remote.TvShowResponse
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import com.pimenta.bestv.network.data.remote.getTmdb
+import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 
-/**
- * Created by marcus on 04-04-2018.
- */
-interface CastTmdbApi {
-    @GET("person/{person_id}")
-    suspend fun getCastDetails(
-        @Path("person_id") personId: Int,
-        @Query("language") language: String,
-    ): CastResponse
+class CastTmdbApi(private val client: HttpClient) {
+    suspend fun getCastDetails(personId: Int, language: String): CastResponse =
+        client.getTmdb("person/$personId") {
+            parameter("language", language)
+        }
 
-    @GET("person/{person_id}/movie_credits")
-    suspend fun getMovieCredits(
-        @Path("person_id") personId: Int,
-        @Query("language") language: String,
-    ): CastWorkListResponse<MovieResponse>
+    suspend fun getMovieCredits(personId: Int, language: String): CastWorkListResponse<MovieResponse> =
+        client.getTmdb("person/$personId/movie_credits") {
+            parameter("language", language)
+        }
 
-    @GET("person/{person_id}/tv_credits")
-    suspend fun getTvShowCredits(
-        @Path("person_id") personId: Int,
-        @Query("language") language: String,
-    ): CastWorkListResponse<TvShowResponse>
+    suspend fun getTvShowCredits(personId: Int, language: String): CastWorkListResponse<TvShowResponse> =
+        client.getTmdb("person/$personId/tv_credits") {
+            parameter("language", language)
+        }
 }

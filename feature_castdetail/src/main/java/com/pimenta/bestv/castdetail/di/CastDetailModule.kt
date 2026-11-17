@@ -28,7 +28,6 @@ import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val castDetailModule = module {
     single<NavigationEntryProvider>(named("castDetailsEntryProvider")) {
@@ -36,7 +35,7 @@ val castDetailModule = module {
     }
 
     // API
-    single { get<Retrofit>().create(CastTmdbApi::class.java) }
+    single { CastTmdbApi(get()) }
 
     // DataSource
     factory {

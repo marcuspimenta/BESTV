@@ -14,12 +14,14 @@
 
 package com.pimenta.bestv.workdetail.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by marcus on 22-02-2018.
  */
+@Serializable
 data class VideoListResponse(
-    @SerializedName("id") var id: Int = 0,
-    @SerializedName("results") var videos: List<VideoResponse>? = null,
+    @SerialName("id") var id: Int = 0,
+    @SerialName("results") var videos: List<VideoResponse>? = null,
 )

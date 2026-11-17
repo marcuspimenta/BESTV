@@ -4,7 +4,7 @@ This document describes the Koin dependency injection setup used in the BESTV pr
 
 ## Overview
 
-[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. The current dependency pin is Koin 4.2.2 in `buildSrc/src/main/kotlin/Dependencies.kt`, with Android and Compose extensions used across the app.
+[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. The current dependency pin is managed in `gradle/libs.versions.toml`, with Android and Compose extensions used across the app.
 
 ## Project Structure
 
@@ -73,45 +73,21 @@ val appModule = module {
 
 ### Network Module
 
-Provides Retrofit, OkHttp, and API configuration:
+Provides the shared Android Ktor client and API configuration. Shared TMDb response DTOs and client setup live in `common`; each feature owns its typed endpoint clients under `data/remote/api`. The client uses the Android OkHttp engine and its disk cache.
 
 ```kotlin
 // common/src/main/java/com/pimenta/bestv/data/di/NetworkModule.kt
 val networkModule = module {
-    // Named qualifiers for configuration values
     single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
-
-    // OkHttp client as singleton
     single {
-        OkHttpClient.Builder().apply {
-            if (BuildConfig.TMDB_ACCESS_TOKEN.isNotBlank()) {
-                addInterceptor { chain ->
-                    val request = chain.request()
-                        .newBuilder()
-                        .header("Authorization", "Bearer ${BuildConfig.TMDB_ACCESS_TOKEN}")
-                        .build()
-                    chain.proceed(request)
-                }
-            }
-            if (BuildConfig.BUILD_TYPE == "debug") {
-                addInterceptor(HttpLoggingInterceptor().apply {
-                    redactHeader("Authorization")
-                    level = HttpLoggingInterceptor.Level.BASIC
-                })
-            }
-            readTimeout(60L, TimeUnit.SECONDS)
-            writeTimeout(60L, TimeUnit.SECONDS)
-            connectTimeout(60L, TimeUnit.SECONDS)
-        }.build()
-    }
-
-    // Retrofit as singleton
-    single {
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.TMDB_BASE_URL)
-            .client(get())  // Injects OkHttpClient
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
+        createAndroidTmdbHttpClient(
+            config = TmdbHttpClientConfig(
+                baseUrl = BuildConfig.TMDB_BASE_URL,
+                accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
+                debugLogging = BuildConfig.BUILD_TYPE == "debug",
+            ),
+            cacheDirectory = File(androidApplication().cacheDir, "tmdb-http-cache"),
+        )
     }
 }
 ```
@@ -146,9 +122,9 @@ A typical feature module provides APIs, data sources, repositories, use cases, a
 ```kotlin
 // feature_search/src/main/java/.../di/SearchModule.kt
 val searchModule = module {
-    // APIs - created from Retrofit
-    single { get<Retrofit>().create(SearchMovieTmdbApi::class.java) }
-    single { get<Retrofit>().create(SearchTvShowTmdbApi::class.java) }
+    // Typed Ktor API clients share the singleton HttpClient.
+    single { SearchMovieTmdbApi(get()) }
+    single { SearchTvShowTmdbApi(get()) }
 
     // DataSources - factory with named parameters
     factory {
@@ -320,7 +296,7 @@ assertTrue(repository is com.pimenta.bestv.search.data.repository.MovieRepositor
 testApplication.close()
 ```
 
-The affected feature modules use this pattern with mocked local dependencies and a Retrofit instance pointed at a test base URL; they do not add a Koin test dependency.
+The affected feature modules use this pattern with mocked local dependencies and a mocked `HttpClient`. Each feature's endpoint tests use Ktor's MockEngine; common tests cover shared client configuration and DTO parsing.
 
 ### 4. Avoid
 

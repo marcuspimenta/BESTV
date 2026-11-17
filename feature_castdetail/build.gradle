@@ -16,6 +16,7 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation libs.ktor.client.core
     implementation libs.kotlinx.coroutines.core
 
     implementation libs.navigation3.runtime
@@ -41,14 +42,12 @@ dependencies {
     implementation libs.koin.android.runtime
     implementation libs.koin.android.compose
 
-    // Retrofit
-    implementation libs.retrofit.core
-
     // Timber
     implementation libs.timber
 
     // JUnit
     testImplementation libs.junit4
+    testImplementation libs.ktor.client.mock
 
     // Coroutines Test
     testImplementation libs.kotlinx.coroutines.test

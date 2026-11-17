@@ -1,13 +1,15 @@
 package com.pimenta.bestv.data.model.remote
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by marcus on 20-04-2020.
  */
+@Serializable
 open class PageResponse<T>(
-    @SerializedName("page") var page: Int = 0,
-    @SerializedName("total_pages") var totalPages: Int = 0,
-    @SerializedName("total_results") var totalResults: Int = 0,
-    @SerializedName("results") var results: List<T>? = null
+    @SerialName("page") var page: Int = 0,
+    @SerialName("total_pages") var totalPages: Int = 0,
+    @SerialName("total_results") var totalResults: Int = 0,
+    @SerialName("results") var results: List<T>? = null
 )

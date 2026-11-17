@@ -7,6 +7,7 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation libs.ktor.client.core
 
     // Kotlin
     implementation libs.kotlin.stdlib
@@ -29,14 +30,13 @@ dependencies {
     // Koin
     implementation libs.koin.android.runtime
 
-    // Retrofit
-    implementation libs.retrofit.core
-
     // Timber
     implementation libs.timber
 
     // JUnit
     testImplementation libs.junit4
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.ktor.client.mock
 
     // Coroutines Test
     testImplementation libs.kotlinx.coroutines.test

@@ -1,6 +1,7 @@
 package com.pimenta.bestv.recommendation.di
 
 import android.app.Application
+import io.ktor.client.HttpClient
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.recommendation.data.repository.MovieRepository as MovieRepositoryImpl
 import com.pimenta.bestv.recommendation.domain.repository.MovieRepository
@@ -18,7 +19,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.mockito.kotlin.mock
-import retrofit2.Retrofit
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
@@ -31,7 +31,7 @@ class RepositoryBindingsTest {
         val infrastructure =
             module {
                 single<CoroutineDispatcher> { Dispatchers.IO }
-                single { Retrofit.Builder().baseUrl("https://example.test/").build() }
+                single { mock<HttpClient>() }
                 single(named("tmdbFilterLanguage")) { "en-US" }
                 single { Resource(mock<Application>()) }
                 single<WorkDetailsRoute> { mock() }

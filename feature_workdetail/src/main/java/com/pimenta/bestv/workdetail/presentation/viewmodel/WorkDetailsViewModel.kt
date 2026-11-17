@@ -222,12 +222,12 @@ class WorkDetailsViewModel(
                 updateState {
                     it.copy(
                         state =
-                            (it.state as Loaded).copy(
-                                indexOfContentToScroll = it.state.contents
-                                    .firstOf<Header>()
-                                    .actions
-                                    .indexOf(actionButton),
-                            ),
+                        (it.state as Loaded).copy(
+                            indexOfContentToScroll = it.state.contents
+                                .firstOf<Header>()
+                                .actions
+                                .indexOf(actionButton),
+                        ),
                     )
                 }
             }

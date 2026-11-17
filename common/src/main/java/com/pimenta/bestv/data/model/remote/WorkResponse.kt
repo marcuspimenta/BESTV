@@ -14,22 +14,24 @@
 
 package com.pimenta.bestv.data.model.remote
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by marcus on 06/07/18.
  */
+@Serializable
 abstract class WorkResponse(
-    @SerializedName("id") val id: Int = 0,
-    @SerializedName("original_language") val originalLanguage: String? = null,
-    @SerializedName("status") val status: String? = null,
-    @SerializedName("overview") val overview: String? = null,
-    @SerializedName("backdrop_path") val backdropPath: String? = null,
-    @SerializedName("poster_path") val posterPath: String? = null,
-    @SerializedName("popularity") val popularity: Float = 0f,
-    @SerializedName("vote_average") val voteAverage: Float = 0f,
-    @SerializedName("vote_count") val voteCount: Float = 0f,
-    @SerializedName("adult") val isAdult: Boolean = false
+    @SerialName("id") val id: Int = 0,
+    @SerialName("original_language") val originalLanguage: String? = null,
+    @SerialName("status") val status: String? = null,
+    @SerialName("overview") val overview: String? = null,
+    @SerialName("backdrop_path") val backdropPath: String? = null,
+    @SerialName("poster_path") val posterPath: String? = null,
+    @SerialName("popularity") val popularity: Float = 0f,
+    @SerialName("vote_average") val voteAverage: Float = 0f,
+    @SerialName("vote_count") val voteCount: Float = 0f,
+    @SerialName("adult") val isAdult: Boolean = false
 ) {
 
     abstract val title: String?

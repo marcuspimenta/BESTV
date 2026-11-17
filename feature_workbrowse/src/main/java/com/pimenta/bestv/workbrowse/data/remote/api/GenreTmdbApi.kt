@@ -1,35 +1,18 @@
-/*
- * Copyright (C) 2018 Marcus Pimenta
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.pimenta.bestv.workbrowse.data.remote.api
 
-import com.pimenta.bestv.workbrowse.data.remote.model.MovieGenreListResponse
-import com.pimenta.bestv.workbrowse.data.remote.model.TvShowGenreListResponse
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.pimenta.bestv.network.data.remote.getTmdb
+import com.pimenta.bestv.workbrowse.data.remote.model.GenreListResponse
+import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 
-/**
- * Created by marcus on 20-10-2019.
- */
-interface GenreTmdbApi {
-    @GET("genre/movie/list")
-    suspend fun getMovieGenres(
-        @Query("language") language: String,
-    ): MovieGenreListResponse
+class GenreTmdbApi(private val client: HttpClient) {
+    suspend fun getMovieGenres(language: String): GenreListResponse =
+        client.getTmdb("genre/movie/list") {
+            parameter("language", language)
+        }
 
-    @GET("genre/tv/list")
-    suspend fun getTvShowGenres(
-        @Query("language") language: String,
-    ): TvShowGenreListResponse
+    suspend fun getTvShowGenres(language: String): GenreListResponse =
+        client.getTmdb("genre/tv/list") {
+            parameter("language", language)
+        }
 }

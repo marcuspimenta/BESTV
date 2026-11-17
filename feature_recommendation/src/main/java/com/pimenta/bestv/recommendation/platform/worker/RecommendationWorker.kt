@@ -22,7 +22,7 @@ import com.pimenta.bestv.recommendation.domain.LoadRecommendationUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlinx.coroutines.CancellationException
-import retrofit2.HttpException
+import io.ktor.client.plugins.ResponseException
 import java.io.IOException
 
 /**
@@ -47,8 +47,8 @@ class RecommendationWorker(
 internal fun Exception.toRecommendationResult(): ListenableWorker.Result = when (this) {
     is CancellationException -> throw this
     is IOException -> ListenableWorker.Result.retry()
-    is HttpException -> if (code() == 429 ||
-        code() >= 500
+    is ResponseException -> if (response.status.value == 429 ||
+        response.status.value >= 500
     ) ListenableWorker.Result.retry() else ListenableWorker.Result.failure()
     else -> ListenableWorker.Result.failure()
 }

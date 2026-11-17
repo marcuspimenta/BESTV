@@ -1,6 +1,7 @@
 package com.pimenta.bestv.search.di
 
 import android.app.Application
+import io.ktor.client.HttpClient
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.search.data.repository.MovieRepository as MovieRepositoryImpl
 import com.pimenta.bestv.search.data.repository.TvShowRepository as TvShowRepositoryImpl
@@ -16,7 +17,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.mockito.kotlin.mock
-import retrofit2.Retrofit
 
 class RepositoryBindingsTest {
     @Test
@@ -24,7 +24,7 @@ class RepositoryBindingsTest {
         val infrastructure =
             module {
                 single<CoroutineDispatcher> { Dispatchers.IO }
-                single { Retrofit.Builder().baseUrl("https://example.test/").build() }
+                single { mock<HttpClient>() }
                 single(named("tmdbFilterLanguage")) { "en-US" }
                 single { Resource(mock<Application>()) }
             }

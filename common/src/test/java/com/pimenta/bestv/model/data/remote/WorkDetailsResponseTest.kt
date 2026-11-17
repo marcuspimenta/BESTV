@@ -7,17 +7,20 @@
 
 package com.pimenta.bestv.model.data.remote
 
-import com.google.gson.Gson
 import com.pimenta.bestv.data.model.remote.MovieResponse
 import com.pimenta.bestv.data.model.remote.TvShowResponse
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
 class WorkDetailsResponseTest {
+    private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
+
     @Test
     fun `missing detail values remain absent`() {
-        val response = Gson().fromJson("{}", MovieResponse::class.java)
+        val response = json.decodeFromString<MovieResponse>("{}")
 
         assertNull(response.status)
         assertNull(response.originalLanguage)
@@ -28,9 +31,8 @@ class WorkDetailsResponseTest {
 
     @Test
     fun `movie details map financial fields and keywords`() {
-        val response = Gson().fromJson(
+        val response = json.decodeFromString<MovieResponse>(
             """{"status":"Released","original_language":"en","budget":225000000,"revenue":2505477000,"keywords":{"keywords":[{"id":1,"name":"hero"}]}}""",
-            MovieResponse::class.java,
         )
 
         assertEquals("Released", response.status)
@@ -48,9 +50,8 @@ class WorkDetailsResponseTest {
 
     @Test
     fun `tv details map keywords from results`() {
-        val response = Gson().fromJson(
+        val response = json.decodeFromString<TvShowResponse>(
             """{"status":"Returning Series","original_language":"en","keywords":{"results":[{"id":2,"name":"drama"}]}}""",
-            TvShowResponse::class.java,
         )
 
         assertEquals("Returning Series", response.status)

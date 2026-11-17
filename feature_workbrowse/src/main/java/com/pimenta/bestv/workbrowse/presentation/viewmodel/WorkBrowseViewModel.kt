@@ -183,8 +183,14 @@ class WorkBrowseViewModel(
                 val sections =
                     state.sections.mapNotNull { section ->
                         when (section) {
-                            is Movies -> section.copy(content = section.content.withFavoriteFlagsInPresentation(favoriteIds))
-                            is TvShows -> section.copy(content = section.content.withFavoriteFlagsInPresentation(favoriteIds))
+                            is Movies -> section.copy(
+                                content = section.content
+                                    .withFavoriteFlagsInPresentation(favoriteIds),
+                            )
+                            is TvShows -> section.copy(
+                                content = section.content
+                                    .withFavoriteFlagsInPresentation(favoriteIds),
+                            )
                             is Favorites -> null
                             Search -> Search
                         }

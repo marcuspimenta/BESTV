@@ -14,35 +14,39 @@
 
 package com.pimenta.bestv.workdetail.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Response model for TMDB watch providers API.
  * Data powered by JustWatch.
  */
+@Serializable
 data class WatchProvidersResponse(
-    @SerializedName("id") val id: Int = 0,
-    @SerializedName("results") val results: Map<String, CountryWatchProvidersResponse>? = null,
+    @SerialName("id") val id: Int = 0,
+    @SerialName("results") val results: Map<String, CountryWatchProvidersResponse>? = null,
 )
 
 /**
  * Watch providers for a specific country.
  */
+@Serializable
 data class CountryWatchProvidersResponse(
-    @SerializedName("link") val link: String? = null,
-    @SerializedName("flatrate") val flatrate: List<WatchProviderResponse>? = null,
-    @SerializedName("rent") val rent: List<WatchProviderResponse>? = null,
-    @SerializedName("buy") val buy: List<WatchProviderResponse>? = null,
-    @SerializedName("ads") val ads: List<WatchProviderResponse>? = null,
-    @SerializedName("free") val free: List<WatchProviderResponse>? = null,
+    @SerialName("link") val link: String? = null,
+    @SerialName("flatrate") val flatrate: List<WatchProviderResponse>? = null,
+    @SerialName("rent") val rent: List<WatchProviderResponse>? = null,
+    @SerialName("buy") val buy: List<WatchProviderResponse>? = null,
+    @SerialName("ads") val ads: List<WatchProviderResponse>? = null,
+    @SerialName("free") val free: List<WatchProviderResponse>? = null,
 )
 
 /**
  * Individual watch provider information.
  */
+@Serializable
 data class WatchProviderResponse(
-    @SerializedName("display_priority") val displayPriority: Int? = null,
-    @SerializedName("logo_path") val logoPath: String? = null,
-    @SerializedName("provider_id") val providerId: Int? = null,
-    @SerializedName("provider_name") val providerName: String? = null,
+    @SerialName("display_priority") val displayPriority: Int? = null,
+    @SerialName("logo_path") val logoPath: String? = null,
+    @SerialName("provider_id") val providerId: Int? = null,
+    @SerialName("provider_name") val providerName: String? = null,
 )

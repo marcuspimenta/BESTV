@@ -55,9 +55,6 @@ dependencies {
     implementation libs.compose.ui.core
     implementation libs.androidx.work.runtime.ktx
 
-    // Retrofit
-    implementation libs.retrofit.core
-
     // Koin
     implementation libs.koin.android.runtime
     implementation libs.koin.android.compose
