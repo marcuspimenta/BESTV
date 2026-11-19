@@ -12,6 +12,7 @@ buildscript {
         classpath libs.plugin.bouncycastle
         classpath libs.plugin.kotlin.gradle
         classpath libs.plugin.compose.compiler.gradle
+        classpath libs.plugin.compose.multiplatform.gradle
         classpath libs.plugin.kotlin.serialization.gradle
         classpath libs.plugin.ktlint.gradle
         classpath libs.plugin.sqldelight
@@ -52,6 +53,13 @@ subprojects { project ->
     project.pluginManager.withPlugin('org.jlleitschuh.gradle.ktlint') {
         project.configure(project.extensions.getByName('ktlint')) {
             outputToConsole = true
+            filter {
+                exclude { element ->
+                    element.file.absolutePath.contains(
+                        "${File.separator}build${File.separator}generated${File.separator}"
+                    )
+                }
+            }
         }
     }
 }

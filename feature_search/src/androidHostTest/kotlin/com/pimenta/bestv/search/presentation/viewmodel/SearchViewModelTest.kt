@@ -1,0 +1,515 @@
+/*
+ * Copyright (C) 2018 Marcus Pimenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.pimenta.bestv.search.presentation.viewmodel
+
+import androidx.lifecycle.viewModelScope
+import com.pimenta.bestv.domain.model.ContentSource
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.presentation.model.WorkType
+import com.pimenta.bestv.presentation.model.WorkViewModel
+import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
+import com.pimenta.bestv.presentation.platform.Resource
+import com.pimenta.bestv.presentation.route.WorkDetailsDestination
+import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
+import com.pimenta.bestv.search.domain.SearchWorksByQueryUseCase
+import com.pimenta.bestv.search.presentation.model.SearchEvent
+import com.pimenta.bestv.search.presentation.model.SearchEffect
+import com.pimenta.bestv.search.presentation.model.SearchState
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.Movies
+import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
+import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
+import com.pimenta.bestv.search.presentation.viewmodel.SearchRequestProcessor.SearchAction
+import com.pimenta.bestv.search.presentation.viewmodel.SelectedWorkRequestProcessor.SelectedWorkAction
+import app.cash.turbine.test
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+
+/**
+ * Created by marcus on 23-10-2025.
+ */
+private const val QUERY = "Batman"
+
+private val WORK_VIEW_MODEL =
+    WorkViewModel(
+        id = 1,
+        title = "Game of thrones",
+        originalTitle = "Game of thrones",
+        originalLanguage = "en",
+        overview = "A great TV show",
+        source = "tmdb",
+        backdropUrl = "https://example.com/backdrop.jpg",
+        posterUrl = "https://example.com/poster.jpg",
+        releaseDate = "Jan 01, 2020",
+        type = WorkType.TV_SHOW,
+        voteAverage = 9.0f,
+    )
+
+private val MOVIE_VIEW_MODEL_LIST =
+    listOf(
+        WorkViewModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            originalLanguage = "en",
+            overview = "A superhero movie",
+            source = "tmdb",
+            backdropUrl = "https://image.tmdb.org/t/p/w1280/backdrop.jpg",
+            posterUrl = "https://image.tmdb.org/t/p/w500/poster.jpg",
+            releaseDate = "Jan 01, 2023",
+            type = WorkType.MOVIE,
+            voteAverage = 8.0f,
+            backdropCardUrl = "https://image.tmdb.org/t/p/w780/backdrop.jpg",
+        ),
+    )
+
+private val MOVIE_DOMAIN_MODEL_LIST =
+    listOf(
+        WorkDomainModel(
+            id = 1,
+            title = "Batman",
+            originalTitle = "Batman",
+            originalLanguage = "en",
+            overview = "A superhero movie",
+            source = ContentSource.TMDB,
+            backdropPath = "/backdrop.jpg",
+            posterPath = "/poster.jpg",
+            releaseDate = "2023-01-01",
+            type = WorkDomainModel.Type.MOVIE,
+            voteAverage = 8.0f,
+        ),
+    )
+
+private val MOVIE_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 10,
+        results = MOVIE_DOMAIN_MODEL_LIST,
+    )
+
+private val TV_SHOW_VIEW_MODEL_LIST =
+    listOf(
+        WorkViewModel(
+            id = 2,
+            title = "Batman TV",
+            originalTitle = "Batman TV",
+            originalLanguage = "en",
+            overview = "A superhero TV show",
+            source = "tmdb",
+            backdropUrl = "https://image.tmdb.org/t/p/w1280/backdrop_tv.jpg",
+            posterUrl = "https://image.tmdb.org/t/p/w500/poster_tv.jpg",
+            releaseDate = "Feb 01, 2023",
+            type = WorkType.TV_SHOW,
+            voteAverage = 7.5f,
+            backdropCardUrl = "https://image.tmdb.org/t/p/w780/backdrop_tv.jpg",
+        ),
+    )
+
+private val TV_SHOW_DOMAIN_MODEL_LIST =
+    listOf(
+        WorkDomainModel(
+            id = 2,
+            title = "Batman TV",
+            originalTitle = "Batman TV",
+            originalLanguage = "en",
+            overview = "A superhero TV show",
+            source = ContentSource.TMDB,
+            backdropPath = "/backdrop_tv.jpg",
+            posterPath = "/poster_tv.jpg",
+            releaseDate = "2023-02-01",
+            type = WorkDomainModel.Type.TV_SHOW,
+            voteAverage = 7.5f,
+        ),
+    )
+
+private val TV_SHOW_PAGE_DOMAIN_MODEL =
+    PageDomainModel(
+        page = 1,
+        totalPages = 10,
+        results = TV_SHOW_DOMAIN_MODEL_LIST,
+    )
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class SearchViewModelTest {
+    private val testDispatcher = StandardTestDispatcher()
+    private val searchWorksByQueryUseCase: SearchWorksByQueryUseCase = mock()
+    private val searchMoviesByQueryUseCase: SearchMoviesByQueryUseCase = mock()
+    private val searchTvShowsByQueryUseCase: SearchTvShowsByQueryUseCase = mock()
+    private val searchRequestProcessor: SearchRequestProcessor = mock()
+    private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor = mock()
+    private val resource: Resource = mock()
+    private val searchActions = MutableSharedFlow<SearchAction>(extraBufferCapacity = 1)
+    private val selectedWorkActions = MutableSharedFlow<SelectedWorkAction>(extraBufferCapacity = 1)
+
+    private lateinit var viewModel: SearchViewModel
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+        whenever(resource.labelFor(ContentSource.TMDB)).thenReturn("tmdb")
+        whenever(searchRequestProcessor.observe()).thenReturn(searchActions)
+        whenever(selectedWorkRequestProcessor.observe()).thenReturn(selectedWorkActions)
+
+        doAnswer { invocation ->
+            val query = invocation.arguments[0] as String
+            searchActions.tryEmit(
+                if (query.isBlank()) SearchAction.Clear else SearchAction.Search(query),
+            )
+            Unit
+        }.also { stub ->
+            runBlocking {
+                stub.whenever(searchRequestProcessor).emitSearchRequest(any())
+            }
+        }
+
+        doAnswer { invocation ->
+            val work = invocation.arguments[0] as WorkViewModel?
+            selectedWorkActions.tryEmit(
+                if (work == null) SelectedWorkAction.Clear else SelectedWorkAction.Select(work),
+            )
+            Unit
+        }.also { stub ->
+            runBlocking {
+                stub.whenever(selectedWorkRequestProcessor).emitSelectedWorkRequest(any())
+            }
+        }
+
+        viewModel = SearchViewModel(
+            searchWorksByQueryUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
+            searchRequestProcessor,
+            selectedWorkRequestProcessor,
+            resource,
+            TvDeviceCapabilities,
+        )
+    }
+
+    @After
+    fun tearDown() {
+        viewModel.viewModelScope.cancel()
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `should search works by query and update state`() =
+        runTest(testDispatcher) {
+            val result = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(result)
+
+            // Trigger search
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+
+            advanceUntilIdle()
+
+            // State should have results
+            val resultState = viewModel.state.value
+            assertEquals(QUERY, resultState.query)
+            assertFalse(resultState.isSearching)
+
+            val loadedState = resultState.state as SearchState.State.Loaded
+            assertTrue(loadedState.hasResults)
+            assertEquals(2, loadedState.contents.size)
+
+            val moviesContent = loadedState.contents.filterIsInstance<Movies>().first()
+            assertEquals(MOVIE_VIEW_MODEL_LIST, moviesContent.movies)
+            assertEquals(1, moviesContent.page.currentPage)
+            assertEquals(10, moviesContent.page.totalPages)
+
+            val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().first()
+            assertEquals(TV_SHOW_VIEW_MODEL_LIST, tvShowsContent.tvShows)
+            assertEquals(1, tvShowsContent.page.currentPage)
+            assertEquals(10, tvShowsContent.page.totalPages)
+        }
+
+    @Test
+    fun `should update state with error when search fails`() =
+        runTest(testDispatcher) {
+            whenever(searchWorksByQueryUseCase(QUERY)).thenThrow(RuntimeException("Network error"))
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+
+            advanceUntilIdle()
+
+            val state = viewModel.state.value
+            assertFalse(state.isSearching)
+            assertTrue(state.state is Error)
+        }
+
+    @Test
+    fun `should clear search when query is empty`() =
+        runTest(testDispatcher) {
+            // Search with empty query
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(""))
+
+            advanceUntilIdle()
+
+            // State should be reset
+            val state = viewModel.state.value
+            assertEquals("", state.query)
+            assertFalse(state.isSearching)
+            assertTrue(state.state is Empty)
+        }
+
+    @Test
+    fun `should load more movies when pagination is requested`() =
+        runTest(testDispatcher) {
+            // First setup initial search
+            val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            // Now setup pagination
+            val page2Movies = MOVIE_PAGE_DOMAIN_MODEL.copy(page = 2)
+            whenever(searchMoviesByQueryUseCase(QUERY, 2)).thenReturn(page2Movies)
+
+            // Trigger pagination
+            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+
+            advanceUntilIdle()
+
+            // State should have more movies
+            val paginatedState = viewModel.state.value
+            val loadedState = paginatedState.state as SearchState.State.Loaded
+            val moviesContent = loadedState.contents.filterIsInstance<Movies>().first()
+            assertEquals(2, moviesContent.page.currentPage)
+            assertTrue(moviesContent.movies.size >= MOVIE_VIEW_MODEL_LIST.size)
+        }
+
+    @Test
+    fun `should load more tv shows when pagination is requested`() =
+        runTest(testDispatcher) {
+            // First setup initial search
+            val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            // Now setup pagination
+            val page2TvShows = TV_SHOW_PAGE_DOMAIN_MODEL.copy(page = 2)
+            whenever(searchTvShowsByQueryUseCase(QUERY, 2)).thenReturn(page2TvShows)
+
+            // Trigger pagination
+            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+
+            advanceUntilIdle()
+
+            // State should have more tv shows
+            val paginatedState = viewModel.state.value
+            val loadedState = paginatedState.state as SearchState.State.Loaded
+            val tvShowsContent = loadedState.contents.filterIsInstance<TvShows>().first()
+            assertEquals(2, tvShowsContent.page.currentPage)
+            assertTrue(tvShowsContent.tvShows.size >= TV_SHOW_VIEW_MODEL_LIST.size)
+        }
+
+    @Test
+    fun `should cancel pagination before a changed query is debounced`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQueryChanged("Superman"))
+        }
+
+    @Test
+    fun `should cancel pagination when a query is submitted`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQuerySubmitted("Superman"))
+        }
+
+    @Test
+    fun `should cancel pagination when the query becomes empty`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.SearchQueryChanged(""))
+        }
+
+    @Test
+    fun `should cancel pagination when search is cleared`() =
+        runTest(testDispatcher) {
+            assertPaginationCancelled(SearchEvent.ClearSearch)
+        }
+
+    private suspend fun TestScope.assertPaginationCancelled(event: SearchEvent) {
+        viewModel.viewModelScope.cancel()
+        viewModel = SearchViewModel(
+            searchWorksByQueryUseCase,
+            searchMoviesByQueryUseCase,
+            searchTvShowsByQueryUseCase,
+            SearchRequestProcessor(),
+            selectedWorkRequestProcessor,
+            resource,
+            TvDeviceCapabilities,
+        )
+        val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+        whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+        whenever(searchWorksByQueryUseCase("Superman")).thenReturn(initialResult)
+        viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+        advanceUntilIdle()
+
+        val moviePage = CompletableDeferred<PageDomainModel<WorkDomainModel>>()
+        val tvShowPage = CompletableDeferred<PageDomainModel<WorkDomainModel>>()
+        var moviesCancelled = false
+        var tvShowsCancelled = false
+        whenever(searchMoviesByQueryUseCase(QUERY, 2)).doSuspendableAnswer {
+            try {
+                moviePage.await()
+            } finally {
+                moviesCancelled = !moviePage.isCompleted
+            }
+        }
+        whenever(searchTvShowsByQueryUseCase(QUERY, 2)).doSuspendableAnswer {
+            try {
+                tvShowPage.await()
+            } finally {
+                tvShowsCancelled = !tvShowPage.isCompleted
+            }
+        }
+        viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+        viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+        runCurrent()
+        verify(searchMoviesByQueryUseCase)(QUERY, 2)
+        verify(searchTvShowsByQueryUseCase)(QUERY, 2)
+
+        viewModel.handleEvent(event)
+        runCurrent()
+
+        assertTrue(moviesCancelled)
+        assertTrue(tvShowsCancelled)
+        verify(searchWorksByQueryUseCase, never())("Superman")
+
+        advanceUntilIdle()
+        val stateAfterSearch = viewModel.state.value
+        moviePage.complete(MOVIE_PAGE_DOMAIN_MODEL.copy(page = 2))
+        tvShowPage.complete(TV_SHOW_PAGE_DOMAIN_MODEL.copy(page = 2))
+        advanceUntilIdle()
+        assertEquals(stateAfterSearch, viewModel.state.value)
+
+        if (event == SearchEvent.ClearSearch || event == SearchEvent.SearchQueryChanged("")) {
+            assertEquals("", stateAfterSearch.query)
+            assertTrue(stateAfterSearch.state is Empty)
+        } else {
+            assertEquals("Superman", stateAfterSearch.query)
+            val loadedState = stateAfterSearch.state as SearchState.State.Loaded
+            val movies = loadedState.contents.filterIsInstance<Movies>().first()
+            val tvShows = loadedState.contents.filterIsInstance<TvShows>().first()
+            assertEquals(MOVIE_VIEW_MODEL_LIST, movies.movies)
+            assertEquals(TV_SHOW_VIEW_MODEL_LIST, tvShows.tvShows)
+            assertFalse(movies.page.isLoadingMore)
+            assertFalse(tvShows.page.isLoadingMore)
+
+            whenever(searchMoviesByQueryUseCase("Superman", 2)).thenReturn(MOVIE_PAGE_DOMAIN_MODEL.copy(page = 2))
+            whenever(searchTvShowsByQueryUseCase("Superman", 2)).thenReturn(TV_SHOW_PAGE_DOMAIN_MODEL.copy(page = 2))
+            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+            advanceUntilIdle()
+            verify(searchMoviesByQueryUseCase)("Superman", 2)
+            verify(searchTvShowsByQueryUseCase)("Superman", 2)
+        }
+    }
+
+    @Test
+    fun `should ignore pagination while a new search is pending`() =
+        runTest(testDispatcher) {
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL)
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged("Superman"))
+            viewModel.handleEvent(SearchEvent.LoadMoreMovies)
+            viewModel.handleEvent(SearchEvent.LoadMoreTvShows)
+            runCurrent()
+
+            verify(searchMoviesByQueryUseCase, never())(any(), any())
+            verify(searchTvShowsByQueryUseCase, never())(any(), any())
+        }
+
+    @Test
+    fun `should update selected work when work is selected`() =
+        runTest(testDispatcher) {
+            // First setup initial search to have a loaded state
+            val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            // Now select a work
+            viewModel.handleEvent(SearchEvent.WorkItemSelected(WORK_VIEW_MODEL))
+
+            advanceUntilIdle()
+
+            val state = viewModel.state.value
+            val loadedState = state.state as SearchState.State.Loaded
+            assertEquals(WORK_VIEW_MODEL, loadedState.selectedWork)
+        }
+
+    @Test
+    fun `workClicked emits work details navigation`() =
+        runTest(testDispatcher) {
+            viewModel.effects.test {
+                viewModel.handleEvent(SearchEvent.WorkClicked(WORK_VIEW_MODEL))
+                val effect = awaitItem() as SearchEffect.Navigate
+                val destination = effect.destination as WorkDetailsDestination
+                assertEquals(WORK_VIEW_MODEL, destination.work)
+            }
+        }
+
+    @Test
+    fun `should clear search when clear event is triggered`() =
+        runTest(testDispatcher) {
+            // First do a search
+            val result = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
+            whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(result)
+
+            viewModel.handleEvent(SearchEvent.SearchQueryChanged(QUERY))
+            advanceUntilIdle()
+
+            // Clear search
+            viewModel.handleEvent(SearchEvent.ClearSearch)
+
+            // State should be reset
+            val clearedState = viewModel.state.value
+            assertEquals("", clearedState.query)
+            assertFalse(clearedState.isSearching)
+            assertTrue(clearedState.state is Empty)
+        }
+}

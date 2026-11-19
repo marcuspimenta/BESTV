@@ -6,9 +6,9 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app'
+include ':androidApp'
 include ':common'
-include ':data_shared'
+include ':iosAppFramework'
 include ':feature_workdetail'
 include ':feature_castdetail'
 include ':feature_search'

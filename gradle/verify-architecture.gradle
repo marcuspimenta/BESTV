@@ -56,20 +56,31 @@ def normalizedRelativePath = { File sourceFile, File sourceRoot ->
     sourceFile.path.substring(sourceRoot.path.length()).replace('\\', '/')
 }
 
+def productionSourceDirectories = [
+    'src/main/java',
+    'src/main/kotlin',
+    'src/commonMain/kotlin',
+    'src/androidMain/kotlin',
+    'src/iosMain/kotlin',
+    'src/jvmMain/kotlin',
+]
+
 def findViolations = {
     def features = featureNames()
     def violations = []
 
     subprojects.each { Project module ->
-        def sourceRoot = module.file('src/main/java')
-        if (!sourceRoot.exists()) return
-
-        fileTree(sourceRoot).matching { include '**/*.kt' }.each { File sourceFile ->
-            def relativePath = normalizedRelativePath(sourceFile, sourceRoot)
-            sourceFile.eachLine { String line, int lineNumber ->
-                def imported = importedPackage(line)
-                if (imported && violatesArchitecture(module, relativePath, imported, features)) {
-                    violations << "${module.name}${relativePath}:${lineNumber}: ${line.trim()}"
+        productionSourceDirectories.each { String sourceDirectory ->
+            def sourceRoot = module.file(sourceDirectory)
+            if (sourceRoot.exists()) {
+                fileTree(sourceRoot).matching { include '**/*.kt' }.each { File sourceFile ->
+                    def relativePath = normalizedRelativePath(sourceFile, sourceRoot)
+                    sourceFile.eachLine { String line, int lineNumber ->
+                        def imported = importedPackage(line)
+                        if (imported && violatesArchitecture(module, relativePath, imported, features)) {
+                            violations << "${module.name}${relativePath}:${lineNumber}: ${line.trim()}"
+                        }
+                    }
                 }
             }
         }
@@ -89,6 +100,6 @@ tasks.register('verifyArchitecture') {
     }
 }
 
-project(':app').tasks.matching { it.name == 'preBuild' }.configureEach {
+project(':androidApp').tasks.matching { it.name == 'preBuild' }.configureEach {
     dependsOn rootProject.tasks.named('verifyArchitecture')
 }

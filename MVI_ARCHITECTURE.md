@@ -35,8 +35,7 @@ MVI is a unidirectional data flow architecture pattern that provides predictable
 
 ### 1. BaseViewModel
 
-The foundation of the MVI implementation is the `BaseViewModel` class located at:
-`viewmodel`
+The foundation of the MVI implementation is the Kotlin Multiplatform `BaseViewModel` in `common/src/commonMain/kotlin/com/pimenta/bestv/presentation/viewmodel/BaseViewModel.kt`. It uses Lifecycle's multiplatform `ViewModel`, so feature ViewModels in `commonMain` can be used by the shared Android and iOS Compose screens.
 
 ```kotlin
 abstract class BaseViewModel<ViewState, ViewEffect>(initialState: ViewState) : ViewModel() {
@@ -57,6 +56,8 @@ abstract class BaseViewModel<ViewState, ViewEffect>(initialState: ViewState) : V
     protected val currentState: ViewState
 }
 ```
+
+BESTV backs `effects` with a buffered `Channel` exposed as `receiveAsFlow()`. This is a consuming stream, not a broadcast; collect it once at the screen or host boundary.
 
 ### 2. State
 
@@ -111,15 +112,17 @@ sealed interface SearchEvent {
 
 Effects represent one-time actions that don't persist in state. They are:
 - **Fire-and-forget**: Consumed once and not stored
-- **Navigation**: Opening new screens, showing dialogs
-- **External actions**: Launching intents, showing toasts
+- **Semantic**: Describe navigation or an external action without naming a platform API
+- **Platform handled**: The Android or iOS host performs platform-specific work such as opening a URL
 
 **Example:** `SearchEffect.kt`
 ```kotlin
 sealed interface SearchEffect {
-    data class OpenWorkDetails(val intent: Intent) : SearchEffect
+    data class Navigate(val destination: NavKey) : SearchEffect
 }
 ```
+
+Shared effects must not carry Android `Intent` values. Internal navigation carries a shared destination key; an external action can carry a URL or another platform-neutral value. Android and iOS hosts handle platform work through their own adapters or callbacks.
 
 **Naming convention:** `*Effect.kt`
 
@@ -132,7 +135,7 @@ sealed interface SearchEffect {
 Create a state file that represents all possible UI states:
 
 ```kotlin
-// feature_example/presentation/model/ExampleState.kt
+// feature_example/src/commonMain/kotlin/.../presentation/model/ExampleState.kt
 data class ExampleState(
     val isLoading: Boolean = false,
     val state: State = State.Initial
@@ -150,7 +153,7 @@ data class ExampleState(
 Create an event file with all possible user actions:
 
 ```kotlin
-// feature_example/presentation/model/ExampleEvent.kt
+// feature_example/src/commonMain/kotlin/.../presentation/model/ExampleEvent.kt
 sealed interface ExampleEvent {
     data object LoadData : ExampleEvent
     data object Retry : ExampleEvent
@@ -163,9 +166,10 @@ sealed interface ExampleEvent {
 Create an effect file for one-time side effects:
 
 ```kotlin
-// feature_example/presentation/model/ExampleEffect.kt
+// feature_example/src/commonMain/kotlin/.../presentation/model/ExampleEffect.kt
 sealed interface ExampleEffect {
-    data class NavigateToDetails(val intent: Intent) : ExampleEffect
+    data class Navigate(val destination: NavKey) : ExampleEffect
+    data class OpenExternalUrl(val url: String) : ExampleEffect
     data class ShowError(val message: String) : ExampleEffect
 }
 ```
@@ -175,10 +179,9 @@ sealed interface ExampleEffect {
 Create the ViewModel extending `BaseViewModel`:
 
 ```kotlin
-// feature_example/presentation/viewmodel/ExampleViewModel.kt
+// feature_example/src/commonMain/kotlin/.../presentation/viewmodel/ExampleViewModel.kt
 class ExampleViewModel(
     private val getDataUseCase: GetDataUseCase,
-    private val detailsRoute: DetailsRoute
 ) : BaseViewModel<ExampleState, ExampleEffect>(ExampleState()) {
 
     fun handleEvent(event: ExampleEvent) {
@@ -201,6 +204,8 @@ class ExampleViewModel(
                         state = ExampleState.State.Loaded(data)
                     )
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 updateState {
                     it.copy(
@@ -213,8 +218,7 @@ class ExampleViewModel(
     }
 
     private fun handleItemClicked(item: Item) {
-        val intent = detailsRoute.buildIntent(item)
-        emitEffect(ExampleEffect.NavigateToDetails(intent))
+        emitEffect(ExampleEffect.Navigate(ExampleDestination(item.id)))
     }
 }
 ```
@@ -224,11 +228,12 @@ class ExampleViewModel(
 Connect the ViewModel to the UI:
 
 ```kotlin
-// feature_example/presentation/ui/compose/ExampleScreen.kt
+// feature_example/src/commonMain/kotlin/.../presentation/ui/compose/ExampleScreen.kt
 @Composable
 fun ExampleScreen(
     viewModel: ExampleViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
+    openExternalUrl: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Collect state with lifecycle awareness
@@ -238,7 +243,8 @@ fun ExampleScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is ExampleEffect.NavigateToDetails -> openIntent(effect.intent)
+                is ExampleEffect.Navigate -> navigate(effect.destination)
+                is ExampleEffect.OpenExternalUrl -> openExternalUrl(effect.url)
                 is ExampleEffect.ShowError -> { /* Show toast/snackbar */ }
             }
         }
@@ -339,24 +345,18 @@ private fun search(query: String) {
 
 ```
 feature_example/
-├── data/
-│   ├── datasource/
-│   └── repository/
-├── domain/
-│   └── usecase/
-├── presentation/
-│   ├── model/
-│   │   ├── ExampleState.kt
-│   │   ├── ExampleEvent.kt
-│   │   └── ExampleEffect.kt
-│   ├── viewmodel/
-│   │   └── ExampleViewModel.kt
-│   └── ui/
-│       └── compose/
-│           └── ExampleScreen.kt
-└── di/
-    └── ExampleModule.kt
+└── src/
+    ├── commonMain/kotlin/com/example/feature_example/
+    │   ├── data/              # Shared data sources, repositories, and source mappers
+    │   ├── domain/            # Use cases and repository contracts
+    │   ├── di/                # Shared feature bindings
+    │   └── presentation/      # State, events, ViewModel, and mobile Compose UI
+    ├── commonMain/composeResources/ # Shared strings, images, and fonts
+    ├── androidMain/kotlin/    # Android adapters, wrappers, and TV Compose UI
+    └── androidHostTest/kotlin/ # JVM-hosted KMP feature tests
 ```
+
+The feature's `commonMain` source set is shared by Android and iOS. Android-only navigation adapters and TV layouts stay in `androidMain`; the iOS app composes the mobile screens through `iosAppFramework`. A shared ViewModel should expose route keys and semantic actions, while each app host performs platform-specific navigation or URL opening.
 
 ## Existing Features
 
@@ -376,7 +376,7 @@ The following features in the project implement the MVI pattern:
 A reusable state component for handling pagination:
 
 ```kotlin
-// common/src/main/java/com/pimenta/bestv/presentation/model/PaginationState.kt
+// common/src/commonMain/kotlin/com/pimenta/bestv/presentation/model/PaginationState.kt
 data class PaginationState(
     val currentPage: Int = 0,
     val totalPages: Int = 0,

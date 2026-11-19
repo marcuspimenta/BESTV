@@ -1,0 +1,87 @@
+/*
+ * Copyright (C) 2018 Marcus Pimenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+package com.pimenta.bestv.presentation.ui.compose
+
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.presentation.route.navigation.NavigationEntryProvider
+
+private const val SCREEN_TRANSITION_DURATION_MILLIS = 400
+
+@Composable
+fun BestvApp(
+    initialDestination: NavKey,
+    navigationEntryProviders: List<NavigationEntryProvider>,
+    isMobileDevice: Boolean,
+    onExit: () -> Unit,
+) {
+    val backStack = rememberNavBackStack(initialDestination)
+    val navigate: (NavKey) -> Unit = { destination -> backStack.add(destination) }
+    val onBack: () -> Unit = {
+        if (backStack.size > 1) {
+            backStack.removeLastOrNull()
+        } else {
+            onExit()
+        }
+    }
+
+    BESTVTheme {
+        NavDisplay(
+            backStack = backStack,
+            onBack = onBack,
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(),
+            ),
+            transitionSpec = {
+                if (isMobileDevice) pushScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
+            popTransitionSpec = {
+                if (isMobileDevice) popScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
+            predictivePopTransitionSpec = {
+                if (isMobileDevice) popScreenTransition() else EnterTransition.None togetherWith ExitTransition.None
+            },
+            entryProvider = entryProvider {
+                navigationEntryProviders.forEach { provider ->
+                    provider.install(this, navigate, onBack)
+                }
+            },
+        )
+    }
+}
+
+private fun pushScreenTransition() = slideInHorizontally(
+    initialOffsetX = { it },
+    animationSpec = tween(SCREEN_TRANSITION_DURATION_MILLIS),
+) togetherWith slideOutHorizontally(
+    targetOffsetX = { -it },
+    animationSpec = tween(SCREEN_TRANSITION_DURATION_MILLIS),
+)
+
+private fun popScreenTransition() = slideInHorizontally(
+    initialOffsetX = { -it },
+    animationSpec = tween(SCREEN_TRANSITION_DURATION_MILLIS),
+) togetherWith slideOutHorizontally(
+    targetOffsetX = { it },
+    animationSpec = tween(SCREEN_TRANSITION_DURATION_MILLIS),
+)

@@ -1,74 +1,91 @@
-apply plugin: 'com.android.library'
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'org.jetbrains.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
-android {
-    namespace 'com.pimenta.bestv.castdetail'
-
-    defaultConfig {
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-    }
-
-    buildFeatures {
-        compose true
-    }
+compose.resources {
+    publicResClass = true
+    packageOfResClass = 'com.pimenta.bestv.castdetail.resources'
 }
 
-dependencies {
-    implementation project(':common')
-    implementation libs.ktor.client.core
-    implementation libs.kotlinx.coroutines.core
+kotlin {
+    android {
+        namespace = 'com.pimenta.bestv.castdetail'
+        compileSdk = libs.versions.compile.sdk.get().replace('android-', '').split('\\.')[0].toInteger()
+        minSdk = libs.versions.min.sdk.get().toInteger()
+        androidResources {
+            enable = true
+        }
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
+        withHostTest {
+            includeAndroidResources = true
+        }
+        withDeviceTest {
+            instrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
+        }
+    }
 
-    implementation libs.navigation3.runtime
+    iosArm64()
+    iosSimulatorArm64()
 
-    // Kotlin
-    implementation libs.kotlin.stdlib
+    sourceSets {
+        commonMain.dependencies {
+            api project(':common')
+            api libs.kotlinx.coroutines.core
+            api libs.kotlinx.serialization.core
+            api libs.koin.core
+            api libs.navigation3.runtime
+            api libs.androidx.lifecycle.viewmodel
+            api libs.androidx.lifecycle.runtime.compose
+            api compose.runtime
+            api compose.foundation
+            api compose.material3
+            implementation compose.materialIconsExtended
+            api compose.ui
+            implementation compose.components.resources
+            implementation libs.kotlinx.serialization.json
+            implementation libs.ktor.client.core
+            implementation libs.koin.compose
+            implementation libs.koin.compose.viewmodel
+            implementation libs.coil.compose
+            implementation libs.coil.network.ktor3
+        }
 
-    // Compose for TV
-    implementation platform(libs.compose.bom)
-    implementation libs.compose.ui.core
-    implementation libs.compose.ui.tooling.preview
-    implementation libs.compose.foundation
-    implementation libs.compose.material3
-    implementation libs.androidx.tv.foundation
-    implementation libs.androidx.tv.material
-    implementation libs.androidx.activity.compose
-    implementation libs.coil.compose
-    implementation libs.coil.network.okhttp
-    debugImplementation libs.compose.ui.tooling.runtime
+        androidMain.dependencies {
+            implementation project.dependencies.platform(libs.compose.bom)
+            implementation libs.androidx.tv.foundation
+            implementation libs.androidx.tv.material
+            implementation libs.androidx.activity.compose
+            implementation libs.androidx.core
+            implementation libs.androidx.lifecycle.runtime.ktx
+            implementation libs.koin.android.runtime
+            implementation libs.koin.android.compose
+            implementation libs.coil.network.okhttp
+            implementation libs.compose.ui.tooling.preview
+        }
 
+        androidHostTest.dependencies {
+            implementation libs.junit4
+            implementation libs.kotlin.test.junit
+            implementation libs.robolectric
+            implementation libs.ktor.client.mock
+            implementation libs.okhttp.mockwebserver
+            implementation libs.kotlinx.coroutines.test
+            implementation libs.mockito.inline
+            implementation libs.mockito.core
+            implementation libs.mockito.kotlin
+            implementation libs.turbine
+        }
 
-    // Koin
-    implementation libs.koin.android.runtime
-    implementation libs.koin.android.compose
-
-    // Timber
-    implementation libs.timber
-
-    // JUnit
-    testImplementation libs.junit4
-    testImplementation libs.ktor.client.mock
-
-    // Coroutines Test
-    testImplementation libs.kotlinx.coroutines.test
-
-    // Turbine (for testing flows)
-    testImplementation libs.turbine
-
-    // Kotlin Test
-    testImplementation libs.kotlin.test.junit
-
-    // Mockito
-    testImplementation libs.mockito.inline
-    testImplementation libs.mockito.core
-    testImplementation libs.mockito.kotlin
-
-    // Robolectric
-    testImplementation libs.robolectric
-
-    // Compose UI testing
-    androidTestImplementation platform(libs.compose.bom)
-    androidTestImplementation libs.compose.ui.test.junit4
-    androidTestImplementation libs.androidx.test.ext.junit
-    debugImplementation libs.compose.ui.test.manifest
+        androidDeviceTest.dependencies {
+            implementation project.dependencies.platform(libs.compose.bom)
+            implementation libs.compose.ui.test.junit4
+            implementation libs.androidx.test.ext.junit
+            implementation libs.compose.ui.test.manifest
+        }
+    }
 }

@@ -4,31 +4,38 @@ This document describes the Koin dependency injection setup used in the BESTV pr
 
 ## Overview
 
-[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. The current dependency pin is managed in `gradle/libs.versions.toml`, with Android and Compose extensions used across the app.
+[Koin](https://insert-koin.io/) is a pragmatic lightweight dependency injection framework for Kotlin. The current dependency pin is managed in `gradle/libs.versions.toml`, with Android and Compose Multiplatform integrations used across the apps.
 
 ## Project Structure
 
 ```
-app/
+androidApp/src/main/java/com/pimenta/bestv/
 └── di/
-    └── AppModule.kt          # Root module that includes all other modules
+    ├── AppModule.kt          # Android root composition
+    └── NetworkModule.kt      # Android network engine and app configuration
 
-common/src/main/java/com/pimenta/bestv/
-├── data/di/                  # NetworkModule, DatabaseModule, DispatcherModule
-├── presentation/di/          # PresentationModule
-└── route/di/                 # RouteModule
+common/src/commonMain/kotlin/com/pimenta/bestv/
+├── data/remote/api/          # Shared Ktor request configuration
+├── di/                       # DatabaseModule, DispatcherModule, TmdbNetworkModule
+└── presentation/route/di/    # SharedRouteModule
 
-feature_*/
-└── di/
-    └── *Module.kt            # Feature-specific dependencies
+common/src/androidMain/kotlin/com/pimenta/bestv/
+├── data/remote/api/          # Android OkHttp engine
+├── di/                       # AndroidDatabaseDriverModule, PresentationModule
+└── presentation/route/di/    # RouteModule
+
+iosAppFramework/src/iosMain/  # iOS Koin platform bindings and MainViewController
+
+feature_*/src/commonMain/kotlin/.../di/
+└── *Module.kt                # Shared feature dependencies
 ```
 
 ## Initialization
 
-Koin is initialized in the `Application` class:
+On Android, Koin is initialized in the `Application` class:
 
 ```kotlin
-// app/src/main/java/.../BesTVApplication.kt
+// androidApp/src/main/java/.../BesTVApplication.kt
 class BesTVApplication : Application() {
 
     override fun onCreate() {
@@ -48,17 +55,24 @@ class BesTVApplication : Application() {
 
 ## Module Organization
 
-### Root Module (AppModule)
+### Android Root Module (AppModule)
 
-The `appModule` aggregates all modules using `includes()`:
+The `appModule` in `androidApp` registers Android device/navigation entry providers and aggregates Android platform bindings and feature modules using `includes()`:
 
 ```kotlin
-// app/src/main/java/.../di/AppModule.kt
+// androidApp/src/main/java/.../di/AppModule.kt
 val appModule = module {
+    single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
+    single<NavigationEntryProvider>(named("workBrowseEntryProvider")) { WorkBrowseNavigationEntryProvider() }
+    // Search, Work Details, and Cast Details entry providers are registered here too.
+    single { getAll<NavigationEntryProvider>() }
+
     includes(
-        // Shared modules
+        // App and shared modules
         networkModule,
+        databaseDriverModule,
         databaseModule,
+        dispatcherModule(Dispatchers.IO),
         presentationModule,
         routeModule,
         // Feature modules
@@ -71,54 +85,58 @@ val appModule = module {
 }
 ```
 
+### Dispatcher Module
+
+The Koin module lives in `commonMain` and accepts a `CoroutineDispatcher` from the app. Android supplies `Dispatchers.IO`; an iOS entry point can supply its platform-appropriate dispatcher without putting JVM-only `Dispatchers.IO` in shared code.
+
 ### Network Module
 
-Provides the shared Android Ktor client and API configuration. Shared TMDb response DTOs and client setup live in `common`; each feature owns its typed endpoint clients under `data/remote/api`. The client uses the Android OkHttp engine and its disk cache.
+The Android app reads `BuildConfig`, creates the Android cache, and supplies an OkHttp-backed client. `TmdbNetworkModule` in `commonMain` registers that client and the shared filter-language value. Shared TMDb response DTOs and Ktor request setup also live in `commonMain`; each feature owns its typed endpoint clients under `data/remote/api`.
 
 ```kotlin
-// common/src/main/java/com/pimenta/bestv/data/di/NetworkModule.kt
-val networkModule = module {
-    single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
-    single {
-        createAndroidTmdbHttpClient(
-            config = TmdbHttpClientConfig(
-                baseUrl = BuildConfig.TMDB_BASE_URL,
-                accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
-                debugLogging = BuildConfig.BUILD_TYPE == "debug",
-            ),
-            cacheDirectory = File(androidApplication().cacheDir, "tmdb-http-cache"),
-        )
-    }
+// androidApp/src/main/java/com/pimenta/bestv/di/NetworkModule.kt
+import com.pimenta.bestv.BuildConfig
+
+val networkModule = tmdbNetworkModule {
+    createAndroidTmdbHttpClient(
+        config = TmdbHttpClientConfig(
+            baseUrl = "https://api.themoviedb.org/3/",
+            accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
+            debugLogging = BuildConfig.BUILD_TYPE == "debug",
+        ),
+        cacheDirectory = File(androidApplication().cacheDir, "tmdb-http-cache"),
+    )
 }
 ```
+
+### iOS Composition Root
+
+The SwiftUI app in `iosApp` calls [`MainViewController`](iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/MainViewController.kt). That iOS entry point starts Koin once with the iOS platform bindings, a Darwin-backed Ktor client, the shared database and dispatcher modules, shared route bindings, and the Browse, Search, Work Details, and Cast Details feature modules. The iOS platform module supplies `DeviceCapabilities`, `ContentSourceLabelProvider`, and `NativeSqliteDriver`; it does not load Android Context, Android resource, Intent route, or TV recommendation bindings.
+
+Keep each app entry point responsible for platform construction. The feature Koin modules and common database/network contracts are shared; Android and iOS provide their own `HttpClient`, `SqlDriver`, dispatcher, and platform presentation bindings.
 
 ### Database Module
 
-Provides the Android SQLDelight driver, generated database, and shared local data sources:
+The common module binds the generated database and shared local data sources using the multiplatform `SqlDriver` interface:
 
 ```kotlin
-// common/src/main/java/com/pimenta/bestv/data/di/DatabaseModule.kt
+// common/src/commonMain/kotlin/com/pimenta/bestv/di/DatabaseModule.kt
 val databaseModule = module {
-    // Android driver opens the existing database file.
-    single {
-        val driver = AndroidSqliteDriver(MediaDatabase.Schema, androidApplication(), "bestv.db")
-        MediaDatabase(driver)
-    }
+    single { MediaDatabase(get<SqlDriver>()) }
 
-    // Shared SQLDelight local data sources
-    single { MovieLocalDataSource(get()) }
-    single { TvShowLocalDataSource(get()) }
+    single { MovieLocalDataSource(database = get(), ioDispatcher = get()) }
+    single { TvShowLocalDataSource(database = get(), ioDispatcher = get()) }
 }
 ```
 
-The SQLDelight schema and query implementations live in `data_shared/src/commonMain`. The Android driver uses the same `bestv.db` filename and version-1 `movie` and `tv_show` table layouts as the former Room database, preserving existing favorite and cached-work rows.
+`AndroidDatabaseDriverModule` in `common/src/androidMain` supplies `SqlDriver` with `AndroidSqliteDriver`. The iOS platform module in `iosAppFramework` supplies `NativeSqliteDriver`; both reuse the common bindings. The SQLDelight schema and query implementations live in `common/src/commonMain/sqldelight`. Both platforms use the existing `bestv.db` filename and version-1 `movie` and `tv_show` table layouts, preserving favorite and cached-work rows.
 
 ### Feature Module Example
 
 A typical feature module provides APIs, data sources, repositories, use cases, and ViewModels:
 
 ```kotlin
-// feature_search/src/main/java/.../di/SearchModule.kt
+// feature_search/src/commonMain/kotlin/.../di/SearchModule.kt
 val searchModule = module {
     // Typed Ktor API clients share the singleton HttpClient.
     single { SearchMovieTmdbApi(get()) }
@@ -150,7 +168,7 @@ val searchModule = module {
 }
 ```
 
-The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. Feature binding smoke tests resolve these ports with test infrastructure.
+The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. KMP feature binding tests live in `androidHostTest` and resolve these ports with test infrastructure.
 
 `GetBrowseDataUseCase` loads the Browse catalog from the network. Favorite sections are observed separately through `ObserveFavoritesUseCase`, which combines the movie and TV favorite flows backed by SQLDelight.
 
@@ -187,10 +205,8 @@ viewModelOf(::MyViewModel)
 Use `named()` to distinguish between multiple instances of the same type:
 
 ```kotlin
-// Definition
-single(named("tmdbFilterLanguage")) { BuildConfig.TMDB_FILTER_LANGUAGE }
-
-// Injection
+// TmdbNetworkModule defines the shared language value.
+// Feature modules request it by qualifier:
 factory {
     MyDataSource(
         language = get(named("tmdbFilterLanguage"))
@@ -200,41 +216,32 @@ factory {
 
 ### Parameterized Injection
 
-For ViewModels or objects that need runtime parameters:
+KMP feature modules register ViewModels with `viewModelOf`; Compose navigation supplies destination-specific parameters when resolving them:
 
 ```kotlin
-// Definition with parametersOf
-factory { (cast: CastViewModel) ->
-    CastDetailsViewModel(
-        cast = cast,
-        getCastDetailsUseCase = get(),
-        workDetailsRoute = get()
-    )
-}
+// feature_castdetail/src/commonMain/.../di/CastDetailModule.kt
+viewModelOf(::CastDetailsViewModel)
 
-// Injection in Activity
-private val viewModel: CastDetailsViewModel by viewModel {
-    parametersOf(intent.getParcelableExtra<CastViewModel>(CAST)!!)
-}
+// Resolve from a Navigation 3 entry or the iOS Compose renderer.
+val viewModel = koinViewModel<CastDetailsViewModel>(
+    parameters = { parametersOf(destination.castId) },
+)
 ```
 
 ## Injection in Components
 
-### In Activities
+### In Compose navigation entries
 
 ```kotlin
-class SearchActivity : ComponentActivity() {
-    // Simple ViewModel injection
-    private val viewModel: SearchViewModel by viewModel()
-}
-
-class CastDetailsActivity : ComponentActivity() {
-    // ViewModel with parameters
-    private val viewModel: CastDetailsViewModel by viewModel {
-        parametersOf(intent.getParcelableExtra<CastViewModel>(CAST)!!)
-    }
+entry<WorkDetailsDestination> { destination ->
+    val viewModel = koinViewModel<WorkDetailsViewModel>(
+        parameters = { parametersOf(destination.work) },
+    )
+    WorkDetailsWrapperScreen(viewModel = viewModel, ...)
 }
 ```
+
+Android Navigation 3 feature entries and the iOS Compose renderer both resolve shared feature ViewModels through Koin Compose. Platform intents are handled by Android route adapters; they carry serializable presentation models as Kotlin Serialization JSON string extras.
 
 ### In Composables
 
@@ -244,7 +251,7 @@ ViewModels are passed as parameters to Composable screens:
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel,
-    openIntent: (Intent) -> Unit,
+    navigate: (NavKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -272,7 +279,7 @@ factory {
 
 - **One module per feature**: Keep dependencies scoped to their feature
 - **Shared modules**: Extract common dependencies to shared modules
-- **Use includes()**: Aggregate modules in the app module
+- **Use includes()**: Aggregate modules in the `androidApp` module
 
 ### 2. Scope Selection
 
@@ -294,7 +301,7 @@ assertTrue(repository is com.pimenta.bestv.search.data.repository.MovieRepositor
 testApplication.close()
 ```
 
-The affected feature modules use this pattern with mocked local dependencies and a mocked `HttpClient`. Each feature's endpoint tests use Ktor's MockEngine; common tests cover shared client configuration and DTO parsing.
+The affected feature modules use this pattern with mocked local dependencies and a mocked `HttpClient`. KMP feature endpoint tests use Ktor's MockEngine in `androidHostTest`; the `common` module's host tests cover shared client configuration and DTO parsing.
 
 ### 4. Avoid
 
@@ -303,6 +310,8 @@ The affected feature modules use this pattern with mocked local dependencies and
 - Large monolithic modules
 
 ## Module Dependency Graph
+
+The simplified diagram shows the Android `appModule`; it omits some feature registrations for space. The iOS composition root is separately assembled by `MainViewController` in `iosAppFramework`.
 
 ```
                     ┌─────────────┐

@@ -1,0 +1,119 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* BESTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* BESTVApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* BESTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BESTVApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A20000000000000000000004 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A30000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A40000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A40000000000000000000002 /* iosApp */,
+				A40000000000000000000003 /* Frameworks */,
+				A40000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A40000000000000000000002 /* iosApp */ = {
+			isa = PBXGroup;
+			children = (A20000000000000000000001 /* BESTVApp.swift */, A20000000000000000000002 /* Info.plist */, );
+			path = .;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000003 /* Frameworks */ = {isa = PBXGroup; children = (); name = Frameworks; sourceTree = "<group>"; };
+		A40000000000000000000004 /* Products */ = {isa = PBXGroup; children = (A20000000000000000000004 /* iosApp.app */, ); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A50000000000000000000001 /* iosApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000000000000000000002 /* Build configuration list for PBXNativeTarget "iosApp" */;
+			buildPhases = (A30000000000000000000004 /* Build Kotlin framework */, A30000000000000000000003 /* Sources */, A30000000000000000000002 /* Frameworks */, A30000000000000000000005 /* Resources */, );
+			buildRules = ();
+			dependencies = ();
+			name = iosApp;
+			productName = iosApp;
+			productReference = A20000000000000000000004 /* iosApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A50000000000000000000002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; TargetAttributes = {A50000000000000000000001 = {CreatedOnToolsVersion = 16.0; }; }; };
+			buildConfigurationList = A70000000000000000000001 /* Build configuration list for PBXProject "iosApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base, );
+			mainGroup = A40000000000000000000001;
+			productRefGroup = A40000000000000000000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (A50000000000000000000001 /* iosApp */, );
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A30000000000000000000005 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A30000000000000000000004 /* Build Kotlin framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = ();
+			inputFileListPaths = ();
+			inputPaths = ();
+			name = "Build Kotlin framework";
+			outputFileListPaths = ();
+			outputPaths = ();
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\ncd \"$SRCROOT/..\"\n./gradlew :iosAppFramework:assembleComposeAppDebugXCFramework\nRESOURCE_SOURCE=\"$SRCROOT/../iosAppFramework/build/XCFrameworks/debug/ComposeApp.xcframework/ios-arm64-simulator/ComposeApp.framework/composeResources\"\nRESOURCE_DEST=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/compose-resources/composeResources\"\nmkdir -p \"$RESOURCE_DEST\"\nditto \"$RESOURCE_SOURCE\" \"$RESOURCE_DEST\"\nTMDB_TOKEN_DEST=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/tmdb-access-token.txt\"\npython3 - \"$SRCROOT/../local.properties\" \"$TMDB_TOKEN_DEST\" <<'PY'\nfrom pathlib import Path\nimport os\nimport sys\n\nproperties_path = Path(sys.argv[1])\ntoken = os.environ.get('TMDB_ACCESS_TOKEN', '').strip()\nif not token and properties_path.exists():\n    for line in properties_path.read_text(errors='ignore').splitlines():\n        key, separator, value = line.partition('=')\n        if separator and key.strip() == 'TMDB_ACCESS_TOKEN':\n            token = value.strip()\n            break\n\ntoken_path = Path(sys.argv[2])\nif token:\n    token_path.parent.mkdir(parents=True, exist_ok=True)\n    token_path.write_text(token, encoding='utf-8')\nelif token_path.exists():\n    token_path.unlink()\n    print('warning: TMDB_ACCESS_TOKEN is not set; iOS TMDb requests will not authenticate')\nPY\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A30000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* BESTVApp.swift in Sources */, ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A60000000000000000000001 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Debug; };
+		A60000000000000000000002 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Release; };
+		A60000000000000000000003 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 2; "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 15.0; PRODUCT_BUNDLE_IDENTIFIER = com.pimenta.bestv.ios; PRODUCT_NAME = "$(TARGET_NAME)"; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 1; "FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = "$(inherited) $(PROJECT_DIR)/../iosAppFramework/build/XCFrameworks/debug/ComposeApp.xcframework/ios-arm64-simulator"; "FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = "$(inherited) $(PROJECT_DIR)/../iosAppFramework/build/XCFrameworks/debug/ComposeApp.xcframework/ios-arm64"; OTHER_LDFLAGS = "$(inherited) -framework ComposeApp -lsqlite3"; }; name = Debug; };
+		A60000000000000000000004 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 2; "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 15.0; PRODUCT_BUNDLE_IDENTIFIER = com.pimenta.bestv.ios; PRODUCT_NAME = "$(TARGET_NAME)"; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 1; "FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = "$(inherited) $(PROJECT_DIR)/../iosAppFramework/build/XCFrameworks/debug/ComposeApp.xcframework/ios-arm64-simulator"; "FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = "$(inherited) $(PROJECT_DIR)/../iosAppFramework/build/XCFrameworks/debug/ComposeApp.xcframework/ios-arm64"; OTHER_LDFLAGS = "$(inherited) -framework ComposeApp -lsqlite3"; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A70000000000000000000001 /* Build configuration list for PBXProject "iosApp" */ = {isa = XCConfigurationList; buildConfigurations = (A60000000000000000000001 /* Debug */, A60000000000000000000002 /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		A70000000000000000000002 /* Build configuration list for PBXNativeTarget "iosApp" */ = {isa = XCConfigurationList; buildConfigurations = (A60000000000000000000003 /* Debug */, A60000000000000000000004 /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = A50000000000000000000002 /* Project object */;
+}

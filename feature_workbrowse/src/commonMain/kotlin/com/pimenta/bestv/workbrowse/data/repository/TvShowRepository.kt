@@ -1,0 +1,59 @@
+/*
+ * Copyright (C) 2018 Marcus Pimenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.pimenta.bestv.workbrowse.data.repository
+
+import com.pimenta.bestv.data.remote.mapper.toDomainModel
+import com.pimenta.bestv.domain.model.PageDomainModel
+import com.pimenta.bestv.domain.model.WorkDomainModel
+import com.pimenta.bestv.workbrowse.data.local.datasource.TvShowLocalDataSource
+import com.pimenta.bestv.workbrowse.data.remote.datasource.TvShowRemoteDataSource
+import com.pimenta.bestv.workbrowse.domain.repository.TvShowRepository as TvShowRepositoryContract
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
+
+/**
+ * Created by marcus on 20-10-2019.
+ */
+class TvShowRepository(
+    private val tvShowLocalDataSource: TvShowLocalDataSource,
+    private val tvShowRemoteDataSource: TvShowRemoteDataSource,
+    override val ioDispatcher: CoroutineDispatcher,
+) : TvShowRepositoryContract {
+
+    override fun observeFavoriteTvShows() = tvShowLocalDataSource.observeFavoriteTvShows().flowOn(ioDispatcher)
+
+    override suspend fun getTvShowByGenre(
+        genreId: Int,
+        page: Int,
+    ): PageDomainModel<WorkDomainModel> = withIoDispatcher {
+        tvShowRemoteDataSource.getTvShowByGenre(genreId, page).toDomainModel()
+    }
+
+    override suspend fun getAiringTodayTvShows(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
+        tvShowRemoteDataSource.getAiringTodayTvShows(page).toDomainModel()
+    }
+
+    override suspend fun getOnTheAirTvShows(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
+        tvShowRemoteDataSource.getOnTheAirTvShows(page).toDomainModel()
+    }
+
+    override suspend fun getPopularTvShows(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
+        tvShowRemoteDataSource.getPopularTvShows(page).toDomainModel()
+    }
+
+    override suspend fun getTopRatedTvShows(page: Int): PageDomainModel<WorkDomainModel> = withIoDispatcher {
+        tvShowRemoteDataSource.getTopRatedTvShows(page).toDomainModel()
+    }
+}

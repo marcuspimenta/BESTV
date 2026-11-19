@@ -1,0 +1,43 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkConfig
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.compose'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+
+kotlin {
+    def composeAppXcFramework = new XCFrameworkConfig(project, 'ComposeApp')
+    [iosArm64(), iosSimulatorArm64()].each { target ->
+        target.binaries.framework {
+            baseName = 'ComposeApp'
+            isStatic = true
+            composeAppXcFramework.add(delegate)
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api project(':common')
+            api project(':feature_workbrowse')
+            api project(':feature_search')
+            api project(':feature_workdetail')
+            api project(':feature_castdetail')
+            implementation libs.koin.core
+            implementation libs.koin.compose
+            implementation libs.koin.compose.viewmodel
+            implementation libs.navigation3.ui
+            implementation libs.lifecycle.viewmodel.navigation3
+            implementation libs.coil.compose
+            implementation libs.coil.network.ktor3
+            implementation compose.runtime
+            implementation compose.foundation
+            implementation compose.material3
+            implementation compose.ui
+        }
+
+        iosMain.dependencies {
+            implementation libs.sqldelight.native.driver
+            implementation libs.ktor.client.darwin
+        }
+    }
+}

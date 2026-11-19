@@ -14,7 +14,7 @@
 
 package com.pimenta.bestv.recommendation.data.repository
 
-import com.pimenta.bestv.data.model.mapper.toDomainModel
+import com.pimenta.bestv.data.remote.mapper.toDomainModel
 import com.pimenta.bestv.domain.model.PageDomainModel
 import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.recommendation.data.remote.datasource.MovieRemoteDataSource

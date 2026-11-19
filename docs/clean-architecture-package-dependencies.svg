@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1320" height="790" viewBox="0 0 1320 790" role="img" aria-labelledby="title desc">
   <title id="title">Clean Architecture package dependencies</title>
-  <desc id="desc">Presentation and data depend inward on domain contracts. Domain depends on neither outer layer. Platform adapters and dependency injection connect framework services and implementations at the application edge.</desc>
+  <desc id="desc">Presentation and data depend inward on domain contracts. Domain depends on neither outer layer. Platform adapters and dependency injection connect Android and iOS services and implementations at the application edge.</desc>
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#28364a"/></marker>
     <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#2563eb"/></marker>
@@ -59,8 +59,8 @@
   <!-- Composition edge -->
   <rect x="130" y="620" width="1060" height="110" rx="18" fill="#eef0f4" stroke="#8a94a3" stroke-width="1.5"/>
   <text x="660" y="657" text-anchor="middle" class="layer">APPLICATION EDGE · composition and platform adapters</text>
-  <text x="660" y="689" text-anchor="middle" class="pkg">app/di  ·  feature_x/di  ·  feature_x/platform/</text>
-  <text x="660" y="713" text-anchor="middle" class="note">Koin wires ports to adapters; platform code wraps WorkManager, TV APIs, Android resources, and framework services</text>
+  <text x="660" y="689" text-anchor="middle" class="pkg">androidApp  ·  iosAppFramework  ·  feature_x/di  ·  feature_x/platform/</text>
+  <text x="660" y="713" text-anchor="middle" class="note">Koin wires ports to adapters; platform code wraps Android/iOS services, TV APIs, and platform resources</text>
   <path d="M193 530 C193 576 286 580 390 620" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrowBlue)"/>
   <path d="M1127 530 C1127 576 1034 580 930 620" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrowBlue)"/>
 

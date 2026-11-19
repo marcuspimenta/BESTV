@@ -1,125 +1,119 @@
-apply plugin: 'com.android.library'
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'org.jetbrains.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+apply plugin: 'app.cash.sqldelight'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withInputStream { localProperties.load(it) }
+compose.resources {
+    publicResClass = true
+    packageOfResClass = 'com.pimenta.bestv.common.resources'
 }
 
-def tmdbAccessToken = System.getenv('TMDB_ACCESS_TOKEN')
-if (tmdbAccessToken == null || tmdbAccessToken.trim().isEmpty()) {
-    tmdbAccessToken = localProperties.getProperty('TMDB_ACCESS_TOKEN')
-}
-if (tmdbAccessToken == null) {
-    tmdbAccessToken = ''
-}
+kotlin {
+    android {
+        namespace = 'com.pimenta.bestv.common'
+        compileSdk = libs.versions.compile.sdk.get().replace('android-', '').split('\\.')[0].toInteger()
+        minSdk = libs.versions.min.sdk.get().toInteger()
+        compilerOptions.jvmTarget.set(
+            JvmTarget.fromTarget(libs.versions.jvm.target.get())
+        )
 
-if (tmdbAccessToken.trim().isEmpty()) {
-    logger.warn('''
-        TMDB_ACCESS_TOKEN is not set. BESTV will build, but TMDb API requests will not authenticate.
-        Set TMDB_ACCESS_TOKEN in the environment, or add it to the root local.properties file.
-    '''.stripIndent().trim())
-}
-
-def tmdbAccessTokenLiteral = groovy.json.JsonOutput.toJson(tmdbAccessToken.trim())
-
-android {
-    namespace 'com.pimenta.bestv.common'
-
-    buildFeatures {
-        buildConfig = true
-        compose true
-    }
-
-    defaultConfig {
-        buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
-        buildConfigField "String", "TMDB_FILTER_LANGUAGE", "\"en-US\""
-        buildConfigField "String", "YOUTUBE_BASE_URL", "\"https://www.youtube.com/watch?v=%s\""
-        buildConfigField "String", "YOUTUBE_THUMBNAIL_BASE_URL", "\"https://img.youtube.com/vi/%s/hqdefault.jpg\""
-        buildConfigField "String", "PREFERENCE_NAME", "\"BESTV\""
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        debug {
-            buildConfigField "String", "TMDB_ACCESS_TOKEN", tmdbAccessTokenLiteral
+        androidResources {
+            enable = true
         }
-        release {
-            buildConfigField "String", "TMDB_ACCESS_TOKEN", tmdbAccessTokenLiteral
+
+        withHostTest {
+            includeAndroidResources = true
+        }
+
+        withDeviceTest {
+            instrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
         }
     }
 
-    testOptions {
-        unitTests.all {
-            jvmArgs '-Dnet.bytebuddy.experimental=true'
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            api libs.kotlinx.coroutines.core
+            api libs.sqldelight.runtime
+            api libs.kotlinx.serialization.core
+            api libs.koin.core
+            api libs.navigation3.runtime
+            api libs.androidx.lifecycle.viewmodel
+            api libs.androidx.lifecycle.runtime.compose
+            api libs.koin.compose
+            api libs.koin.compose.viewmodel
+            api compose.runtime
+            api compose.foundation
+            api compose.material3
+            implementation compose.materialIconsExtended
+            api compose.ui
+            implementation compose.components.resources
+            implementation libs.coil.compose
+            implementation libs.coil.network.ktor3
+            implementation libs.kotlinx.serialization.json
+            implementation libs.sqldelight.coroutines.extensions
+
+            implementation libs.ktor.client.core
+            implementation libs.ktor.client.content.negotiation
+            implementation libs.ktor.client.logging
+            implementation libs.ktor.serialization.kotlinx.json
+        }
+
+        androidMain.dependencies {
+            api libs.ktor.client.core
+
+            implementation libs.sqldelight.android.driver
+            implementation libs.ktor.client.okhttp
+            implementation libs.okhttp.client
+
+            implementation libs.koin.android.runtime
+
+            implementation libs.androidx.recommendation
+            implementation libs.androidx.tvprovider
+
+            implementation libs.compose.ui.tooling.preview
+            implementation libs.androidx.tv.foundation
+            implementation libs.androidx.tv.material
+            implementation libs.androidx.activity.compose
+            implementation libs.androidx.lifecycle.runtime.ktx
+            implementation libs.coil.network.okhttp
+            implementation libs.lottie.compose
+            implementation libs.timber
+        }
+
+        androidHostTest.dependencies {
+            implementation libs.junit4
+            implementation libs.kotlin.test.junit
+            implementation libs.robolectric
+            implementation libs.ktor.client.mock
+            implementation libs.kotlinx.coroutines.test
+            implementation libs.kotlinx.serialization.json
+            implementation libs.mockito.inline
+            implementation libs.mockito.core
+            implementation libs.mockito.kotlin
+        }
+
+        androidDeviceTest.dependencies {
+            implementation project.dependencies.platform(libs.compose.bom)
+            implementation libs.compose.ui.test.junit4
+            implementation libs.androidx.test.ext.junit
+            implementation libs.compose.ui.test.manifest
         }
     }
 }
 
-dependencies {
-    // Multiplatform SQLDelight schema and database models.
-    api project(':data_shared')
-    implementation libs.sqldelight.android.driver
-
-    // Shared Ktor client configuration and wire models used by feature modules.
-    implementation libs.ktor.client.core
-    implementation libs.ktor.client.content.negotiation
-    implementation libs.ktor.serialization.kotlinx.json
-    implementation libs.ktor.client.logging
-    implementation libs.ktor.client.okhttp
-    implementation libs.okhttp.client
-    // Kotlin and coroutines
-    implementation libs.kotlin.stdlib
-    api libs.kotlinx.coroutines.core
-
-    // Serialization
-    implementation libs.kotlinx.serialization.core
-
-    // Koin
-    implementation libs.koin.core
-    implementation libs.koin.android.runtime
-
-    // Networking
-
-    // Android platform integrations
-    implementation libs.androidx.recommendation
-    implementation libs.androidx.tvprovider
-
-    // Compose, image loading, and animation
-    implementation platform(libs.compose.bom)
-    implementation libs.compose.ui.core
-    implementation libs.compose.ui.tooling.preview
-    implementation libs.compose.foundation
-    implementation libs.compose.material3
-    implementation libs.androidx.tv.foundation
-    implementation libs.androidx.tv.material
-    implementation libs.androidx.activity.compose
-    implementation libs.androidx.lifecycle.runtime.ktx
-    implementation libs.coil.compose
-    implementation libs.coil.network.okhttp
-    implementation libs.lottie.compose
-    debugImplementation libs.compose.ui.tooling.runtime
-
-    // Navigation contracts exposed to consuming features
-    api libs.navigation3.runtime
-
-    // Unit tests
-    testImplementation libs.junit4
-    testImplementation libs.kotlin.test.junit
-    testImplementation libs.robolectric
-    testImplementation libs.ktor.client.mock
-    testImplementation libs.kotlinx.coroutines.test
-    testImplementation libs.kotlinx.serialization.json
-    testImplementation libs.mockito.inline
-    testImplementation libs.mockito.core
-    testImplementation libs.mockito.kotlin
-
-    // Compose UI instrumentation tests
-    androidTestImplementation platform(libs.compose.bom)
-    androidTestImplementation libs.compose.ui.test.junit4
-    androidTestImplementation libs.androidx.test.ext.junit
-    debugImplementation libs.compose.ui.test.manifest
+sqldelight {
+    databases {
+        MediaDatabase {
+            packageName = 'com.pimenta.bestv.data.local.database'
+            dialect libs.sqldelight.sqlite318.dialect
+        }
+    }
 }
