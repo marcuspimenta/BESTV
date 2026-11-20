@@ -1,0 +1,32 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+
+kotlin {
+    android {
+        namespace = 'com.pimenta.bestv.appcomposition'
+        compileSdk = libs.versions.compile.sdk.get().replace('android-', '').split('\\.')[0].toInteger()
+        minSdk = libs.versions.min.sdk.get().toInteger()
+        compilerOptions.jvmTarget.set(
+            JvmTarget.fromTarget(libs.versions.jvm.target.get())
+        )
+    }
+
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            api libs.koin.core
+            api libs.kotlinx.coroutines.core
+
+            implementation project(':common')
+            implementation project(':feature_castdetail')
+            implementation project(':feature_search')
+            implementation project(':feature_workbrowse')
+            implementation project(':feature_workdetail')
+        }
+    }
+}

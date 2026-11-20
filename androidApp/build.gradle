@@ -61,6 +61,7 @@ android {
 }
 
 dependencies {
+    implementation project(':appComposition')
     implementation project(':common')
     implementation project(':feature_workdetail')
     implementation project(':feature_castdetail')

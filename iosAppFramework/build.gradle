@@ -17,6 +17,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api project(':appComposition')
             api project(':common')
             api project(':feature_workbrowse')
             api project(':feature_search')

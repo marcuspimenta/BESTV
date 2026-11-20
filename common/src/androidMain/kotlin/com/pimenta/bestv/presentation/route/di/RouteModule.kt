@@ -14,14 +14,12 @@
 
 package com.pimenta.bestv.presentation.route.di
 
-import com.pimenta.bestv.presentation.route.di.sharedRouteModule
 import com.pimenta.bestv.presentation.route.workbrowse.WorkBrowseRoute
 import com.pimenta.bestv.presentation.route.workdetail.WorkDetailsRoute
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val routeModule = module {
-    includes(sharedRouteModule)
+val androidRouteModule = module {
     singleOf(::WorkBrowseRoute)
     singleOf(::WorkDetailsRoute)
 }

@@ -15,19 +15,19 @@
 package com.pimenta.bestv.di
 
 import com.pimenta.bestv.BuildConfig
+import com.pimenta.bestv.data.remote.api.TMDB_API_BASE_URL
 import com.pimenta.bestv.data.remote.api.createAndroidTmdbHttpClient
 import com.pimenta.bestv.data.remote.api.TmdbHttpClientConfig
 import org.koin.android.ext.koin.androidApplication
 import java.io.File
 
 private const val HTTP_CACHE_DIRECTORY = "tmdb-http-cache"
-private const val TMDB_BASE_URL = "https://api.themoviedb.org/3/"
 
 val networkModule =
     tmdbNetworkModule {
         createAndroidTmdbHttpClient(
             config = TmdbHttpClientConfig(
-                baseUrl = TMDB_BASE_URL,
+                baseUrl = TMDB_API_BASE_URL,
                 accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
                 debugLogging = BuildConfig.BUILD_TYPE == "debug",
             ),

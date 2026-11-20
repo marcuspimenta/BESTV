@@ -11,8 +11,13 @@ This document describes the Koin dependency injection setup used in the BESTV pr
 ```
 androidApp/src/main/java/com/pimenta/bestv/
 └── di/
-    ├── AppModule.kt          # Android root composition
-    └── NetworkModule.kt      # Android network engine and app configuration
+    ├── AppModule.kt             # Android root composition
+    ├── PlatformModule.kt        # Android-only bindings
+    ├── NavigationModule.kt      # Android navigation entry providers
+    └── NetworkModule.kt         # Android network engine and app configuration
+
+appComposition/src/commonMain/kotlin/com/pimenta/bestv/appcomposition/di/
+└── AppCompositionModule.kt   # Shared app-level DI composition
 
 common/src/commonMain/kotlin/com/pimenta/bestv/
 ├── data/remote/api/          # Shared Ktor request configuration
@@ -22,9 +27,14 @@ common/src/commonMain/kotlin/com/pimenta/bestv/
 common/src/androidMain/kotlin/com/pimenta/bestv/
 ├── data/remote/api/          # Android OkHttp engine
 ├── di/                       # AndroidDatabaseDriverModule, PresentationModule
-└── presentation/route/di/    # RouteModule
+└── presentation/route/di/    # AndroidRouteModule
 
-iosAppFramework/src/iosMain/  # iOS Koin platform bindings and MainViewController
+iosAppFramework/src/commonMain/kotlin/com/pimenta/bestv/ioscompose/navigation/
+└── NavigationModule.kt      # iOS navigation entry providers
+
+iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/
+├── di/PlatformModule.kt     # iOS-only bindings
+└── MainViewController.kt   # iOS Koin startup and Compose entry point
 
 feature_*/src/commonMain/kotlin/.../di/
 └── *Module.kt                # Shared feature dependencies
@@ -55,32 +65,26 @@ class BesTVApplication : Application() {
 
 ## Module Organization
 
+### Shared App Composition
+
+`appCompositionModule` is the shared composition layer used by both app hosts. It includes the common database and dispatcher bindings, shared routes, and the Browse, Search, Work Details, and Cast Details feature modules. Each host supplies its `platformModule` and `navigationModule`. Android and iOS use the same file and binding names for these platform-only roles; their implementations live in separate Gradle modules.
+
+The `common` module does not aggregate feature modules because features already depend on `common`; putting that composition there would create a dependency cycle.
+
 ### Android Root Module (AppModule)
 
-The `appModule` in `androidApp` registers Android device/navigation entry providers and aggregates Android platform bindings and feature modules using `includes()`:
+The Android root adds its platform module and Android-only recommendation module to the shared composition:
 
 ```kotlin
 // androidApp/src/main/java/.../di/AppModule.kt
 val appModule = module {
-    single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
-    single<NavigationEntryProvider>(named("workBrowseEntryProvider")) { WorkBrowseNavigationEntryProvider() }
-    // Search, Work Details, and Cast Details entry providers are registered here too.
-    single { getAll<NavigationEntryProvider>() }
-
     includes(
-        // App and shared modules
-        networkModule,
-        databaseDriverModule,
-        databaseModule,
-        dispatcherModule(Dispatchers.IO),
-        presentationModule,
-        routeModule,
-        // Feature modules
-        castDetailModule,
+        appCompositionModule(
+            platformModule = platformModule,
+            navigationModule = navigationModule,
+            dispatcher = Dispatchers.IO,
+        ),
         recommendationModule,
-        searchModule,
-        workBrowseModule,
-        workDetailModule,
     )
 }
 ```
@@ -100,7 +104,7 @@ import com.pimenta.bestv.BuildConfig
 val networkModule = tmdbNetworkModule {
     createAndroidTmdbHttpClient(
         config = TmdbHttpClientConfig(
-            baseUrl = "https://api.themoviedb.org/3/",
+        baseUrl = TMDB_API_BASE_URL,
             accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
             debugLogging = BuildConfig.BUILD_TYPE == "debug",
         ),
@@ -111,9 +115,9 @@ val networkModule = tmdbNetworkModule {
 
 ### iOS Composition Root
 
-The SwiftUI app in `iosApp` calls [`MainViewController`](iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/MainViewController.kt). That iOS entry point starts Koin once with the iOS platform bindings, a Darwin-backed Ktor client, the shared database and dispatcher modules, shared route bindings, and the Browse, Search, Work Details, and Cast Details feature modules. The iOS platform module supplies `DeviceCapabilities`, `ContentSourceLabelProvider`, and `NativeSqliteDriver`; it does not load Android Context, Android resource, Intent route, or TV recommendation bindings.
+The SwiftUI app in `iosApp` calls [`MainViewController`](iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/MainViewController.kt). That iOS entry point starts Koin once with `appCompositionModule`, supplying its `platformModule`, `navigationModule`, and `Dispatchers.Default`. The iOS `PlatformModule.kt` provides a Darwin-backed Ktor client, `DeviceCapabilities`, `ContentSourceLabelProvider`, and `NativeSqliteDriver`; the shared TMDb API base URL lives in `commonMain`.
 
-Keep each app entry point responsible for platform construction. The feature Koin modules and common database/network contracts are shared; Android and iOS provide their own `HttpClient`, `SqlDriver`, dispatcher, and platform presentation bindings.
+Keep each app entry point responsible for platform construction. The feature Koin modules and common database/network contracts are shared; Android and iOS provide their own `HttpClient`, `SqlDriver`, dispatcher, and platform presentation bindings. Android additionally includes the recommendation module and its TV provider.
 
 ### Database Module
 
@@ -311,29 +315,16 @@ The affected feature modules use this pattern with mocked local dependencies and
 
 ## Module Dependency Graph
 
-The simplified diagram shows the Android `appModule`; it omits some feature registrations for space. The iOS composition root is separately assembled by `MainViewController` in `iosAppFramework`.
+The shared `appComposition` module is used by both app roots. Each root provides its platform bindings and navigation entry providers; Android also includes the recommendation module.
 
 ```
-                    ┌─────────────┐
-                    │  appModule  │
-                    └──────┬──────┘
-                           │
-           ┌───────────────┼───────────────┐
-           │               │               │
-           ▼               ▼               ▼
-    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-    │networkModule│ │databaseModule│ │ routeModule │
-    └─────────────┘ └─────────────┘ └─────────────┘
-           │               │               │
-           └───────────────┼───────────────┘
-                           │
-    ┌──────────────────────┼──────────────────────┐
-    │                      │                      │
-    ▼                      ▼                      ▼
-┌──────────┐        ┌──────────┐          ┌──────────┐
-│searchMod.│        │castDetail│          │workBrowse│
-└──────────┘        │  Module  │          │  Module  │
-                    └──────────┘          └──────────┘
+Android appModule ──────┐
+                        ├── appCompositionModule
+iOS MainViewController ─┘       ├── common database, dispatcher, and routes
+                                ├── Browse, Search, Work Details, Cast Details
+                                └── host-supplied platform and navigation modules
+
+Android also includes recommendationModule.
 ```
 
 ## References

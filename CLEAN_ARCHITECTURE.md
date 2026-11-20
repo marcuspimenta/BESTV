@@ -1,6 +1,6 @@
 # Clean Architecture in BESTV
 
-This guide describes the architecture implemented by the current BESTV modules and source sets. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. The `common` module and mobile feature modules have Android and iOS Kotlin Multiplatform targets. Portable data and domain code, shared ViewModels, route contracts, UI primitives, and mobile Compose screens live in `commonMain`; Android-specific drivers, resource adapters, Intent navigation, and TV UI live in Android source sets. The `iosAppFramework` module assembles the shared features for the iOS app. Each feature owns its typed Ktor TMDb API client.
+This guide describes the architecture implemented by the current BESTV modules and source sets. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. The `common` module and mobile feature modules have Android and iOS Kotlin Multiplatform targets. Portable data and domain code, shared ViewModels, route contracts, UI primitives, and mobile Compose screens live in `commonMain`; Android-specific drivers, resource adapters, Intent navigation, and TV UI live in Android source sets. The `appComposition` module aggregates shared app-level Koin bindings for Android and iOS, while `iosAppFramework` provides the iOS Compose entry point and framework. Each feature owns its typed Ktor TMDb API client.
 
 ![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
@@ -85,6 +85,7 @@ common/src/commonMain/sqldelight/com/pimenta/bestv/data/local/database/
 feature_<capability>/data/local/
 └── mapper/                    # Persistence model to domain mapping
 
+appComposition/src/commonMain/ # Shared app-level Koin composition for Android and iOS
 androidApp/src/main/            # Android Application, Activity, and Navigation 3 host
 iosApp/                         # SwiftUI/Xcode app and native entry point
 iosAppFramework/src/commonMain/ # iOS Compose app renderer over shared feature screens

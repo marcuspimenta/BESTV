@@ -13,6 +13,8 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+const val TMDB_API_BASE_URL = "https://api.themoviedb.org/3/"
+
 data class TmdbHttpClientConfig(
     val baseUrl: String,
     val accessToken: String,
