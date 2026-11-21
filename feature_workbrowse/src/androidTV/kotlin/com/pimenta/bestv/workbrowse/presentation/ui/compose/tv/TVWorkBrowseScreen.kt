@@ -68,6 +68,7 @@ import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.ModalNavigationDrawer
 import androidx.tv.material3.NavigationDrawerItem
+import androidx.tv.material3.NavigationDrawerScope
 import androidx.tv.material3.Text
 import androidx.tv.material3.rememberDrawerState
 import com.pimenta.bestv.presentation.model.WorkViewModel
@@ -261,58 +262,14 @@ private fun TVBrowseSections(
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .onPreviewKeyEvent { keyEvent ->
-                            if (keyEvent.type == KeyEventType.KeyDown &&
-                                keyEvent.key == Key.DirectionRight &&
-                                drawerState.currentValue == DrawerValue.Open
-                            ) {
-                                scope.launch { drawerState.setValue(DrawerValue.Closed) }
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .focusGroup()
-                            .focusRestorer()
-                            .padding(BESTVTheme.scale.s060)
-                            .align(Alignment.Center),
-                        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-                    ) {
-                        sections.forEachIndexed { index, section ->
-                            NavigationDrawerItem(
-                                selected = selectedSectionIndex == index,
-                                onClick = {
-                                    onSectionClicked(index)
-                                    scope.launch {
-                                        drawerState.setValue(DrawerValue.Closed)
-                                    }
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(section.iconRes),
-                                        contentDescription = null,
-                                        tint = BESTVTheme.colors.white,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .focusRequester(drawerItemFocusRequesters[index]),
-                                content = {
-                                    Text(
-                                        text = stringResource(section.titleRes),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = BESTVTheme.colors.white,
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
+                TVBrowseDrawerContent(
+                    sections = sections,
+                    selectedSectionIndex = selectedSectionIndex,
+                    focusRequesters = drawerItemFocusRequesters,
+                    isDrawerOpen = drawerState.currentValue == DrawerValue.Open,
+                    onClose = { scope.launch { drawerState.setValue(DrawerValue.Closed) } },
+                    onSectionClicked = onSectionClicked,
+                )
             },
             scrimBrush = Brush.horizontalGradient(listOf(BESTVTheme.colors.black, BESTVTheme.colors.transparent)),
             modifier = modifier,
@@ -362,6 +319,67 @@ private fun TVBrowseSections(
                                 ),
                             ),
                         ).align(BottomStart),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavigationDrawerScope.TVBrowseDrawerContent(
+    sections: List<Section>,
+    selectedSectionIndex: Int,
+    focusRequesters: List<FocusRequester>,
+    isDrawerOpen: Boolean,
+    onClose: () -> Unit,
+    onSectionClicked: (Int) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .onPreviewKeyEvent { keyEvent ->
+                if (keyEvent.type == KeyEventType.KeyDown &&
+                    keyEvent.key == Key.DirectionRight &&
+                    isDrawerOpen
+                ) {
+                    onClose()
+                    true
+                } else {
+                    false
+                }
+            },
+    ) {
+        Column(
+            modifier = Modifier
+                .focusGroup()
+                .focusRestorer()
+                .padding(BESTVTheme.scale.s060)
+                .align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+        ) {
+            sections.forEachIndexed { index, section ->
+                NavigationDrawerItem(
+                    selected = selectedSectionIndex == index,
+                    onClick = {
+                        onSectionClicked(index)
+                        onClose()
+                    },
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(section.iconRes),
+                            contentDescription = null,
+                            tint = BESTVTheme.colors.white,
+                        )
+                    },
+                    modifier = Modifier
+                        .focusRequester(focusRequesters[index]),
+                    content = {
+                        Text(
+                            text = stringResource(section.titleRes),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = BESTVTheme.colors.white,
+                        )
+                    },
                 )
             }
         }

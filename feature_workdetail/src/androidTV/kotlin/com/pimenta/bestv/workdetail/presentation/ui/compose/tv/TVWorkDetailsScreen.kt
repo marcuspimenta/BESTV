@@ -204,57 +204,18 @@ internal fun TVLoadedWorkDetails(
                 key = { _, content -> content.id },
                 contentType = { _, content -> content.lazyContentType() },
             ) { index, content ->
-                when (content) {
-                    is Header ->
-                        TVWorkDetailsHeader(
-                            work = work,
-                            header = content,
-                            actionClicked = actionClicked,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-
-                    is Casts ->
-                        TVCastRow(
-                            casts = content.casts,
-                            onCastClick = onCastClick,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-
-                    is RecommendedWorks ->
-                        TVWorksRow(
-                            title = stringResource(Res.string.recommended),
-                            works = content.recommended,
-                            onWorkClick = onWorkClick,
-                            isLoadingMore = content.page.isLoadingMore,
-                            onLoadMore = onLoadMoreRecommendations,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-
-                    is Reviews ->
-                        TVReviewRow(
-                            reviews = content.reviews,
-                            isLoadingMore = content.page.isLoadingMore,
-                            onLoadMore = onLoadMoreReviews,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-
-                    is SimilarWorks ->
-                        TVWorksRow(
-                            title = stringResource(Res.string.similar),
-                            works = content.similar,
-                            onWorkClick = onWorkClick,
-                            isLoadingMore = content.page.isLoadingMore,
-                            onLoadMore = onLoadMoreSimilar,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-
-                    is Videos ->
-                        TVVideoRow(
-                            videos = content.videos,
-                            onVideoClick = onVideoClick,
-                            initialFocusRequester = focusRequesters[index],
-                        )
-                }
+                TVWorkDetailsRow(
+                    content = content,
+                    work = work,
+                    focusRequester = focusRequesters[index],
+                    actionClicked = actionClicked,
+                    onVideoClick = onVideoClick,
+                    onCastClick = onCastClick,
+                    onWorkClick = onWorkClick,
+                    onLoadMoreReviews = onLoadMoreReviews,
+                    onLoadMoreRecommendations = onLoadMoreRecommendations,
+                    onLoadMoreSimilar = onLoadMoreSimilar,
+                )
             }
         }
 
@@ -278,6 +239,72 @@ internal fun TVLoadedWorkDetails(
                 onClearScrollIndex()
             }
         }
+    }
+}
+
+@Composable
+private fun TVWorkDetailsRow(
+    content: WorkDetailsState.Content,
+    work: WorkViewModel,
+    focusRequester: FocusRequester,
+    actionClicked: (ActionButton) -> Unit,
+    onVideoClick: (VideoViewModel) -> Unit,
+    onCastClick: (CastViewModel) -> Unit,
+    onWorkClick: (WorkViewModel) -> Unit,
+    onLoadMoreReviews: () -> Unit,
+    onLoadMoreRecommendations: () -> Unit,
+    onLoadMoreSimilar: () -> Unit,
+) {
+    when (content) {
+        is Header ->
+            TVWorkDetailsHeader(
+                work = work,
+                header = content,
+                actionClicked = actionClicked,
+                initialFocusRequester = focusRequester,
+            )
+
+        is Casts ->
+            TVCastRow(
+                casts = content.casts,
+                onCastClick = onCastClick,
+                initialFocusRequester = focusRequester,
+            )
+
+        is RecommendedWorks ->
+            TVWorksRow(
+                title = stringResource(Res.string.recommended),
+                works = content.recommended,
+                onWorkClick = onWorkClick,
+                isLoadingMore = content.page.isLoadingMore,
+                onLoadMore = onLoadMoreRecommendations,
+                initialFocusRequester = focusRequester,
+            )
+
+        is Reviews ->
+            TVReviewRow(
+                reviews = content.reviews,
+                isLoadingMore = content.page.isLoadingMore,
+                onLoadMore = onLoadMoreReviews,
+                initialFocusRequester = focusRequester,
+            )
+
+        is SimilarWorks ->
+            TVWorksRow(
+                title = stringResource(Res.string.similar),
+                works = content.similar,
+                onWorkClick = onWorkClick,
+                isLoadingMore = content.page.isLoadingMore,
+                onLoadMore = onLoadMoreSimilar,
+                initialFocusRequester = focusRequester,
+            )
+
+        is Videos ->
+            TVVideoRow(
+                videos = content.videos,
+                onVideoClick = onVideoClick,
+                initialFocusRequester = focusRequester,
+            )
     }
 }
 

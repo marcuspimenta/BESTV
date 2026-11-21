@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -65,7 +66,6 @@ import com.pimenta.bestv.workdetail.resources.remove_favorites
 import com.pimenta.bestv.workdetail.resources.save_favorites
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun MobileWorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
     navigate: (NavKey) -> Unit,
@@ -168,51 +168,73 @@ fun MobileWorkDetailsScreen(
                     if (imageUrl == currentBackdropUrl) dominantBackdropColorArgb = color.toArgb()
                 },
             )
-            TopAppBar(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .shadow(elevation = appBarElevation),
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CommonRes.string.back),
-                            tint = BESTVTheme.colors.white,
-                        )
-                    }
-                },
-                title = {
-                    AnimatedVisibility(
-                        visible = showCollapsedTitle,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
-                        Text(
-                            text = state.work.title,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = BESTVTheme.colors.white,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                },
-                actions = {
-                    saveAction?.let { action ->
-                        IconButton(onClick = { viewModel.handleEvent(ActionButtonClicked(action)) }) {
-                            FavoriteIcon(action)
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = appBarBackgroundColor,
-                    titleContentColor = BESTVTheme.colors.white,
-                    navigationIconContentColor = BESTVTheme.colors.white,
-                    actionIconContentColor = BESTVTheme.colors.white,
-                ),
-                windowInsets = TopAppBarDefaults.windowInsets,
+            MobileWorkDetailsTopBar(
+                title = state.work.title,
+                showTitle = showCollapsedTitle,
+                backgroundColor = appBarBackgroundColor,
+                elevation = appBarElevation,
+                saveAction = saveAction,
+                onSaveClick = { viewModel.handleEvent(ActionButtonClicked(it)) },
+                onBack = onBack,
+                modifier = Modifier.align(Alignment.TopCenter),
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MobileWorkDetailsTopBar(
+    title: String,
+    showTitle: Boolean,
+    backgroundColor: Color,
+    elevation: Dp,
+    saveAction: SaveWork?,
+    onSaveClick: (SaveWork) -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        modifier = modifier.shadow(elevation = elevation),
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(CommonRes.string.back),
+                    tint = BESTVTheme.colors.white,
+                )
+            }
+        },
+        title = {
+            AnimatedVisibility(
+                visible = showTitle,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = BESTVTheme.colors.white,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        },
+        actions = {
+            saveAction?.let { action ->
+                IconButton(onClick = { onSaveClick(action) }) {
+                    FavoriteIcon(action)
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+            titleContentColor = BESTVTheme.colors.white,
+            navigationIconContentColor = BESTVTheme.colors.white,
+            actionIconContentColor = BESTVTheme.colors.white,
+        ),
+        windowInsets = TopAppBarDefaults.windowInsets,
+    )
 }
 
 @Composable

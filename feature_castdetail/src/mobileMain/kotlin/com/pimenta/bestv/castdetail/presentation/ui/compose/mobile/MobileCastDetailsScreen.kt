@@ -13,6 +13,7 @@ import com.pimenta.bestv.castdetail.resources.Res
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,7 +71,6 @@ import com.pimenta.bestv.common.resources.movies_title
 import com.pimenta.bestv.common.resources.tv_shows_title
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun MobileCastDetailsScreen(
     viewModel: CastDetailsViewModel,
     navigate: (NavKey) -> Unit,
@@ -106,31 +106,10 @@ fun MobileCastDetailsScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = BESTVTheme.colors.black,
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CommonRes.string.back),
-                        )
-                    }
-                },
-                title = {
-                    AnimatedVisibility(
-                        visible = showCollapsedTitle,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
-                        Text(
-                            text = loaded?.cast?.name.orEmpty(),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = BESTVTheme.colors.white,
-                            maxLines = 1,
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = BESTVTheme.colors.black),
-                windowInsets = TopAppBarDefaults.windowInsets,
+            MobileCastDetailsTopBar(
+                title = loaded?.cast?.name.orEmpty(),
+                showTitle = showCollapsedTitle,
+                onBack = onBack,
             )
         },
     ) { contentPadding ->
@@ -165,10 +144,45 @@ fun MobileCastDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MobileCastDetailsTopBar(
+    title: String,
+    showTitle: Boolean,
+    onBack: () -> Unit,
+) {
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(CommonRes.string.back),
+                )
+            }
+        },
+        title = {
+            AnimatedVisibility(
+                visible = showTitle,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = BESTVTheme.colors.white,
+                    maxLines = 1,
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = BESTVTheme.colors.black),
+        windowInsets = TopAppBarDefaults.windowInsets,
+    )
+}
+
 @Composable
 private fun MobileCastDetailsContent(
     state: CastDetailsState,
-    scrollState: androidx.compose.foundation.ScrollState,
+    scrollState: ScrollState,
     modifier: Modifier = Modifier,
     onEvent: (CastDetailsEvent) -> Unit,
     onViewportTopChanged: (Float) -> Unit,
@@ -206,7 +220,7 @@ private fun MobileCastDetailsContent(
 @Composable
 private fun MobileCastDetailsLoadedContent(
     castDetails: CastDetailsState.Loaded,
-    scrollState: androidx.compose.foundation.ScrollState,
+    scrollState: ScrollState,
     modifier: Modifier,
     onEvent: (CastDetailsEvent) -> Unit,
     onViewportTopChanged: (Float) -> Unit,

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -140,47 +142,62 @@ private fun MobileSearchTopBar(
             }
         },
         title = {
-            TextField(
-                value = query,
-                onValueChange = onQueryChanged,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(BESTVTheme.scale.s280)
-                    .clip(RoundedCornerShape(BESTVTheme.scale.mobileSearchFieldCornerRadius)),
-                placeholder = {
-                    Text(
-                        text = stringResource(Res.string.search_placeholder),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (query.isNotEmpty()) {
-                        IconButton(onClick = onClear) {
-                            Icon(
-                                Icons.Default.Clear,
-                                contentDescription = stringResource(Res.string.clear_search),
-                            )
-                        }
-                    }
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = BESTVTheme.colors.white,
-                    unfocusedTextColor = BESTVTheme.colors.white,
-                    cursorColor = BESTVTheme.colors.white,
-                    focusedContainerColor = BESTVTheme.colors.mobileCardSurface,
-                    unfocusedContainerColor = BESTVTheme.colors.mobileCardSurface,
-                    focusedIndicatorColor = BESTVTheme.colors.transparent,
-                    unfocusedIndicatorColor = BESTVTheme.colors.transparent,
-                ),
+            MobileSearchField(
+                query = query,
+                onQueryChanged = onQueryChanged,
+                onClear = onClear,
+                onSearch = onSearch,
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = BESTVTheme.colors.black),
         windowInsets = TopAppBarDefaults.windowInsets,
+    )
+}
+
+@Composable
+private fun MobileSearchField(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    onClear: () -> Unit,
+    onSearch: () -> Unit,
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChanged,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(BESTVTheme.scale.s280)
+            .clip(RoundedCornerShape(BESTVTheme.scale.mobileSearchFieldCornerRadius)),
+        placeholder = {
+            Text(
+                text = stringResource(Res.string.search_placeholder),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = onClear) {
+                    Icon(
+                        Icons.Default.Clear,
+                        contentDescription = stringResource(Res.string.clear_search),
+                    )
+                }
+            }
+        },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = BESTVTheme.colors.white,
+            unfocusedTextColor = BESTVTheme.colors.white,
+            cursorColor = BESTVTheme.colors.white,
+            focusedContainerColor = BESTVTheme.colors.mobileCardSurface,
+            unfocusedContainerColor = BESTVTheme.colors.mobileCardSurface,
+            focusedIndicatorColor = BESTVTheme.colors.transparent,
+            unfocusedIndicatorColor = BESTVTheme.colors.transparent,
+        ),
     )
 }
 
@@ -196,22 +213,10 @@ private fun MobileSearchContent(
     Box(modifier = modifier) {
         when (val result = state.state) {
             is Empty ->
-                Column(
-                    modifier = Modifier.align(Alignment.Center).padding(BESTVTheme.scale.s240),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-                ) {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = null,
-                        tint = BESTVTheme.colors.secondaryText,
-                        modifier = Modifier.size(BESTVTheme.scale.s160),
-                    )
-                    Text(
-                        text = stringResource(Res.string.search_placeholder),
-                        color = BESTVTheme.colors.secondaryText,
-                    )
-                }
+                MobileSearchEmptyMessage(
+                    message = stringResource(Res.string.search_placeholder),
+                    modifier = Modifier.align(Alignment.Center),
+                )
 
             is Error ->
                 MobileError(
@@ -222,53 +227,18 @@ private fun MobileSearchContent(
 
             is SearchState.State.Loaded -> {
                 if (!result.hasResults) {
-                    Column(
-                        modifier = Modifier.align(Alignment.Center).padding(BESTVTheme.scale.s240),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
-                    ) {
-                        Icon(
-                            Icons.Default.Search,
-                            contentDescription = null,
-                            tint = BESTVTheme.colors.secondaryText,
-                            modifier = Modifier.size(BESTVTheme.scale.s160),
-                        )
-                        Text(
-                            text = stringResource(Res.string.no_results),
-                            color = BESTVTheme.colors.secondaryText,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
+                    MobileSearchEmptyMessage(
+                        message = stringResource(Res.string.no_results),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
-                    ) {
-                        items(
-                            items = result.contents,
-                            key = { content -> content.lazyListKey() },
-                            contentType = { content -> content.lazyContentType() },
-                        ) { content ->
-                            when (content) {
-                                is Movies ->
-                                    MobileWorkRow(
-                                        title = stringResource(CommonRes.string.movies_title),
-                                        works = content.movies,
-                                        onWorkClick = onWorkClick,
-                                        pagination = content.page,
-                                        onLoadMore = onLoadMoreMovies,
-                                    )
-
-                                is TvShows ->
-                                    MobileWorkRow(
-                                        title = stringResource(CommonRes.string.tv_shows_title),
-                                        works = content.tvShows,
-                                        onWorkClick = onWorkClick,
-                                        pagination = content.page,
-                                        onLoadMore = onLoadMoreTvShows,
-                                    )
-                            }
-                        }
-                    }
+                    MobileSearchResults(
+                        contents = result.contents,
+                        onWorkClick = onWorkClick,
+                        onLoadMoreMovies = onLoadMoreMovies,
+                        onLoadMoreTvShows = onLoadMoreTvShows,
+                    )
                 }
             }
         }
@@ -277,6 +247,65 @@ private fun MobileSearchContent(
             MobileLoading(
                 modifier = Modifier.align(Alignment.Center),
             )
+        }
+    }
+}
+
+@Composable
+private fun MobileSearchEmptyMessage(
+    message: String,
+    modifier: Modifier = Modifier,
+    style: TextStyle = LocalTextStyle.current,
+) {
+    Column(
+        modifier = modifier.padding(BESTVTheme.scale.s240),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s060),
+    ) {
+        Icon(
+            Icons.Default.Search,
+            contentDescription = null,
+            tint = BESTVTheme.colors.secondaryText,
+            modifier = Modifier.size(BESTVTheme.scale.s160),
+        )
+        Text(text = message, color = BESTVTheme.colors.secondaryText, style = style)
+    }
+}
+
+@Composable
+private fun MobileSearchResults(
+    contents: List<SearchState.Content>,
+    onWorkClick: (WorkViewModel) -> Unit,
+    onLoadMoreMovies: () -> Unit,
+    onLoadMoreTvShows: () -> Unit,
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(BESTVTheme.scale.s080),
+    ) {
+        items(
+            items = contents,
+            key = { content -> content.lazyListKey() },
+            contentType = { content -> content.lazyContentType() },
+        ) { content ->
+            when (content) {
+                is Movies ->
+                    MobileWorkRow(
+                        title = stringResource(CommonRes.string.movies_title),
+                        works = content.movies,
+                        onWorkClick = onWorkClick,
+                        pagination = content.page,
+                        onLoadMore = onLoadMoreMovies,
+                    )
+
+                is TvShows ->
+                    MobileWorkRow(
+                        title = stringResource(CommonRes.string.tv_shows_title),
+                        works = content.tvShows,
+                        onWorkClick = onWorkClick,
+                        pagination = content.page,
+                        onLoadMore = onLoadMoreTvShows,
+                    )
+            }
         }
     }
 }

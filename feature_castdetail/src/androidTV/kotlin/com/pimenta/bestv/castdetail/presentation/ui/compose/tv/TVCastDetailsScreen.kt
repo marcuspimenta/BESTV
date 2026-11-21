@@ -109,39 +109,52 @@ internal fun TVCastDetailsContent(
             }
 
             is CastDetailsState.Loaded -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .focusGroup()
-                        .focusRestorer()
-                        .verticalScroll(rememberScrollState())
-                        .padding(bottom = BESTVTheme.scale.s240),
-                ) {
-                    TVCastDetailsHeader(
-                        cast = state.cast,
-                    )
-
-                    if (state.movies.isNotEmpty()) {
-                        TVWorksRow(
-                            title = stringResource(CommonRes.string.movies_title),
-                            works = state.movies,
-                            onWorkClick = onWorkClick,
-                            initialFocusRequester = firstWorkFocusRequester,
-                            requestInitialFocus = true,
-                        )
-                    }
-
-                    if (state.tvShows.isNotEmpty()) {
-                        TVWorksRow(
-                            title = stringResource(CommonRes.string.tv_shows_title),
-                            works = state.tvShows,
-                            onWorkClick = onWorkClick,
-                            initialFocusRequester = firstWorkFocusRequester.takeIf { state.movies.isEmpty() },
-                            requestInitialFocus = state.movies.isEmpty(),
-                        )
-                    }
-                }
+                TVCastCredits(
+                    state = state,
+                    firstWorkFocusRequester = firstWorkFocusRequester,
+                    onWorkClick = onWorkClick,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun TVCastCredits(
+    state: CastDetailsState.Loaded,
+    firstWorkFocusRequester: FocusRequester,
+    onWorkClick: (WorkViewModel) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .focusGroup()
+            .focusRestorer()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = BESTVTheme.scale.s240),
+    ) {
+        TVCastDetailsHeader(
+            cast = state.cast,
+        )
+
+        if (state.movies.isNotEmpty()) {
+            TVWorksRow(
+                title = stringResource(CommonRes.string.movies_title),
+                works = state.movies,
+                onWorkClick = onWorkClick,
+                initialFocusRequester = firstWorkFocusRequester,
+                requestInitialFocus = true,
+            )
+        }
+
+        if (state.tvShows.isNotEmpty()) {
+            TVWorksRow(
+                title = stringResource(CommonRes.string.tv_shows_title),
+                works = state.tvShows,
+                onWorkClick = onWorkClick,
+                initialFocusRequester = firstWorkFocusRequester.takeIf { state.movies.isEmpty() },
+                requestInitialFocus = state.movies.isEmpty(),
+            )
         }
     }
 }
