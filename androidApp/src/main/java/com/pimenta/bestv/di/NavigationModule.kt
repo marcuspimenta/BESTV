@@ -18,7 +18,6 @@ package com.pimenta.bestv.di
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.ui.platform.LocalContext
 import com.pimenta.bestv.castdetail.presentation.navigation.castDetailsNavigationEntryProvider
 import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsWrapperScreen

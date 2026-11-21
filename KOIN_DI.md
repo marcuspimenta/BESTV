@@ -89,6 +89,8 @@ val appModule = module {
 }
 ```
 
+Both `androidMobile` and `androidTV` currently include `recommendationModule`; its TV-oriented provider and boot receiver have not been restricted to the TV flavor. Feature screen selection does not use Koin device detection: each flavor compiles its own wrapper implementation, and `androidApp`'s navigation module calls that wrapper. `BuildConfig.IS_MOBILE` controls the navigation transitions in `BestvApp`.
+
 ### Dispatcher Module
 
 The Koin module lives in `commonMain` and accepts a `CoroutineDispatcher` from the app. Android supplies `Dispatchers.IO`; an iOS entry point can supply its platform-appropriate dispatcher without putting JVM-only `Dispatchers.IO` in shared code.
@@ -115,7 +117,7 @@ val networkModule = tmdbNetworkModule {
 
 ### iOS Composition Root
 
-The SwiftUI app in `iosApp` calls [`MainViewController`](iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/MainViewController.kt). That iOS entry point starts Koin once with `appCompositionModule`, supplying its `platformModule`, `navigationModule`, and `Dispatchers.Default`. The iOS `PlatformModule.kt` provides a Darwin-backed Ktor client, `DeviceCapabilities`, `ContentSourceLabelProvider`, and `NativeSqliteDriver`; the shared TMDb API base URL lives in `commonMain`.
+The SwiftUI app in `iosApp` calls [`MainViewController`](iosAppFramework/src/iosMain/kotlin/com/pimenta/bestv/ioscompose/MainViewController.kt). That iOS entry point starts Koin once with `appCompositionModule`, supplying its `platformModule`, `navigationModule`, and `Dispatchers.Default`. The iOS `PlatformModule.kt` provides a Darwin-backed Ktor client, `ContentSourceLabelProvider`, and `NativeSqliteDriver`; the shared TMDb API base URL lives in `commonMain`.
 
 Keep each app entry point responsible for platform construction. The feature Koin modules and common database/network contracts are shared; Android and iOS provide their own `HttpClient`, `SqlDriver`, dispatcher, and platform presentation bindings. Android additionally includes the recommendation module and its TV provider.
 
@@ -172,7 +174,7 @@ val searchModule = module {
 }
 ```
 
-The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. KMP feature binding tests live in `androidHostTest` and resolve these ports with test infrastructure.
+The feature module keeps the concrete repository registration and the port binding together. Use cases depend on the feature's `domain.repository` interface, while Koin knows the `data.repository` implementation. The same data binding pattern is used by Work Browse, Work Details, and Cast Details. Recommendation binds its output domain port directly to a platform TV provider; its movie input port binds to a data repository. KMP feature binding tests live in `androidUnitTest` and resolve these ports with test infrastructure.
 
 `GetBrowseDataUseCase` loads the Browse catalog from the network. Favorite sections are observed separately through `ObserveFavoritesUseCase`, which combines the movie and TV favorite flows backed by SQLDelight.
 
@@ -245,7 +247,7 @@ entry<WorkDetailsDestination> { destination ->
 }
 ```
 
-Android Navigation 3 feature entries and the iOS Compose renderer both resolve shared feature ViewModels through Koin Compose. Platform intents are handled by Android route adapters; they carry serializable presentation models as Kotlin Serialization JSON string extras.
+The feature entry providers live in `commonMain` and resolve shared ViewModels through Koin Compose. The Android navigation module supplies the flavor-specific wrappers; the iOS navigation module supplies the shared mobile screens. Platform intents are handled by Android route adapters; they carry serializable presentation models as Kotlin Serialization JSON string extras.
 
 ### In Composables
 
@@ -305,7 +307,7 @@ assertTrue(repository is com.pimenta.bestv.search.data.repository.MovieRepositor
 testApplication.close()
 ```
 
-The affected feature modules use this pattern with mocked local dependencies and a mocked `HttpClient`. KMP feature endpoint tests use Ktor's MockEngine in `androidHostTest`; the `common` module's host tests cover shared client configuration and DTO parsing.
+The affected feature modules use this pattern with mocked local dependencies and a mocked `HttpClient`. KMP feature endpoint tests use Ktor's MockEngine in `androidUnitTest`; the `common` module's host tests cover shared client configuration and DTO parsing. Run the relevant flavor tasks, for example `./gradlew :feature_search:testAndroidMobileDebugUnitTest :feature_search:testAndroidTVDebugUnitTest`.
 
 ### 4. Avoid
 

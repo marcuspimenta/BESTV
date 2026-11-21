@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
@@ -13,26 +13,23 @@ compose.resources {
 }
 
 kotlin {
-    android {
-        namespace = 'com.pimenta.bestv.workdetail'
-        compileSdk = libs.versions.compile.sdk.get().replace('android-', '').split('\\.')[0].toInteger()
-        minSdk = libs.versions.min.sdk.get().toInteger()
-        androidResources {
-            enable = true
-        }
+    androidTarget {
         compilerOptions.jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
-        withHostTest {
-            includeAndroidResources = true
-        }
-        withDeviceTest {
-            instrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
-        }
     }
 
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
+        iosMain.kotlin.srcDir("src/mobileMain/kotlin")
+        matching { it.name == 'androidAndroidMobile' }.configureEach {
+            kotlin.srcDir("src/mobileMain/kotlin")
+            kotlin.srcDir("src/androidMobile/kotlin")
+        }
+        matching { it.name == 'androidAndroidTV' }.configureEach {
+            kotlin.srcDir("src/androidTV/kotlin")
+        }
+
         commonMain.dependencies {
             api project(':common')
             api libs.kotlinx.coroutines.core
@@ -57,8 +54,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation project.dependencies.platform(libs.compose.bom)
-            implementation libs.androidx.tv.foundation
-            implementation libs.androidx.tv.material
             implementation libs.androidx.activity.compose
             implementation libs.androidx.core
             implementation libs.androidx.lifecycle.runtime.ktx
@@ -68,7 +63,7 @@ kotlin {
             implementation libs.compose.ui.tooling.preview
         }
 
-        androidHostTest.dependencies {
+        androidUnitTest.dependencies {
             implementation libs.junit4
             implementation libs.kotlin.test.junit
             implementation libs.robolectric
@@ -81,11 +76,26 @@ kotlin {
             implementation libs.turbine
         }
 
-        androidDeviceTest.dependencies {
+        androidInstrumentedTest.dependencies {
             implementation project.dependencies.platform(libs.compose.bom)
             implementation libs.compose.ui.test.junit4
             implementation libs.androidx.test.ext.junit
             implementation libs.compose.ui.test.manifest
         }
     }
+}
+
+android {
+    namespace 'com.pimenta.bestv.workdetail'
+    buildFeatures { compose true }
+    testOptions { unitTests.includeAndroidResources = true }
+    defaultConfig { testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
+}
+
+dependencies {
+    androidTVImplementation libs.androidx.tv.foundation
+    androidTVImplementation libs.androidx.tv.material
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.test.ext.junit
+    debugImplementation libs.compose.ui.test.manifest
 }

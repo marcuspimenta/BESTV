@@ -25,18 +25,12 @@ import com.pimenta.bestv.data.remote.api.configureTmdbClient
 import com.pimenta.bestv.di.tmdbNetworkModule
 import com.pimenta.bestv.domain.model.ContentSource
 import com.pimenta.bestv.presentation.platform.ContentSourceLabelProvider
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 internal fun platformModule(accessToken: String): Module = module {
-    single<DeviceCapabilities> {
-        object : DeviceCapabilities {
-            override val isMobileDevice = true
-        }
-    }
     single<ContentSourceLabelProvider> {
         ContentSourceLabelProvider { source ->
             when (source) {

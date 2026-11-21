@@ -1,17 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'com.android.library'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 kotlin {
-    android {
-        namespace = 'com.pimenta.bestv.appcomposition'
-        compileSdk = libs.versions.compile.sdk.get().replace('android-', '').split('\\.')[0].toInteger()
-        minSdk = libs.versions.min.sdk.get().toInteger()
-        compilerOptions.jvmTarget.set(
-            JvmTarget.fromTarget(libs.versions.jvm.target.get())
-        )
+    androidTarget {
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
     }
 
     iosArm64()
@@ -30,3 +25,5 @@ kotlin {
         }
     }
 }
+
+android { namespace 'com.pimenta.bestv.appcomposition' }

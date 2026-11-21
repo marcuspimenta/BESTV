@@ -20,9 +20,17 @@ buildscript {
 }
 
 def configureAndroidProject = { project ->
+    if (!project.pluginManager.hasPlugin('org.jetbrains.kotlin.multiplatform')) {
+        project.apply plugin: 'org.jetbrains.kotlin.android'
+    }
     project.apply plugin: 'kotlin-parcelize'
 
     project.configure(project.extensions.getByName('android')) {
+        flavorDimensions 'device'
+        productFlavors {
+            androidMobile { dimension 'device' }
+            androidTV { dimension 'device' }
+        }
         compileSdkVersion libs.versions.compile.sdk.get()
 
         defaultConfig {
@@ -36,9 +44,11 @@ def configureAndroidProject = { project ->
         }
     }
 
-    project.configure(project.extensions.getByName('kotlin')) {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
+    if (!project.pluginManager.hasPlugin('org.jetbrains.kotlin.multiplatform')) {
+        project.configure(project.extensions.getByName('kotlin')) {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
+            }
         }
     }
 }

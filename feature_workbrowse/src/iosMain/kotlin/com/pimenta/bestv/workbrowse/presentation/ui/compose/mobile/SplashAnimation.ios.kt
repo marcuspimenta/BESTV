@@ -27,8 +27,8 @@ import platform.Foundation.NSURL
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-internal actual fun SplashAnimation(
-    modifier: Modifier,
+internal fun SplashAnimation(
+    modifier: Modifier = Modifier,
     onCompleted: () -> Unit,
 ) {
     val currentOnCompleted = rememberUpdatedState(onCompleted)

@@ -12,7 +12,7 @@ Use this skill to review existing BESTV packages and dependencies, identify boun
 1. Read repository instructions, inspect `git status`, and preserve unrelated edits.
 2. Read [BESTV project guidelines](../bestv-project-guidelines/SKILL.md), [Clean Architecture documentation](../../../CLEAN_ARCHITECTURE.md), and [Layered Feature Architecture](../android-feature-architecture/references/layered-feature-architecture.md). Treat them as intended conventions, then verify all claims against current source and build files.
 3. Inspect `settings.gradle` and the relevant module `build.gradle` files to establish actual Gradle dependencies. Package names alone do not prove a module boundary.
-4. Inventory the feature's `commonMain`, `androidMain`, and applicable test source sets as well as its `data`, `domain`, `presentation`, `platform`, and `di` packages. Include shared modules involved in its flow.
+4. Inventory the feature's `commonMain`, `androidMain`, `mobileMain`, `androidMobile`, `androidTV`, and applicable test source directories as well as its `data`, `domain`, `presentation`, `platform`, and `di` packages. Include shared modules involved in its flow.
 5. Trace representative read and write flows end to end: presentation event/ViewModel → use case → domain repository contract → implementation/data source → mapper → presentation state. Include worker, receiver, scheduler, provider, or navigation entry points when the feature uses them.
 6. Inspect imports and public method signatures at each boundary. Run `./gradlew verifyArchitecture` when the environment supports Gradle, and inspect the checker implementation at `gradle/verify-architecture.gradle` to understand exactly what it enforces.
 7. Report each finding with file/package evidence, the dependency direction, why it crosses a boundary, and a concrete minimal fix. Separate confirmed violations from design choices or risks the automated checker does not cover.
@@ -30,13 +30,13 @@ Use this skill to review existing BESTV packages and dependencies, identify boun
 
 ## Automated check coverage
 
-The root `verifyArchitecture` task checks production Kotlin imports in `src/main/java`, `src/main/kotlin`, `src/commonMain/kotlin`, `src/androidMain/kotlin`, `src/iosMain/kotlin`, and `src/jvmMain/kotlin`. It currently rejects:
+The root `verifyArchitecture` task checks production Kotlin imports in `src/main/java`, `src/main/kotlin`, `src/commonMain/kotlin`, `src/androidMain/kotlin`, `src/androidMobile/kotlin`, `src/androidTV/kotlin`, `src/mobileMain/kotlin`, `src/iosMain/kotlin`, and `src/jvmMain/kotlin`. It currently rejects:
 
 - Domain imports of presentation, data, Android/AndroidX, Ktor, and Koin.
-- Data imports of presentation.
+- Data imports of presentation and presentation imports of data.
 - Direct package imports from another `feature_*` module.
 
-The check does not inspect generated sources or every source set a KMP module could define, and it does not enforce Gradle dependency declarations. Shared presentation models and mappers live in `common/src/commonMain`; feature ViewModels and mobile Compose screens live in each feature's `commonMain`.
+The check does not inspect generated sources or every source set a KMP module could define, and it does not enforce Gradle dependency declarations. Shared presentation models and mappers live in `common/src/commonMain`; feature ViewModels live in `commonMain`, while shared Android mobile and iOS feature screens live in `mobileMain`.
 
 The task is a useful guard, not a complete architecture proof. A clean result does not verify Gradle dependency declarations, type leakage through unqualified or generated APIs, ownership of business rules, correct mapper placement beyond the listed package rule, dependency inversion in call graphs, DI binding correctness, or runtime behavior. Check those manually and recommend targeted improvements to the task when an important boundary can be enforced reliably.
 
@@ -48,7 +48,7 @@ Prefer small, flow-preserving changes. For each violation:
 2. Identify the owning layer for the leaked type or behavior.
 3. Propose a concrete move or replacement, such as introducing a domain value/interface, moving source mapping into data, moving UI mapping/resource lookup into presentation, or moving Android scheduling into a platform adapter.
 4. Describe required call-site and Koin binding updates, and note any behavior/schema/route compatibility constraints.
-5. Recommend only meaningful validation: `verifyArchitecture`, affected KMP `androidHostTest` or Android-only unit-test tasks, relevant `ktlintCheck`, and `:androidApp` or iOS framework builds where integration or resources changed. Do not claim checks that were not run.
+5. Recommend only meaningful validation: `verifyArchitecture`, affected KMP flavor unit-test tasks (such as `testAndroidMobileDebugUnitTest` and `testAndroidTVDebugUnitTest`) or Android-only unit-test tasks, relevant `ktlintCheck`, and `:androidApp` or iOS framework builds where integration or resources changed. Do not claim checks that were not run.
 
 Do not recommend new Gradle modules, broad renames, or abstractions solely to match a diagram. Preserve existing TV/mobile behavior, navigation contracts, persistence schema, and background-work semantics unless the requested fix requires an explicit change.
 

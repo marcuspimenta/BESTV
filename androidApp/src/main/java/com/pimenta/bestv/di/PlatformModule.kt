@@ -16,15 +16,10 @@
 
 package com.pimenta.bestv.di
 
-import com.pimenta.bestv.application.AndroidDeviceCapabilities
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.route.di.androidRouteModule
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val platformModule = module {
-    single<DeviceCapabilities> { AndroidDeviceCapabilities(androidContext()) }
-
     includes(
         networkModule,
         databaseDriverModule,

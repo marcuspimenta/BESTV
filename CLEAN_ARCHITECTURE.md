@@ -1,6 +1,6 @@
 # Clean Architecture in BESTV
 
-This guide describes the architecture implemented by the current BESTV modules and source sets. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. The `common` module and mobile feature modules have Android and iOS Kotlin Multiplatform targets. Portable data and domain code, shared ViewModels, route contracts, UI primitives, and mobile Compose screens live in `commonMain`; Android-specific drivers, resource adapters, Intent navigation, and TV UI live in Android source sets. The `appComposition` module aggregates shared app-level Koin bindings for Android and iOS, while `iosAppFramework` provides the iOS Compose entry point and framework. Each feature owns its typed Ktor TMDb API client.
+This guide describes the architecture implemented by the current BESTV modules and source sets. Feature code is organized into `presentation`, `domain`, `data`, `platform`, and `di` packages. The `common` module and mobile feature modules have Android and iOS Kotlin Multiplatform targets. Portable data and domain code, shared ViewModels, route contracts and UI primitives live in `commonMain`, while shared mobile screens live in `mobileMain`; Android-specific drivers, resource adapters, Intent navigation, and TV UI live in Android source sets. The `appComposition` module aggregates shared app-level Koin bindings for Android and iOS, while `iosAppFramework` provides the iOS Compose entry point and framework. Each feature owns its typed Ktor TMDb API client.
 
 ![Clean Architecture package dependency diagram](docs/clean-architecture-package-dependencies.svg)
 
@@ -24,8 +24,8 @@ Feature folders follow this shape; individual features include only the packages
 feature_search/src/commonMain/kotlin/com/pimenta/bestv/search/
 ├── presentation/
 │   ├── model/                 # Screen state, events, and effects
-│   ├── viewmodel/
-│   └── ui/                    # Shared mobile Compose screens
+│   ├── navigation/            # Shared entry-provider builder
+│   └── viewmodel/
 ├── domain/
 │   ├── *UseCase.kt
 │   └── repository/            # Interfaces owned by domain
@@ -35,11 +35,12 @@ feature_search/src/commonMain/kotlin/com/pimenta/bestv/search/
 │   └── repository/            # Implements domain interfaces
 └── di/                        # Koin composition for this feature
 
-feature_search/src/androidMain/kotlin/com/pimenta/bestv/search/
-└── presentation/ui/           # Android wrappers, TV screens, and navigation adapters
+feature_search/src/mobileMain/kotlin/ # Shared Android mobile and iOS screens
+feature_search/src/androidMobile/ # Mobile wrapper
+feature_search/src/androidTV/     # TV wrapper and screens
 ```
 
-The KMP features place shared layers in `src/commonMain/kotlin` and shared strings/images in `src/commonMain/composeResources`; shared fonts can use the same resource source set when added. Android wrappers, Navigation entry providers, TV screens, and Android-specific adapters live in `src/androidMain`. The `feature_recommendation` module remains Android-only and has a `platform/` package for its boot receiver, WorkManager worker and scheduler, and Android TV providers. Keep platform-specific implementations at this outer edge rather than in domain.
+The KMP features place shared layers in `src/commonMain/kotlin` and shared strings/images in `src/commonMain/composeResources`; shared fonts can use the same resource source set when added. Navigation entry providers are shared; Android wrappers and TV screens live in the flavored source directories of each feature. `mobileMain` is a directory registered with both `iosMain` and the Android mobile compilation, not a separate Gradle module. The Android TV compilation does not include those mobile feature screens. The `feature_recommendation` module remains Android-only and has a `platform/` package for its boot receiver, WorkManager worker and scheduler, and Android TV providers. It is currently included in both Android flavors. Keep platform-specific implementations at this outer edge rather than in domain.
 
 ## Shared packages and models
 
@@ -71,9 +72,9 @@ common/src/androidMain/kotlin/com/pimenta/bestv/
 └── presentation/
     ├── image/                 # Android image-loader configuration
     ├── platform/              # Android resource adapter
-    ├── route/                 # Android Intent route adapters and route DI
-    ├── theme/                 # Android TV Compose theme
-    └── ui/compose/tv/         # Android TV-specific Compose primitives
+    └── route/                 # Android Intent route adapters and route DI
+
+common/src/androidTV/  # Android TV Compose theme and primitives
 
 common/src/iosMain/kotlin/com/pimenta/bestv/
 ├── logging/                    # iOS logger implementation
@@ -92,7 +93,7 @@ iosAppFramework/src/commonMain/ # iOS Compose app renderer over shared feature s
 iosAppFramework/src/iosMain/    # ComposeUIViewController and iOS Koin/driver/engine bindings
 ```
 
-The `common` Android target has the generated resource namespace `com.pimenta.bestv.common.R`; Android-only resources live under `common/src/androidMain/res`, while shared assets and strings use Compose resources in `commonMain`. Portable application constants, Koin bindings, TMDb DTOs, presentation models, domain-to-presentation mappers, route contracts, and SQLDelight query APIs are in `commonMain`. Android-specific code includes the Koin SQLDelight driver, resource adapter, OkHttp engine, Intent routes, Android image-loader setup, and TV Compose primitives. Mobile screen implementations are in each feature's `commonMain`; Android TV screens and wrappers are in feature `androidMain` source sets. The `androidApp` module owns `BuildConfig`, app startup, and the Android Navigation 3 host. Typed endpoint clients and feature-specific response models stay in their feature's `data/remote` package. The shared SQLDelight schema, persistence models, and local database operations live in `common`; Android creates its SQLDelight driver in `common`'s Android driver DI module.
+The `common` Android target has the generated resource namespace `com.pimenta.bestv.common.R`; Android-only resources live under `common/src/androidMain/res`, while shared assets and strings use Compose resources in `commonMain`. Portable application constants, Koin bindings, TMDb DTOs, presentation models, domain-to-presentation mappers, route contracts, and SQLDelight query APIs are in `commonMain`. Android-specific code includes the Koin SQLDelight driver, resource adapter, OkHttp engine, Intent routes, and Android image-loader setup. Mobile screen implementations are in each feature’s `mobileMain`; Android TV screens and wrappers are in the features’ `androidTV` source sets. The `androidApp` module owns `BuildConfig`, app startup, and the Android Navigation 3 host. Typed endpoint clients and feature-specific response models stay in their feature's `data/remote` package. The shared SQLDelight schema, persistence models, and local database operations live in `common`; Android creates its SQLDelight driver in `common`'s Android driver DI module.
 
 ## Mapping rules
 
@@ -144,7 +145,9 @@ The Work Details, Browse, Search, and Cast Details Koin modules live in `commonM
 
 ## Shared UI and platform adapters
 
-The mobile Browse, Search, Work Details, and Cast Details composables live in their feature modules' `commonMain` source sets and are used by both Android and iOS. Their ViewModels, state, events, and effects are shared as well. Android keeps the TV-specific screens, focus behavior, Navigation 3 `NavDisplay` host, and Intent adapters in Android source sets and `androidApp`. iOS uses the SwiftUI target in `iosApp` and the Kotlin `iosAppFramework` module, which renders the same mobile screens and handles iOS startup, back navigation, deep links, and platform callbacks. Shared effects carry route keys or URL strings rather than Android `Intent` objects.
+The mobile Browse, Search, Work Details, and Cast Details composables live in their feature modules’ `mobileMain` source directories and are used by both Android and iOS. Their ViewModels, state, events, and effects are shared as well. Android keeps the TV-specific screens, focus behavior, Navigation 3 `NavDisplay` host, and Intent adapters in Android source sets and `androidApp`. iOS uses the SwiftUI target in `iosApp` and the Kotlin `iosAppFramework` module, which renders the same mobile screens and handles iOS startup, back navigation, deep links, and platform callbacks. Shared effects carry route keys or URL strings rather than Android `Intent` objects.
+
+The feature entry-provider functions in `commonMain` take screen content from the host. The Android navigation module supplies identically named wrappers from either `androidMobile` or `androidTV`; the iOS navigation module supplies the mobile screens. Android chooses the wrapper through the build variant, while `BuildConfig.IS_MOBILE` selects the host's navigation transition behavior.
 
 ## Example request flow
 
@@ -189,6 +192,8 @@ Run the root Gradle task:
 - Data imports from presentation.
 - Data imports from common presentation packages and presentation imports from data.
 - Direct imports from another feature package.
+
+The scan includes `commonMain`, `androidMain`, `androidMobile`, `androidTV`, `mobileMain`, `iosMain`, `jvmMain`, and Android `main` Kotlin/Java source directories. It does not inspect generated or test sources or enforce Gradle dependency declarations.
 
 Platform adapters and feature DI are allowed to form the composition edge. The check is a source import guard, not a substitute for Gradle module boundaries or code review.
 

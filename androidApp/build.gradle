@@ -39,6 +39,10 @@ android {
         versionName "1.1.0"
         buildConfigField "String", "TMDB_ACCESS_TOKEN", tmdbAccessTokenLiteral
     }
+    productFlavors {
+        androidMobile { buildConfigField 'boolean', 'IS_MOBILE', 'true' }
+        androidTV { buildConfigField 'boolean', 'IS_MOBILE', 'false' }
+    }
     buildTypes {
         debug {
             debuggable true
@@ -98,7 +102,7 @@ dependencies {
 tasks.register('verifyNavigationEntries') {
     group = 'verification'
     description = 'Verifies that every navigation destination has a registered entry provider.'
-    dependsOn tasks.named('testDebugUnitTest')
+    dependsOn tasks.named('testAndroidMobileDebugUnitTest'), tasks.named('testAndroidTVDebugUnitTest')
 }
 
 tasks.named('check') {
@@ -106,7 +110,8 @@ tasks.named('check') {
 }
 
 tasks.matching {
-    it.name in ['assembleDebug', 'assembleRelease', 'bundleDebug', 'bundleRelease']
-}.configureEach {
-    dependsOn tasks.named('verifyNavigationEntries')
+    it.name ==~ /(?:assemble|bundle)Android(?:Mobile|TV)(?:Debug|Release)/
+}.configureEach { task ->
+    def flavor = task.name.contains('AndroidMobile') ? 'AndroidMobile' : 'AndroidTV'
+    dependsOn tasks.named("test${flavor}DebugUnitTest")
 }

@@ -61,6 +61,9 @@ def productionSourceDirectories = [
     'src/main/kotlin',
     'src/commonMain/kotlin',
     'src/androidMain/kotlin',
+    'src/androidMobile/kotlin',
+    'src/androidTV/kotlin',
+    'src/mobileMain/kotlin',
     'src/iosMain/kotlin',
     'src/jvmMain/kotlin',
 ]

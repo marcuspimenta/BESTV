@@ -350,13 +350,18 @@ feature_example/
     │   ├── data/              # Shared data sources, repositories, and source mappers
     │   ├── domain/            # Use cases and repository contracts
     │   ├── di/                # Shared feature bindings
-    │   └── presentation/      # State, events, ViewModel, and mobile Compose UI
+    │   └── presentation/      # State, events, and ViewModel
     ├── commonMain/composeResources/ # Shared strings, images, and fonts
-    ├── androidMain/kotlin/    # Android adapters, wrappers, and TV Compose UI
-    └── androidHostTest/kotlin/ # JVM-hosted KMP feature tests
+    ├── mobileMain/kotlin/     # Shared Android mobile and iOS Compose screens
+    ├── androidMain/           # Android resources and adapters shared by both flavors
+    ├── androidMobile/kotlin/  # Android mobile wrapper and platform-specific mobile UI
+    ├── androidTV/kotlin/      # TV wrapper and screens
+    ├── iosMain/kotlin/        # iOS-specific implementations, where needed
+    ├── androidTestAndroidTV/  # TV Compose instrumentation tests
+    └── androidUnitTest/kotlin/ # JVM-hosted KMP feature tests
 ```
 
-The feature's `commonMain` source set is shared by Android and iOS. Android-only navigation adapters and TV layouts stay in `androidMain`; the iOS app composes the mobile screens through `iosAppFramework`. A shared ViewModel should expose route keys and semantic actions, while each app host performs platform-specific navigation or URL opening.
+The feature’s `commonMain` source set is shared by Android and iOS. Its `mobileMain` directory is registered with `iosMain` and the `androidMobile` compilation, so the mobile screens are shared without being compiled for TV. The feature’s `androidTV` source directory contains the TV layouts; `iosAppFramework` composes the mobile screens. Flavor-specific Android wrappers share a signature and are selected at compile time. A shared ViewModel should expose route keys and semantic actions, while each app host performs platform-specific navigation or URL opening.
 
 ## Existing Features
 
