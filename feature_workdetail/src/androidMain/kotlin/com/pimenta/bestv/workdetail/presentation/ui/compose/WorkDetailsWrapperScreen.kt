@@ -8,9 +8,11 @@
 package com.pimenta.bestv.workdetail.presentation.ui.compose
 
 import androidx.compose.runtime.Composable
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.workdetail.presentation.ui.compose.mobile.MobileWorkDetailsScreen
 import com.pimenta.bestv.workdetail.presentation.ui.compose.tv.TVWorkDetailsScreen
 import com.pimenta.bestv.workdetail.presentation.viewmodel.WorkDetailsViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun WorkDetailsWrapperScreen(
@@ -19,7 +21,7 @@ fun WorkDetailsWrapperScreen(
     openExternalUrl: (String) -> Unit,
     onBack: () -> Unit,
 ) {
-    val isMobileDevice = viewModel.state.value.isMobileDevice
+    val isMobileDevice = koinInject<DeviceCapabilities>().isMobileDevice
     if (isMobileDevice) {
         MobileWorkDetailsScreen(
             viewModel = viewModel,

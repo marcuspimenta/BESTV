@@ -20,7 +20,6 @@ import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.platform.ContentSourceLabelProvider
 import com.pimenta.bestv.presentation.route.search.SearchRoute
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
@@ -59,9 +58,8 @@ class WorkBrowseViewModel(
     // private val loadRecommendationUseCase: LoadRecommendationUseCase,
     private val searchRoute: SearchRoute,
     private val resource: ContentSourceLabelProvider,
-    private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<WorkBrowseState, WorkBrowseEffect>(
-    WorkBrowseState(isMobileDevice = deviceCapabilities.isMobileDevice),
+    WorkBrowseState(),
 ) {
     init {
         observeFavorites()

@@ -8,10 +8,12 @@
 package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
 import androidx.compose.runtime.Composable
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile.MobileBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.ui.compose.tv.TVWorkBrowseScreen
 import com.pimenta.bestv.workbrowse.presentation.viewmodel.WorkBrowseViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun WorkBrowseWrapperScreen(
@@ -19,7 +21,7 @@ fun WorkBrowseWrapperScreen(
     navigate: (NavKey) -> Unit,
     closeScreen: () -> Unit,
 ) {
-    val isMobileDevice = viewModel.state.value.isMobileDevice
+    val isMobileDevice = koinInject<DeviceCapabilities>().isMobileDevice
     if (isMobileDevice) {
         MobileBrowseScreen(
             viewModel = viewModel,

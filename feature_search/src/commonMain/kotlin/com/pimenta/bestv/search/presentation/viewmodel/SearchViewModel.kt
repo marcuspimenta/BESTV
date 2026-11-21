@@ -20,7 +20,6 @@ import com.pimenta.bestv.presentation.platform.ContentSourceLabelProvider
 import com.pimenta.bestv.presentation.model.PageViewModel
 import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
 import com.pimenta.bestv.search.domain.SearchTvShowsByQueryUseCase
@@ -52,8 +51,7 @@ class SearchViewModel(
     private val searchRequestProcessor: SearchRequestProcessor,
     private val selectedWorkRequestProcessor: SelectedWorkRequestProcessor,
     private val resource: ContentSourceLabelProvider,
-    deviceCapabilities: DeviceCapabilities,
-) : BaseViewModel<SearchState, SearchEffect>(SearchState(isMobileDevice = deviceCapabilities.isMobileDevice)) {
+) : BaseViewModel<SearchState, SearchEffect>(SearchState()) {
 
     private var moviesPaginationJob: Job? = null
     private var tvShowsPaginationJob: Job? = null

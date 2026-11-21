@@ -8,10 +8,12 @@
 package com.pimenta.bestv.castdetail.presentation.ui.compose
 
 import androidx.compose.runtime.Composable
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.castdetail.presentation.ui.compose.mobile.MobileCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.ui.compose.tv.TVCastDetailsScreen
 import com.pimenta.bestv.castdetail.presentation.viewmodel.CastDetailsViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun CastDetailsWrapperScreen(
@@ -19,7 +21,7 @@ fun CastDetailsWrapperScreen(
     navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
 ) {
-    val isMobileDevice = viewModel.state.value.isMobileDevice
+    val isMobileDevice = koinInject<DeviceCapabilities>().isMobileDevice
     if (isMobileDevice) {
         MobileCastDetailsScreen(
             viewModel = viewModel,

@@ -24,7 +24,6 @@ import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
  * This is the single source of truth for the screen's state.
  */
 data class SearchState(
-    val isMobileDevice: Boolean = false,
     val query: String = "",
     val isSearching: Boolean = false,
     val state: State = Empty,

@@ -20,7 +20,6 @@ import com.pimenta.bestv.domain.model.PageDomainModel
 import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import com.pimenta.bestv.search.domain.SearchMoviesByQueryUseCase
@@ -219,7 +218,6 @@ class SearchViewModelTest {
             searchRequestProcessor,
             selectedWorkRequestProcessor,
             resource,
-            TvDeviceCapabilities,
         )
     }
 
@@ -377,7 +375,6 @@ class SearchViewModelTest {
             SearchRequestProcessor(),
             selectedWorkRequestProcessor,
             resource,
-            TvDeviceCapabilities,
         )
         val initialResult = MOVIE_PAGE_DOMAIN_MODEL to TV_SHOW_PAGE_DOMAIN_MODEL
         whenever(searchWorksByQueryUseCase(QUERY)).thenReturn(initialResult)

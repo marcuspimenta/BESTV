@@ -22,7 +22,6 @@ import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.platform.ContentSourceLabelProvider
 import com.pimenta.bestv.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import kotlinx.coroutines.CancellationException
@@ -38,9 +37,8 @@ class CastDetailsViewModel(
     private val castId: Int,
     private val getCastDetailsUseCase: GetCastDetailsUseCase,
     private val resource: ContentSourceLabelProvider,
-    private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<CastDetailsState, CastDetailsEffect>(
-    CastDetailsState.Loading(deviceCapabilities.isMobileDevice),
+    CastDetailsState.Loading,
 ) {
     fun handleEvent(event: CastDetailsEvent) {
         when (event) {
@@ -52,7 +50,7 @@ class CastDetailsViewModel(
     private fun loadData() {
         viewModelScope.launch {
             try {
-                updateState { CastDetailsState.Loading(deviceCapabilities.isMobileDevice) }
+                updateState { CastDetailsState.Loading }
 
                 val (castDetails, movies, tvShows) = getCastDetailsUseCase(castId)
 
@@ -63,17 +61,16 @@ class CastDetailsViewModel(
                             cast = cast,
                             movies = movies?.mapNotNull { movie -> movie.toViewModel(resource) }.orEmpty(),
                             tvShows = tvShows?.mapNotNull { tvShow -> tvShow.toViewModel(resource) }.orEmpty(),
-                            isMobileDevice = deviceCapabilities.isMobileDevice,
                         )
                     } else {
-                        CastDetailsState.Error(deviceCapabilities.isMobileDevice)
+                        CastDetailsState.Error
                     }
                 }
             } catch (exception: CancellationException) {
                 throw exception
             } catch (exception: Exception) {
                 logError(exception, "Error while getting the cast details")
-                updateState { CastDetailsState.Error(deviceCapabilities.isMobileDevice) }
+                updateState { CastDetailsState.Error }
             }
         }
     }

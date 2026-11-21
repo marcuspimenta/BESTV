@@ -5,7 +5,6 @@ import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.platform.Resource
-import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.route.SearchDestination
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import com.pimenta.bestv.presentation.route.search.SearchRoute
@@ -128,7 +127,6 @@ class WorkBrowseViewModelTest {
             observeFavoritesUseCase = observeFavoritesUseCase,
             searchRoute = searchRoute,
             resource = resource,
-            deviceCapabilities = TvDeviceCapabilities,
         )
 
     private suspend fun TestScope.transitionToLoadedState() {

@@ -23,7 +23,6 @@ import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.presentation.route.CastDetailsDestination
@@ -177,7 +176,6 @@ class WorkDetailsViewModelTest {
             getSimilarByWorkUseCase = getSimilarByWorkUseCase,
             castDetailsRoute = castDetailsRoute,
             resource = resource,
-            deviceCapabilities = TvDeviceCapabilities,
         )
 
     @Before
@@ -229,6 +227,17 @@ class WorkDetailsViewModelTest {
             val header = loadedState.contents.filterIsInstance<WorkDetailsState.Content.Header>().first()
             val saveWork = header.actions.filterIsInstance<WorkDetailsState.ActionButton.SaveWork>().first()
             assertTrue(saveWork.isFavorite)
+            assertEquals(
+                listOf(
+                    saveWork,
+                    WorkDetailsState.ActionButton.ScrollToVideos,
+                    WorkDetailsState.ActionButton.ScrollToCasts,
+                    WorkDetailsState.ActionButton.ScrollToRecommendedWorks,
+                    WorkDetailsState.ActionButton.ScrollToSimilarWorks,
+                    WorkDetailsState.ActionButton.ScrollToReviews,
+                ),
+                header.actions,
+            )
             assertEquals("Released", header.metadata?.status)
             assertEquals("English", header.metadata?.originalLanguage)
 

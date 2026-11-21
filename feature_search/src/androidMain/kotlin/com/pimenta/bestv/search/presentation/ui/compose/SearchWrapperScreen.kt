@@ -8,10 +8,12 @@
 package com.pimenta.bestv.search.presentation.ui.compose
 
 import androidx.compose.runtime.Composable
+import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.search.presentation.ui.compose.mobile.MobileSearchScreen
 import com.pimenta.bestv.search.presentation.ui.compose.tv.TVSearchScreen
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun SearchWrapperScreen(
@@ -19,7 +21,7 @@ fun SearchWrapperScreen(
     navigate: (NavKey) -> Unit,
     onBack: () -> Unit,
 ) {
-    val isMobileDevice = viewModel.state.value.isMobileDevice
+    val isMobileDevice = koinInject<DeviceCapabilities>().isMobileDevice
     if (isMobileDevice) {
         MobileSearchScreen(
             viewModel = viewModel,

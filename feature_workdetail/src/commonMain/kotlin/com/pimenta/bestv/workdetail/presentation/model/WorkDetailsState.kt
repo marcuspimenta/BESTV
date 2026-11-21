@@ -39,7 +39,6 @@ private const val ID_ACTION_SCROLL_TO_REVIEWS = 6
 data class WorkDetailsState(
     val work: WorkViewModel,
     val state: State,
-    val isMobileDevice: Boolean,
 ) {
     sealed interface State {
         data object Loading : State

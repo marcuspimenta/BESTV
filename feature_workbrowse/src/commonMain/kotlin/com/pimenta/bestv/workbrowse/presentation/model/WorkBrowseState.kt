@@ -34,7 +34,6 @@ import com.pimenta.bestv.workbrowse.resources.search as workBrowseSearchString
  * Represents the state of the Work Browse screen.
  */
 data class WorkBrowseState(
-    val isMobileDevice: Boolean = false,
     val latestFavorites: List<WorkViewModel> = emptyList(),
     val state: State = Loading(false),
 ) {

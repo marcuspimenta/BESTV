@@ -56,7 +56,6 @@ val castDetailModule = module {
             castId = castId,
             getCastDetailsUseCase = get(),
             resource = get(),
-            deviceCapabilities = get(),
         )
     }
 }

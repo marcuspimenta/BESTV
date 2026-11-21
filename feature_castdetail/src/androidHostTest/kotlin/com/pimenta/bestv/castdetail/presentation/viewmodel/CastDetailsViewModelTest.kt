@@ -26,7 +26,6 @@ import com.pimenta.bestv.domain.model.WorkDomainModel
 import com.pimenta.bestv.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
-import com.pimenta.bestv.presentation.platform.TvDeviceCapabilities
 import com.pimenta.bestv.presentation.platform.Resource
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import kotlinx.coroutines.CancellationException
@@ -135,7 +134,6 @@ class CastDetailsViewModelTest {
             castId = CAST.id,
             getCastDetailsUseCase = getCastDetailsUseCase,
             resource = resource,
-            deviceCapabilities = TvDeviceCapabilities,
         )
 
     @Before

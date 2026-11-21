@@ -22,7 +22,6 @@ import com.pimenta.bestv.presentation.extension.firstOf
 import com.pimenta.bestv.presentation.extension.replaceFirst
 import com.pimenta.bestv.presentation.model.PaginationState
 import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
-import com.pimenta.bestv.presentation.platform.DeviceCapabilities
 import com.pimenta.bestv.presentation.platform.ContentSourceLabelProvider
 import com.pimenta.bestv.presentation.route.castdetail.CastDetailsRoute
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
@@ -92,9 +91,8 @@ class WorkDetailsViewModel(
     private val getSimilarByWorkUseCase: GetSimilarByWorkUseCase,
     private val castDetailsRoute: CastDetailsRoute,
     private val resource: ContentSourceLabelProvider,
-    private val deviceCapabilities: DeviceCapabilities,
 ) : BaseViewModel<WorkDetailsState, WorkDetailsEffect>(
-    WorkDetailsState(work, Loading, isMobileDevice = deviceCapabilities.isMobileDevice),
+    WorkDetailsState(work, Loading),
 ) {
     fun handleEvent(event: WorkDetailsEvent) {
         when (event) {
@@ -128,22 +126,18 @@ class WorkDetailsViewModel(
                             indexOfContentToScroll = null,
                             contents = listOfNotNull(
                                 Header(
-                                    actions = if (deviceCapabilities.isMobileDevice) {
-                                        listOf(SaveWork(result.isFavorite))
-                                    } else {
-                                        listOfNotNull(
-                                            SaveWork(result.isFavorite),
-                                            ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
-                                            ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
-                                            ScrollToRecommendedWorks.takeIf {
-                                                result.recommended.results?.isNotEmpty() == true
-                                            },
-                                            ScrollToSimilarWorks.takeIf {
-                                                result.similar.results?.isNotEmpty() == true
-                                            },
-                                            ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
-                                        )
-                                    },
+                                    actions = listOfNotNull(
+                                        SaveWork(result.isFavorite),
+                                        ScrollToVideos.takeIf { result.videos?.isNotEmpty() == true },
+                                        ScrollToCasts.takeIf { result.casts?.isNotEmpty() == true },
+                                        ScrollToRecommendedWorks.takeIf {
+                                            result.recommended.results?.isNotEmpty() == true
+                                        },
+                                        ScrollToSimilarWorks.takeIf {
+                                            result.similar.results?.isNotEmpty() == true
+                                        },
+                                        ScrollToReviews.takeIf { result.reviews.results?.isNotEmpty() == true },
+                                    ),
                                     watchProviders = result.watchProviders?.let {
                                         it.toViewModel().takeIf { it.hasAnyProvider }
                                     },
