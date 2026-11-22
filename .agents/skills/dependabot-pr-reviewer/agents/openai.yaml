@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dependabot PR Reviewer"
+  short_description: "Review dependency PRs and merge after all builds pass"
+  default_prompt: "Use $dependabot-pr-reviewer to review this BESTV Dependabot pull request."

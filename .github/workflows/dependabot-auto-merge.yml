@@ -1,0 +1,128 @@
+name: Dependabot auto-merge
+
+on:
+  workflow_run:
+    workflows: [Dependabot platform builds]
+    types: [completed]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge:
+    if: >-
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      github.event_name == 'pull_request_review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge only reviewed, passing Dependabot updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion || '' }}
+          RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha || '' }}
+          RUN_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch || '' }}
+          REVIEW_PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+          REVIEW_HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "workflow_run" && "$RUN_CONCLUSION" != "success" ]]; then
+            echo "Platform build workflow did not succeed; no merge action taken."
+            exit 0
+          fi
+
+          if [[ "$EVENT_NAME" == "workflow_run" ]]; then
+            if [[ -z "$RUN_HEAD_SHA" || -z "$RUN_HEAD_BRANCH" ]]; then
+              echo "Build run did not include a head commit or branch; refusing to merge."
+              exit 0
+            fi
+
+            head_owner="${REPOSITORY%%/*}"
+            gh api "repos/$REPOSITORY/pulls" \
+              --method GET \
+              -f state=open \
+              -f head="$head_owner:$RUN_HEAD_BRANCH" \
+              > "$RUNNER_TEMP/open-pull-requests.json"
+
+            pr_number="$(jq -r --arg sha "$RUN_HEAD_SHA" \
+              '[.[] | select(.user.login == "dependabot[bot]" and .head.sha == $sha)] | first | .number // empty' \
+              "$RUNNER_TEMP/open-pull-requests.json")"
+            expected_head_sha="$RUN_HEAD_SHA"
+          else
+            pr_number="$REVIEW_PR_NUMBER"
+            expected_head_sha="$REVIEW_HEAD_SHA"
+          fi
+
+          if [[ -z "$pr_number" || -z "$expected_head_sha" ]]; then
+            echo "No matching open Dependabot pull request was found; no merge action taken."
+            exit 0
+          fi
+
+          gh api "repos/$REPOSITORY/pulls/$pr_number" > "$RUNNER_TEMP/pull-request.json"
+          pr_author="$(jq -r '.user.login' "$RUNNER_TEMP/pull-request.json")"
+          pr_state="$(jq -r '.state' "$RUNNER_TEMP/pull-request.json")"
+          pr_base="$(jq -r '.base.ref' "$RUNNER_TEMP/pull-request.json")"
+          pr_head_sha="$(jq -r '.head.sha' "$RUNNER_TEMP/pull-request.json")"
+          pr_head_repo="$(jq -r '.head.repo.full_name // empty' "$RUNNER_TEMP/pull-request.json")"
+
+          if [[ "$pr_author" != "dependabot[bot]" || "$pr_state" != "open" || \
+                "$pr_base" != "master" || "$pr_head_repo" != "$REPOSITORY" || \
+                "$pr_head_sha" != "$expected_head_sha" ]]; then
+            echo "Pull request identity or head commit changed; refusing to merge."
+            exit 0
+          fi
+
+          gh api "repos/$REPOSITORY/pulls/$pr_number/reviews?per_page=100" \
+            > "$RUNNER_TEMP/pull-request-reviews.json"
+          approved="$(jq -r --arg sha "$pr_head_sha" '
+            [ .[] | select(.submitted_at != null) ]
+            | sort_by(.submitted_at)
+            | group_by(.user.login)
+            | map(last)
+            | any(.[]; .user.type == "User" and .user.login != "dependabot[bot]" and
+                  .commit_id == $sha and .state == "APPROVED")
+          ' "$RUNNER_TEMP/pull-request-reviews.json")"
+          changes_requested="$(jq -r --arg sha "$pr_head_sha" '
+            [ .[] | select(.submitted_at != null) ]
+            | sort_by(.submitted_at)
+            | group_by(.user.login)
+            | map(last)
+            | any(.[]; .user.type == "User" and .commit_id == $sha and .state == "CHANGES_REQUESTED")
+          ' "$RUNNER_TEMP/pull-request-reviews.json")"
+
+          if [[ "$approved" != "true" || "$changes_requested" == "true" ]]; then
+            echo "A current approval is missing or changes were requested; no merge action taken."
+            exit 0
+          fi
+
+          gh api "repos/$REPOSITORY/actions/runs" \
+            --method GET \
+            -f head_sha="$pr_head_sha" \
+            -f event=pull_request \
+            -f per_page=100 \
+            > "$RUNNER_TEMP/workflow-runs.json"
+          builds_passed="$(jq -r --arg sha "$pr_head_sha" '
+            any(.workflow_runs[]; .name == "Dependabot platform builds" and
+                .head_sha == $sha and .status == "completed" and .conclusion == "success")
+          ' "$RUNNER_TEMP/workflow-runs.json")"
+
+          if [[ "$builds_passed" != "true" ]]; then
+            echo "No successful platform build run exists for the current PR commit; no merge action taken."
+            exit 0
+          fi
+
+          gh api "repos/$REPOSITORY/pulls/$pr_number" > "$RUNNER_TEMP/pull-request-before-merge.json"
+          if [[ "$(jq -r '.state' "$RUNNER_TEMP/pull-request-before-merge.json")" != "open" || \
+                "$(jq -r '.user.login' "$RUNNER_TEMP/pull-request-before-merge.json")" != "dependabot[bot]" || \
+                "$(jq -r '.head.sha' "$RUNNER_TEMP/pull-request-before-merge.json")" != "$pr_head_sha" ]]; then
+            echo "Pull request changed during validation; refusing to merge."
+            exit 0
+          fi
+
+          gh pr merge "$pr_number" --repo "$REPOSITORY" --squash
