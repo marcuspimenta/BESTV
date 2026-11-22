@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.castdetail.presentation.ui.compose.tv
+package com.pimenta.bestv.castdetail.presentation.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
+import com.pimenta.bestv.castdetail.presentation.ui.compose.tv.TVCastDetailsHeader
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEffect.Navigate
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsEvent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
@@ -52,9 +53,10 @@ import com.pimenta.bestv.common.resources.movies_title
 import com.pimenta.bestv.common.resources.tv_shows_title
 
 @Composable
-fun TVCastDetailsScreen(
+fun CastDetailsScreen(
     viewModel: CastDetailsViewModel,
     navigate: (NavKey) -> Unit,
+    @Suppress("UNUSED_PARAMETER") onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -161,7 +163,7 @@ private fun TVCastCredits(
 
 @Preview
 @Composable
-private fun TVCastDetailsScreenPreview() {
+private fun CastDetailsScreenPreview() {
     MaterialTheme {
         TVCastDetailsContent(
             state = CastDetailsState.Loaded(

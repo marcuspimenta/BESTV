@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.workdetail.presentation.ui.compose.tv
+package com.pimenta.bestv.workdetail.presentation.ui.compose
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.tv.material3.MaterialTheme
+import com.pimenta.bestv.workdetail.presentation.ui.compose.tv.TVCastRow
+import com.pimenta.bestv.workdetail.presentation.ui.compose.tv.TVReviewRow
+import com.pimenta.bestv.workdetail.presentation.ui.compose.tv.TVVideoRow
+import com.pimenta.bestv.workdetail.presentation.ui.compose.tv.TVWorkDetailsHeader
 import com.pimenta.bestv.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
@@ -73,10 +77,11 @@ import com.pimenta.bestv.workdetail.resources.recommended
 import com.pimenta.bestv.workdetail.resources.similar
 
 @Composable
-fun TVWorkDetailsScreen(
+fun WorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
     navigate: (NavKey) -> Unit,
     openExternalUrl: (String) -> Unit,
+    @Suppress("UNUSED_PARAMETER") onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -319,7 +324,7 @@ private fun WorkDetailsState.Content.lazyContentType(): String = when (this) {
 
 @Preview
 @Composable
-private fun TVWorkDetailsScreenPreview() {
+private fun WorkDetailsScreenPreview() {
     MaterialTheme {
         TVWorkDetailsContent(
             state = WorkDetailsState(
@@ -359,7 +364,7 @@ private fun TVWorkDetailsScreenPreview() {
 
 @Preview
 @Composable
-private fun TVWorkDetailsScreenWithErrorPreview() {
+private fun WorkDetailsScreenWithErrorPreview() {
     MaterialTheme {
         TVWorkDetailsContent(
             state = WorkDetailsState(

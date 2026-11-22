@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.search.presentation.ui.compose.tv
+package com.pimenta.bestv.search.presentation.ui.compose
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,6 +56,7 @@ import com.pimenta.bestv.search.presentation.model.SearchState.Content.TvShows
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Empty
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Error
 import com.pimenta.bestv.search.presentation.model.SearchState.State.Loaded
+import com.pimenta.bestv.search.presentation.ui.compose.tv.TVSearchBar
 import com.pimenta.bestv.search.presentation.viewmodel.SearchViewModel
 import kotlinx.coroutines.flow.collectLatest
 import com.pimenta.bestv.common.resources.Res as CommonRes
@@ -65,9 +66,10 @@ import com.pimenta.bestv.search.resources.no_results
 import com.pimenta.bestv.search.resources.search_placeholder
 
 @Composable
-fun TVSearchScreen(
+fun SearchScreen(
     viewModel: SearchViewModel,
     navigate: (NavKey) -> Unit,
+    @Suppress("UNUSED_PARAMETER") onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

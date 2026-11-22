@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  */
 
-package com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile
+package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile.MobileBrowseBottomBar
+import com.pimenta.bestv.workbrowse.presentation.ui.compose.mobile.MobileBrowseContent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.CloseScreen
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect.Navigate
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
@@ -46,7 +48,7 @@ import com.pimenta.bestv.common.resources.search as commonSearchDrawable
 import com.pimenta.bestv.workbrowse.resources.search as workBrowseSearchString
 
 @Composable
-fun MobileBrowseScreen(
+fun WorkBrowseScreen(
     viewModel: WorkBrowseViewModel,
     navigate: (NavKey) -> Unit,
     closeScreen: () -> Unit,

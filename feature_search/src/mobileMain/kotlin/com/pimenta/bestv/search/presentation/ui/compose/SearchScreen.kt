@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  */
 
-package com.pimenta.bestv.search.presentation.ui.compose.mobile
+package com.pimenta.bestv.search.presentation.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -79,7 +79,7 @@ import com.pimenta.bestv.search.resources.no_results
 import com.pimenta.bestv.search.resources.search_placeholder
 
 @Composable
-fun MobileSearchScreen(
+fun SearchScreen(
     viewModel: SearchViewModel,
     navigate: (NavKey) -> Unit,
     onBack: () -> Unit,

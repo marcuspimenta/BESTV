@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.pimenta.bestv.workbrowse.presentation.ui.compose.tv
+package com.pimenta.bestv.workbrowse.presentation.ui.compose
 
 import android.net.Uri
 import android.widget.VideoView
@@ -103,10 +103,10 @@ private const val SPLASH_ANIMATION_FILE =
     "android.resource://com.pimenta.bestv/raw/splash_animation"
 
 @Composable
-fun TVWorkBrowseScreen(
+fun WorkBrowseScreen(
     viewModel: WorkBrowseViewModel,
-    closeScreen: () -> Unit,
     navigate: (NavKey) -> Unit,
+    closeScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

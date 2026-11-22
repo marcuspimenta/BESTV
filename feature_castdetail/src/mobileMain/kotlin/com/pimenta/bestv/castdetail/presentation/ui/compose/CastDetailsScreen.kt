@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  */
 
-package com.pimenta.bestv.castdetail.presentation.ui.compose.mobile
+package com.pimenta.bestv.castdetail.presentation.ui.compose
 
 import com.pimenta.bestv.common.resources.Res as CommonRes
 import com.pimenta.bestv.castdetail.resources.Res
@@ -71,7 +71,7 @@ import com.pimenta.bestv.common.resources.movies_title
 import com.pimenta.bestv.common.resources.tv_shows_title
 
 @Composable
-fun MobileCastDetailsScreen(
+fun CastDetailsScreen(
     viewModel: CastDetailsViewModel,
     navigate: (NavKey) -> Unit,
     onBack: () -> Unit,

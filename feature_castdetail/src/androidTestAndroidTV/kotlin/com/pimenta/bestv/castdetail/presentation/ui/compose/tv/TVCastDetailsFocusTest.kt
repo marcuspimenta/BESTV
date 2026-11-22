@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.pimenta.bestv.castdetail.presentation.ui.compose.TVCastDetailsContent
 import com.pimenta.bestv.castdetail.presentation.model.CastDetailsState
 import com.pimenta.bestv.presentation.model.CastViewModel
 import com.pimenta.bestv.presentation.model.WorkType

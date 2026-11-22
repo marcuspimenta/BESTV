@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  */
 
-package com.pimenta.bestv.workdetail.presentation.ui.compose.mobile
+package com.pimenta.bestv.workdetail.presentation.ui.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.workdetail.presentation.ui.compose.mobile.MobileWorkDetailsContent
 import com.pimenta.bestv.workdetail.resources.Res
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.Navigate
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEffect.OpenExternalUrl
@@ -66,7 +67,7 @@ import com.pimenta.bestv.workdetail.resources.remove_favorites
 import com.pimenta.bestv.workdetail.resources.save_favorites
 
 @Composable
-fun MobileWorkDetailsScreen(
+fun WorkDetailsScreen(
     viewModel: WorkDetailsViewModel,
     navigate: (NavKey) -> Unit,
     openExternalUrl: (String) -> Unit,

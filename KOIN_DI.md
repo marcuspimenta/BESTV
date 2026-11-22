@@ -243,7 +243,7 @@ entry<WorkDetailsDestination> { destination ->
     val viewModel = koinViewModel<WorkDetailsViewModel>(
         parameters = { parametersOf(destination.work) },
     )
-    WorkDetailsWrapperScreen(viewModel = viewModel, ...)
+    WorkDetailsScreen(viewModel = viewModel, ...)
 }
 ```
 

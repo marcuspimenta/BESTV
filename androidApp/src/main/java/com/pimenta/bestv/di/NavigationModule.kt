@@ -20,28 +20,28 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.ui.platform.LocalContext
 import com.pimenta.bestv.castdetail.presentation.navigation.castDetailsNavigationEntryProvider
-import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsWrapperScreen
+import com.pimenta.bestv.castdetail.presentation.ui.compose.CastDetailsScreen
 import com.pimenta.bestv.presentation.route.navigation.navigationEntryProviderModule
 import com.pimenta.bestv.search.presentation.navigation.searchNavigationEntryProvider
-import com.pimenta.bestv.search.presentation.ui.compose.SearchWrapperScreen
+import com.pimenta.bestv.search.presentation.ui.compose.SearchScreen
 import com.pimenta.bestv.workbrowse.presentation.navigation.workBrowseNavigationEntryProvider
-import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseWrapperScreen
+import com.pimenta.bestv.workbrowse.presentation.ui.compose.WorkBrowseScreen
 import com.pimenta.bestv.workdetail.presentation.model.ErrorType.FailedToOpenYouTubeVideo
 import com.pimenta.bestv.workdetail.presentation.model.WorkDetailsEvent.ShowError
 import com.pimenta.bestv.workdetail.presentation.navigation.workDetailsNavigationEntryProvider
-import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsWrapperScreen
+import com.pimenta.bestv.workdetail.presentation.ui.compose.WorkDetailsScreen
 import androidx.core.net.toUri
 
 val navigationModule = navigationEntryProviderModule(
     workBrowseProvider = workBrowseNavigationEntryProvider { viewModel, navigate, onBack ->
-        WorkBrowseWrapperScreen(viewModel, navigate, onBack)
+        WorkBrowseScreen(viewModel, navigate, onBack)
     },
     searchProvider = searchNavigationEntryProvider { viewModel, navigate, onBack ->
-        SearchWrapperScreen(viewModel, navigate, onBack)
+        SearchScreen(viewModel, navigate, onBack)
     },
     workDetailsProvider = workDetailsNavigationEntryProvider { viewModel, navigate, _, onBack ->
         val context = LocalContext.current
-        WorkDetailsWrapperScreen(
+        WorkDetailsScreen(
             viewModel = viewModel,
             navigate = navigate,
             openExternalUrl = { url ->
@@ -55,6 +55,6 @@ val navigationModule = navigationEntryProviderModule(
         )
     },
     castDetailsProvider = castDetailsNavigationEntryProvider { viewModel, navigate, onBack ->
-        CastDetailsWrapperScreen(viewModel, navigate, onBack)
+        CastDetailsScreen(viewModel, navigate, onBack)
     },
 )

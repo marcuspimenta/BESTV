@@ -14,6 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.theme.BESTVTheme
+import com.pimenta.bestv.workbrowse.presentation.ui.compose.TVWorkBrowseContent
 import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
 import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel.POPULAR_MOVIES
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
