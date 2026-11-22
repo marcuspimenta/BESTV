@@ -15,8 +15,6 @@
 package com.pimenta.bestv.workbrowse.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pimenta.bestv.domain.model.WorkDomainModel
-import com.pimenta.bestv.presentation.model.WorkType
 import com.pimenta.bestv.presentation.model.WorkViewModel
 import com.pimenta.bestv.presentation.mapper.toViewModel
 import com.pimenta.bestv.presentation.viewmodel.BaseViewModel
@@ -25,18 +23,10 @@ import com.pimenta.bestv.presentation.route.search.SearchRoute
 import com.pimenta.bestv.presentation.route.WorkDetailsDestination
 import com.pimenta.bestv.workbrowse.domain.GetBrowseDataUseCase
 import com.pimenta.bestv.workbrowse.domain.ObserveFavoritesUseCase
-import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDomainModel
 import com.pimenta.bestv.workbrowse.domain.model.BrowseSectionDetails
-import com.pimenta.bestv.workbrowse.presentation.mapper.toViewModels
-import com.pimenta.bestv.workbrowse.presentation.model.ContentSection
-import com.pimenta.bestv.workbrowse.presentation.model.TopWorkTypeViewModel
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEffect
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseEvent
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Favorites
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Movies
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.Search
-import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.Section.TvShows
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Error
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loaded
 import com.pimenta.bestv.workbrowse.presentation.model.WorkBrowseState.State.Loading
@@ -149,79 +139,12 @@ class WorkBrowseViewModel(
         }
     }
 
-    private fun displayBrowseSections(
-        sectionsDetails: BrowseSectionDetails,
-        favorites: List<WorkViewModel>,
-    ) {
-        val favoriteIds = favorites.mapTo(mutableSetOf()) { it.type to it.id }
-        val movieSections = sectionsDetails.movieSections.withFavoriteFlags(favoriteIds)
-        val tvShowSections = sectionsDetails.tvShowSections.withFavoriteFlags(favoriteIds)
-        val favoriteSections = favorites.toFavoriteSections()
-
-        updateState { current ->
-            val previous = current.state as? Loaded
-            val movieViewModels = movieSections.toViewModels(resource)
-            val tvShowViewModels = tvShowSections.toViewModels(resource)
-            val sections = listOfNotNull(
-                Search,
-                Movies(movieViewModels).takeIf { it.content.isNotEmpty() },
-                TvShows(tvShowViewModels).takeIf { it.content.isNotEmpty() },
-                Favorites(favoriteSections).takeIf { it.content.isNotEmpty() },
-            )
-            val selectedSectionIndex = previous?.selectedSectionIndex ?: 1
-
-            current.copy(
-                state = Loaded(
-                    workSelected = previous?.workSelected,
-                    selectedSectionIndex = selectedSectionIndex.coerceAtMost(sections.lastIndex),
-                    sections = sections,
-                ),
-            )
-        }
+    private fun displayBrowseSections(sectionsDetails: BrowseSectionDetails, favorites: List<WorkViewModel>) {
+        updateState { current -> current.withBrowseSections(sectionsDetails, favorites, resource) }
     }
 
     private fun updateLoadedFavorites(favorites: List<WorkViewModel>) {
-        val favoriteIds = favorites.mapTo(mutableSetOf()) { it.type to it.id }
-        val favoriteSections = favorites.toFavoriteSections()
-
-        updateState { current ->
-            val loaded = current.state as? Loaded
-            val updatedState = loaded?.let { state ->
-                val sections =
-                    state.sections.mapNotNull { section ->
-                        when (section) {
-                            is Movies -> section.copy(
-                                content = section.content
-                                    .withFavoriteFlagsInPresentation(favoriteIds),
-                            )
-                            is TvShows -> section.copy(
-                                content = section.content
-                                    .withFavoriteFlagsInPresentation(favoriteIds),
-                            )
-                            is Favorites -> null
-                            Search -> Search
-                        }
-                    } + listOfNotNull(Favorites(favoriteSections).takeIf { favoriteSections.isNotEmpty() })
-
-                state.copy(
-                    selectedSectionIndex = state.selectedSectionIndex.coerceAtMost(sections.lastIndex),
-                    sections = sections,
-                )
-            } ?: current.state
-
-            current.copy(latestFavorites = favorites, state = updatedState)
-        }
-    }
-
-    private fun List<WorkViewModel>.toFavoriteSections(): List<ContentSection> {
-        if (isEmpty()) return emptyList()
-
-        return listOf(
-            ContentSection.TopContent(
-                type = TopWorkTypeViewModel.FAVORITES_MOVIES,
-                works = map { it.copy(isFavorite = true) },
-            ),
-        )
+        updateState { current -> current.withFavorites(favorites) }
     }
 
     private fun handleSplashAnimationFinished() {
@@ -260,40 +183,4 @@ class WorkBrowseViewModel(
     private fun handleWorkClicked(work: WorkViewModel) {
         emitEffect(WorkBrowseEffect.Navigate(WorkDetailsDestination.create(work)))
     }
-
-    private fun List<BrowseSectionDomainModel>.withFavoriteFlags(
-        favoriteIds: Set<Pair<WorkType, Int>>,
-    ) = map { section ->
-        when (section) {
-            is BrowseSectionDomainModel.TopContent -> section.copy(works = section.works.withFavoriteStatus(favoriteIds))
-            is BrowseSectionDomainModel.GenreContent -> section.copy(works = section.works.withFavoriteStatus(favoriteIds))
-        }
-    }
-
-    private fun List<WorkDomainModel>.withFavoriteStatus(
-        favoriteIds: Set<Pair<WorkType, Int>>,
-    ) = map { work ->
-        work.copy(isFavorite = (work.type.toWorkType() to work.id) in favoriteIds)
-    }
-
-    private fun List<ContentSection>.withFavoriteFlagsInPresentation(
-        favoriteIds: Set<Pair<WorkType, Int>>,
-    ) = map { section ->
-        when (section) {
-            is ContentSection.TopContent -> section.copy(works = section.works.withFavoriteWorkFlags(favoriteIds))
-            is ContentSection.Genre -> section.copy(works = section.works.withFavoriteWorkFlags(favoriteIds))
-        }
-    }
-
-    private fun List<WorkViewModel>.withFavoriteWorkFlags(
-        favoriteIds: Set<Pair<WorkType, Int>>,
-    ) = map { work ->
-        work.copy(isFavorite = (work.type to work.id) in favoriteIds)
-    }
-
-    private fun WorkDomainModel.Type.toWorkType() =
-        when (this) {
-            WorkDomainModel.Type.MOVIE -> WorkType.MOVIE
-            WorkDomainModel.Type.TV_SHOW -> WorkType.TV_SHOW
-        }
 }

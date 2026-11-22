@@ -495,6 +495,63 @@ class WorkDetailsViewModelTest {
         }
 
     @Test
+    fun `loadMoreRecommendations should append the next page`() =
+        runTest(testDispatcher) {
+            val details = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = WORK_PAGE.copy(totalPages = 2),
+                similar = WORK_PAGE,
+                reviews = REVIEW_PAGE,
+                watchProviders = null,
+            )
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(details)
+            whenever(getRecommendationByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK.id, 2))
+                .thenReturn(WORK_PAGE.copy(page = 2, totalPages = 2, results = WORK_PAGE.results?.map { it.copy(id = 3) }))
+
+            viewModel.handleEvent(WorkDetailsEvent.LoadData)
+            advanceUntilIdle()
+            viewModel.handleEvent(WorkDetailsEvent.LoadMoreRecommendations)
+            advanceUntilIdle()
+
+            val loaded = viewModel.state.value.state as WorkDetailsState.State.Loaded
+            val recommendations = loaded.contents.filterIsInstance<WorkDetailsState.Content.RecommendedWorks>().first()
+            assertEquals(listOf(2, 3), recommendations.recommended.map { it.id })
+            assertEquals(2, recommendations.page.currentPage)
+            assertFalse(recommendations.page.isLoadingMore)
+        }
+
+    @Test
+    fun `loadMoreSimilar should restore pagination state after failure`() =
+        runTest(testDispatcher) {
+            val details = GetWorkDetailsUseCase.WorkDetailsDomainWrapper(
+                isFavorite = false,
+                videos = emptyList(),
+                casts = emptyList(),
+                recommended = WORK_PAGE,
+                similar = WORK_PAGE.copy(totalPages = 2),
+                reviews = REVIEW_PAGE,
+                watchProviders = null,
+            )
+            whenever(getWorkDetailsUseCase(any(), any(), any(), any())).thenReturn(details)
+            whenever(getSimilarByWorkUseCase(WorkDomainModel.Type.MOVIE, WORK.id, 2))
+                .thenThrow(IllegalStateException("Request failed"))
+
+            viewModel.handleEvent(WorkDetailsEvent.LoadData)
+            advanceUntilIdle()
+            viewModel.handleEvent(WorkDetailsEvent.LoadMoreSimilar)
+            advanceUntilIdle()
+
+            val loaded = viewModel.state.value.state as WorkDetailsState.State.Loaded
+            val similar = loaded.contents.filterIsInstance<WorkDetailsState.Content.SimilarWorks>().first()
+            assertEquals(listOf(2), similar.similar.map { it.id })
+            assertEquals(1, similar.page.currentPage)
+            assertFalse(similar.page.isLoadingMore)
+            assertEquals(ErrorType.PaginationError, loaded.error)
+        }
+
+    @Test
     fun `dismissError should clear favorite error from loaded state`() =
         runTest(testDispatcher) {
             // First load data to have a loaded state
