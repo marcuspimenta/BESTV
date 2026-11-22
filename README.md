@@ -9,10 +9,10 @@ The app shares its touch-first Compose Multiplatform screens between Android and
 
 ## TV and mobile showcase
 
-The composite below pairs the TV and mobile experiences. Each platform adapts browsing and discovery to its screen and input method.
+The composite below shows the Android TV, Android mobile, and iOS experiences. Each platform adapts browsing and discovery to its screen and input method.
 
 <p align="center">
-  <img src="docs/screenshots/tv-mobile-showcase.png" alt="BESTV shown on an Android TV and a mobile phone" width="100%">
+  <img src="docs/screenshots/tv-mobile-showcase.png" alt="BESTV shown on Android TV, Android mobile, and iOS" width="100%">
 </p>
 
 ## Features
