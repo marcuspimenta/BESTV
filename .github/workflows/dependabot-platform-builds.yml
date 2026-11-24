@@ -31,7 +31,7 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
-          packages: platforms;android-37.0
+          packages: platforms;android-37.1
 
       - name: Build Android mobile and TV apps
         run: ./gradlew :androidApp:assembleAndroidMobileDebug :androidApp:assembleAndroidTVDebug
@@ -54,7 +54,7 @@ jobs:
       - name: Set up Android SDK for Gradle configuration
         uses: android-actions/setup-android@v4
         with:
-          packages: platforms;android-37.0
+          packages: platforms;android-37.1
 
       - name: Build iOS simulator app
         run: >-

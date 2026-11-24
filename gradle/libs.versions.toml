@@ -1,6 +1,6 @@
 [versions]
 min-sdk = "26"
-compile-sdk = "android-37.0"
+compile-sdk = "android-37.1"
 target-sdk = "36"
 java-version = "11"
 jvm-target = "11"
