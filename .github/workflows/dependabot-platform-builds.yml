@@ -63,6 +63,5 @@ jobs:
           -target iosApp
           -configuration Debug
           -sdk iphonesimulator
-          -derivedDataPath "$RUNNER_TEMP/BESTVDerivedData"
           CODE_SIGNING_ALLOWED=NO
           build
